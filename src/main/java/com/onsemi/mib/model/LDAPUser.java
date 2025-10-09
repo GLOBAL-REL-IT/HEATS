@@ -1,0 +1,257 @@
+package com.onsemi.mib.model;
+
+public class LDAPUser {
+
+    /* LDAPUser */
+    private String id;
+    private String loginId;
+    private String oncid;
+    private String firstname;
+    private String lastname;
+    private String email;
+    private String title;
+    private String groupId;
+    private String isActive;
+    private String createdBy;
+    private String createdTime;
+    private String modifiedBy;
+    private String modifiedTime;
+    private String password;
+
+    /*extra features*/
+    private String srEmailShipping;
+    private String srEmailRetrieve;
+    private String hwEmailShipping;
+    private String hwEmailRetrieve;
+    private String featuresTestEmail;
+    private String featuresTrackGts;
+    private String featuresTrackInventory;
+    private String featuresCreateGts;
+    private String srEmailShipToRl;
+    private String hwEmailShipToRl;
+    private String scrap;
+
+    /* LDAP User Group */
+    private String groupCode;
+    private String groupName;
+
+    public String getScrap() {
+        return scrap;
+    }
+
+    public void setScrap(String scrap) {
+        this.scrap = scrap;
+    }
+
+    public LDAPUser() {
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
+
+    public String getLoginId() {
+        return loginId;
+    }
+
+    public void setLoginId(String loginId) {
+        this.loginId = loginId;
+    }
+
+    public String getOncid() {
+        return oncid;
+    }
+
+    public void setOncid(String oncid) {
+        this.oncid = oncid;
+    }
+
+    public String getFirstname() {
+        return firstname;
+    }
+
+    public void setFirstname(String firstname) {
+        this.firstname = firstname;
+    }
+
+    public String getLastname() {
+        return lastname;
+    }
+
+    public void setLastname(String lastname) {
+        this.lastname = lastname;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    public String getGroupId() {
+        return groupId;
+    }
+
+    public void setGroupId(String groupId) {
+        this.groupId = groupId;
+    }
+
+    public String getIsActive() {
+        return isActive;
+    }
+
+    public void setIsActive(String isActive) {
+        this.isActive = isActive;
+    }
+
+    public String getCreatedBy() {
+        return createdBy;
+    }
+
+    public void setCreatedBy(String createdBy) {
+        this.createdBy = createdBy;
+    }
+
+    public String getCreatedTime() {
+        return createdTime;
+    }
+
+    public void setCreatedTime(String createdTime) {
+        this.createdTime = createdTime;
+    }
+
+    public String getModifiedBy() {
+        return modifiedBy;
+    }
+
+    public void setModifiedBy(String modifiedBy) {
+        this.modifiedBy = modifiedBy;
+    }
+
+    public String getModifiedTime() {
+        return modifiedTime;
+    }
+
+    public void setModifiedTime(String modifiedTime) {
+        this.modifiedTime = modifiedTime;
+    }
+
+    public String getSrEmailShipping() {
+        return srEmailShipping;
+    }
+
+    public void setSrEmailShipping(String srEmailShipping) {
+        this.srEmailShipping = srEmailShipping;
+    }
+
+    public String getSrEmailRetrieve() {
+        return srEmailRetrieve;
+    }
+
+    public void setSrEmailRetrieve(String srEmailRetrieve) {
+        this.srEmailRetrieve = srEmailRetrieve;
+    }
+
+    public String getHwEmailShipping() {
+        return hwEmailShipping;
+    }
+
+    public void setHwEmailShipping(String hwEmailShipping) {
+        this.hwEmailShipping = hwEmailShipping;
+    }
+
+    public String getHwEmailRetrieve() {
+        return hwEmailRetrieve;
+    }
+
+    public void setHwEmailRetrieve(String hwEmailRetrieve) {
+        this.hwEmailRetrieve = hwEmailRetrieve;
+    }
+
+    public String getFeaturesTestEmail() {
+        return featuresTestEmail;
+    }
+
+    public void setFeaturesTestEmail(String featuresTestEmail) {
+        this.featuresTestEmail = featuresTestEmail;
+    }
+
+    public String getFeaturesTrackGts() {
+        return featuresTrackGts;
+    }
+
+    public void setFeaturesTrackGts(String featuresTrackGts) {
+        this.featuresTrackGts = featuresTrackGts;
+    }
+
+    public String getFeaturesTrackInventory() {
+        return featuresTrackInventory;
+    }
+
+    public void setFeaturesTrackInventory(String featuresTrackInventory) {
+        this.featuresTrackInventory = featuresTrackInventory;
+    }
+
+    public String getFeaturesCreateGts() {
+        return featuresCreateGts;
+    }
+
+    public void setFeaturesCreateGts(String featuresCreateGts) {
+        this.featuresCreateGts = featuresCreateGts;
+    }
+
+    public String getGroupCode() {
+        return groupCode;
+    }
+
+    public void setGroupCode(String groupCode) {
+        this.groupCode = groupCode;
+    }
+
+    public String getGroupName() {
+        return groupName;
+    }
+
+    public void setGroupName(String groupName) {
+        this.groupName = groupName;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    public String getSrEmailShipToRl() {
+        return srEmailShipToRl;
+    }
+
+    public void setSrEmailShipToRl(String srEmailShipToRl) {
+        this.srEmailShipToRl = srEmailShipToRl;
+    }
+
+    public String getHwEmailShipToRl() {
+        return hwEmailShipToRl;
+    }
+
+    public void setHwEmailShipToRl(String hwEmailShipToRl) {
+        this.hwEmailShipToRl = hwEmailShipToRl;
+    }
+
+}

@@ -3,7 +3,7 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.onsemi</groupId>
-    <artifactId>MIB</artifactId>
+    <artifactId>HEATS</artifactId>
     <name>HEATS</name>
     <packaging>war</packaging>
     <version>1.1</version>
@@ -128,12 +128,7 @@
                 <dependency>
             <groupId>mysql</groupId>
             <artifactId>mysql-connector-java</artifactId>
-            <!--<version>5.1.27</version>-->
-<<<<<<< HEAD
             <version>8.0.32</version>
-=======
-            <version>8.0.22</version>
->>>>>>> 6efe209c46c7289024abf9bf84bf5b36e7452772
         </dependency>
         <!--MSSQL-->
 <!--        <dependency>
