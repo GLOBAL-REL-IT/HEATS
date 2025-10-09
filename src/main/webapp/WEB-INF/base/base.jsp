@@ -230,11 +230,7 @@
             </s:layout-component>
 
             <!-- Favicon -->
-<<<<<<< HEAD
             <link type="image/x-icon" href="${contextPath}/resources/vendor/login/img/heat.png" rel="shortcut icon"/>
-=======
-            <link type="image/x-icon" href="${contextPath}/resources/vendor/login/img/OSTORMS.png" rel="shortcut icon"/>
->>>>>>> 6efe209c46c7289024abf9bf84bf5b36e7452772
 
             <!-- google font libraries -->
             <!--<link href='http://fonts.googleapis.com/css?family=Open+Sans:400,600,700,300|Titillium+Web:200,300,400' rel='stylesheet' type='text/css'>-->

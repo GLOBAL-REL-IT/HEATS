@@ -190,11 +190,7 @@
                                         <td><c:out value="${doList.mthToScrap}"/></td>
                                         <td><c:out value="${doList.status}"/></td>
                                         <td align="center">
-<<<<<<< HEAD
                                             <a href="${contextPath}/sr/noRetention/query/detail/${doList.ftpId}" id="editB" class="table-link" title="Detail">
-=======
-                                                <a onclick="window.open(this.href,'_blank');return false;" href="${contextPath}/sr/noRetention/query/detail/${doList.ftpId}" id="editB" class="table-link" title="Details">
->>>>>>> 6efe209c46c7289024abf9bf84bf5b36e7452772
                                                 <span class="fa-stack">
                                                     <i class="fa fa-square fa-stack-2x"></i>
                                                     <i class="fa fa-arrow-circle-right fa-stack-1x fa-inverse"></i>

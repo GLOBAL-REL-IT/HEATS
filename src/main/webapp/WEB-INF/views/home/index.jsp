@@ -6,9 +6,6 @@
     </c:when>
     <c:otherwise>
         <%@include file="/WEB-INF/views/home/login_new.jsp" %>
-<<<<<<< HEAD
          <%--<%@include file="/WEB-INF/views/home/login.jsp" %>--%>
-=======
->>>>>>> 6efe209c46c7289024abf9bf84bf5b36e7452772
     </c:otherwise>
 </c:choose>

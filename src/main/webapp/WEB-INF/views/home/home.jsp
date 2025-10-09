@@ -5,7 +5,6 @@
         <f:message key="general.label.home"/>
     </s:layout-component>
     <s:layout-component name="page_css">
-<<<<<<< HEAD
         <!--<link rel="stylesheet" href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css"/>-->
         <!-- tagsCloud Keywords CSS -->
         <link rel="stylesheet" href="${contextPath}/resources/statflow/vendor/tagsCloud/tagsCloud.css">
@@ -59,16 +58,11 @@
                 justify-content: flex-end;
             }*/
         </style>
-=======
-        <link rel="stylesheet" href="${contextPath}/resources/private/css/compiled/calendar.css" type="text/css" media="screen" />
-        <link rel="stylesheet" href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css"/>
->>>>>>> 6efe209c46c7289024abf9bf84bf5b36e7452772
     </s:layout-component>
     <s:layout-component name="page_header">
         <f:message key="general.label.dashboard"/>
     </s:layout-component>
     <s:layout-component name="page_container">
-<<<<<<< HEAD
         <!-- Content wrapper start -->
         <div class="content-wrapper">
 
@@ -641,268 +635,6 @@
             </div>
             <!-- Row end -->
 
-=======
-        <div class="col-lg-12">
-            <!--<h1><f:message key="general.label.dashboard"/></h1>-->
-            <!--<h1><B><u>Dashboard</u></B></h1>-->
-            <c:if test="${sessionScope.userSession.id == '0'}">
-                <div class="row">
-                    <div class="col-lg-12">
-                        <div class="main-box clearfix">
-                            <div class="clearfix">
-                                <h2 class="pull-left">Unregistered User</h2>
-                            </div>
-                            <hr/>
-                            <p>Sorry, your ID is not registered with STORMS, please contact our System Administrator for further help!</p>
-                        </div>
-                    </div>
-                </div>
-            </c:if>
-            <c:if test="${sessionScope.userSession.id != '0'}">
-                <div class="row">
-                    <div class="main-box clearfix">
-                        <h2>Dashboard - Sample Retention</h2> 
-                        <!--<div class="col-lg-1 col-md-6"></div>-->
-                        <c:if test="${groupId != '3'}">
-                            <div class="col-lg-3 col-md-6">
-                                <div class="panel panel-primary">
-                                    <div class="panel-heading">
-                                        <div class="row">
-                                            <div class="col-xs-3">
-                                                <!--<i class="fa fa-truck fa-5x"></i>-->
-                                                <i class='bx bxl-dropbox' style='font-size:5em' ></i>
-                                            </div>
-                                            <div class="col-xs-9 text-right">
-                                                <!--<div class="font-weight-bold display-2"> <h2>26</h2></div>-->
-                                                <h1 class="display-1 test" id="srReady">${countNewShipInitial}</h1>
-                                                <div>RMS ready for inventory</div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <a href="${contextPath}/sr/srFtp">
-                                        <div class="panel-footer">
-                                            <span class="pull-left">View Details</span>
-                                            <span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
-                                            <div class="clearfix"></div>
-                                        </div>
-                                    </a>
-                                </div>
-                            </div>
-                            <div class="col-lg-3 col-md-6">
-                                <div class="panel panel-default">
-                                    <div class="panel-heading">
-                                        <div class="row">
-                                            <div class="col-xs-3">
-                                                <!--<i class="fa fa-truck fa-flip-horizontal fa-5x"></i>-->
-                                                <i class='bx bxs-package' style='font-size:5em' ></i>
-                                            </div>
-                                            <div class="col-xs-9 text-right">
-                                                <h1 class="display-1 test" id="srRetrieve">${countShInitial}</h1>
-                                                <div>Retrieval Request</div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <a href="${contextPath}/sr/retrieve">
-                                        <div class="panel-footer">
-                                            <span class="pull-left">View Details</span>
-                                            <span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
-                                            <div class="clearfix"></div>
-                                        </div>
-                                    </a>
-                                </div>
-                            </div>
-                            <div class="col-lg-3 col-md-6">
-                                <div class="panel panel-danger">
-                                    <div class="panel-heading">
-                                        <div class="row">
-                                            <div class="col-xs-3">
-                                                <!--<i class="fa fa-box fa-5x"></i>-->
-                                                <i class='bx bxs-box' style='font-size: 5em'></i>
-                                            </div>
-                                            <div class="col-xs-9 text-right">
-                                                <h1 class="display-1 test1" id="srSample">${countInvInitial}</h1>
-                                                <div>Total Sample Retention</div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <a href="${contextPath}/sr/inventory">
-                                        <div class="panel-footer">
-                                            <span class="pull-left">View Details</span>
-                                            <span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
-                                            <div class="clearfix"></div>
-                                        </div>
-                                    </a>
-                                </div>
-                            </div>
-                            <div class="col-lg-3 col-md-6">
-                                <div class="panel panel-warning">
-                                    <div class="panel-heading">
-                                        <div class="row">
-                                            <div class="col-xs-3">
-                                                <!--<i class="fa fa-inbox fa-5x"></i>-->
-                                                <i class='bx bx-box' style='font-size: 5em'></i>
-                                            </div>
-                                            <div class="col-xs-9 text-right">
-                                                <h1 class="display-1 test2" id="srShelf">${countShelfInitial}</h1>
-                                                <div>Available Shelf</div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <a href="${contextPath}/sr/inventoryMgt">
-                                        <div class="panel-footer">
-                                            <span class="pull-left">View Details</span>
-                                            <span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
-                                            <div class="clearfix"></div>
-                                        </div>
-                                    </a>
-                                </div>
-                            </div>
-                        </c:if>
-                        <c:if test="${groupId == '3'}">
-                            <div class="col-lg-3 col-md-6">
-                                <div class="panel panel-primary">
-                                    <div class="panel-heading">
-                                        <div class="row">
-                                            <div class="col-xs-3">
-                                                <!--<i class="fa fa-truck fa-5x"></i>-->
-                                                <i class='bx bxl-dropbox' style='font-size:5em' ></i>
-                                            </div>
-                                            <div class="col-xs-9 text-right">
-                                                <!--<div class="font-weight-bold display-2"> <h2>26</h2></div>-->
-                                                <h1 class="display-1 test" id="srReady">${countNewShipInitial}</h1>
-                                                <div>RMS ready for inventory</div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <a href="${contextPath}/">
-                                        <div class="panel-footer">
-                                            <span class="pull-left"><i class="gray">View Details</i></span>
-                                            <span class="pull-right"><i class="fa fa-arrow-circle-right gray"></i></span>
-                                            <div class="clearfix"></div>
-                                        </div>
-                                    </a>
-                                </div>
-                            </div>
-                            <div class="col-lg-3 col-md-6">
-                                <div class="panel panel-default">
-                                    <div class="panel-heading">
-                                        <div class="row">
-                                            <div class="col-xs-3">
-                                                <!--<i class="fa fa-truck fa-flip-horizontal fa-5x"></i>-->
-                                                <i class='bx bxs-package' style='font-size:5em' ></i>
-                                            </div>
-                                            <div class="col-xs-9 text-right">
-                                                <h1 class="display-1 test" id="srRetrieve">${countShInitial}</h1>
-                                                <div>Retrieval Request</div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <a href="${contextPath}/sr/retrieve">
-                                        <div class="panel-footer">
-                                            <span class="pull-left">View Details</span>
-                                            <span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
-                                            <div class="clearfix"></div>
-                                        </div>
-                                    </a>
-                                </div>
-                            </div>
-                            <div class="col-lg-3 col-md-6">
-                                <div class="panel panel-danger">
-                                    <div class="panel-heading">
-                                        <div class="row">
-                                            <div class="col-xs-3">
-                                                <!--<i class="fa fa-box fa-5x"></i>-->
-                                                <i class='bx bxs-box' style='font-size: 5em'></i>
-                                            </div>
-                                            <div class="col-xs-9 text-right">
-                                                <h1 class="display-1 test1" id="srSample">${countInvInitial}</h1>
-                                                <div>Total Sample Retention</div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <a href="${contextPath}/sr/inventory">
-                                        <div class="panel-footer">
-                                            <span class="pull-left">View Details</span>
-                                            <span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
-                                            <div class="clearfix"></div>
-                                        </div>
-                                    </a>
-                                </div>
-                            </div>
-                            <div class="col-lg-3 col-md-6">
-                                <div class="panel panel-warning">
-                                    <div class="panel-heading">
-                                        <div class="row">
-                                            <div class="col-xs-3">
-                                                <!--<i class="fa fa-inbox fa-5x"></i>-->
-                                                <i class='bx bx-box' style='font-size: 5em'></i>
-                                            </div>
-                                            <div class="col-xs-9 text-right">
-                                                <h1 class="display-1 test2" id="srShelf">${countShelfInitial}</h1>
-                                                <div>Available Shelf</div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <a href="${contextPath}/">
-                                        <div class="panel-footer">
-                                            <span class="pull-left"><i class="gray">View Details</i></span>
-                                            <span class="pull-right"><i class="fa fa-arrow-circle-right gray"></i></span>
-                                            <div class="clearfix"></div>
-                                        </div>
-                                    </a>
-                                </div>
-                            </div>
-                        </c:if>
-                        <div class="row">
-                            <div class="col-lg-8">
-                                <div class="panel panel-default">
-                                    <div class="panel-heading">
-                                        <i class="fa fa-bar-chart-o fa-fw"></i> <b>Sample Retention - Inventory / Retrieve ${year}</b>
-                                    </div>
-                                    <div class="panel-body">
-                                        <canvas id="myChart" height="164"></canvas>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-lg-4">
-                                <div class="panel panel-default">
-                                    <div class="panel-heading">
-                                        <i class="fa fa-bar-chart-o fa-fw"></i> <b>Sample Retention - Inventory / Retrieve ${year}</b>
-                                    </div>
-                                    <div class="panel-body">
-                                        <div class="table-responsive">            
-                                            <table id="dt_spml" class="table">
-                                                <thead>
-                                                    <tr>
-                                                        <th><span><b>Month</b></span></th>
-                                                        <th><span><b>Inventory</b></span></th>
-                                                        <th><span><b>Retrieve</b></span></th>
-                                                    </tr>
-                                                </thead>
-                                                <tbody>
-                                                    <c:forEach items="${shipmentInAndOut}" var="whRetrieve" varStatus="whRetrieveLoop">
-                                                        <tr>
-                                                            <td><c:out value="${whRetrieve.rackMonth}"/></td>
-                                                            <td><c:out value="${whRetrieve.rack}"/></td>
-                                                            <td><c:out value="${whRetrieve.shelf}"/></td>
-                                                        </tr>
-                                                    </c:forEach>
-                                                    <tr>
-                                                        <td><b>Total</b></td>
-                                                        <td><b>${totalFrom}</b></td>
-                                                        <td><b>${totalTo}</b></td>
-                                                    </tr>
-                                                </tbody>
-                                            </table>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </c:if>
->>>>>>> 6efe209c46c7289024abf9bf84bf5b36e7452772
         </div>
         <!-- Content wrapper end -->
 
@@ -914,7 +646,6 @@
         <!-- App footer end -->
     </s:layout-component>
     <s:layout-component name="page_js">
-<<<<<<< HEAD
 
         <!-- Apex Charts -->
         <script src="${contextPath}/resources/statflow/vendor/apex/apexcharts.min.js"></script>
@@ -1195,82 +926,6 @@ chartss.render();
 //                    };
 //                    var chart1 = new ApexCharts(document.querySelector("#taskStats1"), options1);
 //                    chart1.render();
-=======
-        <script src="${contextPath}/resources/private/js/jquery-ui.custom.min.js"></script>
-        <script src="${contextPath}/resources/private/js/fullcalendar.min.js"></script>
-
-        <script src="${contextPath}/resources/private/js/Chart.js"></script>
-        <script src="${contextPath}/resources/private/js/Chart.PieceLabel.js"></script>
-    </s:layout-component>
-    <s:layout-component name="page_js_inline">
-        <script>
-            $(document).ready(function () {
-            setInterval(function () {
-            $('#srReady').load('srReady')
-            }, 10000);
-            setInterval(function () {
-            $('#srRetrieve').load('srRetrieve')
-            }, 10000);
-            setInterval(function () {
-            $('#srSample').load('srSample')
-            }, 10000);
-            setInterval(function () {
-            $('#srShelf').load('srShelf')
-            }, 10000);
-            });
-            var ctx = document.getElementById("myChart");
-            var myChart = new Chart(ctx, {
-            type: 'bar',
-                    data: {
-                    labels: ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"],
-                            datasets: [{
-                            label: 'Inventory', backgroundColor: [
-            <c:forEach items="${fullCredit}">
-                            'rgba(54, 162, 235, 0.2)',
-            </c:forEach>
-                            ],
-                                    borderColor: [
-            <c:forEach items="${fullCredit}">
-                                    'rgba(54, 162, 235, 1)',
-            </c:forEach>
-                                    ],
-                                    borderWidth: 1,
-                                    data: [${fullDebit}]
-                            }, {
-                            label: 'Retrieve',
-                                    backgroundColor: [
-            <c:forEach items="${fullCredit}">
-                                    'rgba(0,128,128, 0.2)',
-            </c:forEach>
-                                    ],
-                                    borderColor: [
-            <c:forEach items="${fullCredit}">
-                                    'rgba(0,128,128,1)',
-            </c:forEach>
-                                    ],
-                                    borderWidth: 1,
-                                    data: [${fullCredit} ]
-                            }]
-                    },
-                    options: {
-                    scales: {
-                    yAxes: [{
-                    ticks: {
-                    beginAtZero: true
-                    }
-                    }]
-                    },
-                            responsive: true,
-                            legend: {
-                            position: 'top',
-                            },
-                            title: {
-                            display: true,
-                                    fontSize: 19
-                            }
-                    }
-            });
->>>>>>> 6efe209c46c7289024abf9bf84bf5b36e7452772
         </script>
 
     </s:layout-component>
