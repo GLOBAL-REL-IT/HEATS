@@ -456,8 +456,6 @@ public class RetrieveDAO {
         return retrieveList;
     }
 
-<<<<<<< HEAD:src/main/java/com/onsemi/mib/dao/RetrieveDAO.java
-=======
     public Integer getCountSample() {
         Integer count = null;
         try {
@@ -505,8 +503,7 @@ public class RetrieveDAO {
         }
         return count;
     }
-
->>>>>>> 6efe209c46c7289024abf9bf84bf5b36e7452772:src/main/java/com/onsemi/ostorms/dao/RetrieveDAO.java
+    
     public Integer getCountInventory(String month, String year) {
         Integer count = null;
         try {

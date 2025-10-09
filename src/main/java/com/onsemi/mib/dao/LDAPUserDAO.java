@@ -4,15 +4,9 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
-<<<<<<< HEAD:src/main/java/com/onsemi/mib/dao/LDAPUserDAO.java
 import com.onsemi.mib.db.DB;
 import com.onsemi.mib.tools.QueryResult;
 import com.onsemi.mib.model.LDAPUser;
-=======
-import com.onsemi.ostorms.db.DB;
-import com.onsemi.ostorms.tools.QueryResult;
-import com.onsemi.ostorms.model.LDAPUser;
->>>>>>> 6efe209c46c7289024abf9bf84bf5b36e7452772:src/main/java/com/onsemi/ostorms/dao/LDAPUserDAO.java
 import java.math.BigInteger;
 import java.sql.Connection;
 import javax.sql.DataSource;

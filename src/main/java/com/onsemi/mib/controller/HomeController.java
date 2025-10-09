@@ -43,7 +43,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 @PropertySource("classpath:ldap.properties")
 public class HomeController {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(HomeControllerOG.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(HomeController.class);
     String[] args = {};
 
     @Autowired

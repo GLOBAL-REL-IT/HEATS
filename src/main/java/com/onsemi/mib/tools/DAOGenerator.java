@@ -16,20 +16,12 @@ import org.apache.commons.lang3.StringUtils;
 public class DAOGenerator {
 
     public static void main(String[] args) {
-<<<<<<< HEAD:src/main/java/com/onsemi/mib/tools/DAOGenerator.java
         String table = "hardware";
-=======
-        String table = "sr_user_manual";
->>>>>>> 6efe209c46c7289024abf9bf84bf5b36e7452772:src/main/java/com/onsemi/ostorms/tools/DAOGenerator.java
         String sql = "SELECT * FROM " + table + " LIMIT 1";
         try {
             Class.forName("com.mysql.jdbc.Driver");
             Connection conn = null;
-<<<<<<< HEAD:src/main/java/com/onsemi/mib/tools/DAOGenerator.java
             conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/mib?serverTimezone=UTC&useLegacyDatetimeCode=false", "root", "root");
-=======
-            conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/ostorms?serverTimezone=UTC&useLegacyDatetimeCode=false", "root", "root");
->>>>>>> 6efe209c46c7289024abf9bf84bf5b36e7452772:src/main/java/com/onsemi/ostorms/tools/DAOGenerator.java
             if (conn != null) {
                 String className = className(table) + "DAO";
                 String modelName = modelName(table);

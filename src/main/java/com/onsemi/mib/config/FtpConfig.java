@@ -1,20 +1,11 @@
 package com.onsemi.mib.config;
 
-<<<<<<< HEAD:src/main/java/com/onsemi/mib/config/FtpConfig.java
 import com.onsemi.mib.dao.FTPDao;
 import com.onsemi.mib.dao.LogFtpDAO;
 import com.onsemi.mib.model.FTPdata;
 import com.onsemi.mib.model.FtpFile;
 import com.onsemi.mib.model.LogFtp;
 import com.onsemi.mib.tools.QueryResult;
-=======
-import com.onsemi.ostorms.dao.FTPDao;
-import com.onsemi.ostorms.dao.LogFtpDAO;
-import com.onsemi.ostorms.model.FTPdata;
-import com.onsemi.ostorms.model.FtpFile;
-import com.onsemi.ostorms.model.LogFtp;
-import com.onsemi.ostorms.tools.QueryResult;
->>>>>>> 6efe209c46c7289024abf9bf84bf5b36e7452772:src/main/java/com/onsemi/ostorms/config/FtpConfig.java
 import com.opencsv.CSVReader;
 import java.io.File;
 import java.io.FileReader;
@@ -44,11 +35,7 @@ public class FtpConfig {
     String fileLocation = "";
 
 //    @Scheduled(cron = "0 35 9 * * ?") //every 5 minute - cron (sec min hr daysOfMth month daysOfWeek year(optional)) //testing
-<<<<<<< HEAD:src/main/java/com/onsemi/mib/config/FtpConfig.java
 //    @Scheduled(cron = "0 30 0 * * ?") //every 5 minute - cron (sec min hr daysOfMth month daysOfWeek year(optional)) production
-=======
-    @Scheduled(cron = "0 30 0 * * ?") //every 5 minute - cron (sec min hr daysOfMth month daysOfWeek year(optional)) production
->>>>>>> 6efe209c46c7289024abf9bf84bf5b36e7452772:src/main/java/com/onsemi/ostorms/config/FtpConfig.java
     public void cronRun() {
 //        String username = System.getProperty("user.name");
 //        String targetLocation = "C:\\OSTORM TEST FTP\\";  //local

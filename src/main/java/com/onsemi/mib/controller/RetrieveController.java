@@ -1,6 +1,5 @@
 package com.onsemi.mib.controller;
 
-<<<<<<< HEAD:src/main/java/com/onsemi/mib/controller/RetrieveController.java
 import com.onsemi.mib.dao.BulkRetrieveDAO;
 import com.onsemi.mib.dao.BulkRetrieveDetailDAO;
 import com.onsemi.mib.dao.FTPDao;
@@ -9,22 +8,11 @@ import com.onsemi.mib.dao.InventoryDAO;
 import com.onsemi.mib.dao.InventoryMgtDAO;
 import com.onsemi.mib.dao.LogDAO;
 import com.onsemi.mib.dao.RequestDAO;
-=======
-import com.onsemi.ostorms.dao.BulkRetrieveDAO;
-import com.onsemi.ostorms.dao.BulkRetrieveDetailDAO;
-import com.onsemi.ostorms.dao.FTPDao;
-import com.onsemi.ostorms.dao.HostnameDAO;
-import com.onsemi.ostorms.dao.InventoryDAO;
-import com.onsemi.ostorms.dao.InventoryMgtDAO;
-import com.onsemi.ostorms.dao.LogDAO;
-import com.onsemi.ostorms.dao.RequestDAO;
->>>>>>> 6efe209c46c7289024abf9bf84bf5b36e7452772:src/main/java/com/onsemi/ostorms/controller/RetrieveController.java
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.util.List;
 import java.util.Locale;
 import javax.servlet.http.HttpServletRequest;
-<<<<<<< HEAD:src/main/java/com/onsemi/mib/controller/RetrieveController.java
 import com.onsemi.mib.dao.RetrieveDAO;
 import com.onsemi.mib.dao.UserDAO;
 import com.onsemi.mib.model.BulkRetrieve;
@@ -40,23 +28,6 @@ import com.onsemi.mib.model.Retrieve;
 import com.onsemi.mib.model.UserSession;
 import com.onsemi.mib.tools.EmailSender;
 import com.onsemi.mib.tools.QueryResult;
-=======
-import com.onsemi.ostorms.dao.RetrieveDAO;
-import com.onsemi.ostorms.dao.UserDAO;
-import com.onsemi.ostorms.model.BulkRetrieve;
-import com.onsemi.ostorms.model.BulkRetrieveDetail;
-import com.onsemi.ostorms.model.FTPdata;
-import com.onsemi.ostorms.model.Hostname;
-import com.onsemi.ostorms.model.Inventory;
-import com.onsemi.ostorms.model.InventoryMgt;
-import com.onsemi.ostorms.model.LDAPUser;
-import com.onsemi.ostorms.model.Log;
-import com.onsemi.ostorms.model.Request;
-import com.onsemi.ostorms.model.Retrieve;
-import com.onsemi.ostorms.model.UserSession;
-import com.onsemi.ostorms.tools.EmailSender;
-import com.onsemi.ostorms.tools.QueryResult;
->>>>>>> 6efe209c46c7289024abf9bf84bf5b36e7452772:src/main/java/com/onsemi/ostorms/controller/RetrieveController.java
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;

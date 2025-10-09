@@ -1,6 +1,5 @@
 package com.onsemi.mib.config;
 
-<<<<<<< HEAD:src/main/java/com/onsemi/mib/config/ConfigAutoScrap.java
 import com.onsemi.mib.dao.FTPDao;
 import com.onsemi.mib.dao.HostnameDAO;
 import com.onsemi.mib.dao.InventoryDAO;
@@ -19,26 +18,6 @@ import com.onsemi.mib.model.SRInventory;
 import com.onsemi.mib.model.Scrap;
 import com.onsemi.mib.tools.EmailSender;
 import com.onsemi.mib.tools.QueryResult;
-=======
-import com.onsemi.ostorms.dao.FTPDao;
-import com.onsemi.ostorms.dao.HostnameDAO;
-import com.onsemi.ostorms.dao.InventoryDAO;
-import com.onsemi.ostorms.dao.LogDAO;
-import com.onsemi.ostorms.dao.RequestDAO;
-import com.onsemi.ostorms.dao.SRInventoryDAO;
-import com.onsemi.ostorms.dao.ScrapDAO;
-import com.onsemi.ostorms.dao.UserDAO;
-import com.onsemi.ostorms.model.FTPdata;
-import com.onsemi.ostorms.model.Hostname;
-import com.onsemi.ostorms.model.Inventory;
-import com.onsemi.ostorms.model.LDAPUser;
-import com.onsemi.ostorms.model.Log;
-import com.onsemi.ostorms.model.Request;
-import com.onsemi.ostorms.model.SRInventory;
-import com.onsemi.ostorms.model.Scrap;
-import com.onsemi.ostorms.tools.EmailSender;
-import com.onsemi.ostorms.tools.QueryResult;
->>>>>>> 6efe209c46c7289024abf9bf84bf5b36e7452772:src/main/java/com/onsemi/ostorms/config/ConfigAutoScrap.java
 import java.util.List;
 import javax.servlet.ServletContext;
 import org.slf4j.Logger;
@@ -59,11 +38,7 @@ public class ConfigAutoScrap {
     ServletContext servletContext;
 
 //    @Scheduled(cron = "0 40 14 * * *") //every 8 AM everyday - cron (sec min hr daysOfMth month daysOfWeek year(optional)) testing
-<<<<<<< HEAD:src/main/java/com/onsemi/mib/config/ConfigAutoScrap.java
 //    @Scheduled(cron = "0 5 9 1 * ?") //every 8 AM everyday - cron (sec min hr daysOfMth month daysOfWeek year(optional)) production
-=======
-    @Scheduled(cron = "0 5 9 1 * ?") //every 8 AM everyday - cron (sec min hr daysOfMth month daysOfWeek year(optional)) production
->>>>>>> 6efe209c46c7289024abf9bf84bf5b36e7452772:src/main/java/com/onsemi/ostorms/config/ConfigAutoScrap.java
     public void cronRun() {
 
         InventoryDAO invD = new InventoryDAO();

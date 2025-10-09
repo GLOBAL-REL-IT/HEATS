@@ -6,7 +6,7 @@
     <artifactId>HEATS</artifactId>
     <name>HEATS</name>
     <packaging>war</packaging>
-    <version>1.1</version>
+    <version>0.1</version>
     <properties>
         <!-- Build Properties -->
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -16,6 +16,8 @@
         <org.slf4j-version>1.7.5</org.slf4j-version>
         <hibernate.version>4.0.1.Final</hibernate.version>
         <netbeans.hint.deploy.server>Tomcat</netbeans.hint.deploy.server>
+        <maven.compiler.source>1.8</maven.compiler.source>
+        <maven.compiler.target>1.8</maven.compiler.target>
     </properties>
     <dependencies>
         <!-- Spring -->
@@ -89,6 +91,12 @@
         <!-- Servlet -->
         <dependency>
             <groupId>javax.servlet</groupId>
+            <artifactId>javax.servlet-api</artifactId>
+            <version>4.0.1</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>javax.servlet</groupId>
             <artifactId>servlet-api</artifactId>
             <version>2.5</version>
             <scope>provided</scope>
@@ -103,12 +111,6 @@
             <groupId>javax.servlet</groupId>
             <artifactId>jstl</artifactId>
             <version>1.2</version>
-        </dependency>
-        <dependency>
-            <groupId>javax.servlet</groupId>
-            <artifactId>javax.servlet-api</artifactId>
-            <version>3.1.0</version>
-            <scope>provided</scope>
         </dependency>
         
         <!-- Stripes -->
@@ -161,12 +163,17 @@
             <artifactId>spring-security-config</artifactId>
             <version>${org.springframework.security-version}</version>
         </dependency>
+        <dependency>
+            <groupId>org.springframework.security</groupId>
+            <artifactId>spring-security-ldap</artifactId>
+            <version>${org.springframework.security-version}</version>
+        </dependency>
         <!--	
          Test 
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
-            <version>4.11</version>
+            <version>4.13.2</version>
             <scope>test</scope>
         </dependency>-->
         
@@ -319,19 +326,21 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
-                <version>2.3.2</version>
+                <version>3.11.0</version>
                 <configuration>
-                    <source>1.6</source>
-                    <target>1.6</target>
+                    <source>1.8</source>
+                    <target>1.8</target>
                     <compilerArgument>-Xlint:all</compilerArgument>
                     <showWarnings>true</showWarnings>
-                    <showDeprecation>false</showDeprecation>
+                    <showDeprecation>true</showDeprecation>
+                    <debug>true</debug>
                 </configuration>
             </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-war-plugin</artifactId>
-                <version>2.4</version>
+                <!--<version>2.4</version>-->
+                <version>3.3.2</version>
                 <configuration>
                     <failOnMissingWebXml>false</failOnMissingWebXml>
                 </configuration>

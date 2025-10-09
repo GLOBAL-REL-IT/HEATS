@@ -1,8 +1,4 @@
-<<<<<<< HEAD:src/main/java/com/onsemi/mib/model/LogFtp.java
 package com.onsemi.mib.model;
-=======
-package com.onsemi.ostorms.model;
->>>>>>> 6efe209c46c7289024abf9bf84bf5b36e7452772:src/main/java/com/onsemi/ostorms/model/LogFtp.java
 
 public class LogFtp {
 

@@ -16,22 +16,14 @@ import org.apache.commons.lang3.StringUtils;
 public class ModelGenerator {
 
     public static void main(String[] args) {
-<<<<<<< HEAD:src/main/java/com/onsemi/mib/tools/ModelGenerator.java
         String table = "hardware";
-=======
-        String table = "sr_user_manual";
->>>>>>> 6efe209c46c7289024abf9bf84bf5b36e7452772:src/main/java/com/onsemi/ostorms/tools/ModelGenerator.java
         String sql = "SELECT * FROM " + table + " LIMIT 1";
         try {
             Class.forName("com.mysql.jdbc.Driver");
 //            Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver");
             Connection conn = null;
-<<<<<<< HEAD:src/main/java/com/onsemi/mib/tools/ModelGenerator.java
 //            conn = DriverManager.getConnection("jdbc:sqlserver://MYSE01WS039/GP01QA;databaseName=MIB_SBN;integratedSecurity=true");
             conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/mib?serverTimezone=UTC&useLegacyDatetimeCode=false", "root", "root");
-=======
-            conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/ostorms?serverTimezone=UTC&useLegacyDatetimeCode=false", "root", "root");
->>>>>>> 6efe209c46c7289024abf9bf84bf5b36e7452772:src/main/java/com/onsemi/ostorms/tools/ModelGenerator.java
             if (conn != null) {
                 String className = className(table);
                 System.out.println("ClassName: " + className);

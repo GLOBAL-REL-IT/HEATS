@@ -4,7 +4,6 @@ import com.onsemi.mib.dao.LDAPUserDAO;
 import java.util.List;
 import java.util.Locale;
 import javax.servlet.http.HttpServletRequest;
-<<<<<<< HEAD:src/main/java/com/onsemi/mib/controller/AdminController.java
 import com.onsemi.mib.dao.MenuDAO;
 import com.onsemi.mib.dao.SREventListDAO;
 import com.onsemi.mib.dao.UserDAO;
@@ -22,25 +21,6 @@ import com.onsemi.mib.model.UserGroupAccess;
 import com.onsemi.mib.model.UserManual;
 import com.onsemi.mib.model.UserSession;
 import com.onsemi.mib.tools.SpmlUtil;
-=======
-import com.onsemi.ostorms.dao.MenuDAO;
-import com.onsemi.ostorms.dao.SREventListDAO;
-import com.onsemi.ostorms.dao.UserDAO;
-import com.onsemi.ostorms.dao.UserGroupAccessDAO;
-import com.onsemi.ostorms.dao.UserGroupDAO;
-import com.onsemi.ostorms.dao.UserManualDAO;
-import com.onsemi.ostorms.model.EventGroup;
-import com.onsemi.ostorms.model.JSONResponse;
-import com.onsemi.ostorms.model.LDAPUser;
-import com.onsemi.ostorms.model.Menu;
-import com.onsemi.ostorms.tools.QueryResult;
-import com.onsemi.ostorms.model.User;
-import com.onsemi.ostorms.model.UserGroup;
-import com.onsemi.ostorms.model.UserGroupAccess;
-import com.onsemi.ostorms.model.UserManual;
-import com.onsemi.ostorms.model.UserSession;
-import com.onsemi.ostorms.tools.SpmlUtil;
->>>>>>> 6efe209c46c7289024abf9bf84bf5b36e7452772:src/main/java/com/onsemi/ostorms/controller/AdminController.java
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;

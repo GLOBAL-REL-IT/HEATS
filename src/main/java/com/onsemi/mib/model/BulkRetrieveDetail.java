@@ -1,8 +1,4 @@
-<<<<<<< HEAD:src/main/java/com/onsemi/mib/model/BulkRetrieveDetail.java
 package com.onsemi.mib.model;
-=======
-package com.onsemi.ostorms.model;
->>>>>>> 6efe209c46c7289024abf9bf84bf5b36e7452772:src/main/java/com/onsemi/ostorms/model/BulkRetrieveDetail.java
 
 public class BulkRetrieveDetail {
 

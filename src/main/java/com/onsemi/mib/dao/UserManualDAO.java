@@ -1,12 +1,6 @@
-<<<<<<< HEAD:src/main/java/com/onsemi/mib/dao/UserManualDAO.java
 package com.onsemi.mib.dao;
 
 import com.onsemi.mib.db.DB;
-=======
-package com.onsemi.ostorms.dao;
-
-import com.onsemi.ostorms.db.DB;
->>>>>>> 6efe209c46c7289024abf9bf84bf5b36e7452772:src/main/java/com/onsemi/ostorms/dao/UserManualDAO.java
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -15,13 +9,8 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 import javax.sql.DataSource;
-<<<<<<< HEAD:src/main/java/com/onsemi/mib/dao/UserManualDAO.java
 import com.onsemi.mib.model.UserManual;
 import com.onsemi.mib.tools.QueryResult;
-=======
-import com.onsemi.ostorms.model.UserManual;
-import com.onsemi.ostorms.tools.QueryResult;
->>>>>>> 6efe209c46c7289024abf9bf84bf5b36e7452772:src/main/java/com/onsemi/ostorms/dao/UserManualDAO.java
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
