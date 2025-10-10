@@ -3545,28 +3545,21 @@
                                                             const data001 = 'DTS';
                                                             const myDropdown = document.getElementById("itemUsage");
                                                             const selectedValue = myDropdown.value;
-
-                                                            console.log("AHOI > " + selectedValue);
-                                                            console.log("data001 >>> " + data001);
+//                                                            console.log("AHOI > " + selectedValue);
+//                                                            console.log("data001 >>> " + data001);
                                                             
                                                             for (let i = 0; i < myDropdown.options.length; i++) {
                                                                 if (myDropdown.options[i].value === data001) {
-                                                                    console.log("MASUK SELECTED " + myDropdown.options[i].value);
+//                                                                    console.log("MASUK SELECTED " + myDropdown.options[i].value);
                                                                     myDropdown.options[i].selected = true;
                                                                     break; // Exit the loop once the option is found and selected
                                                                 } else {
-                                                                    console.log("YANG LAIN : " + myDropdown.options[i].value);
+//                                                                    console.log("YANG LAIN : " + myDropdown.options[i].value);
                                                                 }
-                                                              }
-                                                              
-                                                              // Get the selected option's index
-                                                                const selectedIndex = myDropdown.selectedIndex;
-
-                                                                // Get the text content of the selected option
-                                                                const selectedText = myDropdown.options[selectedIndex].text;
-                                                                
-                                                                console.log("LAST CHECK >> " + selectedText);
-                                                            
+                                                            }
+                                                            const selectedIndex = myDropdown.selectedIndex;
+                                                            const selectedText = myDropdown.options[selectedIndex].text;
+//                                                            console.log("LAST CHECK >> " + selectedText);
                                                             $("#testItem").val(data001);
                                                            
                                                        },
