@@ -148,42 +148,37 @@
                         </form>
                     </div>
                 </div>
-
             </div>
-            <!-- -->
-            <!-- -->        
-            <!-- --> 
         </div>
-    </div>
-</s:layout-component>
-<s:layout-component name="page_js">
-    <script src="${contextPath}/resources/private/js/select2.min.js"></script>
-    <script src="${contextPath}/resources/private/js/bootstrap-select.js"></script>
-    <script src="${contextPath}/resources/validation/jquery.validate.min.js"></script>
-    <script src="${contextPath}/resources/validation/additional-methods.js"></script>
-    <script src="${contextPath}/resources/private/datatables/js/jquery.dataTables.min.js"></script>
-</s:layout-component>
-<s:layout-component name="page_js_inline">
-    <script>
+    </s:layout-component>
+    <s:layout-component name="page_js">
+        <script src="${contextPath}/resources/private/js/select2.min.js"></script>
+        <script src="${contextPath}/resources/private/js/bootstrap-select.js"></script>
+        <script src="${contextPath}/resources/validation/jquery.validate.min.js"></script>
+        <script src="${contextPath}/resources/validation/additional-methods.js"></script>
+        <script src="${contextPath}/resources/private/datatables/js/jquery.dataTables.min.js"></script>
+    </s:layout-component>
+    <s:layout-component name="page_js_inline">
+        <script>
 
-        $(document).ready(function () {
-            $('#Shelf').bind('copy paste cut', function (e) {
-                e.preventDefault(); //this line will help us to disable cut,copy,paste  
-            });
+            $(document).ready(function () {
+                $('#Shelf').bind('copy paste cut', function (e) {
+                    e.preventDefault(); //this line will help us to disable cut,copy,paste  
+                });
 
-            var validator = $("#edit_hardwarequest_form").validate({
-                rules: {
-                    finalQty: {
-                        required: true,
-                        number: true
-                    },
-                    shelf: {
-                        required: true
+                var validator = $("#edit_hardwarequest_form").validate({
+                    rules: {
+                        finalQty: {
+                            required: true,
+                            number: true
+                        },
+                        shelf: {
+                            required: true
+                        }
                     }
-                }
-            });
+                });
 
-        });
-    </script>
-</s:layout-component>
+            });
+        </script>
+    </s:layout-component>
 </s:layout-render>

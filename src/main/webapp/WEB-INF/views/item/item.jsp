@@ -1351,6 +1351,15 @@
                                                             </div>
                                                         </div>
                                                     </div>
+                                                    <div class="col-xl-4 col-sm-12 col-12">
+                                                        <div class="mb-3">
+                                                            <label for="testItem" class="form-label">TEST DROPDOWN</label>
+                                                            <div class="input-group">
+                                                                <!--<span class="input-group-text"><i class="bi bi-telephone"></i></span>-->
+                                                                <input type="text" class="form-control" id="testItem" name="testItem" value="">
+                                                            </div>
+                                                        </div>
+                                                    </div>
                                                     <div class="visually-hidden col-xl-4 col-sm-12 col-12">
                                                         <div class="mb-3">
                                                             <label for="assemblyId" class="form-label">Assembly ID</label>
@@ -3447,8 +3456,8 @@
 <s:layout-component name="page_js_inline">
     <script>
 
-                                               $(function () {
-                                                   $("#scrollVertical2").DataTable({
+                                                $(function () {
+                                                    $("#scrollVertical2").DataTable({
                                                        scrollY: "680px",
                                                        scrollCollapse: false,
                                                        paging: false,
@@ -3458,17 +3467,17 @@
                                                        columnDefs: [{
                                                                targets: [0, 1, 3, 4], visible: false
                                                            }]
-                                                   });
-                                               });
+                                                    });
+                                                });
 
-                                              $(function () {
-$("#scrollVertical4").DataTable({
-        scrollY: "150px",
-        scrollCollapse: false,
-        paging: false,
-        bInfo: false,
-});
-});
+                                                $(function () {
+                                                    $("#scrollVertical4").DataTable({
+                                                            scrollY: "150px",
+                                                            scrollCollapse: false,
+                                                            paging: false,
+                                                            bInfo: false,
+                                                    });
+                                                });
 
                                                function modalDelete(e) {
                                                    var pkId = $(e).attr("modaldeleteid");
@@ -3532,16 +3541,40 @@ $("#scrollVertical4").DataTable({
                                                            $("#otherOnsemiQty").val(data.otherONQty);
                                                            $("#vendorQty").val(data.vendorQty);
                                                            $("#totalQty").val(data.totalQty);
-                                                           $('#itemUsage').val('DTS');
-//                                                                            $("#itemUsage").val(data.itemUsage);
-//                                                                            $('#itemUsage [value="DTS"]').selected = true;
-//                                                                            document.querySelector('#itemUsage [value="DTS"]').selected = true;
-//                                                                            $("#itemUsage option[value=3]").attr('selected', true); 
+                                                           
+                                                            const data001 = 'DTS';
+                                                            const myDropdown = document.getElementById("itemUsage");
+                                                            const selectedValue = myDropdown.value;
+
+                                                            console.log("AHOI > " + selectedValue);
+                                                            console.log("data001 >>> " + data001);
+                                                            
+                                                            for (let i = 0; i < myDropdown.options.length; i++) {
+                                                                if (myDropdown.options[i].value === data001) {
+                                                                    console.log("MASUK SELECTED " + myDropdown.options[i].value);
+                                                                    myDropdown.options[i].selected = true;
+                                                                    break; // Exit the loop once the option is found and selected
+                                                                } else {
+                                                                    console.log("YANG LAIN : " + myDropdown.options[i].value);
+                                                                }
+                                                              }
+                                                              
+                                                              // Get the selected option's index
+                                                                const selectedIndex = myDropdown.selectedIndex;
+
+                                                                // Get the text content of the selected option
+                                                                const selectedText = myDropdown.options[selectedIndex].text;
+                                                                
+                                                                console.log("LAST CHECK >> " + selectedText);
+                                                            
+                                                            $("#testItem").val(data001);
+                                                           
                                                        },
                                                        error: function (jqXHR, textStatus, errorThrown) {
                                                            console.error("Error loading data: " + textStatus, errorThrown);
                                                        }
                                                    });
+                                                   document.querySelector('#tab-oneAAA').click();
                                                }
 
                                                function ajaxHw() {

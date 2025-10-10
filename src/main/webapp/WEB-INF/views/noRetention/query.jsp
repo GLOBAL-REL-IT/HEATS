@@ -99,7 +99,7 @@
                                 </div>
                             </div>
                             <div class="form-group" id="rmsIdDiv">
-                                 <label for="packageFamily" class="col-lg-1 control-label">Pkg Name</label>
+                                <label for="packageFamily" class="col-lg-1 control-label">Pkg Name</label>
                                 <div class="col-lg-2">
                                     <select id="pkgName" name="pkgName" class="js-example-basic-single" style="width: 100%" autofocus="autofocus">
                                         <option value = ""></option>
@@ -178,27 +178,27 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                <c:forEach items="${SrQuery}" var="doList" varStatus="ftpListLoop">
-                                    <tr>
-                                        <!--<td class="details-control"></td>-->
-                                        <td><c:out value="${ftpListLoop.index+1}"/></td>
-                                        <td><c:out value="${doList.rmsId}"/></td>
-                                        <td><c:out value="${doList.lotType}"/></td>
-                                        <td><c:out value="${doList.rmsEvent}"/></td>
-                                        <td><c:out value="${doList.pkgFamily}"/></td>
-                                        <td><c:out value="${doList.pkgName}"/></td>
-                                        <td><c:out value="${doList.mthToScrap}"/></td>
-                                        <td><c:out value="${doList.status}"/></td>
-                                        <td align="center">
-                                            <a href="${contextPath}/sr/noRetention/query/detail/${doList.ftpId}" id="editB" class="table-link" title="Detail">
-                                                <span class="fa-stack">
-                                                    <i class="fa fa-square fa-stack-2x"></i>
-                                                    <i class="fa fa-arrow-circle-right fa-stack-1x fa-inverse"></i>
-                                                </span>
-                                            </a>  
-                                        </td>
-                                    </tr>
-                                </c:forEach>
+                                    <c:forEach items="${SrQuery}" var="doList" varStatus="ftpListLoop">
+                                        <tr>
+                                            <!--<td class="details-control"></td>-->
+                                            <td><c:out value="${ftpListLoop.index+1}"/></td>
+                                            <td><c:out value="${doList.rmsId}"/></td>
+                                            <td><c:out value="${doList.lotType}"/></td>
+                                            <td><c:out value="${doList.rmsEvent}"/></td>
+                                            <td><c:out value="${doList.pkgFamily}"/></td>
+                                            <td><c:out value="${doList.pkgName}"/></td>
+                                            <td><c:out value="${doList.mthToScrap}"/></td>
+                                            <td><c:out value="${doList.status}"/></td>
+                                            <td align="center">
+                                                <a href="${contextPath}/sr/noRetention/query/detail/${doList.ftpId}" id="editB" class="table-link" title="Detail">
+                                                    <span class="fa-stack">
+                                                        <i class="fa fa-square fa-stack-2x"></i>
+                                                        <i class="fa fa-arrow-circle-right fa-stack-1x fa-inverse"></i>
+                                                    </span>
+                                                </a>  
+                                            </td>
+                                        </tr>
+                                    </c:forEach>
                                 </tbody>
                             </table>
                         </div>
@@ -213,7 +213,7 @@
         <script src="${contextPath}/resources/validation/jquery.validate.min.js"></script>
         <script src="${contextPath}/resources/validation/additional-methods.js"></script>
         <script src="${contextPath}/resources/validation/bootstrap-datepicker.js"></script>
-        
+
         <script src="${contextPath}/resources/vendor/DataTables/Buttons-2.4.2/js/buttons.dataTables.min.js"></script>
         <script src="${contextPath}/resources/vendor/DataTables/datatables.min.js"></script>
     </s:layout-component>
@@ -236,12 +236,12 @@
                     validator.resetForm();
                 });
 
-                  oTable = $('#example').DataTable({
-                                                                dom: 'Brtip',
-                                                                buttons: [
-                                                                    'copy', 'csv', 'print'
-                                                                ]
-                                                            });
+                oTable = $('#example').DataTable({
+                    dom: 'Brtip',
+                    buttons: [
+                        'copy', 'csv', 'print'
+                    ]
+                });
 
                 $('#dt_spml_search').keyup(function () {
                     oTable.search($(this).val()).draw();
