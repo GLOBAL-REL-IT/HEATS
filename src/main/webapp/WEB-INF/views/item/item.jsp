@@ -988,7 +988,7 @@
                                                         <div class="mb-3">
                                                             <label for="itemUsage" class="form-label">Item Usage</label>
                                                             <div class="input-group">
-                                                                <select class="select-single js-states form-control" id="itemUsage" name="itemUsage"
+                                                                <select class="form-control" id="itemUsage" name="itemUsage"
                                                                         title="Select Item Usage" data-live-search="true">
                                                                     <option></option>
                                                                     <c:forEach items="${paramItemUsage}" var="invInner">
@@ -1341,22 +1341,13 @@
                                                         <div class="mb-3">
                                                             <label for="itemUsage" class="form-label">Item Usage</label>
                                                             <div class="input-group">
-                                                                <select class="select-single js-states form-control" id="itemUsage" name="itemUsage"
+                                                                <select class="form-control" id="itemUsage" name="itemUsage"
                                                                         title="Select Item Usage" data-live-search="true">
                                                                     <option></option>
                                                                     <c:forEach items="${paramItemUsage}" var="invInner">
                                                                         <option value="${invInner.name}" ${invInner.selected}>${invInner.name}</option>
                                                                     </c:forEach>
                                                                 </select>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                    <div class="col-xl-4 col-sm-12 col-12">
-                                                        <div class="mb-3">
-                                                            <label for="testItem" class="form-label">TEST DROPDOWN</label>
-                                                            <div class="input-group">
-                                                                <!--<span class="input-group-text"><i class="bi bi-telephone"></i></span>-->
-                                                                <input type="text" class="form-control" id="testItem" name="testItem" value="">
                                                             </div>
                                                         </div>
                                                     </div>
