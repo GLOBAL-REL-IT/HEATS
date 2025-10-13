@@ -633,6 +633,23 @@ public class ItemController {
         return hw;
     }
 
+    @RequestMapping(value = "/item/hardwareList/{itemPKID}", method = {RequestMethod.GET, RequestMethod.POST})
+    @ResponseBody
+    public List<Hardware> hardwareList2(
+            @ModelAttribute UserSession userSession,
+            Model model,
+            HttpServletRequest request,
+            @PathVariable("itemPKID") String itemPKID
+    ) throws IOException {
+
+        LOGGER.info("itemPKID222: " + itemPKID);
+
+        HardwareDAO hwD = new HardwareDAO();
+        List<Hardware> hw = hwD.getHardwareListByItemId(itemPKID);
+
+        return hw;
+    }
+
     @RequestMapping(value = "/hardwareJsonSPTS", method = {RequestMethod.GET, RequestMethod.POST})
     public String hardwareJsonSPTS(
             Model model,
