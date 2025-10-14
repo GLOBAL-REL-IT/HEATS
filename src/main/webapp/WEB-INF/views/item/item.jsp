@@ -1,5 +1,5 @@
 <%@page contentType="text/html;charset=UTF-8" %>
-<%--<%@include file="/WEB-INF/base/taglibs.jsp" %>--%>
+<%@include file="/WEB-INF/base/taglibs.jsp" %>
 <s:layout-render name="/WEB-INF/base/base.jsp">
     <s:layout-component name="page_css">
         <!-- Data Tables -->
