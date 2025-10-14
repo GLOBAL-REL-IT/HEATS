@@ -16,10 +16,11 @@ import org.apache.commons.lang3.StringUtils;
 public class ModelGenerator {
 
     public static void main(String[] args) {
-        String table = "hardware";
+        String table = "item_transaction";
         String sql = "SELECT * FROM " + table + " LIMIT 1";
         try {
-            Class.forName("com.mysql.jdbc.Driver");
+//            Class.forName("com.mysql.jdbc.Driver");
+            Class.forName("com.mysql.cj.jdbc.Driver");
 //            Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver");
             Connection conn = null;
 //            conn = DriverManager.getConnection("jdbc:sqlserver://MYSE01WS039/GP01QA;databaseName=MIB_SBN;integratedSecurity=true");
@@ -46,7 +47,7 @@ public class ModelGenerator {
                             + "\t}\n\n";
                 }
                 classFileContent += "}";
-                String fileLocation = "C:\\D Drive\\New\\MIB\\src\\main\\java\\com\\onsemi\\mib\\model\\";
+                String fileLocation = "C:\\D Drive\\New\\HEATS\\src\\main\\java\\com\\onsemi\\mib\\model\\";
                 FileUtils.writeStringToFile(new File(fileLocation + className + ".java"), classFileContent);
                 rs.close();
                 ps.close();
@@ -84,13 +85,13 @@ public class ModelGenerator {
         }
         return b;
     }
-    
+
     private static String className(String string) {
         String[] a = string.split("\\_");
         String b = "";
         for (int i = 0; i < a.length; i++) {
             if (i == 0) {
-               b += StringUtils.capitalize(a[i]); //added 18092025
+                b += StringUtils.capitalize(a[i]); //added 18092025
             } else {
                 b += StringUtils.capitalize(a[i]);
             }

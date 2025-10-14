@@ -16,10 +16,10 @@ import org.apache.commons.lang3.StringUtils;
 public class DAOGenerator {
 
     public static void main(String[] args) {
-        String table = "hardware";
+        String table = "item_transaction";
         String sql = "SELECT * FROM " + table + " LIMIT 1";
         try {
-            Class.forName("com.mysql.jdbc.Driver");
+            Class.forName("com.mysql.cj.jdbc.Drive");
             Connection conn = null;
             conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/mib?serverTimezone=UTC&useLegacyDatetimeCode=false", "root", "root");
             if (conn != null) {
@@ -262,7 +262,7 @@ public class DAOGenerator {
                         + "\t\treturn " + modelName + "List;\n"
                         + "\t}\n";
                 classFileContent += "}";
-                String fileLocation = "C:\\D Drive\\New\\MIB\\src\\main\\java\\com\\onsemi\\mib\\dao\\";
+                String fileLocation = "C:\\D Drive\\New\\HEATS\\src\\main\\java\\com\\onsemi\\mib\\dao\\";
                 FileUtils.writeStringToFile(new File(fileLocation + className + ".java"), classFileContent);
                 rs.close();
                 ps.close();

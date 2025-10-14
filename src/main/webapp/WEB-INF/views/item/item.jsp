@@ -1,5 +1,5 @@
 <%@page contentType="text/html;charset=UTF-8" %>
-<%@include file="/WEB-INF/base/taglibs.jsp" %>
+<%--<%@include file="/WEB-INF/base/taglibs.jsp" %>--%>
 <s:layout-render name="/WEB-INF/base/base.jsp">
     <s:layout-component name="page_css">
         <!-- Data Tables -->
@@ -215,7 +215,7 @@
                                     </li>
                                     <li class="nav-item" role="presentation" style="border:1px; border-right-style: ridge;">
                                         <a class="nav-link" id="tab-threeAAA" data-bs-toggle="tab" href="#threeAAA" role="tab"
-                                           aria-controls="threeAAA" aria-selected="false"><i class="bi bi-arrow-left-right"></i>Movement</a>
+                                           aria-controls="threeAAA" aria-selected="false" onclick="ajaxTrans();"><i class="bi bi-arrow-left-right"></i>Movement</a>
                                     </li>
                                     <li class="nav-item" role="presentation">
                                         <a class="nav-link" id="tab-fourAAA" data-bs-toggle="tab" href="#fourAAA" role="tab"
@@ -995,6 +995,15 @@
                                                                         <option value="${invInner.name}" ${invInner.selected}>${invInner.name}</option>
                                                                     </c:forEach>
                                                                 </select>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-group col-xl-4 col-sm-12 col-12">
+                                                        <div class="mb-3">
+                                                            <label for="assemblyId" class="form-label">test</label>
+                                                            <div class="input-group">
+                                                                <!--<span class="input-group-text"><i class="bi bi-telephone"></i></span>-->
+                                                                <input type="text" class="form-control" id="testItem" name="testItem" placeholder="" value="">
                                                             </div>
                                                         </div>
                                                     </div>
@@ -3402,6 +3411,52 @@
                                         <!-- Row end -->
                                     </div>
                                     <!--end dive for second tab-->
+                                    <div class="tab-pane fade" id="threeAAA" role="tabpanel">
+                                        <!-- Row start -->
+                                        <div class="row gx-4">
+                                            <div class="table-responsive">
+                                                <table id="hideSearchExample" class="table custom-table pending">
+                                                    <thead>
+                                                        <tr>
+                                                            <!--<th class="col-12">Site</th>-->
+                                                            <th>Hardware ID</th>
+                                                            <th>ALU</th>
+                                                            <th>MFG Date</th>
+                                                            <th>RMS_Event</th>
+                                                            <th>Status</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </div>
+                                        <!-- Row end -->
+                                    </div>
+                                    <!--end dive for third tab-->
+                                    <div class="tab-pane fade" id="fourAAA" role="tabpanel">
+                                        <!-- Row start -->
+                                        <div class="row gx-4">
+                                            <div class="table-responsive">
+                                                <table id="customButtons" class="table custom-table pending">
+                                                    <thead>
+                                                        <tr>
+                                                            <!--<th class="col-12">Site</th>-->
+                                                            <th>Hardware ID</th>
+                                                            <th>ALU</th>
+                                                            <th>MFG Date</th>
+                                                            <th>RMS_Event</th>
+                                                            <th>Status</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </div>
+                                        <!-- Row end -->
+                                    </div>
+                                    <!--end dive for fourth tab-->
                                 </div>
                                 <!--end div for tab content-->
                             </div>
@@ -3533,7 +3588,7 @@
                                                            $("#vendorQty").val(data.vendorQty);
                                                            $("#totalQty").val(data.totalQty);
                                                            
-                                                            const data001 = 'DTS';
+                                                            const data001 = data.itemUsage;
                                                             const myDropdown = document.getElementById("itemUsage");
                                                             const selectedValue = myDropdown.value;
 //                                                            console.log("AHOI > " + selectedValue);
@@ -3552,6 +3607,7 @@
                                                             const selectedText = myDropdown.options[selectedIndex].text;
 //                                                            console.log("LAST CHECK >> " + selectedText);
                                                             $("#testItem").val(data001);
+//                                                                $("#testItem").val(data.itemUsage);
                                                            
                                                        },
                                                        error: function (jqXHR, textStatus, errorThrown) {
@@ -3572,6 +3628,36 @@
                                                        success: function (data) {
                                                            // Populate form fields with received data
                                                            var tableBody = $('#customButtons tbody');
+                                                           tableBody.empty(); // Clear existing table rows
+
+                                                           $.each(data, function (index, item) {
+                                                               var row = '<tr>' +
+                                                                       '<td>' + item.hardwareName + '</td>' +
+                                                                       '<td>' + item.alu + '</td>' +
+                                                                       '<td>' + item.mfgDate + '</td>' +
+                                                                       '<td>' + item.rmsEvent + '</td>' +
+                                                                       '<td>' + item.status + '</td>' +
+                                                                       '</tr>';
+                                                               tableBody.append(row);
+                                                           });
+                                                       },
+                                                       error: function (jqXHR, textStatus, errorThrown) {
+                                                           console.error("Error loading data: " + textStatus, errorThrown);
+                                                       }
+                                                   });
+                                               }
+                                               
+                                               function ajaxTrans() {
+                                                   var itemPKID = $("#itemPKID").val();
+//                                                   alert($("#itemPKID").val());
+                                                   $.ajax({
+                                                       url: '${contextPath}/hw/item/transList', // Replace with your controller URL
+                                                       type: 'GET',
+                                                       data: {itemPKID: itemPKID},
+                                                       dataType: 'json',
+                                                       success: function (data) {
+                                                           // Populate form fields with received data
+                                                           var tableBody = $('#hideSearchExample tbody');
                                                            tableBody.empty(); // Clear existing table rows
 
                                                            $.each(data, function (index, item) {

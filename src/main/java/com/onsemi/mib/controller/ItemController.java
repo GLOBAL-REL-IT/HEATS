@@ -1,30 +1,18 @@
 package com.onsemi.mib.controller;
 
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.onsemi.mib.dao.FTPDao;
 import com.onsemi.mib.dao.HardwareDAO;
 import com.onsemi.mib.dao.ItemDAO;
 import com.onsemi.mib.dao.HimsRequestDAO;
-import com.onsemi.mib.dao.InventoryDAO;
-import com.onsemi.mib.dao.InventoryMgtDAO;
-import com.onsemi.mib.dao.LogDAO;
-import com.onsemi.mib.dao.LogFtpDAO;
+import com.onsemi.mib.dao.ItemTransactionDAO;
 import com.onsemi.mib.dao.ParameterDetailsDAO;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
-import java.util.Locale;
 import javax.servlet.http.HttpServletRequest;
 import com.onsemi.mib.dao.RequestDAO;
-import com.onsemi.mib.model.FTPdata;
 import com.onsemi.mib.model.Hardware;
 import com.onsemi.mib.model.Item;
 import com.onsemi.mib.model.HimsInventory;
-import com.onsemi.mib.model.Inventory;
-import com.onsemi.mib.model.InventoryMgt;
-import com.onsemi.mib.model.JSONResponse;
-import com.onsemi.mib.model.Log;
-import com.onsemi.mib.model.LogFtp;
+import com.onsemi.mib.model.ItemTransaction;
 import com.onsemi.mib.model.ParameterDetails;
 import com.onsemi.mib.model.Request;
 import com.onsemi.mib.model.UserSession;
@@ -53,7 +41,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.SessionAttributes;
 import org.springframework.web.servlet.ModelAndView;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 @Controller
 @RequestMapping(value = "/hw")
@@ -368,6 +355,8 @@ public class ItemController {
 
         int count = 0;
         int countAdd = 0;
+        int countTrans = 0;
+        int countTransAdd = 0;
 
         //insert into database
         for (int i = 0; i < getItemByParam.length(); i++) {
@@ -613,6 +602,47 @@ public class ItemController {
         ItemDAO hwD = new ItemDAO();
         Item hw = hwD.getHardwareDetailByPkid(pkID);
 
+        //add transaction to DB
+        JSONObject params2 = new JSONObject();
+        params2.put("itemsPKID", pkID);
+        JSONArray getTransactionByParam = SPTSWebService.getTransactionByParam(params2);
+
+        for (int i = 0; i < getTransactionByParam.length(); i++) {
+
+            ItemTransactionDAO itemD = new ItemTransactionDAO();
+            int countPkid = itemD.getCountPkidAndItemPkid(Integer.toString(getTransactionByParam.getJSONObject(i).getInt("PKID")), Integer.toString(getTransactionByParam.getJSONObject(i).getInt("ItemsPKID")));
+            if (countPkid == 0) {
+                ItemTransaction item = new ItemTransaction();
+                item.setSptsPkid(Integer.toString(getTransactionByParam.getJSONObject(i).getInt("PKID")));
+                item.setItemPkid(Integer.toString(getTransactionByParam.getJSONObject(i).getInt("ItemsPKID")));
+                item.setSiteName(getTransactionByParam.getJSONObject(i).getString("SiteName"));
+                String dateTime = getTransactionByParam.getJSONObject(i).getString("DateTime").substring(0, 10) + " " + getTransactionByParam.getJSONObject(i).getString("DateTime").substring(11, 19);
+                item.setDateTime(dateTime);
+                item.setTransType(Integer.toString(getTransactionByParam.getJSONObject(i).getInt("TransType")));
+                item.setTransTypeName(getTransactionByParam.getJSONObject(i).getString("TransTypeName"));
+                item.setTransQty(Integer.toString(getTransactionByParam.getJSONObject(i).getInt("TransQty")));
+                if (getTransactionByParam.getJSONObject(i).has("TransInQty")) {
+                    item.setTransInQty(Integer.toString(getTransactionByParam.getJSONObject(i).getInt("TransInQty")));
+                }
+                if (getTransactionByParam.getJSONObject(i).has("TransOutQty")) {
+                    item.setTransOutQty(Integer.toString(getTransactionByParam.getJSONObject(i).getInt("TransOutQty")));
+                }
+                if (getTransactionByParam.getJSONObject(i).has("LifetimeUsageHrs")) {
+                    item.setAlu(Double.toString(getTransactionByParam.getJSONObject(i).getDouble("LifetimeUsageHrs")));
+                }
+                if (getTransactionByParam.getJSONObject(i).has("Remarks")) {
+                    item.setRemarks(getTransactionByParam.getJSONObject(i).getString("Remarks"));
+                }
+
+                itemD = new ItemTransactionDAO();
+                QueryResult qI = itemD.insertItemTransaction(item);
+                countTransAdd += qI.getResult();
+            }
+            countTrans += 1;
+        }
+        LOGGER.info("Total data Trans: " + countTrans);
+        LOGGER.info("Total insert Trans: " + countTransAdd);
+
         return hw;
     }
 
@@ -629,6 +659,23 @@ public class ItemController {
 
         HardwareDAO hwD = new HardwareDAO();
         List<Hardware> hw = hwD.getHardwareListByItemId(itemPKID);
+
+        return hw;
+    }
+
+    @RequestMapping(value = "/item/transList", method = {RequestMethod.GET, RequestMethod.POST})
+    @ResponseBody
+    public List<ItemTransaction> transList(
+            @ModelAttribute UserSession userSession,
+            Model model,
+            HttpServletRequest request,
+            @RequestParam(required = false) String itemPKID
+    ) throws IOException {
+
+        LOGGER.info("itemPKID: " + itemPKID);
+
+        ItemTransactionDAO hwD = new ItemTransactionDAO();
+        List<ItemTransaction> hw = hwD.getItemTransactionListByItemPkid(itemPKID);
 
         return hw;
     }
