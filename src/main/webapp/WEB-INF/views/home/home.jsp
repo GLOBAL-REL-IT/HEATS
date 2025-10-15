@@ -628,6 +628,7 @@
                             <h5 class="card-title">RMS Before & After Loading 2025</h5>
                         </div>
                         <div class="card-body">
+                            dekat sini ke ni
                             <div id="basic-bar-graph-grouped2"></div>
                         </div>
                     </div>
@@ -808,66 +809,68 @@ var chart = new ApexCharts(document.querySelector("#demography2"), options);
 chart.render();
 
 var optionsss = {
-  chart: {
-    height: 355,
-    type: 'bar',
-    toolbar: {
-      show: false,
+    chart: {
+        height: 355,
+        type: 'bar',
+        toolbar: {
+            show: false,
+        },
     },
-  },
-  plotOptions: {
-    bar: {
-      horizontal: true,
-      dataLabels: {
-        position: 'top',
-      },
-    }
-  },
-  dataLabels: {
-    enabled: true,
-    offsetX: -6,
-    style: {
-      fontSize: '12px',
-      colors: ['#fff']
-    }
-  },
-  stroke: {
-    show: true,
-    width: 0,
-  },
-  series: [{
-    data: [44, 55, 41, 64, 22,11,43,50,66,12,33,45]
-  }, {
-    data: [53, 32, 33, 44, 32,32,12,5,34,12,47,6]
-  }],
-  xaxis: {
-    categories: ["Jan", "Feb", "Mar", "Apr", "May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"],
-  },
-  grid: {
-    borderColor: '#ffe4a7',
-    strokeDashArray: 5,
+    plotOptions: {
+        bar: {
+            horizontal: true,
+            dataLabels: {
+                position: 'top',
+            },
+        }
+    },
+    dataLabels: {
+        enabled: true,
+        offsetX: -6,
+        style: {
+            fontSize: '12px',
+            colors: ['#fff']
+        }
+    },
+    stroke: {
+        show: true,
+        width: 0,
+    },
+    series: [{
+        name: 'Before Loading',
+        data: [44, 55, 41, 64, 22,11,43,50,66,12,33,45]
+    }, {
+        name: 'After Loading',
+        data: [53, 32, 33, 44, 32,32,12,5,34,12,47,6]
+    }],
     xaxis: {
-      lines: {
-        show: true
-      }
+        categories: ["Jan", "Feb", "Mar", "Apr", "May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"],
     },
-    yaxis: {
-      lines: {
-        show: false,
-      }
+    grid: {
+        borderColor: '#ffe4a7',
+        strokeDashArray: 5,
+        xaxis: {
+            lines: {
+                show: true
+            }
+        },
+        yaxis: {
+            lines: {
+                show: false,
+            }
+        },
+        padding: {
+            top: 0,
+            right: 0,
+            bottom: 0,
+            left: 0
+        },
     },
-    padding: {
-      top: 0,
-      right: 0,
-      bottom: 0,
-      left: 0
-    },
-  },
-  colors: ["#507DFF", "#6A90FF", "#83A3FF", "#9DB6FF", "#B7C9FF", "#D0DCFF", "#EAEFFF"],
+    colors: ['#615FFF', '#05DF72'],
 }
 var chartss = new ApexCharts(
-  document.querySelector("#basic-bar-graph-grouped2"),
-  optionsss
+    document.querySelector("#basic-bar-graph-grouped2"),
+    optionsss
 );
 chartss.render();
 
