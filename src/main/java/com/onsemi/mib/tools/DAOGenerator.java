@@ -16,10 +16,10 @@ import org.apache.commons.lang3.StringUtils;
 public class DAOGenerator {
 
     public static void main(String[] args) {
-        String table = "item_transaction";
+        String table = "item_visual_inspection";
         String sql = "SELECT * FROM " + table + " LIMIT 1";
         try {
-            Class.forName("com.mysql.cj.jdbc.Drive");
+            Class.forName("com.mysql.cj.jdbc.Driver");
             Connection conn = null;
             conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/mib?serverTimezone=UTC&useLegacyDatetimeCode=false", "root", "root");
             if (conn != null) {

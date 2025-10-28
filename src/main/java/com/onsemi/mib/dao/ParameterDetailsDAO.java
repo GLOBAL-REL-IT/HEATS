@@ -324,6 +324,33 @@ public class ParameterDetailsDAO {
         return parameterDetailList;
     }
 
+    public Integer getCountMasterCodeAndName(String masterCode, String name) {
+        Integer count = null;
+        try {
+            PreparedStatement ps = conn.prepareStatement(
+                    "SELECT COUNT(*) AS count FROM parameter_details inc WHERE inc.master_code = '" + masterCode + "' AND name = '" + name + "'"
+            );
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                count = rs.getInt("count");
+            }
+            rs.close();
+
+            ps.close();
+        } catch (SQLException e) {
+            LOGGER.error(e.getMessage());
+        } finally {
+            if (conn != null) {
+                try {
+                    conn.close();
+                } catch (SQLException e) {
+                    LOGGER.error(e.getMessage());
+                }
+            }
+        }
+        return count;
+    }
+
 //    public List<ParameterDetails> getNameByDetailCode(String detailCode) {
 //        String sql = "SELECT name AS name FROM cdars_parameter_details WHERE detail_code = '" + detailCode + "'";
 //        List<ParameterDetails> parameterDetailList = new ArrayList<ParameterDetails>();

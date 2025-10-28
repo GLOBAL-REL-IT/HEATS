@@ -57,6 +57,15 @@ public class Item {
     private String modifedBy;
     private String modifiedDate;
     private String itemUsage;
+    private String sptsStatus;
+
+    public String getSptsStatus() {
+        return sptsStatus;
+    }
+
+    public void setSptsStatus(String sptsStatus) {
+        this.sptsStatus = sptsStatus;
+    }
 
     public String getItemUsage() {
         return itemUsage;

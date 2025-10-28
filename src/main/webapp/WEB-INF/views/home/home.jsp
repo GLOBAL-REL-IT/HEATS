@@ -105,7 +105,7 @@
                         <div class="card-body p-3">
                             <div class="d-flex align-items-center">
                                 <div>
-                                    <h6 class="text-muted mb-1 fw-light">MPE</h6>
+                                    <h6 class="text-muted mb-1 fw-light">Maverick</h6>
                                     <h3 class="fw-bold mb-1">4</h3>
                                     <!--                                    <span class="badge bg-primary-subtle text-primary rounded-pill px-2 py-1">
                                                                             <i class="bi bi-arrow-up-right"></i> 8%
@@ -490,7 +490,7 @@
                     <div class="card mb-4">
                         <div class="card-header">
                             <!--<h5 class="card-title" style="color:#5ec3f1">MPE</h5>-->
-                            <h5 class="card-title">MPE</h5>
+                            <h5 class="card-title">Maverick</h5>
                         </div>
                         <div class="card-body">
                             <div class="table-responsive">
@@ -600,7 +600,7 @@
                 <div class="col-xxl-6 col-sm-12 col-12">
                     <div class="card mb-4">
                         <div class="card-header">
-                            <h5 class="card-title">MPE 2025</h5>
+                            <h5 class="card-title">Maverick 2025</h5>
                         </div>
                         <div class="card-body">
 
@@ -625,10 +625,10 @@
                 <div class="col-xxl-6 col-sm-12 col-12">
                     <div class="card mb-4">
                         <div class="card-header">
-                            <h5 class="card-title">RMS Before & After Loading 2025</h5>
+                            <h5 class="card-title">WIP Report 2025</h5>
                         </div>
                         <div class="card-body">
-                            dekat sini ke ni
+                            <!--dekat sini ke ni-->
                             <div id="basic-bar-graph-grouped2"></div>
                         </div>
                     </div>
@@ -837,10 +837,10 @@ var optionsss = {
         width: 0,
     },
     series: [{
-        name: 'Before Loading',
+        name: 'WIP Incoming Request',
         data: [44, 55, 41, 64, 22,11,43,50,66,12,33,45]
     }, {
-        name: 'After Loading',
+        name: 'WIP Completed',
         data: [53, 32, 33, 44, 32,32,12,5,34,12,47,6]
     }],
     xaxis: {

@@ -16,7 +16,7 @@ import org.apache.commons.lang3.StringUtils;
 public class ModelGenerator {
 
     public static void main(String[] args) {
-        String table = "item_transaction";
+        String table = "item_visual_inspection";
         String sql = "SELECT * FROM " + table + " LIMIT 1";
         try {
 //            Class.forName("com.mysql.jdbc.Driver");

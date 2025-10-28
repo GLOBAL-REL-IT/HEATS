@@ -34,14 +34,14 @@
 
     <body class="align-items-center d-flex p-5"> 
         <div class="card m-auto mw-400 p-8 w-100" id="login"> 
-            <center><h2 class="font-link-rms fs-4 text-body-emphasis" style="font-weight:bold">Welcome to Rel Hardware & Equipment Activity Tracking System (HEATs)</h2></center>
+            <center><h2 class="font-link-rms fs-3 text-body-emphasis" style="font-weight:bold">Reliability Lab <br> <br>Hardware & Equipment Activity Tracking System</h2></center>
             <div id="logo">
                 <a href="${contextPath}/">
                     <img src="${contextPath}/resources/vendor/login/img/heat.png" alt="Logo" width="85%" />
                 </a>
             </div>
             <center>
-                <br><div class="mb-5 text-body-secondary">Please sign in to continue to the system</div> </center>
+                <br><div class="mb-5 text-body-secondary"><span style="font-weight:bold; color:black;">WELCOME</span> <br>Please sign in to continue to the system</div> </center>
             <form id="login-form" action="${contextPath}/" class="form" method="post">
 
                 <c:if test="${not empty error}">

@@ -200,10 +200,14 @@ public class ItemTransactionDAO {
     }
 
     public List<ItemTransaction> getItemTransactionListByItemPkid(String itemPkid) {
-        String sql = "SELECT item_pkid, DATE_FORMAT(date_time,'%d %M %Y %h:%i %p') AS view_date_time, trans_type_name, IFNULL(trans_in_qty,'-') AS transInQty, "
-                + "IFNULL(trans_out_qty,'-') AS transOutQty, IFNULL(alu,'-') AS ALU, remarks "
-                + "FROM item_transaction "
-                + "WHERE item_pkid = '" + itemPkid + "' ORDER BY id ASC";
+        String sql = "SELECT it.item_id, "
+//                + "tran.item_pkid, "
+                + "DATE_FORMAT(tran.date_time,'%d %M %Y %h:%i %p') AS view_date_time, tran.trans_type_name, "
+                + "IFNULL(tran.trans_in_qty,'-') AS transInQty, IFNULL(tran.trans_out_qty,'-') AS transOutQty, "
+                + "IFNULL(tran.alu,'-') AS ALU, tran.remarks "
+                + "FROM item_transaction tran, item it "
+                + "WHERE item_pkid = '" + itemPkid + "' AND it.spts_pkid = tran.item_pkid "
+                + "ORDER BY tran.id ASC";
         List<ItemTransaction> itemtransactionList = new ArrayList<ItemTransaction>();
         try {
             PreparedStatement ps = conn.prepareStatement(sql);
@@ -211,14 +215,10 @@ public class ItemTransactionDAO {
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
                 itemtransaction = new ItemTransaction();
-                itemtransaction.setId(rs.getString("id"));
-//                itemtransaction.setSptsPkid(rs.getString("spts_pkid"));
-//                itemtransaction.setSiteName(rs.getString("site_name"));
+                itemtransaction.setItemId(rs.getString("item_id"));
                 itemtransaction.setDateTime(rs.getString("view_date_time"));
-                itemtransaction.setItemPkid(rs.getString("item_pkid"));
-//                itemtransaction.setTransType(rs.getString("trans_type"));
+//                itemtransaction.setItemPkid(rs.getString("item_pkid"));
                 itemtransaction.setTransTypeName(rs.getString("trans_type_name"));
-//                itemtransaction.setTransQty(rs.getString("trans_qty"));
                 itemtransaction.setTransInQty(rs.getString("transInQty"));
                 itemtransaction.setTransOutQty(rs.getString("transOutQty"));
                 itemtransaction.setAlu(rs.getString("ALU"));

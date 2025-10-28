@@ -27,6 +27,9 @@
 
             <!-- Scrollbar CSS -->
             <link rel="stylesheet" href="${contextPath}/resources/statflow/vendor/overlay-scroll/OverlayScrollbars.min.css">
+            
+            <!-- select2 CSS -->
+            <link rel="stylesheet" href="${contextPath}/resources/select2/css/select2.min.css">
 
             <!-- this page specific styles -->
             <s:layout-component name="page_css">
@@ -299,7 +302,7 @@
                             <li class="breadcrumb-item breadcrumb-active" aria-current="page" >
                                 <!--<i class="bi bi-house"></i>-->
                                 <img class="img2" src="${contextPath}/resources/vendor/login/img/heat.png" alt="HEATs">
-                                <a href="${contextPath}/" class="text3d"> &nbsp;&nbsp;Rel Hardware & Equipment Activity Tracking System (HEATs)</a>
+                                <a href="${contextPath}/" class="text3d"> &nbsp;&nbsp;Reliability Lab Hardware & Equipment Activity Tracking System</a>
                             </li>
                             <!--                                <a href="index.html">Home</a>
                                                         </li>
@@ -453,6 +456,9 @@
             <script src="${contextPath}/resources/statflow/js/bootstrap.bundle.min.js"></script>
             <script src="${contextPath}/resources/statflow/js/modernizr.js"></script>
             <script src="${contextPath}/resources/statflow/js/moment.js"></script>
+            
+            <!-- Select2 Js -->
+            <script src="${contextPath}/resources/select2/js/select2.min.js"></script>
 
             <!-- *************
                                 ************ Vendor Js Files *************
@@ -467,6 +473,8 @@
 
             <!-- Main Js Required -->
             <script src="${contextPath}/resources/statflow/js/main.js"></script>
+            
+            
 
 
             <script>

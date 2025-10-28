@@ -4,6 +4,7 @@ import com.onsemi.mib.dao.HardwareDAO;
 import com.onsemi.mib.dao.ItemDAO;
 import com.onsemi.mib.dao.HimsRequestDAO;
 import com.onsemi.mib.dao.ItemTransactionDAO;
+import com.onsemi.mib.dao.ItemVisualInspectionDAO;
 import com.onsemi.mib.dao.ParameterDetailsDAO;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
@@ -13,6 +14,7 @@ import com.onsemi.mib.model.Hardware;
 import com.onsemi.mib.model.Item;
 import com.onsemi.mib.model.HimsInventory;
 import com.onsemi.mib.model.ItemTransaction;
+import com.onsemi.mib.model.ItemVisualInspection;
 import com.onsemi.mib.model.ParameterDetails;
 import com.onsemi.mib.model.Request;
 import com.onsemi.mib.model.UserSession;
@@ -21,9 +23,13 @@ import com.onsemi.mib.tools.SPTSWebService;
 import com.onsemi.mib.tools.SystemUtil;
 import java.io.IOException;
 import java.sql.SQLException;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Locale;
 import javax.servlet.ServletContext;
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -41,6 +47,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.SessionAttributes;
 import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 @Controller
 @RequestMapping(value = "/hw")
@@ -56,9 +63,41 @@ public class ItemController {
     @Autowired
     ServletContext servletContext;
 
-//    @RequestMapping(value = "/hardware", method = RequestMethod.GET)
-    @RequestMapping(value = "/item", method = {RequestMethod.GET, RequestMethod.POST})
+    @RequestMapping(value = "/item", method = {RequestMethod.GET, RequestMethod.POST}) //without checking SPTS data and update to MIB DB
     public String request(
+            Model model,
+            @ModelAttribute UserSession userSession,
+            @RequestParam(required = false) String itemType
+    ) throws IOException {
+
+        JSONArray getItemTypeAll = SPTSWebService.getItemTypeAll();
+        List<LinkedHashMap<String, String>> itemTpeAll = SystemUtil.jsonArrayToList(getItemTypeAll);
+        model.addAttribute("itemTpeAll", itemTpeAll);
+
+        String itemTypeTitle = "";
+
+        if (itemType == null || "".equals(itemType)) {
+            ItemDAO hwD = new ItemDAO();
+            List<Item> itemList = hwD.getHardwareDetailListByItemType("No Item Type");
+            model.addAttribute("itemList", itemList);
+        } else {
+            ItemDAO hwD = new ItemDAO();
+            List<Item> itemList = hwD.getHardwareDetailListByItemType(itemType);
+            model.addAttribute("itemList", itemList);
+            itemTypeTitle = " (" + itemType + ")";
+        }
+        model.addAttribute("itemTypeTitle", itemTypeTitle);
+
+        ParameterDetailsDAO pD = new ParameterDetailsDAO();
+        List<ParameterDetails> paramItemUsage = pD.getGroupParameterDetailList("", "001");
+        model.addAttribute("paramItemUsage", paramItemUsage);
+
+        return "item/item";
+//        return "hardware/hardware_json";
+    }
+
+    @RequestMapping(value = "/item2", method = {RequestMethod.GET, RequestMethod.POST}) //checking SPTS data and update to MIB DB
+    public String request2(
             Model model,
             @ModelAttribute UserSession userSession,
             @RequestParam(required = false) String itemType
@@ -677,6 +716,24 @@ public class ItemController {
         ItemTransactionDAO hwD = new ItemTransactionDAO();
         List<ItemTransaction> hw = hwD.getItemTransactionListByItemPkid(itemPKID);
 
+        return hw;
+    }
+
+    @RequestMapping(value = "/item/transList2/{itemPKID}", method = {RequestMethod.GET, RequestMethod.POST})
+    @ResponseBody
+    public List<ItemTransaction> transList2(
+            @ModelAttribute UserSession userSession,
+            Model model,
+            HttpServletRequest request,
+            @PathVariable("itemPKID") String itemPKID
+    ) throws IOException {
+
+        LOGGER.info("itemPKID2: " + itemPKID);
+
+        ItemTransactionDAO hwD = new ItemTransactionDAO();
+        List<ItemTransaction> hw = hwD.getItemTransactionListByItemPkid(itemPKID);
+
+//        LOGGER.info("hw: " + Arrays.toString(hw.toArray()));
         return hw;
     }
 
@@ -1399,6 +1456,381 @@ public class ItemController {
 
         return "item/hardwareSPTSUpdate";
 //        return "hardware/hardware_json";
+    }
+
+    @RequestMapping(value = "/item/add", method = {RequestMethod.GET, RequestMethod.POST})
+    public String itemAdd(
+            Model model,
+            @ModelAttribute UserSession userSession,
+            @RequestParam(required = false) String itemType
+    ) throws IOException {
+
+        JSONArray getItemTypeAll = SPTSWebService.getItemTypeAll();
+
+        for (int i = 0; i < getItemTypeAll.length(); i++) {
+
+            ParameterDetailsDAO pD = new ParameterDetailsDAO();
+            String masterCode = "002";
+            String detailcode = pD.getNextDetailCode(masterCode);
+            pD = new ParameterDetailsDAO();
+            int count = pD.getCountMasterCodeAndName(masterCode, getItemTypeAll.getJSONObject(i).getString("ItemType"));
+
+            if (count == 0) {
+                ParameterDetails param = new ParameterDetails();
+                param.setMasterCode(masterCode);
+                param.setDetailCode(detailcode);
+                param.setName(getItemTypeAll.getJSONObject(i).getString("ItemType"));
+                param.setCreatedBy(userSession.getId());
+                pD = new ParameterDetailsDAO();
+                QueryResult q = pD.insertParameterDetails(param);
+            }
+        }
+
+        ParameterDetailsDAO pD = new ParameterDetailsDAO();
+        List<ParameterDetails> paramItemType = pD.getGroupParameterDetailList(itemType, "002");
+        model.addAttribute("paramItemType", paramItemType);
+
+        pD = new ParameterDetailsDAO();
+        List<ParameterDetails> paramItemUsage = pD.getGroupParameterDetailList("", "001");
+        model.addAttribute("paramItemUsage", paramItemUsage);
+
+        model.addAttribute("itemType", itemType);
+        LOGGER.info("itemType: " + itemType);
+
+        return "item/item_add";
+    }
+
+    @RequestMapping(value = "/item/save", method = {RequestMethod.GET, RequestMethod.POST})
+    public String itemSave(
+            Model model,
+            Locale locale,
+            RedirectAttributes redirectAttrs,
+            @ModelAttribute UserSession userSession,
+            @RequestParam(required = false) String itemTypeRead,
+            @RequestParam(required = false) String subType,
+            @RequestParam(required = false) String itemId,
+            @RequestParam(required = false) String itemName,
+            @RequestParam(required = false) String assemblyId,
+            @RequestParam(required = false) String itemUsage,
+            @RequestParam(required = false) String model2,
+            @RequestParam(required = false) String manufacture,
+            @RequestParam(required = false) String unitCost,
+            @RequestParam(required = false) String equipmentType,
+            @RequestParam(required = false) String equipmentModel,
+            @RequestParam(required = false) String equipmentManufacturer,
+            @RequestParam(required = false) String minQty,
+            @RequestParam(required = false) String maxQty,
+            @RequestParam(required = false) String rack,
+            @RequestParam(required = false) String shelf,
+            @RequestParam(required = false) String stressType,
+            @RequestParam(required = false) String onHandQty,
+            @RequestParam(required = false) String productionQty,
+            @RequestParam(required = false) String otherOnsemiQty,
+            @RequestParam(required = false) String productionStagingQty,
+            @RequestParam(required = false) String repairQty,
+            @RequestParam(required = false) String quarantineQty,
+            @RequestParam(required = false) String externalCleanQty,
+            @RequestParam(required = false) String externalRecleanQty,
+            @RequestParam(required = false) String internalCleanQty,
+            @RequestParam(required = false) String internalRecleanQty,
+            @RequestParam(required = false) String otherQty,
+            @RequestParam(required = false) String vendorQty,
+            @RequestParam(required = false) String storageFactoryQty,
+            @RequestParam(required = false) String totalQty,
+            @RequestParam(required = false) String isConsumable,
+            @RequestParam(required = false) String remarks,
+            @RequestParam(required = false) String expirationDate
+    ) {
+
+        Item item = new Item();
+        LOGGER.info("itemTypeRead: " + itemTypeRead);
+        item.setItemType(itemTypeRead);
+        item.setSubType(subType);
+        item.setSiteName("Seremban");
+        item.setItemId(itemId);
+        item.setItemName(itemName);
+        item.setAssemblyId(assemblyId);
+        item.setRack(rack);
+        item.setShelf(shelf);
+        item.setItemUsage(itemUsage);
+        item.setOnHandQty(onHandQty);
+
+        if (productionQty == null || "".equals(productionQty)) {
+            productionQty = "0";
+        }
+        if (productionStagingQty == null || "".equals(productionStagingQty)) {
+            productionStagingQty = "0";
+        }
+        if (repairQty == null || "".equals(repairQty)) {
+            repairQty = "0";
+        }
+        if (otherQty == null || "".equals(otherQty)) {
+            otherQty = "0";
+        }
+        if (quarantineQty == null || "".equals(quarantineQty)) {
+            quarantineQty = "0";
+        }
+        if (externalCleanQty == null || "".equals(externalCleanQty)) {
+            externalCleanQty = "0";
+        }
+        if (externalRecleanQty == null || "".equals(externalRecleanQty)) {
+            externalRecleanQty = "0";
+        }
+        if (internalCleanQty == null || "".equals(internalCleanQty)) {
+            internalCleanQty = "0";
+        }
+        if (internalRecleanQty == null || "".equals(internalRecleanQty)) {
+            internalRecleanQty = "0";
+        }
+        if (storageFactoryQty == null || "".equals(storageFactoryQty)) {
+            storageFactoryQty = "0";
+        }
+        if (otherOnsemiQty == null || "".equals(otherOnsemiQty)) {
+            otherOnsemiQty = "0";
+        }
+        if (vendorQty == null || "".equals(vendorQty)) {
+            vendorQty = "0";
+        }
+        item.setProductionQty(productionQty);
+        item.setProductionStagingQty(productionStagingQty);
+        item.setRepairQty(repairQty);
+        item.setOtherQty(otherQty);
+        item.setQuarantineQty(quarantineQty);
+        item.setExternalCleanQty(externalCleanQty);
+        item.setExternalRecleanQty(externalRecleanQty);
+        item.setInternalCleanQty(internalCleanQty);
+        item.setInternalRecleanQty(internalRecleanQty);
+        item.setStorageFactoryQty(storageFactoryQty);
+        item.setOtherOnsemiQty(otherOnsemiQty);
+        item.setVendorQty(vendorQty);
+
+        int totalQ = Integer.parseInt(onHandQty) + Integer.parseInt(productionQty) + Integer.parseInt(productionStagingQty) + Integer.parseInt(repairQty) + Integer.parseInt(otherQty) + Integer.parseInt(quarantineQty) + Integer.parseInt(externalCleanQty)
+                + Integer.parseInt(externalRecleanQty) + Integer.parseInt(internalCleanQty) + Integer.parseInt(internalRecleanQty) + Integer.parseInt(storageFactoryQty) + Integer.parseInt(otherOnsemiQty) + Integer.parseInt(vendorQty);
+
+        item.setTotalQty(Integer.toString(totalQ));
+        item.setUnitCost(unitCost);
+
+        Double totalCost = totalQ * Double.parseDouble(unitCost);
+        item.setTotalCost(totalCost.toString());
+
+        item.setMinQty(minQty);
+        item.setMaxQty(maxQty);
+        item.setExpirationDate(expirationDate);
+        if ("on".equals(isConsumable)) {
+            isConsumable = "true";
+        } else {
+            isConsumable = "false";
+        }
+        item.setIsConsumable(isConsumable);
+        item.setModel(model2);
+        item.setManufacturer(manufacture);
+        item.setEquipmentType(equipmentType);
+        item.setEquipmentModel(equipmentModel);
+        item.setEquipmentManufacturer(equipmentManufacturer);
+        item.setStressType(stressType);
+        item.setRemarks(remarks);
+        item.setCreatedBy(userSession.getFullname());
+        if ("BIB".equals(itemTypeRead) || "BIB Card".equals(itemTypeRead)) {
+            item.setStatus("Pending Visual Inspection");
+            item.setFlag("0");
+        } else {
+            item.setStatus("Good");
+            item.setFlag("1");
+        }
+        //check if itemID exist or not
+        ItemDAO itemD = new ItemDAO();
+        int count = itemD.getCountItemId(itemId);
+        if (count > 0) {
+            redirectAttrs.addFlashAttribute("error", "Duplicate Item ID: " + itemId + ". Pls register with different Item ID.");
+            return "redirect:/hw/item/add";
+        } else {
+            itemD = new ItemDAO();
+            QueryResult i = itemD.insertHardwareDetail(item);
+
+            if (i.getResult() == 1) {
+                redirectAttrs.addFlashAttribute("success", "Succesfully registered Item ID: " + itemId);
+                if ("BIB".equals(itemTypeRead) || "BIB Card".equals(itemTypeRead)) {
+//                    return "redirect:/hw/item/add";
+//                    return "redirect:/hw/item/addActivity/" + i.getGeneratedKey();
+                    return "redirect:/hw/item/add2/" + i.getGeneratedKey();
+                } else {
+                    return "redirect:/";
+                }
+            } else {
+                redirectAttrs.addFlashAttribute("error", "Failed to registered Item ID: " + itemId + ". Pls contact system admin.");
+                return "redirect:/hw/item/add";
+            }
+//            return returnPage;
+        }
+    }
+
+    @RequestMapping(value = "/item/add2/{id}", method = RequestMethod.GET)
+    public String itemAdd2(
+            Model model,
+            @ModelAttribute UserSession userSession,
+            @PathVariable("id") String id
+    ) throws IOException {
+
+        ItemDAO itemD = new ItemDAO();
+        Item item = itemD.getHardwareDetail(id);
+        model.addAttribute("item", item);
+
+        ParameterDetailsDAO pD = new ParameterDetailsDAO();
+        List<ParameterDetails> paramItemUsage = pD.getGroupParameterDetailList(item.getItemUsage(), "001");
+        model.addAttribute("paramItemUsage", paramItemUsage);
+
+        ItemVisualInspectionDAO itemVmD = new ItemVisualInspectionDAO();
+        ItemVisualInspection itemVm = itemVmD.getItemVisualInspectionByMibItemId(id);
+        model.addAttribute("itemVm", itemVm);
+
+        if (item.getStatus().contains("Good")) {
+            String hwActive = "active";
+            String hwActiveTab = "in active";
+            model.addAttribute("hwActive", hwActive);
+            model.addAttribute("hwActiveTab", hwActiveTab);
+        } else {
+            String hwActive = "";
+            String hwActiveTab = "";
+            model.addAttribute("hwActive", hwActive);
+            model.addAttribute("hwActiveTab", hwActiveTab);
+        }
+        if (item.getStatus().contains("Visual Inspection")) {
+            String vmActive = "active";
+            String vmActiveTab = "in active";
+            model.addAttribute("vmActive", vmActive);
+            model.addAttribute("vmActiveTab", vmActiveTab);
+        } else {
+            String vmActive = "";
+            String vmActiveTab = "";
+            model.addAttribute("vmActive", vmActive);
+            model.addAttribute("vmActiveTab", vmActiveTab);
+        }
+
+        if (item.getStatus().contains("Test")) {
+            String teActive = "active";
+            String teActiveTab = "in active";
+            model.addAttribute("teActive", teActive);
+            model.addAttribute("teActiveTab", teActiveTab);
+        } else {
+            String teActive = "";
+            String teActiveTab = "";
+            model.addAttribute("teActive", teActive);
+            model.addAttribute("teActiveTab", teActiveTab);
+        }
+
+        return "item/item_add2";
+    }
+
+    @RequestMapping(value = "/item/vm/save", method = {RequestMethod.GET, RequestMethod.POST})
+    public String itemVmSave(
+            Model model,
+            Locale locale,
+            RedirectAttributes redirectAttrs,
+            @ModelAttribute UserSession userSession,
+            @RequestParam(required = false) String mibItemId,
+            @RequestParam(required = false) String itemStatus,
+            @RequestParam(required = false) String pcb,
+            @RequestParam(required = false) String pcbReject,
+            @RequestParam(required = false) String handle,
+            @RequestParam(required = false) String handleReject,
+            @RequestParam(required = false) String metalFrame,
+            @RequestParam(required = false) String metalFrameReject,
+            @RequestParam(required = false) String hardwareFasterners,
+            @RequestParam(required = false) String hardwareFasternersReject,
+            @RequestParam(required = false) String clipHolder,
+            @RequestParam(required = false) String clipHolderReject,
+            @RequestParam(required = false) String pcbEdgeFinger,
+            @RequestParam(required = false) String pcbEdgeFingerReject,
+            @RequestParam(required = false) String connector,
+            @RequestParam(required = false) String connectorReject,
+            @RequestParam(required = false) String dutSockets,
+            @RequestParam(required = false) String dutSocketsReject,
+            @RequestParam(required = false) String edgeMibBanana,
+            @RequestParam(required = false) String edgeMibBananaReject,
+            @RequestParam(required = false) String electComponet,
+            @RequestParam(required = false) String electComponentReject,
+            @RequestParam(required = false) String solderJoin,
+            @RequestParam(required = false) String solderJoinReject,
+            @RequestParam(required = false) String winConnector,
+            @RequestParam(required = false) String winConnectorReject,
+            @RequestParam(required = false) String remarks
+    ) {
+
+        String finalStatus = "";
+
+        ItemVisualInspection item = new ItemVisualInspection();
+
+        item.setMibItemId(mibItemId);
+        if ("Pending Visual Inspection".equals(itemStatus)) {
+            item.setModule("Item Registration");
+        } else if ("Pending Visual Inspection (from Maverick)".equals(itemStatus)) {
+            item.setModule("Item Registration (2nd Visual Inspection");
+        } else {
+            item.setModule("Item Registration");
+        }
+        item.setPcb(pcb);
+        item.setPcbReject(pcbReject);
+        item.setHandle(handle);
+        item.setHandleReject(handleReject);
+        item.setMetalFrame(metalFrame);
+        item.setMetalFrameReject(metalFrameReject);
+        item.setHardwareFasterners(hardwareFasterners);
+        item.setHardwareFasternersReject(hardwareFasternersReject);
+        item.setClipHolder(clipHolder);
+        item.setClipHolderReject(clipHolderReject);
+        item.setPcbEdgeFinger(pcbEdgeFinger);
+        item.setPcbEdgeFingerReject(pcbEdgeFingerReject);
+        item.setConnector(connector);
+        item.setConnectorReject(connectorReject);
+        item.setDutSockets(dutSockets);
+        item.setDutSocketsReject(dutSocketsReject);
+        item.setEdgeMbBanana(edgeMibBanana);
+        item.setEdgeMbBananaReject(edgeMibBananaReject);
+        item.setElectComponent(electComponet);
+        item.setElectComponentReject(electComponentReject);
+        item.setSolderJoint(solderJoin);
+        item.setSolderJointReject(solderJoinReject);
+        item.setWinConnector(winConnector);
+        item.setWinConnectorReject(winConnectorReject);
+        item.setRemarks(remarks);
+
+        if ("Fail".equals(pcb) || "Fail".equals(handle) || "Fail".equals(metalFrame) || "Fail".equals(hardwareFasterners) || "Fail".equals(clipHolder) || "Fail".equals(pcbEdgeFinger) || "Fail".equals(connector)
+                || "Fail".equals(dutSockets) || "Fail".equals(edgeMibBanana) || "Fail".equals(electComponet) || "Fail".equals(solderJoin) || "Fail".equals(winConnector)) {
+            finalStatus = "Fail";
+        } else {
+            finalStatus = "Pass";
+        }
+        item.setFinalStatus(finalStatus);
+        ItemVisualInspectionDAO itemVmD = new ItemVisualInspectionDAO();
+        QueryResult q = itemVmD.insertItemVisualInspection(item);
+        if (!"0".equals(q.getGeneratedKey())) {
+            if ("Fail".equals(finalStatus)) {
+
+                //send email
+                redirectAttrs.addFlashAttribute("error", "Visual Inspection Fail. Pls go to Maverick Module for Corrective Action.");
+                return "redirect:/hw/item/add";
+            } else {
+                redirectAttrs.addFlashAttribute("success", "Visual Inspection Pass.");
+                return "redirect:/hw/item/add";
+            }
+
+        } else {
+            redirectAttrs.addFlashAttribute("error", "Failed to save Visual Inspection. Pls Contact System Admin");
+            return "redirect:/hw/item/add";
+        }
+    }
+
+    @RequestMapping(value = "/item/addActivity/{id}", method = RequestMethod.GET)
+    public String addActivity(
+            Model model,
+            @ModelAttribute UserSession userSession,
+            @PathVariable("id") String id
+    ) {
+
+        ItemDAO itemD = new ItemDAO();
+        Item item = itemD.getHardwareDetail(id);
+        model.addAttribute("item", item);
+        return "item/item_check";
     }
 
     @RequestMapping(value = "/equipment", method = RequestMethod.GET)

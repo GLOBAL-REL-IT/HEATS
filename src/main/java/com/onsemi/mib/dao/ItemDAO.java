@@ -30,7 +30,7 @@ public class ItemDAO {
         QueryResult queryResult = new QueryResult();
         try {
             PreparedStatement ps = conn.prepareStatement(
-                    "INSERT INTO item (spts_pkid, item_type, sub_type, item_id, item_name, assembly_id, rack, shelf, on_hand_qty, production_staging_qty, production_qty, repair_qty, other_qty, quarantine_qty, external_clean_qty, external_reclean_qty, internal_clean_qty, internal_reclean_qty, storage_factory_qty, other_onsemi_qty, vendor_qty, total_qty, unit_cost, total_cost, status, alu_hrs, movement_alu_hrs, min_qty, max_qty, pm_ww1, pm_ww2, expiration_date, is_critical, is_consumable, downtime_value, downtime_unit, implementation_cost, manpower_value, manpower_unit, complexity, model, manufacturer, equipment_type, equipment_model, equipment_manufacturer, stress_type, remarks, flag, created_by, created_date, site_name) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,NOW(),?)", Statement.RETURN_GENERATED_KEYS
+                    "INSERT INTO item (spts_pkid, item_type, sub_type, item_id, item_name, assembly_id, rack, shelf, on_hand_qty, production_staging_qty, production_qty, repair_qty, other_qty, quarantine_qty, external_clean_qty, external_reclean_qty, internal_clean_qty, internal_reclean_qty, storage_factory_qty, other_onsemi_qty, vendor_qty, total_qty, unit_cost, total_cost, status, alu_hrs, movement_alu_hrs, min_qty, max_qty, pm_ww1, pm_ww2, expiration_date, is_critical, is_consumable, downtime_value, downtime_unit, implementation_cost, manpower_value, manpower_unit, complexity, model, manufacturer, equipment_type, equipment_model, equipment_manufacturer, stress_type, remarks, flag, created_by, created_date, site_name, item_usage) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,NOW(),?,?)", Statement.RETURN_GENERATED_KEYS
             );
             ps.setString(1, hardwaredetail.getSptsPkid());
             ps.setString(2, hardwaredetail.getItemType());
@@ -82,6 +82,7 @@ public class ItemDAO {
             ps.setString(48, hardwaredetail.getFlag());
             ps.setString(49, hardwaredetail.getCreatedBy());
             ps.setString(50, hardwaredetail.getSiteName());
+            ps.setString(51, hardwaredetail.getItemUsage());
 //            ps.setString(50, hardwaredetail.getCreatedDate());
 //            ps.setString(51, hardwaredetail.getModifedBy());
 //            ps.setString(52, hardwaredetail.getModifiedDate());
@@ -106,7 +107,7 @@ public class ItemDAO {
         }
         return queryResult;
     }
-    
+
     public QueryResult updateHardwareDetailFromSpts(Item hardwaredetail) {
         QueryResult queryResult = new QueryResult();
         try {
@@ -340,6 +341,7 @@ public class ItemDAO {
                 hardwaredetail.setCreatedDate(rs.getString("created_date"));
                 hardwaredetail.setModifedBy(rs.getString("modifed_by"));
                 hardwaredetail.setModifiedDate(rs.getString("modified_date"));
+                hardwaredetail.setItemUsage(rs.getString("item_usage"));
             }
             rs.close();
             ps.close();
@@ -517,7 +519,7 @@ public class ItemDAO {
     }
 
     public List<Item> getHardwareDetailListByItemType(String itemType) {
-        String sql = "SELECT * FROM item WHERE item_type = '" + itemType + "' AND STATUS <> 'Scrapped' ORDER BY item_id ASC";
+        String sql = "SELECT * FROM item WHERE item_type = '" + itemType + "' AND STATUS <> 'Scrapped' AND flag = '1' ORDER BY item_id ASC";
         List<Item> hardwaredetailList = new ArrayList<Item>();
         try {
             PreparedStatement ps = conn.prepareStatement(sql);
@@ -602,6 +604,33 @@ public class ItemDAO {
         try {
             PreparedStatement ps = conn.prepareStatement(
                     "SELECT COUNT(*) AS count FROM item inc WHERE inc.spts_pkid = '" + pkid + "'"
+            );
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                count = rs.getInt("count");
+            }
+            rs.close();
+
+            ps.close();
+        } catch (SQLException e) {
+            LOGGER.error(e.getMessage());
+        } finally {
+            if (conn != null) {
+                try {
+                    conn.close();
+                } catch (SQLException e) {
+                    LOGGER.error(e.getMessage());
+                }
+            }
+        }
+        return count;
+    }
+
+    public Integer getCountItemId(String itemId) {
+        Integer count = null;
+        try {
+            PreparedStatement ps = conn.prepareStatement(
+                    "SELECT COUNT(*) AS count FROM item inc WHERE inc.item_id = '" + itemId + "'"
             );
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {

@@ -92,28 +92,36 @@
 
             <!-- Row start -->
             <div class="row gx-4">
+                <nav class="navbar bg-body-tertiary">
+                    <div class="container-fluid justify-content-start">
+                        <!--<button class="btn btn-outline-success me-2" type="button">Pending Registration (BIB/ Bib Card)</button>-->
+                        <a href="${contextPath}/hw/item/add" class="btn btn-outline-success me-2" role="button">
+                             <i class='bi bi-plus-square'></i>&nbsp;&nbsp;Add New</a>
+                        <!--<button class="btn btn-sm btn-outline-secondary" type="button">Smaller button</button>-->
+                    </div>
+                </nav>
                 <div class="col-sm-12 col-12">
                     <!-- Card start -->
                     <div class="card mb-4">
                         <div class="card-header">
                             <h5 class="card-title">Hardware Module</h5>
-                            <div class="float-end">
-                                <a href="${contextPath}/hw/hardware" class="leads rounded-5">
+<!--                            <div class="float-end">
+                                <a href="${contextPath}/hw/item/add" class="leads rounded-5">
                                     <i class='bi bi-plus-square' style='color:#ffffff' ></i>&nbsp;&nbsp;Add New
                                 </a>
-                            </div>
+                            </div>-->
                         </div>
 
                         <div class="card-body">
                             <!-- Row start -->
                             <form class="row g-3 align-items-center" role="form" action="${contextPath}/hw/item" method="post">
-                                <div class="row mb-5">
+                                <div class="row mb-3">
                                     <label class="col-sm-1 col-md-1 col-form-label fw-semibold" for="singleSelect">Item Type</label>
                                     <div class="col-sm-3 col-md-3">
                                         <div class="row g-1">
                                             <div class="col-sm-11 col-md-12">
-                                                <select class="select-single js-states form-control" id="itemType" name="itemType"
-                                                        title="Select Item Type" data-live-search="true">
+                                                <select class="js-example-basic-single" id="itemType" name="itemType"
+                                                        style="width: 100%">
                                                     <option></option>
                                                     <c:forEach items="${itemTpeAll}" var="invInner">
                                                         <option value="${invInner.ItemType}">${invInner.ItemType}</option>
@@ -233,19 +241,13 @@
                                                 <!--<div class="card-body">-->
                                                 <form class="row gx-3 " role="form" action="${contextPath}/hw/item/update" method="post">
                                                     <!-- Row start -->
-                                                    <!--                                                    <div class="col-12 mb-3">
-                                                                                                            <h6 class="fw-semibold mb-3 border-start border-info ps-2"
-                                                                                                                style="border-left-width: 3px !important;">
-                                                                                                                <i class="bi bi-person-badge me-2"></i>HW Details
-                                                                                                            </h6>
-                                                                                                        </div>-->
                                                     <div class="form-group required col-xl-2 col-sm-12 col-12">
                                                         <div class="mb-3">
                                                             <!--<div class="mb-3 was-validated">-->
                                                             <label for="itemType2" class="form-label">Item Type</label>
                                                             <div class="input-group">
                                                                 <!--<span class="input-group-text"><i class="bi bi-person"></i></span>-->
-                                                                <input type="text" class="form-control" id="itemType2" name="itemType2" placeholder="" value="" required="">
+                                                                <input type="text" class="form-control" id="itemType2" name="itemType2" placeholder="" value="" readonly>
                                                                 <!--<div class="valid-feedback">Looks good!</div>-->
                                                                 <!--<div class="invalid-feedback">Please provide a valid zip.</div>-->
                                                             </div>
@@ -256,8 +258,8 @@
                                                             <label for="subType" class="form-label">Sub Type</label>
                                                             <div class="input-group">
                                                                 <!--<span class="input-group-text"><i class="bi bi-person"></i></span>-->
-                                                                <input type="text" class="form-control" id="subType" name="subType" placeholder="" value="">
-                                                                <input type="text" class="form-control" id="itemPKID" name="itemPKID" placeholder="" value="">
+                                                                <input type="text" class="form-control" id="subType" name="subType" placeholder="" value="" readonly>
+                                                                <input type="hidden" class="form-control" id="itemPKID" name="itemPKID" placeholder="" value="" readonly>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -266,7 +268,7 @@
                                                             <label for="itemId" class="form-label">Item ID</label>
                                                             <div class="input-group">
                                                                 <!--<span class="input-group-text"><i class="bi bi-envelope"></i></span>-->
-                                                                <input type="text" class="form-control" id="itemId" name="itemId" placeholder="" value="">
+                                                                <input type="text" class="form-control" id="itemId" name="itemId" placeholder="" value="" readonly>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -275,7 +277,7 @@
                                                             <label for="itemName" class="form-label">Item Name</label>
                                                             <div class="input-group">
                                                                 <!--<span class="input-group-text"><i class="bi bi-telephone"></i></span>-->
-                                                                <input type="text" class="form-control" id="itemName" name="itemName" placeholder="" value="">
+                                                                <input type="text" class="form-control" id="itemName" name="itemName" placeholder="" value="" readonly>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -284,7 +286,7 @@
                                                             <label for="status" class="form-label">Status</label>
                                                             <div class="input-group">
                                                                 <!--<span class="input-group-text"><i class="bi bi-person"></i></span>-->
-                                                                <input type="text" class="form-control" id="status" name="status" placeholder="" value="" disabled>
+                                                                <input type="text" class="form-control" id="status" name="status" placeholder="" value="" readonly>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -293,7 +295,7 @@
                                                             <label for="aluHrs" class="form-label">ALU</label>
                                                             <div class="input-group">
                                                                 <!--<span class="input-group-text"><i class="bi bi-envelope"></i></span>-->
-                                                                <input type="text" class="form-control" id="aluHrs" name="aluHrs" placeholder="" value="" disabled>
+                                                                <input type="text" class="form-control" id="aluHrs" name="aluHrs" placeholder="" value="" readonly>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -302,7 +304,7 @@
                                                             <label for="assemblyId" class="form-label">Assembly ID</label>
                                                             <div class="input-group">
                                                                 <!--<span class="input-group-text"><i class="bi bi-telephone"></i></span>-->
-                                                                <input type="text" class="form-control" id="assemblyId" name="assemblyId" placeholder="" value="">
+                                                                <input type="text" class="form-control" id="assemblyId" name="assemblyId" placeholder="" value="" readonly>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -311,7 +313,7 @@
                                                             <label for="model" class="form-label">Spare Part Model</label>
                                                             <div class="input-group">
                                                                 <!--<span class="input-group-text"><i class="bi bi-telephone"></i></span>-->
-                                                                <input type="text" class="form-control" id="model" name="model" value="">
+                                                                <input type="text" class="form-control" id="model" name="model" value="" readonly>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -321,7 +323,7 @@
                                                             <label for="manufacturer" class="form-label">Spare Part Manufacturer</label>
                                                             <div class="input-group">
                                                                 <!--<span class="input-group-text"><i class="bi bi-person"></i></span>-->
-                                                                <input type="text" class="form-control" id="manufacturer" name="manufacturer" placeholder="" value="">
+                                                                <input type="text" class="form-control" id="manufacturer" name="manufacturer" placeholder="" value="" readonly>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -330,7 +332,7 @@
                                                             <label for="unitCost" class="form-label">Unit cost (USD)</label>
                                                             <div class="input-group">
                                                                 <!--<span class="input-group-text"><i class="bi bi-envelope"></i></span>-->
-                                                                <input type="text" class="form-control" id="unitCost" name="unitCost" placeholder="" value="">
+                                                                <input type="text" class="form-control" id="unitCost" name="unitCost" placeholder="" value="" readonly>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -339,7 +341,7 @@
                                                             <label for="equipmentType" class="form-label">Equipment Type</label>
                                                             <div class="input-group">
                                                                 <!--<span class="input-group-text"><i class="bi bi-person"></i></span>-->
-                                                                <input type="text" class="form-control" id="equipmentType" name="equipmentType" placeholder="" value="">
+                                                                <input type="text" class="form-control" id="equipmentType" name="equipmentType" placeholder="" value="" readonly>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -348,7 +350,7 @@
                                                             <label for="equipmentModel" class="form-label">Equipment Model</label>
                                                             <div class="input-group">
                                                                 <!--<span class="input-group-text"><i class="bi bi-envelope"></i></span>-->
-                                                                <input type="text" class="form-control" id="equipmentModel" name="equipmentModel" value="">
+                                                                <input type="text" class="form-control" id="equipmentModel" name="equipmentModel" value="" readonly>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -368,7 +370,7 @@
                                                             <div class="input-group">
                                                                 <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
                                                                 <input type="text" class="form-control" id="minQty" name="minQty"
-                                                                       placeholder="" value="">
+                                                                       placeholder="" value="" readonly>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -378,7 +380,7 @@
                                                             <div class="input-group">
                                                                 <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
                                                                 <input type="text" class="form-control" id="maxQty" name="maxQty"
-                                                                       placeholder="" value="">
+                                                                       placeholder="" value="" readonly>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -388,7 +390,7 @@
                                                             <div class="input-group">
                                                                 <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
                                                                 <input type="text" class="form-control" id="rack" name="rack"
-                                                                       placeholder="" value="">
+                                                                       placeholder="" value="" readonly>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -398,7 +400,7 @@
                                                             <div class="input-group">
                                                                 <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
                                                                 <input type="text" class="form-control" id="shelf" name="shelf"
-                                                                       placeholder="" value="">
+                                                                       placeholder="" value="" readonly>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -408,7 +410,7 @@
                                                             <div class="input-group">
                                                                 <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
                                                                 <input type="text" class="form-control" id="stressType" name="stressType"
-                                                                       placeholder="" value="">
+                                                                       placeholder="" value="" readonly>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -418,7 +420,7 @@
                                                             <div class="input-group">
                                                                 <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
                                                                 <input type="text" class="form-control" id="onHandQty" name="onHandQty"
-                                                                       placeholder="" value="" disabled>
+                                                                       placeholder="" value="" readonly>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -428,7 +430,7 @@
                                                             <div class="input-group">
                                                                 <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
                                                                 <input type="text" class="form-control" id="productionQty" name="productionQty"
-                                                                       placeholder="" value="" disabled>
+                                                                       placeholder="" value="" readonly>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -438,7 +440,7 @@
                                                             <div class="input-group">
                                                                 <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
                                                                 <input type="text" class="form-control" id="productionStagingQty" name="productionStagingQty"
-                                                                       placeholder="" value="" disabled>
+                                                                       placeholder="" value="" readonly>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -448,7 +450,7 @@
                                                             <div class="input-group">
                                                                 <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
                                                                 <input type="text" class="form-control" id="repairQty" name="repairQty"
-                                                                       placeholder="" value="" disabled>
+                                                                       placeholder="" value="" readonly>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -458,7 +460,7 @@
                                                             <div class="input-group">
                                                                 <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
                                                                 <input type="text" class="form-control" id="quarantineQty" name="quarantineQty"
-                                                                       placeholder="" value="" disabled>
+                                                                       placeholder="" value="" readonly>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -468,7 +470,7 @@
                                                             <div class="input-group">
                                                                 <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
                                                                 <input type="text" class="form-control" id="externalCleanQty" name="externalCleanQty"
-                                                                       placeholder="" value="" disabled>
+                                                                       placeholder="" value="" readonly>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -478,7 +480,7 @@
                                                             <div class="input-group">
                                                                 <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
                                                                 <input type="text" class="form-control" id="externalRecleanQty" name="externalRecleanQty"
-                                                                       placeholder="" value="" disabled>
+                                                                       placeholder="" value="" readonly>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -488,7 +490,7 @@
                                                             <div class="input-group">
                                                                 <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
                                                                 <input type="text" class="form-control" id="internalCleanQty" name="internalCleanQty"
-                                                                       placeholder="" value="" disabled>
+                                                                       placeholder="" value="" readonly>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -498,7 +500,7 @@
                                                             <div class="input-group">
                                                                 <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
                                                                 <input type="text" class="form-control" id="internalRecleanQty" name="internalRecleanQty"
-                                                                       placeholder="" value="" disabled>
+                                                                       placeholder="" value="" readonly>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -508,7 +510,7 @@
                                                             <div class="input-group">
                                                                 <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
                                                                 <input type="text" class="form-control" id="otherQty" name="otherQty"
-                                                                       placeholder="" value="" disabled>
+                                                                       placeholder="" value="" readonly>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -518,7 +520,7 @@
                                                             <div class="input-group">
                                                                 <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
                                                                 <input type="text" class="form-control" id="vendorQty" name="vendorQty"
-                                                                       placeholder="" value="" disabled>
+                                                                       placeholder="" value="" readonly>
                                                             </div>
                                                         </div>
                                                     </div><div class="col-xl-2 col-sm-12 col-12">
@@ -527,7 +529,7 @@
                                                             <div class="input-group">
                                                                 <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
                                                                 <input type="text" class="form-control" id="otherOnsemiQty" name="otherOnsemiQty"
-                                                                       placeholder="" value="" disabled>
+                                                                       placeholder="" value="" readonly>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -537,7 +539,7 @@
                                                             <div class="input-group">
                                                                 <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
                                                                 <input type="text" class="form-control" id="storageFactoryQty" name="storageFactoryQty"
-                                                                       placeholder="" value="" disabled>
+                                                                       placeholder="" value="" readonly>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -547,7 +549,7 @@
                                                             <div class="input-group">
                                                                 <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
                                                                 <input type="text" class="form-control" id="totalQty" name="totalQty"
-                                                                       placeholder="" value="" disabled>
+                                                                       placeholder="" value="" readonly>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -565,7 +567,7 @@
                                                             <div class="input-group">
                                                                 <span class="input-group-text"><i class="bi bi-pencil"></i></span>
                                                                 <textarea class="form-control" id="remarks" name="remarks" placeholder="Enter Message"
-                                                                          rows="3"></textarea>
+                                                                          rows="3" readonly readonly></textarea>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -573,7 +575,7 @@
                                                     <!-- Form actions start -->
                                                     <div class="d-flex justify-content-end gap-2">
                                                         <!--<button type="button" class="btn btn-light">Cancel</button>-->
-                                                        <button type="submit" class="btn btn-primary">Update</button>
+                                                        <!--                                                        <button type="submit" class="btn btn-primary">Update</button>-->
                                                     </div>
                                                     <!-- Form actions end -->
                                                 </form>
@@ -593,7 +595,7 @@
                                                             <label for="itemType2" class="form-label">Item Type</label>
                                                             <div class="input-group">
                                                                 <!--<span class="input-group-text"><i class="bi bi-person"></i></span>-->
-                                                                <input type="text" class="form-control" id="itemType2" name="itemType2" placeholder="" value="" required="">
+                                                                <input type="text" class="form-control" id="itemType2" name="itemType2" placeholder="" value="" readonly>
                                                                 <!--<div class="valid-feedback">Looks good!</div>-->
                                                                 <!--<div class="invalid-feedback">Please provide a valid zip.</div>-->
                                                             </div>
@@ -604,8 +606,8 @@
                                                             <label for="subType" class="form-label">Sub Type</label>
                                                             <div class="input-group">
                                                                 <!--<span class="input-group-text"><i class="bi bi-person"></i></span>-->
-                                                                <input type="text" class="form-control" id="subType" name="subType" placeholder="" value="">
-                                                                <input type="hidden" class="form-control" id="itemPKID" name="itemPKID" placeholder="" value="">
+                                                                <input type="text" class="form-control" id="subType" name="subType" placeholder="" value="" readonly>
+                                                                <input type="hidden" class="form-control" id="itemPKID" name="itemPKID" placeholder="" value="" readonly>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -614,7 +616,7 @@
                                                             <label for="itemId" class="form-label">Item ID</label>
                                                             <div class="input-group">
                                                                 <!--<span class="input-group-text"><i class="bi bi-envelope"></i></span>-->
-                                                                <input type="text" class="form-control" id="itemId" name="itemId" placeholder="" value="">
+                                                                <input type="text" class="form-control" id="itemId" name="itemId" placeholder="" value="" readonly>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -623,7 +625,7 @@
                                                             <label for="itemName" class="form-label">Item Name</label>
                                                             <div class="input-group">
                                                                 <!--<span class="input-group-text"><i class="bi bi-telephone"></i></span>-->
-                                                                <input type="text" class="form-control" id="itemName" name="itemName" placeholder="" value="">
+                                                                <input type="text" class="form-control" id="itemName" name="itemName" placeholder="" value="" readonly>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -632,7 +634,7 @@
                                                             <label for="status" class="form-label">Status</label>
                                                             <div class="input-group">
                                                                 <!--<span class="input-group-text"><i class="bi bi-person"></i></span>-->
-                                                                <input type="text" class="form-control" id="status" name="status" placeholder="" value="" disabled>
+                                                                <input type="text" class="form-control" id="status" name="status" placeholder="" value="" readonly>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -641,7 +643,7 @@
                                                             <label for="aluHrs" class="form-label">ALU</label>
                                                             <div class="input-group">
                                                                 <!--<span class="input-group-text"><i class="bi bi-envelope"></i></span>-->
-                                                                <input type="text" class="form-control" id="aluHrs" name="aluHrs" placeholder="" value="" disabled>
+                                                                <input type="text" class="form-control" id="aluHrs" name="aluHrs" placeholder="" value="" readonly>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -650,7 +652,7 @@
                                                             <label for="assemblyId" class="form-label">Assembly ID</label>
                                                             <div class="input-group">
                                                                 <!--<span class="input-group-text"><i class="bi bi-telephone"></i></span>-->
-                                                                <input type="text" class="form-control" id="assemblyId" name="assemblyId" placeholder="" value="">
+                                                                <input type="text" class="form-control" id="assemblyId" name="assemblyId" placeholder="" value="" readonly>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -659,7 +661,7 @@
                                                             <label for="model" class="form-label">Spare Part Model</label>
                                                             <div class="input-group">
                                                                 <!--<span class="input-group-text"><i class="bi bi-telephone"></i></span>-->
-                                                                <input type="text" class="form-control" id="model" name="model" value="">
+                                                                <input type="text" class="form-control" id="model" name="model" value="" readonly>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -669,7 +671,7 @@
                                                             <label for="manufacturer" class="form-label">Spare Part Manufacturer</label>
                                                             <div class="input-group">
                                                                 <!--<span class="input-group-text"><i class="bi bi-person"></i></span>-->
-                                                                <input type="text" class="form-control" id="manufacturer" name="manufacturer" placeholder="" value="">
+                                                                <input type="text" class="form-control" id="manufacturer" name="manufacturer" placeholder="" value="" readonly>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -678,7 +680,7 @@
                                                             <label for="unitCost" class="form-label">Unit cost (USD)</label>
                                                             <div class="input-group">
                                                                 <!--<span class="input-group-text"><i class="bi bi-envelope"></i></span>-->
-                                                                <input type="text" class="form-control" id="unitCost" name="unitCost" placeholder="" value="">
+                                                                <input type="text" class="form-control" id="unitCost" name="unitCost" placeholder="" value="" readonly>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -687,7 +689,7 @@
                                                             <label for="equipmentType" class="form-label">Equipment Type</label>
                                                             <div class="input-group">
                                                                 <!--<span class="input-group-text"><i class="bi bi-person"></i></span>-->
-                                                                <input type="text" class="form-control" id="equipmentType" name="equipmentType" placeholder="" value="">
+                                                                <input type="text" class="form-control" id="equipmentType" name="equipmentType" placeholder="" value="" readonly>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -696,7 +698,7 @@
                                                             <label for="equipmentModel" class="form-label">Equipment Model</label>
                                                             <div class="input-group">
                                                                 <!--<span class="input-group-text"><i class="bi bi-envelope"></i></span>-->
-                                                                <input type="text" class="form-control" id="equipmentModel" name="equipmentModel" value="">
+                                                                <input type="text" class="form-control" id="equipmentModel" name="equipmentModel" value="" readonly>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -716,7 +718,7 @@
                                                             <div class="input-group">
                                                                 <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
                                                                 <input type="text" class="form-control" id="minQty" name="minQty"
-                                                                       placeholder="" value="">
+                                                                       placeholder="" value="" readonly>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -726,7 +728,7 @@
                                                             <div class="input-group">
                                                                 <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
                                                                 <input type="text" class="form-control" id="maxQty" name="maxQty"
-                                                                       placeholder="" value="">
+                                                                       placeholder="" value="" readonly>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -736,7 +738,7 @@
                                                             <div class="input-group">
                                                                 <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
                                                                 <input type="text" class="form-control" id="rack" name="rack"
-                                                                       placeholder="" value="">
+                                                                       placeholder="" value="" readonly>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -746,7 +748,7 @@
                                                             <div class="input-group">
                                                                 <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
                                                                 <input type="text" class="form-control" id="shelf" name="shelf"
-                                                                       placeholder="" value="">
+                                                                       placeholder="" value="" readonly>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -756,7 +758,7 @@
                                                             <div class="input-group">
                                                                 <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
                                                                 <input type="text" class="form-control" id="stressType" name="stressType"
-                                                                       placeholder="" value="">
+                                                                       placeholder="" value="" readonly>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -766,7 +768,7 @@
                                                             <div class="input-group">
                                                                 <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
                                                                 <input type="text" class="form-control" id="onHandQty" name="onHandQty"
-                                                                       placeholder="" value="" disabled>
+                                                                       placeholder="" value="" readonly>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -776,7 +778,7 @@
                                                             <div class="input-group">
                                                                 <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
                                                                 <input type="text" class="form-control" id="productionQty" name="productionQty"
-                                                                       placeholder="" value="" disabled>
+                                                                       placeholder="" value="" readonly>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -786,7 +788,7 @@
                                                             <div class="input-group">
                                                                 <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
                                                                 <input type="text" class="form-control" id="productionStagingQty" name="productionStagingQty"
-                                                                       placeholder="" value="" disabled>
+                                                                       placeholder="" value="" readonly>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -796,7 +798,7 @@
                                                             <div class="input-group">
                                                                 <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
                                                                 <input type="text" class="form-control" id="repairQty" name="repairQty"
-                                                                       placeholder="" value="" disabled>
+                                                                       placeholder="" value="" readonly>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -806,7 +808,7 @@
                                                             <div class="input-group">
                                                                 <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
                                                                 <input type="text" class="form-control" id="quarantineQty" name="quarantineQty"
-                                                                       placeholder="" value="" disabled>
+                                                                       placeholder="" value="" readonly>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -816,7 +818,7 @@
                                                             <div class="input-group">
                                                                 <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
                                                                 <input type="text" class="form-control" id="externalCleanQty" name="externalCleanQty"
-                                                                       placeholder="" value="" disabled>
+                                                                       placeholder="" value="" readonly>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -826,7 +828,7 @@
                                                             <div class="input-group">
                                                                 <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
                                                                 <input type="text" class="form-control" id="externalRecleanQty" name="externalRecleanQty"
-                                                                       placeholder="" value="" disabled>
+                                                                       placeholder="" value="" readonly>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -836,7 +838,7 @@
                                                             <div class="input-group">
                                                                 <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
                                                                 <input type="text" class="form-control" id="internalCleanQty" name="internalCleanQty"
-                                                                       placeholder="" value="" disabled>
+                                                                       placeholder="" value="" readonly>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -846,7 +848,7 @@
                                                             <div class="input-group">
                                                                 <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
                                                                 <input type="text" class="form-control" id="internalRecleanQty" name="internalRecleanQty"
-                                                                       placeholder="" value="" disabled>
+                                                                       placeholder="" value="" readonly>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -856,7 +858,7 @@
                                                             <div class="input-group">
                                                                 <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
                                                                 <input type="text" class="form-control" id="otherQty" name="otherQty"
-                                                                       placeholder="" value="" disabled>
+                                                                       placeholder="" value="" readonly>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -866,7 +868,7 @@
                                                             <div class="input-group">
                                                                 <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
                                                                 <input type="text" class="form-control" id="vendorQty" name="vendorQty"
-                                                                       placeholder="" value="" disabled>
+                                                                       placeholder="" value="" readonly>
                                                             </div>
                                                         </div>
                                                     </div><div class="visually-hidden col-xl-2 col-sm-12 col-12">
@@ -875,7 +877,7 @@
                                                             <div class="input-group">
                                                                 <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
                                                                 <input type="text" class="form-control" id="otherOnsemiQty" name="otherOnsemiQty"
-                                                                       placeholder="" value="" disabled>
+                                                                       placeholder="" value="" readonly>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -885,7 +887,7 @@
                                                             <div class="input-group">
                                                                 <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
                                                                 <input type="text" class="form-control" id="storageFactoryQty" name="storageFactoryQty"
-                                                                       placeholder="" value="" disabled>
+                                                                       placeholder="" value="" readonly>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -895,7 +897,7 @@
                                                             <div class="input-group">
                                                                 <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
                                                                 <input type="text" class="form-control" id="totalQty" name="totalQty"
-                                                                       placeholder="" value="" disabled>
+                                                                       placeholder="" value="" readonly>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -913,7 +915,7 @@
                                                             <div class="input-group">
                                                                 <span class="input-group-text"><i class="bi bi-pencil"></i></span>
                                                                 <textarea class="form-control" id="remarks" name="remarks" placeholder="Enter Message"
-                                                                          rows="3"></textarea>
+                                                                          rows="3" readonly></textarea>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -921,7 +923,7 @@
                                                     <!-- Form actions start -->
                                                     <div class="d-flex justify-content-end gap-2">
                                                         <!--<button type="button" class="btn btn-light">Cancel</button>-->
-                                                        <button type="submit" class="btn btn-primary">Update</button>
+                                                        <!--                                                        <button type="submit" class="btn btn-primary">Update</button>-->
                                                     </div>
                                                     <!-- Form actions end -->
                                                 </form>
@@ -941,7 +943,7 @@
                                                             <label for="itemType2" class="form-label">Item Type</label>
                                                             <div class="input-group">
                                                                 <!--<span class="input-group-text"><i class="bi bi-person"></i></span>-->
-                                                                <input type="text" class="form-control" id="itemType2" name="itemType2" placeholder="" value="" required="">
+                                                                <input type="text" class="form-control" id="itemType2" name="itemType2" placeholder="" value="" readonly>
                                                                 <!--<div class="valid-feedback">Looks good!</div>-->
                                                                 <!--<div class="invalid-feedback">Please provide a valid zip.</div>-->
                                                             </div>
@@ -952,8 +954,8 @@
                                                             <label for="subType" class="form-label">Sub Type</label>
                                                             <div class="input-group">
                                                                 <!--<span class="input-group-text"><i class="bi bi-person"></i></span>-->
-                                                                <input type="text" class="form-control" id="subType" name="subType" placeholder="" value="">
-                                                                <input type="hidden" class="form-control" id="itemPKID" name="itemPKID" placeholder="" value="">
+                                                                <input type="text" class="form-control" id="subType" name="subType" placeholder="" value="" readonly>
+                                                                <input type="hidden" class="form-control" id="itemPKID" name="itemPKID" placeholder="" value="" readonly>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -962,7 +964,7 @@
                                                             <label for="itemId" class="form-label">Item ID</label>
                                                             <div class="input-group">
                                                                 <!--<span class="input-group-text"><i class="bi bi-envelope"></i></span>-->
-                                                                <input type="text" class="form-control" id="itemId" name="itemId" placeholder="" value="">
+                                                                <input type="text" class="form-control" id="itemId" name="itemId" placeholder="" value="" readonly>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -971,7 +973,7 @@
                                                             <label for="itemName" class="form-label">Item Name</label>
                                                             <div class="input-group">
                                                                 <!--<span class="input-group-text"><i class="bi bi-telephone"></i></span>-->
-                                                                <input type="text" class="form-control" id="itemName" name="itemName" placeholder="" value="">
+                                                                <input type="text" class="form-control" id="itemName" name="itemName" placeholder="" value="" readonly>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -980,7 +982,7 @@
                                                             <label for="status" class="form-label">Status</label>
                                                             <div class="input-group">
                                                                 <!--<span class="input-group-text"><i class="bi bi-person"></i></span>-->
-                                                                <input type="text" class="form-control" id="status" name="status" placeholder="" value="" disabled>
+                                                                <input type="text" class="form-control" id="status" name="status" placeholder="" value="" readonly>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -998,21 +1000,21 @@
                                                             </div>
                                                         </div>
                                                     </div>
-                                                    <div class="form-group col-xl-4 col-sm-12 col-12">
-                                                        <div class="mb-3">
-                                                            <label for="assemblyId" class="form-label">test</label>
-                                                            <div class="input-group">
-                                                                <!--<span class="input-group-text"><i class="bi bi-telephone"></i></span>-->
-                                                                <input type="text" class="form-control" id="testItem" name="testItem" placeholder="" value="">
-                                                            </div>
-                                                        </div>
-                                                    </div>
+                                                    <!--                                                    <div class="form-group col-xl-4 col-sm-12 col-12">
+                                                                                                            <div class="mb-3">
+                                                                                                                <label for="assemblyId" class="form-label">test</label>
+                                                                                                                <div class="input-group">
+                                                                                                                    <span class="input-group-text"><i class="bi bi-telephone"></i></span>
+                                                                                                                    <input type="text" class="form-control" id="testItem" name="testItem" placeholder="" value="" readonly>
+                                                                                                                </div>
+                                                                                                            </div>
+                                                                                                        </div>-->
                                                     <div class="visually-hidden col-xl-4 col-sm-12 col-12">
                                                         <div class="mb-3">
                                                             <label for="assemblyId" class="form-label">Assembly ID</label>
                                                             <div class="input-group">
                                                                 <!--<span class="input-group-text"><i class="bi bi-telephone"></i></span>-->
-                                                                <input type="text" class="form-control" id="assemblyId" name="assemblyId" placeholder="" value="">
+                                                                <input type="text" class="form-control" id="assemblyId" name="assemblyId" placeholder="" value="" readonly>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -1021,7 +1023,7 @@
                                                             <label for="model" class="form-label">Spare Part Model</label>
                                                             <div class="input-group">
                                                                 <!--<span class="input-group-text"><i class="bi bi-telephone"></i></span>-->
-                                                                <input type="text" class="form-control" id="model" name="model" value="">
+                                                                <input type="text" class="form-control" id="model" name="model" value="" readonly>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -1031,7 +1033,7 @@
                                                             <label for="manufacturer" class="form-label">Spare Part Manufacturer</label>
                                                             <div class="input-group">
                                                                 <!--<span class="input-group-text"><i class="bi bi-person"></i></span>-->
-                                                                <input type="text" class="form-control" id="manufacturer" name="manufacturer" placeholder="" value="">
+                                                                <input type="text" class="form-control" id="manufacturer" name="manufacturer" placeholder="" value="" readonly>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -1040,7 +1042,7 @@
                                                             <label for="unitCost" class="form-label">Unit cost (USD)</label>
                                                             <div class="input-group">
                                                                 <!--<span class="input-group-text"><i class="bi bi-envelope"></i></span>-->
-                                                                <input type="text" class="form-control" id="unitCost" name="unitCost" placeholder="" value="">
+                                                                <input type="text" class="form-control" id="unitCost" name="unitCost" placeholder="" value="" readonly>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -1049,7 +1051,7 @@
                                                             <label for="equipmentType" class="form-label">Equipment Type</label>
                                                             <div class="input-group">
                                                                 <!--<span class="input-group-text"><i class="bi bi-person"></i></span>-->
-                                                                <input type="text" class="form-control" id="equipmentType" name="equipmentType" placeholder="" value="">
+                                                                <input type="text" class="form-control" id="equipmentType" name="equipmentType" placeholder="" value="" readonly>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -1058,7 +1060,7 @@
                                                             <label for="equipmentModel" class="form-label">Equipment Model</label>
                                                             <div class="input-group">
                                                                 <!--<span class="input-group-text"><i class="bi bi-envelope"></i></span>-->
-                                                                <input type="text" class="form-control" id="equipmentModel" name="equipmentModel" value="">
+                                                                <input type="text" class="form-control" id="equipmentModel" name="equipmentModel" value="" readonly>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -1078,7 +1080,7 @@
                                                             <div class="input-group">
                                                                 <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
                                                                 <input type="text" class="form-control" id="minQty" name="minQty"
-                                                                       placeholder="" value="">
+                                                                       placeholder="" value="" readonly>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -1088,7 +1090,7 @@
                                                             <div class="input-group">
                                                                 <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
                                                                 <input type="text" class="form-control" id="maxQty" name="maxQty"
-                                                                       placeholder="" value="">
+                                                                       placeholder="" value="" readonly>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -1098,7 +1100,7 @@
                                                             <div class="input-group">
                                                                 <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
                                                                 <input type="text" class="form-control" id="rack" name="rack"
-                                                                       placeholder="" value="">
+                                                                       placeholder="" value="" readonly>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -1108,7 +1110,7 @@
                                                             <div class="input-group">
                                                                 <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
                                                                 <input type="text" class="form-control" id="shelf" name="shelf"
-                                                                       placeholder="" value="">
+                                                                       placeholder="" value="" readonly>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -1118,7 +1120,7 @@
                                                             <div class="input-group">
                                                                 <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
                                                                 <input type="text" class="form-control" id="stressType" name="stressType"
-                                                                       placeholder="" value="">
+                                                                       placeholder="" value="" readonly>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -1128,7 +1130,7 @@
                                                             <div class="input-group">
                                                                 <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
                                                                 <input type="text" class="form-control" id="onHandQty" name="onHandQty"
-                                                                       placeholder="" value="" disabled>
+                                                                       placeholder="" value="" readonly>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -1138,7 +1140,7 @@
                                                             <div class="input-group">
                                                                 <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
                                                                 <input type="text" class="form-control" id="productionQty" name="productionQty"
-                                                                       placeholder="" value="" disabled>
+                                                                       placeholder="" value="" readonly>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -1148,7 +1150,7 @@
                                                             <div class="input-group">
                                                                 <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
                                                                 <input type="text" class="form-control" id="productionStagingQty" name="productionStagingQty"
-                                                                       placeholder="" value="" disabled>
+                                                                       placeholder="" value="" readonly>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -1158,7 +1160,7 @@
                                                             <div class="input-group">
                                                                 <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
                                                                 <input type="text" class="form-control" id="repairQty" name="repairQty"
-                                                                       placeholder="" value="" disabled>
+                                                                       placeholder="" value="" readonly>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -1168,7 +1170,7 @@
                                                             <div class="input-group">
                                                                 <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
                                                                 <input type="text" class="form-control" id="quarantineQty" name="quarantineQty"
-                                                                       placeholder="" value="" disabled>
+                                                                       placeholder="" value="" readonly>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -1178,7 +1180,7 @@
                                                             <div class="input-group">
                                                                 <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
                                                                 <input type="text" class="form-control" id="externalCleanQty" name="externalCleanQty"
-                                                                       placeholder="" value="" disabled>
+                                                                       placeholder="" value="" readonly>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -1188,7 +1190,7 @@
                                                             <div class="input-group">
                                                                 <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
                                                                 <input type="text" class="form-control" id="externalRecleanQty" name="externalRecleanQty"
-                                                                       placeholder="" value="" disabled>
+                                                                       placeholder="" value="" readonly>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -1198,7 +1200,7 @@
                                                             <div class="input-group">
                                                                 <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
                                                                 <input type="text" class="form-control" id="internalCleanQty" name="internalCleanQty"
-                                                                       placeholder="" value="" disabled>
+                                                                       placeholder="" value="" readonly>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -1208,7 +1210,7 @@
                                                             <div class="input-group">
                                                                 <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
                                                                 <input type="text" class="form-control" id="internalRecleanQty" name="internalRecleanQty"
-                                                                       placeholder="" value="" disabled>
+                                                                       placeholder="" value="" readonly>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -1218,7 +1220,7 @@
                                                             <div class="input-group">
                                                                 <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
                                                                 <input type="text" class="form-control" id="otherQty" name="otherQty"
-                                                                       placeholder="" value="" disabled>
+                                                                       placeholder="" value="" readonly>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -1228,7 +1230,7 @@
                                                             <div class="input-group">
                                                                 <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
                                                                 <input type="text" class="form-control" id="vendorQty" name="vendorQty"
-                                                                       placeholder="" value="" disabled>
+                                                                       placeholder="" value="" readonly>
                                                             </div>
                                                         </div>
                                                     </div><div class="col-xl-2 col-sm-12 col-12">
@@ -1237,7 +1239,7 @@
                                                             <div class="input-group">
                                                                 <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
                                                                 <input type="text" class="form-control" id="otherOnsemiQty" name="otherOnsemiQty"
-                                                                       placeholder="" value="" disabled>
+                                                                       placeholder="" value="" readonly>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -1247,7 +1249,7 @@
                                                             <div class="input-group">
                                                                 <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
                                                                 <input type="text" class="form-control" id="storageFactoryQty" name="storageFactoryQty"
-                                                                       placeholder="" value="" disabled>
+                                                                       placeholder="" value="" readonly>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -1257,7 +1259,7 @@
                                                             <div class="input-group">
                                                                 <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
                                                                 <input type="text" class="form-control" id="totalQty" name="totalQty"
-                                                                       placeholder="" value="" disabled>
+                                                                       placeholder="" value="" readonly>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -1275,7 +1277,7 @@
                                                             <div class="input-group">
                                                                 <span class="input-group-text"><i class="bi bi-pencil"></i></span>
                                                                 <textarea class="form-control" id="remarks" name="remarks" placeholder="Enter Message"
-                                                                          rows="3"></textarea>
+                                                                          rows="3" readonly></textarea>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -1283,7 +1285,7 @@
                                                     <!-- Form actions start -->
                                                     <div class="d-flex justify-content-end gap-2">
                                                         <!--<button type="button" class="btn btn-light">Cancel</button>-->
-                                                        <button type="submit" class="btn btn-primary">Update</button>
+                                                        <!--                                                        <button type="submit" class="btn btn-primary">Update</button>-->
                                                     </div>
                                                     <!-- Form actions end -->
                                                 </form>
@@ -1303,7 +1305,7 @@
                                                             <label for="itemType2" class="form-label">Item Type</label>
                                                             <div class="input-group">
                                                                 <!--<span class="input-group-text"><i class="bi bi-person"></i></span>-->
-                                                                <input type="text" class="form-control" id="itemType2" name="itemType2" placeholder="" value="" required="">
+                                                                <input type="text" class="form-control" id="itemType2" name="itemType2" placeholder="" value="" readonly>
                                                                 <!--<div class="valid-feedback">Looks good!</div>-->
                                                                 <!--<div class="invalid-feedback">Please provide a valid zip.</div>-->
                                                             </div>
@@ -1314,8 +1316,8 @@
                                                             <label for="subType" class="form-label">Sub Type</label>
                                                             <div class="input-group">
                                                                 <!--<span class="input-group-text"><i class="bi bi-person"></i></span>-->
-                                                                <input type="text" class="form-control" id="subType" name="subType" placeholder="" value="">
-                                                                <input type="hidden" class="form-control" id="itemPKID" name="itemPKID" placeholder="" value="">
+                                                                <input type="text" class="form-control" id="subType" name="subType" placeholder="" value="" readonly>
+                                                                <input type="hidden" class="form-control" id="itemPKID" name="itemPKID" placeholder="" value="" readonly>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -1324,7 +1326,7 @@
                                                             <label for="itemId" class="form-label">Item ID</label>
                                                             <div class="input-group">
                                                                 <!--<span class="input-group-text"><i class="bi bi-envelope"></i></span>-->
-                                                                <input type="text" class="form-control" id="itemId" name="itemId" placeholder="" value="">
+                                                                <input type="text" class="form-control" id="itemId" name="itemId" placeholder="" value="" readonly>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -1333,7 +1335,7 @@
                                                             <label for="itemName" class="form-label">Item Name</label>
                                                             <div class="input-group">
                                                                 <!--<span class="input-group-text"><i class="bi bi-telephone"></i></span>-->
-                                                                <input type="text" class="form-control" id="itemName" name="itemName" placeholder="" value="">
+                                                                <input type="text" class="form-control" id="itemName" name="itemName" placeholder="" value="" readonly>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -1342,7 +1344,7 @@
                                                             <label for="status" class="form-label">Status</label>
                                                             <div class="input-group">
                                                                 <!--<span class="input-group-text"><i class="bi bi-person"></i></span>-->
-                                                                <input type="text" class="form-control" id="status" name="status" placeholder="" value="" disabled>
+                                                                <input type="text" class="form-control" id="status" name="status" placeholder="" value="" readonly>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -1365,7 +1367,7 @@
                                                             <label for="assemblyId" class="form-label">Assembly ID</label>
                                                             <div class="input-group">
                                                                 <!--<span class="input-group-text"><i class="bi bi-telephone"></i></span>-->
-                                                                <input type="text" class="form-control" id="assemblyId" name="assemblyId" placeholder="" value="">
+                                                                <input type="text" class="form-control" id="assemblyId" name="assemblyId" placeholder="" value="" readonly>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -1374,7 +1376,7 @@
                                                             <label for="model" class="form-label">Spare Part Model</label>
                                                             <div class="input-group">
                                                                 <!--<span class="input-group-text"><i class="bi bi-telephone"></i></span>-->
-                                                                <input type="text" class="form-control" id="model" name="model" value="">
+                                                                <input type="text" class="form-control" id="model" name="model" value="" readonly>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -1384,7 +1386,7 @@
                                                             <label for="manufacturer" class="form-label">Spare Part Manufacturer</label>
                                                             <div class="input-group">
                                                                 <!--<span class="input-group-text"><i class="bi bi-person"></i></span>-->
-                                                                <input type="text" class="form-control" id="manufacturer" name="manufacturer" placeholder="" value="">
+                                                                <input type="text" class="form-control" id="manufacturer" name="manufacturer" placeholder="" value="" readonly>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -1393,7 +1395,7 @@
                                                             <label for="unitCost" class="form-label">Unit cost (USD)</label>
                                                             <div class="input-group">
                                                                 <!--<span class="input-group-text"><i class="bi bi-envelope"></i></span>-->
-                                                                <input type="text" class="form-control" id="unitCost" name="unitCost" placeholder="" value="">
+                                                                <input type="text" class="form-control" id="unitCost" name="unitCost" placeholder="" value="" readonly>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -1402,7 +1404,7 @@
                                                             <label for="equipmentType" class="form-label">Equipment Type</label>
                                                             <div class="input-group">
                                                                 <!--<span class="input-group-text"><i class="bi bi-person"></i></span>-->
-                                                                <input type="text" class="form-control" id="equipmentType" name="equipmentType" placeholder="" value="">
+                                                                <input type="text" class="form-control" id="equipmentType" name="equipmentType" placeholder="" value="" readonly>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -1411,7 +1413,7 @@
                                                             <label for="equipmentModel" class="form-label">Equipment Model</label>
                                                             <div class="input-group">
                                                                 <!--<span class="input-group-text"><i class="bi bi-envelope"></i></span>-->
-                                                                <input type="text" class="form-control" id="equipmentModel" name="equipmentModel" value="">
+                                                                <input type="text" class="form-control" id="equipmentModel" name="equipmentModel" value="" readonly>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -1431,7 +1433,7 @@
                                                             <div class="input-group">
                                                                 <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
                                                                 <input type="text" class="form-control" id="minQty" name="minQty"
-                                                                       placeholder="" value="">
+                                                                       placeholder="" value="" readonly>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -1441,7 +1443,7 @@
                                                             <div class="input-group">
                                                                 <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
                                                                 <input type="text" class="form-control" id="maxQty" name="maxQty"
-                                                                       placeholder="" value="">
+                                                                       placeholder="" value="" readonly>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -1451,7 +1453,7 @@
                                                             <div class="input-group">
                                                                 <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
                                                                 <input type="text" class="form-control" id="rack" name="rack"
-                                                                       placeholder="" value="">
+                                                                       placeholder="" value="" readonly>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -1461,7 +1463,7 @@
                                                             <div class="input-group">
                                                                 <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
                                                                 <input type="text" class="form-control" id="shelf" name="shelf"
-                                                                       placeholder="" value="">
+                                                                       placeholder="" value="" readonly>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -1471,7 +1473,7 @@
                                                             <div class="input-group">
                                                                 <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
                                                                 <input type="text" class="form-control" id="stressType" name="stressType"
-                                                                       placeholder="" value="">
+                                                                       placeholder="" value="" readonly>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -1481,7 +1483,7 @@
                                                             <div class="input-group">
                                                                 <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
                                                                 <input type="text" class="form-control" id="onHandQty" name="onHandQty"
-                                                                       placeholder="" value="" disabled>
+                                                                       placeholder="" value="" readonly>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -1491,7 +1493,7 @@
                                                             <div class="input-group">
                                                                 <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
                                                                 <input type="text" class="form-control" id="productionQty" name="productionQty"
-                                                                       placeholder="" value="" disabled>
+                                                                       placeholder="" value="" readonly>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -1501,7 +1503,7 @@
                                                             <div class="input-group">
                                                                 <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
                                                                 <input type="text" class="form-control" id="productionStagingQty" name="productionStagingQty"
-                                                                       placeholder="" value="" disabled>
+                                                                       placeholder="" value="" readonly>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -1511,7 +1513,7 @@
                                                             <div class="input-group">
                                                                 <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
                                                                 <input type="text" class="form-control" id="repairQty" name="repairQty"
-                                                                       placeholder="" value="" disabled>
+                                                                       placeholder="" value="" readonly>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -1521,7 +1523,7 @@
                                                             <div class="input-group">
                                                                 <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
                                                                 <input type="text" class="form-control" id="quarantineQty" name="quarantineQty"
-                                                                       placeholder="" value="" disabled>
+                                                                       placeholder="" value="" readonly>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -1531,7 +1533,7 @@
                                                             <div class="input-group">
                                                                 <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
                                                                 <input type="text" class="form-control" id="externalCleanQty" name="externalCleanQty"
-                                                                       placeholder="" value="" disabled>
+                                                                       placeholder="" value="" readonly>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -1541,7 +1543,7 @@
                                                             <div class="input-group">
                                                                 <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
                                                                 <input type="text" class="form-control" id="externalRecleanQty" name="externalRecleanQty"
-                                                                       placeholder="" value="" disabled>
+                                                                       placeholder="" value="" readonly>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -1551,7 +1553,7 @@
                                                             <div class="input-group">
                                                                 <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
                                                                 <input type="text" class="form-control" id="internalCleanQty" name="internalCleanQty"
-                                                                       placeholder="" value="" disabled>
+                                                                       placeholder="" value="" readonly>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -1561,7 +1563,7 @@
                                                             <div class="input-group">
                                                                 <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
                                                                 <input type="text" class="form-control" id="internalRecleanQty" name="internalRecleanQty"
-                                                                       placeholder="" value="" disabled>
+                                                                       placeholder="" value="" readonly>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -1571,7 +1573,7 @@
                                                             <div class="input-group">
                                                                 <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
                                                                 <input type="text" class="form-control" id="otherQty" name="otherQty"
-                                                                       placeholder="" value="" disabled>
+                                                                       placeholder="" value="" readonly>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -1581,7 +1583,7 @@
                                                             <div class="input-group">
                                                                 <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
                                                                 <input type="text" class="form-control" id="vendorQty" name="vendorQty"
-                                                                       placeholder="" value="" disabled>
+                                                                       placeholder="" value="" readonly>
                                                             </div>
                                                         </div>
                                                     </div><div class="col-xl-2 col-sm-12 col-12">
@@ -1590,7 +1592,7 @@
                                                             <div class="input-group">
                                                                 <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
                                                                 <input type="text" class="form-control" id="otherOnsemiQty" name="otherOnsemiQty"
-                                                                       placeholder="" value="" disabled>
+                                                                       placeholder="" value="" readonly>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -1600,7 +1602,7 @@
                                                             <div class="input-group">
                                                                 <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
                                                                 <input type="text" class="form-control" id="storageFactoryQty" name="storageFactoryQty"
-                                                                       placeholder="" value="" disabled>
+                                                                       placeholder="" value="" readonly>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -1610,7 +1612,7 @@
                                                             <div class="input-group">
                                                                 <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
                                                                 <input type="text" class="form-control" id="totalQty" name="totalQty"
-                                                                       placeholder="" value="" disabled>
+                                                                       placeholder="" value="" readonly>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -1628,7 +1630,7 @@
                                                             <div class="input-group">
                                                                 <span class="input-group-text"><i class="bi bi-pencil"></i></span>
                                                                 <textarea class="form-control" id="remarks" name="remarks" placeholder="Enter Message"
-                                                                          rows="3"></textarea>
+                                                                          rows="3" readonly></textarea>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -1636,7 +1638,7 @@
                                                     <!-- Form actions start -->
                                                     <div class="d-flex justify-content-end gap-2">
                                                         <!--<button type="button" class="btn btn-light">Cancel</button>-->
-                                                        <button type="submit" class="btn btn-primary">Update</button>
+                                                        <!--                                                        <button type="submit" class="btn btn-primary">Update</button>-->
                                                     </div>
                                                     <!-- Form actions end -->
                                                 </form>
@@ -1656,7 +1658,7 @@
                                                             <label for="itemType2" class="form-label">Item Type</label>
                                                             <div class="input-group">
                                                                 <!--<span class="input-group-text"><i class="bi bi-person"></i></span>-->
-                                                                <input type="text" class="form-control" id="itemType2" name="itemType2" placeholder="" value="" required="">
+                                                                <input type="text" class="form-control" id="itemType2" name="itemType2" placeholder="" value="" readonly>
                                                                 <!--<div class="valid-feedback">Looks good!</div>-->
                                                                 <!--<div class="invalid-feedback">Please provide a valid zip.</div>-->
                                                             </div>
@@ -1667,8 +1669,8 @@
                                                             <label for="subType" class="form-label">Sub Type</label>
                                                             <div class="input-group">
                                                                 <!--<span class="input-group-text"><i class="bi bi-person"></i></span>-->
-                                                                <input type="text" class="form-control" id="subType" name="subType" placeholder="" value="">
-                                                                <input type="hidden" class="form-control" id="itemPKID" name="itemPKID" placeholder="" value="">
+                                                                <input type="text" class="form-control" id="subType" name="subType" placeholder="" value="" readonly>
+                                                                <input type="hidden" class="form-control" id="itemPKID" name="itemPKID" placeholder="" value="" readonly>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -1677,7 +1679,7 @@
                                                             <label for="itemId" class="form-label">Item ID</label>
                                                             <div class="input-group">
                                                                 <!--<span class="input-group-text"><i class="bi bi-envelope"></i></span>-->
-                                                                <input type="text" class="form-control" id="itemId" name="itemId" placeholder="" value="">
+                                                                <input type="text" class="form-control" id="itemId" name="itemId" placeholder="" value="" readonly>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -1686,7 +1688,7 @@
                                                             <label for="itemName" class="form-label">Item Name</label>
                                                             <div class="input-group">
                                                                 <!--<span class="input-group-text"><i class="bi bi-telephone"></i></span>-->
-                                                                <input type="text" class="form-control" id="itemName" name="itemName" placeholder="" value="">
+                                                                <input type="text" class="form-control" id="itemName" name="itemName" placeholder="" value="" readonly>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -1695,7 +1697,7 @@
                                                             <label for="status" class="form-label">Status</label>
                                                             <div class="input-group">
                                                                 <!--<span class="input-group-text"><i class="bi bi-person"></i></span>-->
-                                                                <input type="text" class="form-control" id="status" name="status" placeholder="" value="" disabled>
+                                                                <input type="text" class="form-control" id="status" name="status" placeholder="" value="" readonly>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -1704,7 +1706,7 @@
                                                             <label for="aluHrs" class="form-label">ALU</label>
                                                             <div class="input-group">
                                                                 <!--<span class="input-group-text"><i class="bi bi-envelope"></i></span>-->
-                                                                <input type="text" class="form-control" id="aluHrs" name="aluHrs" placeholder="" value="" disabled>
+                                                                <input type="text" class="form-control" id="aluHrs" name="aluHrs" placeholder="" value="" readonly>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -1713,7 +1715,7 @@
                                                             <label for="assemblyId" class="form-label">Assembly ID</label>
                                                             <div class="input-group">
                                                                 <!--<span class="input-group-text"><i class="bi bi-telephone"></i></span>-->
-                                                                <input type="text" class="form-control" id="assemblyId" name="assemblyId" placeholder="" value="">
+                                                                <input type="text" class="form-control" id="assemblyId" name="assemblyId" placeholder="" value="" readonly>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -1722,7 +1724,7 @@
                                                             <label for="model" class="form-label">Spare Part Model</label>
                                                             <div class="input-group">
                                                                 <!--<span class="input-group-text"><i class="bi bi-telephone"></i></span>-->
-                                                                <input type="text" class="form-control" id="model" name="model" value="">
+                                                                <input type="text" class="form-control" id="model" name="model" value="" readonly>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -1732,7 +1734,7 @@
                                                             <label for="manufacturer" class="form-label">Spare Part Manufacturer</label>
                                                             <div class="input-group">
                                                                 <!--<span class="input-group-text"><i class="bi bi-person"></i></span>-->
-                                                                <input type="text" class="form-control" id="manufacturer" name="manufacturer" placeholder="" value="">
+                                                                <input type="text" class="form-control" id="manufacturer" name="manufacturer" placeholder="" value="" readonly>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -1741,7 +1743,7 @@
                                                             <label for="unitCost" class="form-label">Unit cost (USD)</label>
                                                             <div class="input-group">
                                                                 <!--<span class="input-group-text"><i class="bi bi-envelope"></i></span>-->
-                                                                <input type="text" class="form-control" id="unitCost" name="unitCost" placeholder="" value="">
+                                                                <input type="text" class="form-control" id="unitCost" name="unitCost" placeholder="" value="" readonly>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -1750,7 +1752,7 @@
                                                             <label for="equipmentType" class="form-label">Equipment Type</label>
                                                             <div class="input-group">
                                                                 <!--<span class="input-group-text"><i class="bi bi-person"></i></span>-->
-                                                                <input type="text" class="form-control" id="equipmentType" name="equipmentType" placeholder="" value="">
+                                                                <input type="text" class="form-control" id="equipmentType" name="equipmentType" placeholder="" value="" readonly>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -1759,7 +1761,7 @@
                                                             <label for="equipmentModel" class="form-label">Equipment Model</label>
                                                             <div class="input-group">
                                                                 <!--<span class="input-group-text"><i class="bi bi-envelope"></i></span>-->
-                                                                <input type="text" class="form-control" id="equipmentModel" name="equipmentModel" value="">
+                                                                <input type="text" class="form-control" id="equipmentModel" name="equipmentModel" value="" readonly>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -1779,7 +1781,7 @@
                                                             <div class="input-group">
                                                                 <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
                                                                 <input type="text" class="form-control" id="minQty" name="minQty"
-                                                                       placeholder="" value="">
+                                                                       placeholder="" value="" readonly>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -1789,7 +1791,7 @@
                                                             <div class="input-group">
                                                                 <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
                                                                 <input type="text" class="form-control" id="maxQty" name="maxQty"
-                                                                       placeholder="" value="">
+                                                                       placeholder="" value="" readonly>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -1799,7 +1801,7 @@
                                                             <div class="input-group">
                                                                 <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
                                                                 <input type="text" class="form-control" id="rack" name="rack"
-                                                                       placeholder="" value="">
+                                                                       placeholder="" value="" readonly>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -1809,7 +1811,7 @@
                                                             <div class="input-group">
                                                                 <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
                                                                 <input type="text" class="form-control" id="shelf" name="shelf"
-                                                                       placeholder="" value="">
+                                                                       placeholder="" value="" readonly>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -1819,7 +1821,7 @@
                                                             <div class="input-group">
                                                                 <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
                                                                 <input type="text" class="form-control" id="stressType" name="stressType"
-                                                                       placeholder="" value="">
+                                                                       placeholder="" value="" readonly>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -1829,7 +1831,7 @@
                                                             <div class="input-group">
                                                                 <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
                                                                 <input type="text" class="form-control" id="onHandQty" name="onHandQty"
-                                                                       placeholder="" value="" disabled>
+                                                                       placeholder="" value="" readonly>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -1839,7 +1841,7 @@
                                                             <div class="input-group">
                                                                 <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
                                                                 <input type="text" class="form-control" id="productionQty" name="productionQty"
-                                                                       placeholder="" value="" disabled>
+                                                                       placeholder="" value="" readonly>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -1849,7 +1851,7 @@
                                                             <div class="input-group">
                                                                 <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
                                                                 <input type="text" class="form-control" id="productionStagingQty" name="productionStagingQty"
-                                                                       placeholder="" value="" disabled>
+                                                                       placeholder="" value="" readonly>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -1859,7 +1861,7 @@
                                                             <div class="input-group">
                                                                 <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
                                                                 <input type="text" class="form-control" id="repairQty" name="repairQty"
-                                                                       placeholder="" value="" disabled>
+                                                                       placeholder="" value="" readonly>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -1869,7 +1871,7 @@
                                                             <div class="input-group">
                                                                 <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
                                                                 <input type="text" class="form-control" id="quarantineQty" name="quarantineQty"
-                                                                       placeholder="" value="" disabled>
+                                                                       placeholder="" value="" readonly>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -1879,7 +1881,7 @@
                                                             <div class="input-group">
                                                                 <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
                                                                 <input type="text" class="form-control" id="externalCleanQty" name="externalCleanQty"
-                                                                       placeholder="" value="" disabled>
+                                                                       placeholder="" value="" readonly>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -1889,7 +1891,7 @@
                                                             <div class="input-group">
                                                                 <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
                                                                 <input type="text" class="form-control" id="externalRecleanQty" name="externalRecleanQty"
-                                                                       placeholder="" value="" disabled>
+                                                                       placeholder="" value="" readonly>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -1899,7 +1901,7 @@
                                                             <div class="input-group">
                                                                 <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
                                                                 <input type="text" class="form-control" id="internalCleanQty" name="internalCleanQty"
-                                                                       placeholder="" value="" disabled>
+                                                                       placeholder="" value="" readonly>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -1909,7 +1911,7 @@
                                                             <div class="input-group">
                                                                 <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
                                                                 <input type="text" class="form-control" id="internalRecleanQty" name="internalRecleanQty"
-                                                                       placeholder="" value="" disabled>
+                                                                       placeholder="" value="" readonly>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -1919,7 +1921,7 @@
                                                             <div class="input-group">
                                                                 <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
                                                                 <input type="text" class="form-control" id="otherQty" name="otherQty"
-                                                                       placeholder="" value="" disabled>
+                                                                       placeholder="" value="" readonly>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -1929,7 +1931,7 @@
                                                             <div class="input-group">
                                                                 <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
                                                                 <input type="text" class="form-control" id="vendorQty" name="vendorQty"
-                                                                       placeholder="" value="" disabled>
+                                                                       placeholder="" value="" readonly>
                                                             </div>
                                                         </div>
                                                     </div><div class="visually-hidden col-xl-2 col-sm-12 col-12">
@@ -1938,7 +1940,7 @@
                                                             <div class="input-group">
                                                                 <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
                                                                 <input type="text" class="form-control" id="otherOnsemiQty" name="otherOnsemiQty"
-                                                                       placeholder="" value="" disabled>
+                                                                       placeholder="" value="" readonly>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -1948,7 +1950,7 @@
                                                             <div class="input-group">
                                                                 <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
                                                                 <input type="text" class="form-control" id="storageFactoryQty" name="storageFactoryQty"
-                                                                       placeholder="" value="" disabled>
+                                                                       placeholder="" value="" readonly>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -1958,7 +1960,7 @@
                                                             <div class="input-group">
                                                                 <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
                                                                 <input type="text" class="form-control" id="totalQty" name="totalQty"
-                                                                       placeholder="" value="" disabled>
+                                                                       placeholder="" value="" readonly>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -1976,7 +1978,7 @@
                                                             <div class="input-group">
                                                                 <span class="input-group-text"><i class="bi bi-pencil"></i></span>
                                                                 <textarea class="form-control" id="remarks" name="remarks" placeholder="Enter Message"
-                                                                          rows="3"></textarea>
+                                                                          rows="3" readonly></textarea>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -1984,7 +1986,7 @@
                                                     <!-- Form actions start -->
                                                     <div class="d-flex justify-content-end gap-2">
                                                         <!--<button type="button" class="btn btn-light">Cancel</button>-->
-                                                        <button type="submit" class="btn btn-primary">Update</button>
+                                                        <!--                                                        <button type="submit" class="btn btn-primary">Update</button>-->
                                                     </div>
                                                     <!-- Form actions end -->
                                                 </form>
@@ -2004,7 +2006,7 @@
                                                             <label for="itemType2" class="form-label">Item Type</label>
                                                             <div class="input-group">
                                                                 <!--<span class="input-group-text"><i class="bi bi-person"></i></span>-->
-                                                                <input type="text" class="form-control" id="itemType2" name="itemType2" placeholder="" value="" required="">
+                                                                <input type="text" class="form-control" id="itemType2" name="itemType2" placeholder="" value="" readonly>
                                                                 <!--<div class="valid-feedback">Looks good!</div>-->
                                                                 <!--<div class="invalid-feedback">Please provide a valid zip.</div>-->
                                                             </div>
@@ -2015,8 +2017,8 @@
                                                             <label for="subType" class="form-label">Sub Type</label>
                                                             <div class="input-group">
                                                                 <!--<span class="input-group-text"><i class="bi bi-person"></i></span>-->
-                                                                <input type="text" class="form-control" id="subType" name="subType" placeholder="" value="">
-                                                                <input type="hidden" class="form-control" id="itemPKID" name="itemPKID" placeholder="" value="">
+                                                                <input type="text" class="form-control" id="subType" name="subType" placeholder="" value="" readonly>
+                                                                <input type="hidden" class="form-control" id="itemPKID" name="itemPKID" placeholder="" value="" readonly>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -2025,7 +2027,7 @@
                                                             <label for="itemId" class="form-label">Item ID</label>
                                                             <div class="input-group">
                                                                 <!--<span class="input-group-text"><i class="bi bi-envelope"></i></span>-->
-                                                                <input type="text" class="form-control" id="itemId" name="itemId" placeholder="" value="">
+                                                                <input type="text" class="form-control" id="itemId" name="itemId" placeholder="" value="" readonly>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -2034,7 +2036,7 @@
                                                             <label for="itemName" class="form-label">Item Name</label>
                                                             <div class="input-group">
                                                                 <!--<span class="input-group-text"><i class="bi bi-telephone"></i></span>-->
-                                                                <input type="text" class="form-control" id="itemName" name="itemName" placeholder="" value="">
+                                                                <input type="text" class="form-control" id="itemName" name="itemName" placeholder="" value="" readonly>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -2043,7 +2045,7 @@
                                                             <label for="status" class="form-label">Status</label>
                                                             <div class="input-group">
                                                                 <!--<span class="input-group-text"><i class="bi bi-person"></i></span>-->
-                                                                <input type="text" class="form-control" id="status" name="status" placeholder="" value="" disabled>
+                                                                <input type="text" class="form-control" id="status" name="status" placeholder="" value="" readonly>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -2052,7 +2054,7 @@
                                                             <label for="aluHrs" class="form-label">ALU</label>
                                                             <div class="input-group">
                                                                 <!--<span class="input-group-text"><i class="bi bi-envelope"></i></span>-->
-                                                                <input type="text" class="form-control" id="aluHrs" name="aluHrs" placeholder="" value="" disabled>
+                                                                <input type="text" class="form-control" id="aluHrs" name="aluHrs" placeholder="" value="" readonly>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -2061,7 +2063,7 @@
                                                             <label for="assemblyId" class="form-label">Assembly ID</label>
                                                             <div class="input-group">
                                                                 <!--<span class="input-group-text"><i class="bi bi-telephone"></i></span>-->
-                                                                <input type="text" class="form-control" id="assemblyId" name="assemblyId" placeholder="" value="">
+                                                                <input type="text" class="form-control" id="assemblyId" name="assemblyId" placeholder="" value="" readonly>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -2070,7 +2072,7 @@
                                                             <label for="model" class="form-label">Spare Part Model</label>
                                                             <div class="input-group">
                                                                 <!--<span class="input-group-text"><i class="bi bi-telephone"></i></span>-->
-                                                                <input type="text" class="form-control" id="model" name="model" value="">
+                                                                <input type="text" class="form-control" id="model" name="model" value="" readonly>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -2080,7 +2082,7 @@
                                                             <label for="manufacturer" class="form-label">Spare Part Manufacturer</label>
                                                             <div class="input-group">
                                                                 <!--<span class="input-group-text"><i class="bi bi-person"></i></span>-->
-                                                                <input type="text" class="form-control" id="manufacturer" name="manufacturer" placeholder="" value="">
+                                                                <input type="text" class="form-control" id="manufacturer" name="manufacturer" placeholder="" value="" readonly>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -2089,7 +2091,7 @@
                                                             <label for="unitCost" class="form-label">Unit cost (USD)</label>
                                                             <div class="input-group">
                                                                 <!--<span class="input-group-text"><i class="bi bi-envelope"></i></span>-->
-                                                                <input type="text" class="form-control" id="unitCost" name="unitCost" placeholder="" value="">
+                                                                <input type="text" class="form-control" id="unitCost" name="unitCost" placeholder="" value="" readonly>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -2098,7 +2100,7 @@
                                                             <label for="equipmentType" class="form-label">Equipment Type</label>
                                                             <div class="input-group">
                                                                 <!--<span class="input-group-text"><i class="bi bi-person"></i></span>-->
-                                                                <input type="text" class="form-control" id="equipmentType" name="equipmentType" placeholder="" value="">
+                                                                <input type="text" class="form-control" id="equipmentType" name="equipmentType" placeholder="" value="" readonly>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -2107,7 +2109,7 @@
                                                             <label for="equipmentModel" class="form-label">Equipment Model</label>
                                                             <div class="input-group">
                                                                 <!--<span class="input-group-text"><i class="bi bi-envelope"></i></span>-->
-                                                                <input type="text" class="form-control" id="equipmentModel" name="equipmentModel" value="">
+                                                                <input type="text" class="form-control" id="equipmentModel" name="equipmentModel" value="" readonly>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -2127,7 +2129,7 @@
                                                             <div class="input-group">
                                                                 <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
                                                                 <input type="text" class="form-control" id="minQty" name="minQty"
-                                                                       placeholder="" value="">
+                                                                       placeholder="" value="" readonly>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -2137,7 +2139,7 @@
                                                             <div class="input-group">
                                                                 <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
                                                                 <input type="text" class="form-control" id="maxQty" name="maxQty"
-                                                                       placeholder="" value="">
+                                                                       placeholder="" value="" readonly>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -2147,7 +2149,7 @@
                                                             <div class="input-group">
                                                                 <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
                                                                 <input type="text" class="form-control" id="rack" name="rack"
-                                                                       placeholder="" value="">
+                                                                       placeholder="" value="" readonly>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -2157,7 +2159,7 @@
                                                             <div class="input-group">
                                                                 <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
                                                                 <input type="text" class="form-control" id="shelf" name="shelf"
-                                                                       placeholder="" value="">
+                                                                       placeholder="" value="" readonly>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -2167,7 +2169,7 @@
                                                             <div class="input-group">
                                                                 <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
                                                                 <input type="text" class="form-control" id="stressType" name="stressType"
-                                                                       placeholder="" value="">
+                                                                       placeholder="" value="" readonly>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -2177,7 +2179,7 @@
                                                             <div class="input-group">
                                                                 <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
                                                                 <input type="text" class="form-control" id="onHandQty" name="onHandQty"
-                                                                       placeholder="" value="" disabled>
+                                                                       placeholder="" value="" readonly>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -2187,7 +2189,7 @@
                                                             <div class="input-group">
                                                                 <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
                                                                 <input type="text" class="form-control" id="productionQty" name="productionQty"
-                                                                       placeholder="" value="" disabled>
+                                                                       placeholder="" value="" readonly>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -2197,7 +2199,7 @@
                                                             <div class="input-group">
                                                                 <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
                                                                 <input type="text" class="form-control" id="productionStagingQty" name="productionStagingQty"
-                                                                       placeholder="" value="" disabled>
+                                                                       placeholder="" value="" readonly>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -2207,7 +2209,7 @@
                                                             <div class="input-group">
                                                                 <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
                                                                 <input type="text" class="form-control" id="repairQty" name="repairQty"
-                                                                       placeholder="" value="" disabled>
+                                                                       placeholder="" value="" readonly>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -2217,7 +2219,7 @@
                                                             <div class="input-group">
                                                                 <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
                                                                 <input type="text" class="form-control" id="quarantineQty" name="quarantineQty"
-                                                                       placeholder="" value="" disabled>
+                                                                       placeholder="" value="" readonly>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -2227,7 +2229,7 @@
                                                             <div class="input-group">
                                                                 <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
                                                                 <input type="text" class="form-control" id="externalCleanQty" name="externalCleanQty"
-                                                                       placeholder="" value="" disabled>
+                                                                       placeholder="" value="" readonly>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -2237,7 +2239,7 @@
                                                             <div class="input-group">
                                                                 <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
                                                                 <input type="text" class="form-control" id="externalRecleanQty" name="externalRecleanQty"
-                                                                       placeholder="" value="" disabled>
+                                                                       placeholder="" value="" readonly>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -2247,7 +2249,7 @@
                                                             <div class="input-group">
                                                                 <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
                                                                 <input type="text" class="form-control" id="internalCleanQty" name="internalCleanQty"
-                                                                       placeholder="" value="" disabled>
+                                                                       placeholder="" value="" readonly>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -2257,7 +2259,7 @@
                                                             <div class="input-group">
                                                                 <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
                                                                 <input type="text" class="form-control" id="internalRecleanQty" name="internalRecleanQty"
-                                                                       placeholder="" value="" disabled>
+                                                                       placeholder="" value="" readonly>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -2267,7 +2269,7 @@
                                                             <div class="input-group">
                                                                 <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
                                                                 <input type="text" class="form-control" id="otherQty" name="otherQty"
-                                                                       placeholder="" value="" disabled>
+                                                                       placeholder="" value="" readonly>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -2277,7 +2279,7 @@
                                                             <div class="input-group">
                                                                 <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
                                                                 <input type="text" class="form-control" id="vendorQty" name="vendorQty"
-                                                                       placeholder="" value="" disabled>
+                                                                       placeholder="" value="" readonly>
                                                             </div>
                                                         </div>
                                                     </div><div class="col-xl-2 col-sm-12 col-12">
@@ -2286,7 +2288,7 @@
                                                             <div class="input-group">
                                                                 <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
                                                                 <input type="text" class="form-control" id="otherOnsemiQty" name="otherOnsemiQty"
-                                                                       placeholder="" value="" disabled>
+                                                                       placeholder="" value="" readonly>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -2296,7 +2298,7 @@
                                                             <div class="input-group">
                                                                 <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
                                                                 <input type="text" class="form-control" id="storageFactoryQty" name="storageFactoryQty"
-                                                                       placeholder="" value="" disabled>
+                                                                       placeholder="" value="" readonly>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -2306,7 +2308,7 @@
                                                             <div class="input-group">
                                                                 <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
                                                                 <input type="text" class="form-control" id="totalQty" name="totalQty"
-                                                                       placeholder="" value="" disabled>
+                                                                       placeholder="" value="" readonly>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -2324,7 +2326,7 @@
                                                             <div class="input-group">
                                                                 <span class="input-group-text"><i class="bi bi-pencil"></i></span>
                                                                 <textarea class="form-control" id="remarks" name="remarks" placeholder="Enter Message"
-                                                                          rows="3"></textarea>
+                                                                          rows="3" readonly></textarea>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -2332,7 +2334,7 @@
                                                     <!-- Form actions start -->
                                                     <div class="d-flex justify-content-end gap-2">
                                                         <!--<button type="button" class="btn btn-light">Cancel</button>-->
-                                                        <button type="submit" class="btn btn-primary">Update</button>
+                                                        <!--                                                        <button type="submit" class="btn btn-primary">Update</button>-->
                                                     </div>
                                                     <!-- Form actions end -->
                                                 </form>
@@ -2352,7 +2354,7 @@
                                                             <label for="itemType2" class="form-label">Item Type</label>
                                                             <div class="input-group">
                                                                 <!--<span class="input-group-text"><i class="bi bi-person"></i></span>-->
-                                                                <input type="text" class="form-control" id="itemType2" name="itemType2" placeholder="" value="" required="">
+                                                                <input type="text" class="form-control" id="itemType2" name="itemType2" placeholder="" value="" readonly>
                                                                 <!--<div class="valid-feedback">Looks good!</div>-->
                                                                 <!--<div class="invalid-feedback">Please provide a valid zip.</div>-->
                                                             </div>
@@ -2363,8 +2365,8 @@
                                                             <label for="subType" class="form-label">Sub Type</label>
                                                             <div class="input-group">
                                                                 <!--<span class="input-group-text"><i class="bi bi-person"></i></span>-->
-                                                                <input type="text" class="form-control" id="subType" name="subType" placeholder="" value="">
-                                                                <input type="hidden" class="form-control" id="itemPKID" name="itemPKID" placeholder="" value="">
+                                                                <input type="text" class="form-control" id="subType" name="subType" placeholder="" value="" readonly>
+                                                                <input type="hidden" class="form-control" id="itemPKID" name="itemPKID" placeholder="" value="" readonly>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -2373,7 +2375,7 @@
                                                             <label for="itemId" class="form-label">Item ID</label>
                                                             <div class="input-group">
                                                                 <!--<span class="input-group-text"><i class="bi bi-envelope"></i></span>-->
-                                                                <input type="text" class="form-control" id="itemId" name="itemId" placeholder="" value="">
+                                                                <input type="text" class="form-control" id="itemId" name="itemId" placeholder="" value="" readonly>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -2382,7 +2384,7 @@
                                                             <label for="itemName" class="form-label">Item Name</label>
                                                             <div class="input-group">
                                                                 <!--<span class="input-group-text"><i class="bi bi-telephone"></i></span>-->
-                                                                <input type="text" class="form-control" id="itemName" name="itemName" placeholder="" value="">
+                                                                <input type="text" class="form-control" id="itemName" name="itemName" placeholder="" value="" readonly>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -2391,7 +2393,7 @@
                                                             <label for="status" class="form-label">Status</label>
                                                             <div class="input-group">
                                                                 <!--<span class="input-group-text"><i class="bi bi-person"></i></span>-->
-                                                                <input type="text" class="form-control" id="status" name="status" placeholder="" value="" disabled>
+                                                                <input type="text" class="form-control" id="status" name="status" placeholder="" value="" readonly>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -2400,7 +2402,7 @@
                                                             <label for="aluHrs" class="form-label">ALU</label>
                                                             <div class="input-group">
                                                                 <!--<span class="input-group-text"><i class="bi bi-envelope"></i></span>-->
-                                                                <input type="text" class="form-control" id="aluHrs" name="aluHrs" placeholder="" value="" disabled>
+                                                                <input type="text" class="form-control" id="aluHrs" name="aluHrs" placeholder="" value="" readonly>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -2409,7 +2411,7 @@
                                                             <label for="assemblyId" class="form-label">Assembly ID</label>
                                                             <div class="input-group">
                                                                 <!--<span class="input-group-text"><i class="bi bi-telephone"></i></span>-->
-                                                                <input type="text" class="form-control" id="assemblyId" name="assemblyId" placeholder="" value="">
+                                                                <input type="text" class="form-control" id="assemblyId" name="assemblyId" placeholder="" value="" readonly>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -2418,7 +2420,7 @@
                                                             <label for="model" class="form-label">Spare Part Model</label>
                                                             <div class="input-group">
                                                                 <!--<span class="input-group-text"><i class="bi bi-telephone"></i></span>-->
-                                                                <input type="text" class="form-control" id="model" name="model" value="">
+                                                                <input type="text" class="form-control" id="model" name="model" value="" readonly>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -2428,7 +2430,7 @@
                                                             <label for="manufacturer" class="form-label">Spare Part Manufacturer</label>
                                                             <div class="input-group">
                                                                 <!--<span class="input-group-text"><i class="bi bi-person"></i></span>-->
-                                                                <input type="text" class="form-control" id="manufacturer" name="manufacturer" placeholder="" value="">
+                                                                <input type="text" class="form-control" id="manufacturer" name="manufacturer" placeholder="" value="" readonly>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -2437,7 +2439,7 @@
                                                             <label for="unitCost" class="form-label">Unit cost (USD)</label>
                                                             <div class="input-group">
                                                                 <!--<span class="input-group-text"><i class="bi bi-envelope"></i></span>-->
-                                                                <input type="text" class="form-control" id="unitCost" name="unitCost" placeholder="" value="">
+                                                                <input type="text" class="form-control" id="unitCost" name="unitCost" placeholder="" value="" readonly>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -2446,7 +2448,7 @@
                                                             <label for="equipmentType" class="form-label">Equipment Type</label>
                                                             <div class="input-group">
                                                                 <!--<span class="input-group-text"><i class="bi bi-person"></i></span>-->
-                                                                <input type="text" class="form-control" id="equipmentType" name="equipmentType" placeholder="" value="">
+                                                                <input type="text" class="form-control" id="equipmentType" name="equipmentType" placeholder="" value="" readonly>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -2455,7 +2457,7 @@
                                                             <label for="equipmentModel" class="form-label">Equipment Model</label>
                                                             <div class="input-group">
                                                                 <!--<span class="input-group-text"><i class="bi bi-envelope"></i></span>-->
-                                                                <input type="text" class="form-control" id="equipmentModel" name="equipmentModel" value="">
+                                                                <input type="text" class="form-control" id="equipmentModel" name="equipmentModel" value="" readonly>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -2475,7 +2477,7 @@
                                                             <div class="input-group">
                                                                 <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
                                                                 <input type="text" class="form-control" id="minQty" name="minQty"
-                                                                       placeholder="" value="">
+                                                                       placeholder="" value="" readonly>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -2485,7 +2487,7 @@
                                                             <div class="input-group">
                                                                 <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
                                                                 <input type="text" class="form-control" id="maxQty" name="maxQty"
-                                                                       placeholder="" value="">
+                                                                       placeholder="" value="" readonly>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -2495,7 +2497,7 @@
                                                             <div class="input-group">
                                                                 <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
                                                                 <input type="text" class="form-control" id="rack" name="rack"
-                                                                       placeholder="" value="">
+                                                                       placeholder="" value="" readonly>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -2505,7 +2507,7 @@
                                                             <div class="input-group">
                                                                 <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
                                                                 <input type="text" class="form-control" id="shelf" name="shelf"
-                                                                       placeholder="" value="">
+                                                                       placeholder="" value="" readonly>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -2515,7 +2517,7 @@
                                                             <div class="input-group">
                                                                 <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
                                                                 <input type="text" class="form-control" id="stressType" name="stressType"
-                                                                       placeholder="" value="">
+                                                                       placeholder="" value="" readonly>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -2525,7 +2527,7 @@
                                                             <div class="input-group">
                                                                 <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
                                                                 <input type="text" class="form-control" id="onHandQty" name="onHandQty"
-                                                                       placeholder="" value="" disabled>
+                                                                       placeholder="" value="" readonly>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -2535,7 +2537,7 @@
                                                             <div class="input-group">
                                                                 <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
                                                                 <input type="text" class="form-control" id="productionQty" name="productionQty"
-                                                                       placeholder="" value="" disabled>
+                                                                       placeholder="" value="" readonly>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -2545,7 +2547,7 @@
                                                             <div class="input-group">
                                                                 <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
                                                                 <input type="text" class="form-control" id="productionStagingQty" name="productionStagingQty"
-                                                                       placeholder="" value="" disabled>
+                                                                       placeholder="" value="" readonly>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -2555,7 +2557,7 @@
                                                             <div class="input-group">
                                                                 <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
                                                                 <input type="text" class="form-control" id="repairQty" name="repairQty"
-                                                                       placeholder="" value="" disabled>
+                                                                       placeholder="" value="" readonly>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -2565,7 +2567,7 @@
                                                             <div class="input-group">
                                                                 <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
                                                                 <input type="text" class="form-control" id="quarantineQty" name="quarantineQty"
-                                                                       placeholder="" value="" disabled>
+                                                                       placeholder="" value="" readonly>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -2575,7 +2577,7 @@
                                                             <div class="input-group">
                                                                 <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
                                                                 <input type="text" class="form-control" id="externalCleanQty" name="externalCleanQty"
-                                                                       placeholder="" value="" disabled>
+                                                                       placeholder="" value="" readonly>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -2585,7 +2587,7 @@
                                                             <div class="input-group">
                                                                 <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
                                                                 <input type="text" class="form-control" id="externalRecleanQty" name="externalRecleanQty"
-                                                                       placeholder="" value="" disabled>
+                                                                       placeholder="" value="" readonly>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -2595,7 +2597,7 @@
                                                             <div class="input-group">
                                                                 <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
                                                                 <input type="text" class="form-control" id="internalCleanQty" name="internalCleanQty"
-                                                                       placeholder="" value="" disabled>
+                                                                       placeholder="" value="" readonly>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -2605,7 +2607,7 @@
                                                             <div class="input-group">
                                                                 <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
                                                                 <input type="text" class="form-control" id="internalRecleanQty" name="internalRecleanQty"
-                                                                       placeholder="" value="" disabled>
+                                                                       placeholder="" value="" readonly>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -2615,7 +2617,7 @@
                                                             <div class="input-group">
                                                                 <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
                                                                 <input type="text" class="form-control" id="otherQty" name="otherQty"
-                                                                       placeholder="" value="" disabled>
+                                                                       placeholder="" value="" readonly>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -2625,7 +2627,7 @@
                                                             <div class="input-group">
                                                                 <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
                                                                 <input type="text" class="form-control" id="vendorQty" name="vendorQty"
-                                                                       placeholder="" value="" disabled>
+                                                                       placeholder="" value="" readonly>
                                                             </div>
                                                         </div>
                                                     </div><div class="visually-hidden col-xl-2 col-sm-12 col-12">
@@ -2634,7 +2636,7 @@
                                                             <div class="input-group">
                                                                 <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
                                                                 <input type="text" class="form-control" id="otherOnsemiQty" name="otherOnsemiQty"
-                                                                       placeholder="" value="" disabled>
+                                                                       placeholder="" value="" readonly>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -2644,7 +2646,7 @@
                                                             <div class="input-group">
                                                                 <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
                                                                 <input type="text" class="form-control" id="storageFactoryQty" name="storageFactoryQty"
-                                                                       placeholder="" value="" disabled>
+                                                                       placeholder="" value="" readonly>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -2654,7 +2656,7 @@
                                                             <div class="input-group">
                                                                 <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
                                                                 <input type="text" class="form-control" id="totalQty" name="totalQty"
-                                                                       placeholder="" value="" disabled>
+                                                                       placeholder="" value="" readonly>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -2672,7 +2674,7 @@
                                                             <div class="input-group">
                                                                 <span class="input-group-text"><i class="bi bi-pencil"></i></span>
                                                                 <textarea class="form-control" id="remarks" name="remarks" placeholder="Enter Message"
-                                                                          rows="3"></textarea>
+                                                                          rows="3" readonly></textarea>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -2680,7 +2682,7 @@
                                                     <!-- Form actions start -->
                                                     <div class="d-flex justify-content-end gap-2">
                                                         <!--<button type="button" class="btn btn-light">Cancel</button>-->
-                                                        <button type="submit" class="btn btn-primary">Update</button>
+                                                        <!--                                                        <button type="submit" class="btn btn-primary">Update</button>-->
                                                     </div>
                                                     <!-- Form actions end -->
                                                 </form>
@@ -2700,7 +2702,7 @@
                                                             <label for="itemType2" class="form-label">Item Type</label>
                                                             <div class="input-group">
                                                                 <!--<span class="input-group-text"><i class="bi bi-person"></i></span>-->
-                                                                <input type="text" class="form-control" id="itemType2" name="itemType2" placeholder="" value="" required="">
+                                                                <input type="text" class="form-control" id="itemType2" name="itemType2" placeholder="" value="" readonly>
                                                                 <!--<div class="valid-feedback">Looks good!</div>-->
                                                                 <!--<div class="invalid-feedback">Please provide a valid zip.</div>-->
                                                             </div>
@@ -2711,8 +2713,8 @@
                                                             <label for="subType" class="form-label">Sub Type</label>
                                                             <div class="input-group">
                                                                 <!--<span class="input-group-text"><i class="bi bi-person"></i></span>-->
-                                                                <input type="text" class="form-control" id="subType" name="subType" placeholder="" value="">
-                                                                <input type="hidden" class="form-control" id="itemPKID" name="itemPKID" placeholder="" value="">
+                                                                <input type="text" class="form-control" id="subType" name="subType" placeholder="" value="" readonly>
+                                                                <input type="hidden" class="form-control" id="itemPKID" name="itemPKID" placeholder="" value="" readonly>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -2721,7 +2723,7 @@
                                                             <label for="itemId" class="form-label">Item ID</label>
                                                             <div class="input-group">
                                                                 <!--<span class="input-group-text"><i class="bi bi-envelope"></i></span>-->
-                                                                <input type="text" class="form-control" id="itemId" name="itemId" placeholder="" value="">
+                                                                <input type="text" class="form-control" id="itemId" name="itemId" placeholder="" value="" readonly>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -2730,7 +2732,7 @@
                                                             <label for="itemName" class="form-label">Item Name</label>
                                                             <div class="input-group">
                                                                 <!--<span class="input-group-text"><i class="bi bi-telephone"></i></span>-->
-                                                                <input type="text" class="form-control" id="itemName" name="itemName" placeholder="" value="">
+                                                                <input type="text" class="form-control" id="itemName" name="itemName" placeholder="" value="" readonly>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -2739,7 +2741,7 @@
                                                             <label for="status" class="form-label">Status</label>
                                                             <div class="input-group">
                                                                 <!--<span class="input-group-text"><i class="bi bi-person"></i></span>-->
-                                                                <input type="text" class="form-control" id="status" name="status" placeholder="" value="" disabled>
+                                                                <input type="text" class="form-control" id="status" name="status" placeholder="" value="" readonly>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -2748,7 +2750,7 @@
                                                             <label for="aluHrs" class="form-label">ALU</label>
                                                             <div class="input-group">
                                                                 <!--<span class="input-group-text"><i class="bi bi-envelope"></i></span>-->
-                                                                <input type="text" class="form-control" id="aluHrs" name="aluHrs" placeholder="" value="" disabled>
+                                                                <input type="text" class="form-control" id="aluHrs" name="aluHrs" placeholder="" value="" readonly>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -2757,7 +2759,7 @@
                                                             <label for="assemblyId" class="form-label">Assembly ID</label>
                                                             <div class="input-group">
                                                                 <!--<span class="input-group-text"><i class="bi bi-telephone"></i></span>-->
-                                                                <input type="text" class="form-control" id="assemblyId" name="assemblyId" placeholder="" value="">
+                                                                <input type="text" class="form-control" id="assemblyId" name="assemblyId" placeholder="" value="" readonly>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -2766,7 +2768,7 @@
                                                             <label for="model" class="form-label">Spare Part Model</label>
                                                             <div class="input-group">
                                                                 <!--<span class="input-group-text"><i class="bi bi-telephone"></i></span>-->
-                                                                <input type="text" class="form-control" id="model" name="model" value="">
+                                                                <input type="text" class="form-control" id="model" name="model" value="" readonly>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -2776,7 +2778,7 @@
                                                             <label for="manufacturer" class="form-label">Spare Part Manufacturer</label>
                                                             <div class="input-group">
                                                                 <!--<span class="input-group-text"><i class="bi bi-person"></i></span>-->
-                                                                <input type="text" class="form-control" id="manufacturer" name="manufacturer" placeholder="" value="">
+                                                                <input type="text" class="form-control" id="manufacturer" name="manufacturer" placeholder="" value="" readonly>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -2785,7 +2787,7 @@
                                                             <label for="unitCost" class="form-label">Unit cost (USD)</label>
                                                             <div class="input-group">
                                                                 <!--<span class="input-group-text"><i class="bi bi-envelope"></i></span>-->
-                                                                <input type="text" class="form-control" id="unitCost" name="unitCost" placeholder="" value="">
+                                                                <input type="text" class="form-control" id="unitCost" name="unitCost" placeholder="" value="" readonly>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -2794,7 +2796,7 @@
                                                             <label for="equipmentType" class="form-label">Equipment Type</label>
                                                             <div class="input-group">
                                                                 <!--<span class="input-group-text"><i class="bi bi-person"></i></span>-->
-                                                                <input type="text" class="form-control" id="equipmentType" name="equipmentType" placeholder="" value="">
+                                                                <input type="text" class="form-control" id="equipmentType" name="equipmentType" placeholder="" value="" readonly>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -2803,7 +2805,7 @@
                                                             <label for="equipmentModel" class="form-label">Equipment Model</label>
                                                             <div class="input-group">
                                                                 <!--<span class="input-group-text"><i class="bi bi-envelope"></i></span>-->
-                                                                <input type="text" class="form-control" id="equipmentModel" name="equipmentModel" value="">
+                                                                <input type="text" class="form-control" id="equipmentModel" name="equipmentModel" value="" readonly>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -2823,7 +2825,7 @@
                                                             <div class="input-group">
                                                                 <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
                                                                 <input type="text" class="form-control" id="minQty" name="minQty"
-                                                                       placeholder="" value="">
+                                                                       placeholder="" value="" readonly>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -2833,7 +2835,7 @@
                                                             <div class="input-group">
                                                                 <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
                                                                 <input type="text" class="form-control" id="maxQty" name="maxQty"
-                                                                       placeholder="" value="">
+                                                                       placeholder="" value="" readonly>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -2843,7 +2845,7 @@
                                                             <div class="input-group">
                                                                 <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
                                                                 <input type="text" class="form-control" id="rack" name="rack"
-                                                                       placeholder="" value="">
+                                                                       placeholder="" value="" readonly>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -2853,7 +2855,7 @@
                                                             <div class="input-group">
                                                                 <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
                                                                 <input type="text" class="form-control" id="shelf" name="shelf"
-                                                                       placeholder="" value="">
+                                                                       placeholder="" value="" readonly>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -2863,7 +2865,7 @@
                                                             <div class="input-group">
                                                                 <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
                                                                 <input type="text" class="form-control" id="stressType" name="stressType"
-                                                                       placeholder="" value="">
+                                                                       placeholder="" value="" readonly>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -2873,7 +2875,7 @@
                                                             <div class="input-group">
                                                                 <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
                                                                 <input type="text" class="form-control" id="onHandQty" name="onHandQty"
-                                                                       placeholder="" value="" disabled>
+                                                                       placeholder="" value="" readonly>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -2883,7 +2885,7 @@
                                                             <div class="input-group">
                                                                 <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
                                                                 <input type="text" class="form-control" id="productionQty" name="productionQty"
-                                                                       placeholder="" value="" disabled>
+                                                                       placeholder="" value="" readonly>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -2893,7 +2895,7 @@
                                                             <div class="input-group">
                                                                 <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
                                                                 <input type="text" class="form-control" id="productionStagingQty" name="productionStagingQty"
-                                                                       placeholder="" value="" disabled>
+                                                                       placeholder="" value="" readonly>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -2903,7 +2905,7 @@
                                                             <div class="input-group">
                                                                 <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
                                                                 <input type="text" class="form-control" id="repairQty" name="repairQty"
-                                                                       placeholder="" value="" disabled>
+                                                                       placeholder="" value="" readonly>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -2913,7 +2915,7 @@
                                                             <div class="input-group">
                                                                 <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
                                                                 <input type="text" class="form-control" id="quarantineQty" name="quarantineQty"
-                                                                       placeholder="" value="" disabled>
+                                                                       placeholder="" value="" readonly>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -2923,7 +2925,7 @@
                                                             <div class="input-group">
                                                                 <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
                                                                 <input type="text" class="form-control" id="externalCleanQty" name="externalCleanQty"
-                                                                       placeholder="" value="" disabled>
+                                                                       placeholder="" value="" readonly>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -2933,7 +2935,7 @@
                                                             <div class="input-group">
                                                                 <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
                                                                 <input type="text" class="form-control" id="externalRecleanQty" name="externalRecleanQty"
-                                                                       placeholder="" value="" disabled>
+                                                                       placeholder="" value="" readonly>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -2943,7 +2945,7 @@
                                                             <div class="input-group">
                                                                 <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
                                                                 <input type="text" class="form-control" id="internalCleanQty" name="internalCleanQty"
-                                                                       placeholder="" value="" disabled>
+                                                                       placeholder="" value="" readonly>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -2953,7 +2955,7 @@
                                                             <div class="input-group">
                                                                 <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
                                                                 <input type="text" class="form-control" id="internalRecleanQty" name="internalRecleanQty"
-                                                                       placeholder="" value="" disabled>
+                                                                       placeholder="" value="" readonly>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -2963,7 +2965,7 @@
                                                             <div class="input-group">
                                                                 <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
                                                                 <input type="text" class="form-control" id="otherQty" name="otherQty"
-                                                                       placeholder="" value="" disabled>
+                                                                       placeholder="" value="" readonly>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -2973,7 +2975,7 @@
                                                             <div class="input-group">
                                                                 <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
                                                                 <input type="text" class="form-control" id="vendorQty" name="vendorQty"
-                                                                       placeholder="" value="" disabled>
+                                                                       placeholder="" value="" readonly>
                                                             </div>
                                                         </div>
                                                     </div><div class="visually-hidden col-xl-2 col-sm-12 col-12">
@@ -2982,7 +2984,7 @@
                                                             <div class="input-group">
                                                                 <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
                                                                 <input type="text" class="form-control" id="otherOnsemiQty" name="otherOnsemiQty"
-                                                                       placeholder="" value="" disabled>
+                                                                       placeholder="" value="" readonly>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -2992,7 +2994,7 @@
                                                             <div class="input-group">
                                                                 <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
                                                                 <input type="text" class="form-control" id="storageFactoryQty" name="storageFactoryQty"
-                                                                       placeholder="" value="" disabled>
+                                                                       placeholder="" value="" readonly>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -3002,7 +3004,7 @@
                                                             <div class="input-group">
                                                                 <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
                                                                 <input type="text" class="form-control" id="totalQty" name="totalQty"
-                                                                       placeholder="" value="" disabled>
+                                                                       placeholder="" value="" readonly>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -3020,7 +3022,7 @@
                                                             <div class="input-group">
                                                                 <span class="input-group-text"><i class="bi bi-pencil"></i></span>
                                                                 <textarea class="form-control" id="remarks" name="remarks" placeholder="Enter Message"
-                                                                          rows="3"></textarea>
+                                                                          rows="3" readonly></textarea>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -3028,7 +3030,7 @@
                                                     <!-- Form actions start -->
                                                     <div class="d-flex justify-content-end gap-2">
                                                         <!--<button type="button" class="btn btn-light">Cancel</button>-->
-                                                        <button type="submit" class="btn btn-primary">Update</button>
+                                                        <!--                                                        <button type="submit" class="btn btn-primary">Update</button>-->
                                                     </div>
                                                     <!-- Form actions end -->
                                                 </form>
@@ -3048,7 +3050,7 @@
                                                             <label for="itemType2" class="form-label">Item Type</label>
                                                             <div class="input-group">
                                                                 <!--<span class="input-group-text"><i class="bi bi-person"></i></span>-->
-                                                                <input type="text" class="form-control" id="itemType2" name="itemType2" placeholder="" value="" required="">
+                                                                <input type="text" class="form-control" id="itemType2" name="itemType2" placeholder="" value="" readonly>
                                                                 <!--<div class="valid-feedback">Looks good!</div>-->
                                                                 <!--<div class="invalid-feedback">Please provide a valid zip.</div>-->
                                                             </div>
@@ -3059,8 +3061,8 @@
                                                             <label for="subType" class="form-label">Sub Type</label>
                                                             <div class="input-group">
                                                                 <!--<span class="input-group-text"><i class="bi bi-person"></i></span>-->
-                                                                <input type="text" class="form-control" id="subType" name="subType" placeholder="" value="">
-                                                                <input type="hidden" class="form-control" id="itemPKID" name="itemPKID" placeholder="" value="">
+                                                                <input type="text" class="form-control" id="subType" name="subType" placeholder="" value="" readonly>
+                                                                <input type="hidden" class="form-control" id="itemPKID" name="itemPKID" placeholder="" value="" readonly>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -3069,7 +3071,7 @@
                                                             <label for="itemId" class="form-label">Item ID</label>
                                                             <div class="input-group">
                                                                 <!--<span class="input-group-text"><i class="bi bi-envelope"></i></span>-->
-                                                                <input type="text" class="form-control" id="itemId" name="itemId" placeholder="" value="">
+                                                                <input type="text" class="form-control" id="itemId" name="itemId" placeholder="" value="" readonly>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -3078,7 +3080,7 @@
                                                             <label for="itemName" class="form-label">Item Name</label>
                                                             <div class="input-group">
                                                                 <!--<span class="input-group-text"><i class="bi bi-telephone"></i></span>-->
-                                                                <input type="text" class="form-control" id="itemName" name="itemName" placeholder="" value="">
+                                                                <input type="text" class="form-control" id="itemName" name="itemName" placeholder="" value="" readonly>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -3087,7 +3089,7 @@
                                                             <label for="status" class="form-label">Status</label>
                                                             <div class="input-group">
                                                                 <!--<span class="input-group-text"><i class="bi bi-person"></i></span>-->
-                                                                <input type="text" class="form-control" id="status" name="status" placeholder="" value="" disabled>
+                                                                <input type="text" class="form-control" id="status" name="status" placeholder="" value="" readonly>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -3096,7 +3098,7 @@
                                                             <label for="aluHrs" class="form-label">ALU</label>
                                                             <div class="input-group">
                                                                 <!--<span class="input-group-text"><i class="bi bi-envelope"></i></span>-->
-                                                                <input type="text" class="form-control" id="aluHrs" name="aluHrs" placeholder="" value="" disabled>
+                                                                <input type="text" class="form-control" id="aluHrs" name="aluHrs" placeholder="" value="" readonly>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -3105,7 +3107,7 @@
                                                             <label for="assemblyId" class="form-label">Assembly ID</label>
                                                             <div class="input-group">
                                                                 <!--<span class="input-group-text"><i class="bi bi-telephone"></i></span>-->
-                                                                <input type="text" class="form-control" id="assemblyId" name="assemblyId" placeholder="" value="">
+                                                                <input type="text" class="form-control" id="assemblyId" name="assemblyId" placeholder="" value="" readonly>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -3114,7 +3116,7 @@
                                                             <label for="model" class="form-label">Spare Part Model</label>
                                                             <div class="input-group">
                                                                 <!--<span class="input-group-text"><i class="bi bi-telephone"></i></span>-->
-                                                                <input type="text" class="form-control" id="model" name="model" value="">
+                                                                <input type="text" class="form-control" id="model" name="model" value="" readonly>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -3124,7 +3126,7 @@
                                                             <label for="manufacturer" class="form-label">Spare Part Manufacturer</label>
                                                             <div class="input-group">
                                                                 <!--<span class="input-group-text"><i class="bi bi-person"></i></span>-->
-                                                                <input type="text" class="form-control" id="manufacturer" name="manufacturer" placeholder="" value="">
+                                                                <input type="text" class="form-control" id="manufacturer" name="manufacturer" placeholder="" value="" readonly>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -3133,7 +3135,7 @@
                                                             <label for="unitCost" class="form-label">Unit cost (USD)</label>
                                                             <div class="input-group">
                                                                 <!--<span class="input-group-text"><i class="bi bi-envelope"></i></span>-->
-                                                                <input type="text" class="form-control" id="unitCost" name="unitCost" placeholder="" value="">
+                                                                <input type="text" class="form-control" id="unitCost" name="unitCost" placeholder="" value="" readonly>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -3142,7 +3144,7 @@
                                                             <label for="equipmentType" class="form-label">Equipment Type</label>
                                                             <div class="input-group">
                                                                 <!--<span class="input-group-text"><i class="bi bi-person"></i></span>-->
-                                                                <input type="text" class="form-control" id="equipmentType" name="equipmentType" placeholder="" value="">
+                                                                <input type="text" class="form-control" id="equipmentType" name="equipmentType" placeholder="" value="" readonly>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -3151,7 +3153,7 @@
                                                             <label for="equipmentModel" class="form-label">Equipment Model</label>
                                                             <div class="input-group">
                                                                 <!--<span class="input-group-text"><i class="bi bi-envelope"></i></span>-->
-                                                                <input type="text" class="form-control" id="equipmentModel" name="equipmentModel" value="">
+                                                                <input type="text" class="form-control" id="equipmentModel" name="equipmentModel" value="" readonly>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -3171,7 +3173,7 @@
                                                             <div class="input-group">
                                                                 <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
                                                                 <input type="text" class="form-control" id="minQty" name="minQty"
-                                                                       placeholder="" value="">
+                                                                       placeholder="" value="" readonly>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -3181,7 +3183,7 @@
                                                             <div class="input-group">
                                                                 <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
                                                                 <input type="text" class="form-control" id="maxQty" name="maxQty"
-                                                                       placeholder="" value="">
+                                                                       placeholder="" value="" readonly>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -3191,7 +3193,7 @@
                                                             <div class="input-group">
                                                                 <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
                                                                 <input type="text" class="form-control" id="rack" name="rack"
-                                                                       placeholder="" value="">
+                                                                       placeholder="" value="" readonly>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -3201,7 +3203,7 @@
                                                             <div class="input-group">
                                                                 <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
                                                                 <input type="text" class="form-control" id="shelf" name="shelf"
-                                                                       placeholder="" value="">
+                                                                       placeholder="" value="" readonly>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -3211,7 +3213,7 @@
                                                             <div class="input-group">
                                                                 <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
                                                                 <input type="text" class="form-control" id="stressType" name="stressType"
-                                                                       placeholder="" value="">
+                                                                       placeholder="" value="" readonly>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -3221,7 +3223,7 @@
                                                             <div class="input-group">
                                                                 <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
                                                                 <input type="text" class="form-control" id="onHandQty" name="onHandQty"
-                                                                       placeholder="" value="" disabled>
+                                                                       placeholder="" value="" readonly>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -3231,7 +3233,7 @@
                                                             <div class="input-group">
                                                                 <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
                                                                 <input type="text" class="form-control" id="productionQty" name="productionQty"
-                                                                       placeholder="" value="" disabled>
+                                                                       placeholder="" value="" readonly>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -3241,7 +3243,7 @@
                                                             <div class="input-group">
                                                                 <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
                                                                 <input type="text" class="form-control" id="productionStagingQty" name="productionStagingQty"
-                                                                       placeholder="" value="" disabled>
+                                                                       placeholder="" value="" readonly>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -3251,7 +3253,7 @@
                                                             <div class="input-group">
                                                                 <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
                                                                 <input type="text" class="form-control" id="repairQty" name="repairQty"
-                                                                       placeholder="" value="" disabled>
+                                                                       placeholder="" value="" readonly>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -3261,7 +3263,7 @@
                                                             <div class="input-group">
                                                                 <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
                                                                 <input type="text" class="form-control" id="quarantineQty" name="quarantineQty"
-                                                                       placeholder="" value="" disabled>
+                                                                       placeholder="" value="" readonly>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -3271,7 +3273,7 @@
                                                             <div class="input-group">
                                                                 <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
                                                                 <input type="text" class="form-control" id="externalCleanQty" name="externalCleanQty"
-                                                                       placeholder="" value="" disabled>
+                                                                       placeholder="" value="" readonly>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -3281,7 +3283,7 @@
                                                             <div class="input-group">
                                                                 <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
                                                                 <input type="text" class="form-control" id="externalRecleanQty" name="externalRecleanQty"
-                                                                       placeholder="" value="" disabled>
+                                                                       placeholder="" value="" readonly>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -3291,7 +3293,7 @@
                                                             <div class="input-group">
                                                                 <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
                                                                 <input type="text" class="form-control" id="internalCleanQty" name="internalCleanQty"
-                                                                       placeholder="" value="" disabled>
+                                                                       placeholder="" value="" readonly>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -3301,7 +3303,7 @@
                                                             <div class="input-group">
                                                                 <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
                                                                 <input type="text" class="form-control" id="internalRecleanQty" name="internalRecleanQty"
-                                                                       placeholder="" value="" disabled>
+                                                                       placeholder="" value="" readonly>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -3311,7 +3313,7 @@
                                                             <div class="input-group">
                                                                 <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
                                                                 <input type="text" class="form-control" id="otherQty" name="otherQty"
-                                                                       placeholder="" value="" disabled>
+                                                                       placeholder="" value="" readonly>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -3321,7 +3323,7 @@
                                                             <div class="input-group">
                                                                 <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
                                                                 <input type="text" class="form-control" id="vendorQty" name="vendorQty"
-                                                                       placeholder="" value="" disabled>
+                                                                       placeholder="" value="" readonly>
                                                             </div>
                                                         </div>
                                                     </div><div class="col-xl-2 col-sm-12 col-12">
@@ -3330,7 +3332,7 @@
                                                             <div class="input-group">
                                                                 <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
                                                                 <input type="text" class="form-control" id="otherOnsemiQty" name="otherOnsemiQty"
-                                                                       placeholder="" value="" disabled>
+                                                                       placeholder="" value="" readonly>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -3340,7 +3342,7 @@
                                                             <div class="input-group">
                                                                 <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
                                                                 <input type="text" class="form-control" id="storageFactoryQty" name="storageFactoryQty"
-                                                                       placeholder="" value="" disabled>
+                                                                       placeholder="" value="" readonly>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -3350,7 +3352,7 @@
                                                             <div class="input-group">
                                                                 <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
                                                                 <input type="text" class="form-control" id="totalQty" name="totalQty"
-                                                                       placeholder="" value="" disabled>
+                                                                       placeholder="" value="" readonly>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -3368,7 +3370,7 @@
                                                             <div class="input-group">
                                                                 <span class="input-group-text"><i class="bi bi-pencil"></i></span>
                                                                 <textarea class="form-control" id="remarks" name="remarks" placeholder="Enter Message"
-                                                                          rows="3"></textarea>
+                                                                          rows="3" readonly></textarea>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -3376,7 +3378,7 @@
                                                     <!-- Form actions start -->
                                                     <div class="d-flex justify-content-end gap-2">
                                                         <!--<button type="button" class="btn btn-light">Cancel</button>-->
-                                                        <button type="submit" class="btn btn-primary">Update</button>
+                                                        <!--                                                        <button type="submit" class="btn btn-primary">Update</button>-->
                                                     </div>
                                                     <!-- Form actions end -->
                                                 </form>
@@ -3415,15 +3417,17 @@
                                         <!-- Row start -->
                                         <div class="row gx-4">
                                             <div class="table-responsive">
-                                                <table id="hideSearchExample" class="table custom-table pending">
+                                                <table id="example" class="table custom-table pending">
                                                     <thead>
                                                         <tr>
                                                             <!--<th class="col-12">Site</th>-->
-                                                            <th>Hardware ID</th>
+                                                            <th>Item ID</th>
+                                                            <th>Date</th>
+                                                            <th>Movement Type</th>
+                                                            <th>In</th>
+                                                            <th>Out</th>
                                                             <th>ALU</th>
-                                                            <th>MFG Date</th>
-                                                            <th>RMS_Event</th>
-                                                            <th>Status</th>
+                                                            <th>Remarks</th>
                                                         </tr>
                                                     </thead>
                                                     <tbody>
@@ -3501,9 +3505,38 @@
 </s:layout-component>
 <s:layout-component name="page_js_inline">
     <script>
+        
+        $(document).ready(function() {
+    $('.js-example-basic-single').select2();
+});
 
-                                                $(function () {
-                                                    $("#scrollVertical2").DataTable({
+//                                               $(document).ready(function () {
+//                                                 var itemPKID = "14100";
+//
+//                                                   var example_table = $('#example').dataTable({
+//                                                       dom: 'Qfrtip',
+//                                                       destroy: true,
+//                                                       processing: true,
+//                                                       serverSide: true,
+//                                                       ajax: {
+//                                                           url: "${contextPath}/hw/item/transList2/" + itemPKID,
+//                                                           type: "POST",
+//                                                           contentType: "json",
+//                                                       },
+//                                                       columns: [
+//                                                           {"data": "itemId"},
+//                                                           {"data": "dateTime"},
+//                                                           {"data": "transTypeName"},
+//                                                           {"data": "transInQty"},
+//                                                           {"data": "transOutQty"},
+//                                                           {"data": "alu"},
+//                                                           {"data": "remarks"}
+//                                                       ]
+//                                                   });
+//                                               });
+
+                                               $(function () {
+                                                   $("#scrollVertical2").DataTable({
                                                        scrollY: "680px",
                                                        scrollCollapse: false,
                                                        paging: false,
@@ -3513,17 +3546,17 @@
                                                        columnDefs: [{
                                                                targets: [0, 1, 3, 4], visible: false
                                                            }]
-                                                    });
-                                                });
+                                                   });
+                                               });
 
-                                                $(function () {
-                                                    $("#scrollVertical4").DataTable({
-                                                            scrollY: "150px",
-                                                            scrollCollapse: false,
-                                                            paging: false,
-                                                            bInfo: false,
-                                                    });
-                                                });
+                                               $(function () {
+                                                   $("#scrollVertical4").DataTable({
+                                                       scrollY: "150px",
+                                                       scrollCollapse: false,
+                                                       paging: false,
+//                                                       bInfo: false,
+                                                   });
+                                               });
 
                                                function modalDelete(e) {
                                                    var pkId = $(e).attr("modaldeleteid");
@@ -3533,7 +3566,7 @@
                                                        data: {pkID: pkId},
                                                        dataType: 'json',
                                                        success: function (data) {
-                                                           
+
                                                            var tableBody = $('#customButtons tbody');
                                                            tableBody.empty(); // Clear existing table rows
 //                                                           $( "#nav-item" ).tabs( "option", "active", 0 );
@@ -3541,7 +3574,7 @@
                                                            // Populate form fields with received data
                                                            $("#itemType2").val(data.itemType);
                                                            $("#subType").val(data.subType);
-                                                           $("#itemPKID").val(data.id);
+                                                           $("#itemPKID").val(data.sptsPkid);
                                                            $("#itemId").val(data.itemId);
                                                            $("#itemName").val(data.itemName);
                                                            $("#aluHrs").val(data.aluHrs);
@@ -3587,28 +3620,29 @@
                                                            $("#otherOnsemiQty").val(data.otherONQty);
                                                            $("#vendorQty").val(data.vendorQty);
                                                            $("#totalQty").val(data.totalQty);
-                                                           
-                                                            const data001 = data.itemUsage;
-                                                            const myDropdown = document.getElementById("itemUsage");
-                                                            const selectedValue = myDropdown.value;
+
+                                                           const data001 = data.itemUsage;
+                                                           const myDropdown = document.getElementById("itemUsage");
+//                                                           const selectedValue = myDropdown.value;
 //                                                            console.log("AHOI > " + selectedValue);
 //                                                            console.log("data001 >>> " + data001);
-                                                            
-                                                            for (let i = 0; i < myDropdown.options.length; i++) {
-                                                                if (myDropdown.options[i].value === data001) {
+
+                                                           for (let i = 0; i < myDropdown.options.length; i++) {
+                                                               if (myDropdown.options[i].value === data001) {
 //                                                                    console.log("MASUK SELECTED " + myDropdown.options[i].value);
-                                                                    myDropdown.options[i].selected = true;
-                                                                    break; // Exit the loop once the option is found and selected
-                                                                } else {
+                                                                   myDropdown.options[i].selected = true;
+                                                                   break; // Exit the loop once the option is found and selected
+                                                               } else {
+                                                                   myDropdown.options[i].selected = false;
 //                                                                    console.log("YANG LAIN : " + myDropdown.options[i].value);
-                                                                }
-                                                            }
-                                                            const selectedIndex = myDropdown.selectedIndex;
-                                                            const selectedText = myDropdown.options[selectedIndex].text;
+                                                               }
+                                                           }
+                                                           const selectedIndex = myDropdown.selectedIndex;
+                                                           const selectedText = myDropdown.options[selectedIndex].text;
 //                                                            console.log("LAST CHECK >> " + selectedText);
-                                                            $("#testItem").val(data001);
+//                                                           $("#testItem").val(data001);
 //                                                                $("#testItem").val(data.itemUsage);
-                                                           
+
                                                        },
                                                        error: function (jqXHR, textStatus, errorThrown) {
                                                            console.error("Error loading data: " + textStatus, errorThrown);
@@ -3627,6 +3661,7 @@
                                                        dataType: 'json',
                                                        success: function (data) {
                                                            // Populate form fields with received data
+
                                                            var tableBody = $('#customButtons tbody');
                                                            tableBody.empty(); // Clear existing table rows
 
@@ -3640,42 +3675,121 @@
                                                                        '</tr>';
                                                                tableBody.append(row);
                                                            });
+
+//                                                           table.search(this.value).draw();
                                                        },
                                                        error: function (jqXHR, textStatus, errorThrown) {
                                                            console.error("Error loading data: " + textStatus, errorThrown);
                                                        }
                                                    });
                                                }
-                                               
+
                                                function ajaxTrans() {
+
                                                    var itemPKID = $("#itemPKID").val();
-//                                                   alert($("#itemPKID").val());
-                                                   $.ajax({
-                                                       url: '${contextPath}/hw/item/transList', // Replace with your controller URL
-                                                       type: 'GET',
-                                                       data: {itemPKID: itemPKID},
-                                                       dataType: 'json',
-                                                       success: function (data) {
-                                                           // Populate form fields with received data
-                                                           var tableBody = $('#hideSearchExample tbody');
+
+                                                   var example_table = $('#example').dataTable({
+                                                       dom: 'Bfrtip',
+                                                       destroy: true,
+                                                       processing: true,
+                                                       serverSide: true,
+                                                       lengthMenu: [
+                        [7, 25, 50],
+                        [7, 25, 50, "All"],
+                ],
+                                                       ajax: {
+                                                           url: "${contextPath}/hw/item/transList2/" + itemPKID,
+                                                           type: "GET",
+                                                           contentType: "json",
+                                                           success: function (data) {
+                                                            var tableBody = $('#example tbody');
                                                            tableBody.empty(); // Clear existing table rows
 
                                                            $.each(data, function (index, item) {
                                                                var row = '<tr>' +
-                                                                       '<td>' + item.hardwareName + '</td>' +
+                                                                       '<td>' + item.itemId + '</td>' +
+                                                                       '<td>' + item.dateTime + '</td>' +
+                                                                       '<td>' + item.transTypeName + '</td>' +
+                                                                       '<td>' + item.transInQty + '</td>' +
+                                                                       '<td>' + item.transOutQty + '</td>' +
                                                                        '<td>' + item.alu + '</td>' +
-                                                                       '<td>' + item.mfgDate + '</td>' +
-                                                                       '<td>' + item.rmsEvent + '</td>' +
-                                                                       '<td>' + item.status + '</td>' +
+                                                                       '<td>' + item.remarks + '</td>' +
                                                                        '</tr>';
                                                                tableBody.append(row);
                                                            });
+                                                           
+//                                                           example_table.search(this.value).draw();
                                                        },
                                                        error: function (jqXHR, textStatus, errorThrown) {
                                                            console.error("Error loading data: " + textStatus, errorThrown);
                                                        }
+//                                                           dataSrc: 'hw'
+                                                       },
+//                                                       columns: [
+//                                                           {"data": "itemId"},
+//                                                           {"data": "dateTime"},
+//                                                           {"data": "transTypeName"},
+//                                                           {"data": "transInQty"},
+//                                                           {"data": "transOutQty"},
+//                                                           {"data": "alu"},
+//                                                           {"data": "remarks"}
+//                                                       ]
                                                    });
+//                                                   
+////                                                   example_table.ajax.reload();
+//
+////                                                   var itemPKID = $("#itemPKID").val();
+////                                                   new DataTable('#example', {
+////                                                       ajax: '${contextPath}/hw/item/transList2/' + itemPKID,
+//                                                       deferLoading: 57,
+//                                                       destroy: true,
+//                                                       processing: true,
+//                                                       serverSide: true
+//                                                   });
+example_table.ajax.reload()
                                                }
+
+//                                               function ajaxTrans() {
+//                                                   var itemPKID = $("#itemPKID").val();
+////                                                   alert($("#itemPKID").val());
+//                                                   $.ajax({
+//                                                       url: '${contextPath}/hw/item/transList', // Replace with your controller URL
+//                                                       type: 'GET',
+//                                                       data: {itemPKID: itemPKID},
+//                                                       dataType: 'json',
+//                                                       success: function (data) {
+//                                                           // Populate form fields with received data
+//                                                           
+//                                                         var example_table =  $('#example').dataTable({
+//                                                       destroy: true,
+//                                                        processing: true,
+//                                                        serverSide: false
+//                                                    });
+//
+//                                                           var tableBody = $('#example tbody');
+//                                                           tableBody.empty(); // Clear existing table rows
+//
+//                                                           $.each(data, function (index, item) {
+//                                                               var row = '<tr>' +
+//                                                                       '<td>' + item.itemId + '</td>' +
+//                                                                       '<td>' + item.dateTime + '</td>' +
+//                                                                       '<td>' + item.transTypeName + '</td>' +
+//                                                                       '<td>' + item.transInQty + '</td>' +
+//                                                                       '<td>' + item.transOutQty + '</td>' +
+//                                                                       '<td>' + item.alu + '</td>' +
+//                                                                       '<td>' + item.remarks + '</td>' +
+//                                                                       '</tr>';
+//                                                               tableBody.append(row);
+//                                                           });
+//                                                           
+//                                                           example_table.search(this.value).draw();
+//                                                       },
+//                                                       error: function (jqXHR, textStatus, errorThrown) {
+//                                                           console.error("Error loading data: " + textStatus, errorThrown);
+//                                                       }
+//                                                   });
+//                                               }
+
 
     </script>
 </s:layout-component>
