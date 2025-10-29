@@ -1,5 +1,6 @@
 package com.onsemi.mib.controller;
 
+import com.google.common.base.Strings;
 import com.onsemi.mib.dao.HardwareDAO;
 import com.onsemi.mib.dao.ItemDAO;
 import com.onsemi.mib.dao.HimsRequestDAO;
@@ -701,7 +702,265 @@ public class ItemController {
 
         return hw;
     }
+    
+    @RequestMapping(value = "/item/testHtmlData", method = {RequestMethod.GET, RequestMethod.POST})
+    @ResponseBody
+    public String testHtmlData(
+            @ModelAttribute UserSession userSession,
+            Model model,
+            HttpServletRequest request,
+            @RequestParam(required = false) String itemPKID
+    ) throws IOException {
 
+        LOGGER.info("itemPKID: " + itemPKID);
+        LOGGER.info("SINI KITA MASUK KE FUNCTION CONTROLLER");
+        String data = "";
+        data = "<thead>" +
+"                                                        <tr>" +
+"                                                            <th class=\"col-12\">Site</th>" +
+"                                                            <th>Hardware</th>" +
+"                                                            <th>ALU</th>" +
+"                                                            <th>MFG Date</th>" +
+"                                                            <th>RMS_Event</th>" +
+"                                                            <th>Status</th>" +
+"                                                        </tr>" +
+"                                                    </thead>" +
+"                                                    <tbody>";
+        data += "<tr>"
+                + "<td>Airi Satou</td>" +
+"                        <td class=\"sorting_1\">Accountant</td>" +
+"                        <td>Tokyo</td>" +
+"                        <td class=\"dt-type-numeric\">33</td>" +
+"                        <td class=\"dt-type-date\">2008-11-28 00:00:00</td>" +
+"                        <td class=\"dt-type-numeric\">1200000</td>" +
+"                    </tr><tr>" +
+"                        <td>Garrett Winters</td>" +
+"                        <td class=\"sorting_1\">Accountant</td>" +
+"                        <td>Tokyo</td>" +
+"                        <td class=\"dt-type-numeric\">63</td>" +
+"                        <td class=\"dt-type-date\">2011-07-25 00:00:00</td>" +
+"                        <td class=\"dt-type-numeric\">163500</td>" +
+"                    </tr><tr>" +
+"                        <td>Airi Satou</td>" +
+"                        <td class=\"sorting_1\">Accountant</td>" +
+"                        <td>Tokyo</td>" +
+"                        <td class=\"dt-type-numeric\">33</td>" +
+"                        <td class=\"dt-type-date\">2008-11-28 00:00:00</td>" +
+"                        <td class=\"dt-type-numeric\">162</td>" +
+"                    </tr><tr>" +
+"                        <td>Garrett Winters</td>" +
+"                        <td class=\"sorting_1\">Accountant</td>" +
+"                        <td>Tokyo</td>" +
+"                        <td class=\"dt-type-numeric\">63</td>" +
+"                        <td class=\"dt-type-date\">2011-07-25 00:00:00</td>" +
+"                        <td class=\"dt-type-numeric\">170</td>" +
+"                    </tr><tr>" +
+"                        <td>Angelica Ramos</td>" +
+"                        <td class=\"sorting_1\">Chief Executive Officer (CEO)</td>" +
+"                        <td>London</td>" +
+"                        <td class=\"dt-type-numeric\">47</td>" +
+"                        <td class=\"dt-type-date\">2009-10-09 00:00:00</td>" +
+"                        <td class=\"dt-type-numeric\">86000</td>" +
+"                    </tr><tr>" +
+"                        <td>Angelica Ramos</td>" +
+"                        <td class=\"sorting_1\">Chief Executive Officer (CEO)</td>" +
+"                        <td>London</td>" +
+"                        <td class=\"dt-type-numeric\">47</td>" +
+"                        <td class=\"dt-type-date\">2009-10-09 00:00:00</td>" +
+"                        <td class=\"dt-type-numeric\">1</td>" +
+"                    </tr><tr>" +
+"                        <td>Paul Byrd</td>" +
+"                        <td class=\"sorting_1\">Chief Financial Officer (CFO)</td>" +
+"                        <td>New York</td>" +
+"                        <td class=\"dt-type-numeric\">64</td>" +
+"                        <td class=\"dt-type-date\">2010-06-09 00:00:00</td>" +
+"                        <td class=\"dt-type-numeric\">725</td>" +
+"                    </tr><tr>" +
+"                        <td>Angelica Ramos</td>" +
+"                        <td class=\"sorting_1\">Chief Executive Officer (CEO)</td>" +
+"                        <td>London</td>" +
+"                        <td class=\"dt-type-numeric\">47</td>" +
+"                        <td class=\"dt-type-date\">2009-10-09 00:00:00</td>" +
+"                        <td class=\"dt-type-numeric\">86000</td>" +
+"                    </tr><tr>" +
+"                        <td>Angelica Ramos</td>" +
+"                        <td class=\"sorting_1\">Chief Executive Officer (CEO)</td>" +
+"                        <td>London</td>" +
+"                        <td class=\"dt-type-numeric\">47</td>" +
+"                        <td class=\"dt-type-date\">2009-10-09 00:00:00</td>" +
+"                        <td class=\"dt-type-numeric\">1</td>" +
+"                    </tr><tr>" +
+"                        <td>Paul Byrd</td>" +
+"                        <td class=\"sorting_1\">Chief Financial Officer (CFO)</td>" +
+"                        <td>New York</td>" +
+"                        <td class=\"dt-type-numeric\">64</td>" +
+"                        <td class=\"dt-type-date\">2010-06-09 00:00:00</td>" +
+"                        <td class=\"dt-type-numeric\">725</td>" +
+"                    </tr><tr>" +
+"                        <td>Yuri Berry</td>" +
+"                        <td class=\"sorting_1\">Chief Marketing Officer (CMO)</td>" +
+"                        <td>New York</td>" +
+"                        <td class=\"dt-type-numeric\">40</td>" +
+"                        <td class=\"dt-type-date\">2009-06-25 00:00:00</td>" +
+"                        <td class=\"dt-type-numeric\">675</td>" +
+"                    </tr><tr>" +
+"                        <td>Fiona Green</td>" +
+"                        <td class=\"sorting_1\">Chief Operating Officer (COO)</td>" +
+"                        <td>San Francisco</td>" +
+"                        <td class=\"dt-type-numeric\">48</td>" +
+"                        <td class=\"dt-type-date\">2010-03-11 00:00:00</td>" +
+"                        <td class=\"dt-type-numeric\">470600</td>" +
+"                    </tr><tr>" +
+"                        <td>Fiona Green</td>" +
+"                        <td class=\"sorting_1\">Chief Operating Officer (COO)</td>" +
+"                        <td>San Francisco</td>" +
+"                        <td class=\"dt-type-numeric\">48</td>" +
+"                        <td class=\"dt-type-date\">2010-03-11 00:00:00</td>" +
+"                        <td class=\"dt-type-numeric\">850</td>" +
+"                    </tr>";
+        data += "</tbody>";
+
+//        HardwareDAO hwD = new HardwareDAO();
+//        List<Hardware> hw = hwD.getHardwareListByItemId(itemPKID);
+
+        return data;
+    }
+
+    @RequestMapping(value = "/item/ajaxHtmlSample", method = {RequestMethod.GET, RequestMethod.POST})
+    @ResponseBody
+    public String ajaxHtmlSample(
+            @ModelAttribute UserSession userSession,
+            Model model,
+            HttpServletRequest request,
+            @RequestParam(required = false) String itemPKID
+    ) throws IOException {
+
+        LOGGER.info("itemPKID: " + itemPKID);
+        String data = "{" +
+                        "  \"draw\": 1," +
+                        "  \"recordsTotal\": 57," +
+                        "  \"recordsFiltered\": 57," +
+                        "  \"data\": [" +
+                        "    {" +
+                        "      \"first_name\": \"Airi\"," +
+                        "      \"last_name\": \"Satou\"," +
+                        "      \"position\": \"Accountant\"," +
+                        "      \"office\": \"Tokyo\"," +
+                        "      \"start_date\": \"28th Nov 08\"," +
+                        "      \"salary\": \"$162,700\"" +
+                        "    }," +
+                        "    {" +
+                        "      \"first_name\": \"Angelica\"," +
+                        "      \"last_name\": \"Ramos\"," +
+                        "      \"position\": \"Chief Executive Officer (CEO)\"," +
+                        "      \"office\": \"London\"," +
+                        "      \"start_date\": \"9th Oct 09\"," +
+                        "      \"salary\": \"$1,200,000\"" +
+                        "    }," +
+                        "    {" +
+                        "      \"first_name\": \"Ashton\"," +
+                        "      \"last_name\": \"Cox\"," +
+                        "      \"position\": \"Junior Technical Author\"," +
+                        "      \"office\": \"San Francisco\"," +
+                        "      \"start_date\": \"12th Jan 09\"," +
+                        "      \"salary\": \"$86,000\"" +
+                        "    }," +
+                        "    {" +
+                        "      \"first_name\": \"Bradley\"," +
+                        "      \"last_name\": \"Greer\"," +
+                        "      \"position\": \"Software Engineer\"," +
+                        "      \"office\": \"London\"," +
+                        "      \"start_date\": \"13th Oct 12\"," +
+                        "      \"salary\": \"$132,000\"" +
+                        "    }," +
+                        "    {" +
+                        "      \"first_name\": \"Brenden\"," +
+                        "      \"last_name\": \"Wagner\"," +
+                        "      \"position\": \"Software Engineer\"," +
+                        "      \"office\": \"San Francisco\"," +
+                        "      \"start_date\": \"7th Jun 11\"," +
+                        "      \"salary\": \"$206,850\"" +
+                        "    }," +
+                        "    {" +
+                        "      \"first_name\": \"Brielle\"," +
+                        "      \"last_name\": \"Williamson\"," +
+                        "      \"position\": \"Integration Specialist\"," +
+                        "      \"office\": \"New York\"," +
+                        "      \"start_date\": \"2nd Dec 12\"," +
+                        "      \"salary\": \"$372,000\"" +
+                        "    }," +
+                        "    {" +
+                        "      \"first_name\": \"Bruno\"," +
+                        "      \"last_name\": \"Nash\"," +
+                        "      \"position\": \"Software Engineer\"," +
+                        "      \"office\": \"London\"," +
+                        "      \"start_date\": \"3rd May 11\"," +
+                        "      \"salary\": \"$163,500\"" +
+                        "    }," +
+                        "    {" +
+                        "      \"first_name\": \"Caesar\"," +
+                        "      \"last_name\": \"Vance\"," +
+                        "      \"position\": \"Pre-Sales Support\"," +
+                        "      \"office\": \"New York\"," +
+                        "      \"start_date\": \"12th Dec 11\"," +
+                        "      \"salary\": \"$106,450\"" +
+                        "    }," +
+                        "    {" +
+                        "      \"first_name\": \"Cara\"," +
+                        "      \"last_name\": \"Stevens\"," +
+                        "      \"position\": \"Sales Assistant\"," +
+                        "      \"office\": \"New York\"," +
+                        "      \"start_date\": \"6th Dec 11\"," +
+                        "      \"salary\": \"$145,600\"" +
+                        "    }," +
+                        "    {" +
+                        "      \"first_name\": \"Cedric\"," +
+                        "      \"last_name\": \"Kelly\"," +
+                        "      \"position\": \"Senior Javascript Developer\"," +
+                        "      \"office\": \"Edinburgh\"," +
+                        "      \"start_date\": \"29th Mar 12\"," +
+                        "      \"salary\": \"$433,060\"" +
+                        "    }" +
+                        "  ]" +
+                        "}";
+
+//        ItemTransactionDAO hwD = new ItemTransactionDAO();
+//        List<ItemTransaction> hw = hwD.getItemTransactionListByItemPkid(itemPKID);
+
+        return data;
+    }
+    
+    @RequestMapping(value = "/item/ajaxHtmlSampleHardware", method = {RequestMethod.GET, RequestMethod.POST})
+    @ResponseBody
+    public String ajaxHtmlSampleHardware(
+            @ModelAttribute UserSession userSession,
+            Model model,
+            HttpServletRequest request,
+            @RequestParam(required = false) String itemPKID
+    ) throws IOException {
+
+        LOGGER.info("SINI MASUK NK CHEKC DATA UNTUK HW ID");
+        LOGGER.info("itemPKID: " + itemPKID);
+
+        ItemDAO item = new ItemDAO();
+        List<Item> itemList = item.getDataTest(itemPKID);
+        
+        JSONArray jsonArray = new JSONArray();
+        for (Item itm : itemList) {
+            JSONObject jsonObject = new JSONObject();
+            jsonObject.put("id", Strings.nullToEmpty(itm.getId()));
+            jsonObject.put("item_id", Strings.nullToEmpty(itm.getItemId()));
+            jsonObject.put("item_name", Strings.nullToEmpty(itm.getItemName()));
+            jsonObject.put("item_type", Strings.nullToEmpty(itm.getItemType()));
+            jsonObject.put("assembly_id", Strings.nullToEmpty(itm.getAssemblyId()));
+            jsonObject.put("spts_id", Strings.nullToEmpty(itm.getSptsPkid()));
+            jsonObject.put("aluhrs", Strings.nullToEmpty(itm.getAluHrs()));
+            jsonArray.put(jsonObject);
+        }
+        
+        return jsonArray.toString();
+    }
+    
     @RequestMapping(value = "/item/transList", method = {RequestMethod.GET, RequestMethod.POST})
     @ResponseBody
     public List<ItemTransaction> transList(

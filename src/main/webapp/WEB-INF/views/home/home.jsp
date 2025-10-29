@@ -628,7 +628,6 @@
                             <h5 class="card-title">WIP Report 2025</h5>
                         </div>
                         <div class="card-body">
-                            <!--dekat sini ke ni-->
                             <div id="basic-bar-graph-grouped2"></div>
                         </div>
                     </div>

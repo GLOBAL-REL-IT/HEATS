@@ -267,4 +267,46 @@ public class ItemTransactionDAO {
         }
         return count;
     }
+    
+    public List<ItemTransaction> getDataTest(String sptsId) {
+        String sql = "SELECT * FROM item_transaction WHERE spts_pkid = '" + sptsId + "' ORDER BY id ASC";
+        List<ItemTransaction> itemtransactionList = new ArrayList<ItemTransaction>();
+        try {
+            PreparedStatement ps = conn.prepareStatement(sql);
+            ItemTransaction itemtransaction;
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                itemtransaction = new ItemTransaction();
+                itemtransaction.setId(rs.getString("id"));
+                itemtransaction.setSptsPkid(rs.getString("spts_pkid"));
+                itemtransaction.setSiteName(rs.getString("site_name"));
+                itemtransaction.setDateTime(rs.getString("date_time"));
+                itemtransaction.setItemPkid(rs.getString("item_pkid"));
+                itemtransaction.setTransType(rs.getString("trans_type"));
+                itemtransaction.setTransTypeName(rs.getString("trans_type_name"));
+                itemtransaction.setTransQty(rs.getString("trans_qty"));
+                itemtransaction.setTransInQty(rs.getString("trans_in_qty"));
+                itemtransaction.setTransOutQty(rs.getString("trans_out_qty"));
+                itemtransaction.setAlu(rs.getString("alu"));
+                itemtransaction.setRemarks(rs.getString("remarks"));
+                itemtransactionList.add(itemtransaction);
+            }
+            LOGGER.info("tengok data macam mana rs     >>> " + rs);
+            LOGGER.info("tengok data macam mana sptsId >>> " + itemtransactionList);
+            rs.close();
+            ps.close();
+        } catch (SQLException e) {
+            LOGGER.error(e.getMessage());
+        } finally {
+            if (conn != null) {
+                try {
+                    conn.close();
+                } catch (SQLException e) {
+                    LOGGER.error(e.getMessage());
+                }
+            }
+        }
+        return itemtransactionList;
+    }
+    
 }

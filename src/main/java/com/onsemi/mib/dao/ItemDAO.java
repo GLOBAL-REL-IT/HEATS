@@ -625,7 +625,7 @@ public class ItemDAO {
         }
         return count;
     }
-
+    
     public Integer getCountItemId(String itemId) {
         Integer count = null;
         try {
@@ -652,4 +652,46 @@ public class ItemDAO {
         }
         return count;
     }
+    
+    public List<Item> getDataTest(String id) {
+        String sql = "SELECT * FROM item WHERE id = '"+id+"'";
+        List<Item> itemList = new ArrayList<Item>();
+        try {
+            PreparedStatement ps = conn.prepareStatement(sql);
+            Item item;
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                item = new Item();
+                item.setId(rs.getString("id"));
+                item.setSptsPkid(rs.getString("spts_pkid"));
+                item.setItemId(rs.getString("item_id"));
+                item.setItemName(rs.getString("item_name"));
+                item.setItemType(rs.getString("item_type"));
+                item.setSiteName(rs.getString("site_name"));
+                item.setSubType(rs.getString("sub_type"));
+                item.setAssemblyId(rs.getString("assembly_id"));
+                item.setEquipmentType(rs.getString("equipment_type"));
+                item.setEquipmentManufacturer(rs.getString("model"));
+                item.setEquipmentModel(rs.getString("equipment_model"));
+                item.setModel(rs.getString("model"));
+                item.setStressType(rs.getString("stress_type"));
+                item.setAluHrs(rs.getString("alu_hrs"));
+                itemList.add(item);
+            }
+            rs.close();
+            ps.close();
+        } catch (SQLException e) {
+            LOGGER.error(e.getMessage());
+        } finally {
+            if (conn != null) {
+                try {
+                    conn.close();
+                } catch (SQLException e) {
+                    LOGGER.error(e.getMessage());
+                }
+            }  
+        }
+        return itemList;
+    } 
+
 }

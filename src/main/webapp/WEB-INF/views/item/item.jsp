@@ -8,6 +8,9 @@
         <link rel="stylesheet" href="${contextPath}/resources/statflow/vendor/datatables/buttons/dataTables.bs5-custom.css">
         <!-- Bootstrap Select CSS -->
         <link rel="stylesheet" href="${contextPath}/resources/statflow/vendor/bs-select/bs-select.css">
+        
+        <link rel="stylesheet" href="${contextPath}/resources/vendor/DataTables/customitem/dataTables.dataTables.css"/>
+        <link rel="stylesheet" href="${contextPath}/resources/vendor/DataTables/customitem/bootstrap.min.css"/>
     </s:layout-component>
     <s:layout-component name="page_css_inline">
         <style>
@@ -219,7 +222,7 @@
                                     </li>
                                     <li class="nav-item" role="presentation" style="border:1px; border-right-style: ridge;">
                                         <a class="nav-link" id="tab-twoAAA" data-bs-toggle="tab" href="#twoAAA" role="tab"
-                                           aria-controls="twoAAA" aria-selected="false" onclick="ajaxHw();"><i class="bi bi-list-task"></i>List of HW ID</a>
+                                           aria-controls="twoAAA" aria-selected="false" onclick="ajaxListHardware();"><i class="bi bi-list-task"></i>List of HW ID</a>
                                     </li>
                                     <li class="nav-item" role="presentation" style="border:1px; border-right-style: ridge;">
                                         <a class="nav-link" id="tab-threeAAA" data-bs-toggle="tab" href="#threeAAA" role="tab"
@@ -3394,10 +3397,10 @@
                                         <!-- Row start -->
                                         <div class="row gx-4">
                                             <div class="table-responsive">
-                                                <table id="customButtons" class="table custom-table pending">
+                                                <table id="listHardware" class="table custom-table pending">
                                                     <thead>
                                                         <tr>
-                                                            <!--<th class="col-12">Site</th>-->
+                                                            <th>Site</th>
                                                             <th>Hardware ID</th>
                                                             <th>ALU</th>
                                                             <th>MFG Date</th>
@@ -3417,17 +3420,15 @@
                                         <!-- Row start -->
                                         <div class="row gx-4">
                                             <div class="table-responsive">
-                                                <table id="example" class="table custom-table pending">
+                                                <table id="listMovement" class="table custom-table pending">
                                                     <thead>
                                                         <tr>
-                                                            <!--<th class="col-12">Site</th>-->
-                                                            <th>Item ID</th>
-                                                            <th>Date</th>
-                                                            <th>Movement Type</th>
-                                                            <th>In</th>
-                                                            <th>Out</th>
+                                                            <th>Site</th>
+                                                            <th>Hardware ID</th>
                                                             <th>ALU</th>
-                                                            <th>Remarks</th>
+                                                            <th>MFG Date</th>
+                                                            <th>RMS_Event</th>
+                                                            <th>Status</th>
                                                         </tr>
                                                     </thead>
                                                     <tbody>
@@ -3442,10 +3443,10 @@
                                         <!-- Row start -->
                                         <div class="row gx-4">
                                             <div class="table-responsive">
-                                                <table id="customButtons" class="table custom-table pending">
+                                                <table id="listStorage" class="table custom-table pending">
                                                     <thead>
                                                         <tr>
-                                                            <!--<th class="col-12">Site</th>-->
+                                                            <th>Site</th>
                                                             <th>Hardware ID</th>
                                                             <th>ALU</th>
                                                             <th>MFG Date</th>
@@ -3482,6 +3483,10 @@
     </div>
 </s:layout-component>
 <s:layout-component name="page_js">
+    <script src="${contextPath}/resources/vendor/DataTables/customitem/jquery-3.7.1.min.js"></script>
+    <script src="${contextPath}/resources/vendor/DataTables/customitem/bootstrap.bundle.min.js"></script>
+    <script src="${contextPath}/resources/vendor/DataTables/customitem/dataTables.js"></script>
+    
     <!-- Data Tables -->
     <script src="${contextPath}/resources/statflow/vendor/datatables/dataTables.min.js"></script>
     <script src="${contextPath}/resources/statflow/vendor/datatables/dataTables.bootstrap.min.js"></script>
@@ -3506,9 +3511,9 @@
 <s:layout-component name="page_js_inline">
     <script>
         
-        $(document).ready(function() {
-    $('.js-example-basic-single').select2();
-});
+                                                $(document).ready(function() {
+                                                    $('.js-example-basic-single').select2();
+                                                });
 
 //                                               $(document).ready(function () {
 //                                                 var itemPKID = "14100";
@@ -3569,6 +3574,8 @@
 
                                                            var tableBody = $('#customButtons tbody');
                                                            tableBody.empty(); // Clear existing table rows
+//                                                           var tableBody = $('#customButtons tbody');
+//                                                           tableBody.empty(); // Clear existing table rows
 //                                                           $( "#nav-item" ).tabs( "option", "active", 0 );
 //                                                           $( "#tab-oneAAA" ).tabs({ active: 1});
                                                            // Populate form fields with received data
@@ -3603,46 +3610,22 @@
                                                            $("#equipmentType").val(data.equipmentType);
                                                            $("#equipmentModel").val(data.equipmentModel);
                                                            $("#equipmentManufacturer").val(data.equipmentManufacturer);
-                                                           $("#stressType").val(data.stressType);
-                                                           $("#remarks").val(data.remarks);
-
-                                                           $("#onHandQty").val(data.onHandQty);
-                                                           $("#productionStagingQty").val(data.productionStagingQty);
-                                                           $("#productionQty").val(data.productionQty);
-                                                           $("#repairQty").val(data.repairQty);
-                                                           $("#otherQty").val(data.otherQty);
-                                                           $("#quarantineQty").val(data.quarantineQty);
-                                                           $("#externalCleanQty").val(data.externalCleanQty);
-                                                           $("#externalRecleanQty").val(data.externalRecleanQty);
-                                                           $("#internalCleanQty").val(data.internalCleanQty);
-                                                           $("#internalRecleanQty").val(data.internalRecleanQty);
-                                                           $("#storageFactoryQty").val(data.storageFactoryQty);
-                                                           $("#otherOnsemiQty").val(data.otherONQty);
-                                                           $("#vendorQty").val(data.vendorQty);
-                                                           $("#totalQty").val(data.totalQty);
-
-                                                           const data001 = data.itemUsage;
-                                                           const myDropdown = document.getElementById("itemUsage");
-//                                                           const selectedValue = myDropdown.value;
-//                                                            console.log("AHOI > " + selectedValue);
-//                                                            console.log("data001 >>> " + data001);
-
-                                                           for (let i = 0; i < myDropdown.options.length; i++) {
-                                                               if (myDropdown.options[i].value === data001) {
-//                                                                    console.log("MASUK SELECTED " + myDropdown.options[i].value);
-                                                                   myDropdown.options[i].selected = true;
-                                                                   break; // Exit the loop once the option is found and selected
-                                                               } else {
-                                                                   myDropdown.options[i].selected = false;
-//                                                                    console.log("YANG LAIN : " + myDropdown.options[i].value);
-                                                               }
-                                                           }
-                                                           const selectedIndex = myDropdown.selectedIndex;
-                                                           const selectedText = myDropdown.options[selectedIndex].text;
-//                                                            console.log("LAST CHECK >> " + selectedText);
-//                                                           $("#testItem").val(data001);
-//                                                                $("#testItem").val(data.itemUsage);
-
+                                                           
+//                                                            const data001 = data.itemUsage;
+//                                                            const myDropdown = document.getElementById("itemUsage");
+//                                                            const selectedValue = myDropdown.value;
+//                                                            
+//                                                            for (let i = 0; i < myDropdown.options.length; i++) {
+//                                                                if (myDropdown.options[i].value === data001) {
+//                                                                    myDropdown.options[i].selected = true;
+//                                                                    break; // Exit the loop once the option is found and selected
+//                                                                } else {
+////                                                                 
+//                                                                }
+//                                                            }
+//                                                            const selectedIndex = myDropdown.selectedIndex;
+//                                                            const selectedText = myDropdown.options[selectedIndex].text;
+//                                                            $("#testItem").val(data001);
                                                        },
                                                        error: function (jqXHR, textStatus, errorThrown) {
                                                            console.error("Error loading data: " + textStatus, errorThrown);
@@ -3651,146 +3634,46 @@
                                                    document.querySelector('#tab-oneAAA').click();
                                                }
 
-                                               function ajaxHw() {
-                                                   var itemPKID = $("#itemPKID").val();
-//                                                   alert($("#itemPKID").val());
-                                                   $.ajax({
-                                                       url: '${contextPath}/hw/item/hardwareList', // Replace with your controller URL
-                                                       type: 'GET',
-                                                       data: {itemPKID: itemPKID},
-                                                       dataType: 'json',
-                                                       success: function (data) {
-                                                           // Populate form fields with received data
-
-                                                           var tableBody = $('#customButtons tbody');
-                                                           tableBody.empty(); // Clear existing table rows
-
-                                                           $.each(data, function (index, item) {
-                                                               var row = '<tr>' +
-                                                                       '<td>' + item.hardwareName + '</td>' +
-                                                                       '<td>' + item.alu + '</td>' +
-                                                                       '<td>' + item.mfgDate + '</td>' +
-                                                                       '<td>' + item.rmsEvent + '</td>' +
-                                                                       '<td>' + item.status + '</td>' +
-                                                                       '</tr>';
-                                                               tableBody.append(row);
-                                                           });
-
-//                                                           table.search(this.value).draw();
-                                                       },
-                                                       error: function (jqXHR, textStatus, errorThrown) {
-                                                           console.error("Error loading data: " + textStatus, errorThrown);
-                                                       }
-                                                   });
-                                               }
-
                                                function ajaxTrans() {
-
-                                                   var itemPKID = $("#itemPKID").val();
-
-                                                   var example_table = $('#example').dataTable({
-                                                       dom: 'Bfrtip',
-                                                       destroy: true,
-                                                       processing: true,
-                                                       serverSide: true,
-                                                       lengthMenu: [
-                        [7, 25, 50],
-                        [7, 25, 50, "All"],
-                ],
-                                                       ajax: {
-                                                           url: "${contextPath}/hw/item/transList2/" + itemPKID,
-                                                           type: "GET",
-                                                           contentType: "json",
-                                                           success: function (data) {
-                                                            var tableBody = $('#example tbody');
-                                                           tableBody.empty(); // Clear existing table rows
-
-                                                           $.each(data, function (index, item) {
-                                                               var row = '<tr>' +
-                                                                       '<td>' + item.itemId + '</td>' +
-                                                                       '<td>' + item.dateTime + '</td>' +
-                                                                       '<td>' + item.transTypeName + '</td>' +
-                                                                       '<td>' + item.transInQty + '</td>' +
-                                                                       '<td>' + item.transOutQty + '</td>' +
-                                                                       '<td>' + item.alu + '</td>' +
-                                                                       '<td>' + item.remarks + '</td>' +
-                                                                       '</tr>';
-                                                               tableBody.append(row);
-                                                           });
-                                                           
-//                                                           example_table.search(this.value).draw();
+                                                    var itemPKID = $("#itemPKID").val();
+                                                    $('#listMovement').DataTable().destroy();
+                                                    new DataTable('#listMovement', {
+                                                        ajax: {
+                                                            data: {itemPKID: itemPKID},
+                                                            url: '${contextPath}/hw/item/ajaxHtmlSample',
+                                                            type: 'POST'
                                                        },
-                                                       error: function (jqXHR, textStatus, errorThrown) {
-                                                           console.error("Error loading data: " + textStatus, errorThrown);
-                                                       }
-//                                                           dataSrc: 'hw'
-                                                       },
-//                                                       columns: [
-//                                                           {"data": "itemId"},
-//                                                           {"data": "dateTime"},
-//                                                           {"data": "transTypeName"},
-//                                                           {"data": "transInQty"},
-//                                                           {"data": "transOutQty"},
-//                                                           {"data": "alu"},
-//                                                           {"data": "remarks"}
-//                                                       ]
+                                                        columns: [
+                                                            { data: 'first_name' },
+                                                            { data: 'last_name' },
+                                                            { data: 'position' },
+                                                            { data: 'office' },
+                                                            { data: 'start_date' },
+                                                            { data: 'salary' }
+                                                        ],
+                                                        processing: true,
                                                    });
-//                                                   
-////                                                   example_table.ajax.reload();
-//
-////                                                   var itemPKID = $("#itemPKID").val();
-////                                                   new DataTable('#example', {
-////                                                       ajax: '${contextPath}/hw/item/transList2/' + itemPKID,
-//                                                       deferLoading: 57,
-//                                                       destroy: true,
-//                                                       processing: true,
-//                                                       serverSide: true
-//                                                   });
-example_table.ajax.reload()
                                                }
 
-//                                               function ajaxTrans() {
-//                                                   var itemPKID = $("#itemPKID").val();
-////                                                   alert($("#itemPKID").val());
-//                                                   $.ajax({
-//                                                       url: '${contextPath}/hw/item/transList', // Replace with your controller URL
-//                                                       type: 'GET',
-//                                                       data: {itemPKID: itemPKID},
-//                                                       dataType: 'json',
-//                                                       success: function (data) {
-//                                                           // Populate form fields with received data
-//                                                           
-//                                                         var example_table =  $('#example').dataTable({
-//                                                       destroy: true,
-//                                                        processing: true,
-//                                                        serverSide: false
-//                                                    });
-//
-//                                                           var tableBody = $('#example tbody');
-//                                                           tableBody.empty(); // Clear existing table rows
-//
-//                                                           $.each(data, function (index, item) {
-//                                                               var row = '<tr>' +
-//                                                                       '<td>' + item.itemId + '</td>' +
-//                                                                       '<td>' + item.dateTime + '</td>' +
-//                                                                       '<td>' + item.transTypeName + '</td>' +
-//                                                                       '<td>' + item.transInQty + '</td>' +
-//                                                                       '<td>' + item.transOutQty + '</td>' +
-//                                                                       '<td>' + item.alu + '</td>' +
-//                                                                       '<td>' + item.remarks + '</td>' +
-//                                                                       '</tr>';
-//                                                               tableBody.append(row);
-//                                                           });
-//                                                           
-//                                                           example_table.search(this.value).draw();
-//                                                       },
-//                                                       error: function (jqXHR, textStatus, errorThrown) {
-//                                                           console.error("Error loading data: " + textStatus, errorThrown);
-//                                                       }
-//                                                   });
-//                                               }
-
-
+                                                function ajaxListHardware() {
+                                                var itemPKID = $("#itemPKID").val();
+                                                    $('#listHardware').DataTable().destroy();
+                                                    new DataTable('#listHardware', {
+                                                        ajax: {
+                                                            data: {itemPKID: itemPKID},
+                                                            url: '${contextPath}/hw/item/ajaxHtmlSampleHardware',
+                                                            dataSrc: ''
+                                                        },
+                                                        columns: [
+                                                            { data: 'item_id' },
+                                                            { data: 'item_name' },
+                                                            { data: 'item_type' },
+                                                            { data: 'assembly_id' },
+                                                            { data: 'spts_id' },
+                                                            { data: 'aluhrs' },
+                                                        ]
+                                                   });
+                                                }
     </script>
 </s:layout-component>
 </s:layout-render>
