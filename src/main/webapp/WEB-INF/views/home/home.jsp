@@ -42,21 +42,21 @@
                 color: #FFFFFF; /* White text for contrast */
             }
 
-/*            .img3 {
-                width: 55px;  Sets a fixed width 
-                height: 18px;  Sets a fixed height 
-            }
-
-            .app-footer2 {
-                position: fixed;
-                bottom: 0;
-                right: 0;
-                font-size: 0.7rem;
-                margin: 0;
-                padding: 15px 20px 0 20px;
-                display: flex;
-                justify-content: flex-end;
-            }*/
+            /*            .img3 {
+                            width: 55px;  Sets a fixed width 
+                            height: 18px;  Sets a fixed height 
+                        }
+            
+                        .app-footer2 {
+                            position: fixed;
+                            bottom: 0;
+                            right: 0;
+                            font-size: 0.7rem;
+                            margin: 0;
+                            padding: 15px 20px 0 20px;
+                            display: flex;
+                            justify-content: flex-end;
+                        }*/
         </style>
     </s:layout-component>
     <s:layout-component name="page_header">
@@ -628,7 +628,7 @@
                             <h5 class="card-title">WIP Report 2025</h5>
                         </div>
                         <div class="card-body">
-                            <div id="basic-bar-graph-grouped2"></div>
+                            <div id="chartsample"></div>
                         </div>
                     </div>
                 </div>
@@ -693,185 +693,185 @@
     </s:layout-component>
     <s:layout-component name="page_js_inline">
         <script>
-            
+
             //RMS Return from Loading
             $(function () {
-$("#scrollVertical2").DataTable({
-        scrollY: "207px",
-        scrollCollapse: false,
-        paging: false,
-        bInfo: false,
-});
-});
+                $("#scrollVertical2").DataTable({
+                    scrollY: "207px",
+                    scrollCollapse: false,
+                    paging: false,
+                    bInfo: false,
+                });
+            });
 
-       $(function () {
-$("#scrollVertical3").DataTable({
-        scrollY: "150px",
-        scrollCollapse: false,
-        paging: false,
-        bInfo: false,
-});
-});
+            $(function () {
+                $("#scrollVertical3").DataTable({
+                    scrollY: "150px",
+                    scrollCollapse: false,
+                    paging: false,
+                    bInfo: false,
+                });
+            });
 
-       $(function () {
-$("#scrollVertical4").DataTable({
-        scrollY: "150px",
-        scrollCollapse: false,
-        paging: false,
-        bInfo: false,
-});
-});
+            $(function () {
+                $("#scrollVertical4").DataTable({
+                    scrollY: "150px",
+                    scrollCollapse: false,
+                    paging: false,
+                    bInfo: false,
+                });
+            });
 
-var options = {
-  series: [42, 47, 52, 58, 65],
-  chart: {
-    width: 370,
-    height: 370,
-    type: 'polarArea',
-    fontFamily: 'Poppins, sans-serif',
-    toolbar: {
-      show: false
-    },
-    animations: {
-      enabled: true,
-      easing: 'easeinout',
-      speed: 800
-    }
-  },
-  labels: ['VM Before Loading', 'BIB Test before Loading', 'Abnormal Loading', 'Ionic Test', 'VM After Loading'],
-  fill: {
-    opacity: 0.85,
-    gradient: {
-      enabled: true
-    }
-  },
-  stroke: {
-    width: 2,
-    colors: ['#ffffff']
-  },
-  colors: ["#50589C", "#D97D55", "#5ec3f1", "#9DB6FF", "#59AC77"],
-  yaxis: {
-    show: false
-  },
-  legend: {
-    position: 'bottom',
-    fontSize: '14px',
-    markers: {
-      radius: 3
-    }
-  },
-  tooltip: {
-    y: {
-      formatter: function (val) {
-//        return val + " Million"
-         return val
-      }
-    },
-    theme: 'dark'
-  },
-  dataLabels: {
-    enabled: true,
-    formatter: function (val) {
-      return Math.round(val) + "%"
-    },
-    style: {
-      fontSize: '12px',
-      fontWeight: 'bold'
-    }
-  },
-  plotOptions: {
-    polarArea: {
-      rings: {
-        strokeWidth: 0
-      },
-      spokes: {
-        strokeWidth: 0
-      },
-      offsetY: 0,
-      offsetX: 0
-    }
-  },
-  responsive: [{
-    breakpoint: 480,
-    options: {
-      chart: {
-        width: 280
-      },
-      legend: {
-        position: 'bottom'
-      }
-    }
-  }]
-};
+            var options = {
+                series: [42, 47, 52, 58, 65],
+                chart: {
+                    width: 370,
+                    height: 370,
+                    type: 'polarArea',
+                    fontFamily: 'Poppins, sans-serif',
+                    toolbar: {
+                        show: false
+                    },
+                    animations: {
+                        enabled: true,
+                        easing: 'easeinout',
+                        speed: 800
+                    }
+                },
+                labels: ['VM Before Loading', 'BIB Test before Loading', 'Abnormal Loading', 'Ionic Test', 'VM After Loading'],
+                fill: {
+                    opacity: 0.85,
+                    gradient: {
+                        enabled: true
+                    }
+                },
+                stroke: {
+                    width: 2,
+                    colors: ['#ffffff']
+                },
+                colors: ["#50589C", "#D97D55", "#5ec3f1", "#9DB6FF", "#59AC77"],
+                yaxis: {
+                    show: false
+                },
+                legend: {
+                    position: 'bottom',
+                    fontSize: '14px',
+                    markers: {
+                        radius: 3
+                    }
+                },
+                tooltip: {
+                    y: {
+                        formatter: function (val) {
+//                            return val + " Million"
+                            return val
+                        }
+                    },
+                    theme: 'dark'
+                },
+                dataLabels: {
+                    enabled: true,
+                    formatter: function (val) {
+                        return Math.round(val) + "%"
+                    },
+                    style: {
+                        fontSize: '12px',
+                        fontWeight: 'bold'
+                    }
+                },
+                plotOptions: {
+                    polarArea: {
+                        rings: {
+                            strokeWidth: 0
+                        },
+                        spokes: {
+                            strokeWidth: 0
+                        },
+                        offsetY: 0,
+                        offsetX: 0
+                    }
+                },
+                responsive: [{
+                        breakpoint: 480,
+                        options: {
+                            chart: {
+                                width: 280
+                            },
+                            legend: {
+                                position: 'bottom'
+                            }
+                        }
+                    }]
+            };
 
-var chart = new ApexCharts(document.querySelector("#demography2"), options);
-chart.render();
+            var chart = new ApexCharts(document.querySelector("#demography2"), options);
+            chart.render();
 
-var optionsss = {
-    chart: {
-        height: 355,
-        type: 'bar',
-        toolbar: {
-            show: false,
-        },
-    },
-    plotOptions: {
-        bar: {
-            horizontal: true,
-            dataLabels: {
-                position: 'top',
-            },
-        }
-    },
-    dataLabels: {
-        enabled: true,
-        offsetX: -6,
-        style: {
-            fontSize: '12px',
-            colors: ['#fff']
-        }
-    },
-    stroke: {
-        show: true,
-        width: 0,
-    },
-    series: [{
-        name: 'WIP Incoming Request',
-        data: [44, 55, 41, 64, 22,11,43,50,66,12,33,45]
-    }, {
-        name: 'WIP Completed',
-        data: [53, 32, 33, 44, 32,32,12,5,34,12,47,6]
-    }],
-    xaxis: {
-        categories: ["Jan", "Feb", "Mar", "Apr", "May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"],
-    },
-    grid: {
-        borderColor: '#ffe4a7',
-        strokeDashArray: 5,
-        xaxis: {
-            lines: {
-                show: true
+            var optionsss = {
+                chart: {
+                    height: 355,
+                    type: 'bar',
+                    toolbar: {
+                        show: false,
+                    },
+                },
+                plotOptions: {
+                    bar: {
+                        horizontal: true,
+                        dataLabels: {
+                            position: 'top',
+                        },
+                    }
+                },
+                dataLabels: {
+                    enabled: true,
+                    offsetX: -6,
+                    style: {
+                        fontSize: '12px',
+                        colors: ['#fff']
+                    }
+                },
+                stroke: {
+                    show: true,
+                    width: 0,
+                },
+                series: [{
+                        name: 'WIP Incoming Request',
+                        data: [44, 55, 41, 64, 22, 11, 43, 50, 66, 12, 33, 45]
+                    }, {
+                        name: 'WIP Completed',
+                        data: [53, 32, 33, 44, 32, 32, 12, 5, 34, 12, 47, 6]
+                    }],
+                xaxis: {
+                    categories: ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"],
+                },
+                grid: {
+                    borderColor: '#ffe4a7',
+                    strokeDashArray: 5,
+                    xaxis: {
+                        lines: {
+                            show: true
+                        }
+                    },
+                    yaxis: {
+                        lines: {
+                            show: false,
+                        }
+                    },
+                    padding: {
+                        top: 0,
+                        right: 0,
+                        bottom: 0,
+                        left: 0
+                    },
+                },
+                colors: ['#615FFF', '#05DF72'],
             }
-        },
-        yaxis: {
-            lines: {
-                show: false,
-            }
-        },
-        padding: {
-            top: 0,
-            right: 0,
-            bottom: 0,
-            left: 0
-        },
-    },
-    colors: ['#615FFF', '#05DF72'],
-}
-var chartss = new ApexCharts(
-    document.querySelector("#basic-bar-graph-grouped2"),
-    optionsss
-);
-chartss.render();
+            var chartss = new ApexCharts(
+                    document.querySelector("#basic-bar-graph-grouped2"),
+                    optionsss
+                    );
+            chartss.render();
 
 //                    var options1 = {
 //                        series: [{
@@ -928,6 +928,129 @@ chartss.render();
 //                    };
 //                    var chart1 = new ApexCharts(document.querySelector("#taskStats1"), options1);
 //                    chart1.render();
+
+            var options = {
+                series: [{
+                        name: 'Average',
+                        type: 'column',
+                        data: [1.4, 2, 2.5, 1.5, 2.5, 2.8, 3.8, 4.6, 3.3, 4.4, 1.2, 3.2]
+                    }, {
+                        name: 'New',
+                        type: 'column',
+                        data: [1.1, 3, 3.1, 4, 4.1, 4.9, 6.5, 8.5, 7.7, 6.5, 3.45, 8.2]
+                    }, {
+                        name: 'Complete',
+                        type: 'line',
+                        data: [20, 29, 37, 36, 44, 45, 50, 58, 65, 54, 35, 45]
+                    }],
+                chart: {
+                    height: 350,
+                    type: 'line',
+                    stacked: false
+                },
+                dataLabels: {
+                    enabled: false
+                },
+                stroke: {
+                    width: [1, 1, 4]
+                },
+                title: {
+//                    text: 'WIP Report 2025',
+                    align: 'left',
+                    offsetX: 110
+                },
+                xaxis: {
+                    categories: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
+                },
+                yaxis: [
+                    {
+                        seriesName: 'Average',
+                        axisTicks: {
+                            show: true,
+                        },
+                        axisBorder: {
+                            show: true,
+                            color: '#008FFB'
+                        },
+                        labels: {
+                            style: {
+                                colors: '#008FFB',
+                            }
+                        },
+                        title: {
+                            text: "Average Data Completed",
+                            style: {
+                                color: '#008FFB',
+                            }
+                        },
+                        tooltip: {
+                            enabled: true
+                        }
+                    },
+                    {
+                        seriesName: 'New',
+                        show: false,
+                        max: 100,
+                        opposite: true,
+                        axisTicks: {
+                            show: true,
+                        },
+                        axisBorder: {
+                            show: true,
+                            color: '#00E396'
+                        },
+                        labels: {
+                            style: {
+                                colors: '#00E396',
+                            }
+                        },
+                        title: {
+                            text: "New Task",
+                            style: {
+                                color: '#00E396',
+                            }
+                        },
+                    },
+                    {
+                        seriesName: 'Complete',
+                        opposite: true,
+                        max: 100,
+                        axisTicks: {
+                            show: true,
+                        },
+                        axisBorder: {
+                            show: true,
+                            color: '#FEB019'
+                        },
+                        labels: {
+                            style: {
+                                colors: '#FEB019',
+                            },
+                        },
+                        title: {
+                            text: "Completed Task",
+                            style: {
+                                color: '#FEB019',
+                            }
+                        }
+                    },
+                ],
+                tooltip: {
+                    fixed: {
+                        enabled: true,
+                        position: 'topLeft', // topRight, topLeft, bottomRight, bottomLeft
+                        offsetY: 30,
+                        offsetX: 60
+                    },
+                },
+                legend: {
+                    horizontalAlign: 'left',
+                    offsetX: 40
+                }
+            };
+
+            var chart = new ApexCharts(document.querySelector("#chartsample"), options);
+            chart.render();
         </script>
 
     </s:layout-component>
