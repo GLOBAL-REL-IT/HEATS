@@ -989,8 +989,15 @@
 //                    var chart1 = new ApexCharts(document.querySelector("#taskStats1"), options1);
 //                    chart1.render();
 
+            const averageValue = 4;
+            const averageData = new Array(12).fill(averageValue);
             var options = {
-                series: [{
+                series: [
+                    {
+                        name: 'Average',
+                        type: 'line',
+                        data: averageData
+                    }, {
                         name: 'WIP In',
                         type: 'column',
                         data: [10, 12, 15, 15, 15, 18, 18, 16, 13, 14, 12, 12]
@@ -1020,14 +1027,16 @@
                     offsetX: 110
                 },
                 xaxis: {
-                    categories: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
+                    categories: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
                 },
                 yaxis: [
                     {
-                        seriesName: 'WIP In',
-                        max: 30,
+                        seriesName: 'AVERAGE',
+                        show: false,
+                        min: 0,
+                        max: 10,
                         axisTicks: {
-                            show: true,
+                            show: true
                         },
                         axisBorder: {
                             show: true,
@@ -1035,13 +1044,36 @@
                         },
                         labels: {
                             style: {
-                                colors: '#008FFB',
+                                colors: '#008FFB'
+                            }
+                        },
+                        title: {
+                            text: "kira dia",
+                            style: {
+                                color: '#00E396'
+                            }
+                        }
+                    },
+                    {
+                        seriesName: 'WIP In',
+                        min: 0,
+                        max: 20,
+                        axisTicks: {
+                            show: true
+                        },
+                        axisBorder: {
+                            show: true,
+                            color: '#008FFB'
+                        },
+                        labels: {
+                            style: {
+                                colors: '#008FFB'
                             }
                         },
                         title: {
                             text: "WIP",
                             style: {
-                                color: '#008FFB',
+                                color: '#008FFB'
                             }
                         },
                         tooltip: {
@@ -1051,10 +1083,11 @@
                     {
                         seriesName: 'WIP Completed',
                         show: false,
-                        max: 30,
+                        min: 0,
+                        max: 20,
                         opposite: true,
                         axisTicks: {
-                            show: true,
+                            show: true
                         },
                         axisBorder: {
                             show: true,
@@ -1062,22 +1095,23 @@
                         },
                         labels: {
                             style: {
-                                colors: '#00E396',
+                                colors: '#00E396'
                             }
                         },
                         title: {
                             text: "New Task",
                             style: {
-                                color: '#00E396',
+                                color: '#00E396'
                             }
-                        },
+                        }
                     },
                     {
                         seriesName: 'Average Cycle Time',
                         opposite: true,
+                        min: 0,
                         max: 10,
                         axisTicks: {
-                            show: true,
+                            show: true
                         },
                         axisBorder: {
                             show: true,
@@ -1085,16 +1119,16 @@
                         },
                         labels: {
                             style: {
-                                colors: '#FEB019',
-                            },
+                                colors: '#FEB019'
+                            }
                         },
                         title: {
                             text: "Cycle Time (Day)",
                             style: {
-                                color: '#FEB019',
+                                color: '#FEB019'
                             }
                         }
-                    },
+                    }
                 ],
                 tooltip: {
                     fixed: {
@@ -1102,7 +1136,7 @@
                         position: 'topLeft', // topRight, topLeft, bottomRight, bottomLeft
                         offsetY: 30,
                         offsetX: 60
-                    },
+                    }
                 },
                 legend: {
                     horizontalAlign: 'left',
