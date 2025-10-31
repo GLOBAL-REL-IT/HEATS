@@ -9,8 +9,8 @@
         <!-- Bootstrap Select CSS -->
         <link rel="stylesheet" href="${contextPath}/resources/statflow/vendor/bs-select/bs-select.css">
         
-        <link rel="stylesheet" href="${contextPath}/resources/vendor/DataTables/customitem/dataTables.dataTables.css"/>
-        <link rel="stylesheet" href="${contextPath}/resources/vendor/DataTables/customitem/bootstrap.min.css"/>
+<!--        <link rel="stylesheet" href="${contextPath}/resources/vendor/DataTables/customitem/dataTables.dataTables.css"/>
+        <link rel="stylesheet" href="${contextPath}/resources/vendor/DataTables/customitem/bootstrap.min.css"/>-->
     </s:layout-component>
     <s:layout-component name="page_css_inline">
         <style>
@@ -100,7 +100,8 @@
                         <!--<button class="btn btn-outline-success me-2" type="button">Pending Registration (BIB/ Bib Card)</button>-->
                         <a href="${contextPath}/hw/item/add" class="btn btn-outline-success me-2" role="button">
                              <i class='bi bi-plus-square'></i>&nbsp;&nbsp;Add New</a>
-                        <!--<button class="btn btn-sm btn-outline-secondary" type="button">Smaller button</button>-->
+                             <a href="${contextPath}/hw/item/pending" class="btn btn-outline-success me-2" role="button">
+                             <i class='bi bi-hourglass'></i>&nbsp;&nbsp;Pending VM/Functional Test</a>
                     </div>
                 </nav>
                 <div class="col-sm-12 col-12">
@@ -3423,12 +3424,14 @@
                                                 <table id="listMovement" class="table custom-table pending">
                                                     <thead>
                                                         <tr>
-                                                            <th>Site</th>
-                                                            <th>Hardware ID</th>
+                                                            <!--<th class="col-12">Site</th>-->
+                                                            <th>Item ID</th>
+                                                            <th>Date</th>
+                                                            <th>Movement Type</th>
+                                                            <th>In</th>
+                                                            <th>Out</th>
                                                             <th>ALU</th>
-                                                            <th>MFG Date</th>
-                                                            <th>RMS_Event</th>
-                                                            <th>Status</th>
+                                                            <th>Remarks</th>
                                                         </tr>
                                                     </thead>
                                                     <tbody>
@@ -3640,18 +3643,19 @@
                                                     new DataTable('#listMovement', {
                                                         ajax: {
                                                             data: {itemPKID: itemPKID},
-                                                            url: '${contextPath}/hw/item/ajaxHtmlSample',
-                                                            type: 'POST'
+                                                            url: '${contextPath}/hw/item/ajaxTransaction',
+                                                            dataSrc: ''
                                                        },
                                                         columns: [
-                                                            { data: 'first_name' },
-                                                            { data: 'last_name' },
-                                                            { data: 'position' },
-                                                            { data: 'office' },
-                                                            { data: 'start_date' },
-                                                            { data: 'salary' }
+                                                            {"data": "itemId"},
+                                                           {"data": "dateTime"},
+                                                           {"data": "transTypeName"},
+                                                           {"data": "transInQty"},
+                                                           {"data": "transOutQty"},
+                                                           {"data": "alu"},
+                                                           {"data": "remarks"}
                                                         ],
-                                                        processing: true,
+//                                                        processing: true,
                                                    });
                                                }
 

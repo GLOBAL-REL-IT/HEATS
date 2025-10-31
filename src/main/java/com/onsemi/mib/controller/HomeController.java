@@ -1,9 +1,11 @@
 package com.onsemi.mib.controller;
 
+import com.onsemi.mib.dao.ItemDAO;
 import com.onsemi.mib.dao.LDAPUserDAO;
 import com.onsemi.mib.dao.RetrieveDAO;
 import com.onsemi.mib.dao.SRInventoryMgtDAO;
 import com.onsemi.mib.model.InventoryMgt;
+import com.onsemi.mib.model.Item;
 import com.onsemi.mib.model.LDAPUser;
 import java.util.Locale;
 import javax.servlet.ServletContext;
@@ -126,6 +128,11 @@ public class HomeController {
 //        model.addAttribute("fullDebit", fullDebit);
 //        model.addAttribute("fullCredit", fullCredit);
         if (userSession != null) {
+
+            ItemDAO itemD = new ItemDAO();
+            List<Item> item = itemD.getItemListPendingVMFunctionalTest();
+            model.addAttribute("item", item);
+
             String groupId = userSession.getGroup();
             model.addAttribute("groupId", groupId);
 //            LOGGER.info("groupId = " + groupId);

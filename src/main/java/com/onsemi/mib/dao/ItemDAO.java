@@ -257,6 +257,31 @@ public class ItemDAO {
         return queryResult;
     }
 
+    public QueryResult updateItemStatus(Item hardwaredetail) {
+        QueryResult queryResult = new QueryResult();
+        try {
+            PreparedStatement ps = conn.prepareStatement(
+                    "UPDATE item SET status = ? WHERE id = ?"
+            );
+            ps.setString(1, hardwaredetail.getStatus());
+            ps.setString(2, hardwaredetail.getId());
+            queryResult.setResult(ps.executeUpdate());
+            ps.close();
+        } catch (SQLException e) {
+            queryResult.setErrorMessage(e.getMessage());
+            LOGGER.error(e.getMessage());
+        } finally {
+            if (conn != null) {
+                try {
+                    conn.close();
+                } catch (SQLException e) {
+                    LOGGER.error(e.getMessage());
+                }
+            }
+        }
+        return queryResult;
+    }
+
     public QueryResult deleteHardwareDetail(String hardwaredetailId) {
         QueryResult queryResult = new QueryResult();
         try {
@@ -599,6 +624,44 @@ public class ItemDAO {
         return hardwaredetailList;
     }
 
+    public List<Item> getItemListPendingVMFunctionalTest() {
+        String sql = "SELECT it.id, it.item_type, it.sub_type, it.item_id, it.`status`, it.item_name, it.assembly_id, it.total_qty, it.flag, it.created_by, DATE_FORMAT(it.created_date,'%d %M %Y %h:%i %p') AS createdDate FROM item it WHERE it.flag = '0'";
+        List<Item> hardwaredetailList = new ArrayList<Item>();
+        try {
+            PreparedStatement ps = conn.prepareStatement(sql);
+            Item hardwaredetail;
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                hardwaredetail = new Item();
+                hardwaredetail.setId(rs.getString("id"));
+                hardwaredetail.setItemType(rs.getString("item_type"));
+                hardwaredetail.setSubType(rs.getString("sub_type"));
+                hardwaredetail.setItemId(rs.getString("item_id"));
+                hardwaredetail.setItemName(rs.getString("item_name"));
+                hardwaredetail.setAssemblyId(rs.getString("assembly_id"));
+                hardwaredetail.setTotalQty(rs.getString("total_qty"));
+                hardwaredetail.setStatus(rs.getString("status"));
+                hardwaredetail.setFlag(rs.getString("flag"));
+                hardwaredetail.setCreatedBy(rs.getString("created_by"));
+                hardwaredetail.setCreatedDate(rs.getString("createdDate"));
+                hardwaredetailList.add(hardwaredetail);
+            }
+            rs.close();
+            ps.close();
+        } catch (SQLException e) {
+            LOGGER.error(e.getMessage());
+        } finally {
+            if (conn != null) {
+                try {
+                    conn.close();
+                } catch (SQLException e) {
+                    LOGGER.error(e.getMessage());
+                }
+            }
+        }
+        return hardwaredetailList;
+    }
+
     public Integer getCountPkid(String pkid) {
         Integer count = null;
         try {
@@ -625,7 +688,7 @@ public class ItemDAO {
         }
         return count;
     }
-    
+
     public Integer getCountItemId(String itemId) {
         Integer count = null;
         try {
@@ -652,9 +715,9 @@ public class ItemDAO {
         }
         return count;
     }
-    
+
     public List<Item> getDataTest(String id) {
-        String sql = "SELECT * FROM item WHERE id = '"+id+"'";
+        String sql = "SELECT * FROM item WHERE id = '" + id + "'";
         List<Item> itemList = new ArrayList<Item>();
         try {
             PreparedStatement ps = conn.prepareStatement(sql);
@@ -689,9 +752,9 @@ public class ItemDAO {
                 } catch (SQLException e) {
                     LOGGER.error(e.getMessage());
                 }
-            }  
+            }
         }
         return itemList;
-    } 
+    }
 
 }

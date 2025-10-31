@@ -106,7 +106,7 @@
                     <!-- Card start -->
                     <div class="card mb-4">
                         <div class="card-header">
-                            <h5 class="card-title">Hardware Module - New Registration</h5>
+                            <h5 class="card-title">Hardware Module - <span style="color:#D97D55">New Hardware Registration</span></h5>
                         </div>
                         <div class="card-body">
                             <!-- Row start -->
@@ -127,7 +127,7 @@
                                         </div>
                                     </div>
                                     <div class="col-auto">
-                                        <button type="submit" class="btn btn-primary">Fetch</button>
+                                        <button type="submit" class="btn btn-primary">Create</button>
                                     </div>
                                 </div>
                             </form>

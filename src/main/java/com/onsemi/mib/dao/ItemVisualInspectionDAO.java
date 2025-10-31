@@ -220,8 +220,8 @@ public class ItemVisualInspectionDAO {
         return itemvisualInspection;
     }
 
-    public ItemVisualInspection getItemVisualInspectionByMibItemId(String mibItemId) {
-        String sql = "SELECT * FROM item_visual_inspection WHERE mib_item_id = '" + mibItemId + "'";
+    public ItemVisualInspection getItemVisualInspectionByMibItemIdWithModuleItemRegistration(String mibItemId) {
+        String sql = "SELECT * FROM item_visual_inspection WHERE mib_item_id = '" + mibItemId + "' AND module = 'Item Registration'";
         ItemVisualInspection itemvisualInspection = null;
         try {
             PreparedStatement ps = conn.prepareStatement(sql);
@@ -334,5 +334,32 @@ public class ItemVisualInspectionDAO {
             }
         }
         return itemvisualInspectionList;
+    }
+
+    public Integer getCountItemIdWithModuleItemRegistration(String MibItemId) {
+        Integer count = null;
+        try {
+            PreparedStatement ps = conn.prepareStatement(
+                    "SELECT COUNT(*) AS count FROM item_visual_inspection inc WHERE inc.mib_item_id = '" + MibItemId + "' AND inc.module = 'Item Registration'"
+            );
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                count = rs.getInt("count");
+            }
+            rs.close();
+
+            ps.close();
+        } catch (SQLException e) {
+            LOGGER.error(e.getMessage());
+        } finally {
+            if (conn != null) {
+                try {
+                    conn.close();
+                } catch (SQLException e) {
+                    LOGGER.error(e.getMessage());
+                }
+            }
+        }
+        return count;
     }
 }

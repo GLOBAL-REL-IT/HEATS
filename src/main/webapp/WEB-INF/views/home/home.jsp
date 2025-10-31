@@ -485,6 +485,66 @@
                     </div>
                     <!-- Card end -->
                 </div>
+                <div class="col-12">
+                    <!-- Card start -->
+                    <div class="card mb-4">
+                        <div class="card-header">
+                            <h5 class="card-title">New Hardware - Pending Vm/Functional Test</h5>
+                        </div>
+                        <div class="card-body">
+                            <div class="table-responsive">
+                                <table id="scrollVertical2" class="table pending custom-table">
+                                    <thead>
+                                        <tr>
+                                            <th><span>No</span></th>
+                                            <th><span>Item Type</span></th>
+                                            <th><span>Sub Type</span></th>
+                                            <th><span>Item ID</span></th>
+                                            <th><span>Item Name</span></th>
+                                            <th><span>Assembly ID</span></th>
+                                            <th><span>Registered By</span></th>
+                                            <th><span>Registered Date</span></th>
+                                            <th><span>Status</span></th>
+                                            <th class="col-1"><span>Manage</span></th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <c:forEach items="${item}" var="parameterMaster" varStatus="parameterMasterLoop">
+                                            <tr>
+                                                <td><c:out value="${parameterMasterLoop.index+1}"/></td>
+                                                <td><c:out value="${parameterMaster.itemType}"/></td>
+                                                <td id="modal_delete_info_${parameterMaster.id}"><c:out value="${parameterMaster.subType}"/></td>
+                                                <td><c:out value="${parameterMaster.itemId}"/></td>
+                                                <td><c:out value="${parameterMaster.itemName}"/></td>
+                                                <td><c:out value="${parameterMaster.assemblyId}"/></td>
+                                                <td><c:out value="${parameterMaster.createdBy}"/></td>
+                                                <td><c:out value="${parameterMaster.createdDate}"/></td>
+                                                <td><c:out value="${parameterMaster.status}"/></td>
+                                                <td align="center">
+                                                    <c:set var="String" value="${parameterMaster.status}"/>
+                                                    <c:choose>
+                                                        <c:when test="${(fn:contains(String, 'Activity Selection'))}">
+                                                            <a href="${contextPath}/hw/item/addActivity/${parameterMaster.id}" class="table-link" title="Edit">
+                                                                <i class="bi bi-box-arrow-in-right h3"></i>
+                                                            </a>
+                                                        </c:when>
+                                                        <c:otherwise>
+                                                            <a href="${contextPath}/hw/item/add2/${parameterMaster.id}" class="table-link" title="Edit">
+                                                                <i class="bi bi-box-arrow-in-right h3"></i>
+                                                            </a>
+                                                        </c:otherwise>
+                                                    </c:choose>
+
+                                                </td>
+                                            </tr>
+                                        </c:forEach>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Card end -->
+                </div>
                 <div class="col-sm-12 col-md-6">
                     <!-- Card start -->
                     <div class="card mb-4">
@@ -931,17 +991,17 @@
 
             var options = {
                 series: [{
-                        name: 'Average',
+                        name: 'WIP In',
                         type: 'column',
-                        data: [1.4, 2, 2.5, 1.5, 2.5, 2.8, 3.8, 4.6, 3.3, 4.4, 1.2, 3.2]
+                        data: [10, 12, 15, 15, 15, 18, 18, 16, 13, 14, 12, 12]
                     }, {
-                        name: 'New',
+                        name: 'WIP Completed',
                         type: 'column',
-                        data: [1.1, 3, 3.1, 4, 4.1, 4.9, 6.5, 8.5, 7.7, 6.5, 3.45, 8.2]
+                        data: [10, 10, 7, 10, 16, 19, 15, 15, 17, 15, 11, 12]
                     }, {
-                        name: 'Complete',
+                        name: 'Average Cycle Time',
                         type: 'line',
-                        data: [20, 29, 37, 36, 44, 45, 50, 58, 65, 54, 35, 45]
+                        data: [4.1, 3, 3.2, 2.5, 4.4, 4.5, 5.0, 5.8, 5.5, 5.4, 3.5, 4.5]
                     }],
                 chart: {
                     height: 350,
@@ -964,7 +1024,8 @@
                 },
                 yaxis: [
                     {
-                        seriesName: 'Average',
+                        seriesName: 'WIP In',
+                        max: 30,
                         axisTicks: {
                             show: true,
                         },
@@ -978,7 +1039,7 @@
                             }
                         },
                         title: {
-                            text: "Average Data Completed",
+                            text: "WIP",
                             style: {
                                 color: '#008FFB',
                             }
@@ -988,9 +1049,9 @@
                         }
                     },
                     {
-                        seriesName: 'New',
+                        seriesName: 'WIP Completed',
                         show: false,
-                        max: 100,
+                        max: 30,
                         opposite: true,
                         axisTicks: {
                             show: true,
@@ -1012,9 +1073,9 @@
                         },
                     },
                     {
-                        seriesName: 'Complete',
+                        seriesName: 'Average Cycle Time',
                         opposite: true,
-                        max: 100,
+                        max: 10,
                         axisTicks: {
                             show: true,
                         },
@@ -1028,7 +1089,7 @@
                             },
                         },
                         title: {
-                            text: "Completed Task",
+                            text: "Cycle Time (Day)",
                             style: {
                                 color: '#FEB019',
                             }

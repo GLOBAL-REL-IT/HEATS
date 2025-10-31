@@ -86,7 +86,8 @@ public class ParameterMasterController {
             return "parameterMaster/add";
         } else {
             redirectAttrs.addFlashAttribute("success", messageSource.getMessage("general.label.save.success", args, locale));
-            return "redirect:/admin/parameterMaster/edit/" + queryResult.getGeneratedKey();
+//            return "redirect:/admin/parameterMaster/edit/" + queryResult.getGeneratedKey();
+            return "redirect:/admin/parameterMaster/addDetail/" + mastercode;
         }
     }
 
@@ -204,14 +205,14 @@ public class ParameterMasterController {
     ) {
         ParameterMasterDAO parameterMasterDAO = new ParameterMasterDAO();
         String codeName = parameterMasterDAO.getMasterCodeandName(parameterMasterCode);
-        
+
         parameterMasterDAO = new ParameterMasterDAO();
 //        ParameterMasterDAO par = new ParameterMasterDAO();
         String masterCode = parameterMasterDAO.getMasterCode(parameterMasterCode);
-        
+
         ParameterDetailsDAO p = new ParameterDetailsDAO();
         String detailsCode = p.getNextDetailCode(parameterMasterCode);
-        
+
         p = new ParameterDetailsDAO();
 //        ParameterDetailsDAO parameterDetailsDAO = new ParameterDetailsDAO();
         List<ParameterDetails> parameterDetailsList = p.getParameterDetailsListByMasterCode(parameterMasterCode);

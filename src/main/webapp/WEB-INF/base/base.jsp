@@ -314,7 +314,7 @@
                         <div class="d-flex align-items-center gap-3 ms-auto">
 
                             <!-- Leads start -->
-                            <span class="d-none d-md-block" style="font-weight:bold>Welcome ${sessionScope.userSession.fullname}</span>
+                            <span class="d-none d-md-block" style="font-weight:bold">Welcome ${sessionScope.userSession.fullname}</span>
                             <span class="d-lg-none d-md-block" style="font-weight:bold">Welcome ${sessionScope.userSession.firstName}</span>
                             <a href="${contextPath}/logout" class="leads rounded-3 d-xxl-flex d-none">
                                 <i class='bi bi-box-arrow-right' style='color:#ffffff' ></i>&nbsp;&nbsp;Logout
@@ -349,14 +349,14 @@
                 <div class="modal-dialog">
                     <div class="modal-content">
                         <div class="modal-header">
-                            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                            <h4 class="modal-title"><i class="fa fa-exclamation-triangle" style="color:red"></i>  Delete Confirmation</h4>
+                            <!--<button type="button" class="btn-close" data-bs-dismiss=="modal" aria-hidden="true">&times;</button>-->
+                            <h4 class="modal-title"><i class="bi bi-exclamation-diamond" style="color:red"></i>  Delete Confirmation</h4>
                         </div>
                         <div class="modal-body">
                         </div>
                         <div class="modal-footer">
-                            <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
-                            <a id="modal_delete_button" href="#" class="btn btn-danger"><i class="fa fa-trash-o"></i>  Delete</a>
+                            <button type="button" class="btn btn-default" data-bs-dismiss="modal">Cancel</button>
+                            <a id="modal_delete_button" href="#" class="btn btn-danger"><i class="bi bi-trash"></i>  Delete</a>
                         </div>
                     </div><!-- /.modal-content -->
                 </div><!-- /.modal-dialog -->
@@ -474,7 +474,8 @@
             <!-- Main Js Required -->
             <script src="${contextPath}/resources/statflow/js/main.js"></script>
             
-            
+            <!-- Swal -->
+            <script src="${contextPath}/resources/private/js/sweetalert.min.js"></script>
 
 
             <script>

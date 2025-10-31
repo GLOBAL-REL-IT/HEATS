@@ -98,85 +98,38 @@
                     <!-- Card start -->
                     <div class="card mb-4">
                         <div class="card-header">
-                            <h5 class="card-title">Hardware Module - Activity Selection (BIB / BIB Card)</h5>
+                            <h5 class="card-title">Parameter Master - Edit</h5>
                         </div>
                         <div class="card-body">
                             <!-- Row start -->
-                            <form class="row g-3 align-items-center" role="form" action="${contextPath}/hw/item/addActivity" method="post">
+                            <form class="row g-3 align-items-center" role="form" action="${contextPath}/admin/parameterMaster/update" method="post">
                                 <div class="row mb-4">
-                                    <label class="col-sm-2 col-md-1 col-form-label fw-semibold" for="fName">Item Type</label>
+                                    <label class="col-sm-2 col-md-1 col-form-label fw-semibold" for="fName">Code</label>
                                     <div class="col-sm-9 col-md-10">
                                         <div class="row g-2">
                                             <div class="col-sm-6">
-                                                <input type="text" class="form-control" id="itemId" name="itemId" value="${item.itemType}" disabled>
-                                                <input type="hidden" class="form-control" id="itemId" name="itemId" value="${item.id}">
+                                                <input type="hidden" name="parameterMasterId" value="${parameterMaster.id}" />
+                                                <input type="text" class="form-control" id="code" name="code" value="${parameterMaster.code}" readonly>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
                                 <div class="row mb-4">
-                                    <label class="col-sm-2 col-md-1 col-form-label fw-semibold" for="subType">Sub Type</label>
+                                    <label class="col-sm-2 col-md-1 col-form-label fw-semibold" for="subType">Name</label>
                                     <div class="col-sm-9 col-md-10">
                                         <div class="row g-2">
                                             <div class="col-sm-6">
-                                                <input type="email" class="form-control" id="subType" name="subType" value="${item.subType}" disabled>
+                                                <input type="text" class="form-control" id="name" name="name" placeholder="Name" value="${parameterMaster.name}" required>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
                                 <div class="row mb-4">
-                                    <label class="col-sm-2 col-md-1 col-form-label fw-semibold" for="itemId">item ID</label>
+                                    <label class="col-sm-2 col-md-1 col-form-label fw-semibold" for="itemId">Remarks</label>
                                     <div class="col-sm-9 col-md-10">
                                         <div class="row g-2">
                                             <div class="col-sm-6">
-                                                <input type="email" class="form-control" id="itemId" name="itemId" value="${item.itemId}" disabled>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="row mb-4">
-                                    <label class="col-sm-2 col-md-1 col-form-label fw-semibold" for="itemName">Item Name</label>
-                                    <div class="col-sm-9 col-md-10">
-                                        <div class="row g-2">
-                                            <div class="col-sm-6">
-                                                <input type="email" class="form-control" id="itemName" name="itemName" value="${item.itemName}" disabled>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="row mb-4">
-                                    <label class="col-sm-2 col-md-1 col-form-label fw-semibold" for="assemblyId">Assembly Id</label>
-                                    <div class="col-sm-9 col-md-10">
-                                        <div class="row g-2">
-                                            <div class="col-sm-6">
-                                                <input type="email" class="form-control" id="assemblyId" name="assemblyId" value="${item.assemblyId}" disabled>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="row mb-4">
-                                    <label class="col-sm-2 col-md-1 col-form-label fw-semibold" for="assemblyId">Activity</label>
-                                    <div class="col-xl-2 col-sm-12 col-12">
-                                        <div class="row g-1">
-                                            <label for="isConsumable" class="form-label">Visual Inspection</label>
-                                            <div class="input-group form-check form-switch">
-                                                <input class="form-check-input" type="checkbox" role="switch" id="viCheck" name="viCheck" checked="" disabled="">
-                                            </div>
-                                            <label for="isConsumable" class="form-label">Bib Test</label>
-                                            <div class="input-group form-check form-switch">
-                                                <input class="form-check-input" type="checkbox" role="switch" id="bibTestCheck" name="bibTestCheck">
-                                            </div>
-                                            <label for="isConsumable" class="form-label">Manual Test</label>
-                                            <div class="input-group form-check form-switch">
-                                                <input class="form-check-input" type="checkbox" role="switch" id="manualTestCheck" name="manualTestCheck">
-                                            </div>
-                                            <label for="isConsumable" class="form-label">Leakage Test</label>
-                                            <div class="input-group form-check form-switch">
-                                                <input class="form-check-input" type="checkbox" role="switch" id="leakageTestCheck" name="leakageTestCheck">
-                                            </div>
-                                            <label for="isConsumable" class="form-label">Power Supply Leakage Test</label>
-                                            <div class="input-group form-check form-switch">
-                                                <input class="form-check-input" type="checkbox" role="switch" id="PsLeakageTestCheck" name="PsLeakageTestCheck">
+                                                <textarea class="form-control" rows="5" id="remarks" name="remarks">${parameterMaster.remarks}</textarea>
                                             </div>
                                         </div>
                                     </div>
@@ -189,7 +142,7 @@
                                     <!--</div>-->
                                     <!--<div class="justify-content-start">-->
                                     <!--<button type="button" class="btn btn-light">Cancel</button>-->
-                                    <a href="${contextPath}/hw/item/pending" class="btn btn-dark float-start">Back</a>
+                                    <a href="${contextPath}/admin/parameterMaster" class="btn btn-dark float-start">Back</a>
                                     <!--</div>-->
                                 </div>
                                 <!-- Form actions end -->
