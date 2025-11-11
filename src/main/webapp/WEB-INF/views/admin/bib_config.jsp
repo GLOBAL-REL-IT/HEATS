@@ -97,8 +97,8 @@
             <div class="row gx-4">
                 <nav class="navbar bg-body-tertiary">
                     <div class="container-fluid justify-content-start">
-                        <a href="${contextPath}/hw/item" class="btn btn-outline-warning me-2" role="button">
-                            <i class='bi bi-arrow-bar-left'></i>&nbsp;&nbsp;Back</a>
+                        <a href="${contextPath}/admin/parameterMaster/add" class="btn btn-outline-success me-2" role="button">
+                            <i class='bi bi-plus-square'></i>&nbsp;&nbsp;Add New</a>
                     </div>
                 </nav>
             </div>
@@ -112,8 +112,7 @@
                     <!-- Card start -->
                     <div class="card mb-4">
                         <div class="card-header">
-                            <h5 class="card-title">Hardware Module - <span style="color:#D97D55">Pending VM / Functional Test for BIB & BIB Cards</span></h5>
-                            <!--<h5 class="card-title">Hardware Module - <span style="color:#D97D55">New Hardware Registration</span></h5>-->
+                            <h5 class="card-title">Activity Configuration for BIB/ BIB Cards</h5>
                         </div>
                         <div class="card-body">
 
@@ -137,9 +136,13 @@
                                                     <th><span>Item ID</span></th>
                                                     <th><span>Item Name</span></th>
                                                     <th><span>Assembly ID</span></th>
-                                                    <th><span>Registered By</span></th>
-                                                    <th><span>Registered Date</span></th>
-                                                    <th><span>Status</span></th>
+                                                    <th><span>Stress Type</span></th>
+                                                    <th class="col-1"><span>VI</span></th>
+                                                    <th class="col-1"><span>BIB Test</span></th>
+                                                    <th class="col-1"><span>Manual Test</span></th>
+                                                    <th class="col-1"><span>Leakage Test</span></th>
+                                                    <th class="col-1"><span>PS Leakage Test</span></th>
+                                                    <th class="col-1"><span>Winchester Chamber Leakage Test</span></th>
                                                     <th class="col-1"><span>Manage</span></th>
                                                 </tr>
                                             </thead>
@@ -152,24 +155,17 @@
                                                         <td><c:out value="${parameterMaster.itemId}"/></td>
                                                         <td><c:out value="${parameterMaster.itemName}"/></td>
                                                         <td><c:out value="${parameterMaster.assemblyId}"/></td>
-                                                        <td><c:out value="${parameterMaster.createdBy}"/></td>
-                                                        <td><c:out value="${parameterMaster.createdDate}"/></td>
-                                                        <td><c:out value="${parameterMaster.status}"/></td>
+                                                        <td><c:out value="${parameterMaster.stressType}"/></td>
+                                                        <td><c:out value="${parameterMaster.vi}"/></td>
+                                                        <td><c:out value="${parameterMaster.bibTest}"/></td>
+                                                        <td><c:out value="${parameterMaster.manualTest}"/></td>
+                                                        <td><c:out value="${parameterMaster.leakageTest}"/></td>
+                                                        <td><c:out value="${parameterMaster.psLeakageTest}"/></td>
+                                                        <td><c:out value="${parameterMaster.winchesterChamberLeakageTest}"/></td>
                                                         <td align="center">
-                                                            <c:set var="String" value="${parameterMaster.status}"/>
-                                                            <c:choose>
-                                                                <c:when test="${(fn:contains(String, 'Activity Selection'))}">
-                                                                    <a href="${contextPath}/hw/item/addActivity/${parameterMaster.id}" class="table-link" title="Edit">
+                                                                    <a href="${contextPath}/admin/bibActivity/edit/${parameterMaster.id}" class="table-link" title="Edit">
                                                                         <i class="bi bi-box-arrow-in-right h3"></i>
                                                                     </a>
-                                                                </c:when>
-                                                                <c:otherwise>
-                                                                    <a href="${contextPath}/hw/item/add2/${parameterMaster.id}" class="table-link" title="Edit">
-                                                                        <i class="bi bi-box-arrow-in-right h3"></i>
-                                                                    </a>
-                                                                </c:otherwise>
-                                                            </c:choose>
-
                                                         </td>
                                                     </tr>
                                                 </c:forEach>

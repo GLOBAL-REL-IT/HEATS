@@ -1,5 +1,7 @@
 package com.onsemi.mib.controller;
 
+import com.onsemi.mib.dao.ItemActivityConfigDAO;
+import com.onsemi.mib.dao.ItemDAO;
 import com.onsemi.mib.dao.LDAPUserDAO;
 import java.util.List;
 import java.util.Locale;
@@ -11,6 +13,8 @@ import com.onsemi.mib.dao.UserGroupAccessDAO;
 import com.onsemi.mib.dao.UserGroupDAO;
 import com.onsemi.mib.dao.UserManualDAO;
 import com.onsemi.mib.model.EventGroup;
+import com.onsemi.mib.model.Item;
+import com.onsemi.mib.model.ItemActivityConfig;
 import com.onsemi.mib.model.JSONResponse;
 import com.onsemi.mib.model.LDAPUser;
 import com.onsemi.mib.model.Menu;
@@ -1071,827 +1075,94 @@ public class AdminController {
 
     }
 
-//    @RequestMapping(value = "/srInventoryMgt", method = RequestMethod.GET)
-//    public String srInventoryMgt(
-//            Model model
-//    ) {
-//        SRInventoryMgtDAO srInvMgtDAO = new SRInventoryMgtDAO();
-//        List<SRInventoryMgt> srInvMgtList = srInvMgtDAO.getInventoryList();
-//
-//        model.addAttribute("srInvMgtList", srInvMgtList);
-//        return "admin/srInventoryMgt";
-//    }
-//
-//    @RequestMapping(value = "/hwInventoryMgt", method = RequestMethod.GET)
-//    public String hwInventoryMgt(
-//            Model model
-//    ) {
-//        HWInventoryMgtDAO hwInvMgtDAO = new HWInventoryMgtDAO();
-//        List<HWInventoryMgt> hwInvMgtList = hwInvMgtDAO.getInventoryList();
-//
-//        model.addAttribute("hwInvMgtList", hwInvMgtList);
-//        return "admin/hwInventoryMgt";
-//    }
-//
-//    @RequestMapping(value = "/testEmail", method = {RequestMethod.GET, RequestMethod.POST})
-//    public String email(
-//            Model model,
-//            HttpServletRequest request,
-//            Locale locale,
-//            RedirectAttributes redirectAttrs,
-//            @ModelAttribute UserSession userSession
-//    ) throws IOException {
-//        EmailDAO emailDao = new EmailDAO();
-//        List<UserEmail> doLists = emailDao.getEmailNotifyRelatedPerson();
-//        String[] to = new String[doLists.size()];
-//        for (int i = 0; i < doLists.size(); i++) {
-//            to[i] = doLists.get(i).getEmail();
-//        }
-//
-//        LOGGER.info("send email to person in charge");
-//        EmailSender emailSender = new EmailSender();
-//        emailSender.htmlEmailTable(
-//                servletContext,
-//                "", //user name requestor
-//                to, //to
-//                "OSTORMS - TEST EMAIL", //subject
-//                "<br /> "
-//                + "TEST PURPOSE ONLY"
-//                + "<br /> "
-//                + "Please ignore this email."
-//                + "<br /> "
-//                + "<br />Thank you." //msg
-//        );
-//        return "redirect:/admin/user";
-//    }
-//
-//    @RequestMapping(value = "/hwItemMgt", method = RequestMethod.GET)
-//    public String itemMgt(
-//            Model model
-//    ) {
-//        HWItemMgtDAO hwItemMgtDAO = new HWItemMgtDAO();
-//        List<HWItemMgt> hwItemList = hwItemMgtDAO.getHWItemMgtList();
-//
-//        model.addAttribute("hwItemList", hwItemList);
-//        return "admin/hwItemMgt";
-//    }
-//
-//    @RequestMapping(value = "/hwItemMgt/addItem", method = RequestMethod.GET)
-//    public String addItem(
-//            Model model
-//    ) {
-//        HWItemMgtDAO hwItemMgtDAO = new HWItemMgtDAO();
-//        List<HWItemMgt> hwItemList = hwItemMgtDAO.getHWItemMgtList();
-//
-//        HWRackMgtDAO hwRackMgtDAO = new HWRackMgtDAO();
-//        List<HWRackMgt> hwRackList = hwRackMgtDAO.getHWCategoryList();
-//
-//        model.addAttribute("hwRackList", hwRackList);
-//        model.addAttribute("hwItemList", hwItemList);
-//        return "admin/hwItemMgt_add";
-//    }
-//
-//    @RequestMapping(value = "/hwItemMgt/edit/{id}", method = RequestMethod.GET)
-//    public String editItem(
-//            Model model,
-//            @ModelAttribute UserSession userSession,
-//            @PathVariable("id") String id
-//    ) {
-//        HWItemMgtDAO hwItemMgtDAO = new HWItemMgtDAO();
-//        HWItemMgt hwItem = hwItemMgtDAO.getHWItemMgtListPerId(id);
-//
-//        HWRackMgtDAO hwRackMgtDAO = new HWRackMgtDAO();
-//        List<HWRackMgt> hwRackList = hwRackMgtDAO.getHWCategoryList();
-//
-//        model.addAttribute("hwRackList", hwRackList);
-//        model.addAttribute("hwItem", hwItem);
-//        return "admin/hwItemMgt_edit";
-//    }
-//
-//    @RequestMapping(value = "/hwItemMgt/edit/save", method = {RequestMethod.GET, RequestMethod.POST})
-//    public String hwItemMgtEditSave(
-//            Model model,
-//            Locale locale,
-//            RedirectAttributes redirectAttrs,
-//            @ModelAttribute UserSession userSession,
-//            @RequestParam(required = false) String hwItemMgtId,
-//            @RequestParam(required = false) String itemCategory,
-//            @RequestParam(required = false) String sptsItemType,
-//            @RequestParam(required = false) String sptsSubItemType,
-//            @RequestParam(required = false) String sptsItemId,
-//            @RequestParam(required = false) String modelType,
-//            @RequestParam(required = false) String rackIdentification,
-//            @RequestParam(required = false) String activeStatus
-//    ) {
-//        String redirect = "";
-//        String sptsSubItemTypeQuery = "";
-//        String sptsItemIdQuery = "";
-//        String modelTypeQuery = "";
-//
-//        HWItemMgtDAO hwItemMgtDAO = new HWItemMgtDAO();
-//        int findItemId = hwItemMgtDAO.getCountId(hwItemMgtId);
-//
-//        if (sptsSubItemType.equals("")) {
-//            sptsSubItemTypeQuery = "IS NULL";
-//            sptsSubItemType = null;
-//        } else {
-//            sptsSubItemTypeQuery = " = '" + sptsSubItemTypeQuery + "' ";
-//        }
-//
-//        if (sptsItemId.equals("")) {
-//            sptsItemIdQuery = "IS NULL";
-//            sptsItemId = null;
-//        } else {
-//            sptsItemIdQuery = " = '" + sptsItemId + "' ";
-//        }
-//
-//        if (modelType.equals("")) {
-//            modelTypeQuery = "IS NULL";
-//            modelType = null;
-//        } else {
-//            modelTypeQuery = " = '" + modelType + "' ";
-//        }
-//        hwItemMgtDAO = new HWItemMgtDAO();
-//        int findItemDetails = hwItemMgtDAO.getCountExistingSptsDataExceptSelected(sptsItemType, sptsSubItemTypeQuery, sptsItemIdQuery, modelTypeQuery, hwItemMgtId);
-//
-//        QueryResult queryResult = null;
-//        if (findItemId == 1 && findItemDetails < 4) {
-//            String flag = "";
-//            String status = activeStatus;
-//            if (status.equals("Active")) {
-//                flag = "0";
-//            } else {
-//                flag = "1";
-//            }
-//
-//            HWRackMgtDAO hwRackMgtDAO = new HWRackMgtDAO();
-//            HWRackMgt hwRack = hwRackMgtDAO.getHWRackMgtListPerId(itemCategory);
-//            String rackId = hwRack.getRackId();
-//            itemCategory = hwRack.getRackCategory();
-//
-//            HWItemMgt hwItemMgt = new HWItemMgt();
-//            hwItemMgt.setItemCategory(itemCategory);
-//            hwItemMgt.setSptsItemType(sptsItemType);
-//            hwItemMgt.setSptsSubItemType(sptsSubItemType);
-//            hwItemMgt.setSptsItemId(sptsItemId);
-//            hwItemMgt.setSptsModelContain(modelType);
-//            hwItemMgt.setRackIdentification(rackId);
-//            hwItemMgt.setFlag(flag);
-//            hwItemMgt.setStatus(status);
-//            hwItemMgt.setModifiedBy(userSession.getFullname());
-//            hwItemMgt.setCreatedBy(userSession.getFullname());
-//            hwItemMgtDAO = new HWItemMgtDAO();
-//            queryResult = hwItemMgtDAO.insertHWItemMgt(hwItemMgt);
-//            if (queryResult.getResult() == 1) {
-//                redirectAttrs.addFlashAttribute("success", messageSource.getMessage("admin.label.group.save.success", args, locale));
-//                redirect = "redirect:/admin/hwItemMgt/";
-//            } else {
-//                redirectAttrs.addFlashAttribute("error", messageSource.getMessage("admin.label.group.save.error", args, locale));
-//                redirect = "redirect:/admin/hwItemMgt/addItem";
-//            }
-//        } else {
-//            if (findItemId != 1) {
-//                redirectAttrs.addFlashAttribute("error", messageSource.getMessage("Item Management ID not existed. Please re-check.", args, locale));
-//            } else {
-//                redirectAttrs.addFlashAttribute("error", messageSource.getMessage("Item details existed. Please create new item details.", args, locale));
-//            }
-//            redirect = "redirect:/admin/hwItemMgt/addItem";
-//
-//        }
-//        return redirect;
-//    }
-//
-//    @RequestMapping(value = "/hwItemMgt/addItem/save", method = {RequestMethod.GET, RequestMethod.POST})
-//    public String hwItemMgtAdd(
-//            Model model,
-//            Locale locale,
-//            RedirectAttributes redirectAttrs,
-//            @ModelAttribute UserSession userSession,
-//            @RequestParam(required = false) String itemCategory,
-//            @RequestParam(required = false) String sptsItemType,
-//            @RequestParam(required = false) String sptsSubItemType,
-//            @RequestParam(required = false) String sptsItemId,
-//            @RequestParam(required = false) String modelType,
-//            //            @RequestParam(required = false) String rackIdentification,
-//            @RequestParam(required = false) String activeStatus
-//    ) {
-//        String redirect = "";
-//        String sptsSubItemTypeQuery = "";
-//        String sptsItemIdQuery = "";
-//        String modelTypeQuery = "";
-//
-//        HWItemMgtDAO hwItemMgtDAO = new HWItemMgtDAO();
-//        int findItemCategory = hwItemMgtDAO.getCountExistingCategory(itemCategory);
-//
-//        if (sptsSubItemType.equals("")) {
-//            sptsSubItemTypeQuery = "IS NULL";
-//            sptsSubItemType = null;
-//        } else {
-//            sptsSubItemTypeQuery = " = '" + sptsSubItemTypeQuery + "' ";
-//        }
-//
-//        if (sptsItemId.equals("")) {
-//            sptsItemIdQuery = "IS NULL";
-//            sptsItemId = null;
-//        } else {
-//            sptsItemIdQuery = " = '" + sptsItemId + "' ";
-//        }
-//
-//        if (modelType.equals("")) {
-//            modelTypeQuery = "IS NULL";
-//            modelType = null;
-//        } else {
-//            modelTypeQuery = " = '" + modelType + "' ";
-//        }
-//        hwItemMgtDAO = new HWItemMgtDAO();
-//        int findItemDetails = hwItemMgtDAO.getCountExistingSptsData(sptsItemType, sptsSubItemTypeQuery, sptsItemIdQuery, modelTypeQuery);
-//
-//        QueryResult queryResult = null;
-//        if (findItemCategory == 0 && findItemDetails < 4) {
-//            String flag = "";
-//            String status = activeStatus;
-//            if (status.equals("Active")) {
-//                flag = "0";
-//            } else {
-//                flag = "1";
-//            }
-//
-//            HWRackMgtDAO hwRackMgtDAO = new HWRackMgtDAO();
-//            HWRackMgt hwRack = hwRackMgtDAO.getHWRackMgtListPerId(itemCategory);
-//            String rackIdentification = hwRack.getRackId();
-//            itemCategory = hwRack.getRackCategory();
-//
-//            HWItemMgt hwItemMgt = new HWItemMgt();
-//            hwItemMgt.setItemCategory(itemCategory);
-//            hwItemMgt.setSptsItemType(sptsItemType);
-//            hwItemMgt.setSptsSubItemType(sptsSubItemType);
-//            hwItemMgt.setSptsItemId(sptsItemId);
-//            hwItemMgt.setSptsModelContain(modelType);
-//            hwItemMgt.setRackIdentification(rackIdentification);
-//            hwItemMgt.setFlag(flag);
-//            hwItemMgt.setStatus(status);
-//            hwItemMgt.setModifiedBy(userSession.getFullname());
-//            hwItemMgt.setCreatedBy(userSession.getFullname());
-//            hwItemMgtDAO = new HWItemMgtDAO();
-//            queryResult = hwItemMgtDAO.insertHWItemMgt(hwItemMgt);
-//            if (queryResult.getResult() == 1) {
-//                redirectAttrs.addFlashAttribute("success", messageSource.getMessage("admin.label.group.save.success", args, locale));
-//                redirect = "redirect:/admin/hwItemMgt/";
-//            } else {
-//                redirectAttrs.addFlashAttribute("error", messageSource.getMessage("admin.label.group.save.error", args, locale));
-//                redirect = "redirect:/admin/hwItemMgt/addItem";
-//            }
-//        } else {
-//            if (findItemCategory != 0) {
-//                redirectAttrs.addFlashAttribute("error", messageSource.getMessage("Item Category existed. Please create new item category.", args, locale));
-//            } else {
-//                redirectAttrs.addFlashAttribute("error", messageSource.getMessage("Item details existed. Please create new item details.", args, locale));
-//            }
-//            redirect = "redirect:/admin/hwItemMgt/addItem";
-//
-//        }
-//        return redirect;
-//    }
-//
-//    @RequestMapping(value = "/hwItemMgt/delete/{itemId}", method = {RequestMethod.GET, RequestMethod.POST})
-//    public String hwItemMgtDelete(
-//            Model model,
-//            Locale locale,
-//            RedirectAttributes redirectAttrs,
-//            @PathVariable("itemId") String itemId
-//    ) {
-//        HWItemMgtDAO hwItemMgtDAO = new HWItemMgtDAO();
-//        QueryResult queryResult = hwItemMgtDAO.deleteHWItemMgt(itemId);
-//        if (queryResult.getResult() == 1) {
-//            redirectAttrs.addFlashAttribute("success", messageSource.getMessage("admin.label.user.delete.success", args, locale));
-//        } else {
-//            redirectAttrs.addFlashAttribute("error", messageSource.getMessage("admin.label.user.delete.error", args, locale));
-//        }
-//        return "redirect:/admin/hwItemMgt";
-//    }
-//
-//    @RequestMapping(value = "/hwRackMgt", method = RequestMethod.GET)
-//    public String rackMgt(
-//            Model model
-//    ) {
-//        HWRackMgtDAO hwRackMgtDAO = new HWRackMgtDAO();
-//        List<HWRackMgt> hwRackList = hwRackMgtDAO.getHWRackMgtList();
-//
-//        model.addAttribute("hwRackList", hwRackList);
-//        return "admin/hwRackMgt";
-//    }
-//
-//    @RequestMapping(value = "/hwEntryFile", method = RequestMethod.GET)
-//    public String hwEntryFile(
-//            Model model
-//    ) {
-//        return "admin/hwEntryFile";
-//    }
-//
-//    @RequestMapping(value = "/hwEntryFile/upload", method = {RequestMethod.GET, RequestMethod.POST})
-//    public ModelAndView hwEntryFileUpload(
-//            Model model,
-//            Locale locale,
-//            RedirectAttributes redirectAttrs,
-//            @ModelAttribute UserSession userSession,
-//            @RequestParam(required = false) MultipartFile fileUpload
-//    ) {
-//        String stringPath = "";
-//        String returnPath = "";
-//
-//        List<HWRequest> hwReqList = new ArrayList<HWRequest>();
-//        if (fileUpload.isEmpty()) {
-//            redirectAttrs.addFlashAttribute("message", "Please select a file to upload");
-//        } else {
-//            if (fileUpload.getOriginalFilename().contains(".csv")) {
-//                try {
-//                    File folder = new File(UPLOADED_FOLDER);
-//                    File[] verifyFiles = folder.listFiles();
-//                    int maxIndex = 0;
-//                    if (verifyFiles.length != 0) {
-//                        for (File listOfFile : verifyFiles) {
-//                            if (listOfFile.isFile()) {
-//                                maxIndex++;
-//                            }
-//                        }
-//                    }
-//                    String index = String.format("%05d", maxIndex + 1);
-//                    // Get the file and save it somewhere
-//                    byte[] bytes = fileUpload.getBytes();
-//                    Path path = Paths.get(UPLOADED_FOLDER + index + "_HWBarcode_" + fileUpload.getOriginalFilename());
-//                    Files.write(path, bytes);
-//                    stringPath = path.toString();
-//
-//                    folder = new File(UPLOADED_FOLDER);
-//                    File[] listOfFiles = folder.listFiles();
-//
-//                    boolean readFile = false;
-//                    String fileName = fileUpload.getOriginalFilename();
-//                    if (listOfFiles.length != 0) {
-//                        for (File listOfFile : listOfFiles) {
-//                            if (listOfFile.isFile()) {
-//                                if (listOfFile.getName().equals(index + "_HWBarcode_" + fileName)) {
-//                                    readFile = true;
-//                                    CSVReader csvReader = null;
-//                                    try {
-//                                        csvReader = new CSVReader(new FileReader(stringPath), ',', '"', 1);
-//                                        String[] fileContents = null;
-//                                        List<HWFileBCImport> importList = new ArrayList<HWFileBCImport>();
-//                                        while ((fileContents = csvReader.readNext()) != null) {
-//                                            HWFileBCImport hwFileImport = new HWFileBCImport(
-//                                                    fileContents[0], fileContents[1], fileContents[2], //boxId, eqptType, eqptId 
-//                                                    fileContents[3], fileContents[4] //qty, reqDate
-//                                            );
-//                                            importList.add(hwFileImport);
-//                                        }
-//                                        int y = 1;
-//                                        for (HWFileBCImport r : importList) {
-//                                            y++;
-//                                            HWRequest hwreq = new HWRequest();
-//                                            hwreq.setBoxId(r.getBoxId());
-//                                            hwreq.setItemType(r.getEqptType());
-//                                            hwreq.setItemId(r.getEqptId());
-//                                            hwreq.setTotalQty(r.getQty());
-//                                            hwreq.setReqDate(r.getReqDate());
-//                                            hwReqList.add(hwreq);
-//                                        }
-//                                    } catch (Exception ee) {
-//                                        LOGGER.info("File Reading Error : Error while reading " + fileName + ".");
-//                                        ee.printStackTrace();
-//                                    }
-//                                }
-//                            }
-//                        }
-//                    }
-//                } catch (IOException e) {
-//                }
-//            } else {
-//                redirectAttrs.addFlashAttribute("message", "Only .csv ALLOWED.");
-//                returnPath = "redirect:/admin/hwEntryFile";
-//            }
-//            returnPath = "admin/hwEntryFile";
-//        }
-//        return new ModelAndView("sptsItemMultipleBarcodePdf", "hwReqList", hwReqList);
-//    }
-//    @RequestMapping(value = "/hwShipFile/upload", method = {RequestMethod.GET, RequestMethod.POST})
-//    public ModelAndView hwShipFileUpload(
-//            Model model,
-//            Locale locale,
-//            RedirectAttributes redirectAttrs,
-//            @ModelAttribute UserSession userSession,
-//            @RequestParam(required = false) MultipartFile fileShipUpload
-//    ) {
-//        String stringPath = "";
-//
-//        List<HWShipping> doList = new ArrayList<HWShipping>();
-//        if (fileShipUpload.isEmpty()) {
-//            redirectAttrs.addFlashAttribute("message", "Please select a file to upload");
-//        } else if (fileShipUpload.getOriginalFilename().contains(".csv")) {
-//            try {
-//                File folder = new File(UPLOADED_FOLDER);
-//                File[] verifyFiles = folder.listFiles();
-//                int maxIndex = 0;
-//                if (verifyFiles.length != 0) {
-//                    for (File listOfFile : verifyFiles) {
-//                        if (listOfFile.isFile()) {
-//                            maxIndex++;
-//                        }
-//                    }
-//                }
-//                String index = String.format("%05d", maxIndex + 1);
-//                // Get the file and save it somewhere
-//                byte[] bytes = fileShipUpload.getBytes();
-//                Path path = Paths.get(UPLOADED_FOLDER + index + "_HWShip_" + fileShipUpload.getOriginalFilename());
-//                Files.write(path, bytes);
-//                stringPath = path.toString();
-//
-//                folder = new File(UPLOADED_FOLDER);
-//                File[] listOfFiles = folder.listFiles();
-//
-//                boolean readFile = false;
-//                String fileName = fileShipUpload.getOriginalFilename();
-//                if (listOfFiles.length != 0) {
-//                    for (File listOfFile : listOfFiles) {
-//                        if (listOfFile.isFile()) {
-//                            if (listOfFile.getName().equals(index + "_HWShip_" + fileName)) {
-//                                readFile = true;
-//                                CSVReader csvReader = null;
-//                                try {
-//                                    csvReader = new CSVReader(new FileReader(stringPath), ',', '"', 1);
-//                                    String[] fileContents = null;
-//                                    List<HWFileSLImport> importList = new ArrayList<HWFileSLImport>();
-//                                    while ((fileContents = csvReader.readNext()) != null) {
-//                                        HWFileSLImport hwFileImport = new HWFileSLImport(
-//                                                fileContents[0], fileContents[1], fileContents[2], //gtsNo, shipDate,boxId
-//                                                fileContents[3], fileContents[4], fileContents[5], //itemType, itemId,weight
-//                                                fileContents[6], fileContents[7], fileContents[8] //price, totalWeight,totalPrice
-//                                        );
-//                                        importList.add(hwFileImport);
-//                                    }
-//                                    int y = 1;
-//                                    for (HWFileSLImport r : importList) {
-//                                        y++;
-//                                        HWShipping hwship = new HWShipping();
-//                                        hwship.setGtsNo(r.getGtsNo());
-//                                        Date sdf = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss").parse(r.getShipDate());
-//                                        SimpleDateFormat formatter = new SimpleDateFormat("dd MMM yyyy hh:mm a");
-//                                        String shipDate = formatter.format(sdf);
-//                                        hwship.setShippingDate(shipDate);
-//                                        hwship.setBoxId(r.getBoxId());
-//                                        hwship.setItemCategory(r.getItemType());
-//                                        hwship.setItemId(r.getItemId());
-//                                        hwship.setWeight(r.getWeight());
-//                                        hwship.setPrice(r.getPrice());
-//                                        hwship.setTotalWeight(r.getTotalWeight());
-//                                        hwship.setTotalPrice(r.getTotalPrice());
-//                                        doList.add(hwship);
-//                                    }
-//                                } catch (Exception ee) {
-//                                    LOGGER.info("File Reading Error : Error while reading " + fileName + ".");
-//                                    ee.printStackTrace();
-//                                }
-//                            }
-//                        }
-//                    }
-//                }
-//            } catch (IOException e) {
-//            }
-//        } else {
-//            redirectAttrs.addFlashAttribute("message", "Only .csv ALLOWED.");
-//        }
-//        return new ModelAndView("doHWListPdf", "doList", doList);
-//    }
-//
-//    @RequestMapping(value = "/hwCreateReq", method = RequestMethod.GET)
-//    public String hwCreateReq(
-//            Model model
-//    ) {
-//        return "admin/hwCreateReq";
-//    }
-//    @RequestMapping(value = "/hwCreateReq/upload", method = {RequestMethod.GET, RequestMethod.POST})
-//    public String hwCreateReqUpload(
-//            Model model,
-//            Locale locale,
-//            RedirectAttributes redirectAttrs,
-//            @ModelAttribute UserSession userSession,
-//            @RequestParam(required = false) MultipartFile fileUpload
-//    ) {
-//        String stringPath = "";
-//
-//        List<HWRequest> hwReqList = new ArrayList<HWRequest>();
-//        if (fileUpload.isEmpty()) {
-//            redirectAttrs.addFlashAttribute("message", "Please select a file to upload");
-//        } else if (fileUpload.getOriginalFilename().contains(".csv")) {
-//            try {
-//                File folder = new File(UPLOADED_FOLDER);
-//                File[] verifyFiles = folder.listFiles();
-//                int maxIndex = 0;
-//                if (verifyFiles.length != 0) {
-//                    for (File listOfFile : verifyFiles) {
-//                        if (listOfFile.isFile()) {
-//                            maxIndex++;
-//                        }
-//                    }
-//                }
-//                String index = String.format("%05d", maxIndex + 1);
-//                // Get the file and save it somewhere
-//                byte[] bytes = fileUpload.getBytes();
-//                Path path = Paths.get(UPLOADED_FOLDER + index + "_HWInitial_" + fileUpload.getOriginalFilename());
-//                Files.write(path, bytes);
-//                stringPath = path.toString();
-//
-//                folder = new File(UPLOADED_FOLDER);
-//                File[] listOfFiles = folder.listFiles();
-//                String fileName = fileUpload.getOriginalFilename();
-//                if (listOfFiles.length != 0) {
-//                    for (File listOfFile : listOfFiles) {
-//                        if (listOfFile.isFile()) {
-//                            if (listOfFile.getName().equals(index + "_HWInitial_" + fileName)) {
-//                                CSVReader csvReader = null;
-//                                try {
-//                                    csvReader = new CSVReader(new FileReader(stringPath), ',', '"', 1);
-//                                    String[] fileContents = null;
-//                                    List<HWFileRequestImport> importList = new ArrayList<HWFileRequestImport>();
-//                                    while ((fileContents = csvReader.readNext()) != null) {
-//                                        HWFileRequestImport hwFileImport = new HWFileRequestImport(
-//                                                fileContents[0], fileContents[1], fileContents[2], //reqType, boxId, packagingType 
-//                                                fileContents[3], fileContents[4], fileContents[5], //itemType, itemId,itemQty
-//                                                fileContents[6], fileContents[7], fileContents[8], //pcbBId,pcbBQty,pcbCId
-//                                                fileContents[9], fileContents[10], fileContents[11], //pcbCQty,pcbCtrId,pcbCtrQty
-//                                                fileContents[12], fileContents[13], fileContents[14], //lcId,lcQty,pcId
-//                                                fileContents[15], fileContents[16], fileContents[17], //pcQty,remarks,price
-//                                                fileContents[18], fileContents[19], fileContents[20], //weight,gtsNo,shipDate
-//                                                fileContents[21] //totalBox
-//                                        );
-//                                        importList.add(hwFileImport);
-//                                    }
-//                                    csvReader.close();
-//
-//                                    int countTotalQty = 0;
-////                                        HWShipping hwshipping = new HWShipping();
-////                                        List<HWShipping> gtsNoList = new ArrayList<HWShipping>();
-//
-//                                    for (HWFileRequestImport r : importList) {
-//                                        HWRequest hwRequest = new HWRequest();
-//                                        hwRequest.setReqType(r.getReqType());
-//                                        hwRequest.setBoxId(r.getBoxId());
-//                                        hwRequest.setPackagingType(r.getPackagingType());
-//                                        hwRequest.setItemType(r.getItemType());
-//
-//                                        HWItemMgtDAO hwitemdao = new HWItemMgtDAO();
-//                                        HWItemMgt hwitem = hwitemdao.getHWItemMgtListPerCategory(r.getItemType());
-//                                        if (hwitem != null) {
-//                                            hwRequest.setItemCategoryId(hwitem.getId());
-//                                            hwRequest.setItemId(r.getItemId());
-//                                            JSONObject params0 = new JSONObject();
-//                                            params0.put("itemID", r.getItemId());
-//                                            JSONArray getItemByParam = SPTSWebService.getItemByParam(params0);
-//                                            int itempkid = getItemByParam.getJSONObject(0).getInt("PKID");
-//                                            String itemName = getItemByParam.getJSONObject(0).getString("ItemName");
-//                                            hwRequest.setPkid(Integer.toString(itempkid));
-//                                            hwRequest.setItemName(itemName);
-//                                            countTotalQty = countTotalQty + Integer.parseInt(r.getItemQty());
-//                                            hwRequest.setItemQty(r.getItemQty());
-//                                            hwRequest.setServiceDate(r.getServiceDate());
-//                                            if (r.getPcbBId().equals("null") || r.getPcbBId().equals("")) {
-//                                                hwRequest.setPcbBId(null);
-//                                                hwRequest.setPcbBName(null);
-//                                                hwRequest.setPcbBQty(null);
-//                                            } else {
-//                                                params0 = new JSONObject();
-//                                                params0.put("itemID", r.getPcbBId());
-//                                                getItemByParam = SPTSWebService.getItemByParam(params0);
-//                                                itempkid = getItemByParam.getJSONObject(0).getInt("PKID");
-//                                                itemName = getItemByParam.getJSONObject(0).getString("ItemName");
-//                                                hwRequest.setPkidB(Integer.toString(itempkid));
-//                                                hwRequest.setPcbBId(r.getPcbBId());
-//                                                hwRequest.setPcbBName(itemName);
-//                                                countTotalQty = countTotalQty + Integer.parseInt(r.getPcbBQty());
-//                                                hwRequest.setPcbBQty(r.getPcbBQty());
-//                                            }
-//                                            if (r.getPcbCId().equals("null") || r.getPcbCId().equals("")) {
-//                                                hwRequest.setPcbCId(null);
-//                                                hwRequest.setPcbCName(null);
-//                                                hwRequest.setPcbCQty(null);
-//                                            } else {
-//                                                params0 = new JSONObject();
-//                                                params0.put("itemID", r.getPcbCId());
-//                                                getItemByParam = SPTSWebService.getItemByParam(params0);
-//                                                itempkid = getItemByParam.getJSONObject(0).getInt("PKID");
-//                                                itemName = getItemByParam.getJSONObject(0).getString("ItemName");
-//                                                hwRequest.setPkidC(Integer.toString(itempkid));
-//                                                hwRequest.setPcbCId(r.getPcbCId());
-//                                                hwRequest.setPcbCName(itemName);
-//                                                countTotalQty = countTotalQty + Integer.parseInt(r.getPcbCQty());
-//                                                hwRequest.setPcbCQty(r.getPcbCQty());
-//                                            }
-//                                            if (r.getPcbCtrId().equals("null") || r.getPcbCtrId().equals("")) {
-//                                                hwRequest.setPcbCtrId(null);
-//                                                hwRequest.setPcbCtrName(null);
-//                                                hwRequest.setPcbCtrQty(null);
-//                                            } else {
-//                                                params0 = new JSONObject();
-//                                                params0.put("itemID", r.getPcbCtrId());
-//                                                getItemByParam = SPTSWebService.getItemByParam(params0);
-//                                                itempkid = getItemByParam.getJSONObject(0).getInt("PKID");
-//                                                itemName = getItemByParam.getJSONObject(0).getString("ItemName");
-//                                                hwRequest.setPkidCtr(Integer.toString(itempkid));
-//                                                hwRequest.setPcbCtrId(r.getPcbCtrId());
-//                                                hwRequest.setPcbCtrName(itemName);
-//                                                countTotalQty = countTotalQty + Integer.parseInt(r.getPcbCtrQty());
-//                                                hwRequest.setPcbCtrQty(r.getPcbCtrQty());
-//                                            }
-//                                            if (r.getPcId().equals("null") || r.getPcId().equals("")) {
-//                                                hwRequest.setPcId(null);
-//                                                hwRequest.setPcName(null);
-//                                                hwRequest.setPcQty(null);
-//                                            } else {
-//                                                params0 = new JSONObject();
-//                                                params0.put("itemID", r.getPcId());
-//                                                getItemByParam = SPTSWebService.getItemByParam(params0);
-//                                                itempkid = getItemByParam.getJSONObject(0).getInt("PKID");
-//                                                itemName = getItemByParam.getJSONObject(0).getString("ItemName");
-//                                                hwRequest.setPkidPc(Integer.toString(itempkid));
-//                                                hwRequest.setPcId(r.getPcId());
-//                                                hwRequest.setPcName(itemName);
-//                                                countTotalQty = countTotalQty + Integer.parseInt(r.getPcQty());
-//                                                hwRequest.setPcQty(r.getPcQty());
-//                                            }
-//                                            if (r.getLcId().equals("null") || r.getLcId().equals("")) {
-//                                                hwRequest.setLcId(null);
-//                                                hwRequest.setLcName(null);
-//                                                hwRequest.setLcQty(null);
-//                                            } else {
-//                                                params0 = new JSONObject();
-//                                                params0.put("itemID", r.getLcId());
-//                                                getItemByParam = SPTSWebService.getItemByParam(params0);
-//                                                itempkid = getItemByParam.getJSONObject(0).getInt("PKID");
-//                                                itemName = getItemByParam.getJSONObject(0).getString("ItemName");
-//                                                hwRequest.setPkidLc(Integer.toString(itempkid));
-//                                                hwRequest.setLcId(r.getLcId());
-//                                                hwRequest.setLcName(itemName);
-//                                                countTotalQty = countTotalQty + Integer.parseInt(r.getLcQty());
-//                                                hwRequest.setLcQty(r.getLcQty());
-//                                            }
-//
-//                                            hwRequest.setTotalQty(Integer.toString(countTotalQty));
-//                                            hwRequest.setRemarks(r.getRemarks());
-//                                            hwRequest.setReqBy("Auto Request Cron");
-//                                            hwRequest.setStatus("Ship to Sendayan");
-//                                            hwRequest.setFlag("9");
-//                                            hwRequest.setModifiedBy("Auto Request Cron");
-//                                            hwRequest.setCreatedBy("Auto Request Cron");
-//                                            HWRequestDAO hwReqDao = new HWRequestDAO();
-//                                            int count = hwReqDao.getBoxIdExist(r.getBoxId());
-//                                            boolean testExist = true;
-//                                            if (count == 0) {
-//                                                testExist = false;
-//                                            } else {
-//                                                testExist = true;
-//                                            }
-//
-//                                            if (testExist == false) {
-//                                                HWShippingDAO shipdao = new HWShippingDAO();
-//                                                count = shipdao.getCountSameGtsNo(r.getGtsNo());
-//
-//                                                hwReqDao = new HWRequestDAO();
-//                                                QueryResult qr = hwReqDao.insertReq(hwRequest);
-//
-//                                                if (qr.getResult() == 1) {
-////                                                        hwshipping.setGtsNo(r.getGtsNo());
-////                                                        gtsNoList.add(hwshipping);
-//
-//                                                    String reqId = qr.getGeneratedKey();
-//                                                    HWShipping hwShipping = new HWShipping();
-//                                                    hwShipping.setBoxId(r.getBoxId());
-//                                                    hwShipping.setReqId(reqId);
-//                                                    hwShipping.setPrice(r.getPrice());
-//                                                    hwShipping.setWeight(r.getWeight());
-//                                                    hwShipping.setDoAddedBy("Auto Request Cron");
-//                                                    hwShipping.setIndexCount(reqId);
-//                                                    hwShipping.setGtsNo(r.getGtsNo());
-//                                                    hwShipping.setShippingDate(r.getShippingDate());
-//                                                    hwShipping.setTotalBox(r.getTotalBox());
-//                                                    hwShipping.setStatus("Ship to Sendayan");
-//                                                    hwShipping.setFlag("9");
-//                                                    hwShipping.setModifiedBy("Auto Request Cron");
-//                                                    hwShipping.setCreatedBy("Auto Request Cron");
-//                                                    HWShippingDAO hwShippingDAO = new HWShippingDAO();
-//                                                    QueryResult qr2 = hwShippingDAO.insertAutoShipping(hwShipping);
-//
-//                                                    if (qr2.getResult() != 0) {
-//                                                        updateStatus(reqId);
-//                                                    } else {
-//                                                        LOGGER.info("Failed to update Shipping for " + r.getBoxId());
-//                                                    }
-//                                                } else {
-//                                                    LOGGER.info("Failed to update Request for " + r.getBoxId());
-//                                                }
-//                                            } else {
-//                                                LOGGER.info("Box Id Exist >> " + r.getBoxId());
-//                                            }
-//                                        } else {
-//                                            LOGGER.info("Invalid item category >> " + r.getBoxId());
-//                                        }
-//                                    }
-//                                    redirectAttrs.addFlashAttribute("success", messageSource.getMessage("Item has been added into request shipping list.", args, locale));
-//                                } catch (IOException ee) {
-//                                    redirectAttrs.addFlashAttribute("error", messageSource.getMessage("File Reading Error : " + ee.getMessage(), args, locale));
-//                                } catch (JSONException ee) {
-//                                    redirectAttrs.addFlashAttribute("error", messageSource.getMessage("File Reading Error : " + ee.getMessage(), args, locale));
-//                                } catch (NoSuchMessageException ee) {
-//                                    redirectAttrs.addFlashAttribute("error", messageSource.getMessage("File Reading Error : " + ee.getMessage(), args, locale));
-//                                }
-//                            }
-//                        }
-//                    }
-//                }
-//            } catch (IOException e) {
-//                redirectAttrs.addFlashAttribute("error", messageSource.getMessage("File Reading Error : " + e.getMessage(), args, locale));
-//            }
-//        } else {
-//            redirectAttrs.addFlashAttribute("error", messageSource.getMessage("File in a wrong format. Please upload in .CSV format ONLY.", args, locale));
-//        }
-//        return "redirect:/admin/hwCreateReq";
-//    }
-//    public void updateStatus(String requestId) {
-//        /*create csv & email*/
-//        File file = new File("D:\\Data\\OSTORMS\\RL\\hw_request.csv");//utk server baru
-//
-//        HWShippingDAO shippingDao = new HWShippingDAO();
-//        HWShipping shipping = shippingDao.getShippingPerReqIdDb(requestId);
-//
-//        if (file.exists()) { //create csv file
-//            FileWriter fileWriter = null;
-//            try {
-//                fileWriter = new FileWriter("D:\\Data\\OSTORMS\\RL\\hw_request.csv", true);
-//                //New Line after the header
-//                fileWriter.append(LINE_SEPARATOR);
-//                fileWriter.append(shipping.getReqId());
-//                fileWriter.append(COMMA_DELIMITER);
-//                fileWriter.append(shipping.getBoxId());
-//                fileWriter.append(COMMA_DELIMITER);
-//                fileWriter.append(shipping.getServiceDate());
-//                fileWriter.append(COMMA_DELIMITER);
-//                fileWriter.append(shipping.getItemCategory());
-//                fileWriter.append(COMMA_DELIMITER);
-//                fileWriter.append(shipping.getShippingDate());
-//                fileWriter.append(COMMA_DELIMITER);
-//                fileWriter.append(shipping.getGtsNo());
-//                fileWriter.append(COMMA_DELIMITER);
-//                fileWriter.append("1");
-//                fileWriter.append(COMMA_DELIMITER);
-//                fileWriter.append(shipping.getPrice());
-//                fileWriter.append(COMMA_DELIMITER);
-//                fileWriter.append(shipping.getWeight());
-//                fileWriter.append(COMMA_DELIMITER);
-//                fileWriter.close();
-//                System.out.println("Success to append hw_request.csv for reqId : " + shipping.getReqId());
-//            } catch (Exception ee) {
-//            } finally {
-//                try {
-//                    fileWriter.close();
-//                } catch (IOException ie) {
-//                    System.out.println("Error occured while closing the fileWriter");
-//                }
-//            }
-//        } else {
-//            FileWriter fileWriter = null;
-//            try {
-//                fileWriter = new FileWriter("D:\\Data\\OSTORMS\\RL\\hw_request.csv", true);
-////                LOGGER.info("Create hw_request.csv");
-//                //Adding the header
-//                fileWriter.append(HEADER_REQUEST);
-//                //New Line after the header
-//                fileWriter.append(LINE_SEPARATOR);
-//                fileWriter.append(shipping.getReqId());
-//                fileWriter.append(COMMA_DELIMITER);
-//                fileWriter.append(shipping.getBoxId());
-//                fileWriter.append(COMMA_DELIMITER);
-//                fileWriter.append(shipping.getServiceDate());
-//                fileWriter.append(COMMA_DELIMITER);
-//                fileWriter.append(shipping.getItemCategory());
-//                fileWriter.append(COMMA_DELIMITER);
-//                fileWriter.append(shipping.getShippingDate());
-//                fileWriter.append(COMMA_DELIMITER);
-//                fileWriter.append(shipping.getGtsNo());
-//                fileWriter.append(COMMA_DELIMITER);
-//                fileWriter.append("1");
-//                fileWriter.append(COMMA_DELIMITER);
-//                fileWriter.append(shipping.getPrice());
-//                fileWriter.append(COMMA_DELIMITER);
-//                fileWriter.append(shipping.getWeight());
-//                fileWriter.append(COMMA_DELIMITER);
-//                fileWriter.close();
-//                System.out.println("Success to write new hw_request.csv for reqId : " + shipping.getReqId());
-//            } catch (Exception ee) {
-//            } finally {
-//                try {
-//                    fileWriter.close();
-//                } catch (IOException ie) {
-//                    System.out.println("Error occured while closing the fileWriter");
-//                }
-//            }
-//        }
-//    }
+    @RequestMapping(value = "/bibActivity", method = {RequestMethod.GET, RequestMethod.POST})
+    public String bibActivity(
+            Model model,
+            @ModelAttribute UserSession userSession
+    ) {
+
+        ItemActivityConfigDAO itemD = new ItemActivityConfigDAO();
+        List<ItemActivityConfig> item = itemD.getItemActivityConfigListWithItemDetail();
+        model.addAttribute("item", item);
+
+        return "admin/bib_config";
+    }
+
+    @RequestMapping(value = "/bibActivity/edit/{id}", method = {RequestMethod.GET, RequestMethod.POST})
+    public String bibActivityEdit(
+            Model model,
+            @ModelAttribute UserSession userSession,
+            @PathVariable("id") String id
+    ) {
+
+        ItemActivityConfigDAO itemD = new ItemActivityConfigDAO();
+        ItemActivityConfig item = itemD.getItemActivityConfigWithItemDetail(id);
+        model.addAttribute("item", item);
+
+        return "admin/bib_config_edit";
+    }
+
+    @RequestMapping(value = "/bibActivity/update", method = {RequestMethod.GET, RequestMethod.POST})
+    public String addActivitySave(
+            Model model,
+            Locale locale,
+            RedirectAttributes redirectAttrs,
+            @ModelAttribute UserSession userSession,
+            @RequestParam(required = false) String id,
+            @RequestParam(required = false) String viCheck,
+            @RequestParam(required = false) String bibTestCheck,
+            @RequestParam(required = false) String manualTestCheck,
+            @RequestParam(required = false) String leakageTestCheck,
+            @RequestParam(required = false) String psLeakageTestCheck,
+            @RequestParam(required = false) String winchesterChamberLeakageTest
+    ) {
+
+        ItemActivityConfig itemA = new ItemActivityConfig();
+        itemA.setId(id);
+        if ("on".equals(viCheck)) {
+            itemA.setVi("Yes");
+        } else {
+            itemA.setVi("No");
+        }
+        if ("on".equals(bibTestCheck)) {
+            itemA.setBibTest("Yes");
+        } else {
+            itemA.setBibTest("No");
+        }
+        if ("on".equals(manualTestCheck)) {
+            itemA.setManualTest("Yes");
+        } else {
+            itemA.setManualTest("No");
+        }
+        if ("on".equals(leakageTestCheck)) {
+            itemA.setLeakageTest("Yes");
+        } else {
+            itemA.setLeakageTest("No");
+        }
+        if ("on".equals(psLeakageTestCheck )) {
+            itemA.setPsLeakageTest("Yes");
+        } else {
+            itemA.setPsLeakageTest("No");
+        }
+        if ("on".equals(winchesterChamberLeakageTest)) {
+            itemA.setWinchesterChamberLeakageTest("Yes");
+        } else {
+            itemA.setWinchesterChamberLeakageTest("No");
+        }
+        itemA.setFlag("0");
+        itemA.setStatus("New Config");
+
+        ItemActivityConfigDAO itemD = new ItemActivityConfigDAO();
+        QueryResult itemQ = itemD.updateItemActivityConfig(itemA);
+        if (!"0".equals(itemQ.getResult())) {
+            redirectAttrs.addFlashAttribute("success", "Activity Configuration Succesfully Updated.");
+            return "redirect:/admin/bibActivity";
+        } else {
+
+        }
+
+        redirectAttrs.addFlashAttribute("error", "Failed to update Activity Configuration. Pls Contact System Admin");
+        return "redirect:/admin/bibActivity/edit/" + id;
+    }
+
 }

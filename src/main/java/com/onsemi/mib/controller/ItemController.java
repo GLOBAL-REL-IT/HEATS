@@ -4,6 +4,7 @@ import com.google.common.base.Strings;
 import com.onsemi.mib.dao.HardwareDAO;
 import com.onsemi.mib.dao.ItemDAO;
 import com.onsemi.mib.dao.HimsRequestDAO;
+import com.onsemi.mib.dao.ItemActivityConfigDAO;
 import com.onsemi.mib.dao.ItemTransactionDAO;
 import com.onsemi.mib.dao.ItemVisualInspectionDAO;
 import com.onsemi.mib.dao.ParameterDetailsDAO;
@@ -14,6 +15,7 @@ import com.onsemi.mib.dao.RequestDAO;
 import com.onsemi.mib.model.Hardware;
 import com.onsemi.mib.model.Item;
 import com.onsemi.mib.model.HimsInventory;
+import com.onsemi.mib.model.ItemActivityConfig;
 import com.onsemi.mib.model.ItemTransaction;
 import com.onsemi.mib.model.ItemVisualInspection;
 import com.onsemi.mib.model.ParameterDetails;
@@ -22,7 +24,13 @@ import com.onsemi.mib.model.UserSession;
 import com.onsemi.mib.tools.QueryResult;
 import com.onsemi.mib.tools.SPTSWebService;
 import com.onsemi.mib.tools.SystemUtil;
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.OutputStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.sql.SQLException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -32,6 +40,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Locale;
 import javax.servlet.ServletContext;
+import javax.servlet.http.HttpServletResponse;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.slf4j.Logger;
@@ -47,6 +56,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.SessionAttributes;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
@@ -57,6 +67,10 @@ public class ItemController {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(ItemController.class);
     String[] args = {};
+
+    private static final String UPLOADED_FOLDER = "\\\\mysed-rel-app05\\f$\\HEATS\\VI-Attachment\\"; //server
+
+    private static final int BUFFER_SIZE = 4096;
 
     @Autowired
     private MessageSource messageSource;
@@ -2137,20 +2151,64 @@ public class ItemController {
             @RequestParam(required = false) String solderJointReject,
             @RequestParam(required = false) String winConnector,
             @RequestParam(required = false) String winConnectorReject,
-            @RequestParam(required = false) String remarks
+            @RequestParam(required = false) String remarks,
+            @RequestParam(required = false) String pcbRejectQty,
+            @RequestParam(required = false) MultipartFile pcbRejectUpload,
+            @RequestParam(required = false) String handleRejectQty,
+            @RequestParam(required = false) MultipartFile handleRejectUpload,
+            @RequestParam(required = false) String metalFrameRejectQty,
+            @RequestParam(required = false) MultipartFile metalFrameRejectUpload,
+            @RequestParam(required = false) String hardwareFasternersRejectQty,
+            @RequestParam(required = false) MultipartFile hardwareFasternersRejectUpload,
+            @RequestParam(required = false) String clipHolderRejectQty,
+            @RequestParam(required = false) MultipartFile clipHolderRejectUpload,
+            @RequestParam(required = false) String pcbEdgeFingerRejectQty,
+            @RequestParam(required = false) MultipartFile pcbEdgeFingerRejectUpload,
+            @RequestParam(required = false) String connectorRejectQty,
+            @RequestParam(required = false) MultipartFile connectorRejectUpload,
+            @RequestParam(required = false) String dutSocketsRejectQty,
+            @RequestParam(required = false) MultipartFile dutSocketsRejectUpload,
+            @RequestParam(required = false) String edgeMbBananaRejectQty,
+            @RequestParam(required = false) MultipartFile edgeMbBananaRejectUpload,
+            @RequestParam(required = false) String electComponentRejectQty,
+            @RequestParam(required = false) MultipartFile electComponentRejectUpload,
+            @RequestParam(required = false) String solderJointRejectQty,
+            @RequestParam(required = false) MultipartFile solderJointRejectUpload,
+            @RequestParam(required = false) String winConnectorRejectQty,
+            @RequestParam(required = false) MultipartFile winConnectorRejectUpload
     ) {
 
         String finalStatus = "";
+        String stringPathPcb = "";
+        String stringPathHandle = "";
+        String stringPathmetalFrame = "";
+        String stringPathHardwareFasterners = "";
+        String stringPathclipHolder = "";
+        String stringPathPcbEdgeFinger = "";
+        String stringPathConnector = "";
+        String stringPathDutSockets = "";
+        String stringPathEdgeMbBanana = "";
+        String stringPathElectComponent = "";
+        String stringPathSolderJoint = "";
+        String stringPathWinConnector = "";
 
         ItemVisualInspection itemVm = new ItemVisualInspection();
 
         itemVm.setMibItemId(mibItemId);
-        if ("Pending Visual Inspection".equals(itemStatus)) {
+        if (null == itemStatus) {
             itemVm.setModule("Item Registration");
-        } else if ("Pending Visual Inspection (from Maverick)".equals(itemStatus)) {
-            itemVm.setModule("Item Registration (2nd Visual Inspection");
         } else {
-            itemVm.setModule("Item Registration");
+            switch (itemStatus) {
+                case "Pending Visual Inspection":
+                    itemVm.setModule("Item Registration");
+                    break;
+                case "Pending Visual Inspection (from Maverick)":
+                    itemVm.setModule("Item Registration (2nd Visual Inspection");
+                    break;
+                default:
+                    itemVm.setModule("Item Registration");
+                    break;
+            }
         }
         itemVm.setPcb(pcb);
         itemVm.setPcbReject(pcbReject);
@@ -2178,6 +2236,67 @@ public class ItemController {
         itemVm.setWinConnectorReject(winConnectorReject);
         itemVm.setRemarks(remarks);
 
+        if ("Pass".equals(pcb) || "NA".equals(pcb)) {
+            itemVm.setPcbRejectQty("0");
+        } else {
+            itemVm.setPcbRejectQty(pcbRejectQty);
+        }
+        if ("Pass".equals(handle) || "NA".equals(handle)) {
+            itemVm.setHandleRejectQty("0");
+        } else {
+            itemVm.setHandleRejectQty(handleRejectQty);
+        }
+        if ("Pass".equals(metalFrame) || "NA".equals(metalFrame)) {
+            itemVm.setMetalFrameRejectQty("0");
+        } else {
+            itemVm.setMetalFrameRejectQty(metalFrameRejectQty);
+        }
+        if ("Pass".equals(hardwareFasterners) || "NA".equals(hardwareFasterners)) {
+            itemVm.setHardwareFasternersRejectQty("0");
+        } else {
+            itemVm.setHardwareFasternersRejectQty(hardwareFasternersRejectQty);
+        }
+        if ("Pass".equals(clipHolder) || "NA".equals(clipHolder)) {
+            itemVm.setClipHolderRejectQty("0");
+        } else {
+            itemVm.setClipHolderRejectQty(clipHolderRejectQty);
+        }
+        if ("Pass".equals(pcbEdgeFinger) || "NA".equals(pcbEdgeFinger)) {
+            itemVm.setPcbEdgeFingerRejectQty("0");
+        } else {
+            itemVm.setPcbEdgeFingerRejectQty(pcbEdgeFingerRejectQty);
+        }
+        if ("Pass".equals(connector) || "NA".equals(connector)) {
+            itemVm.setConnectorRejectQty("0");
+        } else {
+            itemVm.setConnectorRejectQty(connectorRejectQty);
+        }
+        if ("Pass".equals(dutSockets) || "NA".equals(dutSockets)) {
+            itemVm.setDutSocketsRejectQty("0");
+        } else {
+            itemVm.setDutSocketsRejectQty(dutSocketsRejectQty);
+        }
+        if ("Pass".equals(edgeMbBanana) || "NA".equals(edgeMbBanana)) {
+            itemVm.setEdgeMbBananaRejectQty("0");
+        } else {
+            itemVm.setEdgeMbBananaRejectQty(edgeMbBananaRejectQty);
+        }
+        if ("Pass".equals(electComponent) || "NA".equals(electComponent)) {
+            itemVm.setElectComponentRejectQty("0");
+        } else {
+            itemVm.setElectComponentRejectQty(electComponentRejectQty);
+        }
+        if ("Pass".equals(solderJoint) || "NA".equals(solderJoint)) {
+            itemVm.setSolderJointRejectQty("0");
+        } else {
+            itemVm.setSolderJointRejectQty(solderJointRejectQty);
+        }
+        if ("Pass".equals(winConnector) || "NA".equals(winConnector)) {
+            itemVm.setWinConnectorRejectQty("0");
+        } else {
+            itemVm.setWinConnectorRejectQty(winConnectorRejectQty);
+        }
+
         if ("Fail".equals(pcb) || "Fail".equals(handle) || "Fail".equals(metalFrame) || "Fail".equals(hardwareFasterners) || "Fail".equals(clipHolder) || "Fail".equals(pcbEdgeFinger) || "Fail".equals(connector)
                 || "Fail".equals(dutSockets) || "Fail".equals(edgeMbBanana) || "Fail".equals(electComponent) || "Fail".equals(solderJoint) || "Fail".equals(winConnector)) {
             finalStatus = "Fail";
@@ -2192,6 +2311,173 @@ public class ItemController {
         ItemVisualInspectionDAO itemVmD = new ItemVisualInspectionDAO();
         QueryResult q = itemVmD.insertItemVisualInspection(itemVm);
         if (!"0".equals(q.getGeneratedKey())) {
+
+            itemVm = new ItemVisualInspection();
+            LOGGER.info("pcbRejectUpload: " + pcbRejectUpload);
+
+            //check if user upload any attachment
+//            if (!pcbRejectUpload.isEmpty()) {
+            if (pcbRejectUpload != null) {
+                try {
+                    // Get the file and save it somewhere
+                    byte[] bytesPcb = pcbRejectUpload.getBytes();
+                    Path pathPcb = Paths.get(UPLOADED_FOLDER + q.getGeneratedKey() + "_pcb_" + pcbRejectUpload.getOriginalFilename());
+                    Files.write(pathPcb, bytesPcb);
+                    stringPathPcb = pathPcb.toString();
+                    LOGGER.info("pathPcb : " + pathPcb);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                itemVm.setPcbRejectUpload(stringPathPcb);
+            }
+            if (handleRejectUpload != null) {
+                try {
+                    // Get the file and save it somewhere
+                    byte[] bytesHandle = handleRejectUpload.getBytes();
+                    Path pathHandle = Paths.get(UPLOADED_FOLDER + q.getGeneratedKey() + "_handle_" + handleRejectUpload.getOriginalFilename());
+                    Files.write(pathHandle, bytesHandle);
+                    stringPathHandle = pathHandle.toString();
+                    LOGGER.info("pathHandle : " + pathHandle);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                itemVm.setHandleRejectUpload(stringPathHandle);
+            }
+            if (metalFrameRejectUpload != null) {
+                try {
+                    // Get the file and save it somewhere
+                    byte[] bytesMetalFrame = metalFrameRejectUpload.getBytes();
+                    Path pathMetalFrame = Paths.get(UPLOADED_FOLDER + q.getGeneratedKey() + "_metalFrame_" + metalFrameRejectUpload.getOriginalFilename());
+                    Files.write(pathMetalFrame, bytesMetalFrame);
+                    stringPathmetalFrame = pathMetalFrame.toString();
+                    LOGGER.info("pathMetalFrame : " + pathMetalFrame);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                itemVm.setMetalFrameRejectUpload(stringPathmetalFrame);
+            }
+            if (hardwareFasternersRejectUpload != null) {
+                try {
+                    // Get the file and save it somewhere
+                    byte[] bytesHardwareFasterners = hardwareFasternersRejectUpload.getBytes();
+                    Path pathHardwareFasterners = Paths.get(UPLOADED_FOLDER + q.getGeneratedKey() + "_hardwareFasteners_" + hardwareFasternersRejectUpload.getOriginalFilename());
+                    Files.write(pathHardwareFasterners, bytesHardwareFasterners);
+                    stringPathHardwareFasterners = pathHardwareFasterners.toString();
+                    LOGGER.info("pathHardwareFasterners : " + pathHardwareFasterners);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                itemVm.setHardwareFasternersRejectUpload(stringPathHardwareFasterners);
+            }
+            if (clipHolderRejectUpload != null) {
+                try {
+                    // Get the file and save it somewhere
+                    byte[] bytesClipHolder = clipHolderRejectUpload.getBytes();
+                    Path pathClipHolder = Paths.get(UPLOADED_FOLDER + q.getGeneratedKey() + "_clipHolder_" + clipHolderRejectUpload.getOriginalFilename());
+                    Files.write(pathClipHolder, bytesClipHolder);
+                    stringPathclipHolder = pathClipHolder.toString();
+                    LOGGER.info("pathClipHolder : " + pathClipHolder);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                itemVm.setClipHolderRejectUpload(stringPathclipHolder);
+            }
+
+            if (pcbEdgeFingerRejectUpload != null) {
+                try {
+                    // Get the file and save it somewhere
+                    byte[] bytesPcbEdgeFinger = pcbEdgeFingerRejectUpload.getBytes();
+                    Path pathPcbEdgeFinger = Paths.get(UPLOADED_FOLDER + q.getGeneratedKey() + "_pcbEdgeFinger_" + pcbEdgeFingerRejectUpload.getOriginalFilename());
+                    Files.write(pathPcbEdgeFinger, bytesPcbEdgeFinger);
+                    stringPathPcbEdgeFinger = pathPcbEdgeFinger.toString();
+                    LOGGER.info("pathPcbEdgeFinger : " + pathPcbEdgeFinger);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                itemVm.setPcbEdgeFingerRejectUpload(stringPathPcbEdgeFinger);
+            }
+            if (connectorRejectUpload != null) {
+                try {
+                    // Get the file and save it somewhere
+                    byte[] bytesConnector = connectorRejectUpload.getBytes();
+                    Path pathConnector = Paths.get(UPLOADED_FOLDER + q.getGeneratedKey() + "_connector_" + connectorRejectUpload.getOriginalFilename());
+                    Files.write(pathConnector, bytesConnector);
+                    stringPathConnector = pathConnector.toString();
+                    LOGGER.info("pathConnector : " + pathConnector);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                itemVm.setConnectorRejectUpload(stringPathConnector);
+            }
+            if (dutSocketsRejectUpload != null) {
+                try {
+                    // Get the file and save it somewhere
+                    byte[] bytesDutSockets = dutSocketsRejectUpload.getBytes();
+                    Path pathDutSockets = Paths.get(UPLOADED_FOLDER + q.getGeneratedKey() + "_dutSockets_" + dutSocketsRejectUpload.getOriginalFilename());
+                    Files.write(pathDutSockets, bytesDutSockets);
+                    stringPathDutSockets = pathDutSockets.toString();
+                    LOGGER.info("pathDutSockets : " + pathDutSockets);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                itemVm.setDutSocketsRejectUpload(stringPathDutSockets);
+            }
+            if (edgeMbBananaRejectUpload != null) {
+                try {
+                    // Get the file and save it somewhere
+                    byte[] bytesEdgeMbBanana = edgeMbBananaRejectUpload.getBytes();
+                    Path pathEdgeMbBanana = Paths.get(UPLOADED_FOLDER + q.getGeneratedKey() + "_edgeMbBanana_" + edgeMbBananaRejectUpload.getOriginalFilename());
+                    Files.write(pathEdgeMbBanana, bytesEdgeMbBanana);
+                    stringPathEdgeMbBanana = pathEdgeMbBanana.toString();
+                    LOGGER.info("pathEdgeMbBanana : " + pathEdgeMbBanana);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                itemVm.setEdgeMbBananaRejectUpload(stringPathEdgeMbBanana);
+            }
+            if (electComponentRejectUpload != null) {
+                try {
+                    // Get the file and save it somewhere
+                    byte[] bytesElectComponent = electComponentRejectUpload.getBytes();
+                    Path pathElectComponent = Paths.get(UPLOADED_FOLDER + q.getGeneratedKey() + "_electComponent_" + electComponentRejectUpload.getOriginalFilename());
+                    Files.write(pathElectComponent, bytesElectComponent);
+                    stringPathElectComponent = pathElectComponent.toString();
+                    LOGGER.info("pathElectComponent : " + pathElectComponent);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                itemVm.setElectComponentRejectUpload(stringPathElectComponent);
+            }
+            if (solderJointRejectUpload != null) {
+                try {
+                    // Get the file and save it somewhere
+                    byte[] bytesSolderJoint = solderJointRejectUpload.getBytes();
+                    Path pathSolderJoint = Paths.get(UPLOADED_FOLDER + q.getGeneratedKey() + "_solderJoint_" + solderJointRejectUpload.getOriginalFilename());
+                    Files.write(pathSolderJoint, bytesSolderJoint);
+                    stringPathSolderJoint = pathSolderJoint.toString();
+                    LOGGER.info("pathSolderJoint : " + pathSolderJoint);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                itemVm.setSolderJointRejectUpload(stringPathSolderJoint);
+            }
+
+            if (winConnectorRejectUpload != null) {
+                try {
+                    // Get the file and save it somewhere
+                    byte[] bytesWinConnector = winConnectorRejectUpload.getBytes();
+                    Path pathWinConnector = Paths.get(UPLOADED_FOLDER + q.getGeneratedKey() + "_winConnector_" + winConnectorRejectUpload.getOriginalFilename());
+                    Files.write(pathWinConnector, bytesWinConnector);
+                    stringPathWinConnector = pathWinConnector.toString();
+                    LOGGER.info("pathWinConnector : " + pathWinConnector);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                itemVm.setWinConnectorRejectUpload(stringPathWinConnector);
+            }
+            itemVm.setId(q.getGeneratedKey());
+            itemVmD = new ItemVisualInspectionDAO();
+            QueryResult q3 = itemVmD.updateItemVisualInspectionForAttachment(itemVm);
 
             //update Item DB
             String status = "";
@@ -2220,6 +2506,97 @@ public class ItemController {
         }
     }
 
+    @RequestMapping(value = "/item/vm/downloadAttach/{id}/{type}", method = RequestMethod.GET)
+    public void downloadAttachment(HttpServletRequest request,
+            @PathVariable("type") String type,
+            @PathVariable("id") String id,
+            HttpServletResponse response) throws IOException {
+
+        ItemVisualInspectionDAO itemD = new ItemVisualInspectionDAO();
+        ItemVisualInspection item = itemD.getItemVisualInspection(id);
+
+        String attachment = "";
+        switch (type) {
+            case "pcb":
+                attachment = item.getPcbRejectUpload();
+                break;
+            case "handle":
+                attachment = item.getHandleRejectUpload();
+                break;
+            case "metalFrame":
+                attachment = item.getMetalFrameRejectUpload();
+                break;
+            case "hardwareFasterners":
+                attachment = item.getHardwareFasternersRejectUpload();
+                break;
+            case "clipHolder":
+                attachment = item.getClipHolderRejectUpload();
+                break;
+            case "pcbEdgeFinger":
+                attachment = item.getPcbEdgeFingerRejectUpload();
+                break;
+            case "connector":
+                attachment = item.getConnectorRejectUpload();
+                break;
+            case "dutSockets":
+                attachment = item.getDutSocketsRejectUpload();
+                break;
+            case "edgeMbBanana":
+                attachment = item.getEdgeMbBananaRejectUpload();
+                break;
+            case "electComponent":
+                attachment = item.getElectComponentRejectUpload();
+                break;
+            case "solderJoint":
+                attachment = item.getSolderJointRejectUpload();
+                break;
+            case "winConnector":
+                attachment = item.getWinConnectorRejectUpload();
+                break;
+            default:
+                attachment = "";
+                break;
+        }
+
+        // construct the complete absolute path of the file
+        String fullPath = attachment;
+        File downloadFile = new File(fullPath);
+        FileInputStream inputStream = new FileInputStream(downloadFile);
+
+        // get MIME type of the file
+        String mimeType = servletContext.getMimeType(fullPath);
+        if (mimeType == null) {
+            // set to binary type if MIME mapping not found
+            mimeType = "application/octet-stream";
+        }
+        System.out.println("MIME type: " + mimeType);
+
+        // set content attributes for the response
+        response.setContentType(mimeType);
+        response.setContentLength((int) downloadFile.length());
+
+        // set headers for the response
+        String headerKey = "Content-Disposition";
+        String headerValue = String.format("attachment; filename=\"%s\"",
+                downloadFile.getName());
+        response.setHeader(headerKey, headerValue);
+
+        // get output stream of the response
+        OutputStream outStream = response.getOutputStream();
+
+        byte[] buffer = new byte[BUFFER_SIZE];
+        int bytesRead = -1;
+
+        // write bytes read from the input stream into the output stream
+        while ((bytesRead = inputStream.read(buffer)) != -1) {
+            outStream.write(buffer, 0, bytesRead);
+        }
+
+        inputStream.close();
+        outStream.close();
+
+    }
+
     @RequestMapping(value = "/item/addActivity/{id}", method = RequestMethod.GET)
     public String addActivity(
             Model model,
@@ -2231,6 +2608,80 @@ public class ItemController {
         Item item = itemD.getHardwareDetail(id);
         model.addAttribute("item", item);
         return "item/item_check";
+    }
+
+    @RequestMapping(value = "/item/addActivity/save", method = {RequestMethod.GET, RequestMethod.POST})
+    public String addActivitySave(
+            Model model,
+            Locale locale,
+            RedirectAttributes redirectAttrs,
+            @ModelAttribute UserSession userSession,
+            @RequestParam(required = false) String mibItemId,
+            @RequestParam(required = false) String viCheck,
+            @RequestParam(required = false) String bibTestCheck,
+            @RequestParam(required = false) String manualTestCheck,
+            @RequestParam(required = false) String leakageTestCheck,
+            @RequestParam(required = false) String psLeakageTestCheck,
+            @RequestParam(required = false) String winchesterChamberLeakageTest
+    ) {
+
+        ItemActivityConfig itemA = new ItemActivityConfig();
+        itemA.setMibItemId(mibItemId);
+        if ("on".equals(viCheck)) {
+            itemA.setVi("Yes");
+        } else {
+            itemA.setVi("No");
+        }
+        if ("on".equals(bibTestCheck)) {
+            itemA.setBibTest("Yes");
+        } else {
+            itemA.setBibTest("No");
+        }
+        if ("on".equals(manualTestCheck)) {
+            itemA.setManualTest("Yes");
+        } else {
+            itemA.setManualTest("No");
+        }
+        if ("on".equals(leakageTestCheck)) {
+            itemA.setLeakageTest("Yes");
+        } else {
+            itemA.setLeakageTest("No");
+        }
+        if ("on".equals(psLeakageTestCheck)) {
+            itemA.setPsLeakageTest("Yes");
+        } else {
+            itemA.setPsLeakageTest("No");
+        }
+        if ("on".equals(winchesterChamberLeakageTest)) {
+            itemA.setWinchesterChamberLeakageTest("Yes");
+        } else {
+            itemA.setWinchesterChamberLeakageTest("No");
+        }
+        itemA.setFlag("0");
+        itemA.setCreatedBy(userSession.getFullname());
+        itemA.setStatus("New Config");
+
+        ItemActivityConfigDAO itemD = new ItemActivityConfigDAO();
+        QueryResult itemQ = itemD.insertItemActivityConfig(itemA);
+        if (!"0".equals(itemQ.getGeneratedKey())) {
+
+            //update status on Item table
+            Item item = new Item();
+            item.setId(mibItemId);
+            item.setStatus("Pending Visual Inspection");
+            item.setFlag("0");
+
+            ItemDAO itemDA = new ItemDAO();
+            QueryResult iQ = itemDA.updateItemStatusAndFlag(item);
+
+            redirectAttrs.addFlashAttribute("success", "Activity Configuration Succesfully Added.");
+            return "redirect:/hw/item/pending/";
+        } else {
+
+        }
+
+        redirectAttrs.addFlashAttribute("error", "Failed to save Activity Configuration. Pls Contact System Admin");
+        return "redirect:/hw/item/add2/" + mibItemId;
     }
 
     @RequestMapping(value = "/equipment", method = RequestMethod.GET)

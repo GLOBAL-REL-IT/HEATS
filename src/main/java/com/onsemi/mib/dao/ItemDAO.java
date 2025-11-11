@@ -281,6 +281,32 @@ public class ItemDAO {
         }
         return queryResult;
     }
+    
+    public QueryResult updateItemStatusAndFlag(Item hardwaredetail) {
+        QueryResult queryResult = new QueryResult();
+        try {
+            PreparedStatement ps = conn.prepareStatement(
+                    "UPDATE item SET status = ?, flag = ? WHERE id = ?"
+            );
+            ps.setString(1, hardwaredetail.getStatus());
+            ps.setString(2, hardwaredetail.getFlag());
+            ps.setString(3, hardwaredetail.getId());
+            queryResult.setResult(ps.executeUpdate());
+            ps.close();
+        } catch (SQLException e) {
+            queryResult.setErrorMessage(e.getMessage());
+            LOGGER.error(e.getMessage());
+        } finally {
+            if (conn != null) {
+                try {
+                    conn.close();
+                } catch (SQLException e) {
+                    LOGGER.error(e.getMessage());
+                }
+            }
+        }
+        return queryResult;
+    }
 
     public QueryResult deleteHardwareDetail(String hardwaredetailId) {
         QueryResult queryResult = new QueryResult();

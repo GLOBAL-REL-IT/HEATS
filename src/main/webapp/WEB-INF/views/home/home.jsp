@@ -994,7 +994,7 @@
             var options = {
                 series: [
                     {
-                        name: 'Average',
+                        name: 'KPI',
                         type: 'line',
                         data: averageData
                     }, {

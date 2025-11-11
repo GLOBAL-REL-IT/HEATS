@@ -98,18 +98,18 @@
                     <!-- Card start -->
                     <div class="card mb-4">
                         <div class="card-header">
-                            <h5 class="card-title">Hardware Module - <span style="color:#D97D55">Activity Configuration (BIB / BIB Card)</span></h5>
+                            <h5 class="card-title">Hardware Module - Activity Selection (BIB / BIB Card)</h5>
                         </div>
                         <div class="card-body">
                             <!-- Row start -->
-                            <form class="row g-3 align-items-center" role="form" action="${contextPath}/hw/item/addActivity/save" method="post">
+                            <form class="row g-3 align-items-center" role="form" action="${contextPath}/admin/bibActivity/update" method="post">
                                 <div class="row mb-4">
                                     <label class="col-sm-2 col-md-1 col-form-label fw-semibold" for="fName">Item Type</label>
                                     <div class="col-sm-9 col-md-10">
                                         <div class="row g-2">
                                             <div class="col-sm-6">
                                                 <input type="text" class="form-control" id="itemId" name="itemId" value="${item.itemType}" disabled>
-                                                <input type="hidden" class="form-control" id="mibItemId" name="mibItemId" value="${item.id}">
+                                                <input type="hidden" class="form-control" id="id" name="id" value="${item.id}">
                                             </div>
                                         </div>
                                     </div>
@@ -154,33 +154,43 @@
                                         </div>
                                     </div>
                                 </div>
+                                            <div class="row mb-4">
+                                    <label class="col-sm-2 col-md-1 col-form-label fw-semibold" for="stressType">Stress Type</label>
+                                    <div class="col-sm-9 col-md-10">
+                                        <div class="row g-2">
+                                            <div class="col-sm-6">
+                                                <input type="text" class="form-control" id="stressType" name="stressType" value="${item.stressType}" disabled>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
                                 <div class="row mb-4">
                                     <label class="col-sm-2 col-md-1 col-form-label fw-semibold" for="assemblyId">Activity</label>
                                     <div class="col-xl-2 col-sm-12 col-12">
                                         <div class="row g-1">
                                             <label for="viCheck" class="form-label">Visual Inspection</label>
                                             <div class="input-group form-check form-switch">
-                                                <input class="form-check-input" type="checkbox" role="switch" id="viCheck" name="viCheck" checked="">
+                                                <input class="form-check-input" type="checkbox" role="switch" id="viCheck" name="viCheck"  <c:if test="${item.vi == 'Yes'}">checked</c:if> >
                                             </div>
                                             <label for="bibTestCheck" class="form-label">Bib Test</label>
                                             <div class="input-group form-check form-switch">
-                                                <input class="form-check-input" type="checkbox" role="switch" id="bibTestCheck" name="bibTestCheck" checked>
+                                                <input class="form-check-input" type="checkbox" role="switch" id="bibTestCheck" name="bibTestCheck" <c:if test="${item.bibTest == 'Yes'}">checked</c:if> >
                                             </div>
                                             <label for="manualTestCheck" class="form-label">Manual Test</label>
                                             <div class="input-group form-check form-switch">
-                                                <input class="form-check-input" type="checkbox" role="switch" id="manualTestCheck" name="manualTestCheck">
+                                                <input class="form-check-input" type="checkbox" role="switch" id="manualTestCheck" name="manualTestCheck" <c:if test="${item.manualTest == 'Yes'}">checked</c:if> >
                                             </div>
                                             <label for="leakageTestCheck" class="form-label">Leakage Test</label>
                                             <div class="input-group form-check form-switch">
-                                                <input class="form-check-input" type="checkbox" role="switch" id="leakageTestCheck" name="leakageTestCheck">
+                                                <input class="form-check-input" type="checkbox" role="switch" id="leakageTestCheck" name="leakageTestCheck" <c:if test="${item.leakageTest == 'Yes'}">checked</c:if> >
                                             </div>
-                                            <label for="PsLeakageTestCheck" class="form-label">Power Supply Leakage Test</label>
+                                            <label for="psLeakageTestCheck" class="form-label">Power Supply Leakage Test</label>
                                             <div class="input-group form-check form-switch">
-                                                <input class="form-check-input" type="checkbox" role="switch" id="psLeakageTestCheck" name="psLeakageTestCheck">
+                                                <input class="form-check-input" type="checkbox" role="switch" id="psLeakageTestCheck" name="psLeakageTestCheck" <c:if test="${item.psLeakageTest == 'Yes'}">checked</c:if> >
                                             </div>
                                             <label for="winchesterChamberLeakageTest" class="form-label">Winchester Chamber Leakage Test</label>
                                             <div class="input-group form-check form-switch">
-                                                <input class="form-check-input" type="checkbox" role="switch" id="winchesterChamberLeakageTest" name="winchesterChamberLeakageTest">
+                                                <input class="form-check-input" type="checkbox" role="switch" id="winchesterChamberLeakageTest" name="winchesterChamberLeakageTest" <c:if test="${item.winchesterChamberLeakageTest == 'Yes'}">checked</c:if> >
                                             </div>
                                         </div>
                                     </div>
@@ -193,7 +203,7 @@
                                     <!--</div>-->
                                     <!--<div class="justify-content-start">-->
                                     <!--<button type="button" class="btn btn-light">Cancel</button>-->
-                                    <a href="${contextPath}/hw/item/pending" class="btn btn-dark float-start">Back</a>
+                                    <a href="${contextPath}/admin/bibActivity" class="btn btn-dark float-start">Back</a>
                                     <!--</div>-->
                                 </div>
                                 <!-- Form actions end -->

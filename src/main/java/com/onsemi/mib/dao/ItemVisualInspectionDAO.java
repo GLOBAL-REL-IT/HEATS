@@ -30,7 +30,12 @@ public class ItemVisualInspectionDAO {
         QueryResult queryResult = new QueryResult();
         try {
             PreparedStatement ps = conn.prepareStatement(
-                    "INSERT INTO item_visual_inspection (mib_item_id, module, pcb, pcb_reject, handle, handle_reject, metal_frame, metal_frame_reject, hardware_fasterners, hardware_fasterners_reject, clip_holder, clip_holder_reject, pcb_edge_finger, pcb_edge_finger_reject, connector, connector_reject, dut_sockets, dut_sockets_reject, edge_mb_banana, edge_mb_banana_reject, elect_component, elect_component_reject, solder_joint, solder_joint_reject, win_connector, win_connector_reject, remarks, final_status, created_by, created_date, flag) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)", Statement.RETURN_GENERATED_KEYS
+                    "INSERT INTO item_visual_inspection (mib_item_id, module, pcb, pcb_reject, handle, handle_reject, metal_frame, metal_frame_reject, hardware_fasterners, hardware_fasterners_reject, "
+                    + "clip_holder, clip_holder_reject, pcb_edge_finger, pcb_edge_finger_reject, connector, connector_reject, dut_sockets, dut_sockets_reject, edge_mb_banana, edge_mb_banana_reject, "
+                    + "elect_component, elect_component_reject, solder_joint, solder_joint_reject, win_connector, win_connector_reject, remarks, final_status, created_by, created_date, flag,"
+                    + "pcb_reject_qty, handle_reject_qty, metal_frame_reject_qty, hardware_fasterners_reject_qty, clip_holder_reject_qty, pcb_edge_finger_reject_qty, connector_reject_qty,"
+                    + "dut_sockets_reject_qty, edge_mb_banana_reject_qty, elect_component_reject_qty, solder_joint_reject_qty, win_connector_reject_qty) "
+                    + "VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)", Statement.RETURN_GENERATED_KEYS
             );
             ps.setString(1, itemvisualInspection.getMibItemId());
             ps.setString(2, itemvisualInspection.getModule());
@@ -63,6 +68,20 @@ public class ItemVisualInspectionDAO {
             ps.setString(29, itemvisualInspection.getCreatedBy());
             ps.setString(30, itemvisualInspection.getCreatedDate());
             ps.setString(31, itemvisualInspection.getFlag());
+
+            ps.setString(32, itemvisualInspection.getPcbRejectQty());
+            ps.setString(33, itemvisualInspection.getHandleRejectQty());
+            ps.setString(34, itemvisualInspection.getMetalFrameRejectQty());
+            ps.setString(35, itemvisualInspection.getHardwareFasternersRejectQty());
+            ps.setString(36, itemvisualInspection.getClipHolderRejectQty());
+            ps.setString(37, itemvisualInspection.getPcbEdgeFingerRejectQty());
+            ps.setString(38, itemvisualInspection.getConnectorRejectQty());
+            ps.setString(39, itemvisualInspection.getDutSocketsRejectQty());
+            ps.setString(40, itemvisualInspection.getEdgeMbBananaRejectQty());
+            ps.setString(41, itemvisualInspection.getElectComponentRejectQty());
+            ps.setString(42, itemvisualInspection.getSolderJointRejectQty());
+            ps.setString(43, itemvisualInspection.getWinConnectorRejectQty());
+
             queryResult.setResult(ps.executeUpdate());
             ResultSet rs = ps.getGeneratedKeys();
             if (rs.next()) {
@@ -140,6 +159,43 @@ public class ItemVisualInspectionDAO {
         return queryResult;
     }
 
+    public QueryResult updateItemVisualInspectionForAttachment(ItemVisualInspection itemvisualInspection) {
+        QueryResult queryResult = new QueryResult();
+        try {
+            PreparedStatement ps = conn.prepareStatement(
+                    "UPDATE item_visual_inspection SET pcb_reject_upload = ?, handle_reject_upload = ?, metal_frame_reject_upload = ?, hardware_fasterners_reject_upload = ?, clip_holder_reject_upload = ?, pcb_edge_finger_reject_upload = ?, "
+                    + "connector_reject_upload = ?, dut_sockets_reject_upload = ?, edge_mb_banana_reject_upload = ?, elect_component_reject_upload = ?, solder_joint_reject_upload = ?, win_connector_reject_upload = ? WHERE id = ?"
+            );
+            ps.setString(1, itemvisualInspection.getPcbRejectUpload());
+            ps.setString(2, itemvisualInspection.getHandleRejectUpload());
+            ps.setString(3, itemvisualInspection.getMetalFrameRejectUpload());
+            ps.setString(4, itemvisualInspection.getHardwareFasternersRejectUpload());
+            ps.setString(5, itemvisualInspection.getClipHolderRejectUpload());
+            ps.setString(6, itemvisualInspection.getPcbEdgeFingerRejectUpload());
+            ps.setString(7, itemvisualInspection.getConnectorRejectUpload());
+            ps.setString(8, itemvisualInspection.getDutSocketsRejectUpload());
+            ps.setString(9, itemvisualInspection.getEdgeMbBananaRejectUpload());
+            ps.setString(10, itemvisualInspection.getElectComponentRejectUpload());
+            ps.setString(11, itemvisualInspection.getSolderJointRejectUpload());
+            ps.setString(12, itemvisualInspection.getWinConnectorRejectUpload());
+            ps.setString(13, itemvisualInspection.getId());
+            queryResult.setResult(ps.executeUpdate());
+            ps.close();
+        } catch (SQLException e) {
+            queryResult.setErrorMessage(e.getMessage());
+            LOGGER.error(e.getMessage());
+        } finally {
+            if (conn != null) {
+                try {
+                    conn.close();
+                } catch (SQLException e) {
+                    LOGGER.error(e.getMessage());
+                }
+            }
+        }
+        return queryResult;
+    }
+
     public QueryResult deleteItemVisualInspection(String itemvisualInspectionId) {
         QueryResult queryResult = new QueryResult();
         try {
@@ -176,28 +232,52 @@ public class ItemVisualInspectionDAO {
                 itemvisualInspection.setModule(rs.getString("module"));
                 itemvisualInspection.setPcb(rs.getString("pcb"));
                 itemvisualInspection.setPcbReject(rs.getString("pcb_reject"));
+                itemvisualInspection.setPcbRejectQty(rs.getString("pcb_reject_qty"));
+                itemvisualInspection.setPcbRejectUpload(rs.getString("pcb_reject_upload"));
                 itemvisualInspection.setHandle(rs.getString("handle"));
                 itemvisualInspection.setHandleReject(rs.getString("handle_reject"));
+                itemvisualInspection.setHandleRejectQty(rs.getString("handle_reject_qty"));
+                itemvisualInspection.setHandleRejectUpload(rs.getString("handle_reject_upload"));
                 itemvisualInspection.setMetalFrame(rs.getString("metal_frame"));
                 itemvisualInspection.setMetalFrameReject(rs.getString("metal_frame_reject"));
+                itemvisualInspection.setMetalFrameRejectQty(rs.getString("metal_frame_reject_qty"));
+                itemvisualInspection.setMetalFrameRejectUpload(rs.getString("metal_frame_reject_upload"));
                 itemvisualInspection.setHardwareFasterners(rs.getString("hardware_fasterners"));
                 itemvisualInspection.setHardwareFasternersReject(rs.getString("hardware_fasterners_reject"));
+                itemvisualInspection.setHardwareFasternersRejectQty(rs.getString("hardware_fasterners_reject_qty"));
+                itemvisualInspection.setHardwareFasternersRejectUpload(rs.getString("hardware_fasterners_reject_upload"));
                 itemvisualInspection.setClipHolder(rs.getString("clip_holder"));
                 itemvisualInspection.setClipHolderReject(rs.getString("clip_holder_reject"));
+                itemvisualInspection.setClipHolderRejectQty(rs.getString("clip_holder_reject_qty"));
+                itemvisualInspection.setClipHolderRejectUpload(rs.getString("clip_holder_reject_upload"));
                 itemvisualInspection.setPcbEdgeFinger(rs.getString("pcb_edge_finger"));
                 itemvisualInspection.setPcbEdgeFingerReject(rs.getString("pcb_edge_finger_reject"));
+                itemvisualInspection.setPcbEdgeFingerRejectQty(rs.getString("pcb_edge_finger_reject_qty"));
+                itemvisualInspection.setPcbEdgeFingerRejectUpload(rs.getString("pcb_edge_finger_reject_upload"));
                 itemvisualInspection.setConnector(rs.getString("connector"));
                 itemvisualInspection.setConnectorReject(rs.getString("connector_reject"));
+                itemvisualInspection.setConnectorRejectQty(rs.getString("connector_reject_qty"));
+                itemvisualInspection.setConnectorRejectUpload(rs.getString("connector_reject_upload"));
                 itemvisualInspection.setDutSockets(rs.getString("dut_sockets"));
                 itemvisualInspection.setDutSocketsReject(rs.getString("dut_sockets_reject"));
+                itemvisualInspection.setDutSocketsRejectQty(rs.getString("dut_sockets_reject_qty"));
+                itemvisualInspection.setDutSocketsRejectUpload(rs.getString("dut_sockets_reject_upload"));
                 itemvisualInspection.setEdgeMbBanana(rs.getString("edge_mb_banana"));
                 itemvisualInspection.setEdgeMbBananaReject(rs.getString("edge_mb_banana_reject"));
+                itemvisualInspection.setEdgeMbBananaRejectQty(rs.getString("edge_mb_banana_reject_qty"));
+                itemvisualInspection.setEdgeMbBananaRejectUpload(rs.getString("edge_mb_banana_reject_upload"));
                 itemvisualInspection.setElectComponent(rs.getString("elect_component"));
                 itemvisualInspection.setElectComponentReject(rs.getString("elect_component_reject"));
+                itemvisualInspection.setElectComponentRejectQty(rs.getString("elect_component_reject_qty"));
+                itemvisualInspection.setElectComponentRejectUpload(rs.getString("elect_component_reject_upload"));
                 itemvisualInspection.setSolderJoint(rs.getString("solder_joint"));
                 itemvisualInspection.setSolderJointReject(rs.getString("solder_joint_reject"));
+                itemvisualInspection.setSolderJointRejectQty(rs.getString("solder_joint_reject_qty"));
+                itemvisualInspection.setSolderJointRejectUpload(rs.getString("solder_joint_reject_upload"));
                 itemvisualInspection.setWinConnector(rs.getString("win_connector"));
                 itemvisualInspection.setWinConnectorReject(rs.getString("win_connector_reject"));
+                itemvisualInspection.setWinConnectorRejectQty(rs.getString("win_connector_reject_qty"));
+                itemvisualInspection.setWinConnectorRejectUpload(rs.getString("win_connector_reject_upload"));
                 itemvisualInspection.setRemarks(rs.getString("remarks"));
                 itemvisualInspection.setFinalStatus(rs.getString("final_status"));
                 itemvisualInspection.setCreatedBy(rs.getString("created_by"));
@@ -233,28 +313,52 @@ public class ItemVisualInspectionDAO {
                 itemvisualInspection.setModule(rs.getString("module"));
                 itemvisualInspection.setPcb(rs.getString("pcb"));
                 itemvisualInspection.setPcbReject(rs.getString("pcb_reject"));
+                itemvisualInspection.setPcbRejectQty(rs.getString("pcb_reject_qty"));
+                itemvisualInspection.setPcbRejectUpload(rs.getString("pcb_reject_upload"));
                 itemvisualInspection.setHandle(rs.getString("handle"));
                 itemvisualInspection.setHandleReject(rs.getString("handle_reject"));
+                itemvisualInspection.setHandleRejectQty(rs.getString("handle_reject_qty"));
+                itemvisualInspection.setHandleRejectUpload(rs.getString("handle_reject_upload"));
                 itemvisualInspection.setMetalFrame(rs.getString("metal_frame"));
                 itemvisualInspection.setMetalFrameReject(rs.getString("metal_frame_reject"));
+                itemvisualInspection.setMetalFrameRejectQty(rs.getString("metal_frame_reject_qty"));
+                itemvisualInspection.setMetalFrameRejectUpload(rs.getString("metal_frame_reject_upload"));
                 itemvisualInspection.setHardwareFasterners(rs.getString("hardware_fasterners"));
                 itemvisualInspection.setHardwareFasternersReject(rs.getString("hardware_fasterners_reject"));
+                itemvisualInspection.setHardwareFasternersRejectQty(rs.getString("hardware_fasterners_reject_qty"));
+                itemvisualInspection.setHardwareFasternersRejectUpload(rs.getString("hardware_fasterners_reject_upload"));
                 itemvisualInspection.setClipHolder(rs.getString("clip_holder"));
                 itemvisualInspection.setClipHolderReject(rs.getString("clip_holder_reject"));
+                itemvisualInspection.setClipHolderRejectQty(rs.getString("clip_holder_reject_qty"));
+                itemvisualInspection.setClipHolderRejectUpload(rs.getString("clip_holder_reject_upload"));
                 itemvisualInspection.setPcbEdgeFinger(rs.getString("pcb_edge_finger"));
                 itemvisualInspection.setPcbEdgeFingerReject(rs.getString("pcb_edge_finger_reject"));
+                itemvisualInspection.setPcbEdgeFingerRejectQty(rs.getString("pcb_edge_finger_reject_qty"));
+                itemvisualInspection.setPcbEdgeFingerRejectUpload(rs.getString("pcb_edge_finger_reject_upload"));
                 itemvisualInspection.setConnector(rs.getString("connector"));
                 itemvisualInspection.setConnectorReject(rs.getString("connector_reject"));
+                itemvisualInspection.setConnectorRejectQty(rs.getString("connector_reject_qty"));
+                itemvisualInspection.setConnectorRejectUpload(rs.getString("connector_reject_upload"));
                 itemvisualInspection.setDutSockets(rs.getString("dut_sockets"));
                 itemvisualInspection.setDutSocketsReject(rs.getString("dut_sockets_reject"));
+                itemvisualInspection.setDutSocketsRejectQty(rs.getString("dut_sockets_reject_qty"));
+                itemvisualInspection.setDutSocketsRejectUpload(rs.getString("dut_sockets_reject_upload"));
                 itemvisualInspection.setEdgeMbBanana(rs.getString("edge_mb_banana"));
                 itemvisualInspection.setEdgeMbBananaReject(rs.getString("edge_mb_banana_reject"));
+                itemvisualInspection.setEdgeMbBananaRejectQty(rs.getString("edge_mb_banana_reject_qty"));
+                itemvisualInspection.setEdgeMbBananaRejectUpload(rs.getString("edge_mb_banana_reject_upload"));
                 itemvisualInspection.setElectComponent(rs.getString("elect_component"));
                 itemvisualInspection.setElectComponentReject(rs.getString("elect_component_reject"));
+                itemvisualInspection.setElectComponentRejectQty(rs.getString("elect_component_reject_qty"));
+                itemvisualInspection.setElectComponentRejectUpload(rs.getString("elect_component_reject_upload"));
                 itemvisualInspection.setSolderJoint(rs.getString("solder_joint"));
                 itemvisualInspection.setSolderJointReject(rs.getString("solder_joint_reject"));
+                itemvisualInspection.setSolderJointRejectQty(rs.getString("solder_joint_reject_qty"));
+                itemvisualInspection.setSolderJointRejectUpload(rs.getString("solder_joint_reject_upload"));
                 itemvisualInspection.setWinConnector(rs.getString("win_connector"));
                 itemvisualInspection.setWinConnectorReject(rs.getString("win_connector_reject"));
+                itemvisualInspection.setWinConnectorRejectQty(rs.getString("win_connector_reject_qty"));
+                itemvisualInspection.setWinConnectorRejectUpload(rs.getString("win_connector_reject_upload"));
                 itemvisualInspection.setRemarks(rs.getString("remarks"));
                 itemvisualInspection.setFinalStatus(rs.getString("final_status"));
                 itemvisualInspection.setCreatedBy(rs.getString("created_by"));

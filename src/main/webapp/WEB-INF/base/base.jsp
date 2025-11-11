@@ -29,7 +29,8 @@
             <link rel="stylesheet" href="${contextPath}/resources/statflow/vendor/overlay-scroll/OverlayScrollbars.min.css">
             
             <!-- select2 CSS -->
-            <link rel="stylesheet" href="${contextPath}/resources/select2/css/select2.min.css">
+            <!--<link rel="stylesheet" href="${contextPath}/resources/select2/css/select2.min.css">-->
+            <link rel="stylesheet" href="${contextPath}/resources/vendor/select2-4.0.13/css/select2.min.css">
 
             <!-- this page specific styles -->
             <s:layout-component name="page_css">
@@ -458,7 +459,8 @@
             <script src="${contextPath}/resources/statflow/js/moment.js"></script>
             
             <!-- Select2 Js -->
-            <script src="${contextPath}/resources/select2/js/select2.min.js"></script>
+            <!--<script src="${contextPath}/resources/select2/js/select2.min.js"></script>-->
+            <script src="${contextPath}/resources/vendor/select2-4.0.13/js/select2.min.js"></script>
 
             <!-- *************
                                 ************ Vendor Js Files *************
