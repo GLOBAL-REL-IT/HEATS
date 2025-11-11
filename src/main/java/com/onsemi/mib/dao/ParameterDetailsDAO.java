@@ -324,6 +324,40 @@ public class ParameterDetailsDAO {
         return parameterDetailList;
     }
 
+    public List<ParameterDetails> getActivityParameter(String name, String masterCode) {
+        String sql = "SELECT id, master_code AS masterCode, detail_code AS detailCode, name AS name, remarks AS remarks, IF(name=\"" + name + "\",\"selected=''\",\"\") AS selected FROM parameter_details "
+                + " WHERE master_code = '" + masterCode + "' ORDER BY detail_code";
+        LOGGER.info("sql >>> " + sql);
+        List<ParameterDetails> parameterDetailList = new ArrayList<ParameterDetails>();
+        try {
+            PreparedStatement ps = conn.prepareStatement(sql);
+            ParameterDetails parameterDetails;
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                parameterDetails = new ParameterDetails(
+                        rs.getString("id"),
+                        rs.getString("masterCode"),
+                        rs.getString("detailCode"),
+                        rs.getString("name"),
+                        rs.getString("selected"),
+                        rs.getString("remarks")
+                );
+                parameterDetailList.add(parameterDetails);
+            }
+        } catch (SQLException e) {
+            LOGGER.error(e.getMessage());
+        } finally {
+            if (conn != null) {
+                try {
+                    conn.close();
+                } catch (SQLException e) {
+                    LOGGER.error(e.getMessage());
+                }
+            }
+        }
+        return parameterDetailList;
+    }
+
     public Integer getCountMasterCodeAndName(String masterCode, String name) {
         Integer count = null;
         try {

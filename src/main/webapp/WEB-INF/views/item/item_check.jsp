@@ -1,5 +1,6 @@
 <%@page contentType="text/html;charset=UTF-8" %>
 <%@include file="/WEB-INF/base/taglibs.jsp" %>
+<%--<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>--%>
 <s:layout-render name="/WEB-INF/base/base.jsp">
     <s:layout-component name="page_css">
         <!-- Data Tables -->
@@ -27,7 +28,6 @@
                 float:none;
                 text-align:right;
             }
-
             .select2-container-active .select2-choice,
             .select2-container-active .select2-choices {
                 border: 1px solid $input-border-focus !important;
@@ -36,7 +36,6 @@
                 -webkit-box-shadow: inset 0 1px 1px rgba(0,0,0,.075), 0 0 8px rgba(102, 175, 233, .6) !important;
                 box-shadow: inset 0 1px 1px rgba(0,0,0,.075), 0 0 8px rgba(102, 175, 233, .6) !important;
             }
-
             .select2-dropdown-open .select2-choice {
                 border-bottom: 0 !important;
                 background-image: none;
@@ -45,7 +44,6 @@
                 -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, .075), 0 0 6px #009d9b !important;
                 box-shadow: inset 0 1px 1px rgba(0, 0, 0, .075), 0 0 6px #009d9b !important;
             }
-
             .select2-dropdown-open.select2-drop-above .select2-choice,
             .select2-dropdown-open.select2-drop-above .select2-choices {
                 border: 1px solid $input-border-focus !important;
@@ -56,36 +54,29 @@
                 -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, .075), 0 0 6px #009d9b !important;
                 box-shadow: inset 0 1px 1px rgba(0, 0, 0, .075), 0 0 6px #009d9b !important;
             }
-
             .no-border {
                 border: 0;
                 box-shadow: none;  /*You may want to include this as bootstrap applies these styles too */
             }
-
             span.tab-space {
                 padding-left:20em;
             }
-
             .move-left {
                 width: auto;
                 box-shadow: none;
             }
-
             .form-group.required .form-label:after {
                 content:"*";
                 color:red;
             }
-
             .img3 {
                 width: 55px; /* Sets a fixed width */
                 height: 18px; /* Sets a fixed height */
             }
-
             .pending thead th {
                 background-color: #f06a0a; /* Light blue */
                 color: #FFFFFF; /* White text for contrast */
             }
-
         </style>
     </s:layout-component>
     <s:layout-component name="page_container">
@@ -155,72 +146,38 @@
                                     </div>
                                 </div>
                                 <div class="row mb-4">
-                                    <label class="col-sm-2 col-md-1 col-form-label fw-semibold" for="assemblyId">Activity</label>
+                                    <label class="col-sm-2 col-md-1 col-form-label fw-semibold" for="activity">Activity</label>
                                     <div class="col-xl-2 col-sm-12 col-12">
                                         <div class="row g-1">
-                                            <label for="viCheck" class="form-label">Visual Inspection</label>
-                                            <div class="input-group form-check form-switch">
-                                                <input class="form-check-input" type="checkbox" role="switch" id="viCheck" name="viCheck" checked="">
-                                            </div>
-                                            <label for="bibTestCheck" class="form-label">Bib Test</label>
-                                            <div class="input-group form-check form-switch">
-                                                <input class="form-check-input" type="checkbox" role="switch" id="bibTestCheck" name="bibTestCheck" checked>
-                                            </div>
-                                            <label for="manualTestCheck" class="form-label">Manual Test</label>
-                                            <div class="input-group form-check form-switch">
-                                                <input class="form-check-input" type="checkbox" role="switch" id="manualTestCheck" name="manualTestCheck">
-                                            </div>
-                                            <label for="leakageTestCheck" class="form-label">Leakage Test</label>
-                                            <div class="input-group form-check form-switch">
-                                                <input class="form-check-input" type="checkbox" role="switch" id="leakageTestCheck" name="leakageTestCheck">
-                                            </div>
-                                            <label for="PsLeakageTestCheck" class="form-label">Power Supply Leakage Test</label>
-                                            <div class="input-group form-check form-switch">
-                                                <input class="form-check-input" type="checkbox" role="switch" id="psLeakageTestCheck" name="psLeakageTestCheck">
-                                            </div>
-                                            <label for="winchesterChamberLeakageTest" class="form-label">Winchester Chamber Leakage Test</label>
-                                            <div class="input-group form-check form-switch">
-                                                <input class="form-check-input" type="checkbox" role="switch" id="winchesterChamberLeakageTest" name="winchesterChamberLeakageTest">
-                                            </div>
+                                            <c:forEach items="${activity}" var="xtvt">
+                                                <label for="${xtvt.remarks}" class="form-label">${xtvt.name}</label>
+                                                <div class="input-group form-check form-switch">
+                                                    <input class="form-check-input" type="checkbox" role="switch" id="${xtvt.remarks}" name="${xtvt.remarks}" <c:if test="${xtvt.remarks eq 'viCheck'}"> checked</c:if>>
+                                                </div>
+                                            </c:forEach>
                                         </div>
                                     </div>
                                 </div>
                                 <!-- Form actions start -->
                                 <div class="col-md-12">
-                                    <!--<div class="justify-content-end">-->
-                                    <!--<button type="button" class="btn btn-light">Cancel</button>-->
                                     <button type="submit" id="submit" id="submit" class="btn btn-primary float-end">Save</button>
-                                    <!--</div>-->
-                                    <!--<div class="justify-content-start">-->
-                                    <!--<button type="button" class="btn btn-light">Cancel</button>-->
                                     <a href="${contextPath}/hw/item/pending" class="btn btn-dark float-start">Back</a>
-                                    <!--</div>-->
                                 </div>
                                 <!-- Form actions end -->
                             </form>
-                            <!-- Row end -->
-
                         </div>
                     </div>
-                    <!-- Card end -->
                 </div>
             </div>
-            <!-- Row end -->
-
-            <!-- Row start -->
-
         </div>
-        <!-- Content wrapper end -->
-
         <!-- App Footer start -->
         <div class="app-footer">
             <img class="img3" src="${contextPath}/resources/onsemi logo.webp" alt="onsemi">
             <span>© HEATs 2025</span>
         </div>
-        </div>
+    </div>
     </s:layout-component>
     <s:layout-component name="page_js">
-
         <!-- Date Range JS -->
         <script src="${contextPath}/resources/statflow/vendor/daterange/daterange.js"></script>
         <script src="${contextPath}/resources/statflow/vendor/daterange/custom-daterange.js"></script>
@@ -248,20 +205,7 @@
     </s:layout-component>
     <s:layout-component name="page_js_inline">
         <script>
-
             $(document).ready(function () {
-
-                //            $('#onHandQty').change(function () {
-                ////                    $('#totalQty').val(parseInt($('#onHandQty').val()) + parseInt($('#productionQty').val()) + parseInt($('#productionStagingQty').val()) + parseInt($('#repairQty').val()));
-                //                $('#totalQty').val(parseInt($('#onHandQty').val()));
-                //            });
-//                var element = $('#itemTypeRead');
-//                if (!element.val()) {
-//                    //                        alert();
-//                    $("#submit").attr("disabled", true);
-//                } else {
-//                    $("#submit").removeAttr('disabled');
-//                }
 
             });
         </script>

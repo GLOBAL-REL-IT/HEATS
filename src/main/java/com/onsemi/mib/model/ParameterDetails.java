@@ -30,6 +30,15 @@ public class ParameterDetails {
         this.selected = selected;
     }
 
+    public ParameterDetails(String id, String masterCode, String detailCode, String name, String selected, String remarks) {
+        this.id = id;
+        this.masterCode = masterCode;
+        this.detailCode = detailCode;
+        this.name = name;
+        this.remarks = remarks;
+        this.selected = selected;
+    }
+
     public ParameterDetails(String id, String masterCode, String detailCode, String name, String remarks, String createdBy, String createdDate, String modifiedBy, String modifiedDate) {
         this.id = id;
         this.masterCode = masterCode;

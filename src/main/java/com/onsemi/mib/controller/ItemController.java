@@ -2606,7 +2606,14 @@ public class ItemController {
 
         ItemDAO itemD = new ItemDAO();
         Item item = itemD.getHardwareDetail(id);
+        
+        ParameterDetailsDAO pD = new ParameterDetailsDAO();
+        List<ParameterDetails> paramItemUsage = pD.getActivityParameter("", "017");
+        
+        LOGGER.info("paramItemUsage >>> " + paramItemUsage);
+        
         model.addAttribute("item", item);
+        model.addAttribute("activity", paramItemUsage);
         return "item/item_check";
     }
 
