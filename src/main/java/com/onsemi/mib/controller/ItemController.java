@@ -1997,6 +1997,28 @@ public class ItemController {
             @ModelAttribute UserSession userSession,
             @PathVariable("mibItemId") String mibItemId
     ) throws IOException {
+        
+        ItemActivityConfigDAO itemdao = new ItemActivityConfigDAO();
+        ItemActivityConfig itemData = itemdao.getItemActivityByItemId(mibItemId);
+        LOGGER.info("mibItemId >>> " + mibItemId);
+        String viCheck = "NO";
+        String bibCheck = "NO";
+        String manCheck = "NO";
+        String leakCheck = "NO";
+        String psCheck = "NO";
+        String winCheck = "NO";
+        if (itemData != null) {
+            LOGGER.info("TAKKAN MASUK SINI JUGAK");
+            viCheck = itemData.getVi();
+            bibCheck = itemData.getBibTest();
+            manCheck = itemData.getManualTest();
+            leakCheck = itemData.getLeakageTest();
+            psCheck = itemData.getPsLeakageTest();
+            winCheck = itemData.getWinchesterChamberLeakageTest();
+        } else {
+            LOGGER.info("OK, DEKAT SINI DIA TAK DE DATA");
+            return "redirect:/hw/item/addActivity/" + mibItemId;
+        }
 
         ItemDAO itemD = new ItemDAO();
         Item item = itemD.getHardwareDetail(mibItemId);
@@ -2115,6 +2137,13 @@ public class ItemController {
             model.addAttribute("teActive", teActive);
             model.addAttribute("teActiveTab", teActiveTab);
         }
+        
+        model.addAttribute("viCheck", viCheck);
+        model.addAttribute("bibCheck", bibCheck);
+        model.addAttribute("manCheck", manCheck);
+        model.addAttribute("leakCheck", leakCheck);
+        model.addAttribute("psCheck", psCheck);
+        model.addAttribute("winCheck", winCheck);
 
         return "item/item_add2";
     }

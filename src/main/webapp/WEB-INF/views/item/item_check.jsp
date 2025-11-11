@@ -152,7 +152,7 @@
                                             <c:forEach items="${activity}" var="xtvt">
                                                 <label for="${xtvt.remarks}" class="form-label">${xtvt.name}</label>
                                                 <div class="input-group form-check form-switch">
-                                                    <input class="form-check-input" type="checkbox" role="switch" id="${xtvt.remarks}" name="${xtvt.remarks}" <c:if test="${xtvt.remarks eq 'viCheck'}"> checked</c:if>>
+                                                    <input class="form-check-input" type="checkbox" role="switch" id="${xtvt.remarks}" name="${xtvt.remarks}" <c:if test="${xtvt.remarks eq 'viCheck'}"> checked onclick="return false;"</c:if>>
                                                 </div>
                                             </c:forEach>
                                         </div>

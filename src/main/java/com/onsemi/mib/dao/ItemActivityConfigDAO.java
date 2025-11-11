@@ -284,4 +284,42 @@ public class ItemActivityConfigDAO {
         }
         return itemactivityConfig;
     }
+    
+    public ItemActivityConfig getItemActivityByItemId(String itemId) {
+        String sql = "SELECT * FROM item_activity_config WHERE mib_item_id = '" + itemId + "'";
+        ItemActivityConfig itemactivityConfig = null;
+        try {
+            PreparedStatement ps = conn.prepareStatement(sql);
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                itemactivityConfig = new ItemActivityConfig();
+                itemactivityConfig.setId(rs.getString("id"));
+                itemactivityConfig.setMibItemId(rs.getString("mib_item_id"));
+                itemactivityConfig.setVi(rs.getString("vi"));
+                itemactivityConfig.setBibTest(rs.getString("bib_test"));
+                itemactivityConfig.setManualTest(rs.getString("manual_test"));
+                itemactivityConfig.setLeakageTest(rs.getString("leakage_test"));
+                itemactivityConfig.setPsLeakageTest(rs.getString("ps_leakage_test"));
+                itemactivityConfig.setWinchesterChamberLeakageTest(rs.getString("winchester_chamber_leakage_test"));
+                itemactivityConfig.setCreatedBy(rs.getString("created_by"));
+                itemactivityConfig.setCreatedDate(rs.getString("created_date"));
+                itemactivityConfig.setStatus(rs.getString("status"));
+                itemactivityConfig.setFlag(rs.getString("flag"));
+            }
+            rs.close();
+            ps.close();
+        } catch (SQLException e) {
+            LOGGER.error(e.getMessage());
+        } finally {
+            if (conn != null) {
+                try {
+                    conn.close();
+                } catch (SQLException e) {
+                    LOGGER.error(e.getMessage());
+                }
+            }
+        }
+        return itemactivityConfig;
+    }
+
 }

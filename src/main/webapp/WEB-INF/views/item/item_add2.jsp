@@ -4118,25 +4118,24 @@
                                                     <div class="card mb-4">
                                                         <div class="card-body">
                                                             <div class="accordion" id="accordionPanelsStayOpenExample">
+                                                                <c:if test="${bibCheck eq 'Yes'}">
                                                                 <div class="accordion-item">
                                                                     <h2 class="accordion-header" id="panelsStayOpen-headingOne">
                                                                         <button class="accordion-button" type="button" data-bs-toggle="collapse"
-                                                                                data-bs-target="#panelsStayOpen-collapseOne" aria-expanded="true"
+                                                                                data-bs-target="#panelsStayOpen-collapseOne" aria-expanded="false"
                                                                                 aria-controls="panelsStayOpen-collapseOne">
-                                                                            Bib Test
+                                                                            BIB Test
                                                                         </button>
                                                                     </h2>
-                                                                    <div id="panelsStayOpen-collapseOne" class="accordion-collapse collapse show"
+                                                                    <div id="panelsStayOpen-collapseOne" class="accordion-collapse collapse"
                                                                          aria-labelledby="panelsStayOpen-headingOne">
                                                                         <div class="accordion-body">
                                                                             <form class="row gx-3 " role="form" action="${contextPath}/hw/item/bibTest/save" method="post">
-                                                                                <!-- Row start -->
                                                                                 <div class="col-xl-1 col-sm-12 col-12">
                                                                                     <div class="mb-3">
-                                                                                        <label for="subType" class="form-label">Quantity</label>
+                                                                                        <label for="quantity" class="form-label">Quantity</label>
                                                                                         <div class="input-group">
-                                                                                            <!--<span class="input-group-text"><i class="bi bi-person"></i></span>-->
-                                                                                            <input type="text" class="form-control" id="itemTypeRead" name="itemTypeRead" placeholder="" value="${item.totalQty}" readonly>
+                                                                                            <input type="text" class="form-control" id="totalQty" name="totalQty" placeholder="" value="${item.totalQty}" readonly>
                                                                                             <input type="hidden" class="form-control" id="id" name="id" placeholder="" value="${item.id}">
                                                                                         </div>
                                                                                     </div>
@@ -4159,22 +4158,20 @@
                                                                                     <div class="mb-3">
                                                                                         <label for="itemId" class="form-label">Upload Result</label>
                                                                                         <div class="input-group">
-                                                                                            <!--<span class="input-group-text"><i class="bi bi-envelope"></i></span>-->
                                                                                             <input class="form-control" type="file" id="formFile">
                                                                                         </div>
                                                                                     </div>
                                                                                 </div>
 
-                                                                                <!-- Form actions start -->
                                                                                 <div class="col-md-12">
                                                                                     <button type="submit" id="submit" class="btn btn-primary float-end">Save</button>
-                                                                                    <!--<a href="${contextPath}/hw/item/pending" class="btn btn-dark float-start">Back</a>-->
                                                                                 </div>
-                                                                                <!-- Form actions end -->
                                                                             </form>
                                                                         </div>
                                                                     </div>
                                                                 </div>
+                                                                </c:if>
+                                                                <c:if test="${manCheck eq 'Yes'}">
                                                                 <div class="accordion-item">
                                                                     <h2 class="accordion-header" id="panelsStayOpen-headingTwo">
                                                                         <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
@@ -4190,6 +4187,8 @@
                                                                         </div>
                                                                     </div>
                                                                 </div>
+                                                                </c:if>
+                                                                <c:if test="${leakCheck eq 'Yes'}">
                                                                 <div class="accordion-item">
                                                                     <h2 class="accordion-header" id="panelsStayOpen-headingThree">
                                                                         <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
@@ -4201,10 +4200,48 @@
                                                                     <div id="panelsStayOpen-collapseThree" class="accordion-collapse collapse"
                                                                          aria-labelledby="panelsStayOpen-headingThree">
                                                                         <div class="accordion-body">
-                                                                            <strong>Leakage Test</strong>
+                                                                            <form class="row gx-3 " role="form" action="${contextPath}/hw/item/leakTest/save" method="post">
+                                                                                <div class="col-xl-1 col-sm-12 col-12">
+                                                                                    <div class="mb-3">
+                                                                                        <label for="quantity" class="form-label">Quantity</label>
+                                                                                        <div class="input-group">
+                                                                                            <input type="text" class="form-control" id="totalQty" name="totalQty" placeholder="" value="${item.totalQty}" readonly>
+                                                                                            <input type="hidden" class="form-control" id="id" name="id" placeholder="" value="${item.id}">
+                                                                                        </div>
+                                                                                    </div>
+                                                                                </div>
+                                                                                <div class="form-group required col-xl-2 col-sm-12 col-12">
+                                                                                    <div class="mb-3">
+                                                                                        <label for="leakResult" class="form-label">Leakage Result</label>
+                                                                                        <div class="input-group">
+                                                                                            <select class="select-single js-states form-control" id="leakResult" name="leakResult"
+                                                                                                    title="Select Leakage Result" data-live-search="true" style="width: 100%" required>
+                                                                                                <option></option>
+                                                                                                <c:forEach items="${BibPassFail}" var="invInner">
+                                                                                                    <option value="${invInner.name}" ${invInner.selected}>${invInner.name}</option>
+                                                                                                </c:forEach>
+                                                                                            </select>
+                                                                                        </div>
+                                                                                    </div>
+                                                                                </div>
+                                                                                <div class="form-group col-xl-4 col-sm-12 col-12">
+                                                                                    <div class="mb-3">
+                                                                                        <label for="itemId" class="form-label">Upload Result</label>
+                                                                                        <div class="input-group">
+                                                                                            <input class="form-control" type="file" id="formFile">
+                                                                                        </div>
+                                                                                    </div>
+                                                                                </div>
+
+                                                                                <div class="col-md-12">
+                                                                                    <button type="submit" id="submit" class="btn btn-primary float-end">Save</button>
+                                                                                </div>
+                                                                            </form>
                                                                         </div>
                                                                     </div>
                                                                 </div>
+                                                                </c:if>
+                                                                <c:if test="${psCheck eq 'Yes'}">
                                                                 <div class="accordion-item">
                                                                     <h2 class="accordion-header" id="panelsStayOpen-headingFour">
                                                                         <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
@@ -4216,10 +4253,32 @@
                                                                     <div id="panelsStayOpen-collapseFour" class="accordion-collapse collapse"
                                                                          aria-labelledby="panelsStayOpen-headingFour">
                                                                         <div class="accordion-body">
-                                                                            <strong>Power Supply Leakage Test</strong>
+                                                                            <form class="row gx-3 " role="form" action="${contextPath}/hw/item/psTest/save" method="post">
+                                                                                <strong>Power Supply Leakage Test</strong>
+                                                                            </form>
                                                                         </div>
                                                                     </div>
                                                                 </div>
+                                                                </c:if>
+                                                                <c:if test="${winCheck eq 'Yes'}">
+                                                                <div class="accordion-item">
+                                                                    <h2 class="accordion-header" id="panelsStayOpen-headingFive">
+                                                                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                                                                                data-bs-target="#panelsStayOpen-collapseFive" aria-expanded="false"
+                                                                                aria-controls="panelsStayOpen-collapseFive">
+                                                                            Winchester Chamber Leakage Test
+                                                                        </button>
+                                                                    </h2>
+                                                                    <div id="panelsStayOpen-collapseFive" class="accordion-collapse collapse"
+                                                                         aria-labelledby="panelsStayOpen-headingFive">
+                                                                        <div class="accordion-body">
+                                                                            <form class="row gx-3 " role="form" action="${contextPath}/hw/item/winTest/save" method="post">
+                                                                                <strong>Winchester Chamber Leakage Test</strong>
+                                                                            </form>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                                </c:if>
                                                             </div>
 
                                                         </div>
