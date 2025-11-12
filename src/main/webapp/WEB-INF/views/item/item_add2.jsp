@@ -4183,7 +4183,43 @@
                                                                     <div id="panelsStayOpen-collapseTwo" class="accordion-collapse collapse"
                                                                          aria-labelledby="panelsStayOpen-headingTwo">
                                                                         <div class="accordion-body">
-                                                                            <strong>Manual Test</strong>
+                                                                            <form class="row gx-3 " role="form" action="${contextPath}/hw/item/manTest/save" method="post">
+                                                                                <div class="col-xl-1 col-sm-12 col-12">
+                                                                                    <div class="mb-3">
+                                                                                        <label for="quantity" class="form-label">Quantity</label>
+                                                                                        <div class="input-group">
+                                                                                            <input type="text" class="form-control" id="totalQty" name="totalQty" placeholder="" value="${item.totalQty}" readonly>
+                                                                                            <input type="hidden" class="form-control" id="id" name="id" placeholder="" value="${item.id}">
+                                                                                        </div>
+                                                                                    </div>
+                                                                                </div>
+                                                                                <div class="form-group required col-xl-2 col-sm-12 col-12">
+                                                                                    <div class="mb-3">
+                                                                                        <label for="manResult" class="form-label">Manual Test Result</label>
+                                                                                        <div class="input-group">
+                                                                                            <select class="select-single js-states form-control" id="manResult" name="manResult"
+                                                                                                    title="Select Manual Test Result" data-live-search="true" style="width: 100%" required>
+                                                                                                <option></option>
+                                                                                                <c:forEach items="${BibPassFail}" var="invInner">
+                                                                                                    <option value="${invInner.name}" ${invInner.selected}>${invInner.name}</option>
+                                                                                                </c:forEach>
+                                                                                            </select>
+                                                                                        </div>
+                                                                                    </div>
+                                                                                </div>
+                                                                                <div class="form-group col-xl-4 col-sm-12 col-12">
+                                                                                    <div class="mb-3">
+                                                                                        <label for="itemId" class="form-label">Upload Result</label>
+                                                                                        <div class="input-group">
+                                                                                            <input class="form-control" type="file" id="formFile">
+                                                                                        </div>
+                                                                                    </div>
+                                                                                </div>
+
+                                                                                <div class="col-md-12">
+                                                                                    <button type="submit" id="submit" class="btn btn-primary float-end">Save</button>
+                                                                                </div>
+                                                                            </form>
                                                                         </div>
                                                                     </div>
                                                                 </div>
@@ -4254,7 +4290,41 @@
                                                                          aria-labelledby="panelsStayOpen-headingFour">
                                                                         <div class="accordion-body">
                                                                             <form class="row gx-3 " role="form" action="${contextPath}/hw/item/psTest/save" method="post">
-                                                                                <strong>Power Supply Leakage Test</strong>
+                                                                                <div class="col-xl-1 col-sm-12 col-12">
+                                                                                    <div class="mb-3">
+                                                                                        <label for="quantity" class="form-label">Quantity</label>
+                                                                                        <div class="input-group">
+                                                                                            <input type="text" class="form-control" id="totalQty" name="totalQty" placeholder="" value="${item.totalQty}" readonly>
+                                                                                            <input type="hidden" class="form-control" id="id" name="id" placeholder="" value="${item.id}">
+                                                                                        </div>
+                                                                                    </div>
+                                                                                </div>
+                                                                                <div class="form-group required col-xl-2 col-sm-12 col-12">
+                                                                                    <div class="mb-3">
+                                                                                        <label for="psResult" class="form-label">Power Supply Leakage Result</label>
+                                                                                        <div class="input-group">
+                                                                                            <select class="select-single js-states form-control" id="psResult" name="psResult"
+                                                                                                    title="Select Leakage Result" data-live-search="true" style="width: 100%" >
+                                                                                                <option></option>
+                                                                                                <c:forEach items="${BibPassFail}" var="invInner">
+                                                                                                    <option value="${invInner.name}" ${invInner.selected}>${invInner.name}</option>
+                                                                                                </c:forEach>
+                                                                                            </select>
+                                                                                        </div>
+                                                                                    </div>
+                                                                                </div>
+                                                                                <div class="form-group col-xl-4 col-sm-12 col-12">
+                                                                                    <div class="mb-3">
+                                                                                        <label for="itemId" class="form-label">Upload Result</label>
+                                                                                        <div class="input-group">
+                                                                                            <input class="form-control" type="file" id="formFile">
+                                                                                        </div>
+                                                                                    </div>
+                                                                                </div>
+
+                                                                                <div class="col-md-12">
+                                                                                    <button type="submit" id="submit" class="btn btn-primary float-end">Save</button>
+                                                                                </div>
                                                                             </form>
                                                                         </div>
                                                                     </div>
@@ -4273,7 +4343,41 @@
                                                                          aria-labelledby="panelsStayOpen-headingFive">
                                                                         <div class="accordion-body">
                                                                             <form class="row gx-3 " role="form" action="${contextPath}/hw/item/winTest/save" method="post">
-                                                                                <strong>Winchester Chamber Leakage Test</strong>
+                                                                                <div class="col-xl-1 col-sm-12 col-12">
+                                                                                    <div class="mb-3">
+                                                                                        <label for="quantity" class="form-label">Quantity</label>
+                                                                                        <div class="input-group">
+                                                                                            <input type="text" class="form-control" id="totalQty" name="totalQty" placeholder="" value="${item.totalQty}" readonly>
+                                                                                            <input type="hidden" class="form-control" id="id" name="id" placeholder="" value="${item.id}">
+                                                                                        </div>
+                                                                                    </div>
+                                                                                </div>
+                                                                                <div class="form-group required col-xl-2 col-sm-12 col-12">
+                                                                                    <div class="mb-3">
+                                                                                        <label for="winResult" class="form-label">Winchester Chamber Leakage Result</label>
+                                                                                        <div class="input-group">
+                                                                                            <select class="select-single js-states form-control" id="winResult" name="winResult"
+                                                                                                    title="Select Winchester Chamber Leakage Result" data-live-search="true" style="width: 100%" required>
+                                                                                                <option></option>
+                                                                                                <c:forEach items="${BibPassFail}" var="invInner">
+                                                                                                    <option value="${invInner.name}" ${invInner.selected}>${invInner.name}</option>
+                                                                                                </c:forEach>
+                                                                                            </select>
+                                                                                        </div>
+                                                                                    </div>
+                                                                                </div>
+                                                                                <div class="form-group col-xl-4 col-sm-12 col-12">
+                                                                                    <div class="mb-3">
+                                                                                        <label for="itemId" class="form-label">Upload Result</label>
+                                                                                        <div class="input-group">
+                                                                                            <input class="form-control" type="file" id="formFile">
+                                                                                        </div>
+                                                                                    </div>
+                                                                                </div>
+
+                                                                                <div class="col-md-12">
+                                                                                    <button type="submit" id="submit" class="btn btn-primary float-end">Save</button>
+                                                                                </div>
                                                                             </form>
                                                                         </div>
                                                                     </div>

@@ -727,7 +727,6 @@ public class ItemController {
     ) throws IOException {
 
         LOGGER.info("itemPKID: " + itemPKID);
-        LOGGER.info("SINI KITA MASUK KE FUNCTION CONTROLLER");
         String data = "";
         data = "<thead>"
                 + "                                                        <tr>"
@@ -848,7 +847,6 @@ public class ItemController {
             @RequestParam(required = false) String itemPKID
     ) throws IOException {
 
-        LOGGER.info("itemPKID: " + itemPKID);
         String data = "{"
                 + "  \"draw\": 1,"
                 + "  \"recordsTotal\": 57,"
@@ -951,9 +949,6 @@ public class ItemController {
             @RequestParam(required = false) String itemPKID
     ) throws IOException {
 
-        LOGGER.info("SINI MASUK NK CHEKC DATA UNTUK HW ID");
-        LOGGER.info("itemPKID: " + itemPKID);
-
         ItemDAO item = new ItemDAO();
         List<Item> itemList = item.getDataTest(itemPKID);
 
@@ -981,9 +976,6 @@ public class ItemController {
             HttpServletRequest request,
             @RequestParam(required = false) String itemPKID
     ) throws IOException {
-
-        LOGGER.info("SINI MASUK NK CHEKC DATA UNTUK HW ID");
-        LOGGER.info("itemPKID: " + itemPKID);
 
 //        ItemDAO item = new ItemDAO();
 //        List<Item> itemList = item.getDataTest(itemPKID);
@@ -1023,12 +1015,8 @@ public class ItemController {
             HttpServletRequest request,
             @RequestParam(required = false) String itemPKID
     ) throws IOException {
-
-        LOGGER.info("itemPKID: " + itemPKID);
-
         ItemTransactionDAO hwD = new ItemTransactionDAO();
         List<ItemTransaction> hw = hwD.getItemTransactionListByItemPkid(itemPKID);
-
         return hw;
     }
 
@@ -1040,13 +1028,8 @@ public class ItemController {
             HttpServletRequest request,
             @PathVariable("itemPKID") String itemPKID
     ) throws IOException {
-
-        LOGGER.info("itemPKID2: " + itemPKID);
-
         ItemTransactionDAO hwD = new ItemTransactionDAO();
         List<ItemTransaction> hw = hwD.getItemTransactionListByItemPkid(itemPKID);
-
-//        LOGGER.info("hw: " + Arrays.toString(hw.toArray()));
         return hw;
     }
 
@@ -1058,12 +1041,8 @@ public class ItemController {
             HttpServletRequest request,
             @PathVariable("itemPKID") String itemPKID
     ) throws IOException {
-
-        LOGGER.info("itemPKID222: " + itemPKID);
-
         HardwareDAO hwD = new HardwareDAO();
         List<Hardware> hw = hwD.getHardwareListByItemId(itemPKID);
-
         return hw;
     }
 
@@ -2000,7 +1979,6 @@ public class ItemController {
         
         ItemActivityConfigDAO itemdao = new ItemActivityConfigDAO();
         ItemActivityConfig itemData = itemdao.getItemActivityByItemId(mibItemId);
-        LOGGER.info("mibItemId >>> " + mibItemId);
         String viCheck = "NO";
         String bibCheck = "NO";
         String manCheck = "NO";
@@ -2008,7 +1986,6 @@ public class ItemController {
         String psCheck = "NO";
         String winCheck = "NO";
         if (itemData != null) {
-            LOGGER.info("TAKKAN MASUK SINI JUGAK");
             viCheck = itemData.getVi();
             bibCheck = itemData.getBibTest();
             manCheck = itemData.getManualTest();
@@ -2016,7 +1993,6 @@ public class ItemController {
             psCheck = itemData.getPsLeakageTest();
             winCheck = itemData.getWinchesterChamberLeakageTest();
         } else {
-            LOGGER.info("OK, DEKAT SINI DIA TAK DE DATA");
             return "redirect:/hw/item/addActivity/" + mibItemId;
         }
 
@@ -2638,8 +2614,6 @@ public class ItemController {
         
         ParameterDetailsDAO pD = new ParameterDetailsDAO();
         List<ParameterDetails> paramItemUsage = pD.getActivityParameter("", "017");
-        
-        LOGGER.info("paramItemUsage >>> " + paramItemUsage);
         
         model.addAttribute("item", item);
         model.addAttribute("activity", paramItemUsage);
