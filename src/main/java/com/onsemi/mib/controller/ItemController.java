@@ -7,6 +7,7 @@ import com.onsemi.mib.dao.HimsRequestDAO;
 import com.onsemi.mib.dao.ItemActivityConfigDAO;
 import com.onsemi.mib.dao.ItemTransactionDAO;
 import com.onsemi.mib.dao.ItemVisualInspectionDAO;
+import com.onsemi.mib.dao.ManualTestDAO;
 import com.onsemi.mib.dao.ParameterDetailsDAO;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
@@ -32,10 +33,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.sql.SQLException;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Locale;
@@ -1976,7 +1974,7 @@ public class ItemController {
             @ModelAttribute UserSession userSession,
             @PathVariable("mibItemId") String mibItemId
     ) throws IOException {
-        
+
         ItemActivityConfigDAO itemdao = new ItemActivityConfigDAO();
         ItemActivityConfig itemData = itemdao.getItemActivityByItemId(mibItemId);
         String viCheck = "NO";
@@ -2113,7 +2111,7 @@ public class ItemController {
             model.addAttribute("teActive", teActive);
             model.addAttribute("teActiveTab", teActiveTab);
         }
-        
+
         model.addAttribute("viCheck", viCheck);
         model.addAttribute("bibCheck", bibCheck);
         model.addAttribute("manCheck", manCheck);
@@ -2611,10 +2609,10 @@ public class ItemController {
 
         ItemDAO itemD = new ItemDAO();
         Item item = itemD.getHardwareDetail(id);
-        
+
         ParameterDetailsDAO pD = new ParameterDetailsDAO();
         List<ParameterDetails> paramItemUsage = pD.getActivityParameter("", "017");
-        
+
         model.addAttribute("item", item);
         model.addAttribute("activity", paramItemUsage);
         return "item/item_check";
@@ -2632,7 +2630,16 @@ public class ItemController {
             @RequestParam(required = false) String manualTestCheck,
             @RequestParam(required = false) String leakageTestCheck,
             @RequestParam(required = false) String psLeakageTestCheck,
-            @RequestParam(required = false) String winchesterChamberLeakageTest
+            @RequestParam(required = false) String winchesterChamberLeakageTest,
+            @RequestParam(required = false) String qtyField,
+            @RequestParam(required = false) String dutField,
+            @RequestParam(required = false) String manComp,
+            @RequestParam(required = false, value = "component_name[]") List<String> nameRows,
+            @RequestParam(required = false, value = "component_type[]") List<String> type,
+            @RequestParam(required = false, value = "actual_value[]") List<String> num1Rows,
+            @RequestParam(required = false, value = "percentage[]") List<String> num2Rows,
+            @RequestParam(required = false, value = "lower[]") List<String> num3Rows,
+            @RequestParam(required = false, value = "upper[]") List<String> num4Rows
     ) {
 
         ItemActivityConfig itemA = new ItemActivityConfig();
@@ -2647,8 +2654,46 @@ public class ItemController {
         } else {
             itemA.setBibTest("No");
         }
+        
+        ManualTestDAO test = new ManualTestDAO();
+        int saizQty = Integer.parseInt(qtyField);
+        int saizDut = Integer.parseInt(dutField);
+        
+        String status = "";
+        String user = userSession.getLoginId();
+        String flag = "1";
+        
         if ("on".equals(manualTestCheck)) {
             itemA.setManualTest("Yes");
+            QueryResult q0 = test.insertManualTest(mibItemId, qtyField, dutField, manComp, user, flag);
+            for (int c1 = 1; c1 <= saizQty; c1++) {
+                String qtyId = "0";
+                test = new ManualTestDAO();
+                QueryResult q1 = test.insertManual01(mibItemId, String.valueOf(c1), user, flag);
+                if (!"0".equals(q1.getGeneratedKey())) {
+                    qtyId = q1.getGeneratedKey();
+                } else {
+                    
+                }
+                for (int c2 = 1; c2<=saizDut; c2++) {
+                    String dutId = "0";
+                    test = new ManualTestDAO();
+                    QueryResult q2 = test.insertManual02(mibItemId, qtyId, String.valueOf(c2), user, flag);
+                    if (!"0".equals(q2.getGeneratedKey())) {
+                        dutId = q2.getGeneratedKey();
+                    } else {
+                        
+                    }
+                    int saiz = nameRows.size();
+                    for (int i=0; i<saiz; i++) {
+                        test = new ManualTestDAO();
+                        QueryResult q3 = test.insertManual03(mibItemId, qtyId, dutId, nameRows.get(i), num1Rows.get(i), num3Rows.get(i), num4Rows.get(i), num2Rows.get(i), status, user, flag);
+                        if (!"0".equals(q3.getGeneratedKey())) {
+                            
+                        }
+                    }
+                }
+            }
         } else {
             itemA.setManualTest("No");
         }

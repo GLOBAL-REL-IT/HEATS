@@ -89,15 +89,103 @@
 
             .accordion-button:not(.collapsed) {
                 /*color: var(--bs-accordion-active-color);*/
-                background-color: #f06a0a;
-                ;
+                /*background-color: #f06a0a;*/
+                background-color: lightsalmon;
+                /*;*/
                 /*box-shadow: inset 0 calc(-1 * var(--bs-accordion-border-width)) 0 var(--bs-accordion-border-color);*/
             }
             .accordion-button {
                 /*color: var(--bs-accordion-active-color);*/
                 background-color: #f8f9ff;
-                ;
+                /*;*/
                 /*box-shadow: inset 0 calc(-1 * var(--bs-accordion-border-width)) 0 var(--bs-accordion-border-color);*/
+            }
+            
+            /* INI UNTUK TABLE MANUAL TEST SAHAJA*/
+            table {
+                border-collapse: collapse;
+                width: 95%;
+                max-width: 1500px;
+                box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+                background-color: #fff;
+                border-radius: 8px;
+                overflow: hidden;
+            }
+            th, td {
+                border: 1px solid #dee2e6;
+                padding: 0;
+                text-align: center;
+            }
+            thead th {
+                /*background-color: #007bff;*/
+                background-color: gray;
+                color: white;
+                font-weight: 600;
+                padding: 12px 8px;
+            }
+            .qty-header {
+                /*background-color: #e9ecef;*/
+                background-color: lightgray;
+                font-weight: bold;
+                color: #333;
+                padding: 12px 16px;
+            }
+            thead tr:nth-child(2) th {
+                /*background-color: #4da6ff;*/
+                background-color: lightgray;
+                color: white;
+                font-weight: normal;
+                font-size: 0.85em;
+                padding: 6px 4px;
+                white-space: nowrap;
+            }
+            tbody tr:nth-child(even) {
+                background-color: #f8f9fa;
+            }
+            tbody tr:hover {
+                background-color: #e0f7fa;
+            }
+            .input-wrapper {
+                padding: 8px 4px 2px;
+            }
+            .param-cell input {
+                width: 100%;
+                padding: 4px;
+                box-sizing: border-box;
+                border: none;
+                text-align: center;
+                background-color: transparent;
+                font-family: inherit;
+                font-size: inherit;
+            }
+            .limits {
+                font-size: 0.75em;
+                color: #6c757d;
+                display: block;
+                padding-bottom: 4px;
+            }
+            .status-cell {
+                background-color: #eafdea;
+                padding: 4px;
+            }
+            select {
+                padding: 6px;
+                border-radius: 4px;
+                border: 1px solid #ccc;
+                font-size: 0.9em;
+                width: 100%;
+                box-sizing: border-box;
+                background-color: #fff;
+            }
+            .status-header {
+                /*background-color: #28a745 !important;*/
+                background-color: lightgreen !important;
+                color: white !important;
+                font-weight: bold !important;
+            }
+            .saving {
+                opacity: 0.6;
+                cursor: wait;
             }
 
         </style>
@@ -4180,11 +4268,10 @@
                                                                             Manual Test
                                                                         </button>
                                                                     </h2>
-                                                                    <div id="panelsStayOpen-collapseTwo" class="accordion-collapse collapse"
-                                                                         aria-labelledby="panelsStayOpen-headingTwo">
+                                                                    <div id="panelsStayOpen-collapseTwo" class="accordion-collapse collapse" aria-labelledby="panelsStayOpen-headingTwo">
                                                                         <div class="accordion-body">
                                                                             <form class="row gx-3 " role="form" action="${contextPath}/hw/item/manTest/save" method="post">
-                                                                                <div class="col-xl-1 col-sm-12 col-12">
+<!--                                                                                <div class="col-xl-1 col-sm-12 col-12">
                                                                                     <div class="mb-3">
                                                                                         <label for="quantity" class="form-label">Quantity</label>
                                                                                         <div class="input-group">
@@ -4218,7 +4305,226 @@
 
                                                                                 <div class="col-md-12">
                                                                                     <button type="submit" id="submit" class="btn btn-primary float-end">Save</button>
-                                                                                </div>
+                                                                                </div>-->
+                                                                                        
+                                                                                        <div class="col-12">
+                                                                                            <table>
+                                                                                                <thead>
+                                                                                                    <tr>
+                                                                                                        <th rowspan="2">QTY</th> 
+                                                                                                        <th colspan="5">DUT # 1</th>
+                                                                                                        <th colspan="5">DUT # 2</th>
+                                                                                                    </tr>
+                                                                                                    <tr>
+                                                                                                        <th>R1</th>
+                                                                                                        <th>C1</th>
+                                                                                                        <th>Zener</th>
+                                                                                                        <th>Diode</th>
+                                                                                                        <th class="status-header">Status</th>
+                                                                                                        <th>R1</th>
+                                                                                                        <th>C1</th>
+                                                                                                        <th>Zener</th>
+                                                                                                        <th>Diode</th>
+                                                                                                        <th class="status-header">Status</th>
+                                                                                                    </tr>
+                                                                                                </thead>
+                                                                                                <tbody>
+                                                                                                    <tr>
+                                                                                                        <td class="qty-header">1</td>
+                                                                                                        <td class="param-cell">
+                                                                                                            <div class="input-wrapper">
+                                                                                                                <input type="text" class="live-update" data-item-id="101" data-l1-id="1" data-l2-id="1" data-cpnt-name="R1_Volt" value="1.2V">
+                                                                                                                <span class="limits">L: 1.1V | U: 1.3V</span>
+                                                                                                            </div>
+                                                                                                        </td>
+                                                                                                        <td class="param-cell">
+                                                                                                            <div class="input-wrapper">
+                                                                                                                <input type="text" class="live-update" data-item-id="101" data-l1-id="1" data-l2-id="1" data-cpnt-name="R2_Curr" value="0.5A">
+                                                                                                                <span class="limits">L: 0.4A | U: 0.6A</span>
+                                                                                                            </div>
+                                                                                                        </td>
+                                                                                                        <td class="param-cell">
+                                                                                                            <div class="input-wrapper">
+                                                                                                                <input type="text" class="live-update" data-item-id="101" data-l1-id="1" data-l2-id="1" data-cpnt-name="R3_Temp" value="45C">
+                                                                                                                <span class="limits">L: 20C | U: 60C</span>
+                                                                                                            </div>
+                                                                                                        </td>
+                                                                                                        <td class="param-cell">
+                                                                                                            <div class="input-wrapper">
+                                                                                                                <input type="text" class="live-update" data-item-id="101" data-l1-id="1" data-l2-id="1" data-cpnt-name="R4_Freq" value="100Hz">
+                                                                                                                <span class="limits">L: 90Hz | U: 110Hz</span>
+                                                                                                            </div>
+                                                                                                        </td>
+                                                                                                        <td class="status-cell">
+                                                                                                            <select>
+                                                                                                                <option value="pass">Pass</option>
+                                                                                                                <option value="fail">Fail</option>
+                                                                                                            </select>
+                                                                                                        </td>
+                                                                                                        <td class="param-cell">
+                                                                                                            <div class="input-wrapper">
+                                                                                                                <input type="text" class="live-update" data-item-id="101" data-l1-id="1" data-l2-id="2" data-cpnt-name="R1_Volt" value="1.2V">
+                                                                                                                <span class="limits">L: 1.1V | U: 1.3V</span>
+                                                                                                            </div>
+                                                                                                        </td>
+                                                                                                        <td class="param-cell">
+                                                                                                            <div class="input-wrapper">
+                                                                                                                <input type="text" class="live-update" data-item-id="101" data-l1-id="1" data-l2-id="2" data-cpnt-name="R2_Curr" value="0.5A">
+                                                                                                                <span class="limits">L: 0.4A | U: 0.6A</span>
+                                                                                                            </div>
+                                                                                                        </td>
+                                                                                                        <td class="param-cell">
+                                                                                                            <div class="input-wrapper">
+                                                                                                                <input type="text" class="live-update" data-item-id="101" data-l1-id="1" data-l2-id="2" data-cpnt-name="R3_Temp" value="45C">
+                                                                                                                <span class="limits">L: 20C | U: 60C</span>
+                                                                                                            </div>
+                                                                                                        </td>
+                                                                                                        <td class="param-cell">
+                                                                                                            <div class="input-wrapper">
+                                                                                                                <input type="text" class="live-update" data-item-id="101" data-l1-id="1" data-l2-id="2" data-cpnt-name="R4_Freq" value="100Hz">
+                                                                                                                <span class="limits">L: 90Hz | U: 110Hz</span>
+                                                                                                            </div>
+                                                                                                        </td>
+                                                                                                        <td class="status-cell">
+                                                                                                            <select>
+                                                                                                                <option value="pass">Pass</option>
+                                                                                                                <option value="fail">Fail</option>
+                                                                                                            </select>
+                                                                                                        </td>
+                                                                                                    </tr>
+                                                                                                    <tr>
+                                                                                                        <td class="qty-header">2</td>
+                                                                                                        <td class="param-cell">
+                                                                                                            <div class="input-wrapper">
+                                                                                                                <input type="text" class="live-update" data-item-id="101" data-l1-id="2" data-l2-id="1" data-cpnt-name="R1_Volt" value="1.2V">
+                                                                                                                <span class="limits">L: 1.1V | U: 1.3V</span>
+                                                                                                            </div>
+                                                                                                        </td>
+                                                                                                        <td class="param-cell">
+                                                                                                            <div class="input-wrapper">
+                                                                                                                <input type="text" class="live-update" data-item-id="101" data-l1-id="2" data-l2-id="1" data-cpnt-name="R2_Curr" value="0.5A">
+                                                                                                                <span class="limits">L: 0.4A | U: 0.6A</span>
+                                                                                                            </div>
+                                                                                                        </td>
+                                                                                                        <td class="param-cell">
+                                                                                                            <div class="input-wrapper">
+                                                                                                                <input type="text" class="live-update" data-item-id="101" data-l1-id="2" data-l2-id="1" data-cpnt-name="R3_Temp" value="45C">
+                                                                                                                <span class="limits">L: 20C | U: 60C</span>
+                                                                                                            </div>
+                                                                                                        </td>
+                                                                                                        <td class="param-cell">
+                                                                                                            <div class="input-wrapper">
+                                                                                                                <input type="text" class="live-update" data-item-id="101" data-l1-id="2" data-l2-id="1" data-cpnt-name="R4_Freq" value="100Hz">
+                                                                                                                <span class="limits">L: 90Hz | U: 110Hz</span>
+                                                                                                            </div>
+                                                                                                        </td>
+                                                                                                        <td class="status-cell">
+                                                                                                            <select>
+                                                                                                                <option value="pass">Pass</option>
+                                                                                                                <option value="fail">Fail</option>
+                                                                                                            </select>
+                                                                                                        </td>
+                                                                                                        <td class="param-cell">
+                                                                                                            <div class="input-wrapper">
+                                                                                                                <input type="text" class="live-update" data-item-id="101" data-l1-id="2" data-l2-id="2" data-cpnt-name="R1_Volt" value="1.2V">
+                                                                                                                <span class="limits">L: 1.1V | U: 1.3V</span>
+                                                                                                            </div>
+                                                                                                        </td>
+                                                                                                        <td class="param-cell">
+                                                                                                            <div class="input-wrapper">
+                                                                                                                <input type="text" class="live-update" data-item-id="101" data-l1-id="2" data-l2-id="2" data-cpnt-name="R2_Curr" value="0.5A">
+                                                                                                                <span class="limits">L: 0.4A | U: 0.6A</span>
+                                                                                                            </div>
+                                                                                                        </td>
+                                                                                                        <td class="param-cell">
+                                                                                                            <div class="input-wrapper">
+                                                                                                                <input type="text" class="live-update" data-item-id="101" data-l1-id="2" data-l2-id="2" data-cpnt-name="R3_Temp" value="45C">
+                                                                                                                <span class="limits">L: 20C | U: 60C</span>
+                                                                                                            </div>
+                                                                                                        </td>
+                                                                                                        <td class="param-cell">
+                                                                                                            <div class="input-wrapper">
+                                                                                                                <input type="text" class="live-update" data-item-id="101" data-l1-id="2" data-l2-id="2" data-cpnt-name="R4_Freq" value="100Hz">
+                                                                                                                <span class="limits">L: 90Hz | U: 110Hz</span>
+                                                                                                            </div>
+                                                                                                        </td>
+                                                                                                        <td class="status-cell">
+                                                                                                            <select>
+                                                                                                                <option value="pass">Pass</option>
+                                                                                                                <option value="fail">Fail</option>
+                                                                                                            </select>
+                                                                                                        </td>
+                                                                                                    </tr>
+                                                                                                    <tr>
+                                                                                                        <td class="qty-header">3</td>
+                                                                                                        <td class="param-cell">
+                                                                                                            <div class="input-wrapper">
+                                                                                                                <input type="text" class="live-update" data-item-id="101" data-l1-id="3" data-l2-id="1" data-cpnt-name="R1_Volt" value="1.2V">
+                                                                                                                <span class="limits">L: 1.1V | U: 1.3V</span>
+                                                                                                            </div>
+                                                                                                        </td>
+                                                                                                        <td class="param-cell">
+                                                                                                            <div class="input-wrapper">
+                                                                                                                <input type="text" class="live-update" data-item-id="101" data-l1-id="3" data-l2-id="1" data-cpnt-name="R2_Curr" value="0.5A">
+                                                                                                                <span class="limits">L: 0.4A | U: 0.6A</span>
+                                                                                                            </div>
+                                                                                                        </td>
+                                                                                                        <td class="param-cell">
+                                                                                                            <div class="input-wrapper">
+                                                                                                                <input type="text" class="live-update" data-item-id="101" data-l1-id="3" data-l2-id="1" data-cpnt-name="R3_Temp" value="45C">
+                                                                                                                <span class="limits">L: 20C | U: 60C</span>
+                                                                                                            </div>
+                                                                                                        </td>
+                                                                                                        <td class="param-cell">
+                                                                                                            <div class="input-wrapper">
+                                                                                                                <input type="text" class="live-update" data-item-id="101" data-l1-id="3" data-l2-id="1" data-cpnt-name="R4_Freq" value="100Hz">
+                                                                                                                <span class="limits">L: 90Hz | U: 110Hz</span>
+                                                                                                            </div>
+                                                                                                        </td>
+                                                                                                        <td class="status-cell">
+                                                                                                            <select>
+                                                                                                                <option value="pass">Pass</option>
+                                                                                                                <option value="fail">Fail</option>
+                                                                                                            </select>
+                                                                                                        </td>
+                                                                                                        <td class="param-cell">
+                                                                                                            <div class="input-wrapper">
+                                                                                                                <input type="text" class="live-update" data-item-id="101" data-l1-id="3" data-l2-id="2" data-cpnt-name="R1_Volt" value="1.2V">
+                                                                                                                <span class="limits">L: 1.1V | U: 1.3V</span>
+                                                                                                            </div>
+                                                                                                        </td>
+                                                                                                        <td class="param-cell">
+                                                                                                            <div class="input-wrapper">
+                                                                                                                <input type="text" class="live-update" data-item-id="101" data-l1-id="3" data-l2-id="2" data-cpnt-name="R2_Curr" value="0.5A">
+                                                                                                                <span class="limits">L: 0.4A | U: 0.6A</span>
+                                                                                                            </div>
+                                                                                                        </td>
+                                                                                                        <td class="param-cell">
+                                                                                                            <div class="input-wrapper">
+                                                                                                                <input type="text" class="live-update" data-item-id="101" data-l1-id="3" data-l2-id="2" data-cpnt-name="R3_Temp" value="45C">
+                                                                                                                <span class="limits">L: 20C | U: 60C</span>
+                                                                                                            </div>
+                                                                                                        </td>
+                                                                                                        <td class="param-cell">
+                                                                                                            <div class="input-wrapper">
+                                                                                                                <input type="text" class="live-update" data-item-id="101" data-l1-id="3" data-l2-id="2" data-cpnt-name="R4_Freq" value="100Hz">
+                                                                                                                <span class="limits">L: 90Hz | U: 110Hz</span>
+                                                                                                            </div>
+                                                                                                        </td>
+                                                                                                        <td class="status-cell">
+                                                                                                            <select>
+                                                                                                                <option value="pass">Pass</option>
+                                                                                                                <option value="fail">Fail</option>
+                                                                                                            </select>
+                                                                                                        </td>
+                                                                                                    </tr>
+                                                                                                </tbody>
+                                                                                            </table>
+                                                                                        </div>
+
+                                                                                        <div class="col-md-12">
+                                                                                            <button type="submit" id="submit" class="btn btn-primary float-end">Save</button>
+                                                                                        </div>
                                                                             </form>
                                                                         </div>
                                                                     </div>
