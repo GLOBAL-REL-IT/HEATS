@@ -932,6 +932,7 @@
                     optionsss
                     );
             chartss.render();
+            
 
 //                    var options1 = {
 //                        series: [{
