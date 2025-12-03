@@ -2,202 +2,334 @@
 <%@include file="/WEB-INF/base/taglibs.jsp" %>
 <s:layout-render name="/WEB-INF/base/base.jsp">
     <s:layout-component name="page_css">
+        <!-- Data Tables -->
+        <link rel="stylesheet" href="${contextPath}/resources/statflow/vendor/datatables/dataTables.bs5.css">
+        <link rel="stylesheet" href="${contextPath}/resources/statflow/vendor/datatables/dataTables.bs5-custom.css">
+        <link rel="stylesheet" href="${contextPath}/resources/statflow/vendor/datatables/buttons/dataTables.bs5-custom.css">
+        <!-- Bootstrap Select CSS -->
+        <link rel="stylesheet" href="${contextPath}/resources/statflow/vendor/bs-select/bs-select.css">
+
+<!--        <link rel="stylesheet" href="${contextPath}/resources/vendor/DataTables/customitem/dataTables.dataTables.css"/>
+<link rel="stylesheet" href="${contextPath}/resources/vendor/DataTables/customitem/bootstrap.min.css"/>-->
     </s:layout-component>
     <s:layout-component name="page_css_inline">
+        <style>
+            @media print {
+                table thead {
+                    border-top: #000 solid 2px;
+                    border-bottom: #000 solid 2px;
+                }
+                table tbody {
+                    border-top: #000 solid 2px;
+                    border-bottom: #000 solid 2px;
+                }
+            }
+            .dataTables_wrapper .dt-buttons {
+                float:none;
+                text-align:right;
+            }
+
+            .select2-container-active .select2-choice,
+            .select2-container-active .select2-choices {
+                border: 1px solid $input-border-focus !important;
+                -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, .075), 0 0 6px #009d9b !important;
+                box-shadow: inset 0 1px 1px rgba(0, 0, 0, .075), 0 0 6px #009d9b !important;
+                -webkit-box-shadow: inset 0 1px 1px rgba(0,0,0,.075), 0 0 8px rgba(102, 175, 233, .6) !important;
+                box-shadow: inset 0 1px 1px rgba(0,0,0,.075), 0 0 8px rgba(102, 175, 233, .6) !important;
+            }
+
+            .select2-dropdown-open .select2-choice {
+                border-bottom: 0 !important;
+                background-image: none;
+                background-color: #fff;
+                filter: none;
+                -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, .075), 0 0 6px #009d9b !important;
+                box-shadow: inset 0 1px 1px rgba(0, 0, 0, .075), 0 0 6px #009d9b !important;
+            }
+
+            .select2-dropdown-open.select2-drop-above .select2-choice,
+            .select2-dropdown-open.select2-drop-above .select2-choices {
+                border: 1px solid $input-border-focus !important;
+                border-top: 0 !important;
+                background-image: none;
+                background-color: #fff;
+                filter: none;
+                -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, .075), 0 0 6px #009d9b !important;
+                box-shadow: inset 0 1px 1px rgba(0, 0, 0, .075), 0 0 6px #009d9b !important;
+            }
+
+            .no-border {
+                border: 0;
+                box-shadow: none;  /*You may want to include this as bootstrap applies these styles too */
+            }
+
+            span.tab-space {
+                padding-left:20em;
+            }
+
+            .move-left {
+                width: auto;
+                box-shadow: none;
+            }
+
+            .form-group.required .form-label:after {
+                content:"*";
+                color:red;
+            }
+
+            .img3 {
+                width: 55px; /* Sets a fixed width */
+                height: 18px; /* Sets a fixed height */
+            }
+
+            .pending thead th {
+                background-color: #f06a0a; /* Light blue */
+                color: #FFFFFF; /* White text for contrast */
+            }
+
+        </style>
     </s:layout-component>
     <s:layout-component name="page_container">
-        <div class="col-lg-12">
-            <!--<h1>Edit User</h1>-->
-            <div class="row">
-                <div class="col-lg-7">
-                    <div class="main-box">
-                        <h2>User Information</h2>
-                        <form id="edit_user_form" class="form-horizontal" role="form" action="${contextPath}/admin/ldap_user/update" method="post">
-                            <input type="hidden" name="userId" value="${user.id}">
-                            <div class="form-group">
-                                <label for="loginId" class="col-lg-4 control-label">Login ID *</label>
-                                <div class="col-lg-8">
-                                    <input type="text" class="form-control" id="loginId" name="loginId" placeholder="Login ID" value="${user.loginId}" readonly>
-                                </div>
-                            </div>
-                            <div class="form-group">
-                                <label for="fullname" class="col-lg-4 control-label">Name *</label>
-                                <div class="col-lg-8">
-                                    <input type="text" class="form-control" id="fullname" name="fullname" placeholder="Name" value="${user.firstname} ${user.lastname}" readonly>
-                                </div>
-                            </div>
-                            <div class="form-group">
-                                <label for="email" class="col-lg-4 control-label">Email *</label>
-                                <div class="col-lg-8">
-                                    <input type="text" class="form-control" id="email" name="email" placeholder="Email" value="${user.email}">
-                                </div>
-                            </div>
-                            <div class="form-group">
-                                <label for="groupId" class="col-lg-4 control-label">Group *</label>
-                                <div class="col-lg-8">
-                                    <select id="groupId" name="groupId" class="form-control">
-                                        <option value="" selected="">Select Group...</option>
-                                        <c:forEach items="${userGroupList}" var="group">
-                                            <option value="${group.id}" ${group.selected}>${group.code} - ${group.name}</option>
-                                        </c:forEach>
-                                    </select>
-                                </div>
-                            </div>
-                            <div class="form-group">
-                                <label for="isActive" class="col-lg-4 control-label">Status *</label>
-                                <div class="col-lg-8">
-                                    <select id="isActive" name="isActive" class="form-control">
-                                        <option value="0" <c:if test="${user.isActive == '0'}">selected=""</c:if>>Inactive</option>
-                                        <option value="1" <c:if test="${user.isActive == '1'}">selected=""</c:if>>Active</option>
-                                        </select>
+        <!-- Content wrapper start -->
+        <div class="content-wrapper">
+
+            <!-- Row start -->
+            <div class="row gx-4">
+                <nav class="navbar bg-body-tertiary">
+                    <div class="container-fluid justify-content-start">
+                        <a href="${contextPath}/admin/user" class="btn btn-outline-success me-2" role="button">
+                            <i class='bi bi-arrow-bar-left'></i>&nbsp;&nbsp;Back</a>
+                    </div>
+                </nav>
+                <div class="col-sm-10 col-12">
+                    <!-- Card start -->
+                    <div class="card mb-4">
+                        <div class="card-header">
+                            <h5 class="card-title">Configuration - <span style="color:#D97D55">Edit User</span></h5>
+                        </div>
+
+                        <div class="card-body">
+                            <!-- Row start -->
+                            <form class="row g-3 align-items-center" role="form" action="${contextPath}/admin/user/update" method="post">
+                                <div class="row mb-4">
+                                    <label class="col-sm-2 col-md-1 col-form-label fw-semibold" for="loginId">Login ID</label>
+                                    <div class="col-sm-9 col-md-10">
+                                        <div class="row g-2">
+                                            <div class="col-sm-6">
+                                                <input type="text" class="form-control" id="loginId" name="loginId" placeholder="Login ID" value="${user.loginId}" readonly>
+                                                <input type="hidden" name="userId" value="${user.id}">
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
-                                <a href="${contextPath}/admin/user" class="btn btn-info pull-left"><i class="fa fa-reply"></i> Back</a>
-                            <div class="pull-right">
-                                <button type="reset" class="btn btn-secondary cancel">Reset</button>
-                                <button type="submit" class="btn btn-primary">Save</button>
+                                <div class="row mb-4">
+                                    <label class="col-sm-2 col-md-1 col-form-label fw-semibold" for="fullname">Name</label>
+                                    <div class="col-sm-9 col-md-10">
+                                        <div class="row g-2">
+                                            <div class="col-sm-6">
+                                                <input type="text" class="form-control" id="fullname" name="fullname" placeholder="Name" value="${user.firstname} ${user.lastname}" readonly>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row mb-4">
+                                    <label class="col-sm-2 col-md-1 col-form-label fw-semibold" for="email">Email</label>
+                                    <div class="col-sm-9 col-md-10">
+                                        <div class="row g-2">
+                                            <div class="col-sm-6">
+                                                <input type="text" class="form-control" id="email" name="email" placeholder="Email" value="${user.email}">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row mb-4">
+                                    <label class="col-sm-2 col-md-1 col-form-label fw-semibold" for="subType">Group</label>
+                                    <div class="col-sm-9 col-md-10">
+                                        <div class="row g-2">
+                                            <div class="col-sm-6">
+                                                <select class="js-example-basic-single" id="groupId" name="groupId"
+                                                        style="width: 100%">
+                                                    <option value="" selected="">Select Group...</option>
+                                                    <c:forEach items="${userGroupList}" var="group">
+                                                        <option value="${group.id}" ${group.selected}>${group.code} - ${group.name}</option>
+                                                    </c:forEach>
+                                                </select>                                            
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row mb-4">
+                                    <label class="col-sm-2 col-md-1 col-form-label fw-semibold" for="subType">Email</label>
+                                    <div class="col-sm-9 col-md-10">
+                                        <div class="row g-2">
+                                            <div class="col-sm-6">
+                                                <select id="isActive" name="isActive" class="form-control">
+                                                    <option value="0" <c:if test="${user.isActive == '0'}">selected=""</c:if>>Inactive</option>
+                                                    <option value="1" <c:if test="${user.isActive == '1'}">selected=""</c:if>>Active</option>
+                                                    </select>                                       
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <!-- Form actions start -->
+                                    <div class="col-md-12">
+                                        <button type="submit" id="submit" id="submit" class="btn btn-primary float-end">Update</button>
+                                    </div>
+                                    <!-- Form actions end -->
+                                </form>
+                                <!-- Row end -->
+
                             </div>
-                            <div class="clearfix"></div>
-                        </form>
+                        </div>
+                        <!-- Card end -->
+                    </div>
+                    <div class="col-sm-10 col-12">
+                        <!-- Card start -->
+                        <div class="card mb-4">
+                            <div class="card-header">
+                                <h5 class="card-title">Configuration - <span style="color:#D97D55">Edit User (Access Control)</span></h5>
+                            </div>
+
+                            <div class="card-body">
+                                <!-- Row start -->
+                                <form class="row g-3 align-items-center" role="form" action="${contextPath}/admin/user/updateAccess" method="post">
+                                <div class="col-12 mb-1">
+                                    <h6 class="fw-semibold mb-1 border-start border-primary ps-2"style="border-left-width: 3px !important;">Hardware Module</h6>
+                                </div>
+                                <div class="col-12">
+                                    <!--<div class="card mb-4">-->
+                                    <!--<div class="card-body">-->
+                                    <div class="form-check form-check-inline">
+                                        <input type="hidden" name="userId" value="${user.id}">
+                                        <input class="form-check-input" type="checkbox" id="itemAdd" name="itemAdd" value="Yes" <c:if test="${user.itemAdd == 'Yes'}">checked</c:if>>
+                                            <label class="form-check-label" for="inlineCheckbox1">Add Item</label>
+                                        </div>
+                                        <div class="form-check form-check-inline">
+                                            <input class="form-check-input" type="checkbox" id="itemEdit" name="itemEdit" value="Yes" <c:if test="${user.itemEdit == 'Yes'}">checked</c:if>>
+                                            <label class="form-check-label" for="inlineCheckbox1">Edit Item</label>
+                                        </div>
+                                        <div class="form-check form-check-inline">
+                                            <input class="form-check-input" type="checkbox" id="itemDelete" name="itemDelete" value="Yes" <c:if test="${user.itemDelete == 'Yes'}">checked</c:if>>
+                                            <label class="form-check-label" for="inlineCheckbox1">Delete Item</label>
+                                        </div>
+                                        <div class="form-check form-check-inline">
+                                            <input class="form-check-input" type="checkbox" id="itemHwAdd" name="itemHwAdd" value="Yes" <c:if test="${user.itemHardwareAdd == 'Yes'}">checked</c:if>>
+                                            <label class="form-check-label" for="inlineCheckbox1">Add Hardware ID</label>
+                                        </div>
+                                        <div class="form-check form-check-inline">
+                                            <input class="form-check-input" type="checkbox" id="itemHwEdit" name="itemHwEdit" value="Yes" <c:if test="${user.itemHardwareEdit == 'Yes'}">checked</c:if>>
+                                            <label class="form-check-label" for="inlineCheckbox1">Edit Hardware ID</label>
+                                        </div>
+                                        <div class="form-check form-check-inline">
+                                            <input class="form-check-input" type="checkbox" id="itemHwDelete" name="itemHwDelete" value="Yes" <c:if test="${user.itemHardwareDelete == 'Yes'}">checked</c:if>>
+                                            <label class="form-check-label" for="inlineCheckbox1">Delete Hardware ID</label>
+                                        </div>
+                                        <div class="form-check form-check-inline">
+                                            <input class="form-check-input" type="checkbox" id="itemActConfig" name="itemActConfig" value="Yes" <c:if test="${user.itemActivityConfig == 'Yes'}">checked</c:if>>
+                                            <label class="form-check-label" for="inlineCheckbox1">Access Activity Config</label>
+                                        </div>
+                                        <div class="form-check form-check-inline">
+                                            <input class="form-check-input" type="checkbox" id="itemActAdd" name="itemActAdd" value="Yes" <c:if test="${user.itemActivityAdd == 'Yes'}">checked</c:if>>
+                                            <label class="form-check-label" for="inlineCheckbox1">Add Activity Config</label>
+                                        </div>
+                                        <div class="form-check form-check-inline">
+                                            <input class="form-check-input" type="checkbox" id="itemActEdit" name="itemActEdit" value="Yes" <c:if test="${user.itemActivityEdit == 'Yes'}">checked</c:if>>
+                                            <label class="form-check-label" for="inlineCheckbox1">Edit Activity Config</label>
+                                        </div>
+                                        <div class="form-check form-check-inline">
+                                            <input class="form-check-input" type="checkbox" id="itemMovement" name="itemMovementAdd" value="Yes" <c:if test="${user.itemMovementAdd == 'Yes'}">checked</c:if>>
+                                            <label class="form-check-label" for="inlineCheckbox1">Add Item Movement</label>
+                                        </div>
+                                        <div class="form-check form-check-inline">
+                                            <input class="form-check-input" type="checkbox" id="itemSfRecell" name="itemSfRecall" value="Yes" <c:if test="${user.itemSfRecall == 'Yes'}">checked</c:if>>
+                                            <label class="form-check-label" for="inlineCheckbox1">Recall Item from SF</label>
+                                        </div>
+                                        <!--</div>-->
+                                        <!--</div>-->
+                                    </div>
+                                    <!-- Form actions start -->
+                                    <div class="col-md-12">
+                                        <button type="submit" id="submit" id="submit" class="btn btn-primary float-end">Update</button>
+                                    </div>
+                                    <!-- Form actions end -->
+                                </form>
+                                <!-- Row end -->
+
+                            </div>
+                        </div>
+                        <!-- Card end -->
                     </div>
                 </div>
-                <c:if test="${user.password!=null && sessionId=='1'}">
-                    <div class="col-lg-5">
-                        <div class="main-box">
-                            <h2>Change Password</h2>
-                            <form id="password_user_form" class="form-horizontal" role="form" action="${contextPath}/admin/user/password" method="post">
-                                <input type="hidden" name="userId" value="${user.id}">
-                                <div class="form-group">
-                                    <label for="currentPassword" class="col-lg-4 control-label">Current Password *</label>
-                                    <div class="col-lg-8">
-                                        <input type="password" class="form-control" id="currentPassword" name="currentPassword" placeholder="Current Password">
-                                    </div>
-                                </div>
-                                <div class="form-group">
-                                    <label for="password" class="col-lg-4 control-label">Password *</label>
-                                    <div class="col-lg-8">
-                                        <input type="password" class="form-control" id="password" name="password" placeholder="Password">
-                                    </div>
-                                </div>
-                                <div class="form-group">
-                                    <label for="confirmPassword" class="col-lg-4 control-label">Confirm Password *</label>
-                                    <div class="col-lg-8">
-                                        <input type="password" class="form-control" id="confirmPassword" name="confirmPassword" placeholder="Confirm Password">
-                                    </div>
-                                </div>
-                                <div class="pull-right">
-                                    <button type="reset" class="btn btn-secondary cancel">Reset</button>
-                                    <button type="submit" class="btn btn-primary">Change Password</button>
-                                </div>
-                                <div class="clearfix"></div>
-                            </form>
-                        </div>
-                    </div>
-                </c:if>
+                <!-- Row end -->
+
+
             </div>
-            <div class="row">
-                <div class="col-lg-7">
-                    <div class="main-box">
-                        <h2>Email Notification</h2>
-                        <form id="auth_access_frm" class="form-horizontal" role="form" action="${contextPath}/admin/ldap_user/authAccess" method="post">
-                            <input type="hidden" name="userLdapId" value="${user.id}">
-                            <div class="form-group">
-                                <label for="sr_retrieve_email" class="col-lg-5 control-label"><b>Retrieve Notification Email</b></label>
-                                <div class="col-lg-6">
-                                    <input type="radio" class="custom-control-input" id="sr_retrieve_email_active" name="radioSrRetrieveEmail" value="Active" ${srEmailRetrieveActive}>
-                                    <label class="custom-control-label" for="defaultActive">Active</label>
-                                    <input type="radio" class="custom-control-input" id="sr_retrieve_email_inactive" name="radioSrRetrieveEmail" value="Inactive" ${srEmailRetrieveInactive}>
-                                    <label class="custom-control-label" for="defaultInactive">Inactive</label>
-                                </div>
-                            </div>
-                            <div class="form-group">
-                                <label for="sr_ship_rl_email" class="col-lg-5 control-label"><b>Scrap Notification Email</b></label>
-                                <div class="col-lg-6">
-                                    <input type="radio" class="custom-control-input" id="sr_scrap_email_active" name="radioSrScrapEmail" value="Active" ${srEmailScrapActive}>
-                                    <label class="custom-control-label" for="defaultActive">Active</label>
-                                    <input type="radio" class="custom-control-input" id="sr_scrap_inactive" name="radioSrScrapEmail" value="Inactive" ${srEmailScrapInactive}>
-                                    <label class="custom-control-label" for="defaultInactive">Inactive</label>
-                                </div>
-                            </div>
-<!--                            <div class="form-group">
-                                <label for="features_test_email" class="col-lg-5 control-label"><b>Ability to Send Test Email</b></label>
-                                <div class="col-lg-6">
-                                    <c:if test="${sessionId=='1'}">
-                                        <input type="radio" class="custom-control-input" id="features_test_email_active" name="radioFeaturesTestEmail" value="Active" ${featuresTestEmailActive}>
-                                        <label class="custom-control-label" for="defaultActive">Active</label>
-                                        <input type="radio" class="custom-control-input" id="features_test_email_inactive" name="radioFeaturesTestEmail" value="Inactive" ${featuresTestEmailInactive}>
-                                        <label class="custom-control-label" for="defaultInactive">Inactive</label>
-                                    </c:if>
-                                    <c:if test="${sessionId!='1'}">
-                                        <input type="radio" class="custom-control-input" id="features_test_email_active" name="radioFeaturesTestEmail" value="Active" disabled="" ${featuresTestEmailActive}>
-                                        <label class="custom-control-label" for="defaultActive">Active</label>
-                                        <input type="radio" class="custom-control-input" id="features_test_email_inactive" name="radioFeaturesTestEmail" value="Inactive" disabled="" ${featuresTestEmailInactive}>
-                                        <label class="custom-control-label" for="defaultInactive">Inactive</label>
-                                    </c:if>    
-                                </div>
-                            </div>-->
-                            <div class="pull-right">
-                                <button type="reset" class="btn btn-secondary cancel">Reset</button>
-                                <button type="submit" class="btn btn-primary">Update</button>
-                            </div>
-                            <div class="clearfix"></div>
-                        </form>
-                    </div>
-                </div>     
-            </div>               
+            <!-- Content wrapper end -->
+
+            <!-- App Footer start -->
+            <div class="app-footer">
+                <img class="img3" src="${contextPath}/resources/onsemi logo.webp" alt="onsemi">
+            <span>© HEATs 2025</span>
         </div>
-    </s:layout-component>
-    <s:layout-component name="page_js">
-        <script src="${contextPath}/resources/validation/jquery.validate.min.js"></script>
-        <script src="${contextPath}/resources/validation/additional-methods.js"></script>
-    </s:layout-component>
-    <s:layout-component name="page_js_inline">
-        <script>
-            $(document).ready(function () {
-                var edit_user_form = $("#edit_user_form").validate({
-                    rules: {
-                        loginId: {
-                            required: true,
-                            alphanumeric: true,
-                            minlength: 2
-                        },
-                        fullname: {
-                            required: true,
-                            letterspace: true,
-                            minlength: 2
-                        },
-                        email: {
-                            required: true,
-                            email: true
-                        },
-                        groupId: {
-                            required: true
-                        }
-                    }
-                });
-                var password_user_form = $("#password_user_form").validate({
-                    rules: {
-                        currentPassword: {
-                            required: true
-                        },
-                        password: {
-                            required: true,
-                            minlength: 8
-                        },
-                        confirmPassword: {
-                            required: true,
-                            minlength: 8,
-                            equalTo: password
-                        }
-                    }
-                });
-                $("#edit_user_form .cancel").click(function () {
-                    edit_user_form.resetForm();
-                });
-                $("#password_user_form .cancel").click(function () {
-                    password_user_form.resetForm();
-                });
+    </div>
+</s:layout-component>
+<s:layout-component name="page_js">
+    <script src="${contextPath}/resources/vendor/DataTables/customitem/jquery-3.7.1.min.js"></script>
+    <script src="${contextPath}/resources/vendor/DataTables/customitem/bootstrap.bundle.min.js"></script>
+    <script src="${contextPath}/resources/vendor/DataTables/customitem/dataTables.js"></script>
+
+    <!-- Data Tables -->
+    <script src="${contextPath}/resources/statflow/vendor/datatables/dataTables.min.js"></script>
+    <script src="${contextPath}/resources/statflow/vendor/datatables/dataTables.bootstrap.min.js"></script>
+
+    <!-- Custom Data tables -->
+    <script src="${contextPath}/resources/statflow/vendor/datatables/custom/custom-datatables.js"></script>
+
+    <!-- DataTable Buttons -->
+    <script src="${contextPath}/resources/statflow/vendor/datatables/buttons/dataTables.buttons.min.js"></script>
+    <script src="${contextPath}/resources/statflow/vendor/datatables/buttons/jszip.min.js"></script>
+    <script src="${contextPath}/resources/statflow/vendor/datatables/buttons/dataTables.buttons.min.js"></script>
+    <script src="${contextPath}/resources/statflow/vendor/datatables/buttons/pdfmake.min.js"></script>
+    <script src="${contextPath}/resources/statflow/vendor/datatables/buttons/vfs_fonts.js"></script>
+    <script src="${contextPath}/resources/statflow/vendor/datatables/buttons/buttons.html5.min.js"></script>
+    <script src="${contextPath}/resources/statflow/vendor/datatables/buttons/buttons.print.min.js"></script>
+    <script src="${contextPath}/resources/statflow/vendor/datatables/buttons/buttons.colVis.min.js"></script>
+
+    <!-- Bootstrap Select JS -->
+    <script src="${contextPath}/resources/statflow/vendor/bs-select/bs-select.min.js"></script>
+    <script src="${contextPath}/resources/statflow/vendor/bs-select/bs-select-custom.js"></script>
+</s:layout-component>
+<s:layout-component name="page_js_inline">
+    <script>
+
+        $(document).ready(function () {
+            $('.js-example-basic-single').select2();
+        });
+
+        $(function () {
+            $("#customButtons1").DataTable({
+                lengthMenu: [
+                    [10, 25, 50],
+                    [10, 25, 50, "All"],
+                ],
+                language: {
+                    lengthMenu: "Display _MENU_ Records Per Page",
+                    info: "Showing Page _PAGE_ of _PAGES_",
+                },
+                dom: "Blfrtip",
+                buttons: ["copy", "csv", "pdf", "print"],
             });
+        });
+
+
+        function modalDelete(e) {
+            var deleteId = $(e).attr("modaldeleteid");
+            var deleteInfo = $("#modal_delete_info_" + deleteId).html();
+            var deleteUrl = "${contextPath}/admin/aluConfig/delete/" + deleteId;
+            var deleteMsg = "<f:message key='general.label.delete.confirmation'><f:param value='" + deleteInfo + "'/></f:message>";
+            $("#delete_modal .modal-body").html(deleteMsg);
+            $("#modal_delete_button").attr("href", deleteUrl);
+        }
         </script>
-    </s:layout-component>
+</s:layout-component>
 </s:layout-render>

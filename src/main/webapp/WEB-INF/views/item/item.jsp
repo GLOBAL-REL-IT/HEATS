@@ -8,9 +8,9 @@
         <link rel="stylesheet" href="${contextPath}/resources/statflow/vendor/datatables/buttons/dataTables.bs5-custom.css">
         <!-- Bootstrap Select CSS -->
         <link rel="stylesheet" href="${contextPath}/resources/statflow/vendor/bs-select/bs-select.css">
-        
+
 <!--        <link rel="stylesheet" href="${contextPath}/resources/vendor/DataTables/customitem/dataTables.dataTables.css"/>
-        <link rel="stylesheet" href="${contextPath}/resources/vendor/DataTables/customitem/bootstrap.min.css"/>-->
+<link rel="stylesheet" href="${contextPath}/resources/vendor/DataTables/customitem/bootstrap.min.css"/>-->
     </s:layout-component>
     <s:layout-component name="page_css_inline">
         <style>
@@ -98,10 +98,13 @@
                 <nav class="navbar bg-body-tertiary">
                     <div class="container-fluid justify-content-start">
                         <!--<button class="btn btn-outline-success me-2" type="button">Pending Registration (BIB/ Bib Card)</button>-->
-                        <a href="${contextPath}/hw/item/add" class="btn btn-outline-success me-2" role="button">
-                             <i class='bi bi-plus-square'></i>&nbsp;&nbsp;Add New</a>
-                             <a href="${contextPath}/hw/item/pending" class="btn btn-outline-success me-2" role="button">
-                             <i class='bi bi-hourglass'></i>&nbsp;&nbsp;Pending VM/Functional Test</a>
+                        <c:if test="${userItemAdd == 'Yes'}"><a href="${contextPath}/hw/item/add" class="btn btn-outline-success me-2" role="button">
+                                <i class='bi bi-plus-square'></i>&nbsp;&nbsp;Add New</a></c:if>
+                        <a href="${contextPath}/hw/item/pending" class="btn btn-outline-success me-2" role="button">
+                            <i class='bi bi-hourglass'></i>&nbsp;&nbsp;Pending VM/Functional Test</a>
+                        <a href="${contextPath}/hw/item/query" class="btn btn-outline-success me-2" role="button">
+                            <i class='bi bi-search'></i>&nbsp;&nbsp;Query</a>
+
                     </div>
                 </nav>
                 <div class="col-sm-12 col-12">
@@ -109,33 +112,32 @@
                     <div class="card mb-4">
                         <div class="card-header">
                             <h5 class="card-title">Hardware Module</h5>
-<!--                            <div class="float-end">
-                                <a href="${contextPath}/hw/item/add" class="leads rounded-5">
-                                    <i class='bi bi-plus-square' style='color:#ffffff' ></i>&nbsp;&nbsp;Add New
-                                </a>
-                            </div>-->
                         </div>
-
                         <div class="card-body">
                             <!-- Row start -->
-                            <form class="row g-3 align-items-center" role="form" action="${contextPath}/hw/item" method="post">
+                            <form class="row g-3 align-items-center" role="form" action="${contextPath}/hw" method="post">
                                 <div class="row mb-3">
                                     <label class="col-sm-1 col-md-1 col-form-label fw-semibold" for="singleSelect">Item Type</label>
                                     <div class="col-sm-3 col-md-3">
                                         <div class="row g-1">
                                             <div class="col-sm-11 col-md-12">
                                                 <select class="js-example-basic-single" id="itemType" name="itemType"
-                                                        style="width: 100%">
+                                                        style="width: 100%" onchange="toggleLinkVisibility()">
                                                     <option></option>
                                                     <c:forEach items="${itemTpeAll}" var="invInner">
                                                         <option value="${invInner.ItemType}">${invInner.ItemType}</option>
                                                     </c:forEach>
                                                 </select>
+                                                <input type="hidden" class="form-control" id="userItemEdit" name="userItemEdit" placeholder="" value="${userItemEdit}" readonly>
                                             </div>
                                         </div>
                                     </div>
                                     <div class="col-auto">
                                         <button type="submit" class="btn btn-primary">Fetch</button>
+                                        <span id="linkContainer" style="display:none;">
+                                            <a href="${contextPath}/hw/item2" class="btn btn-outline-success me-2" role="button" id="myLink">
+                                                <i class='bi bi-arrow-clockwise'></i>&nbsp;&nbsp;Update List from SPTS</a>
+                                        </span>
                                     </div>
                                 </div>
                             </form>
@@ -155,9 +157,6 @@
 
                     <!-- Card start -->
                     <div class="card mb-4">
-                        <!--                        <div class="card-header">
-                                                    <h5 class="card-title">Form Layout</h5>
-                                                </div>-->
                         <div class="card-body">
 
                             <!-- Row start -->
@@ -179,8 +178,6 @@
                                                     <th>Sub Type</th>
                                                     <th class="col-12">Item ID</th>
                                                     <th>item Name</th>
-                                                    <!--<th>Assembly ID</th>-->
-                                                    <!--<th>Total Qty</th>-->
                                                     <th>Status</th>
                                                     <th>Detail</th>
                                                 </tr>
@@ -192,8 +189,6 @@
                                                         <td><c:out value="${request.subType}"/></td>
                                                         <td><c:out value="${request.itemId}"/></td>
                                                         <td><c:out value="${request.itemName}"/></td>
-                                                        <!--<td><c:out value="${request.assemblyId}"/></td>-->
-                                                        <!--<td><c:out value="${request.totalQty}"/></td>-->
                                                         <td><c:out value="${request.status}"/></td>
                                                         <td>
                                                             <a modaldeleteid="${request.sptsPkid}" class="btn btn-sm me-1" title="Detail" data-toggle="Detail" onclick="modalDelete(this);">
@@ -231,19 +226,21 @@
                                     </li>
                                     <li class="nav-item" role="presentation">
                                         <a class="nav-link" id="tab-fourAAA" data-bs-toggle="tab" href="#fourAAA" role="tab"
-                                           aria-controls="fourAAA" aria-selected="false"><i class="bi bi-house-door"></i>Storage Factory</a>
+                                           aria-controls="fourAAA" aria-selected="false" onclick="ajaxStorage();"><i class="bi bi-house-door"></i>Storage Factory</a>
                                     </li>
                                 </ul>
                                 <div class="tab-content" id="customTabContent">
                                     <div class="tab-pane fade show active" id="oneAAA" role="tabpanel">
-                                        <!--differentiate form attribute based on item type-->
-                                        <c:set var="String" value="${itemTypeTitle}"/>
-                                        <c:choose>
-                                            <c:when test="${(fn:contains(String, 'BIB')) || (fn:contains(String, 'DRIVER BOARD'))}">
-                                                <!-- Card start -->
-                                                <!--<div class="card mb-4">-->
-                                                <!--<div class="card-body">-->
-                                                <form class="row gx-3 " role="form" action="${contextPath}/hw/item/update" method="post">
+                                        <form class="row gx-3 needs-validation" role="form" action="${contextPath}/hw/item/update" method="post" novalidate>
+                                            <c:if test="${not empty itemTypeTitle}"><div class="mb-3 container-fluid justify-content-start">
+                                                    <c:if test="${userItemDelete == 'Yes'}"><a onclick="scrapModal();" role="button" title="Scrap" data-bs-toggle="modal" data-bs-target="#delete_modal" class="btn btn-outline-danger me-2">
+                                                            <i class="bi bi-trash3" style="color:red"></i>&nbsp;&nbsp;Scrap</a></c:if>
+                                                </div></c:if>
+                                                <!--differentiate form attribute based on item type-->
+                                            <c:set var="String" value="${itemTypeTitle}"/>
+                                            <c:choose>
+                                                <c:when test="${(fn:contains(String, 'BIB')) || (fn:contains(String, 'DRIVER BOARD'))}">
+                                                    <!--<form class="row gx-3 " role="form" action="${contextPath}/hw/item/update" method="post">-->
                                                     <!-- Row start -->
                                                     <div class="form-group required col-xl-2 col-sm-12 col-12">
                                                         <div class="mb-3">
@@ -251,7 +248,7 @@
                                                             <label for="itemType2" class="form-label">Item Type</label>
                                                             <div class="input-group">
                                                                 <!--<span class="input-group-text"><i class="bi bi-person"></i></span>-->
-                                                                <input type="text" class="form-control" id="itemType2" name="itemType2" placeholder="" value="" readonly>
+                                                                <input type="text" class="form-control" id="itemType2" name="itemType2" placeholder="" value="" readonly required>
                                                                 <!--<div class="valid-feedback">Looks good!</div>-->
                                                                 <!--<div class="invalid-feedback">Please provide a valid zip.</div>-->
                                                             </div>
@@ -264,6 +261,7 @@
                                                                 <!--<span class="input-group-text"><i class="bi bi-person"></i></span>-->
                                                                 <input type="text" class="form-control" id="subType" name="subType" placeholder="" value="" readonly>
                                                                 <input type="hidden" class="form-control" id="itemPKID" name="itemPKID" placeholder="" value="" readonly>
+                                                                <input type="hidden" class="form-control" id="mibId" name="mibId" placeholder="" value="" readonly>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -272,7 +270,7 @@
                                                             <label for="itemId" class="form-label">Item ID</label>
                                                             <div class="input-group">
                                                                 <!--<span class="input-group-text"><i class="bi bi-envelope"></i></span>-->
-                                                                <input type="text" class="form-control" id="itemId" name="itemId" placeholder="" value="" readonly>
+                                                                <input type="text" class="form-control" id="itemId" name="itemId" placeholder="" value="" readonly required>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -281,7 +279,7 @@
                                                             <label for="itemName" class="form-label">Item Name</label>
                                                             <div class="input-group">
                                                                 <!--<span class="input-group-text"><i class="bi bi-telephone"></i></span>-->
-                                                                <input type="text" class="form-control" id="itemName" name="itemName" placeholder="" value="" readonly>
+                                                                <input type="text" class="form-control" id="itemName" name="itemName" placeholder="" value="" readonly required>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -299,7 +297,7 @@
                                                             <label for="aluHrs" class="form-label">ALU</label>
                                                             <div class="input-group">
                                                                 <!--<span class="input-group-text"><i class="bi bi-envelope"></i></span>-->
-                                                                <input type="text" class="form-control" id="aluHrs" name="aluHrs" placeholder="" value="" readonly>
+                                                                <input type="number" step="0.01" class="form-control" id="aluHrs" name="aluHrs" placeholder="" value="" readonly>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -308,7 +306,14 @@
                                                             <label for="assemblyId" class="form-label">Assembly ID</label>
                                                             <div class="input-group">
                                                                 <!--<span class="input-group-text"><i class="bi bi-telephone"></i></span>-->
-                                                                <input type="text" class="form-control" id="assemblyId" name="assemblyId" placeholder="" value="" readonly>
+                                                                <!--<input type="text" class="form-control" id="assemblyId" name="assemblyId" placeholder="" value="" readonly>-->
+                                                                <select class="js-example-tags" id="assemblyId" name="assemblyId"
+                                                                        title="Select AssemblyId" data-live-search="true">
+                                                                    <option></option>
+                                                                    <c:forEach items="${listAssemblyId}" var="invInner">
+                                                                        <option value="${invInner.assemblyId}" ${invInner.selected}>${invInner.assemblyId}</option>
+                                                                    </c:forEach>
+                                                                </select>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -363,7 +368,7 @@
                                                             <label for="equipmentManufacturer" class="form-label">Eqpt Manufacturer</label>
                                                             <div class="input-group">
                                                                 <!--<span class="input-group-text"><i class="bi bi-telephone"></i></span>-->
-                                                                <input type="text" class="form-control" id="equipmentManufacturer" name="equipmentManufacturer" value="" >
+                                                                <input type="text" class="form-control" id="equipmentManufacturer" name="equipmentManufacturer" value="" readonly>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -388,23 +393,23 @@
                                                             </div>
                                                         </div>
                                                     </div>
-                                                    <div class="col-xl-3 col-sm-12 col-12">
+                                                    <div class="form-group required col-xl-3 col-sm-12 col-12">
                                                         <div class="mb-3">
                                                             <label for="rack" class="form-label">Rack</label>
                                                             <div class="input-group">
                                                                 <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
                                                                 <input type="text" class="form-control" id="rack" name="rack"
-                                                                       placeholder="" value="" readonly>
+                                                                       placeholder="" value="" readonly required>
                                                             </div>
                                                         </div>
                                                     </div>
-                                                    <div class="col-xl-3 col-sm-12 col-12">
+                                                    <div class="form-group required col-xl-3 col-sm-12 col-12">
                                                         <div class="mb-3">
                                                             <label for="shelf" class="form-label">Shelf</label>
                                                             <div class="input-group">
                                                                 <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
                                                                 <input type="text" class="form-control" id="shelf" name="shelf"
-                                                                       placeholder="" value="" readonly>
+                                                                       placeholder="" value="" readonly required>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -557,7 +562,14 @@
                                                             </div>
                                                         </div>
                                                     </div>
-
+                                                    <div class="col-xl-2 col-sm-12 col-12">
+                                                        <div class="mb-3">
+                                                            <label for="isConsumable" class="form-label">Consumable?</label>
+                                                            <div class="input-group form-check form-switch">
+                                                                <input class="form-check-input" type="checkbox" role="switch" id="isConsumable" name="isConsumable" disabled>
+                                                            </div>
+                                                        </div>
+                                                    </div>
                                                     <!-- Additional Information Section -->
                                                     <div class="col-12 mt-2 mb-3">
                                                         <h6 class="fw-semibold mb-3 border-start border-warning ps-2"
@@ -571,7 +583,7 @@
                                                             <div class="input-group">
                                                                 <span class="input-group-text"><i class="bi bi-pencil"></i></span>
                                                                 <textarea class="form-control" id="remarks" name="remarks" placeholder="Enter Message"
-                                                                          rows="3" readonly readonly></textarea>
+                                                                          rows="3" readonly ></textarea>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -582,26 +594,16 @@
                                                         <!--                                                        <button type="submit" class="btn btn-primary">Update</button>-->
                                                     </div>
                                                     <!-- Form actions end -->
-                                                </form>
-                                                <!--</div>-->
-                                                <!--</div>-->
-                                                <!-- Card end -->
-                                            </c:when>
-                                            <c:when test="${(fn:contains(String, 'Flux')) || (fn:contains(String, 'IPA')) || (fn:contains(String, 'Ionox'))}">
-                                                <!-- Card start -->
-                                                <!--<div class="card mb-4">-->
-                                                <!--<div class="card-body">-->
-                                                <form class="row gx-3 " role="form" action="${contextPath}/hw/hardware/update" method="post">
+                                                    <!--</form>-->
+                                                </c:when>
+                                                <c:when test="${(fn:contains(String, 'Flux')) || (fn:contains(String, 'IPA')) || (fn:contains(String, 'Ionox'))}">
+                                                    <!--<form class="row gx-3 " role="form" action="${contextPath}/hw/hardware/update" method="post">-->
                                                     <!-- Row start -->
                                                     <div class="form-group required col-xl-2 col-sm-12 col-12">
                                                         <div class="mb-3">
-                                                            <!--<div class="mb-3 was-validated">-->
                                                             <label for="itemType2" class="form-label">Item Type</label>
                                                             <div class="input-group">
-                                                                <!--<span class="input-group-text"><i class="bi bi-person"></i></span>-->
-                                                                <input type="text" class="form-control" id="itemType2" name="itemType2" placeholder="" value="" readonly>
-                                                                <!--<div class="valid-feedback">Looks good!</div>-->
-                                                                <!--<div class="invalid-feedback">Please provide a valid zip.</div>-->
+                                                                <input type="text" class="form-control" id="itemType2" name="itemType2" placeholder="" value="" readonly required>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -612,6 +614,7 @@
                                                                 <!--<span class="input-group-text"><i class="bi bi-person"></i></span>-->
                                                                 <input type="text" class="form-control" id="subType" name="subType" placeholder="" value="" readonly>
                                                                 <input type="hidden" class="form-control" id="itemPKID" name="itemPKID" placeholder="" value="" readonly>
+                                                                <input type="hidden" class="form-control" id="mibId" name="mibId" placeholder="" value="" readonly>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -620,7 +623,7 @@
                                                             <label for="itemId" class="form-label">Item ID</label>
                                                             <div class="input-group">
                                                                 <!--<span class="input-group-text"><i class="bi bi-envelope"></i></span>-->
-                                                                <input type="text" class="form-control" id="itemId" name="itemId" placeholder="" value="" readonly>
+                                                                <input type="text" class="form-control" id="itemId" name="itemId" placeholder="" value="" readonly required>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -629,7 +632,7 @@
                                                             <label for="itemName" class="form-label">Item Name</label>
                                                             <div class="input-group">
                                                                 <!--<span class="input-group-text"><i class="bi bi-telephone"></i></span>-->
-                                                                <input type="text" class="form-control" id="itemName" name="itemName" placeholder="" value="" readonly>
+                                                                <input type="text" class="form-control" id="itemName" name="itemName" placeholder="" value="" readonly required>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -647,7 +650,7 @@
                                                             <label for="aluHrs" class="form-label">ALU</label>
                                                             <div class="input-group">
                                                                 <!--<span class="input-group-text"><i class="bi bi-envelope"></i></span>-->
-                                                                <input type="text" class="form-control" id="aluHrs" name="aluHrs" placeholder="" value="" readonly>
+                                                                <input type="number" step="0.01" class="form-control" id="aluHrs" name="aluHrs" placeholder="" value="" readonly>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -711,7 +714,7 @@
                                                             <label for="equipmentManufacturer" class="form-label">Eqpt Manufacturer</label>
                                                             <div class="input-group">
                                                                 <!--<span class="input-group-text"><i class="bi bi-telephone"></i></span>-->
-                                                                <input type="text" class="form-control" id="equipmentManufacturer" name="equipmentManufacturer" value="" >
+                                                                <input type="text" class="form-control" id="equipmentManufacturer" name="equipmentManufacturer" value="" readonly>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -736,23 +739,23 @@
                                                             </div>
                                                         </div>
                                                     </div>
-                                                    <div class="col-xl-3 col-sm-12 col-12">
+                                                    <div class="form-group required col-xl-3 col-sm-12 col-12">
                                                         <div class="mb-3">
                                                             <label for="rack" class="form-label">Rack</label>
                                                             <div class="input-group">
                                                                 <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
                                                                 <input type="text" class="form-control" id="rack" name="rack"
-                                                                       placeholder="" value="" readonly>
+                                                                       placeholder="" value="" readonly required>
                                                             </div>
                                                         </div>
                                                     </div>
-                                                    <div class="col-xl-3 col-sm-12 col-12">
+                                                    <div class="form-group required col-xl-3 col-sm-12 col-12">
                                                         <div class="mb-3">
                                                             <label for="shelf" class="form-label">Shelf</label>
                                                             <div class="input-group">
                                                                 <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
                                                                 <input type="text" class="form-control" id="shelf" name="shelf"
-                                                                       placeholder="" value="" readonly>
+                                                                       placeholder="" value="" readonly required>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -905,7 +908,14 @@
                                                             </div>
                                                         </div>
                                                     </div>
-
+                                                    <div class="col-xl-2 col-sm-12 col-12">
+                                                        <div class="mb-3">
+                                                            <label for="isConsumable" class="form-label">Consumable?</label>
+                                                            <div class="input-group form-check form-switch">
+                                                                <input class="form-check-input" type="checkbox" role="switch" id="isConsumable" name="isConsumable" disabled>
+                                                            </div>
+                                                        </div>
+                                                    </div>
                                                     <!-- Additional Information Section -->
                                                     <div class="col-12 mt-2 mb-3">
                                                         <h6 class="fw-semibold mb-3 border-start border-warning ps-2"
@@ -926,20 +936,13 @@
 
                                                     <!-- Form actions start -->
                                                     <div class="d-flex justify-content-end gap-2">
-                                                        <!--<button type="button" class="btn btn-light">Cancel</button>-->
-                                                        <!--                                                        <button type="submit" class="btn btn-primary">Update</button>-->
                                                     </div>
                                                     <!-- Form actions end -->
-                                                </form>
-                                                <!--</div>-->
-                                                <!--</div>-->
-                                                <!-- Card end -->
-                                            </c:when>
-                                            <c:when test="${(fn:contains(String, 'ATE'))}">
-                                                <!-- Card start -->
-                                                <!--<div class="card mb-4">-->
-                                                <!--<div class="card-body">-->
-                                                <form class="row gx-3 " role="form" action="${contextPath}/hw/hardware/update" method="post">
+                                                    <!--</form>-->
+                                                    <!-- Card end -->
+                                                </c:when>
+                                                <c:when test="${(fn:contains(String, 'ATE'))}">
+                                                    <!--<form class="row gx-3 " role="form" action="${contextPath}/hw/hardware/update" method="post">-->
                                                     <!-- Row start -->
                                                     <div class="form-group required col-xl-2 col-sm-12 col-12">
                                                         <div class="mb-3">
@@ -947,7 +950,7 @@
                                                             <label for="itemType2" class="form-label">Item Type</label>
                                                             <div class="input-group">
                                                                 <!--<span class="input-group-text"><i class="bi bi-person"></i></span>-->
-                                                                <input type="text" class="form-control" id="itemType2" name="itemType2" placeholder="" value="" readonly>
+                                                                <input type="text" class="form-control" id="itemType2" name="itemType2" placeholder="" value="" readonly required>
                                                                 <!--<div class="valid-feedback">Looks good!</div>-->
                                                                 <!--<div class="invalid-feedback">Please provide a valid zip.</div>-->
                                                             </div>
@@ -960,6 +963,7 @@
                                                                 <!--<span class="input-group-text"><i class="bi bi-person"></i></span>-->
                                                                 <input type="text" class="form-control" id="subType" name="subType" placeholder="" value="" readonly>
                                                                 <input type="hidden" class="form-control" id="itemPKID" name="itemPKID" placeholder="" value="" readonly>
+                                                                <input type="hidden" class="form-control" id="mibId" name="mibId" placeholder="" value="" readonly>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -968,7 +972,7 @@
                                                             <label for="itemId" class="form-label">Item ID</label>
                                                             <div class="input-group">
                                                                 <!--<span class="input-group-text"><i class="bi bi-envelope"></i></span>-->
-                                                                <input type="text" class="form-control" id="itemId" name="itemId" placeholder="" value="" readonly>
+                                                                <input type="text" class="form-control" id="itemId" name="itemId" placeholder="" value="" readonly required>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -977,369 +981,7 @@
                                                             <label for="itemName" class="form-label">Item Name</label>
                                                             <div class="input-group">
                                                                 <!--<span class="input-group-text"><i class="bi bi-telephone"></i></span>-->
-                                                                <input type="text" class="form-control" id="itemName" name="itemName" placeholder="" value="" readonly>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                    <div class="col-xl-4 col-sm-12 col-12">
-                                                        <div class="mb-3">
-                                                            <label for="status" class="form-label">Status</label>
-                                                            <div class="input-group">
-                                                                <!--<span class="input-group-text"><i class="bi bi-person"></i></span>-->
-                                                                <input type="text" class="form-control" id="status" name="status" placeholder="" value="" readonly>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                    <div class="form-group required col-xl-4 col-sm-12 col-12">
-                                                        <div class="mb-3">
-                                                            <label for="itemUsage" class="form-label">Item Usage</label>
-                                                            <div class="input-group">
-                                                                <select class="form-control" id="itemUsage" name="itemUsage"
-                                                                        title="Select Item Usage" data-live-search="true">
-                                                                    <option></option>
-                                                                    <c:forEach items="${paramItemUsage}" var="invInner">
-                                                                        <option value="${invInner.name}" ${invInner.selected}>${invInner.name}</option>
-                                                                    </c:forEach>
-                                                                </select>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                    <!--                                                    <div class="form-group col-xl-4 col-sm-12 col-12">
-                                                                                                            <div class="mb-3">
-                                                                                                                <label for="assemblyId" class="form-label">test</label>
-                                                                                                                <div class="input-group">
-                                                                                                                    <span class="input-group-text"><i class="bi bi-telephone"></i></span>
-                                                                                                                    <input type="text" class="form-control" id="testItem" name="testItem" placeholder="" value="" readonly>
-                                                                                                                </div>
-                                                                                                            </div>
-                                                                                                        </div>-->
-                                                    <div class="visually-hidden col-xl-4 col-sm-12 col-12">
-                                                        <div class="mb-3">
-                                                            <label for="assemblyId" class="form-label">Assembly ID</label>
-                                                            <div class="input-group">
-                                                                <!--<span class="input-group-text"><i class="bi bi-telephone"></i></span>-->
-                                                                <input type="text" class="form-control" id="assemblyId" name="assemblyId" placeholder="" value="" readonly>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                    <div class="col-xl-4 col-sm-12 col-12">
-                                                        <div class="mb-3">
-                                                            <label for="model" class="form-label">Spare Part Model</label>
-                                                            <div class="input-group">
-                                                                <!--<span class="input-group-text"><i class="bi bi-telephone"></i></span>-->
-                                                                <input type="text" class="form-control" id="model" name="model" value="" readonly>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-
-                                                    <div class="col-xl-4 col-sm-12 col-12">
-                                                        <div class="mb-3">
-                                                            <label for="manufacturer" class="form-label">Spare Part Manufacturer</label>
-                                                            <div class="input-group">
-                                                                <!--<span class="input-group-text"><i class="bi bi-person"></i></span>-->
-                                                                <input type="text" class="form-control" id="manufacturer" name="manufacturer" placeholder="" value="" readonly>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                    <div class="col-xl-4 col-sm-12 col-12">
-                                                        <div class="mb-3">
-                                                            <label for="unitCost" class="form-label">Unit cost (USD)</label>
-                                                            <div class="input-group">
-                                                                <!--<span class="input-group-text"><i class="bi bi-envelope"></i></span>-->
-                                                                <input type="text" class="form-control" id="unitCost" name="unitCost" placeholder="" value="" readonly>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                    <div class="col-xl-4 col-sm-12 col-12">
-                                                        <div class="mb-3">
-                                                            <label for="equipmentType" class="form-label">Equipment Type</label>
-                                                            <div class="input-group">
-                                                                <!--<span class="input-group-text"><i class="bi bi-person"></i></span>-->
-                                                                <input type="text" class="form-control" id="equipmentType" name="equipmentType" placeholder="" value="" readonly>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                    <div class="col-xl-4 col-sm-12 col-12">
-                                                        <div class="mb-3">
-                                                            <label for="equipmentModel" class="form-label">Equipment Model</label>
-                                                            <div class="input-group">
-                                                                <!--<span class="input-group-text"><i class="bi bi-envelope"></i></span>-->
-                                                                <input type="text" class="form-control" id="equipmentModel" name="equipmentModel" value="" readonly>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                    <div class="col-xl-4 col-sm-12 col-12">
-                                                        <div class="mb-3">
-                                                            <label for="equipmentManufacturer" class="form-label">Eqpt Manufacturer</label>
-                                                            <div class="input-group">
-                                                                <!--<span class="input-group-text"><i class="bi bi-telephone"></i></span>-->
-                                                                <input type="text" class="form-control" id="equipmentManufacturer" name="equipmentManufacturer" value="" >
-                                                            </div>
-                                                        </div>
-                                                    </div>
-
-                                                    <div class="col-xl-1 col-sm-12 col-12">
-                                                        <div class="mb-3">
-                                                            <label for="minQty" class="form-label">Min. Qty</label>
-                                                            <div class="input-group">
-                                                                <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
-                                                                <input type="text" class="form-control" id="minQty" name="minQty"
-                                                                       placeholder="" value="" readonly>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                    <div class="col-xl-1 col-sm-12 col-12">
-                                                        <div class="mb-3">
-                                                            <label for="maxQty" class="form-label">Max. Qty</label>
-                                                            <div class="input-group">
-                                                                <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
-                                                                <input type="text" class="form-control" id="maxQty" name="maxQty"
-                                                                       placeholder="" value="" readonly>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                    <div class="col-xl-3 col-sm-12 col-12">
-                                                        <div class="mb-3">
-                                                            <label for="rack" class="form-label">Rack</label>
-                                                            <div class="input-group">
-                                                                <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
-                                                                <input type="text" class="form-control" id="rack" name="rack"
-                                                                       placeholder="" value="" readonly>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                    <div class="col-xl-3 col-sm-12 col-12">
-                                                        <div class="mb-3">
-                                                            <label for="shelf" class="form-label">Shelf</label>
-                                                            <div class="input-group">
-                                                                <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
-                                                                <input type="text" class="form-control" id="shelf" name="shelf"
-                                                                       placeholder="" value="" readonly>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                    <div class="visually-hidden col-xl-4 col-sm-12 col-12">
-                                                        <div class="mb-3">
-                                                            <label for="stressType" class="form-label">Stress Type</label>
-                                                            <div class="input-group">
-                                                                <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
-                                                                <input type="text" class="form-control" id="stressType" name="stressType"
-                                                                       placeholder="" value="" readonly>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                    <div class="col-xl-2 col-sm-12 col-12">
-                                                        <div class="mb-3">
-                                                            <label for="onHandQty" class="form-label">On Hand Qty</label>
-                                                            <div class="input-group">
-                                                                <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
-                                                                <input type="text" class="form-control" id="onHandQty" name="onHandQty"
-                                                                       placeholder="" value="" readonly>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                    <div class="col-xl-2 col-sm-12 col-12">
-                                                        <div class="mb-3">
-                                                            <label for="productionQty" class="form-label">Prod. Qty</label>
-                                                            <div class="input-group">
-                                                                <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
-                                                                <input type="text" class="form-control" id="productionQty" name="productionQty"
-                                                                       placeholder="" value="" readonly>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                    <div class="visually-hidden col-xl-2 col-sm-12 col-12">
-                                                        <div class="mb-3">
-                                                            <label for="productionStagingQty" class="form-label">Prod. Staging Qty</label>
-                                                            <div class="input-group">
-                                                                <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
-                                                                <input type="text" class="form-control" id="productionStagingQty" name="productionStagingQty"
-                                                                       placeholder="" value="" readonly>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                    <div class="col-xl-2 col-sm-12 col-12">
-                                                        <div class="mb-3">
-                                                            <label for="repairQty" class="form-label">Repair Qty</label>
-                                                            <div class="input-group">
-                                                                <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
-                                                                <input type="text" class="form-control" id="repairQty" name="repairQty"
-                                                                       placeholder="" value="" readonly>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                    <div class="col-xl-2 col-sm-12 col-12">
-                                                        <div class="mb-3">
-                                                            <label for="quarantineQty" class="form-label">Quarantine Qty</label>
-                                                            <div class="input-group">
-                                                                <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
-                                                                <input type="text" class="form-control" id="quarantineQty" name="quarantineQty"
-                                                                       placeholder="" value="" readonly>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                    <div class="visually-hidden col-xl-2 col-sm-12 col-12">
-                                                        <div class="mb-3">
-                                                            <label for="externalCleanQty" class="form-label">Ext Clean Qty</label>
-                                                            <div class="input-group">
-                                                                <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
-                                                                <input type="text" class="form-control" id="externalCleanQty" name="externalCleanQty"
-                                                                       placeholder="" value="" readonly>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                    <div class="visually-hidden col-xl-2 col-sm-12 col-12">
-                                                        <div class="mb-3">
-                                                            <label for="externalRecleanQty" class="form-label">Ext Re-clean Qty</label>
-                                                            <div class="input-group">
-                                                                <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
-                                                                <input type="text" class="form-control" id="externalRecleanQty" name="externalRecleanQty"
-                                                                       placeholder="" value="" readonly>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                    <div class="visually-hidden col-xl-2 col-sm-12 col-12">
-                                                        <div class="mb-3">
-                                                            <label for="internalCleanQty" class="form-label">Int. Clean Qty</label>
-                                                            <div class="input-group">
-                                                                <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
-                                                                <input type="text" class="form-control" id="internalCleanQty" name="internalCleanQty"
-                                                                       placeholder="" value="" readonly>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                    <div class="visually-hidden col-xl-2 col-sm-12 col-12">
-                                                        <div class="mb-3">
-                                                            <label for="internalRecleanQty" class="form-label">Int. Re-Clean Qty</label>
-                                                            <div class="input-group">
-                                                                <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
-                                                                <input type="text" class="form-control" id="internalRecleanQty" name="internalRecleanQty"
-                                                                       placeholder="" value="" readonly>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                    <div class="col-xl-2 col-sm-12 col-12">
-                                                        <div class="mb-3">
-                                                            <label for="otherQty" class="form-label">Other Qty</label>
-                                                            <div class="input-group">
-                                                                <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
-                                                                <input type="text" class="form-control" id="otherQty" name="otherQty"
-                                                                       placeholder="" value="" readonly>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                    <div class="col-xl-2 col-sm-12 col-12">
-                                                        <div class="mb-3">
-                                                            <label for="vendorQty" class="form-label">Vendor Qty</label>
-                                                            <div class="input-group">
-                                                                <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
-                                                                <input type="text" class="form-control" id="vendorQty" name="vendorQty"
-                                                                       placeholder="" value="" readonly>
-                                                            </div>
-                                                        </div>
-                                                    </div><div class="col-xl-2 col-sm-12 col-12">
-                                                        <div class="mb-3">
-                                                            <label for="otherOnsemiQty" class="form-label">Other onsemi Qty</label>
-                                                            <div class="input-group">
-                                                                <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
-                                                                <input type="text" class="form-control" id="otherOnsemiQty" name="otherOnsemiQty"
-                                                                       placeholder="" value="" readonly>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                    <div class="col-xl-2 col-sm-12 col-12">
-                                                        <div class="mb-3">
-                                                            <label for="storageFactoryQty" class="form-label">Storage Factory Qty</label>
-                                                            <div class="input-group">
-                                                                <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
-                                                                <input type="text" class="form-control" id="storageFactoryQty" name="storageFactoryQty"
-                                                                       placeholder="" value="" readonly>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                    <div class="col-xl-2 col-sm-12 col-12">
-                                                        <div class="mb-3">
-                                                            <label for="totalQty" class="form-label">Total Qty</label>
-                                                            <div class="input-group">
-                                                                <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
-                                                                <input type="text" class="form-control" id="totalQty" name="totalQty"
-                                                                       placeholder="" value="" readonly>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-
-                                                    <!-- Additional Information Section -->
-                                                    <div class="col-12 mt-2 mb-3">
-                                                        <h6 class="fw-semibold mb-3 border-start border-warning ps-2"
-                                                            style="border-left-width: 3px !important;">
-                                                            <i class="bi bi-chat-square-text me-2"></i>Additional Information
-                                                        </h6>
-                                                    </div>
-                                                    <div class="col-12">
-                                                        <div class="mb-3">
-                                                            <label for="remarks" class="form-label">Remarks</label>
-                                                            <div class="input-group">
-                                                                <span class="input-group-text"><i class="bi bi-pencil"></i></span>
-                                                                <textarea class="form-control" id="remarks" name="remarks" placeholder="Enter Message"
-                                                                          rows="3" readonly></textarea>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-
-                                                    <!-- Form actions start -->
-                                                    <div class="d-flex justify-content-end gap-2">
-                                                        <!--<button type="button" class="btn btn-light">Cancel</button>-->
-                                                        <!--                                                        <button type="submit" class="btn btn-primary">Update</button>-->
-                                                    </div>
-                                                    <!-- Form actions end -->
-                                                </form>
-                                                <!--</div>-->
-                                                <!--</div>-->
-                                                <!-- Card end -->
-                                            </c:when>
-                                            <c:when test="${(fn:contains(String, 'EQP_'))}">
-                                                <!-- Card start -->
-                                                <!--<div class="card mb-4">-->
-                                                <!--<div class="card-body">-->
-                                                <form class="row gx-3 " role="form" action="${contextPath}/hw/item/update" method="post">
-                                                    <!-- Row start -->
-                                                    <div class="form-group required col-xl-2 col-sm-12 col-12">
-                                                        <div class="mb-3">
-                                                            <!--<div class="mb-3 was-validated">-->
-                                                            <label for="itemType2" class="form-label">Item Type</label>
-                                                            <div class="input-group">
-                                                                <!--<span class="input-group-text"><i class="bi bi-person"></i></span>-->
-                                                                <input type="text" class="form-control" id="itemType2" name="itemType2" placeholder="" value="" readonly>
-                                                                <!--<div class="valid-feedback">Looks good!</div>-->
-                                                                <!--<div class="invalid-feedback">Please provide a valid zip.</div>-->
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                    <div class="form-group required col-xl-2 col-sm-12 col-12">
-                                                        <div class="mb-3">
-                                                            <label for="subType" class="form-label">Sub Type</label>
-                                                            <div class="input-group">
-                                                                <!--<span class="input-group-text"><i class="bi bi-person"></i></span>-->
-                                                                <input type="text" class="form-control" id="subType" name="subType" placeholder="" value="" readonly>
-                                                                <input type="hidden" class="form-control" id="itemPKID" name="itemPKID" placeholder="" value="" readonly>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                    <div class="form-group required col-xl-4 col-sm-12 col-12">
-                                                        <div class="mb-3">
-                                                            <label for="itemId" class="form-label">Item ID</label>
-                                                            <div class="input-group">
-                                                                <!--<span class="input-group-text"><i class="bi bi-envelope"></i></span>-->
-                                                                <input type="text" class="form-control" id="itemId" name="itemId" placeholder="" value="" readonly>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                    <div class="form-group required col-xl-4 col-sm-12 col-12">
-                                                        <div class="mb-3">
-                                                            <label for="itemName" class="form-label">Item Name</label>
-                                                            <div class="input-group">
-                                                                <!--<span class="input-group-text"><i class="bi bi-telephone"></i></span>-->
-                                                                <input type="text" class="form-control" id="itemName" name="itemName" placeholder="" value="" readonly>
+                                                                <input type="text" class="form-control" id="itemName" name="itemName" placeholder="" value="" readonly required>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -1426,7 +1068,7 @@
                                                             <label for="equipmentManufacturer" class="form-label">Eqpt Manufacturer</label>
                                                             <div class="input-group">
                                                                 <!--<span class="input-group-text"><i class="bi bi-telephone"></i></span>-->
-                                                                <input type="text" class="form-control" id="equipmentManufacturer" name="equipmentManufacturer" value="" >
+                                                                <input type="text" class="form-control" id="equipmentManufacturer" name="equipmentManufacturer" value="" readonly>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -1451,23 +1093,377 @@
                                                             </div>
                                                         </div>
                                                     </div>
-                                                    <div class="col-xl-3 col-sm-12 col-12">
+                                                    <div class="form-group required col-xl-3 col-sm-12 col-12">
                                                         <div class="mb-3">
                                                             <label for="rack" class="form-label">Rack</label>
                                                             <div class="input-group">
                                                                 <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
                                                                 <input type="text" class="form-control" id="rack" name="rack"
-                                                                       placeholder="" value="" readonly>
+                                                                       placeholder="" value="" readonly required>
                                                             </div>
                                                         </div>
                                                     </div>
-                                                    <div class="col-xl-3 col-sm-12 col-12">
+                                                    <div class="form-group required col-xl-3 col-sm-12 col-12">
                                                         <div class="mb-3">
                                                             <label for="shelf" class="form-label">Shelf</label>
                                                             <div class="input-group">
                                                                 <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
                                                                 <input type="text" class="form-control" id="shelf" name="shelf"
+                                                                       placeholder="" value="" readonly required>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="visually-hidden col-xl-4 col-sm-12 col-12">
+                                                        <div class="mb-3">
+                                                            <label for="stressType" class="form-label">Stress Type</label>
+                                                            <div class="input-group">
+                                                                <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
+                                                                <input type="text" class="form-control" id="stressType" name="stressType"
                                                                        placeholder="" value="" readonly>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-xl-2 col-sm-12 col-12">
+                                                        <div class="mb-3">
+                                                            <label for="onHandQty" class="form-label">On Hand Qty</label>
+                                                            <div class="input-group">
+                                                                <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
+                                                                <input type="text" class="form-control" id="onHandQty" name="onHandQty"
+                                                                       placeholder="" value="" readonly>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-xl-2 col-sm-12 col-12">
+                                                        <div class="mb-3">
+                                                            <label for="productionQty" class="form-label">Prod. Qty</label>
+                                                            <div class="input-group">
+                                                                <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
+                                                                <input type="text" class="form-control" id="productionQty" name="productionQty"
+                                                                       placeholder="" value="" readonly>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="visually-hidden col-xl-2 col-sm-12 col-12">
+                                                        <div class="mb-3">
+                                                            <label for="productionStagingQty" class="form-label">Prod. Staging Qty</label>
+                                                            <div class="input-group">
+                                                                <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
+                                                                <input type="text" class="form-control" id="productionStagingQty" name="productionStagingQty"
+                                                                       placeholder="" value="" readonly>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-xl-2 col-sm-12 col-12">
+                                                        <div class="mb-3">
+                                                            <label for="repairQty" class="form-label">Repair Qty</label>
+                                                            <div class="input-group">
+                                                                <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
+                                                                <input type="text" class="form-control" id="repairQty" name="repairQty"
+                                                                       placeholder="" value="" readonly>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-xl-2 col-sm-12 col-12">
+                                                        <div class="mb-3">
+                                                            <label for="quarantineQty" class="form-label">Quarantine Qty</label>
+                                                            <div class="input-group">
+                                                                <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
+                                                                <input type="text" class="form-control" id="quarantineQty" name="quarantineQty"
+                                                                       placeholder="" value="" readonly>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="visually-hidden col-xl-2 col-sm-12 col-12">
+                                                        <div class="mb-3">
+                                                            <label for="externalCleanQty" class="form-label">Ext Clean Qty</label>
+                                                            <div class="input-group">
+                                                                <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
+                                                                <input type="text" class="form-control" id="externalCleanQty" name="externalCleanQty"
+                                                                       placeholder="" value="" readonly>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="visually-hidden col-xl-2 col-sm-12 col-12">
+                                                        <div class="mb-3">
+                                                            <label for="externalRecleanQty" class="form-label">Ext Re-clean Qty</label>
+                                                            <div class="input-group">
+                                                                <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
+                                                                <input type="text" class="form-control" id="externalRecleanQty" name="externalRecleanQty"
+                                                                       placeholder="" value="" readonly>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="visually-hidden col-xl-2 col-sm-12 col-12">
+                                                        <div class="mb-3">
+                                                            <label for="internalCleanQty" class="form-label">Int. Clean Qty</label>
+                                                            <div class="input-group">
+                                                                <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
+                                                                <input type="text" class="form-control" id="internalCleanQty" name="internalCleanQty"
+                                                                       placeholder="" value="" readonly>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="visually-hidden col-xl-2 col-sm-12 col-12">
+                                                        <div class="mb-3">
+                                                            <label for="internalRecleanQty" class="form-label">Int. Re-Clean Qty</label>
+                                                            <div class="input-group">
+                                                                <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
+                                                                <input type="text" class="form-control" id="internalRecleanQty" name="internalRecleanQty"
+                                                                       placeholder="" value="" readonly>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-xl-2 col-sm-12 col-12">
+                                                        <div class="mb-3">
+                                                            <label for="otherQty" class="form-label">Other Qty</label>
+                                                            <div class="input-group">
+                                                                <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
+                                                                <input type="text" class="form-control" id="otherQty" name="otherQty"
+                                                                       placeholder="" value="" readonly>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-xl-2 col-sm-12 col-12">
+                                                        <div class="mb-3">
+                                                            <label for="vendorQty" class="form-label">Vendor Qty</label>
+                                                            <div class="input-group">
+                                                                <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
+                                                                <input type="text" class="form-control" id="vendorQty" name="vendorQty"
+                                                                       placeholder="" value="" readonly>
+                                                            </div>
+                                                        </div>
+                                                    </div><div class="col-xl-2 col-sm-12 col-12">
+                                                        <div class="mb-3">
+                                                            <label for="otherOnsemiQty" class="form-label">Other onsemi Qty</label>
+                                                            <div class="input-group">
+                                                                <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
+                                                                <input type="text" class="form-control" id="otherOnsemiQty" name="otherOnsemiQty"
+                                                                       placeholder="" value="" readonly>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-xl-2 col-sm-12 col-12">
+                                                        <div class="mb-3">
+                                                            <label for="storageFactoryQty" class="form-label">Storage Factory Qty</label>
+                                                            <div class="input-group">
+                                                                <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
+                                                                <input type="text" class="form-control" id="storageFactoryQty" name="storageFactoryQty"
+                                                                       placeholder="" value="" readonly>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-xl-2 col-sm-12 col-12">
+                                                        <div class="mb-3">
+                                                            <label for="totalQty" class="form-label">Total Qty</label>
+                                                            <div class="input-group">
+                                                                <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
+                                                                <input type="text" class="form-control" id="totalQty" name="totalQty"
+                                                                       placeholder="" value="" readonly>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-xl-2 col-sm-12 col-12">
+                                                        <div class="mb-3">
+                                                            <label for="isConsumable" class="form-label">Consumable?</label>
+                                                            <div class="input-group form-check form-switch">
+                                                                <input class="form-check-input" type="checkbox" role="switch" id="isConsumable" name="isConsumable" disabled>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <!-- Additional Information Section -->
+                                                    <div class="col-12 mt-2 mb-3">
+                                                        <h6 class="fw-semibold mb-3 border-start border-warning ps-2"
+                                                            style="border-left-width: 3px !important;">
+                                                            <i class="bi bi-chat-square-text me-2"></i>Additional Information
+                                                        </h6>
+                                                    </div>
+                                                    <div class="col-12">
+                                                        <div class="mb-3">
+                                                            <label for="remarks" class="form-label">Remarks</label>
+                                                            <div class="input-group">
+                                                                <span class="input-group-text"><i class="bi bi-pencil"></i></span>
+                                                                <textarea class="form-control" id="remarks" name="remarks" placeholder="Enter Message"
+                                                                          rows="3" readonly></textarea>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+
+                                                    <!-- Form actions start -->
+                                                    <div class="d-flex justify-content-end gap-2">
+                                                    </div>
+                                                    <!-- Form actions end -->
+                                                    <!--</form>-->
+                                                    <!-- Card end -->
+                                                </c:when>
+                                                <c:when test="${(fn:contains(String, 'EQP_'))}">
+                                                    <!--<form class="row gx-3 " role="form" action="${contextPath}/hw/item/update" method="post">-->
+                                                    <!-- Row start -->
+                                                    <div class="form-group required col-xl-2 col-sm-12 col-12">
+                                                        <div class="mb-3">
+                                                            <!--<div class="mb-3 was-validated">-->
+                                                            <label for="itemType2" class="form-label">Item Type</label>
+                                                            <div class="input-group">
+                                                                <!--<span class="input-group-text"><i class="bi bi-person"></i></span>-->
+                                                                <input type="text" class="form-control" id="itemType2" name="itemType2" placeholder="" value="" readonly required>
+                                                                <!--<div class="valid-feedback">Looks good!</div>-->
+                                                                <!--<div class="invalid-feedback">Please provide a valid zip.</div>-->
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-group required col-xl-2 col-sm-12 col-12">
+                                                        <div class="mb-3">
+                                                            <label for="subType" class="form-label">Sub Type</label>
+                                                            <div class="input-group">
+                                                                <!--<span class="input-group-text"><i class="bi bi-person"></i></span>-->
+                                                                <input type="text" class="form-control" id="subType" name="subType" placeholder="" value="" readonly>
+                                                                <input type="hidden" class="form-control" id="itemPKID" name="itemPKID" placeholder="" value="" readonly>
+                                                                <input type="hidden" class="form-control" id="mibId" name="mibId" placeholder="" value="" readonly>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-group required col-xl-4 col-sm-12 col-12">
+                                                        <div class="mb-3">
+                                                            <label for="itemId" class="form-label">Item ID</label>
+                                                            <div class="input-group">
+                                                                <!--<span class="input-group-text"><i class="bi bi-envelope"></i></span>-->
+                                                                <input type="text" class="form-control" id="itemId" name="itemId" placeholder="" value="" readonly required>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-group required col-xl-4 col-sm-12 col-12">
+                                                        <div class="mb-3">
+                                                            <label for="itemName" class="form-label">Item Name</label>
+                                                            <div class="input-group">
+                                                                <!--<span class="input-group-text"><i class="bi bi-telephone"></i></span>-->
+                                                                <input type="text" class="form-control" id="itemName" name="itemName" placeholder="" value="" readonly required>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-xl-4 col-sm-12 col-12">
+                                                        <div class="mb-3">
+                                                            <label for="status" class="form-label">Status</label>
+                                                            <div class="input-group">
+                                                                <!--<span class="input-group-text"><i class="bi bi-person"></i></span>-->
+                                                                <input type="text" class="form-control" id="status" name="status" placeholder="" value="" readonly>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-group required col-xl-4 col-sm-12 col-12">
+                                                        <div class="mb-3">
+                                                            <label for="itemUsage" class="form-label">Item Usage</label>
+                                                            <div class="input-group">
+                                                                <select class="form-control" id="itemUsage" name="itemUsage"
+                                                                        title="Select Item Usage" data-live-search="true" required>
+                                                                    <option></option>
+                                                                    <c:forEach items="${paramItemUsage}" var="invInner">
+                                                                        <option value="${invInner.name}" ${invInner.selected}>${invInner.name}</option>
+                                                                    </c:forEach>
+                                                                </select>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="visually-hidden col-xl-4 col-sm-12 col-12">
+                                                        <div class="mb-3">
+                                                            <label for="assemblyId" class="form-label">Assembly ID</label>
+                                                            <div class="input-group">
+                                                                <!--<span class="input-group-text"><i class="bi bi-telephone"></i></span>-->
+                                                                <input type="text" class="form-control" id="assemblyId" name="assemblyId" placeholder="" value="" readonly>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-xl-4 col-sm-12 col-12">
+                                                        <div class="mb-3">
+                                                            <label for="model" class="form-label">Spare Part Model</label>
+                                                            <div class="input-group">
+                                                                <!--<span class="input-group-text"><i class="bi bi-telephone"></i></span>-->
+                                                                <input type="text" class="form-control" id="model" name="model" value="" readonly>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="col-xl-4 col-sm-12 col-12">
+                                                        <div class="mb-3">
+                                                            <label for="manufacturer" class="form-label">Spare Part Manufacturer</label>
+                                                            <div class="input-group">
+                                                                <!--<span class="input-group-text"><i class="bi bi-person"></i></span>-->
+                                                                <input type="text" class="form-control" id="manufacturer" name="manufacturer" placeholder="" value="" readonly>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-xl-4 col-sm-12 col-12">
+                                                        <div class="mb-3">
+                                                            <label for="unitCost" class="form-label">Unit cost (USD)</label>
+                                                            <div class="input-group">
+                                                                <!--<span class="input-group-text"><i class="bi bi-envelope"></i></span>-->
+                                                                <input type="text" class="form-control" id="unitCost" name="unitCost" placeholder="" value="" readonly>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-xl-4 col-sm-12 col-12">
+                                                        <div class="mb-3">
+                                                            <label for="equipmentType" class="form-label">Equipment Type</label>
+                                                            <div class="input-group">
+                                                                <!--<span class="input-group-text"><i class="bi bi-person"></i></span>-->
+                                                                <input type="text" class="form-control" id="equipmentType" name="equipmentType" placeholder="" value="" readonly>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-xl-4 col-sm-12 col-12">
+                                                        <div class="mb-3">
+                                                            <label for="equipmentModel" class="form-label">Equipment Model</label>
+                                                            <div class="input-group">
+                                                                <!--<span class="input-group-text"><i class="bi bi-envelope"></i></span>-->
+                                                                <input type="text" class="form-control" id="equipmentModel" name="equipmentModel" value="" readonly>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-xl-4 col-sm-12 col-12">
+                                                        <div class="mb-3">
+                                                            <label for="equipmentManufacturer" class="form-label">Eqpt Manufacturer</label>
+                                                            <div class="input-group">
+                                                                <!--<span class="input-group-text"><i class="bi bi-telephone"></i></span>-->
+                                                                <input type="text" class="form-control" id="equipmentManufacturer" name="equipmentManufacturer" value="" readonly>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="col-xl-1 col-sm-12 col-12">
+                                                        <div class="mb-3">
+                                                            <label for="minQty" class="form-label">Min. Qty</label>
+                                                            <div class="input-group">
+                                                                <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
+                                                                <input type="text" class="form-control" id="minQty" name="minQty"
+                                                                       placeholder="" value="" readonly>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-xl-1 col-sm-12 col-12">
+                                                        <div class="mb-3">
+                                                            <label for="maxQty" class="form-label">Max. Qty</label>
+                                                            <div class="input-group">
+                                                                <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
+                                                                <input type="text" class="form-control" id="maxQty" name="maxQty"
+                                                                       placeholder="" value="" readonly>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-group required col-xl-3 col-sm-12 col-12">
+                                                        <div class="mb-3">
+                                                            <label for="rack" class="form-label">Rack</label>
+                                                            <div class="input-group">
+                                                                <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
+                                                                <input type="text" class="form-control" id="rack" name="rack"
+                                                                       placeholder="" value="" readonly required>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-group required col-xl-3 col-sm-12 col-12">
+                                                        <div class="mb-3">
+                                                            <label for="shelf" class="form-label">Shelf</label>
+                                                            <div class="input-group">
+                                                                <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
+                                                                <input type="text" class="form-control" id="shelf" name="shelf"
+                                                                       placeholder="" value="" readonly required>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -1620,7 +1616,14 @@
                                                             </div>
                                                         </div>
                                                     </div>
-
+                                                    <div class="col-xl-2 col-sm-12 col-12">
+                                                        <div class="mb-3">
+                                                            <label for="isConsumable" class="form-label">Consumable?</label>
+                                                            <div class="input-group form-check form-switch">
+                                                                <input class="form-check-input" type="checkbox" role="switch" id="isConsumable" name="isConsumable" disabled>
+                                                            </div>
+                                                        </div>
+                                                    </div>
                                                     <!-- Additional Information Section -->
                                                     <div class="col-12 mt-2 mb-3">
                                                         <h6 class="fw-semibold mb-3 border-start border-warning ps-2"
@@ -1641,20 +1644,13 @@
 
                                                     <!-- Form actions start -->
                                                     <div class="d-flex justify-content-end gap-2">
-                                                        <!--<button type="button" class="btn btn-light">Cancel</button>-->
-                                                        <!--                                                        <button type="submit" class="btn btn-primary">Update</button>-->
                                                     </div>
                                                     <!-- Form actions end -->
-                                                </form>
-                                                <!--</div>-->
-                                                <!--</div>-->
-                                                <!-- Card end -->
-                                            </c:when>
-                                            <c:when test="${(fn:contains(String, 'FOL')) || (fn:contains(String, 'TRAY'))}">
-                                                <!-- Card start -->
-                                                <!--<div class="card mb-4">-->
-                                                <!--<div class="card-body">-->
-                                                <form class="row gx-3 " role="form" action="${contextPath}/hw/item/update" method="post">
+                                                    <!--</form>-->
+                                                    <!-- Card end -->
+                                                </c:when>
+                                                <c:when test="${(fn:contains(String, 'FOL')) || (fn:contains(String, 'TRAY'))}">
+                                                    <!--<form class="row gx-3 " role="form" action="${contextPath}/hw/item/update" method="post">-->
                                                     <!-- Row start -->
                                                     <div class="form-group required col-xl-2 col-sm-12 col-12">
                                                         <div class="mb-3">
@@ -1662,7 +1658,7 @@
                                                             <label for="itemType2" class="form-label">Item Type</label>
                                                             <div class="input-group">
                                                                 <!--<span class="input-group-text"><i class="bi bi-person"></i></span>-->
-                                                                <input type="text" class="form-control" id="itemType2" name="itemType2" placeholder="" value="" readonly>
+                                                                <input type="text" class="form-control" id="itemType2" name="itemType2" placeholder="" value="" readonly required>
                                                                 <!--<div class="valid-feedback">Looks good!</div>-->
                                                                 <!--<div class="invalid-feedback">Please provide a valid zip.</div>-->
                                                             </div>
@@ -1675,6 +1671,7 @@
                                                                 <!--<span class="input-group-text"><i class="bi bi-person"></i></span>-->
                                                                 <input type="text" class="form-control" id="subType" name="subType" placeholder="" value="" readonly>
                                                                 <input type="hidden" class="form-control" id="itemPKID" name="itemPKID" placeholder="" value="" readonly>
+                                                                <input type="hidden" class="form-control" id="mibId" name="mibId" placeholder="" value="" readonly>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -1683,7 +1680,7 @@
                                                             <label for="itemId" class="form-label">Item ID</label>
                                                             <div class="input-group">
                                                                 <!--<span class="input-group-text"><i class="bi bi-envelope"></i></span>-->
-                                                                <input type="text" class="form-control" id="itemId" name="itemId" placeholder="" value="" readonly>
+                                                                <input type="text" class="form-control" id="itemId" name="itemId" placeholder="" value="" readonly required>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -1692,7 +1689,7 @@
                                                             <label for="itemName" class="form-label">Item Name</label>
                                                             <div class="input-group">
                                                                 <!--<span class="input-group-text"><i class="bi bi-telephone"></i></span>-->
-                                                                <input type="text" class="form-control" id="itemName" name="itemName" placeholder="" value="" readonly>
+                                                                <input type="text" class="form-control" id="itemName" name="itemName" placeholder="" value="" readonly required>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -1710,7 +1707,7 @@
                                                             <label for="aluHrs" class="form-label">ALU</label>
                                                             <div class="input-group">
                                                                 <!--<span class="input-group-text"><i class="bi bi-envelope"></i></span>-->
-                                                                <input type="text" class="form-control" id="aluHrs" name="aluHrs" placeholder="" value="" readonly>
+                                                                <input type="number" step="0.01" class="form-control" id="aluHrs" name="aluHrs" placeholder="" value="" readonly>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -1774,7 +1771,7 @@
                                                             <label for="equipmentManufacturer" class="form-label">Eqpt Manufacturer</label>
                                                             <div class="input-group">
                                                                 <!--<span class="input-group-text"><i class="bi bi-telephone"></i></span>-->
-                                                                <input type="text" class="form-control" id="equipmentManufacturer" name="equipmentManufacturer" value="" >
+                                                                <input type="text" class="form-control" id="equipmentManufacturer" name="equipmentManufacturer" value="" readonly>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -1799,23 +1796,23 @@
                                                             </div>
                                                         </div>
                                                     </div>
-                                                    <div class="col-xl-3 col-sm-12 col-12">
+                                                    <div class="form-group required col-xl-3 col-sm-12 col-12">
                                                         <div class="mb-3">
                                                             <label for="rack" class="form-label">Rack</label>
                                                             <div class="input-group">
                                                                 <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
                                                                 <input type="text" class="form-control" id="rack" name="rack"
-                                                                       placeholder="" value="" readonly>
+                                                                       placeholder="" value="" readonly required>
                                                             </div>
                                                         </div>
                                                     </div>
-                                                    <div class="col-xl-3 col-sm-12 col-12">
+                                                    <div class="form-group required col-xl-3 col-sm-12 col-12">
                                                         <div class="mb-3">
                                                             <label for="shelf" class="form-label">Shelf</label>
                                                             <div class="input-group">
                                                                 <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
                                                                 <input type="text" class="form-control" id="shelf" name="shelf"
-                                                                       placeholder="" value="" readonly>
+                                                                       placeholder="" value="" readonly required>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -1968,7 +1965,14 @@
                                                             </div>
                                                         </div>
                                                     </div>
-
+                                                    <div class="col-xl-2 col-sm-12 col-12">
+                                                        <div class="mb-3">
+                                                            <label for="isConsumable" class="form-label">Consumable?</label>
+                                                            <div class="input-group form-check form-switch">
+                                                                <input class="form-check-input" type="checkbox" role="switch" id="isConsumable" name="isConsumable" disabled>
+                                                            </div>
+                                                        </div>
+                                                    </div>
                                                     <!-- Additional Information Section -->
                                                     <div class="col-12 mt-2 mb-3">
                                                         <h6 class="fw-semibold mb-3 border-start border-warning ps-2"
@@ -1989,20 +1993,13 @@
 
                                                     <!-- Form actions start -->
                                                     <div class="d-flex justify-content-end gap-2">
-                                                        <!--<button type="button" class="btn btn-light">Cancel</button>-->
-                                                        <!--                                                        <button type="submit" class="btn btn-primary">Update</button>-->
                                                     </div>
                                                     <!-- Form actions end -->
-                                                </form>
-                                                <!--</div>-->
-                                                <!--</div>-->
-                                                <!-- Card end -->
-                                            </c:when>
-                                            <c:when test="${(fn:contains(String, 'PCB'))}">
-                                                <!-- Card start -->
-                                                <!--<div class="card mb-4">-->
-                                                <!--<div class="card-body">-->
-                                                <form class="row gx-3 " role="form" action="${contextPath}/hw/item/update" method="post">
+                                                    <!--</form>-->
+                                                    <!-- Card end -->
+                                                </c:when>
+                                                <c:when test="${(fn:contains(String, 'PCB'))}">
+                                                    <!--<form class="row gx-3 " role="form" action="${contextPath}/hw/item/update" method="post">-->
                                                     <!-- Row start -->
                                                     <div class="form-group required col-xl-2 col-sm-12 col-12">
                                                         <div class="mb-3">
@@ -2010,7 +2007,7 @@
                                                             <label for="itemType2" class="form-label">Item Type</label>
                                                             <div class="input-group">
                                                                 <!--<span class="input-group-text"><i class="bi bi-person"></i></span>-->
-                                                                <input type="text" class="form-control" id="itemType2" name="itemType2" placeholder="" value="" readonly>
+                                                                <input type="text" class="form-control" id="itemType2" name="itemType2" placeholder="" value="" readonly required>
                                                                 <!--<div class="valid-feedback">Looks good!</div>-->
                                                                 <!--<div class="invalid-feedback">Please provide a valid zip.</div>-->
                                                             </div>
@@ -2023,6 +2020,7 @@
                                                                 <!--<span class="input-group-text"><i class="bi bi-person"></i></span>-->
                                                                 <input type="text" class="form-control" id="subType" name="subType" placeholder="" value="" readonly>
                                                                 <input type="hidden" class="form-control" id="itemPKID" name="itemPKID" placeholder="" value="" readonly>
+                                                                <input type="hidden" class="form-control" id="mibId" name="mibId" placeholder="" value="" readonly>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -2031,7 +2029,7 @@
                                                             <label for="itemId" class="form-label">Item ID</label>
                                                             <div class="input-group">
                                                                 <!--<span class="input-group-text"><i class="bi bi-envelope"></i></span>-->
-                                                                <input type="text" class="form-control" id="itemId" name="itemId" placeholder="" value="" readonly>
+                                                                <input type="text" class="form-control" id="itemId" name="itemId" placeholder="" value="" readonly required>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -2040,7 +2038,7 @@
                                                             <label for="itemName" class="form-label">Item Name</label>
                                                             <div class="input-group">
                                                                 <!--<span class="input-group-text"><i class="bi bi-telephone"></i></span>-->
-                                                                <input type="text" class="form-control" id="itemName" name="itemName" placeholder="" value="" readonly>
+                                                                <input type="text" class="form-control" id="itemName" name="itemName" placeholder="" value="" readonly required>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -2058,7 +2056,7 @@
                                                             <label for="aluHrs" class="form-label">ALU</label>
                                                             <div class="input-group">
                                                                 <!--<span class="input-group-text"><i class="bi bi-envelope"></i></span>-->
-                                                                <input type="text" class="form-control" id="aluHrs" name="aluHrs" placeholder="" value="" readonly>
+                                                                <input type="number" step="0.01" class="form-control" id="aluHrs" name="aluHrs" placeholder="" value="" readonly>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -2122,7 +2120,7 @@
                                                             <label for="equipmentManufacturer" class="form-label">Eqpt Manufacturer</label>
                                                             <div class="input-group">
                                                                 <!--<span class="input-group-text"><i class="bi bi-telephone"></i></span>-->
-                                                                <input type="text" class="form-control" id="equipmentManufacturer" name="equipmentManufacturer" value="" >
+                                                                <input type="text" class="form-control" id="equipmentManufacturer" name="equipmentManufacturer" value="" readonly>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -2147,23 +2145,23 @@
                                                             </div>
                                                         </div>
                                                     </div>
-                                                    <div class="col-xl-3 col-sm-12 col-12">
+                                                    <div class="form-group required col-xl-3 col-sm-12 col-12">
                                                         <div class="mb-3">
                                                             <label for="rack" class="form-label">Rack</label>
                                                             <div class="input-group">
                                                                 <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
                                                                 <input type="text" class="form-control" id="rack" name="rack"
-                                                                       placeholder="" value="" readonly>
+                                                                       placeholder="" value="" readonly required>
                                                             </div>
                                                         </div>
                                                     </div>
-                                                    <div class="col-xl-3 col-sm-12 col-12">
+                                                    <div class="form-group required col-xl-3 col-sm-12 col-12">
                                                         <div class="mb-3">
                                                             <label for="shelf" class="form-label">Shelf</label>
                                                             <div class="input-group">
                                                                 <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
                                                                 <input type="text" class="form-control" id="shelf" name="shelf"
-                                                                       placeholder="" value="" readonly>
+                                                                       placeholder="" value="" readonly required>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -2316,7 +2314,14 @@
                                                             </div>
                                                         </div>
                                                     </div>
-
+                                                    <div class="col-xl-2 col-sm-12 col-12">
+                                                        <div class="mb-3">
+                                                            <label for="isConsumable" class="form-label">Consumable?</label>
+                                                            <div class="input-group form-check form-switch">
+                                                                <input class="form-check-input" type="checkbox" role="switch" id="isConsumable" name="isConsumable" disabled>
+                                                            </div>
+                                                        </div>
+                                                    </div>
                                                     <!-- Additional Information Section -->
                                                     <div class="col-12 mt-2 mb-3">
                                                         <h6 class="fw-semibold mb-3 border-start border-warning ps-2"
@@ -2337,20 +2342,13 @@
 
                                                     <!-- Form actions start -->
                                                     <div class="d-flex justify-content-end gap-2">
-                                                        <!--<button type="button" class="btn btn-light">Cancel</button>-->
-                                                        <!--                                                        <button type="submit" class="btn btn-primary">Update</button>-->
                                                     </div>
                                                     <!-- Form actions end -->
-                                                </form>
-                                                <!--</div>-->
-                                                <!--</div>-->
-                                                <!-- Card end -->
-                                            </c:when>
-                                            <c:when test="${(fn:contains(String, 'Solder Paste'))}">
-                                                <!-- Card start -->
-                                                <!--<div class="card mb-4">-->
-                                                <!--<div class="card-body">-->
-                                                <form class="row gx-3 " role="form" action="${contextPath}/hw/item/update" method="post">
+                                                    <!--</form>-->
+                                                    <!-- Card end -->
+                                                </c:when>
+                                                <c:when test="${(fn:contains(String, 'Solder Paste'))}">
+                                                    <!--<form class="row gx-3 " role="form" action="${contextPath}/hw/item/update" method="post">-->
                                                     <!-- Row start -->
                                                     <div class="form-group required col-xl-2 col-sm-12 col-12">
                                                         <div class="mb-3">
@@ -2358,7 +2356,7 @@
                                                             <label for="itemType2" class="form-label">Item Type</label>
                                                             <div class="input-group">
                                                                 <!--<span class="input-group-text"><i class="bi bi-person"></i></span>-->
-                                                                <input type="text" class="form-control" id="itemType2" name="itemType2" placeholder="" value="" readonly>
+                                                                <input type="text" class="form-control" id="itemType2" name="itemType2" placeholder="" value="" readonly required>
                                                                 <!--<div class="valid-feedback">Looks good!</div>-->
                                                                 <!--<div class="invalid-feedback">Please provide a valid zip.</div>-->
                                                             </div>
@@ -2371,6 +2369,7 @@
                                                                 <!--<span class="input-group-text"><i class="bi bi-person"></i></span>-->
                                                                 <input type="text" class="form-control" id="subType" name="subType" placeholder="" value="" readonly>
                                                                 <input type="hidden" class="form-control" id="itemPKID" name="itemPKID" placeholder="" value="" readonly>
+                                                                <input type="hidden" class="form-control" id="mibId" name="mibId" placeholder="" value="" readonly>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -2379,7 +2378,7 @@
                                                             <label for="itemId" class="form-label">Item ID</label>
                                                             <div class="input-group">
                                                                 <!--<span class="input-group-text"><i class="bi bi-envelope"></i></span>-->
-                                                                <input type="text" class="form-control" id="itemId" name="itemId" placeholder="" value="" readonly>
+                                                                <input type="text" class="form-control" id="itemId" name="itemId" placeholder="" value="" readonly required>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -2388,7 +2387,7 @@
                                                             <label for="itemName" class="form-label">Item Name</label>
                                                             <div class="input-group">
                                                                 <!--<span class="input-group-text"><i class="bi bi-telephone"></i></span>-->
-                                                                <input type="text" class="form-control" id="itemName" name="itemName" placeholder="" value="" readonly>
+                                                                <input type="text" class="form-control" id="itemName" name="itemName" placeholder="" value="" readonly required>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -2406,7 +2405,7 @@
                                                             <label for="aluHrs" class="form-label">ALU</label>
                                                             <div class="input-group">
                                                                 <!--<span class="input-group-text"><i class="bi bi-envelope"></i></span>-->
-                                                                <input type="text" class="form-control" id="aluHrs" name="aluHrs" placeholder="" value="" readonly>
+                                                                <input type="number" step="0.01" class="form-control" id="aluHrs" name="aluHrs" placeholder="" value="" readonly>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -2470,7 +2469,7 @@
                                                             <label for="equipmentManufacturer" class="form-label">Eqpt Manufacturer</label>
                                                             <div class="input-group">
                                                                 <!--<span class="input-group-text"><i class="bi bi-telephone"></i></span>-->
-                                                                <input type="text" class="form-control" id="equipmentManufacturer" name="equipmentManufacturer" value="" >
+                                                                <input type="text" class="form-control" id="equipmentManufacturer" name="equipmentManufacturer" value="" readonly>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -2495,23 +2494,23 @@
                                                             </div>
                                                         </div>
                                                     </div>
-                                                    <div class="col-xl-3 col-sm-12 col-12">
+                                                    <div class="form-group required col-xl-3 col-sm-12 col-12">
                                                         <div class="mb-3">
                                                             <label for="rack" class="form-label">Rack</label>
                                                             <div class="input-group">
                                                                 <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
                                                                 <input type="text" class="form-control" id="rack" name="rack"
-                                                                       placeholder="" value="" readonly>
+                                                                       placeholder="" value="" readonly required>
                                                             </div>
                                                         </div>
                                                     </div>
-                                                    <div class="col-xl-3 col-sm-12 col-12">
+                                                    <div class="form-group required col-xl-3 col-sm-12 col-12">
                                                         <div class="mb-3">
                                                             <label for="shelf" class="form-label">Shelf</label>
                                                             <div class="input-group">
                                                                 <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
                                                                 <input type="text" class="form-control" id="shelf" name="shelf"
-                                                                       placeholder="" value="" readonly>
+                                                                       placeholder="" value="" readonly required>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -2664,7 +2663,14 @@
                                                             </div>
                                                         </div>
                                                     </div>
-
+                                                    <div class="col-xl-2 col-sm-12 col-12">
+                                                        <div class="mb-3">
+                                                            <label for="isConsumable" class="form-label">Consumable?</label>
+                                                            <div class="input-group form-check form-switch">
+                                                                <input class="form-check-input" type="checkbox" role="switch" id="isConsumable" name="isConsumable" disabled>
+                                                            </div>
+                                                        </div>
+                                                    </div>
                                                     <!-- Additional Information Section -->
                                                     <div class="col-12 mt-2 mb-3">
                                                         <h6 class="fw-semibold mb-3 border-start border-warning ps-2"
@@ -2685,20 +2691,13 @@
 
                                                     <!-- Form actions start -->
                                                     <div class="d-flex justify-content-end gap-2">
-                                                        <!--<button type="button" class="btn btn-light">Cancel</button>-->
-                                                        <!--                                                        <button type="submit" class="btn btn-primary">Update</button>-->
                                                     </div>
                                                     <!-- Form actions end -->
-                                                </form>
-                                                <!--</div>-->
-                                                <!--</div>-->
-                                                <!-- Card end -->
-                                            </c:when>
-                                            <c:when test="${(fn:contains(String, 'Stencil'))}">
-                                                <!-- Card start -->
-                                                <!--<div class="card mb-4">-->
-                                                <!--<div class="card-body">-->
-                                                <form class="row gx-3 " role="form" action="${contextPath}/hw/item/update" method="post">
+                                                    <!--</form>-->
+                                                    <!-- Card end -->
+                                                </c:when>
+                                                <c:when test="${(fn:contains(String, 'Stencil'))}">
+                                                    <!--<form class="row gx-3 " role="form" action="${contextPath}/hw/item/update" method="post">-->
                                                     <!-- Row start -->
                                                     <div class="form-group required col-xl-2 col-sm-12 col-12">
                                                         <div class="mb-3">
@@ -2706,7 +2705,7 @@
                                                             <label for="itemType2" class="form-label">Item Type</label>
                                                             <div class="input-group">
                                                                 <!--<span class="input-group-text"><i class="bi bi-person"></i></span>-->
-                                                                <input type="text" class="form-control" id="itemType2" name="itemType2" placeholder="" value="" readonly>
+                                                                <input type="text" class="form-control" id="itemType2" name="itemType2" placeholder="" value="" readonly required>
                                                                 <!--<div class="valid-feedback">Looks good!</div>-->
                                                                 <!--<div class="invalid-feedback">Please provide a valid zip.</div>-->
                                                             </div>
@@ -2719,6 +2718,7 @@
                                                                 <!--<span class="input-group-text"><i class="bi bi-person"></i></span>-->
                                                                 <input type="text" class="form-control" id="subType" name="subType" placeholder="" value="" readonly>
                                                                 <input type="hidden" class="form-control" id="itemPKID" name="itemPKID" placeholder="" value="" readonly>
+                                                                <input type="hidden" class="form-control" id="mibId" name="mibId" placeholder="" value="" readonly>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -2727,7 +2727,7 @@
                                                             <label for="itemId" class="form-label">Item ID</label>
                                                             <div class="input-group">
                                                                 <!--<span class="input-group-text"><i class="bi bi-envelope"></i></span>-->
-                                                                <input type="text" class="form-control" id="itemId" name="itemId" placeholder="" value="" readonly>
+                                                                <input type="text" class="form-control" id="itemId" name="itemId" placeholder="" value="" readonly required>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -2736,7 +2736,7 @@
                                                             <label for="itemName" class="form-label">Item Name</label>
                                                             <div class="input-group">
                                                                 <!--<span class="input-group-text"><i class="bi bi-telephone"></i></span>-->
-                                                                <input type="text" class="form-control" id="itemName" name="itemName" placeholder="" value="" readonly>
+                                                                <input type="text" class="form-control" id="itemName" name="itemName" placeholder="" value="" readonly required>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -2754,7 +2754,7 @@
                                                             <label for="aluHrs" class="form-label">ALU</label>
                                                             <div class="input-group">
                                                                 <!--<span class="input-group-text"><i class="bi bi-envelope"></i></span>-->
-                                                                <input type="text" class="form-control" id="aluHrs" name="aluHrs" placeholder="" value="" readonly>
+                                                                <input type="number" step="0.01" class="form-control" id="aluHrs" name="aluHrs" placeholder="" value="" readonly>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -2818,7 +2818,7 @@
                                                             <label for="equipmentManufacturer" class="form-label">Eqpt Manufacturer</label>
                                                             <div class="input-group">
                                                                 <!--<span class="input-group-text"><i class="bi bi-telephone"></i></span>-->
-                                                                <input type="text" class="form-control" id="equipmentManufacturer" name="equipmentManufacturer" value="" >
+                                                                <input type="text" class="form-control" id="equipmentManufacturer" name="equipmentManufacturer" value="" readonly>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -2843,23 +2843,23 @@
                                                             </div>
                                                         </div>
                                                     </div>
-                                                    <div class="col-xl-3 col-sm-12 col-12">
+                                                    <div class="form-group required col-xl-3 col-sm-12 col-12">
                                                         <div class="mb-3">
                                                             <label for="rack" class="form-label">Rack</label>
                                                             <div class="input-group">
                                                                 <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
                                                                 <input type="text" class="form-control" id="rack" name="rack"
-                                                                       placeholder="" value="" readonly>
+                                                                       placeholder="" value="" readonly required>
                                                             </div>
                                                         </div>
                                                     </div>
-                                                    <div class="col-xl-3 col-sm-12 col-12">
+                                                    <div class="form-group required col-xl-3 col-sm-12 col-12">
                                                         <div class="mb-3">
                                                             <label for="shelf" class="form-label">Shelf</label>
                                                             <div class="input-group">
                                                                 <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
                                                                 <input type="text" class="form-control" id="shelf" name="shelf"
-                                                                       placeholder="" value="" readonly>
+                                                                       placeholder="" value="" readonly required>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -3012,7 +3012,14 @@
                                                             </div>
                                                         </div>
                                                     </div>
-
+                                                    <div class="col-xl-2 col-sm-12 col-12">
+                                                        <div class="mb-3">
+                                                            <label for="isConsumable" class="form-label">Consumable?</label>
+                                                            <div class="input-group form-check form-switch">
+                                                                <input class="form-check-input" type="checkbox" role="switch" id="isConsumable" name="isConsumable" disabled>
+                                                            </div>
+                                                        </div>
+                                                    </div>
                                                     <!-- Additional Information Section -->
                                                     <div class="col-12 mt-2 mb-3">
                                                         <h6 class="fw-semibold mb-3 border-start border-warning ps-2"
@@ -3033,13 +3040,9 @@
 
                                                     <!-- Form actions start -->
                                                     <div class="d-flex justify-content-end gap-2">
-                                                        <!--<button type="button" class="btn btn-light">Cancel</button>-->
-                                                        <!--                                                        <button type="submit" class="btn btn-primary">Update</button>-->
                                                     </div>
                                                     <!-- Form actions end -->
                                                 </form>
-                                                <!--</div>-->
-                                                <!--</div>-->
                                                 <!-- Card end -->
                                             </c:when>
                                             <c:otherwise>
@@ -3054,19 +3057,20 @@
                                                             <label for="itemType2" class="form-label">Item Type</label>
                                                             <div class="input-group">
                                                                 <!--<span class="input-group-text"><i class="bi bi-person"></i></span>-->
-                                                                <input type="text" class="form-control" id="itemType2" name="itemType2" placeholder="" value="" readonly>
+                                                                <input type="text" class="form-control" id="itemType2" name="itemType2" placeholder="" value="" readonly required >
                                                                 <!--<div class="valid-feedback">Looks good!</div>-->
                                                                 <!--<div class="invalid-feedback">Please provide a valid zip.</div>-->
                                                             </div>
                                                         </div>
                                                     </div>
-                                                    <div class="form-group required col-xl-2 col-sm-12 col-12">
+                                                    <div class="col-xl-2 col-sm-12 col-12">
                                                         <div class="mb-3">
                                                             <label for="subType" class="form-label">Sub Type</label>
                                                             <div class="input-group">
                                                                 <!--<span class="input-group-text"><i class="bi bi-person"></i></span>-->
                                                                 <input type="text" class="form-control" id="subType" name="subType" placeholder="" value="" readonly>
                                                                 <input type="hidden" class="form-control" id="itemPKID" name="itemPKID" placeholder="" value="" readonly>
+                                                                <input type="hidden" class="form-control" id="mibId" name="mibId" placeholder="" value="" readonly>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -3075,7 +3079,7 @@
                                                             <label for="itemId" class="form-label">Item ID</label>
                                                             <div class="input-group">
                                                                 <!--<span class="input-group-text"><i class="bi bi-envelope"></i></span>-->
-                                                                <input type="text" class="form-control" id="itemId" name="itemId" placeholder="" value="" readonly>
+                                                                <input type="text" class="form-control" id="itemId" name="itemId" placeholder="" value="" readonly required>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -3084,7 +3088,7 @@
                                                             <label for="itemName" class="form-label">Item Name</label>
                                                             <div class="input-group">
                                                                 <!--<span class="input-group-text"><i class="bi bi-telephone"></i></span>-->
-                                                                <input type="text" class="form-control" id="itemName" name="itemName" placeholder="" value="" readonly>
+                                                                <input type="text" class="form-control" id="itemName" name="itemName" placeholder="" value="" readonly required>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -3102,7 +3106,7 @@
                                                             <label for="aluHrs" class="form-label">ALU</label>
                                                             <div class="input-group">
                                                                 <!--<span class="input-group-text"><i class="bi bi-envelope"></i></span>-->
-                                                                <input type="text" class="form-control" id="aluHrs" name="aluHrs" placeholder="" value="" readonly>
+                                                                <input type="number" step="0.01" class="form-control" id="aluHrs" name="aluHrs" placeholder="" value="" readonly>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -3166,7 +3170,7 @@
                                                             <label for="equipmentManufacturer" class="form-label">Eqpt Manufacturer</label>
                                                             <div class="input-group">
                                                                 <!--<span class="input-group-text"><i class="bi bi-telephone"></i></span>-->
-                                                                <input type="text" class="form-control" id="equipmentManufacturer" name="equipmentManufacturer" value="" >
+                                                                <input type="text" class="form-control" id="equipmentManufacturer" name="equipmentManufacturer" value="" readonly>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -3191,23 +3195,23 @@
                                                             </div>
                                                         </div>
                                                     </div>
-                                                    <div class="col-xl-3 col-sm-12 col-12">
+                                                    <div class="form-group required col-xl-3 col-sm-12 col-12">
                                                         <div class="mb-3">
                                                             <label for="rack" class="form-label">Rack</label>
                                                             <div class="input-group">
                                                                 <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
                                                                 <input type="text" class="form-control" id="rack" name="rack"
-                                                                       placeholder="" value="" readonly>
+                                                                       placeholder="" value="" readonly required>
                                                             </div>
                                                         </div>
                                                     </div>
-                                                    <div class="col-xl-3 col-sm-12 col-12">
+                                                    <div class="form-group required col-xl-3 col-sm-12 col-12">
                                                         <div class="mb-3">
                                                             <label for="shelf" class="form-label">Shelf</label>
                                                             <div class="input-group">
                                                                 <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
                                                                 <input type="text" class="form-control" id="shelf" name="shelf"
-                                                                       placeholder="" value="" readonly>
+                                                                       placeholder="" value="" readonly required>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -3360,7 +3364,14 @@
                                                             </div>
                                                         </div>
                                                     </div>
-
+                                                    <div class="col-xl-2 col-sm-12 col-12">
+                                                        <div class="mb-3">
+                                                            <label for="isConsumable" class="form-label">Consumable?</label>
+                                                            <div class="input-group form-check form-switch">
+                                                                <input class="form-check-input" type="checkbox" role="switch" id="isConsumable" name="isConsumable" disabled>
+                                                            </div>
+                                                        </div>
+                                                    </div>
                                                     <!-- Additional Information Section -->
                                                     <div class="col-12 mt-2 mb-3">
                                                         <h6 class="fw-semibold mb-3 border-start border-warning ps-2"
@@ -3380,10 +3391,10 @@
                                                     </div>
 
                                                     <!-- Form actions start -->
-                                                    <div class="d-flex justify-content-end gap-2">
-                                                        <!--<button type="button" class="btn btn-light">Cancel</button>-->
-                                                        <!--                                                        <button type="submit" class="btn btn-primary">Update</button>-->
-                                                    </div>
+                                                    <!--<div class="d-flex justify-content-end gap-2">-->
+                                                    <!--<button type="button" class="btn btn-light">Cancel</button>-->
+                                                    <!--                                                        <button type="submit" class="btn btn-primary">Update</button>-->
+                                                    <!--</div>-->
                                                     <!-- Form actions end -->
                                                 </form>
                                                 <!--</div>-->
@@ -3392,69 +3403,97 @@
                                             </c:otherwise>
                                         </c:choose>
                                         <!--end of differentiate form attribute based on item type-->
+                                        <!-- Form actions start -->
+                                        <div class="d-flex justify-content-end gap-2">
+                                            <!--<button type="button" class="btn btn-light">Cancel</button>-->
+                                            <c:if test="${userItemEdit == 'Yes'}"><button type="submit" class="btn btn-primary">Update</button></c:if>
+                                        </div>
+                                        <!-- Form actions end -->
+                                        </form>
                                     </div> 
                                     <!--end div for 1st tab-->
                                     <div class="tab-pane fade" id="twoAAA" role="tabpanel">
                                         <!-- Row start -->
                                         <div class="row gx-4">
-                                            <div class="table-responsive">
-                                                <table id="listHardware" class="table custom-table pending">
-                                                    <thead>
-                                                        <tr>
-                                                            <th>Site</th>
-                                                            <th>Hardware ID</th>
-                                                            <th>ALU</th>
-                                                            <th>MFG Date</th>
-                                                            <th>RMS_Event</th>
-                                                            <th>Status</th>
-                                                        </tr>
-                                                    </thead>
-                                                    <tbody>
-                                                    </tbody>
-                                                </table>
+                                            <div class="mb-3 container-fluid justify-content-start">
+                                                <!--<button class="btn btn-outline-success me-2" type="button">Pending Registration (BIB/ Bib Card)</button>-->
+                                                <c:if test="${userItemHwAdd == 'Yes'}"><a href="" class="btn btn-outline-success me-2" role="button">
+                                                        <i class='bi bi-plus-circle'></i>&nbsp;&nbsp;New Hardware ID</a></c:if>
+                                                </div>
+                                                <div class="table-responsive">
+                                                    <table id="listHardware" class="table custom-table pending">
+                                                        <thead>
+                                                            <tr>
+                                                                <th>Site</th>
+                                                                <th>Hardware ID</th>
+                                                                <th>ALU</th>
+                                                                <th>MFG Date</th>
+                                                                <th>RMS_Event</th>
+                                                                <th>Status</th>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody>
+                                                        </tbody>
+                                                    </table>
+                                                </div>
                                             </div>
+                                            <!-- Row end -->
                                         </div>
-                                        <!-- Row end -->
-                                    </div>
-                                    <!--end dive for second tab-->
-                                    <div class="tab-pane fade" id="threeAAA" role="tabpanel">
-                                        <!-- Row start -->
-                                        <div class="row gx-4">
-                                            <div class="table-responsive">
-                                                <table id="listMovement" class="table custom-table pending">
-                                                    <thead>
-                                                        <tr>
-                                                            <!--<th class="col-12">Site</th>-->
-                                                            <th>Item ID</th>
-                                                            <th>Date</th>
-                                                            <th>Movement Type</th>
-                                                            <th>In</th>
-                                                            <th>Out</th>
-                                                            <th>ALU</th>
-                                                            <th>Remarks</th>
-                                                        </tr>
-                                                    </thead>
-                                                    <tbody>
-                                                    </tbody>
-                                                </table>
+                                        <!--end dive for second tab-->
+                                        <div class="tab-pane fade" id="threeAAA" role="tabpanel">
+                                            <!-- Row start -->
+                                            <div class="row gx-4">
+                                                <div class="mb-3 container-fluid justify-content-start">
+                                                    <!--<button class="btn btn-outline-success me-2" type="button">Pending Registration (BIB/ Bib Card)</button>-->
+                                                    <!--<a href="${contextPath}/hw/item/transaction/" class="btn btn-outline-success me-2" role="button">-->
+                                                <!--<a href="" onclick="myJavaScriptFunction()" class="btn btn-outline-success me-2" role="button">-->
+                                                <c:if test="${userItemMovement == 'Yes'}"><button onclick="goToPage();" class="btn btn-outline-success me-2">
+                                                        <i class='bi bi-plus-circle'></i>&nbsp;&nbsp;New Movement</button></c:if>
+                                                </div>
+                                                <div class="table-responsive">
+                                                    <table id="listMovement" class="table custom-table pending">
+                                                        <thead>
+                                                            <tr>
+                                                                <!--<th class="col-12">Site</th>-->
+                                                                <th>Item ID</th>
+                                                                <th>Date</th>
+                                                                <th>Movement Type</th>
+                                                                <th>In</th>
+                                                                <th>Out</th>
+                                                                <th>ALU</th>
+                                                                <th>Remarks</th>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody>
+                                                        </tbody>
+                                                    </table>
+                                                </div>
                                             </div>
+                                            <!-- Row end -->
                                         </div>
-                                        <!-- Row end -->
-                                    </div>
-                                    <!--end dive for third tab-->
-                                    <div class="tab-pane fade" id="fourAAA" role="tabpanel">
-                                        <!-- Row start -->
-                                        <div class="row gx-4">
+                                        <!--end dive for third tab-->
+                                        <div class="tab-pane fade" id="fourAAA" role="tabpanel">
+                                            <!-- Row start -->
+                                            <div class="row gx-4">
+                                                <div class="mb-3 container-fluid justify-content-start">
+                                                    <!--<button class="btn btn-outline-success me-2" type="button">Pending Registration (BIB/ Bib Card)</button>-->
+                                                    <a href="https://mysed-rel-app03:8443/CDARS/wh/whShipping" target="_blank" class="btn btn-outline-success me-2" role="button">
+                                                        <i class='bi bi-arrow-up-right-circle'></i>&nbsp;&nbsp;Request Through HIMS</a>
+                                                    <a href="${contextPath}/hw/item/ListRetrieveSF" class="btn btn-outline-success me-2" role="button">
+                                                    <i class='bi bi-list-task'></i>&nbsp;&nbsp;List of Recall Item</a>
+                                            </div>
                                             <div class="table-responsive">
                                                 <table id="listStorage" class="table custom-table pending">
                                                     <thead>
                                                         <tr>
-                                                            <th>Site</th>
-                                                            <th>Hardware ID</th>
-                                                            <th>ALU</th>
-                                                            <th>MFG Date</th>
-                                                            <th>RMS_Event</th>
-                                                            <th>Status</th>
+                                                            <th class="col-3">Item ID</th>
+                                                            <th class="col-1">Box No</th>
+                                                            <th class="col-1">Rack</th>
+                                                            <th class="col-2">Shelf</th>
+                                                            <th class="col-1">Qty</th>
+                                                            <th class="col-1">Inventory Date</th>
+                                                            <!--<th class="col-2">Movement Type</th>-->
+                                                            <th class="col-1">Action</th>
                                                         </tr>
                                                     </thead>
                                                     <tbody>
@@ -3489,7 +3528,7 @@
     <script src="${contextPath}/resources/vendor/DataTables/customitem/jquery-3.7.1.min.js"></script>
     <script src="${contextPath}/resources/vendor/DataTables/customitem/bootstrap.bundle.min.js"></script>
     <script src="${contextPath}/resources/vendor/DataTables/customitem/dataTables.js"></script>
-    
+
     <!-- Data Tables -->
     <script src="${contextPath}/resources/statflow/vendor/datatables/dataTables.min.js"></script>
     <script src="${contextPath}/resources/statflow/vendor/datatables/dataTables.bootstrap.min.js"></script>
@@ -3513,171 +3552,317 @@
 </s:layout-component>
 <s:layout-component name="page_js_inline">
     <script>
-        
-                                                $(document).ready(function() {
-                                                    $('.js-example-basic-single').select2();
-                                                });
 
-//                                               $(document).ready(function () {
-//                                                 var itemPKID = "14100";
-//
-//                                                   var example_table = $('#example').dataTable({
-//                                                       dom: 'Qfrtip',
-//                                                       destroy: true,
-//                                                       processing: true,
-//                                                       serverSide: true,
-//                                                       ajax: {
-//                                                           url: "${contextPath}/hw/item/transList2/" + itemPKID,
-//                                                           type: "POST",
-//                                                           contentType: "json",
-//                                                       },
-//                                                       columns: [
-//                                                           {"data": "itemId"},
-//                                                           {"data": "dateTime"},
-//                                                           {"data": "transTypeName"},
-//                                                           {"data": "transInQty"},
-//                                                           {"data": "transOutQty"},
-//                                                           {"data": "alu"},
-//                                                           {"data": "remarks"}
-//                                                       ]
-//                                                   });
-//                                               });
+                                                    // Fetch all the forms we want to apply custom Bootstrap validation styles to
+                                                    const forms = document.querySelectorAll('.needs-validation');
 
-                                               $(function () {
-                                                   $("#scrollVertical2").DataTable({
-                                                       scrollY: "680px",
-                                                       scrollCollapse: false,
-                                                       paging: false,
-                                                       bInfo: false,
-                                                       dom: 'Bfrtip',
-                                                       buttons: ["copy", "csv", "print"],
-                                                       columnDefs: [{
-                                                               targets: [0, 1, 3, 4], visible: false
-                                                           }]
-                                                   });
-                                               });
+                                                    // Loop over them and prevent submission
+                                                    Array.prototype.slice.call(forms).forEach((form) => {
+                                                        form.addEventListener('submit', (event) => {
+                                                            if (!form.checkValidity()) {
+                                                                event.preventDefault();
+                                                                event.stopPropagation();
+                                                            }
+                                                            form.classList.add('was-validated');
+                                                        }, false);
+                                                    });
 
-                                               $(function () {
-                                                   $("#scrollVertical4").DataTable({
-                                                       scrollY: "150px",
-                                                       scrollCollapse: false,
-                                                       paging: false,
-//                                                       bInfo: false,
-                                                   });
-                                               });
+                                                    function toggleLinkVisibility() {
+                                                        var select = document.getElementById('itemType');
+                                                        var container = document.getElementById('linkContainer');
+                                                        var link = document.getElementById('myLink');
 
-                                               function modalDelete(e) {
-                                                   var pkId = $(e).attr("modaldeleteid");
-                                                   $.ajax({
-                                                       url: '${contextPath}/hw/item/detail', // Replace with your controller URL
-                                                       type: 'GET',
-                                                       data: {pkID: pkId},
-                                                       dataType: 'json',
-                                                       success: function (data) {
+                                                        if (select.value !== "") {
+                                                            link.href = "";
+                                                            link.href = "${contextPath}/hw/item2/" + select.value;
+                                                            container.style.display = 'inline'; // Show the link
+//                                                            alert(link.href);
+                                                        } else {
+                                                            container.style.display = 'none'; // Hide the link
+                                                        }
+                                                    }
+                                                    $(document).ready(function () {
+                                                        $('.js-example-basic-single').select2();
+                                                        $(".js-example-tags").select2({
+                    tags: true
+                });
+//                                                        $('input[readonly]').removeAttr('readonly');
 
-                                                           var tableBody = $('#customButtons tbody');
-                                                           tableBody.empty(); // Clear existing table rows
-//                                                           var tableBody = $('#customButtons tbody');
-//                                                           tableBody.empty(); // Clear existing table rows
-//                                                           $( "#nav-item" ).tabs( "option", "active", 0 );
-//                                                           $( "#tab-oneAAA" ).tabs({ active: 1});
-                                                           // Populate form fields with received data
-                                                           $("#itemType2").val(data.itemType);
-                                                           $("#subType").val(data.subType);
-                                                           $("#itemPKID").val(data.sptsPkid);
-                                                           $("#itemId").val(data.itemId);
-                                                           $("#itemName").val(data.itemName);
-                                                           $("#aluHrs").val(data.aluHrs);
+                                                        if ($('#userItemEdit').val() === "Yes") {
+                                                            $("#itemType2").prop("readonly", false);
+                                                            $("#subType").prop("readonly", false);
+                                                            $("#itemPKID").prop("readonly", false);
+                                                            $("#itemId").prop("readonly", false);
+                                                            $("#mibId").prop("readonly", false);
+                                                            $("#itemName").prop("readonly", false);
+                                                            $("#aluHrs").prop("readonly", false);
 
-                                                           $("#assemblyId").val(data.assemblyId);
-                                                           $("#rack").val(data.rack);
-                                                           $("#shelf").val(data.shelf);
-                                                           $("#unitCost").val(data.unitCost);
-                                                           $("#totalCost").val(data.totalCost);
-                                                           $("#status").val(data.status);
-                                                           $("#minQty").val(data.minQty);
-                                                           $("#maxQty").val(data.maxQty);
-                                                           $("#pmWw1").val(data.PmWw1);
-                                                           $("#pmWw2").val(data.PmWw2);
-                                                           $("#expirationDate").val(data.expirationDate);
-                                                           $("#isCritical").val(data.isCritical);
-                                                           $("#isConsumable").val(data.isConsumeable);
-                                                           $("#downtimeValue").val(data.downtimeValue);
-                                                           $("#downtimeUnit").val(data.downtimeUnit);
-                                                           $("#implementationCost").val(data.implementationCost);
-                                                           $("#manpowerValue").val(data.manpowerValue);
-                                                           $("#manpowerUnit").val(data.manpowerUnit);
-                                                           $("#complexity").val(data.complexity);
-                                                           $("#model").val(data.model);
-                                                           $("#manufacturer").val(data.manufacturer);
-                                                           $("#equipmentType").val(data.equipmentType);
-                                                           $("#equipmentModel").val(data.equipmentModel);
-                                                           $("#equipmentManufacturer").val(data.equipmentManufacturer);
-                                                           
-//                                                            const data001 = data.itemUsage;
-//                                                            const myDropdown = document.getElementById("itemUsage");
-//                                                            const selectedValue = myDropdown.value;
-//                                                            
-//                                                            for (let i = 0; i < myDropdown.options.length; i++) {
-//                                                                if (myDropdown.options[i].value === data001) {
-//                                                                    myDropdown.options[i].selected = true;
-//                                                                    break; // Exit the loop once the option is found and selected
-//                                                                } else {
-////                                                                 
-//                                                                }
-//                                                            }
-//                                                            const selectedIndex = myDropdown.selectedIndex;
-//                                                            const selectedText = myDropdown.options[selectedIndex].text;
-//                                                            $("#testItem").val(data001);
-                                                       },
-                                                       error: function (jqXHR, textStatus, errorThrown) {
-                                                           console.error("Error loading data: " + textStatus, errorThrown);
-                                                       }
-                                                   });
-                                                   document.querySelector('#tab-oneAAA').click();
-                                               }
+                                                            $("#assemblyId").prop("readonly", false);
+                                                            $("#rack").prop("readonly", false);
+                                                            $("#shelf").prop("readonly", false);
+                                                            $("#unitCost").prop("readonly", false);
+                                                            $("#totalCost").prop("readonly", false);
+//                                                        $("#status").prop("readonly", false);
+                                                            $("#minQty").prop("readonly", false);
+                                                            $("#maxQty").prop("readonly", false);
+                                                            $("#pmWw1").prop("readonly", false);
+                                                            $("#pmWw2").prop("readonly", false);
+                                                            $("#expirationDate").prop("readonly", false);
+                                                            $("#isCritical").prop("readonly", false);
+                                                            $("#isConsumable").prop("readonly", false);
+                                                            $("#downtimeValue").prop("readonly", false);
+                                                            $("#downtimeUnit").prop("readonly", false);
+                                                            $("#implementationCost").prop("readonly", false);
+                                                            $("#manpowerValue").prop("readonly", false);
+                                                            $("#manpowerUnit").prop("readonly", false);
+                                                            $("#complexity").prop("readonly", false);
+                                                            $("#model").prop("readonly", false);
+                                                            $("#manufacturer").prop("readonly", false);
+                                                            $("#equipmentType").prop("readonly", false);
+                                                            $("#equipmentModel").prop("readonly", false);
+                                                            $("#equipmentManufacturer").prop("readonly", false);
+                                                            $("#onHandQty").prop("readonly", false);
+                                                            $("#productionQty").prop("readonly", false);
+                                                            $("#productionStagingQty").prop("readonly", false);
+                                                            $("#repairQty").prop("readonly", false);
+                                                            $("#quarantineQty").prop("readonly", false);
+                                                            $("#otherQty").prop("readonly", false);
+                                                            $("#vendorQty").prop("readonly", false);
+                                                            $("#otherOnsemiQty").prop("readonly", false);
+                                                            $("#externalCleanQty").prop("readonly", false);
+                                                            $("#externalRecleanQty").prop("readonly", false);
+                                                            $("#internalCleanQty").prop("readonly", false);
+                                                            $("#internalRecleanQty").prop("readonly", false);
+                                                            $("#storageFactoryQty").prop("readonly", false);
+//                                                                $("#totalQty".prop("readonly", false);
+                                                            $("#remarks").prop("readonly", false);
+                                                            $("#isConsumable").prop("disabled", false);
+                                                        }
+                                                    });
 
-                                               function ajaxTrans() {
-                                                    var itemPKID = $("#itemPKID").val();
-                                                    $('#listMovement').DataTable().destroy();
-                                                    new DataTable('#listMovement', {
-                                                        ajax: {
-                                                            data: {itemPKID: itemPKID},
-                                                            url: '${contextPath}/hw/item/ajaxTransaction',
-                                                            dataSrc: ''
-                                                       },
-                                                        columns: [
-                                                            {"data": "itemId"},
-                                                           {"data": "dateTime"},
-                                                           {"data": "transTypeName"},
-                                                           {"data": "transInQty"},
-                                                           {"data": "transOutQty"},
-                                                           {"data": "alu"},
-                                                           {"data": "remarks"}
-                                                        ],
-//                                                        processing: true,
-                                                   });
-                                               }
+                                                    function scrapModal() {
+                                                        var itemPKID = $("#itemPKID").val();
+                                                        var itemId = $("#itemId").val();
+                                                        var itemType = $("#itemType").val();
+//                                                            var deleteId = $(e).attr("modaldeleteid");
+//                                                            var deleteInfo = $("#modal_delete_info_" + deleteId).html();
+                                                        var deleteUrl = "${contextPath}/admin/user/delete2222/" + deleteId;
+                                                        var deleteMsg = "Are you want to scrap ";
+                                                        $("#delete_modal .modal-body").html(deleteMsg);
+                                                        $("#modal_delete_button").attr("href", deleteUrl);
+                                                    }
 
-                                                function ajaxListHardware() {
-                                                var itemPKID = $("#itemPKID").val();
-                                                    $('#listHardware').DataTable().destroy();
-                                                    new DataTable('#listHardware', {
-                                                        ajax: {
-                                                            data: {itemPKID: itemPKID},
-                                                            url: '${contextPath}/hw/item/ajaxHtmlSampleHardware',
-                                                            dataSrc: ''
-                                                        },
-                                                        columns: [
-                                                            { data: 'item_id' },
-                                                            { data: 'item_name' },
-                                                            { data: 'item_type' },
-                                                            { data: 'assembly_id' },
-                                                            { data: 'spts_id' },
-                                                            { data: 'aluhrs' },
-                                                        ]
-                                                   });
-                                                }
+                                                    function goToPage() {
+                                                        if ($("#itemPKID").val()) {
+                                                            var itemPKID = $("#itemPKID").val();
+                                                            var Url = "${contextPath}/hw/item/transaction/" + itemPKID;
+                                                            window.location.href = Url;
+                                                        } else {
+                                                            alert("No Item Selected.")
+                                                        }
+                                                    }
+
+                                                    $(function () {
+                                                        $("#scrollVertical2").DataTable({
+                                                            scrollY: "680px",
+                                                            scrollCollapse: false,
+                                                            paging: false,
+                                                            bInfo: false,
+                                                            dom: 'Bfrtip',
+                                                            buttons: ["copy", "csv", "print"],
+                                                            columnDefs: [{
+                                                                    targets: [0, 1, 3, 4], visible: false
+                                                                }]
+                                                        });
+                                                    });
+
+                                                    $(function () {
+                                                        $("#scrollVertical4").DataTable({
+                                                            scrollY: "150px",
+                                                            scrollCollapse: false,
+                                                            paging: false,
+                                                            //                                                       bInfo: false,
+                                                        });
+                                                    });
+
+                                                    function modalDelete(e) {
+                                                        var pkId = $(e).attr("modaldeleteid");
+                                                        $.ajax({
+                                                            url: '${contextPath}/hw/item/detail', // Replace with your controller URL
+                                                            type: 'GET',
+                                                            data: {pkID: pkId},
+                                                            dataType: 'json',
+                                                            success: function (data) {
+
+                                                                var tableBody = $('#customButtons tbody');
+                                                                tableBody.empty(); // Clear existing table rows
+                                                                // Populate form fields with received data
+                                                                $("#itemType2").val(data.itemType);
+                                                                $("#subType").val(data.subType);
+                                                                $("#itemPKID").val(data.sptsPkid);
+                                                                $("#itemId").val(data.itemId);
+                                                                $("#mibId").val(data.id);
+                                                                $("#itemName").val(data.itemName);
+                                                                $("#aluHrs").val(data.aluHrs);
+
+                                                                $("#assemblyId").val(data.assemblyId);
+                                                                $("#rack").val(data.rack);
+                                                                $("#shelf").val(data.shelf);
+                                                                $("#unitCost").val(data.unitCost);
+                                                                $("#totalCost").val(data.totalCost);
+                                                                $("#status").val(data.status);
+                                                                $("#minQty").val(data.minQty);
+                                                                $("#maxQty").val(data.maxQty);
+                                                                $("#pmWw1").val(data.PmWw1);
+                                                                $("#pmWw2").val(data.PmWw2);
+                                                                $("#expirationDate").val(data.expirationDate);
+                                                                $("#isCritical").val(data.isCritical);
+                                                                $("#isConsumable").val(data.isConsumeable);
+                                                                $("#downtimeValue").val(data.downtimeValue);
+                                                                $("#downtimeUnit").val(data.downtimeUnit);
+                                                                $("#implementationCost").val(data.implementationCost);
+                                                                $("#manpowerValue").val(data.manpowerValue);
+                                                                $("#manpowerUnit").val(data.manpowerUnit);
+                                                                $("#complexity").val(data.complexity);
+                                                                $("#model").val(data.model);
+                                                                $("#manufacturer").val(data.manufacturer);
+                                                                $("#equipmentType").val(data.equipmentType);
+                                                                $("#equipmentModel").val(data.equipmentModel);
+                                                                $("#equipmentManufacturer").val(data.equipmentManufacturer);
+                                                                $("#onHandQty").val(data.onHandQty);
+                                                                $("#productionQty").val(data.productionQty);
+                                                                $("#productionStagingQty").val(data.productionStagingQty);
+                                                                $("#repairQty").val(data.repairQty);
+                                                                $("#quarantineQty").val(data.quarantineQty);
+                                                                $("#otherQty").val(data.otherQty);
+                                                                $("#vendorQty").val(data.vendorQty);
+                                                                $("#otherOnsemiQty").val(data.OtherONQty);
+                                                                $("#externalCleanQty").val(data.externalCleanQty);
+                                                                $("#externalRecleanQty").val(data.externalRecleanQty);
+                                                                $("#internalCleanQty").val(data.internalCleanQty);
+                                                                $("#internalRecleanQty").val(data.internalRecleanQty);
+                                                                $("#storageFactoryQty").val(data.storageFactoryQty);
+                                                                $("#totalQty").val(data.totalQty);
+                                                                $("#remarks").val(data.remarks);
+                                                                $("#itemUsage").val(data.itemUsage);
+                                                                
+                                                                     const data001 = data.assemblyId;
+                                                            const myDropdown = document.getElementById("assemblyId");
+                                                            alert(myDropdown.value);
+                                                            const selectedValue = myDropdown.value;
+                                                            
+                                                            for (let i = 0; i < myDropdown.options.length; i++) {
+                                                                if (myDropdown.options[i].value === data001) {
+                                                                    myDropdown.options[i].selected = true;
+                                                                    break; // Exit the loop once the option is found and selected
+                                                                } else {
+//                                                                 
+                                                                }
+                                                            }
+                                                                
+                                                                if (data.isConsumable === "true") {
+                                                                    $("#isConsumable").attr('checked', true);
+                                                                } else {
+                                                                    $("#isConsumable").attr('checked', false);
+                                                                }
+
+                                                            },
+                                                            error: function (jqXHR, textStatus, errorThrown) {
+                                                                console.error("Error loading data: " + textStatus, errorThrown);
+                                                            }
+                                                        });
+                                                        document.querySelector('#tab-oneAAA').click();
+                                                    }
+
+                                                    function ajaxTrans() {
+                                                        var itemPKID = $("#itemPKID").val();
+                                                        $('#listMovement').DataTable().destroy();
+                                                        new DataTable('#listMovement', {
+                                                            ajax: {
+                                                                data: {itemPKID: itemPKID},
+                                                                url: '${contextPath}/hw/item/ajaxTransaction',
+                                                                dataSrc: ''
+                                                            },
+                                                            columns: [
+                                                                {"data": "itemId"},
+                                                                {"data": "dateTime"},
+                                                                {"data": "transTypeName"},
+                                                                {"data": "transInQty"},
+                                                                {"data": "transOutQty"},
+                                                                {"data": "alu"},
+                                                                {"data": "remarks"}
+                                                            ],
+                                                            //                                                        processing: true,
+                                                        });
+                                                    }
+
+                                                    function ajaxListHardware() {
+                                                        var itemPKID = $("#itemPKID").val();
+                                                        $('#listHardware').DataTable().destroy();
+                                                        new DataTable('#listHardware', {
+                                                            ajax: {
+                                                                data: {itemPKID: itemPKID},
+                                                                url: '${contextPath}/hw/item/ajaxHtmlSampleHardware',
+                                                                dataSrc: ''
+                                                            },
+                                                            columns: [
+                                                                {data: 'item_id'},
+                                                                {data: 'item_name'},
+                                                                {data: 'item_type'},
+                                                                {data: 'assembly_id'},
+                                                                {data: 'spts_id'},
+                                                                {data: 'aluhrs'},
+                                                            ]
+                                                        });
+                                                    }
+
+                                                    function ajaxStorage() {
+                                                        var itemPKID = $("#itemPKID").val();
+                                                        $('#listStorage').DataTable().destroy();
+                                                        new DataTable('#listStorage', {
+                                                            ajax: {
+                                                                data: {itemPKID: itemPKID},
+                                                                url: '${contextPath}/hw/item/ajaxStorage',
+                                                                dataSrc: ''
+                                                            },
+                                                            columns: [
+                                                                {"data": "itemId"},
+                                                                {"data": "boxNo"},
+                                                                {"data": "rack"},
+                                                                {"data": "shelf"},
+                                                                {"data": "qty"},
+                                                                {"data": "movementDateTime"},
+                                                                //                                                           {"data": "movementType"},
+                                                                {
+                                                                    data: "invId", // This column won't directly map to a data field
+                                                                    render: function (data, type, row) {
+                                                                        return '<c:if test="${userItemSfRecall == 'Yes'}"><button class="btn btn-primary edit-btn" data-id="' + data + '" data-pkid="' + itemPKID + '" data-bs-toggle="modal" data-bs-target="#confirmation_modal">Recall</button></c:if>';
+                                                                        // 'row' contains the entire data object for the current row
+
+                                                                    }
+                                                                }
+                                                            ],
+                                                            //                                                        processing: true,
+                                                        });
+                                                    }
+
+                                                    $('#listStorage tbody').on('click', '.edit-btn', function () {
+                                                        var rowId = $(this).data('id'); // Get the 'data-id' attribute
+                                                        var rowPkid = $(this).data('pkid'); // Get the 'data-id' attribute
+                                                        // Perform further actions, e.g., open a modal for editing
+                                                        if (rowId) {
+                                                            var deleteUrl = "${contextPath}/hw/item/retrieveSF/" + rowId + "/" + rowPkid;
+                                                            var deleteMsg = "Are you sure want to retrieve this item from Storage Factory?";
+                                                            $("#confirmation_modal .modal-body").html(deleteMsg);
+                                                            $("#modal_button").attr("href", deleteUrl);
+                                                        } else {
+                                                            var deleteUrl = "";
+                                                            var deleteMsg = "No Item Selected.";
+                                                            $("#confirmation_modal .modal-body").html(deleteMsg);
+                                                            $("#modal_button").attr("href", deleteUrl);
+                                                        }
+
+                                                    });
     </script>
 </s:layout-component>
 </s:layout-render>

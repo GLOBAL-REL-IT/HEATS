@@ -59,6 +59,25 @@ public class Item {
     private String itemUsage;
     private String sptsStatus;
 
+    private String activityId;
+    private String selected;
+
+    public String getSelected() {
+        return selected;
+    }
+
+    public void setSelected(String selected) {
+        this.selected = selected;
+    }
+
+    public String getActivityId() {
+        return activityId;
+    }
+
+    public void setActivityId(String activityId) {
+        this.activityId = activityId;
+    }
+
     public String getSptsStatus() {
         return sptsStatus;
     }

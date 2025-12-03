@@ -95,25 +95,63 @@
 
             <!-- Row start -->
             <div class="row gx-4">
-                <nav class="navbar bg-body-tertiary">
-                    <div class="container-fluid justify-content-start">
-                        <a href="${contextPath}/admin/user/add" class="btn btn-outline-success me-2" role="button">
-                            <i class='bi bi-plus-square'></i>&nbsp;&nbsp;Add User</a>
+                <!--                <nav class="navbar bg-body-tertiary">
+                                    <div class="container-fluid justify-content-start">
+                                        <button class="btn btn-outline-success me-2" type="button">Pending Registration (BIB/ Bib Card)</button>
+                                        <a href="${contextPath}/hw/item/add" class="btn btn-outline-success me-2" role="button">
+                                            <i class='bi bi-plus-square'></i>&nbsp;&nbsp;Add New</a>
+                                        <a href="${contextPath}/hw/item/pending" class="btn btn-outline-success me-2" role="button">
+                                            <i class='bi bi-hourglass'></i>&nbsp;&nbsp;Pending VM/Functional Test</a>
+                                    </div>
+                                </nav>-->
+                <div class="col-sm-8 col-12">
+                    <!-- Card start -->
+                    <div class="card mb-4">
+                        <div class="card-header">
+                            <h5 class="card-title">Item ALU Config</h5>
+                        </div>
+
+                        <div class="card-body">
+                            <!-- Row start -->
+                            <form class="row g-3 align-items-center" role="form" action="${contextPath}/admin/aluConfig/save" method="post">
+                                <div class="row mb-3">
+                                    <label class="col-sm-1 col-md-1 col-form-label fw-semibold" for="singleSelect">Item Type</label>
+                                    <div class="col-sm-3 col-md-3">
+                                        <div class="row g-1">
+                                            <div class="col-sm-11 col-md-12">
+                                                <select class="js-example-basic-single" id="itemType" name="itemType"
+                                                        style="width: 100%">
+                                                    <option></option>
+                                                    <c:forEach items="${paramItemType}" var="invInner">
+                                                        <option value="${invInner.name}">${invInner.name}</option>
+                                                    </c:forEach>
+                                                </select>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-auto">
+                                        <button type="submit" class="btn btn-primary">Add</button>
+                                    </div>
+                                </div>
+                            </form>
+                            <!-- Row end -->
+
+                        </div>
                     </div>
-                </nav>
+                    <!-- Card end -->
+                </div>
             </div>
             <!-- Row end -->
 
             <!-- Row start -->
             <div class="row gx-4">
 
-                <div class="col-sm-12 col-12">
+                <div class="col-sm-8 col-12">
 
                     <!-- Card start -->
                     <div class="card mb-4">
                         <div class="card-header">
-                            <h5 class="card-title">Configuration - <span style="color:#D97D55">User Management</span></h5>
-                            <!--<h5 class="card-title">Hardware Module - <span style="color:#D97D55">New Hardware Registration</span></h5>-->
+                            <h5 class="card-title">Item Type With ALU Calculation</h5>
                         </div>
                         <div class="card-body">
 
@@ -125,36 +163,21 @@
                                             <thead>
                                                 <tr>
                                                     <th><span>No</span></th>
-                                                    <th><span>Firstname</span></th>
-                                                    <th><span>Lastname</span></th>
-                                                    <th><span>Title</span></th>
-                                                    <th><span>Group</span></th>
-                                                    <th><span>Login ID</span></th>
-                                                    <th><span>Email</span></th>
-                                                    <th><span>Oncid</span></th>
-                                                    <th><span>Manage</span></th>
+                                                    <th><span>Item Type</span></th>
+                                                    <th><span>Registered By</span></th>
+                                                    <th><span>Registered Date</span></th>
+                                                    <th class="col-1"><span>Manage</span></th>
                                                 </tr>
                                             </thead>
                                             <tbody>
-                                            <c:forEach items="${userList}" var="user" varStatus="userLoop">
+                                            <c:forEach items="${Item}" var="parameterMaster" varStatus="parameterMasterLoop">
                                                 <tr>
-                                                    <td><c:out value="${userLoop.index+1}"/></td>
-                                                <td id="modal_delete_info_${user.id}"><c:out value="${user.firstname}"/></td>
-                                                <td><c:out value="${user.lastname}"/></td>
-                                                <td><c:out value="${user.title}"/></td>
-                                                <td>
-                                                <c:if test="${not empty user.groupCode}">
-                                                    <c:out value="${user.groupCode} - ${user.groupName}"/>
-                                                </c:if>
-                                                </td>
-                                                <td><c:out value="${user.loginId}"/></td>
-                                                <td><c:out value="${user.email}"/></td>
-                                                <td><c:out value="${user.oncid}"/></td>
+                                                    <td><c:out value="${parameterMasterLoop.index+1}"/></td>
+                                                <td id="modal_delete_info_${parameterMaster.id}"><c:out value="${parameterMaster.itemType}"/></td>
+                                                <td><c:out value="${parameterMaster.createdBy}"/></td>
+                                                <td><c:out value="${parameterMaster.createdDate}"/></td>
                                                 <td align="center">
-                                                    <a href="${contextPath}/admin/user/edit/${user.id}" class="table-link">
-                                                        <i class="bi bi-box-arrow-in-right h3"></i>
-                                                    </a>
-                                                    <a modaldeleteid="${user.id}" title="Delete" data-bs-toggle="modal" data-bs-target="#delete_modal" class="table-link danger group_delete" onclick="modalDelete(this);">
+                                                    <a modaldeleteid="${parameterMaster.id}" title="Delete" data-bs-toggle="modal" data-bs-target="#delete_modal" class="table-link danger group_delete" onclick="modalDelete(this);">
                                                         <i class="bi bi-trash h3" style="color:red"></i>
                                                         <!--</span>-->
                                                     </a>
@@ -212,63 +235,10 @@
     </s:layout-component>
     <s:layout-component name="page_js_inline">
         <script>
+
                                                         $(document).ready(function () {
-
-                                                            $.fn.center = function () {
-                                                                this.css("position", "absolute");
-                                                                this.css("top", ($(window).height() - this.height()) / 2 + $(window).scrollTop() + "px");
-                                                                this.css("left", ($(window).width() - this.width()) / 2 + $(window).scrollLeft() + "px");
-                                                                return this;
-                                                            };
-
-                                                            function showBlockUI() {
-                                                                $.blockUI({
-                                                                    css: {
-                                                                        width: 'auto',
-                                                                        padding: '5px',
-                                                                        backgroundColor: '#fff',
-                                                                        '-webkit-border-radius': '10px',
-                                                                        '-moz-border-radius': '10px'
-                                                                    },
-                                                                    message: '<img src="${contextPath}/resources/private/img/loading_gedik.gif" width="100" />'
-                                                                });
-                                                                $('.blockUI.blockMsg').center();
-                                                            }
-
-                                                            function hideBlockUI() {
-                                                                $.unblockUI();
-                                                            }
-
-                                                            function userSync(loginId) {
-                                                                var url = '${contextPath}/admin/user/sync/' + loginId;
-                                                                var data = {};
-
-                                                                function success(res) {
-                                                                    hideBlockUI();
-                                                                    if (res.status) {
-                                                                        swal({
-                                                                            title: "Success",
-                                                                            text: res.statusMessage,
-                                                                            html: true,
-                                                                            type: "success",
-                                                                            showCancelButton: false,
-                                                                            closeOnConfirm: false
-                                                                        },
-                                                                                function () {
-                                                                                    window.location.reload(true);
-                                                                                });
-                                                                    } else {
-                                                                        swal('Error!', res.statusMessage, 'error');
-                                                                    }
-                                                                }
-
-                                                                $.get(url, data, success, 'json').fail(function (res) {
-                                                                    hideBlockUI();
-                                                                    swal('Error!', JSON.stringify(res, null, 4), 'error');
-                                                                });
-                                                            }
+                                                            $('.js-example-basic-single').select2();
                                                         });
-
 
                                                         $(function () {
                                                             $("#customButtons1").DataTable({
@@ -285,18 +255,15 @@
                                                             });
                                                         });
 
+
                                                         function modalDelete(e) {
                                                             var deleteId = $(e).attr("modaldeleteid");
                                                             var deleteInfo = $("#modal_delete_info_" + deleteId).html();
-                                                            var deleteUrl = "${contextPath}/admin/user/delete/" + deleteId;
+                                                            var deleteUrl = "${contextPath}/admin/aluConfig/delete/" + deleteId;
                                                             var deleteMsg = "<f:message key='general.label.delete.confirmation'><f:param value='" + deleteInfo + "'/></f:message>";
                                                             $("#delete_modal .modal-body").html(deleteMsg);
                                                             $("#modal_delete_button").attr("href", deleteUrl);
                                                         }
-                                                        //                                                    $(document).ready(function () {
-                                                        //                                                        $('.js-example-basic-single').select2();
-                                                        //                                                    });
-
         </script>
     </s:layout-component>
 </s:layout-render>

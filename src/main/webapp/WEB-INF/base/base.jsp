@@ -27,7 +27,7 @@
 
             <!-- Scrollbar CSS -->
             <link rel="stylesheet" href="${contextPath}/resources/statflow/vendor/overlay-scroll/OverlayScrollbars.min.css">
-            
+
             <!-- select2 CSS -->
             <!--<link rel="stylesheet" href="${contextPath}/resources/select2/css/select2.min.css">-->
             <link rel="stylesheet" href="${contextPath}/resources/vendor/select2-4.0.13/css/select2.min.css">
@@ -331,13 +331,13 @@
 
                     <c:if test="${not empty error}">
                         <div class="alert alert-danger">
-                            <a class="close" data-dismiss="alert" href="#" aria-hidden="true">&times;</a>
+                            <a class="close" data-bs-dismiss="alert" href="#" aria-hidden="true">&times;</a>
                             <strong>${error}</strong>
                         </div>
                     </c:if>
                     <c:if test="${not empty success}">
                         <div class="alert alert-success">
-                            <a class="close" data-dismiss="alert" href="#" aria-hidden="true">&times;</a>
+                            <a class="close" data-bs-dismiss="alert" href="#" aria-hidden="true">&times;</a>
                             <strong>${success}</strong>
                         </div>
                     </c:if>
@@ -390,7 +390,7 @@
                         <div class="modal-body">
                         </div>
                         <div class="modal-footer">
-                            <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                            <button type="button" class="btn btn-default" data-bs-dismiss="modal">Cancel</button>
                             <a id="modal_qty_button" href="#" class="btn btn-primary"><i class="fa fa-check"></i> Confirm</a>
                         </div>
                     </div><!-- /.modal-content -->
@@ -401,14 +401,14 @@
                 <div class="modal-dialog">
                     <div class="modal-content">
                         <div class="modal-header">
-                            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                            <!--<button type="button" class="close" data-bs-dismiss="modal" aria-hidden="true">&times;</button>-->
                             <!--<i class="fa fa-exclamation-triangle fa-stack-1x fa-inverse" style="color:yellow"></i>-->
-                            <h4 class="modal-title"><i class="fa fa-exclamation-triangle" style="color:goldenrod"></i> Action Verification</h4>
+                            <h4 class="modal-title"><i class="bi bi-exclamation-diamond" style="color:goldenrod"></i> Action Verification</h4>
                         </div>
                         <div class="modal-body">
                         </div>
                         <div class="modal-footer">
-                            <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                            <button type="button" class="btn btn-default" data-bs-dismiss="modal">Cancel</button>
                             <a id="modal_button" href="#" class="btn btn-primary"><i class="fa fa-check"></i> Confirm</a>
                         </div>
                     </div><!-- /.modal-content -->
@@ -457,7 +457,7 @@
             <script src="${contextPath}/resources/statflow/js/bootstrap.bundle.min.js"></script>
             <script src="${contextPath}/resources/statflow/js/modernizr.js"></script>
             <script src="${contextPath}/resources/statflow/js/moment.js"></script>
-            
+
             <!-- Select2 Js -->
             <!--<script src="${contextPath}/resources/select2/js/select2.min.js"></script>-->
             <script src="${contextPath}/resources/vendor/select2-4.0.13/js/select2.min.js"></script>
@@ -475,9 +475,15 @@
 
             <!-- Main Js Required -->
             <script src="${contextPath}/resources/statflow/js/main.js"></script>
-            
+
+            <!--latest-->
+            <!--<script src="${contextPath}/resources/private/js/css3-mediaqueries.js"></script>--> 
             <!-- Swal -->
             <script src="${contextPath}/resources/private/js/sweetalert.min.js"></script>
+            <!-- theme scripts -->
+            <script src="${contextPath}/resources/private/js/scripts.js"></script>
+            <!-- blockUI -->
+            <script src="${contextPath}/resources/private/js/jquery.blockUI.js"></script>
 
 
             <script>

@@ -84,6 +84,18 @@ public class Interceptor implements HandlerInterceptor {
             user.setEmail("N/A");
             user.setGroupId("0");
             user.setFirstName(ldapUser.getFirstname());
+            //new for UAC
+            user.setItemAdd("No");
+            user.setItemEdit("No");
+            user.setItemDelete("No");
+            user.setItemActivityConfig("No");
+            user.setItemActivityAdd("No");
+            user.setItemActivityEdit("No");
+            user.setItemHardwareAdd("No");
+            user.setItemHardwareEdit("No");
+            user.setItemHardwareDelete("No");
+            user.setItemMovementAdd("No");
+            user.setItemSfRecall("No");
             //Set User Session
             userSession.setId(user.getId());
             userSession.setLoginId(user.getLoginId());
@@ -91,6 +103,18 @@ public class Interceptor implements HandlerInterceptor {
             userSession.setEmail(user.getEmail());
             userSession.setGroup(user.getGroupId());
             userSession.setFirstName(user.getFirstName());
+            //new for UAC
+            userSession.setItemAdd(user.getItemAdd());
+            userSession.setItemEdit(user.getItemEdit());
+            userSession.setItemDelete(user.getItemDelete());
+            userSession.setItemActivityConfig(user.getItemActivityConfig());
+            userSession.setItemActivityAdd(user.getItemActivityAdd());
+            userSession.setItemActivityEdit(user.getItemActivityEdit());
+            userSession.setItemHardwareAdd(user.getItemHardwareAdd());
+            userSession.setItemHardwareEdit(user.getItemHardwareEdit());
+            userSession.setItemHardwareDelete(user.getItemHardwareDelete());
+            userSession.setItemMovementAdd(user.getItemMovementAdd());
+            userSession.setItemSfRecall(user.getItemSfRecall());
         } else {
             //Set Registered User (Remain Using User Model)
             user.setId(ldapUser.getId());
@@ -99,6 +123,18 @@ public class Interceptor implements HandlerInterceptor {
             user.setEmail(ldapUser.getEmail());
             user.setGroupId(ldapUser.getGroupId());
             user.setFirstName(ldapUser.getFirstname());
+            //new for UAC
+            user.setItemAdd(ldapUser.getItemAdd());
+            user.setItemEdit(ldapUser.getItemEdit());
+            user.setItemDelete(ldapUser.getItemDelete());
+            user.setItemActivityConfig(ldapUser.getItemActivityConfig());
+            user.setItemActivityAdd(ldapUser.getItemActivityAdd());
+            user.setItemActivityEdit(ldapUser.getItemActivityEdit());
+            user.setItemHardwareAdd(ldapUser.getItemHardwareAdd());
+            user.setItemHardwareEdit(ldapUser.getItemHardwareEdit());
+            user.setItemHardwareDelete(ldapUser.getItemHardwareDelete());
+            user.setItemMovementAdd(ldapUser.getItemMovementAdd());
+            user.setItemSfRecall(ldapUser.getItemSfRecall());
             //Set User Session
             userSession.setId(user.getId());
             userSession.setLoginId(user.getLoginId());
@@ -106,6 +142,19 @@ public class Interceptor implements HandlerInterceptor {
             userSession.setEmail(user.getEmail());
             userSession.setGroup(user.getGroupId());
             userSession.setFirstName(user.getFirstName());
+            //new for UAC
+            userSession.setItemAdd(user.getItemAdd());
+            userSession.setItemEdit(user.getItemEdit());
+            userSession.setItemDelete(user.getItemDelete());
+            userSession.setItemActivityConfig(user.getItemActivityConfig());
+            userSession.setItemActivityAdd(user.getItemActivityAdd());
+            userSession.setItemActivityEdit(user.getItemActivityEdit());
+            userSession.setItemHardwareAdd(user.getItemHardwareAdd());
+            userSession.setItemHardwareEdit(user.getItemHardwareEdit());
+            userSession.setItemHardwareDelete(user.getItemHardwareDelete());
+            userSession.setItemMovementAdd(user.getItemMovementAdd());
+            userSession.setItemSfRecall(user.getItemSfRecall());
+
         }
 
         currentSession.setAttribute("userSession", userSession);

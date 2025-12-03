@@ -294,7 +294,7 @@ public class ParameterDetailsDAO {
 
     public List<ParameterDetails> getGroupParameterDetailList(String name, String masterCode) {
         String sql = "SELECT id, master_code AS masterCode, detail_code AS detailCode, name AS name, IF(name=\"" + name + "\",\"selected=''\",\"\") AS selected FROM parameter_details "
-                + "Where master_code = '" + masterCode + "' ORDER BY detail_code";
+                + "Where master_code = '" + masterCode + "' ORDER BY name";
         List<ParameterDetails> parameterDetailList = new ArrayList<ParameterDetails>();
         try {
             PreparedStatement ps = conn.prepareStatement(sql);

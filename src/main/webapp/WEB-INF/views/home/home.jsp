@@ -685,7 +685,7 @@
                 <div class="col-xxl-6 col-sm-12 col-12">
                     <div class="card mb-4">
                         <div class="card-header">
-                            <h5 class="card-title">WIP Report 2025</h5>
+                            <h5 class="card-title">Hardware Readiness Report 2024/2025</h5>
                         </div>
                         <div class="card-body">
                             <div id="chartsample"></div>
@@ -867,72 +867,71 @@
             var chart = new ApexCharts(document.querySelector("#demography2"), options);
             chart.render();
 
-            var optionsss = {
-                chart: {
-                    height: 355,
-                    type: 'bar',
-                    toolbar: {
-                        show: false,
-                    },
-                },
-                plotOptions: {
-                    bar: {
-                        horizontal: true,
-                        dataLabels: {
-                            position: 'top',
-                        },
-                    }
-                },
-                dataLabels: {
-                    enabled: true,
-                    offsetX: -6,
-                    style: {
-                        fontSize: '12px',
-                        colors: ['#fff']
-                    }
-                },
-                stroke: {
-                    show: true,
-                    width: 0,
-                },
-                series: [{
-                        name: 'WIP Incoming Request',
-                        data: [44, 55, 41, 64, 22, 11, 43, 50, 66, 12, 33, 45]
-                    }, {
-                        name: 'WIP Completed',
-                        data: [53, 32, 33, 44, 32, 32, 12, 5, 34, 12, 47, 6]
-                    }],
-                xaxis: {
-                    categories: ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"],
-                },
-                grid: {
-                    borderColor: '#ffe4a7',
-                    strokeDashArray: 5,
-                    xaxis: {
-                        lines: {
-                            show: true
-                        }
-                    },
-                    yaxis: {
-                        lines: {
-                            show: false,
-                        }
-                    },
-                    padding: {
-                        top: 0,
-                        right: 0,
-                        bottom: 0,
-                        left: 0
-                    },
-                },
-                colors: ['#615FFF', '#05DF72'],
-            }
-            var chartss = new ApexCharts(
-                    document.querySelector("#basic-bar-graph-grouped2"),
-                    optionsss
-                    );
-            chartss.render();
-            
+//            var optionsss = {
+//                chart: {
+//                    height: 355,
+//                    type: 'bar',
+//                    toolbar: {
+//                        show: false,
+//                    },
+//                },
+//                plotOptions: {
+//                    bar: {
+//                        horizontal: true,
+//                        dataLabels: {
+//                            position: 'top',
+//                        },
+//                    }
+//                },
+//                dataLabels: {
+//                    enabled: true,
+//                    offsetX: -6,
+//                    style: {
+//                        fontSize: '12px',
+//                        colors: ['#fff']
+//                    }
+//                },
+//                stroke: {
+//                    show: true,
+//                    width: 0,
+//                },
+//                series: [{
+//                        name: 'WIP Incoming Request',
+//                        data: [44, 55, 41, 64, 22, 11, 43, 50, 66, 12, 33, 45]
+//                    }, {
+//                        name: 'WIP Completed',
+//                        data: [53, 32, 33, 44, 32, 32, 12, 5, 34, 12, 47, 6]
+//                    }],
+//                xaxis: {
+//                    categories: ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"],
+//                },
+//                grid: {
+//                    borderColor: '#ffe4a7',
+//                    strokeDashArray: 5,
+//                    xaxis: {
+//                        lines: {
+//                            show: true
+//                        }
+//                    },
+//                    yaxis: {
+//                        lines: {
+//                            show: false,
+//                        }
+//                    },
+//                    padding: {
+//                        top: 0,
+//                        right: 0,
+//                        bottom: 0,
+//                        left: 0
+//                    },
+//                },
+//                colors: ['#615FFF', '#05DF72'],
+//            }
+//            var chartss = new ApexCharts(
+//                    document.querySelector("#basic-bar-graph-grouped2"),
+//                    optionsss
+//                    );
+//            chartss.render();
 
 //                    var options1 = {
 //                        series: [{
@@ -990,22 +989,22 @@
 //                    var chart1 = new ApexCharts(document.querySelector("#taskStats1"), options1);
 //                    chart1.render();
 
-            const averageValue = 4;
+            const averageValue = 3;
             const averageData = new Array(12).fill(averageValue);
             var options = {
                 series: [
                     {
-                        name: 'KPI',
-                        type: 'line',
-                        data: averageData
-                    }, {
-                        name: 'WIP In',
+                        name: 'HW In',
                         type: 'column',
                         data: [10, 12, 15, 15, 15, 18, 18, 16, 13, 14, 12, 12]
                     }, {
-                        name: 'WIP Completed',
+                        name: 'HW Released',
                         type: 'column',
                         data: [10, 10, 7, 10, 16, 19, 15, 15, 17, 15, 11, 12]
+                    }, {
+                        name: 'Cycle Time Goal',
+                        type: 'line',
+                        data: averageData
                     }, {
                         name: 'Average Cycle Time',
                         type: 'line',
@@ -1028,10 +1027,61 @@
                     offsetX: 110
                 },
                 xaxis: {
-                    categories: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
+                    categories: ['Dec 24', 'Jan 25', 'Feb 25', 'Mar 25', 'Apr 25', 'May 25', 'Jun 25', 'Jul 25', 'Aug 25', 'Sep 25', 'Oct 25', 'Nov 25']
                 },
                 yaxis: [
+
                     {
+                        seriesName: 'HW In',
+                        min: 0,
+                        max: 20,
+                        axisTicks: {
+                            show: true
+                        },
+                        axisBorder: {
+                            show: true,
+                            color: '#008FFB'
+                        },
+                        labels: {
+                            style: {
+                                colors: '#008FFB'
+                            }
+                        },
+                        title: {
+                            text: "HW (RMS_EVENT)",
+                            style: {
+                                color: '#008FFB'
+                            }
+                        },
+                        tooltip: {
+                            enabled: true
+                        }
+                    },
+                    {
+                        seriesName: 'HW Released',
+                        show: false,
+                        min: 0,
+                        max: 20,
+                        opposite: true,
+                        axisTicks: {
+                            show: true
+                        },
+                        axisBorder: {
+                            show: true,
+                            color: '#00E396'
+                        },
+                        labels: {
+                            style: {
+                                colors: '#00E396'
+                            }
+                        },
+                        title: {
+                            text: "New Task",
+                            style: {
+                                color: '#00E396'
+                            }
+                        }
+                    }, {
                         seriesName: 'AVERAGE',
                         show: false,
                         min: 0,
@@ -1056,57 +1106,6 @@
                         }
                     },
                     {
-                        seriesName: 'WIP In',
-                        min: 0,
-                        max: 20,
-                        axisTicks: {
-                            show: true
-                        },
-                        axisBorder: {
-                            show: true,
-                            color: '#008FFB'
-                        },
-                        labels: {
-                            style: {
-                                colors: '#008FFB'
-                            }
-                        },
-                        title: {
-                            text: "WIP",
-                            style: {
-                                color: '#008FFB'
-                            }
-                        },
-                        tooltip: {
-                            enabled: true
-                        }
-                    },
-                    {
-                        seriesName: 'WIP Completed',
-                        show: false,
-                        min: 0,
-                        max: 20,
-                        opposite: true,
-                        axisTicks: {
-                            show: true
-                        },
-                        axisBorder: {
-                            show: true,
-                            color: '#00E396'
-                        },
-                        labels: {
-                            style: {
-                                colors: '#00E396'
-                            }
-                        },
-                        title: {
-                            text: "New Task",
-                            style: {
-                                color: '#00E396'
-                            }
-                        }
-                    },
-                    {
                         seriesName: 'Average Cycle Time',
                         opposite: true,
                         min: 0,
@@ -1124,7 +1123,7 @@
                             }
                         },
                         title: {
-                            text: "Cycle Time (Day)",
+                            text: "Cycle Time (Readiness Day)",
                             style: {
                                 color: '#FEB019'
                             }

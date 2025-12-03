@@ -185,7 +185,13 @@ public class ItemDAO {
         QueryResult queryResult = new QueryResult();
         try {
             PreparedStatement ps = conn.prepareStatement(
-                    "UPDATE item SET spts_pkid = ?, item_type = ?, sub_type = ?, item_id = ?, item_name = ?, assembly_id = ?, rack = ?, shelf = ?, on_hand_qty = ?, production_staging_qty = ?, production_qty = ?, repair_qty = ?, other_qty = ?, quarantine_qty = ?, external_clean_qty = ?, external_reclean_qty = ?, internal_clean_qty = ?, internal_reclean_qty = ?, storage_factory_qty = ?, other_onsemi_qty = ?, vendor_qty = ?, total_qty = ?, unit_cost = ?, total_cost = ?, status = ?, alu_hrs = ?, movement_alu_hrs = ?, min_qty = ?, max_qty = ?, pm_ww1 = ?, pm_ww2 = ?, expiration_date = ?, is_critical = ?, is_consumable = ?, downtime_value = ?, downtime_unit = ?, implementation_cost = ?, manpower_value = ?, manpower_unit = ?, complexity = ?, model = ?, manufacturer = ?, equipment_type = ?, equipment_model = ?, equipment_manufacturer = ?, stress_type = ?, remarks = ?, flag = ?, created_by = ?, created_date = ?, modifed_by = ?, modified_date = ? WHERE id = ?"
+                    "UPDATE item SET spts_pkid = ?, item_type = ?, sub_type = ?, item_id = ?, item_name = ?, assembly_id = ?, rack = ?, shelf = ?, on_hand_qty = ?, "
+                    + "production_staging_qty = ?, production_qty = ?, repair_qty = ?, other_qty = ?, quarantine_qty = ?, external_clean_qty = ?, "
+                    + "external_reclean_qty = ?, internal_clean_qty = ?, internal_reclean_qty = ?, storage_factory_qty = ?, other_onsemi_qty = ?, "
+                    + "vendor_qty = ?, total_qty = ?, unit_cost = ?, total_cost = ?, status = ?, alu_hrs = ?, movement_alu_hrs = ?, min_qty = ?, "
+                    + "max_qty = ?, pm_ww1 = ?, pm_ww2 = ?, expiration_date = ?, is_critical = ?, is_consumable = ?, downtime_value = ?, downtime_unit = ?, "
+                    + "implementation_cost = ?, manpower_value = ?, manpower_unit = ?, complexity = ?, model = ?, manufacturer = ?, equipment_type = ?, "
+                    + "equipment_model = ?, equipment_manufacturer = ?, stress_type = ?, remarks = ?, flag = ?, modifed_by = ?, modified_date = NOW() WHERE id = ?"
             );
             ps.setString(1, hardwaredetail.getSptsPkid());
             ps.setString(2, hardwaredetail.getItemType());
@@ -235,11 +241,8 @@ public class ItemDAO {
             ps.setString(46, hardwaredetail.getStressType());
             ps.setString(47, hardwaredetail.getRemarks());
             ps.setString(48, hardwaredetail.getFlag());
-            ps.setString(49, hardwaredetail.getCreatedBy());
-            ps.setString(50, hardwaredetail.getCreatedDate());
-            ps.setString(51, hardwaredetail.getModifedBy());
-            ps.setString(52, hardwaredetail.getModifiedDate());
-            ps.setString(53, hardwaredetail.getId());
+            ps.setString(49, hardwaredetail.getModifedBy());
+            ps.setString(50, hardwaredetail.getId());
             queryResult.setResult(ps.executeUpdate());
             ps.close();
         } catch (SQLException e) {
@@ -281,7 +284,32 @@ public class ItemDAO {
         }
         return queryResult;
     }
-    
+
+    public QueryResult updateItemSPTSPKID(Item hardwaredetail) {
+        QueryResult queryResult = new QueryResult();
+        try {
+            PreparedStatement ps = conn.prepareStatement(
+                    "UPDATE item SET spts_pkid = ? WHERE id = ?"
+            );
+            ps.setString(1, hardwaredetail.getSptsPkid());
+            ps.setString(2, hardwaredetail.getId());
+            queryResult.setResult(ps.executeUpdate());
+            ps.close();
+        } catch (SQLException e) {
+            queryResult.setErrorMessage(e.getMessage());
+            LOGGER.error(e.getMessage());
+        } finally {
+            if (conn != null) {
+                try {
+                    conn.close();
+                } catch (SQLException e) {
+                    LOGGER.error(e.getMessage());
+                }
+            }
+        }
+        return queryResult;
+    }
+
     public QueryResult updateItemStatusAndFlag(Item hardwaredetail) {
         QueryResult queryResult = new QueryResult();
         try {
@@ -569,6 +597,86 @@ public class ItemDAO {
         return hardwaredetailList;
     }
 
+    public List<Item> getitemQuery(String query) {
+        String sql = query;
+        List<Item> hardwaredetailList = new ArrayList<Item>();
+        try {
+            PreparedStatement ps = conn.prepareStatement(sql);
+            Item hardwaredetail;
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                hardwaredetail = new Item();
+                hardwaredetail.setId(rs.getString("id"));
+                hardwaredetail.setSptsPkid(rs.getString("spts_pkid"));
+                hardwaredetail.setItemType(rs.getString("item_type"));
+                hardwaredetail.setSubType(rs.getString("sub_type"));
+                hardwaredetail.setItemId(rs.getString("item_id"));
+                hardwaredetail.setItemName(rs.getString("item_name"));
+                hardwaredetail.setAssemblyId(rs.getString("assembly_id"));
+                hardwaredetail.setRack(rs.getString("rack"));
+                hardwaredetail.setShelf(rs.getString("shelf"));
+                hardwaredetail.setOnHandQty(rs.getString("on_hand_qty"));
+                hardwaredetail.setProductionStagingQty(rs.getString("production_staging_qty"));
+                hardwaredetail.setProductionQty(rs.getString("production_qty"));
+                hardwaredetail.setRepairQty(rs.getString("repair_qty"));
+                hardwaredetail.setOtherQty(rs.getString("other_qty"));
+                hardwaredetail.setQuarantineQty(rs.getString("quarantine_qty"));
+                hardwaredetail.setExternalCleanQty(rs.getString("external_clean_qty"));
+                hardwaredetail.setExternalRecleanQty(rs.getString("external_reclean_qty"));
+                hardwaredetail.setInternalCleanQty(rs.getString("internal_clean_qty"));
+                hardwaredetail.setInternalRecleanQty(rs.getString("internal_reclean_qty"));
+                hardwaredetail.setStorageFactoryQty(rs.getString("storage_factory_qty"));
+                hardwaredetail.setOtherOnsemiQty(rs.getString("other_onsemi_qty"));
+                hardwaredetail.setVendorQty(rs.getString("vendor_qty"));
+                hardwaredetail.setTotalQty(rs.getString("total_qty"));
+                hardwaredetail.setUnitCost(rs.getString("unit_cost"));
+                hardwaredetail.setTotalCost(rs.getString("total_cost"));
+                hardwaredetail.setStatus(rs.getString("status"));
+                hardwaredetail.setAluHrs(rs.getString("alu_hrs"));
+                hardwaredetail.setMovementAluHrs(rs.getString("movement_alu_hrs"));
+                hardwaredetail.setMinQty(rs.getString("min_qty"));
+                hardwaredetail.setMaxQty(rs.getString("max_qty"));
+                hardwaredetail.setPmWw1(rs.getString("pm_ww1"));
+                hardwaredetail.setPmWw2(rs.getString("pm_ww2"));
+                hardwaredetail.setExpirationDate(rs.getString("expiration_date"));
+                hardwaredetail.setIsCritical(rs.getString("is_critical"));
+                hardwaredetail.setIsConsumable(rs.getString("is_consumable"));
+                hardwaredetail.setDowntimeValue(rs.getString("downtime_value"));
+                hardwaredetail.setDowntimeUnit(rs.getString("downtime_unit"));
+                hardwaredetail.setImplementationCost(rs.getString("implementation_cost"));
+                hardwaredetail.setManpowerValue(rs.getString("manpower_value"));
+                hardwaredetail.setManpowerUnit(rs.getString("manpower_unit"));
+                hardwaredetail.setComplexity(rs.getString("complexity"));
+                hardwaredetail.setModel(rs.getString("model"));
+                hardwaredetail.setManufacturer(rs.getString("manufacturer"));
+                hardwaredetail.setEquipmentType(rs.getString("equipment_type"));
+                hardwaredetail.setEquipmentModel(rs.getString("equipment_model"));
+                hardwaredetail.setEquipmentManufacturer(rs.getString("equipment_manufacturer"));
+                hardwaredetail.setStressType(rs.getString("stress_type"));
+                hardwaredetail.setRemarks(rs.getString("remarks"));
+                hardwaredetail.setFlag(rs.getString("flag"));
+                hardwaredetail.setCreatedBy(rs.getString("created_by"));
+                hardwaredetail.setCreatedDate(rs.getString("created_date"));
+                hardwaredetail.setModifedBy(rs.getString("modifed_by"));
+                hardwaredetail.setModifiedDate(rs.getString("modified_date"));
+                hardwaredetailList.add(hardwaredetail);
+            }
+            rs.close();
+            ps.close();
+        } catch (SQLException e) {
+            LOGGER.error(e.getMessage());
+        } finally {
+            if (conn != null) {
+                try {
+                    conn.close();
+                } catch (SQLException e) {
+                    LOGGER.error(e.getMessage());
+                }
+            }
+        }
+        return hardwaredetailList;
+    }
+
     public List<Item> getHardwareDetailListByItemType(String itemType) {
         String sql = "SELECT * FROM item WHERE item_type = '" + itemType + "' AND STATUS <> 'Scrapped' AND flag = '1' ORDER BY item_id ASC";
         List<Item> hardwaredetailList = new ArrayList<Item>();
@@ -651,7 +759,8 @@ public class ItemDAO {
     }
 
     public List<Item> getItemListPendingVMFunctionalTest() {
-        String sql = "SELECT it.id, it.item_type, it.sub_type, it.item_id, it.`status`, it.item_name, it.assembly_id, it.total_qty, it.flag, it.created_by, DATE_FORMAT(it.created_date,'%d %M %Y %h:%i %p') AS createdDate FROM item it WHERE it.flag = '0'";
+        String sql = "SELECT it.id, it.item_type, it.sub_type, it.item_id, it.`status`, it.item_name, it.assembly_id, it.total_qty, it.flag, it.created_by, DATE_FORMAT(it.created_date,'%d %M %Y %h:%i %p') AS createdDate, con.id AS ActivityId "
+                + "FROM item it LEFT JOIN item_activity_config con ON it.id = con.mib_item_id WHERE it.flag = '0'";
         List<Item> hardwaredetailList = new ArrayList<Item>();
         try {
             PreparedStatement ps = conn.prepareStatement(sql);
@@ -670,6 +779,7 @@ public class ItemDAO {
                 hardwaredetail.setFlag(rs.getString("flag"));
                 hardwaredetail.setCreatedBy(rs.getString("created_by"));
                 hardwaredetail.setCreatedDate(rs.getString("createdDate"));
+                hardwaredetail.setActivityId(rs.getString("ActivityId"));
                 hardwaredetailList.add(hardwaredetail);
             }
             rs.close();
@@ -742,6 +852,33 @@ public class ItemDAO {
         return count;
     }
 
+    public Integer getCountItemIdAndNotMibId(String itemId, String mibId) {
+        Integer count = null;
+        try {
+            PreparedStatement ps = conn.prepareStatement(
+                    "SELECT COUNT(*) AS count FROM item inc WHERE inc.item_id = '" + itemId + "' AND inc.id <> '" + mibId + "'"
+            );
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                count = rs.getInt("count");
+            }
+            rs.close();
+
+            ps.close();
+        } catch (SQLException e) {
+            LOGGER.error(e.getMessage());
+        } finally {
+            if (conn != null) {
+                try {
+                    conn.close();
+                } catch (SQLException e) {
+                    LOGGER.error(e.getMessage());
+                }
+            }
+        }
+        return count;
+    }
+
     public List<Item> getDataTest(String id) {
         String sql = "SELECT * FROM item WHERE id = '" + id + "'";
         List<Item> itemList = new ArrayList<Item>();
@@ -781,6 +918,265 @@ public class ItemDAO {
             }
         }
         return itemList;
+    }
+
+    public List<Item> getItemAssemblyId(String assemblyId) {
+        String sql = "SELECT DISTINCT(it.assembly_id) AS assemblyId, IF(it.assembly_id=\"" + assemblyId + "\",\"selected=''\",\"\") AS selected FROM item it WHERE it.assembly_id <> '' ORDER BY it.assembly_id ASC";
+        List<Item> hardwaredetailList = new ArrayList<Item>();
+        try {
+            PreparedStatement ps = conn.prepareStatement(sql);
+            Item hardwaredetail;
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                hardwaredetail = new Item();
+                hardwaredetail.setAssemblyId(rs.getString("assemblyId"));
+                hardwaredetail.setSelected(rs.getString("selected"));
+                hardwaredetailList.add(hardwaredetail);
+            }
+            rs.close();
+            ps.close();
+        } catch (SQLException e) {
+            LOGGER.error(e.getMessage());
+        } finally {
+            if (conn != null) {
+                try {
+                    conn.close();
+                } catch (SQLException e) {
+                    LOGGER.error(e.getMessage());
+                }
+            }
+        }
+        return hardwaredetailList;
+    }
+
+    public List<Item> getItemModel(String models) {
+        String sql = "SELECT DISTINCT(it.model) AS models, IF(it.model=\"" + models + "\",\"selected=''\",\"\") AS selected FROM item it WHERE it.model <> '' ORDER BY it.model ASC";
+        List<Item> hardwaredetailList = new ArrayList<Item>();
+        try {
+            PreparedStatement ps = conn.prepareStatement(sql);
+            Item hardwaredetail;
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                hardwaredetail = new Item();
+                hardwaredetail.setModel(rs.getString("models"));
+                hardwaredetail.setSelected(rs.getString("selected"));
+                hardwaredetailList.add(hardwaredetail);
+            }
+            rs.close();
+            ps.close();
+        } catch (SQLException e) {
+            LOGGER.error(e.getMessage());
+        } finally {
+            if (conn != null) {
+                try {
+                    conn.close();
+                } catch (SQLException e) {
+                    LOGGER.error(e.getMessage());
+                }
+            }
+        }
+        return hardwaredetailList;
+    }
+
+    public List<Item> getItemManufacturer(String manufacturer) {
+        String sql = "SELECT DISTINCT(it.manufacturer) AS manufacturer, IF(it.manufacturer=\"" + manufacturer + "\",\"selected=''\",\"\") AS selected FROM item it WHERE it.manufacturer <> '' ORDER BY it.manufacturer ASC";
+        List<Item> hardwaredetailList = new ArrayList<Item>();
+        try {
+            PreparedStatement ps = conn.prepareStatement(sql);
+            Item hardwaredetail;
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                hardwaredetail = new Item();
+                hardwaredetail.setManufacturer(rs.getString("manufacturer"));
+                hardwaredetail.setSelected(rs.getString("selected"));
+                hardwaredetailList.add(hardwaredetail);
+            }
+            rs.close();
+            ps.close();
+        } catch (SQLException e) {
+            LOGGER.error(e.getMessage());
+        } finally {
+            if (conn != null) {
+                try {
+                    conn.close();
+                } catch (SQLException e) {
+                    LOGGER.error(e.getMessage());
+                }
+            }
+        }
+        return hardwaredetailList;
+    }
+
+    public List<Item> getItemEqptType(String eqptType) {
+        String sql = "SELECT DISTINCT(it.equipment_type) AS equipment_type, IF(it.equipment_type=\"" + eqptType + "\",\"selected=''\",\"\") AS selected FROM item it WHERE it.equipment_type <> '' ORDER BY it.equipment_type ASC";
+        List<Item> hardwaredetailList = new ArrayList<Item>();
+        try {
+            PreparedStatement ps = conn.prepareStatement(sql);
+            Item hardwaredetail;
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                hardwaredetail = new Item();
+                hardwaredetail.setEquipmentType(rs.getString("equipment_type"));
+                hardwaredetail.setSelected(rs.getString("selected"));
+                hardwaredetailList.add(hardwaredetail);
+            }
+            rs.close();
+            ps.close();
+        } catch (SQLException e) {
+            LOGGER.error(e.getMessage());
+        } finally {
+            if (conn != null) {
+                try {
+                    conn.close();
+                } catch (SQLException e) {
+                    LOGGER.error(e.getMessage());
+                }
+            }
+        }
+        return hardwaredetailList;
+    }
+
+    public List<Item> getItemEqptModel(String eqptModel) {
+        String sql = "SELECT DISTINCT(it.equipment_model) AS equipment_model, IF(it.equipment_model=\"" + eqptModel + "\",\"selected=''\",\"\") AS selected FROM item it WHERE it.equipment_model <> '' ORDER BY it.equipment_model ASC";
+        List<Item> hardwaredetailList = new ArrayList<Item>();
+        try {
+            PreparedStatement ps = conn.prepareStatement(sql);
+            Item hardwaredetail;
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                hardwaredetail = new Item();
+                hardwaredetail.setEquipmentModel(rs.getString("equipment_model"));
+                hardwaredetail.setSelected(rs.getString("selected"));
+                hardwaredetailList.add(hardwaredetail);
+            }
+            rs.close();
+            ps.close();
+        } catch (SQLException e) {
+            LOGGER.error(e.getMessage());
+        } finally {
+            if (conn != null) {
+                try {
+                    conn.close();
+                } catch (SQLException e) {
+                    LOGGER.error(e.getMessage());
+                }
+            }
+        }
+        return hardwaredetailList;
+    }
+
+    public List<Item> getItemEqptManufacturer(String eqptManufacturer) {
+        String sql = "SELECT DISTINCT(it.equipment_manufacturer) AS equipment_manufacturer, IF(it.equipment_manufacturer=\"" + eqptManufacturer + "\",\"selected=''\",\"\") AS selected FROM item it WHERE it.equipment_manufacturer <> '' ORDER BY it.equipment_manufacturer ASC";
+        List<Item> hardwaredetailList = new ArrayList<Item>();
+        try {
+            PreparedStatement ps = conn.prepareStatement(sql);
+            Item hardwaredetail;
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                hardwaredetail = new Item();
+                hardwaredetail.setEquipmentManufacturer(rs.getString("equipment_manufacturer"));
+                hardwaredetail.setSelected(rs.getString("selected"));
+                hardwaredetailList.add(hardwaredetail);
+            }
+            rs.close();
+            ps.close();
+        } catch (SQLException e) {
+            LOGGER.error(e.getMessage());
+        } finally {
+            if (conn != null) {
+                try {
+                    conn.close();
+                } catch (SQLException e) {
+                    LOGGER.error(e.getMessage());
+                }
+            }
+        }
+        return hardwaredetailList;
+    }
+
+    public List<Item> getItemStressType(String stressType) {
+        String sql = "SELECT DISTINCT(it.stress_type) AS stress_type, IF(it.stress_type=\"" + stressType + "\",\"selected=''\",\"\") AS selected FROM item it WHERE it.stress_type <> '' ORDER BY it.stress_type ASC";
+        List<Item> hardwaredetailList = new ArrayList<Item>();
+        try {
+            PreparedStatement ps = conn.prepareStatement(sql);
+            Item hardwaredetail;
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                hardwaredetail = new Item();
+                hardwaredetail.setStressType(rs.getString("stress_type"));
+                hardwaredetail.setSelected(rs.getString("selected"));
+                hardwaredetailList.add(hardwaredetail);
+            }
+            rs.close();
+            ps.close();
+        } catch (SQLException e) {
+            LOGGER.error(e.getMessage());
+        } finally {
+            if (conn != null) {
+                try {
+                    conn.close();
+                } catch (SQLException e) {
+                    LOGGER.error(e.getMessage());
+                }
+            }
+        }
+        return hardwaredetailList;
+    }
+
+    public List<Item> getItemStatus() {
+        String sql = "SELECT DISTINCT(it.status) AS status FROM item it WHERE it.status <> '' ORDER BY it.status ASC";
+        List<Item> hardwaredetailList = new ArrayList<Item>();
+        try {
+            PreparedStatement ps = conn.prepareStatement(sql);
+            Item hardwaredetail;
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                hardwaredetail = new Item();
+                hardwaredetail.setStatus(rs.getString("status"));
+                hardwaredetailList.add(hardwaredetail);
+            }
+            rs.close();
+            ps.close();
+        } catch (SQLException e) {
+            LOGGER.error(e.getMessage());
+        } finally {
+            if (conn != null) {
+                try {
+                    conn.close();
+                } catch (SQLException e) {
+                    LOGGER.error(e.getMessage());
+                }
+            }
+        }
+        return hardwaredetailList;
+    }
+
+    public List<Item> getItemSubType() {
+        String sql = "SELECT DISTINCT(it.sub_type) AS sub_type FROM item it WHERE it.sub_type <> '' ORDER BY it.sub_type ASC";
+        List<Item> hardwaredetailList = new ArrayList<Item>();
+        try {
+            PreparedStatement ps = conn.prepareStatement(sql);
+            Item hardwaredetail;
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                hardwaredetail = new Item();
+                hardwaredetail.setSubType(rs.getString("sub_type"));
+                hardwaredetailList.add(hardwaredetail);
+            }
+            rs.close();
+            ps.close();
+        } catch (SQLException e) {
+            LOGGER.error(e.getMessage());
+        } finally {
+            if (conn != null) {
+                try {
+                    conn.close();
+                } catch (SQLException e) {
+                    LOGGER.error(e.getMessage());
+                }
+            }
+        }
+        return hardwaredetailList;
     }
 
 }

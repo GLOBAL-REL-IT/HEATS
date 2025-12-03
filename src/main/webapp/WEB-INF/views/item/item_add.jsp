@@ -95,12 +95,12 @@
             <!-- Row start -->
             <div class="row gx-4">
 
-<!--                <nav class="navbar bg-body-tertiary">
-                    <form class="container-fluid justify-content-end">
-                        <button class="btn btn-outline-success me-2" type="button">Pending Registration (BIB/ Bib Card)</button>
-                        <button class="btn btn-sm btn-outline-secondary" type="button">Smaller button</button>
-                    </form>
-                </nav>-->
+                <!--                <nav class="navbar bg-body-tertiary">
+                                    <form class="container-fluid justify-content-end">
+                                        <button class="btn btn-outline-success me-2" type="button">Pending Registration (BIB/ Bib Card)</button>
+                                        <button class="btn btn-sm btn-outline-secondary" type="button">Smaller button</button>
+                                    </form>
+                                </nav>-->
 
                 <div class="col-sm-12 col-12">
                     <!-- Card start -->
@@ -170,7 +170,7 @@
                                                 <!-- Card start -->
                                                 <!--<div class="card mb-4">-->
                                                 <div class="bib" id="bib">
-                                                    <form class="row gx-3 " role="form" action="${contextPath}/hw/item/save" method="post">
+                                                    <form class="row gx-3 needs-validation" role="form" action="${contextPath}/hw/item/save" method="post" novalidate>
                                                         <div class="col-xl-3 col-sm-12 col-12">
                                                             <div class="mb-3">
                                                                 <label for="subType" class="form-label">Item Type</label>
@@ -222,8 +222,14 @@
                                                             <div class="mb-3">
                                                                 <label for="assemblyId" class="form-label">Assembly ID</label>
                                                                 <div class="input-group">
-                                                                    <!--<span class="input-group-text"><i class="bi bi-telephone"></i></span>-->
-                                                                    <input type="text" class="form-control" id="assemblyId" name="assemblyId" placeholder="" value="">
+                                                                    <!--<input type="text" class="form-control" id="assemblyId" name="assemblyId" placeholder="" value="">-->
+                                                                    <select class="js-example-tags" id="assemblyId" name="assemblyId"
+                                                                            style="width: 100%">
+                                                                        <option></option>
+                                                                        <c:forEach items="${listAssemblyId}" var="invInner">
+                                                                            <option value="${invInner.assemblyId}">${invInner.assemblyId}</option>
+                                                                        </c:forEach>
+                                                                    </select>
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -232,7 +238,14 @@
                                                                 <label for="model" class="form-label">Spare Part Model</label>
                                                                 <div class="input-group">
                                                                     <!--<span class="input-group-text"><i class="bi bi-telephone"></i></span>-->
-                                                                    <input type="text" class="form-control" id="model2" name="model2" value="">
+                                                                    <!--<input type="text" class="form-control" id="model2" name="model2" value="">-->
+                                                                    <select class="js-example-tags" id="model2" name="model2"
+                                                                            style="width: 100%">
+                                                                        <option></option>
+                                                                        <c:forEach items="${listModel}" var="invInner">
+                                                                            <option value="${invInner.model}">${invInner.model}</option>
+                                                                        </c:forEach>
+                                                                    </select>
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -242,7 +255,14 @@
                                                                 <label for="manufacturer" class="form-label">Spare Part Manufacturer</label>
                                                                 <div class="input-group">
                                                                     <!--<span class="input-group-text"><i class="bi bi-person"></i></span>-->
-                                                                    <input type="text" class="form-control" id="manufacturer" name="manufacturer" placeholder="" value="">
+                                                                    <!--<input type="text" class="form-control" id="manufacturer" name="manufacturer" placeholder="" value="">-->
+                                                                    <select class="js-example-tags" id="manufacturer" name="manufacturer"
+                                                                            style="width: 100%">
+                                                                        <option></option>
+                                                                        <c:forEach items="${listManufacturer}" var="invInner">
+                                                                            <option value="${invInner.manufacturer}">${invInner.manufacturer}</option>
+                                                                        </c:forEach>
+                                                                    </select>
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -259,8 +279,14 @@
                                                             <div class="mb-3">
                                                                 <label for="equipmentType" class="form-label">Equipment Type</label>
                                                                 <div class="input-group">
-                                                                    <!--<span class="input-group-text"><i class="bi bi-person"></i></span>-->
-                                                                    <input type="text" class="form-control" id="equipmentType" name="equipmentType" placeholder="" value="">
+                                                                    <!--<input type="text" class="form-control" id="equipmentType" name="equipmentType" placeholder="" value="">-->
+                                                                    <select class="js-example-tags" id="equipmentType" name="equipmentType"
+                                                                            style="width: 100%">
+                                                                        <option></option>
+                                                                        <c:forEach items="${listEqptType}" var="invInner">
+                                                                            <option value="${invInner.equipmentType}">${invInner.equipmentType}</option>
+                                                                        </c:forEach>
+                                                                    </select>
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -269,7 +295,14 @@
                                                                 <label for="equipmentModel" class="form-label">Equipment Model</label>
                                                                 <div class="input-group">
                                                                     <!--<span class="input-group-text"><i class="bi bi-envelope"></i></span>-->
-                                                                    <input type="text" class="form-control" id="equipmentModel" name="equipmentModel" value="">
+                                                                    <!--<input type="text" class="form-control" id="equipmentModel" name="equipmentModel" value="">-->
+                                                                    <select class="js-example-tags" id="equipmentModel" name="equipmentModel"
+                                                                            style="width: 100%">
+                                                                        <option></option>
+                                                                        <c:forEach items="${listEqptModel}" var="invInner">
+                                                                            <option value="${invInner.equipmentModel}">${invInner.equipmentModel}</option>
+                                                                        </c:forEach>
+                                                                    </select>
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -278,7 +311,14 @@
                                                                 <label for="equipmentManufacturer" class="form-label">Eqpt Manufacturer</label>
                                                                 <div class="input-group">
                                                                     <!--<span class="input-group-text"><i class="bi bi-telephone"></i></span>-->
-                                                                    <input type="text" class="form-control" id="equipmentManufacturer" name="equipmentManufacturer" value="" >
+                                                                    <!--<input type="text" class="form-control" id="equipmentManufacturer" name="equipmentManufacturer" value="" >-->
+                                                                    <select class="js-example-tags" id="equipmentManufacturer" name="equipmentManufacturer"
+                                                                            style="width: 100%">
+                                                                        <option></option>
+                                                                        <c:forEach items="${listEqptManufacturer}" var="invInner">
+                                                                            <option value="${invInner.equipmentManufacturer}">${invInner.equipmentManufacturer}</option>
+                                                                        </c:forEach>
+                                                                    </select>
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -303,23 +343,23 @@
                                                                 </div>
                                                             </div>
                                                         </div>
-                                                        <div class="col-xl-3 col-sm-12 col-12">
+                                                        <div class="form-group required col-xl-3 col-sm-12 col-12">
                                                             <div class="mb-3">
                                                                 <label for="rack" class="form-label">Rack</label>
                                                                 <div class="input-group">
                                                                     <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
                                                                     <input type="text" class="form-control" id="rack" name="rack"
-                                                                           placeholder="" value="">
+                                                                           placeholder="" value="" required>
                                                                 </div>
                                                             </div>
                                                         </div>
-                                                        <div class="col-xl-3 col-sm-12 col-12">
+                                                        <div class="form-group required col-xl-3 col-sm-12 col-12">
                                                             <div class="mb-3">
                                                                 <label for="shelf" class="form-label">Shelf</label>
                                                                 <div class="input-group">
                                                                     <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
                                                                     <input type="text" class="form-control" id="shelf" name="shelf"
-                                                                           placeholder="" value="">
+                                                                           placeholder="" value="" required>
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -327,9 +367,14 @@
                                                             <div class="mb-3">
                                                                 <label for="stressType" class="form-label">Stress Type</label>
                                                                 <div class="input-group">
-                                                                    <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
-                                                                    <input type="text" class="form-control" id="stressType" name="stressType"
-                                                                           placeholder="" value="">
+                                                                    <!--<input type="text" class="form-control" id="stressType" name="stressType" placeholder="" value="">-->
+                                                                    <select class="js-example-tags" id="stressType" name="stressType"
+                                                                            style="width: 100%">
+                                                                        <option></option>
+                                                                        <c:forEach items="${listStressType}" var="invInner">
+                                                                            <option value="${invInner.stressType}">${invInner.stressType}</option>
+                                                                        </c:forEach>
+                                                                    </select>
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -462,16 +507,6 @@
                                                                 </div>
                                                             </div>
                                                         </div>
-                                                        <!--                                                        <div class="col-xl-2 col-sm-12 col-12">
-                                                                                                                    <div class="mb-3">
-                                                                                                                        <label for="totalQty" class="form-label">Total Qty</label>
-                                                                                                                        <div class="input-group">
-                                                                                                                            <span class="input-group-text"><i class="bi bi-briefcase"></i></span>
-                                                                                                                            <input type="number" class="form-control" id="totalQty" name="totalQty"
-                                                                                                                                   placeholder="" value="" disabled>
-                                                                                                                        </div>
-                                                                                                                    </div>
-                                                                                                                </div>-->
                                                         <div class="col-xl-2 col-sm-12 col-12">
                                                             <div class="mb-3">
                                                                 <label for="expirationDate" class="form-label">Expiration Date</label>
@@ -512,14 +547,8 @@
 
                                                         <!-- Form actions start -->
                                                         <div class="col-md-12">
-                                                            <!--<div class="justify-content-end">-->
-                                                            <!--<button type="button" class="btn btn-light">Cancel</button>-->
                                                             <button type="submit" id="submit" id="submit" class="btn btn-primary float-end">Save</button>
-                                                            <!--</div>-->
-                                                            <!--<div class="justify-content-start">-->
-                                                            <!--<button type="button" class="btn btn-light">Cancel</button>-->
-                                                            <a href="${contextPath}/hw/item/" class="btn btn-dark float-start">Back</a>
-                                                            <!--</div>-->
+                                                            <a href="${contextPath}/hw" class="btn btn-dark float-start">Back</a>
                                                         </div>
                                                         <!-- Form actions end -->
                                                     </form>
@@ -529,9 +558,8 @@
                                             </c:when>
                                             <c:when test="${(fn:contains(String, 'Flux')) || (fn:contains(String, 'IPA')) || (fn:contains(String, 'Ionox'))}">
                                                 <!-- Card start -->
-                                                <!--<div class="card mb-4">-->
                                                 <div class="chemical" id="chemical">
-                                                    <form class="row gx-3 " role="form" action="${contextPath}/hw/item/save" method="post">
+                                                    <form class="row gx-3 needs-validation" role="form" action="${contextPath}/hw/item/save" method="post" novalidate>
                                                         <!-- Row start -->
                                                         <div class="col-xl-2 col-sm-12 col-12">
                                                             <div class="mb-3">
@@ -603,8 +631,14 @@
                                                             <div class="mb-3">
                                                                 <label for="manufacturer" class="form-label">Spare Part Manufacturer</label>
                                                                 <div class="input-group">
-                                                                    <!--<span class="input-group-text"><i class="bi bi-person"></i></span>-->
-                                                                    <input type="text" class="form-control" id="manufacturer" name="manufacturer" placeholder="" value="">
+                                                                    <!--<input type="text" class="form-control" id="manufacturer" name="manufacturer" placeholder="" value="">-->
+                                                                    <select class="js-example-tags" id="manufacturer" name="manufacturer"
+                                                                            style="width: 100%">
+                                                                        <option></option>
+                                                                        <c:forEach items="${listManufacturer}" var="invInner">
+                                                                            <option value="${invInner.manufacturer}">${invInner.manufacturer}</option>
+                                                                        </c:forEach>
+                                                                    </select>
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -622,7 +656,14 @@
                                                                 <label for="equipmentType" class="form-label">Equipment Type</label>
                                                                 <div class="input-group">
                                                                     <!--<span class="input-group-text"><i class="bi bi-person"></i></span>-->
-                                                                    <input type="text" class="form-control" id="equipmentType" name="equipmentType" placeholder="" value="">
+                                                                    <!--<input type="text" class="form-control" id="equipmentType" name="equipmentType" placeholder="" value="">-->
+                                                                    <select class="js-example-tags" id="equipmentType" name="equipmentType"
+                                                                            style="width: 100%">
+                                                                        <option></option>
+                                                                        <c:forEach items="${listEqptType}" var="invInner">
+                                                                            <option value="${invInner.equipmentType}">${invInner.equipmentType}</option>
+                                                                        </c:forEach>
+                                                                    </select>
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -665,23 +706,23 @@
                                                                 </div>
                                                             </div>
                                                         </div>
-                                                        <div class="col-xl-3 col-sm-12 col-12">
+                                                        <div class="form-group required col-xl-3 col-sm-12 col-12">
                                                             <div class="mb-3">
                                                                 <label for="rack" class="form-label">Rack</label>
                                                                 <div class="input-group">
                                                                     <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
                                                                     <input type="text" class="form-control" id="rack" name="rack"
-                                                                           placeholder="" value="">
+                                                                           placeholder="" value="" required>
                                                                 </div>
                                                             </div>
                                                         </div>
-                                                        <div class="col-xl-3 col-sm-12 col-12">
+                                                        <div class="form-group required col-xl-3 col-sm-12 col-12">
                                                             <div class="mb-3">
                                                                 <label for="shelf" class="form-label">Shelf</label>
                                                                 <div class="input-group">
                                                                     <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
                                                                     <input type="text" class="form-control" id="shelf" name="shelf"
-                                                                           placeholder="" value="">
+                                                                           placeholder="" value="" required>
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -824,16 +865,6 @@
                                                                 </div>
                                                             </div>
                                                         </div>
-                                                        <!--                                                        <div class="col-xl-2 col-sm-12 col-12">
-                                                                                                                    <div class="mb-3">
-                                                                                                                        <label for="totalQty" class="form-label">Total Qty</label>
-                                                                                                                        <div class="input-group">
-                                                                                                                            <span class="input-group-text"><i class="bi bi-briefcase"></i></span>
-                                                                                                                            <input type="number" class="form-control" id="totalQty" name="totalQty"
-                                                                                                                                   placeholder="" value="" readonly>
-                                                                                                                        </div>
-                                                                                                                    </div>
-                                                                                                                </div>-->
                                                         <div class="col-xl-2 col-sm-12 col-12">
                                                             <div class="mb-3">
                                                                 <label for="expirationDate" class="form-label">Expiration Date</label>
@@ -874,18 +905,11 @@
 
                                                         <!-- Form actions start -->
                                                         <div class="col-md-12">
-                                                            <!--<div class="justify-content-end">-->
-                                                            <!--<button type="button" class="btn btn-light">Cancel</button>-->
                                                             <button type="submit" id="submit" class="btn btn-primary float-end">Save</button>
-                                                            <!--</div>-->
-                                                            <!--<div class="justify-content-start">-->
-                                                            <!--<button type="button" class="btn btn-light">Cancel</button>-->
-                                                            <a href="${contextPath}/hw/item/" class="btn btn-dark float-start">Back</a>
-                                                            <!--</div>-->
+                                                            <a href="${contextPath}/hw" class="btn btn-dark float-start">Back</a>
                                                         </div>
                                                         <!-- Form actions end -->
                                                     </form>
-                                                    <!--</div>-->
                                                 </div>
                                                 <!-- Card end -->
                                             </c:when>
@@ -893,7 +917,7 @@
                                                 <!-- Card start -->
                                                 <!--<div class="card mb-4">-->
                                                 <div class="ate" id="ate">
-                                                    <form class="row gx-3 " role="form" action="${contextPath}/hw/item/save" method="post">
+                                                    <form class="row gx-3 needs-validation" role="form" action="${contextPath}/hw/item/save" method="post" novalidate>
                                                         <!-- Row start -->
                                                         <div class="col-xl-2 col-sm-12 col-12">
                                                             <div class="mb-3">
@@ -933,15 +957,6 @@
                                                                 </div>
                                                             </div>
                                                         </div>
-                                                        <!--                                                        <div class="col-xl-4 col-sm-12 col-12">
-                                                                                                                    <div class="mb-3">
-                                                                                                                        <label for="status" class="form-label">Status</label>
-                                                                                                                        <div class="input-group">
-                                                                                                                            <span class="input-group-text"><i class="bi bi-person"></i></span>
-                                                                                                                            <input type="text" class="form-control" id="status" name="status" placeholder="" value="">
-                                                                                                                        </div>
-                                                                                                                    </div>
-                                                                                                                </div>-->
                                                         <div class="form-group required col-xl-4 col-sm-12 col-12">
                                                             <div class="mb-3">
                                                                 <label for="itemUsage" class="form-label">Item Usage</label>
@@ -969,8 +984,14 @@
                                                             <div class="mb-3">
                                                                 <label for="model" class="form-label">Spare Part Model</label>
                                                                 <div class="input-group">
-                                                                    <!--<span class="input-group-text"><i class="bi bi-telephone"></i></span>-->
-                                                                    <input type="text" class="form-control" id="model2" name="model2" value="">
+                                                                    <!--<input type="text" class="form-control" id="model2" name="model2" value="">-->
+                                                                    <select class="js-example-tags" id="model2" name="model2"
+                                                                            style="width: 100%">
+                                                                        <option></option>
+                                                                        <c:forEach items="${listModel}" var="invInner">
+                                                                            <option value="${invInner.model}">${invInner.model}</option>
+                                                                        </c:forEach>
+                                                                    </select>
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -979,8 +1000,14 @@
                                                             <div class="mb-3">
                                                                 <label for="manufacturer" class="form-label">Spare Part Manufacturer</label>
                                                                 <div class="input-group">
-                                                                    <!--<span class="input-group-text"><i class="bi bi-person"></i></span>-->
-                                                                    <input type="text" class="form-control" id="manufacturer" name="manufacturer" placeholder="" value="">
+                                                                    <!--<input type="text" class="form-control" id="manufacturer" name="manufacturer" placeholder="" value="">-->
+                                                                    <select class="js-example-tags" id="manufacturer" name="manufacturer"
+                                                                            style="width: 100%">
+                                                                        <option></option>
+                                                                        <c:forEach items="${listManufacturer}" var="invInner">
+                                                                            <option value="${invInner.manufacturer}">${invInner.manufacturer}</option>
+                                                                        </c:forEach>
+                                                                    </select>
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -998,7 +1025,14 @@
                                                                 <label for="equipmentType" class="form-label">Equipment Type</label>
                                                                 <div class="input-group">
                                                                     <!--<span class="input-group-text"><i class="bi bi-person"></i></span>-->
-                                                                    <input type="text" class="form-control" id="equipmentType" name="equipmentType" placeholder="" value="">
+                                                                    <!--<input type="text" class="form-control" id="equipmentType" name="equipmentType" placeholder="" value="">-->
+                                                                    <select class="js-example-tags" id="equipmentType" name="equipmentType"
+                                                                            style="width: 100%">
+                                                                        <option></option>
+                                                                        <c:forEach items="${listEqptType}" var="invInner">
+                                                                            <option value="${invInner.equipmentType}">${invInner.equipmentType}</option>
+                                                                        </c:forEach>
+                                                                    </select>
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -1006,8 +1040,13 @@
                                                             <div class="mb-3">
                                                                 <label for="equipmentModel" class="form-label">Equipment Model</label>
                                                                 <div class="input-group">
-                                                                    <!--<span class="input-group-text"><i class="bi bi-envelope"></i></span>-->
-                                                                    <input type="text" class="form-control" id="equipmentModel" name="equipmentModel" value="">
+                                                                    <!--<input type="text" class="form-control" id="equipmentModel" name="equipmentModel" value="">-->
+                                                                    <select class="js-example-tags" id="equipmentModel" name="equipmentModel" style="width: 100%">
+                                                                        <option></option>
+                                                                        <c:forEach items="${listEqptModel}" var="invInner">
+                                                                            <option value="${invInner.equipmentModel}">${invInner.equipmentModel}</option>
+                                                                        </c:forEach>
+                                                                    </select>
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -1015,8 +1054,13 @@
                                                             <div class="mb-3">
                                                                 <label for="equipmentManufacturer" class="form-label">Eqpt Manufacturer</label>
                                                                 <div class="input-group">
-                                                                    <!--<span class="input-group-text"><i class="bi bi-telephone"></i></span>-->
-                                                                    <input type="text" class="form-control" id="equipmentManufacturer" name="equipmentManufacturer" value="" >
+                                                                    <!--<input type="text" class="form-control" id="equipmentManufacturer" name="equipmentManufacturer" value="" >-->
+                                                                    <select class="js-example-tags" id="equipmentManufacturer" name="equipmentManufacturer" style="width: 100%">
+                                                                        <option></option>
+                                                                        <c:forEach items="${listEqptManufacturer}" var="invInner">
+                                                                            <option value="${invInner.equipmentManufacturer}">${invInner.equipmentManufacturer}</option>
+                                                                        </c:forEach>
+                                                                    </select>
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -1041,23 +1085,23 @@
                                                                 </div>
                                                             </div>
                                                         </div>
-                                                        <div class="col-xl-3 col-sm-12 col-12">
+                                                        <div class="form-group required col-xl-3 col-sm-12 col-12">
                                                             <div class="mb-3">
                                                                 <label for="rack" class="form-label">Rack</label>
                                                                 <div class="input-group">
                                                                     <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
                                                                     <input type="text" class="form-control" id="rack" name="rack"
-                                                                           placeholder="" value="">
+                                                                           placeholder="" value="" required>
                                                                 </div>
                                                             </div>
                                                         </div>
-                                                        <div class="col-xl-3 col-sm-12 col-12">
+                                                        <div class="form-group required col-xl-3 col-sm-12 col-12">
                                                             <div class="mb-3">
                                                                 <label for="shelf" class="form-label">Shelf</label>
                                                                 <div class="input-group">
                                                                     <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
                                                                     <input type="text" class="form-control" id="shelf" name="shelf"
-                                                                           placeholder="" value="">
+                                                                           placeholder="" value="" required>
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -1200,16 +1244,6 @@
                                                                 </div>
                                                             </div>
                                                         </div>
-                                                        <!--                                                        <div class="col-xl-2 col-sm-12 col-12">
-                                                                                                                    <div class="mb-3">
-                                                                                                                        <label for="totalQty" class="form-label">Total Qty</label>
-                                                                                                                        <div class="input-group">
-                                                                                                                            <span class="input-group-text"><i class="bi bi-briefcase"></i></span>
-                                                                                                                            <input type="number" class="form-control" id="totalQty" name="totalQty"
-                                                                                                                                   placeholder="" value="" disabled>
-                                                                                                                        </div>
-                                                                                                                    </div>
-                                                                                                                </div>-->
                                                         <div class="col-xl-2 col-sm-12 col-12">
                                                             <div class="mb-3">
                                                                 <label for="isConsumable" class="form-label">Consumable?</label>
@@ -1239,26 +1273,19 @@
 
                                                         <!-- Form actions start -->
                                                         <div class="col-md-12">
-                                                            <!--<div class="justify-content-end">-->
-                                                            <!--<button type="button" class="btn btn-light">Cancel</button>-->
                                                             <button type="submit" id="submit" class="btn btn-primary float-end">Save</button>
-                                                            <!--</div>-->
-                                                            <!--<div class="justify-content-start">-->
-                                                            <!--<button type="button" class="btn btn-light">Cancel</button>-->
-                                                            <a href="${contextPath}/hw/item/" class="btn btn-dark float-start">Back</a>
-                                                            <!--</div>-->
+                                                            <a href="${contextPath}/hw" class="btn btn-dark float-start">Back</a>
                                                         </div>
                                                         <!-- Form actions end -->
                                                     </form>
                                                 </div>
-                                                <!--</div>-->
                                                 <!-- Card end -->
                                             </c:when>
                                             <c:when test="${(fn:contains(String, 'EQP_'))}">
                                                 <!-- Card start -->
                                                 <!--<div class="card mb-4">-->
                                                 <div class="eqp" id="eqp">
-                                                    <form class="row gx-3 " role="form" action="${contextPath}/hw/item/save" method="post">
+                                                    <form class="row gx-3 needs-validation" role="form" action="${contextPath}/hw/item/save" method="post" novalidate>
                                                         <!-- Row start -->
                                                         <div class="col-xl-2 col-sm-12 col-12">
                                                             <div class="mb-3">
@@ -1270,7 +1297,7 @@
                                                                 </div>
                                                             </div>
                                                         </div>
-                                                        <div class="form-group required col-xl-2 col-sm-12 col-12">
+                                                        <div class="form-group col-xl-2 col-sm-12 col-12">
                                                             <div class="mb-3">
                                                                 <label for="subType" class="form-label">Sub Type</label>
                                                                 <div class="input-group">
@@ -1298,15 +1325,6 @@
                                                                 </div>
                                                             </div>
                                                         </div>
-                                                        <!--                                                        <div class="col-xl-4 col-sm-12 col-12">
-                                                                                                                    <div class="mb-3">
-                                                                                                                        <label for="status" class="form-label">Status</label>
-                                                                                                                        <div class="input-group">
-                                                                                                                            <span class="input-group-text"><i class="bi bi-person"></i></span>
-                                                                                                                            <input type="text" class="form-control" id="status" name="status" placeholder="" value="">
-                                                                                                                        </div>
-                                                                                                                    </div>
-                                                                                                                </div>-->
                                                         <div class="form-group required col-xl-4 col-sm-12 col-12">
                                                             <div class="mb-3">
                                                                 <label for="itemUsage" class="form-label">Item Usage</label>
@@ -1314,7 +1332,7 @@
                                                                     <select class="select-single js-states form-control" id="itemUsage" name="itemUsage"
                                                                             title="Select Item Usage" data-live-search="true">
                                                                         <option></option>
-                                                                        <c:forEach items="${paramItemUsage}" var="invInner">
+                                                                        <c:forEach items="${paramItemUsageEqpt}" var="invInner">
                                                                             <option value="${invInner.name}" ${invInner.selected}>${invInner.name}</option>
                                                                         </c:forEach>
                                                                     </select>
@@ -1334,8 +1352,13 @@
                                                             <div class="mb-3">
                                                                 <label for="model" class="form-label">Spare Part Model</label>
                                                                 <div class="input-group">
-                                                                    <!--<span class="input-group-text"><i class="bi bi-telephone"></i></span>-->
-                                                                    <input type="text" class="form-control" id="model2" name="model2" value="">
+                                                                    <!--<input type="text" class="form-control" id="model2" name="model2" value="">-->
+                                                                    <select class="js-example-tags" id="model2" name="model2" style="width: 100%">
+                                                                        <option></option>
+                                                                        <c:forEach items="${listModel}" var="invInner">
+                                                                            <option value="${invInner.model}">${invInner.model}</option>
+                                                                        </c:forEach>
+                                                                    </select>
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -1344,8 +1367,13 @@
                                                             <div class="mb-3">
                                                                 <label for="manufacturer" class="form-label">Spare Part Manufacturer</label>
                                                                 <div class="input-group">
-                                                                    <!--<span class="input-group-text"><i class="bi bi-person"></i></span>-->
-                                                                    <input type="text" class="form-control" id="manufacturer" name="manufacturer" placeholder="" value="">
+                                                                    <!--<input type="text" class="form-control" id="manufacturer" name="manufacturer" placeholder="" value="">-->
+                                                                    <select class="js-example-tags" id="manufacturer" name="manufacturer" style="width: 100%">
+                                                                        <option></option>
+                                                                        <c:forEach items="${listManufacturer}" var="invInner">
+                                                                            <option value="${invInner.manufacturer}">${invInner.manufacturer}</option>
+                                                                        </c:forEach>
+                                                                    </select>
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -1362,8 +1390,13 @@
                                                             <div class="mb-3">
                                                                 <label for="equipmentType" class="form-label">Equipment Type</label>
                                                                 <div class="input-group">
-                                                                    <!--<span class="input-group-text"><i class="bi bi-person"></i></span>-->
-                                                                    <input type="text" class="form-control" id="equipmentType" name="equipmentType" placeholder="" value="">
+                                                                    <!--<input type="text" class="form-control" id="equipmentType" name="equipmentType" placeholder="" value="">-->
+                                                                    <select class="js-example-tags" id="equipmentType" name="equipmentType" style="width: 100%">
+                                                                        <option></option>
+                                                                        <c:forEach items="${listEqptType}" var="invInner">
+                                                                            <option value="${invInner.equipmentType}">${invInner.equipmentType}</option>
+                                                                        </c:forEach>
+                                                                    </select>
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -1371,8 +1404,13 @@
                                                             <div class="mb-3">
                                                                 <label for="equipmentModel" class="form-label">Equipment Model</label>
                                                                 <div class="input-group">
-                                                                    <!--<span class="input-group-text"><i class="bi bi-envelope"></i></span>-->
-                                                                    <input type="text" class="form-control" id="equipmentModel" name="equipmentModel" value="">
+                                                                    <!--<input type="text" class="form-control" id="equipmentModel" name="equipmentModel" value="">-->
+                                                                    <select class="js-example-tags" id="equipmentModel" name="equipmentModel" style="width: 100%">
+                                                                        <option></option>
+                                                                        <c:forEach items="${listEqptModel}" var="invInner">
+                                                                            <option value="${invInner.equipmentModel}">${invInner.equipmentModel}</option>
+                                                                        </c:forEach>
+                                                                    </select>
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -1380,8 +1418,13 @@
                                                             <div class="mb-3">
                                                                 <label for="equipmentManufacturer" class="form-label">Eqpt Manufacturer</label>
                                                                 <div class="input-group">
-                                                                    <!--<span class="input-group-text"><i class="bi bi-telephone"></i></span>-->
-                                                                    <input type="text" class="form-control" id="equipmentManufacturer" name="equipmentManufacturer" value="" >
+                                                                    <!--<input type="text" class="form-control" id="equipmentManufacturer" name="equipmentManufacturer" value="" >-->
+                                                                    <select class="js-example-tags" id="equipmentManufacturer" name="equipmentManufacturer" style="width: 100%">
+                                                                        <option></option>
+                                                                        <c:forEach items="${listEqptManufacturer}" var="invInner">
+                                                                            <option value="${invInner.equipmentManufacturer}">${invInner.equipmentManufacturer}</option>
+                                                                        </c:forEach>
+                                                                    </select>
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -1406,23 +1449,23 @@
                                                                 </div>
                                                             </div>
                                                         </div>
-                                                        <div class="col-xl-3 col-sm-12 col-12">
+                                                        <div class="form-group required col-xl-3 col-sm-12 col-12">
                                                             <div class="mb-3">
                                                                 <label for="rack" class="form-label">Rack</label>
                                                                 <div class="input-group">
                                                                     <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
                                                                     <input type="text" class="form-control" id="rack" name="rack"
-                                                                           placeholder="" value="">
+                                                                           placeholder="" value="" required>
                                                                 </div>
                                                             </div>
                                                         </div>
-                                                        <div class="col-xl-3 col-sm-12 col-12">
+                                                        <div class="form-group required col-xl-3 col-sm-12 col-12">
                                                             <div class="mb-3">
                                                                 <label for="shelf" class="form-label">Shelf</label>
                                                                 <div class="input-group">
                                                                     <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
                                                                     <input type="text" class="form-control" id="shelf" name="shelf"
-                                                                           placeholder="" value="">
+                                                                           placeholder="" value="" required>
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -1565,16 +1608,6 @@
                                                                 </div>
                                                             </div>
                                                         </div>
-                                                        <!--                                                        <div class="col-xl-2 col-sm-12 col-12">
-                                                                                                                    <div class="mb-3">
-                                                                                                                        <label for="totalQty" class="form-label">Total Qty</label>
-                                                                                                                        <div class="input-group">
-                                                                                                                            <span class="input-group-text"><i class="bi bi-briefcase"></i></span>
-                                                                                                                            <input type="number" class="form-control" id="totalQty" name="totalQty"
-                                                                                                                                   placeholder="" value="" disabled>
-                                                                                                                        </div>
-                                                                                                                    </div>
-                                                                                                                </div>-->
                                                         <div class="col-xl-2 col-sm-12 col-12">
                                                             <div class="mb-3">
                                                                 <label for="isConsumable" class="form-label">Consumable?</label>
@@ -1604,26 +1637,19 @@
 
                                                         <!-- Form actions start -->
                                                         <div class="col-md-12">
-                                                            <!--<div class="justify-content-end">-->
-                                                            <!--<button type="button" class="btn btn-light">Cancel</button>-->
                                                             <button type="submit" id="submit" class="btn btn-primary float-end">Save</button>
-                                                            <!--</div>-->
-                                                            <!--<div class="justify-content-start">-->
-                                                            <!--<button type="button" class="btn btn-light">Cancel</button>-->
-                                                            <a href="${contextPath}/hw/item/" class="btn btn-dark float-start">Back</a>
-                                                            <!--</div>-->
+                                                            <a href="${contextPath}/hw" class="btn btn-dark float-start">Back</a>
                                                         </div>
                                                         <!-- Form actions end -->
                                                     </form>
                                                 </div>
-                                                <!--</div>-->
                                                 <!-- Card end -->
                                             </c:when>
                                             <c:when test="${(fn:contains(String, 'FOL')) || (fn:contains(String, 'TRAY'))}">
                                                 <!-- Card start -->
                                                 <!--<div class="card mb-4">-->
                                                 <div class="fol" id="fol">
-                                                    <form class="row gx-3 " role="form" action="${contextPath}/hw/item/save" method="post">
+                                                    <form class="row gx-3 needs-validation" role="form" action="${contextPath}/hw/item/save" method="post" novalidate>
                                                         <!-- Row start -->
                                                         <div class="col-xl-2 col-sm-12 col-12">
                                                             <div class="mb-3">
@@ -1663,15 +1689,6 @@
                                                                 </div>
                                                             </div>
                                                         </div>
-                                                        <!--                                                        <div class="col-xl-4 col-sm-12 col-12">
-                                                                                                                    <div class="mb-3">
-                                                                                                                        <label for="status" class="form-label">Status</label>
-                                                                                                                        <div class="input-group">
-                                                                                                                            <span class="input-group-text"><i class="bi bi-person"></i></span>
-                                                                                                                            <input type="text" class="form-control" id="status" name="status" placeholder="" value="">
-                                                                                                                        </div>
-                                                                                                                    </div>
-                                                                                                                </div>-->
                                                         <div class="visually-hidden col-xl-4 col-sm-12 col-12">
                                                             <div class="mb-3">
                                                                 <label for="aluHrs" class="form-label">ALU</label>
@@ -1694,8 +1711,13 @@
                                                             <div class="mb-3">
                                                                 <label for="model" class="form-label">Spare Part Model</label>
                                                                 <div class="input-group">
-                                                                    <!--<span class="input-group-text"><i class="bi bi-telephone"></i></span>-->
-                                                                    <input type="text" class="form-control" id="model2" name="model2" value="">
+                                                                    <!--<input type="text" class="form-control" id="model2" name="model2" value="">-->
+                                                                    <select class="js-example-tags" id="model2" name="model2" style="width: 100%">
+                                                                        <option></option>
+                                                                        <c:forEach items="${listModel}" var="invInner">
+                                                                            <option value="${invInner.model}">${invInner.model}</option>
+                                                                        </c:forEach>
+                                                                    </select>
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -1704,8 +1726,13 @@
                                                             <div class="mb-3">
                                                                 <label for="manufacturer" class="form-label">Spare Part Manufacturer</label>
                                                                 <div class="input-group">
-                                                                    <!--<span class="input-group-text"><i class="bi bi-person"></i></span>-->
-                                                                    <input type="text" class="form-control" id="manufacturer" name="manufacturer" placeholder="" value="">
+                                                                    <!--<input type="text" class="form-control" id="manufacturer" name="manufacturer" placeholder="" value="">-->
+                                                                    <select class="js-example-tags" id="manufacturer" name="manufacturer" style="width: 100%">
+                                                                        <option></option>
+                                                                        <c:forEach items="${listManufacturer}" var="invInner">
+                                                                            <option value="${invInner.manufacturer}">${invInner.manufacturer}</option>
+                                                                        </c:forEach>
+                                                                    </select>
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -1722,8 +1749,13 @@
                                                             <div class="mb-3">
                                                                 <label for="equipmentType" class="form-label">Equipment Type</label>
                                                                 <div class="input-group">
-                                                                    <!--<span class="input-group-text"><i class="bi bi-person"></i></span>-->
-                                                                    <input type="text" class="form-control" id="equipmentType" name="equipmentType" placeholder="" value="">
+                                                                    <!--<input type="text" class="form-control" id="equipmentType" name="equipmentType" placeholder="" value="">-->
+                                                                    <select class="js-example-tags" id="equipmentType" name="equipmentType" style="width: 100%">
+                                                                        <option></option>
+                                                                        <c:forEach items="${listEqptType}" var="invInner">
+                                                                            <option value="${invInner.equipmentType}">${invInner.equipmentType}</option>
+                                                                        </c:forEach>
+                                                                    </select>
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -1731,8 +1763,13 @@
                                                             <div class="mb-3">
                                                                 <label for="equipmentModel" class="form-label">Equipment Model</label>
                                                                 <div class="input-group">
-                                                                    <!--<span class="input-group-text"><i class="bi bi-envelope"></i></span>-->
-                                                                    <input type="text" class="form-control" id="equipmentModel" name="equipmentModel" value="">
+                                                                    <!--<input type="text" class="form-control" id="equipmentModel" name="equipmentModel" value="">-->
+                                                                    <select class="js-example-tags" id="equipmentModel" name="equipmentModel" style="width: 100%">
+                                                                        <option></option>
+                                                                        <c:forEach items="${listEqptModel}" var="invInner">
+                                                                            <option value="${invInner.equipmentModel}">${invInner.equipmentModel}</option>
+                                                                        </c:forEach>
+                                                                    </select>
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -1740,8 +1777,13 @@
                                                             <div class="mb-3">
                                                                 <label for="equipmentManufacturer" class="form-label">Eqpt Manufacturer</label>
                                                                 <div class="input-group">
-                                                                    <!--<span class="input-group-text"><i class="bi bi-telephone"></i></span>-->
-                                                                    <input type="text" class="form-control" id="equipmentManufacturer" name="equipmentManufacturer" value="" >
+                                                                    <!--<input type="text" class="form-control" id="equipmentManufacturer" name="equipmentManufacturer" value="" >-->
+                                                                    <select class="js-example-tags" id="equipmentManufacturer" name="equipmentManufacturer" style="width: 100%">
+                                                                        <option></option>
+                                                                        <c:forEach items="${listEqptManufacturer}" var="invInner">
+                                                                            <option value="${invInner.equipmentManufacturer}">${invInner.equipmentManufacturer}</option>
+                                                                        </c:forEach>
+                                                                    </select>
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -1766,23 +1808,23 @@
                                                                 </div>
                                                             </div>
                                                         </div>
-                                                        <div class="col-xl-3 col-sm-12 col-12">
+                                                        <div class="form-group required col-xl-3 col-sm-12 col-12">
                                                             <div class="mb-3">
                                                                 <label for="rack" class="form-label">Rack</label>
                                                                 <div class="input-group">
                                                                     <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
                                                                     <input type="text" class="form-control" id="rack" name="rack"
-                                                                           placeholder="" value="">
+                                                                           placeholder="" value="" required>
                                                                 </div>
                                                             </div>
                                                         </div>
-                                                        <div class="col-xl-3 col-sm-12 col-12">
+                                                        <div class="form-group required col-xl-3 col-sm-12 col-12">
                                                             <div class="mb-3">
                                                                 <label for="shelf" class="form-label">Shelf</label>
                                                                 <div class="input-group">
                                                                     <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
                                                                     <input type="text" class="form-control" id="shelf" name="shelf"
-                                                                           placeholder="" value="">
+                                                                           placeholder="" value="" required>
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -1925,16 +1967,6 @@
                                                                 </div>
                                                             </div>
                                                         </div>
-                                                        <!--                                                        <div class="col-xl-2 col-sm-12 col-12">
-                                                                                                                    <div class="mb-3">
-                                                                                                                        <label for="totalQty" class="form-label">Total Qty</label>
-                                                                                                                        <div class="input-group">
-                                                                                                                            <span class="input-group-text"><i class="bi bi-briefcase"></i></span>
-                                                                                                                            <input type="number" class="form-control" id="totalQty" name="totalQty"
-                                                                                                                                   placeholder="" value="" disabled>
-                                                                                                                        </div>
-                                                                                                                    </div>
-                                                                                                                </div>-->
                                                         <div class="col-xl-2 col-sm-12 col-12">
                                                             <div class="mb-3">
                                                                 <label for="isConsumable" class="form-label">Consumable?</label>
@@ -1964,26 +1996,19 @@
 
                                                         <!-- Form actions start -->
                                                         <div class="col-md-12">
-                                                            <!--<div class="justify-content-end">-->
-                                                            <!--<button type="button" class="btn btn-light">Cancel</button>-->
                                                             <button type="submit" id="submit" class="btn btn-primary float-end">Save</button>
-                                                            <!--</div>-->
-                                                            <!--<div class="justify-content-start">-->
-                                                            <!--<button type="button" class="btn btn-light">Cancel</button>-->
-                                                            <a href="${contextPath}/hw/item/" class="btn btn-dark float-start">Back</a>
-                                                            <!--</div>-->
+                                                            <a href="${contextPath}/hw" class="btn btn-dark float-start">Back</a>
                                                         </div>
                                                         <!-- Form actions end -->
                                                     </form>
                                                 </div>
-                                                <!--</div>-->
                                                 <!-- Card end -->
                                             </c:when>
                                             <c:when test="${(fn:contains(String, 'PCB'))}">
                                                 <!-- Card start -->
                                                 <!--<div class="card mb-4">-->
                                                 <div class="pcb" id="pcb">
-                                                    <form class="row gx-3 " role="form" action="${contextPath}/hw/item/save" method="post">
+                                                    <form class="row gx-3 needs-validation" role="form" action="${contextPath}/hw/item/save" method="post" novalidate>
                                                         <!-- Row start -->
                                                         <div class="col-xl-2 col-sm-12 col-12">
                                                             <div class="mb-3">
@@ -2023,15 +2048,6 @@
                                                                 </div>
                                                             </div>
                                                         </div>
-                                                        <!--                                                        <div class="col-xl-4 col-sm-12 col-12">
-                                                                                                                    <div class="mb-3">
-                                                                                                                        <label for="status" class="form-label">Status</label>
-                                                                                                                        <div class="input-group">
-                                                                                                                            <span class="input-group-text"><i class="bi bi-person"></i></span>
-                                                                                                                            <input type="text" class="form-control" id="status" name="status" placeholder="" value="">
-                                                                                                                        </div>
-                                                                                                                    </div>
-                                                                                                                </div>-->
                                                         <div class="visually-hidden col-xl-4 col-sm-12 col-12">
                                                             <div class="mb-3">
                                                                 <label for="aluHrs" class="form-label">ALU</label>
@@ -2126,23 +2142,23 @@
                                                                 </div>
                                                             </div>
                                                         </div>
-                                                        <div class="col-xl-3 col-sm-12 col-12">
+                                                        <div class="form-group required col-xl-3 col-sm-12 col-12">
                                                             <div class="mb-3">
                                                                 <label for="rack" class="form-label">Rack</label>
                                                                 <div class="input-group">
                                                                     <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
                                                                     <input type="text" class="form-control" id="rack" name="rack"
-                                                                           placeholder="" value="">
+                                                                           placeholder="" value="" required>
                                                                 </div>
                                                             </div>
                                                         </div>
-                                                        <div class="col-xl-3 col-sm-12 col-12">
+                                                        <div class="form-group required col-xl-3 col-sm-12 col-12">
                                                             <div class="mb-3">
                                                                 <label for="shelf" class="form-label">Shelf</label>
                                                                 <div class="input-group">
                                                                     <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
                                                                     <input type="text" class="form-control" id="shelf" name="shelf"
-                                                                           placeholder="" value="">
+                                                                           placeholder="" value="" required>
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -2285,16 +2301,6 @@
                                                                 </div>
                                                             </div>
                                                         </div>
-                                                        <!--                                                        <div class="col-xl-2 col-sm-12 col-12">
-                                                                                                                    <div class="mb-3">
-                                                                                                                        <label for="totalQty" class="form-label">Total Qty</label>
-                                                                                                                        <div class="input-group">
-                                                                                                                            <span class="input-group-text"><i class="bi bi-briefcase"></i></span>
-                                                                                                                            <input type="number" class="form-control" id="totalQty" name="totalQty"
-                                                                                                                                   placeholder="" value="" disabled>
-                                                                                                                        </div>
-                                                                                                                    </div>
-                                                                                                                </div>-->
                                                         <div class="col-xl-2 col-sm-12 col-12">
                                                             <div class="mb-3">
                                                                 <label for="isConsumable" class="form-label">Consumable?</label>
@@ -2324,14 +2330,8 @@
 
                                                         <!-- Form actions start -->
                                                         <div class="col-md-12">
-                                                            <!--<div class="justify-content-end">-->
-                                                            <!--<button type="button" class="btn btn-light">Cancel</button>-->
                                                             <button type="submit" id="submit" class="btn btn-primary float-end">Save</button>
-                                                            <!--</div>-->
-                                                            <!--<div class="justify-content-start">-->
-                                                            <!--<button type="button" class="btn btn-light">Cancel</button>-->
-                                                            <a href="${contextPath}/hw/item/" class="btn btn-dark float-start">Back</a>
-                                                            <!--</div>-->
+                                                            <a href="${contextPath}/hw" class="btn btn-dark float-start">Back</a>
                                                         </div>
                                                         <!-- Form actions end -->
                                                     </form>
@@ -2343,7 +2343,7 @@
                                                 <!-- Card start -->
                                                 <!--<div class="card mb-4">-->
                                                 <div class="solderPaste" id="solderPaste">
-                                                    <form class="row gx-3 " role="form" action="${contextPath}/hw/item/save" method="post">
+                                                    <form class="row gx-3 needs-validation" role="form" action="${contextPath}/hw/item/save" method="post" novalidate>
                                                         <!-- Row start -->
                                                         <div class="col-xl-2 col-sm-12 col-12">
                                                             <div class="mb-3">
@@ -2383,15 +2383,6 @@
                                                                 </div>
                                                             </div>
                                                         </div>
-                                                        <!--                                                        <div class="col-xl-4 col-sm-12 col-12">
-                                                                                                                    <div class="mb-3">
-                                                                                                                        <label for="status" class="form-label">Status</label>
-                                                                                                                        <div class="input-group">
-                                                                                                                            <span class="input-group-text"><i class="bi bi-person"></i></span>
-                                                                                                                            <input type="text" class="form-control" id="status" name="status" placeholder="" value="">
-                                                                                                                        </div>
-                                                                                                                    </div>
-                                                                                                                </div>-->
                                                         <div class="visually-hidden col-xl-4 col-sm-12 col-12">
                                                             <div class="mb-3">
                                                                 <label for="aluHrs" class="form-label">ALU</label>
@@ -2424,8 +2415,13 @@
                                                             <div class="mb-3">
                                                                 <label for="manufacturer" class="form-label">Spare Part Manufacturer</label>
                                                                 <div class="input-group">
-                                                                    <!--<span class="input-group-text"><i class="bi bi-person"></i></span>-->
-                                                                    <input type="text" class="form-control" id="manufacturer" name="manufacturer" placeholder="" value="">
+                                                                    <!--<input type="text" class="form-control" id="manufacturer" name="manufacturer" placeholder="" value="">-->
+                                                                    <select class="js-example-tags" id="manufacturer" name="manufacturer" style="width: 100%">
+                                                                        <option></option>
+                                                                        <c:forEach items="${listManufacturer}" var="invInner">
+                                                                            <option value="${invInner.manufacturer}">${invInner.manufacturer}</option>
+                                                                        </c:forEach>
+                                                                    </select>
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -2486,23 +2482,23 @@
                                                                 </div>
                                                             </div>
                                                         </div>
-                                                        <div class="col-xl-3 col-sm-12 col-12">
+                                                        <div class="form-group required col-xl-3 col-sm-12 col-12">
                                                             <div class="mb-3">
                                                                 <label for="rack" class="form-label">Rack</label>
                                                                 <div class="input-group">
                                                                     <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
                                                                     <input type="text" class="form-control" id="rack" name="rack"
-                                                                           placeholder="" value="">
+                                                                           placeholder="" value="" required>
                                                                 </div>
                                                             </div>
                                                         </div>
-                                                        <div class="col-xl-3 col-sm-12 col-12">
+                                                        <div class="form-group required col-xl-3 col-sm-12 col-12">
                                                             <div class="mb-3">
                                                                 <label for="shelf" class="form-label">Shelf</label>
                                                                 <div class="input-group">
                                                                     <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
                                                                     <input type="text" class="form-control" id="shelf" name="shelf"
-                                                                           placeholder="" value="">
+                                                                           placeholder="" value="" required>
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -2645,24 +2641,14 @@
                                                                 </div>
                                                             </div>
                                                         </div>
-                                                        <!--                                                        <div class="col-xl-2 col-sm-12 col-12">
-                                                                                                                    <div class="mb-3">
-                                                                                                                        <label for="totalQty" class="form-label">Total Qty</label>
-                                                                                                                        <div class="input-group">
-                                                                                                                            <span class="input-group-text"><i class="bi bi-briefcase"></i></span>
-                                                                                                                            <input type="number" class="form-control" id="totalQty" name="totalQty"
-                                                                                                                                   placeholder="" value="" disabled>
-                                                                                                                        </div>
-                                                                                                                    </div>
-                                                                                                                </div>-->
-                                                        <div class="col-xl-2 col-sm-12 col-12">
+                                                        <div class="form-group required col-xl-2 col-sm-12 col-12">
                                                             <div class="mb-3">
                                                                 <label for="expirationDate" class="form-label">Expiration Date</label>
                                                                 <div class="input-group">
                                                                     <span class="input-group-text">
                                                                         <i class="bi bi-calendar4"></i>
                                                                     </span>
-                                                                    <input type="text" id="expirationDate" name="expirationDate" class="form-control datepicker-week-numbers">
+                                                                    <input type="text" id="expirationDate" name="expirationDate" class="form-control datepicker-week-numbers" required> 
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -2695,26 +2681,19 @@
 
                                                         <!-- Form actions start -->
                                                         <div class="col-md-12">
-                                                            <!--<div class="justify-content-end">-->
-                                                            <!--<button type="button" class="btn btn-light">Cancel</button>-->
                                                             <button type="submit" id="submit" class="btn btn-primary float-end">Save</button>
-                                                            <!--</div>-->
-                                                            <!--<div class="justify-content-start">-->
-                                                            <!--<button type="button" class="btn btn-light">Cancel</button>-->
-                                                            <a href="${contextPath}/hw/item/" class="btn btn-dark float-start">Back</a>
-                                                            <!--</div>-->
+                                                            <a href="${contextPath}/hw" class="btn btn-dark float-start">Back</a>
                                                         </div>
                                                         <!-- Form actions end -->
                                                     </form>
                                                 </div>
-                                                <!--</div>-->
                                                 <!-- Card end -->
                                             </c:when>
                                             <c:when test="${(fn:contains(String, 'Stencil'))}">
                                                 <!-- Card start -->
                                                 <!--<div class="card mb-4">-->
                                                 <div class="stencil" id="stencil">
-                                                    <form class="row gx-3 " role="form" action="${contextPath}/hw/item/save" method="post">
+                                                    <form class="row gx-3 needs-validation" role="form" action="${contextPath}/hw/item/save" method="post" novalidate>
                                                         <!-- Row start -->
                                                         <div class="col-xl-2 col-sm-12 col-12">
                                                             <div class="mb-3">
@@ -2754,15 +2733,6 @@
                                                                 </div>
                                                             </div>
                                                         </div>
-                                                        <!--                                                        <div class="col-xl-4 col-sm-12 col-12">
-                                                                                                                    <div class="mb-3">
-                                                                                                                        <label for="status" class="form-label">Status</label>
-                                                                                                                        <div class="input-group">
-                                                                                                                            <span class="input-group-text"><i class="bi bi-person"></i></span>
-                                                                                                                            <input type="text" class="form-control" id="status" name="status" placeholder="" value="">
-                                                                                                                        </div>
-                                                                                                                    </div>
-                                                                                                                </div>-->
                                                         <div class="visually-hidden col-xl-4 col-sm-12 col-12">
                                                             <div class="mb-3">
                                                                 <label for="aluHrs" class="form-label">ALU</label>
@@ -2795,8 +2765,13 @@
                                                             <div class="mb-3">
                                                                 <label for="manufacturer" class="form-label">Spare Part Manufacturer</label>
                                                                 <div class="input-group">
-                                                                    <!--<span class="input-group-text"><i class="bi bi-person"></i></span>-->
-                                                                    <input type="text" class="form-control" id="manufacturer" name="manufacturer" placeholder="" value="">
+                                                                    <!--<input type="text" class="form-control" id="manufacturer" name="manufacturer" placeholder="" value="">-->
+                                                                    <select class="js-example-tags" id="manufacturer" name="manufacturer" style="width: 100%">
+                                                                        <option></option>
+                                                                        <c:forEach items="${listManufacturer}" var="invInner">
+                                                                            <option value="${invInner.manufacturer}">${invInner.manufacturer}</option>
+                                                                        </c:forEach>
+                                                                    </select>
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -2857,23 +2832,23 @@
                                                                 </div>
                                                             </div>
                                                         </div>
-                                                        <div class="col-xl-3 col-sm-12 col-12">
+                                                        <div class="form-group required col-xl-3 col-sm-12 col-12">
                                                             <div class="mb-3">
                                                                 <label for="rack" class="form-label">Rack</label>
                                                                 <div class="input-group">
                                                                     <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
                                                                     <input type="text" class="form-control" id="rack" name="rack"
-                                                                           placeholder="" value="">
+                                                                           placeholder="" value="" required>
                                                                 </div>
                                                             </div>
                                                         </div>
-                                                        <div class="col-xl-3 col-sm-12 col-12">
+                                                        <div class="form-group required col-xl-3 col-sm-12 col-12">
                                                             <div class="mb-3">
                                                                 <label for="shelf" class="form-label">Shelf</label>
                                                                 <div class="input-group">
                                                                     <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
                                                                     <input type="text" class="form-control" id="shelf" name="shelf"
-                                                                           placeholder="" value="">
+                                                                           placeholder="" value="" required>
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -3016,16 +2991,6 @@
                                                                 </div>
                                                             </div>
                                                         </div>
-                                                        <!--                                                        <div class="col-xl-2 col-sm-12 col-12">
-                                                                                                                    <div class="mb-3">
-                                                                                                                        <label for="totalQty" class="form-label">Total Qty</label>
-                                                                                                                        <div class="input-group">
-                                                                                                                            <span class="input-group-text"><i class="bi bi-briefcase"></i></span>
-                                                                                                                            <input type="number" class="form-control" id="totalQty" name="totalQty"
-                                                                                                                                   placeholder="" value="" disabled>
-                                                                                                                        </div>
-                                                                                                                    </div>
-                                                                                                                </div>-->
                                                         <div class="col-xl-2 col-sm-12 col-12">
                                                             <div class="mb-3">
                                                                 <label for="isConsumable" class="form-label">Consumable?</label>
@@ -3055,365 +3020,358 @@
 
                                                         <!-- Form actions start -->
                                                         <div class="col-md-12">
-                                                            <!--<div class="justify-content-end">-->
-                                                            <!--<button type="button" class="btn btn-light">Cancel</button>-->
                                                             <button type="submit" id="submit" class="btn btn-primary float-end">Save</button>
-                                                            <!--</div>-->
-                                                            <!--<div class="justify-content-start">-->
-                                                            <!--<button type="button" class="btn btn-light">Cancel</button>-->
-                                                            <a href="${contextPath}/hw/item/" class="btn btn-dark float-start">Back</a>
-                                                            <!--</div>-->
+                                                            <a href="${contextPath}/hw" class="btn btn-dark float-start">Back</a>
                                                         </div>
                                                         <!-- Form actions end -->
                                                     </form>
                                                 </div>
-                                                <!--</div>-->
                                                 <!-- Card end -->
                                             </c:when>
                                             <c:otherwise>
                                                 <!-- Card start -->
                                                 <!--<div class="card mb-4">-->
                                                 <div class="initial" id="initial">
-                                                    <form class="row gx-3 " role="form" action="${contextPath}/hw/item/save" method="post">
+                                                    <form class="row gx-3 needs-validation" role="form" action="${contextPath}/hw/item/save" method="post" novalidate>
                                                         <!-- Row start -->
-                                                        <div class="col-xl-2 col-sm-12 col-12">
-                                                            <div class="mb-3">
-                                                                <label for="subType" class="form-label">Item Type</label>
-                                                                <div class="input-group">
-                                                                    <!--<span class="input-group-text"><i class="bi bi-person"></i></span>-->
-                                                                    <input type="text" class="form-control" id="itemTypeRead" name="itemTypeRead" placeholder="" value="${itemType}" readonly>
-                                                                    <input type="hidden" class="form-control" id="itemPKID" name="itemPKID" placeholder="" value="">
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                        <div class="form-group required col-xl-2 col-sm-12 col-12">
-                                                            <div class="mb-3">
-                                                                <label for="subType" class="form-label">Sub Type</label>
-                                                                <div class="input-group">
-                                                                    <!--<span class="input-group-text"><i class="bi bi-person"></i></span>-->
-                                                                    <input type="text" class="form-control" id="subType" name="subType" placeholder="" value="">
-                                                                    <input type="hidden" class="form-control" id="itemPKID" name="itemPKID" placeholder="" value="">
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                        <div class="form-group required col-xl-4 col-sm-12 col-12">
-                                                            <div class="mb-3">
-                                                                <label for="itemId" class="form-label">Item ID</label>
-                                                                <div class="input-group">
-                                                                    <!--<span class="input-group-text"><i class="bi bi-envelope"></i></span>-->
-                                                                    <input type="text" class="form-control" id="itemId" name="itemId" placeholder="" value="" required>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                        <div class="form-group required col-xl-4 col-sm-12 col-12">
-                                                            <div class="mb-3">
-                                                                <label for="itemName" class="form-label">Item Name</label>
-                                                                <div class="input-group">
-                                                                    <!--<span class="input-group-text"><i class="bi bi-telephone"></i></span>-->
-                                                                    <input type="text" class="form-control" id="itemName" name="itemName" placeholder="" value="" required>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                        <div class="visually-hidden col-xl-4 col-sm-12 col-12">
-                                                            <div class="mb-3">
-                                                                <label for="aluHrs" class="form-label">ALU</label>
-                                                                <div class="input-group">
-                                                                    <!--<span class="input-group-text"><i class="bi bi-envelope"></i></span>-->
-                                                                    <input type="text" class="form-control" id="aluHrs" name="aluHrs" placeholder="" value="">
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                        <div class="col-xl-4 col-sm-12 col-12">
-                                                            <div class="mb-3">
-                                                                <label for="assemblyId" class="form-label">Assembly ID</label>
-                                                                <div class="input-group">
-                                                                    <!--<span class="input-group-text"><i class="bi bi-telephone"></i></span>-->
-                                                                    <input type="text" class="form-control" id="assemblyId" name="assemblyId" placeholder="" value="">
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                        <div class="col-xl-4 col-sm-12 col-12">
-                                                            <div class="mb-3">
-                                                                <label for="model" class="form-label">Spare Part Model</label>
-                                                                <div class="input-group">
-                                                                    <!--<span class="input-group-text"><i class="bi bi-telephone"></i></span>-->
-                                                                    <input type="text" class="form-control" id="model2" name="model2" value="">
-                                                                </div>
-                                                            </div>
-                                                        </div>
-
-                                                        <div class="col-xl-4 col-sm-12 col-12">
-                                                            <div class="mb-3">
-                                                                <label for="manufacturer" class="form-label">Spare Part Manufacturer</label>
-                                                                <div class="input-group">
-                                                                    <!--<span class="input-group-text"><i class="bi bi-person"></i></span>-->
-                                                                    <input type="text" class="form-control" id="manufacturer" name="manufacturer" placeholder="" value="">
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                        <div class="form-group required col-xl-4 col-sm-12 col-12">
-                                                            <div class="mb-3">
-                                                                <label for="unitCost" class="form-label">Unit cost (USD)</label>
-                                                                <div class="input-group">
-                                                                    <!--<span class="input-group-text"><i class="bi bi-envelope"></i></span>-->
-                                                                    <input type="number" step="0.01" class="form-control" id="unitCost" name="unitCost" placeholder="" value="" required>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                        <div class="col-xl-4 col-sm-12 col-12">
-                                                            <div class="mb-3">
-                                                                <label for="equipmentType" class="form-label">Equipment Type</label>
-                                                                <div class="input-group">
-                                                                    <!--<span class="input-group-text"><i class="bi bi-person"></i></span>-->
-                                                                    <input type="text" class="form-control" id="equipmentType" name="equipmentType" placeholder="" value="">
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                        <div class="col-xl-4 col-sm-12 col-12">
-                                                            <div class="mb-3">
-                                                                <label for="equipmentModel" class="form-label">Equipment Model</label>
-                                                                <div class="input-group">
-                                                                    <!--<span class="input-group-text"><i class="bi bi-envelope"></i></span>-->
-                                                                    <input type="text" class="form-control" id="equipmentModel" name="equipmentModel" value="">
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                        <div class="col-xl-4 col-sm-12 col-12">
-                                                            <div class="mb-3">
-                                                                <label for="equipmentManufacturer" class="form-label">Eqpt Manufacturer</label>
-                                                                <div class="input-group">
-                                                                    <!--<span class="input-group-text"><i class="bi bi-telephone"></i></span>-->
-                                                                    <input type="text" class="form-control" id="equipmentManufacturer" name="equipmentManufacturer" value="" >
-                                                                </div>
-                                                            </div>
-                                                        </div>
-
-                                                        <div class="form-group required col-xl-1 col-sm-12 col-12">
-                                                            <div class="mb-3">
-                                                                <label for="minQty" class="form-label">Min. Qty</label>
-                                                                <div class="input-group">
-                                                                    <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
-                                                                    <input type="number" class="form-control" id="minQty" name="minQty"
-                                                                           placeholder="" value="" required>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                        <div class="form-group required col-xl-1 col-sm-12 col-12">
-                                                            <div class="mb-3">
-                                                                <label for="maxQty" class="form-label">Max. Qty</label>
-                                                                <div class="input-group">
-                                                                    <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
-                                                                    <input type="number" class="form-control" id="maxQty" name="maxQty"
-                                                                           placeholder="" value="" required>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                        <div class="col-xl-3 col-sm-12 col-12">
-                                                            <div class="mb-3">
-                                                                <label for="rack" class="form-label">Rack</label>
-                                                                <div class="input-group">
-                                                                    <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
-                                                                    <input type="text" class="form-control" id="rack" name="rack"
-                                                                           placeholder="" value="">
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                        <div class="col-xl-3 col-sm-12 col-12">
-                                                            <div class="mb-3">
-                                                                <label for="shelf" class="form-label">Shelf</label>
-                                                                <div class="input-group">
-                                                                    <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
-                                                                    <input type="text" class="form-control" id="shelf" name="shelf"
-                                                                           placeholder="" value="">
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                        <div class="form-group required col-xl-4 col-sm-12 col-12">
-                                                            <div class="mb-3">
-                                                                <label for="stressType" class="form-label">Stress Type</label>
-                                                                <div class="input-group">
-                                                                    <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
-                                                                    <input type="text" class="form-control" id="stressType" name="stressType"
-                                                                           placeholder="" value="">
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                        <div class="form-group required col-xl-2 col-sm-12 col-12">
-                                                            <div class="mb-3">
-                                                                <label for="onHandQty" class="form-label">On Hand Qty</label>
-                                                                <div class="input-group">
-                                                                    <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
-                                                                    <input type="number" class="form-control" id="onHandQty" name="onHandQty"
-                                                                           placeholder="" value="" required>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                        <div class="col-xl-2 col-sm-12 col-12">
-                                                            <div class="mb-3">
-                                                                <label for="productionQty" class="form-label">Prod. Qty</label>
-                                                                <div class="input-group">
-                                                                    <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
-                                                                    <input type="number" class="form-control" id="productionQty" name="productionQty"
-                                                                           placeholder="" value="">
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                        <div class="col-xl-2 col-sm-12 col-12">
-                                                            <div class="mb-3">
-                                                                <label for="productionStagingQty" class="form-label">Prod. Staging Qty</label>
-                                                                <div class="input-group">
-                                                                    <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
-                                                                    <input type="number" class="form-control" id="productionStagingQty" name="productionStagingQty"
-                                                                           placeholder="" value="">
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                        <div class="col-xl-2 col-sm-12 col-12">
-                                                            <div class="mb-3">
-                                                                <label for="repairQty" class="form-label">Repair Qty</label>
-                                                                <div class="input-group">
-                                                                    <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
-                                                                    <input type="number" class="form-control" id="repairQty" name="repairQty"
-                                                                           placeholder="" value="">
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                        <div class="col-xl-2 col-sm-12 col-12">
-                                                            <div class="mb-3">
-                                                                <label for="quarantineQty" class="form-label">Quarantine Qty</label>
-                                                                <div class="input-group">
-                                                                    <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
-                                                                    <input type="number" class="form-control" id="quarantineQty" name="quarantineQty"
-                                                                           placeholder="" value="">
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                        <div class="col-xl-2 col-sm-12 col-12">
-                                                            <div class="mb-3">
-                                                                <label for="externalCleanQty" class="form-label">Ext Clean Qty</label>
-                                                                <div class="input-group">
-                                                                    <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
-                                                                    <input type="number" class="form-control" id="externalCleanQty" name="externalCleanQty"
-                                                                           placeholder="" value="">
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                        <div class="col-xl-2 col-sm-12 col-12">
-                                                            <div class="mb-3">
-                                                                <label for="externalRecleanQty" class="form-label">Ext Re-clean Qty</label>
-                                                                <div class="input-group">
-                                                                    <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
-                                                                    <input type="number" class="form-control" id="externalRecleanQty" name="externalRecleanQty"
-                                                                           placeholder="" value="">
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                        <div class="col-xl-2 col-sm-12 col-12">
-                                                            <div class="mb-3">
-                                                                <label for="internalCleanQty" class="form-label">Int. Clean Qty</label>
-                                                                <div class="input-group">
-                                                                    <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
-                                                                    <input type="number" class="form-control" id="internalCleanQty" name="internalCleanQty"
-                                                                           placeholder="" value="">
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                        <div class="col-xl-2 col-sm-12 col-12">
-                                                            <div class="mb-3">
-                                                                <label for="internalRecleanQty" class="form-label">Int. Re-Clean Qty</label>
-                                                                <div class="input-group">
-                                                                    <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
-                                                                    <input type="number" class="form-control" id="internalRecleanQty" name="internalRecleanQty"
-                                                                           placeholder="" value="">
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                        <div class="col-xl-2 col-sm-12 col-12">
-                                                            <div class="mb-3">
-                                                                <label for="otherQty" class="form-label">Other Qty</label>
-                                                                <div class="input-group">
-                                                                    <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
-                                                                    <input type="number" class="form-control" id="otherQty" name="otherQty"
-                                                                           placeholder="" value="">
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                        <div class="col-xl-2 col-sm-12 col-12">
-                                                            <div class="mb-3">
-                                                                <label for="vendorQty" class="form-label">Vendor Qty</label>
-                                                                <div class="input-group">
-                                                                    <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
-                                                                    <input type="number" class="form-control" id="vendorQty" name="vendorQty"
-                                                                           placeholder="" value="">
-                                                                </div>
-                                                            </div>
-                                                        </div><div class="col-xl-2 col-sm-12 col-12">
-                                                            <div class="mb-3">
-                                                                <label for="otherOnsemiQty" class="form-label">Other onsemi Qty</label>
-                                                                <div class="input-group">
-                                                                    <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
-                                                                    <input type="number" class="form-control" id="otherOnsemiQty" name="otherOnsemiQty"
-                                                                           placeholder="" value="">
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                        <div class="col-xl-2 col-sm-12 col-12">
-                                                            <div class="mb-3">
-                                                                <label for="storageFactoryQty" class="form-label">Storage Factory Qty</label>
-                                                                <div class="input-group">
-                                                                    <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
-                                                                    <input type="number" class="form-control" id="storageFactoryQty" name="storageFactoryQty"
-                                                                           placeholder="" value="">
-                                                                </div>
-                                                            </div>
-                                                        </div>
                                                         <!--                                                        <div class="col-xl-2 col-sm-12 col-12">
                                                                                                                     <div class="mb-3">
-                                                                                                                        <label for="totalQty" class="form-label">Total Qty</label>
+                                                                                                                        <label for="subType" class="form-label">Item Type</label>
+                                                                                                                        <div class="input-group">
+                                                                                                                            <span class="input-group-text"><i class="bi bi-person"></i></span>
+                                                                                                                            <input type="text" class="form-control" id="itemTypeRead" name="itemTypeRead" placeholder="" value="${itemType}" readonly>
+                                                                                                                            <input type="hidden" class="form-control" id="itemPKID" name="itemPKID" placeholder="" value="">
+                                                                                                                        </div>
+                                                                                                                    </div>
+                                                                                                                </div>
+                                                                                                                <div class="form-group required col-xl-2 col-sm-12 col-12">
+                                                                                                                    <div class="mb-3">
+                                                                                                                        <label for="subType" class="form-label">Sub Type</label>
+                                                                                                                        <div class="input-group">
+                                                                                                                            <span class="input-group-text"><i class="bi bi-person"></i></span>
+                                                                                                                            <input type="text" class="form-control" id="subType" name="subType" placeholder="" value="">
+                                                                                                                            <input type="hidden" class="form-control" id="itemPKID" name="itemPKID" placeholder="" value="">
+                                                                                                                        </div>
+                                                                                                                    </div>
+                                                                                                                </div>
+                                                                                                                <div class="form-group required col-xl-4 col-sm-12 col-12">
+                                                                                                                    <div class="mb-3">
+                                                                                                                        <label for="itemId" class="form-label">Item ID</label>
+                                                                                                                        <div class="input-group">
+                                                                                                                            <span class="input-group-text"><i class="bi bi-envelope"></i></span>
+                                                                                                                            <input type="text" class="form-control" id="itemId" name="itemId" placeholder="" value="" required>
+                                                                                                                        </div>
+                                                                                                                    </div>
+                                                                                                                </div>
+                                                                                                                <div class="form-group required col-xl-4 col-sm-12 col-12">
+                                                                                                                    <div class="mb-3">
+                                                                                                                        <label for="itemName" class="form-label">Item Name</label>
+                                                                                                                        <div class="input-group">
+                                                                                                                            <span class="input-group-text"><i class="bi bi-telephone"></i></span>
+                                                                                                                            <input type="text" class="form-control" id="itemName" name="itemName" placeholder="" value="" required>
+                                                                                                                        </div>
+                                                                                                                    </div>
+                                                                                                                </div>
+                                                                                                                <div class="visually-hidden col-xl-4 col-sm-12 col-12">
+                                                                                                                    <div class="mb-3">
+                                                                                                                        <label for="aluHrs" class="form-label">ALU</label>
+                                                                                                                        <div class="input-group">
+                                                                                                                            <span class="input-group-text"><i class="bi bi-envelope"></i></span>
+                                                                                                                            <input type="text" class="form-control" id="aluHrs" name="aluHrs" placeholder="" value="">
+                                                                                                                        </div>
+                                                                                                                    </div>
+                                                                                                                </div>
+                                                                                                                <div class="col-xl-4 col-sm-12 col-12">
+                                                                                                                    <div class="mb-3">
+                                                                                                                        <label for="assemblyId" class="form-label">Assembly ID</label>
+                                                                                                                        <div class="input-group">
+                                                                                                                            <span class="input-group-text"><i class="bi bi-telephone"></i></span>
+                                                                                                                            <input type="text" class="form-control" id="assemblyId" name="assemblyId" placeholder="" value="">
+                                                                                                                        </div>
+                                                                                                                    </div>
+                                                                                                                </div>
+                                                                                                                <div class="col-xl-4 col-sm-12 col-12">
+                                                                                                                    <div class="mb-3">
+                                                                                                                        <label for="model" class="form-label">Spare Part Model</label>
+                                                                                                                        <div class="input-group">
+                                                                                                                            <span class="input-group-text"><i class="bi bi-telephone"></i></span>
+                                                                                                                            <input type="text" class="form-control" id="model2" name="model2" value="">
+                                                                                                                        </div>
+                                                                                                                    </div>
+                                                                                                                </div>
+                                                        
+                                                                                                                <div class="col-xl-4 col-sm-12 col-12">
+                                                                                                                    <div class="mb-3">
+                                                                                                                        <label for="manufacturer" class="form-label">Spare Part Manufacturer</label>
+                                                                                                                        <div class="input-group">
+                                                                                                                            <span class="input-group-text"><i class="bi bi-person"></i></span>
+                                                                                                                            <input type="text" class="form-control" id="manufacturer" name="manufacturer" placeholder="" value="">
+                                                                                                                        </div>
+                                                                                                                    </div>
+                                                                                                                </div>
+                                                                                                                <div class="form-group required col-xl-4 col-sm-12 col-12">
+                                                                                                                    <div class="mb-3">
+                                                                                                                        <label for="unitCost" class="form-label">Unit cost (USD)</label>
+                                                                                                                        <div class="input-group">
+                                                                                                                            <span class="input-group-text"><i class="bi bi-envelope"></i></span>
+                                                                                                                            <input type="number" step="0.01" class="form-control" id="unitCost" name="unitCost" placeholder="" value="" required>
+                                                                                                                        </div>
+                                                                                                                    </div>
+                                                                                                                </div>
+                                                                                                                <div class="col-xl-4 col-sm-12 col-12">
+                                                                                                                    <div class="mb-3">
+                                                                                                                        <label for="equipmentType" class="form-label">Equipment Type</label>
+                                                                                                                        <div class="input-group">
+                                                                                                                            <span class="input-group-text"><i class="bi bi-person"></i></span>
+                                                                                                                            <input type="text" class="form-control" id="equipmentType" name="equipmentType" placeholder="" value="">
+                                                                                                                        </div>
+                                                                                                                    </div>
+                                                                                                                </div>
+                                                                                                                <div class="col-xl-4 col-sm-12 col-12">
+                                                                                                                    <div class="mb-3">
+                                                                                                                        <label for="equipmentModel" class="form-label">Equipment Model</label>
+                                                                                                                        <div class="input-group">
+                                                                                                                            <span class="input-group-text"><i class="bi bi-envelope"></i></span>
+                                                                                                                            <input type="text" class="form-control" id="equipmentModel" name="equipmentModel" value="">
+                                                                                                                        </div>
+                                                                                                                    </div>
+                                                                                                                </div>
+                                                                                                                <div class="col-xl-4 col-sm-12 col-12">
+                                                                                                                    <div class="mb-3">
+                                                                                                                        <label for="equipmentManufacturer" class="form-label">Eqpt Manufacturer</label>
+                                                                                                                        <div class="input-group">
+                                                                                                                            <span class="input-group-text"><i class="bi bi-telephone"></i></span>
+                                                                                                                            <input type="text" class="form-control" id="equipmentManufacturer" name="equipmentManufacturer" value="" >
+                                                                                                                        </div>
+                                                                                                                    </div>
+                                                                                                                </div>
+                                                        
+                                                                                                                <div class="form-group required col-xl-1 col-sm-12 col-12">
+                                                                                                                    <div class="mb-3">
+                                                                                                                        <label for="minQty" class="form-label">Min. Qty</label>
                                                                                                                         <div class="input-group">
                                                                                                                             <span class="input-group-text"><i class="bi bi-briefcase"></i></span>
-                                                                                                                            <input type="number" class="form-control" id="totalQty" name="totalQty"
-                                                                                                                                   placeholder="" value="" disabled>
+                                                                                                                            <input type="number" class="form-control" id="minQty" name="minQty"
+                                                                                                                                   placeholder="" value="" required>
+                                                                                                                        </div>
+                                                                                                                    </div>
+                                                                                                                </div>
+                                                                                                                <div class="form-group required col-xl-1 col-sm-12 col-12">
+                                                                                                                    <div class="mb-3">
+                                                                                                                        <label for="maxQty" class="form-label">Max. Qty</label>
+                                                                                                                        <div class="input-group">
+                                                                                                                            <span class="input-group-text"><i class="bi bi-briefcase"></i></span>
+                                                                                                                            <input type="number" class="form-control" id="maxQty" name="maxQty"
+                                                                                                                                   placeholder="" value="" required>
+                                                                                                                        </div>
+                                                                                                                    </div>
+                                                                                                                </div>
+                                                                                                                <div class="col-xl-3 col-sm-12 col-12">
+                                                                                                                    <div class="mb-3">
+                                                                                                                        <label for="rack" class="form-label">Rack</label>
+                                                                                                                        <div class="input-group">
+                                                                                                                            <span class="input-group-text"><i class="bi bi-briefcase"></i></span>
+                                                                                                                            <input type="text" class="form-control" id="rack" name="rack"
+                                                                                                                                   placeholder="" value="">
+                                                                                                                        </div>
+                                                                                                                    </div>
+                                                                                                                </div>
+                                                                                                                <div class="col-xl-3 col-sm-12 col-12">
+                                                                                                                    <div class="mb-3">
+                                                                                                                        <label for="shelf" class="form-label">Shelf</label>
+                                                                                                                        <div class="input-group">
+                                                                                                                            <span class="input-group-text"><i class="bi bi-briefcase"></i></span>
+                                                                                                                            <input type="text" class="form-control" id="shelf" name="shelf"
+                                                                                                                                   placeholder="" value="">
+                                                                                                                        </div>
+                                                                                                                    </div>
+                                                                                                                </div>
+                                                                                                                <div class="form-group required col-xl-4 col-sm-12 col-12">
+                                                                                                                    <div class="mb-3">
+                                                                                                                        <label for="stressType" class="form-label">Stress Type</label>
+                                                                                                                        <div class="input-group">
+                                                                                                                            <span class="input-group-text"><i class="bi bi-briefcase"></i></span>
+                                                                                                                            <input type="text" class="form-control" id="stressType" name="stressType"
+                                                                                                                                   placeholder="" value="">
+                                                                                                                        </div>
+                                                                                                                    </div>
+                                                                                                                </div>
+                                                                                                                <div class="form-group required col-xl-2 col-sm-12 col-12">
+                                                                                                                    <div class="mb-3">
+                                                                                                                        <label for="onHandQty" class="form-label">On Hand Qty</label>
+                                                                                                                        <div class="input-group">
+                                                                                                                            <span class="input-group-text"><i class="bi bi-briefcase"></i></span>
+                                                                                                                            <input type="number" class="form-control" id="onHandQty" name="onHandQty"
+                                                                                                                                   placeholder="" value="" required>
+                                                                                                                        </div>
+                                                                                                                    </div>
+                                                                                                                </div>
+                                                                                                                <div class="col-xl-2 col-sm-12 col-12">
+                                                                                                                    <div class="mb-3">
+                                                                                                                        <label for="productionQty" class="form-label">Prod. Qty</label>
+                                                                                                                        <div class="input-group">
+                                                                                                                            <span class="input-group-text"><i class="bi bi-briefcase"></i></span>
+                                                                                                                            <input type="number" class="form-control" id="productionQty" name="productionQty"
+                                                                                                                                   placeholder="" value="">
+                                                                                                                        </div>
+                                                                                                                    </div>
+                                                                                                                </div>
+                                                                                                                <div class="col-xl-2 col-sm-12 col-12">
+                                                                                                                    <div class="mb-3">
+                                                                                                                        <label for="productionStagingQty" class="form-label">Prod. Staging Qty</label>
+                                                                                                                        <div class="input-group">
+                                                                                                                            <span class="input-group-text"><i class="bi bi-briefcase"></i></span>
+                                                                                                                            <input type="number" class="form-control" id="productionStagingQty" name="productionStagingQty"
+                                                                                                                                   placeholder="" value="">
+                                                                                                                        </div>
+                                                                                                                    </div>
+                                                                                                                </div>
+                                                                                                                <div class="col-xl-2 col-sm-12 col-12">
+                                                                                                                    <div class="mb-3">
+                                                                                                                        <label for="repairQty" class="form-label">Repair Qty</label>
+                                                                                                                        <div class="input-group">
+                                                                                                                            <span class="input-group-text"><i class="bi bi-briefcase"></i></span>
+                                                                                                                            <input type="number" class="form-control" id="repairQty" name="repairQty"
+                                                                                                                                   placeholder="" value="">
+                                                                                                                        </div>
+                                                                                                                    </div>
+                                                                                                                </div>
+                                                                                                                <div class="col-xl-2 col-sm-12 col-12">
+                                                                                                                    <div class="mb-3">
+                                                                                                                        <label for="quarantineQty" class="form-label">Quarantine Qty</label>
+                                                                                                                        <div class="input-group">
+                                                                                                                            <span class="input-group-text"><i class="bi bi-briefcase"></i></span>
+                                                                                                                            <input type="number" class="form-control" id="quarantineQty" name="quarantineQty"
+                                                                                                                                   placeholder="" value="">
+                                                                                                                        </div>
+                                                                                                                    </div>
+                                                                                                                </div>
+                                                                                                                <div class="col-xl-2 col-sm-12 col-12">
+                                                                                                                    <div class="mb-3">
+                                                                                                                        <label for="externalCleanQty" class="form-label">Ext Clean Qty</label>
+                                                                                                                        <div class="input-group">
+                                                                                                                            <span class="input-group-text"><i class="bi bi-briefcase"></i></span>
+                                                                                                                            <input type="number" class="form-control" id="externalCleanQty" name="externalCleanQty"
+                                                                                                                                   placeholder="" value="">
+                                                                                                                        </div>
+                                                                                                                    </div>
+                                                                                                                </div>
+                                                                                                                <div class="col-xl-2 col-sm-12 col-12">
+                                                                                                                    <div class="mb-3">
+                                                                                                                        <label for="externalRecleanQty" class="form-label">Ext Re-clean Qty</label>
+                                                                                                                        <div class="input-group">
+                                                                                                                            <span class="input-group-text"><i class="bi bi-briefcase"></i></span>
+                                                                                                                            <input type="number" class="form-control" id="externalRecleanQty" name="externalRecleanQty"
+                                                                                                                                   placeholder="" value="">
+                                                                                                                        </div>
+                                                                                                                    </div>
+                                                                                                                </div>
+                                                                                                                <div class="col-xl-2 col-sm-12 col-12">
+                                                                                                                    <div class="mb-3">
+                                                                                                                        <label for="internalCleanQty" class="form-label">Int. Clean Qty</label>
+                                                                                                                        <div class="input-group">
+                                                                                                                            <span class="input-group-text"><i class="bi bi-briefcase"></i></span>
+                                                                                                                            <input type="number" class="form-control" id="internalCleanQty" name="internalCleanQty"
+                                                                                                                                   placeholder="" value="">
+                                                                                                                        </div>
+                                                                                                                    </div>
+                                                                                                                </div>
+                                                                                                                <div class="col-xl-2 col-sm-12 col-12">
+                                                                                                                    <div class="mb-3">
+                                                                                                                        <label for="internalRecleanQty" class="form-label">Int. Re-Clean Qty</label>
+                                                                                                                        <div class="input-group">
+                                                                                                                            <span class="input-group-text"><i class="bi bi-briefcase"></i></span>
+                                                                                                                            <input type="number" class="form-control" id="internalRecleanQty" name="internalRecleanQty"
+                                                                                                                                   placeholder="" value="">
+                                                                                                                        </div>
+                                                                                                                    </div>
+                                                                                                                </div>
+                                                                                                                <div class="col-xl-2 col-sm-12 col-12">
+                                                                                                                    <div class="mb-3">
+                                                                                                                        <label for="otherQty" class="form-label">Other Qty</label>
+                                                                                                                        <div class="input-group">
+                                                                                                                            <span class="input-group-text"><i class="bi bi-briefcase"></i></span>
+                                                                                                                            <input type="number" class="form-control" id="otherQty" name="otherQty"
+                                                                                                                                   placeholder="" value="">
+                                                                                                                        </div>
+                                                                                                                    </div>
+                                                                                                                </div>
+                                                                                                                <div class="col-xl-2 col-sm-12 col-12">
+                                                                                                                    <div class="mb-3">
+                                                                                                                        <label for="vendorQty" class="form-label">Vendor Qty</label>
+                                                                                                                        <div class="input-group">
+                                                                                                                            <span class="input-group-text"><i class="bi bi-briefcase"></i></span>
+                                                                                                                            <input type="number" class="form-control" id="vendorQty" name="vendorQty"
+                                                                                                                                   placeholder="" value="">
+                                                                                                                        </div>
+                                                                                                                    </div>
+                                                                                                                </div><div class="col-xl-2 col-sm-12 col-12">
+                                                                                                                    <div class="mb-3">
+                                                                                                                        <label for="otherOnsemiQty" class="form-label">Other onsemi Qty</label>
+                                                                                                                        <div class="input-group">
+                                                                                                                            <span class="input-group-text"><i class="bi bi-briefcase"></i></span>
+                                                                                                                            <input type="number" class="form-control" id="otherOnsemiQty" name="otherOnsemiQty"
+                                                                                                                                   placeholder="" value="">
+                                                                                                                        </div>
+                                                                                                                    </div>
+                                                                                                                </div>
+                                                                                                                <div class="col-xl-2 col-sm-12 col-12">
+                                                                                                                    <div class="mb-3">
+                                                                                                                        <label for="storageFactoryQty" class="form-label">Storage Factory Qty</label>
+                                                                                                                        <div class="input-group">
+                                                                                                                            <span class="input-group-text"><i class="bi bi-briefcase"></i></span>
+                                                                                                                            <input type="number" class="form-control" id="storageFactoryQty" name="storageFactoryQty"
+                                                                                                                                   placeholder="" value="">
+                                                                                                                        </div>
+                                                                                                                    </div>
+                                                                                                                </div>
+                                                                                                                                                                        <div class="col-xl-2 col-sm-12 col-12">
+                                                                                                                                                                            <div class="mb-3">
+                                                                                                                                                                                <label for="totalQty" class="form-label">Total Qty</label>
+                                                                                                                                                                                <div class="input-group">
+                                                                                                                                                                                    <span class="input-group-text"><i class="bi bi-briefcase"></i></span>
+                                                                                                                                                                                    <input type="number" class="form-control" id="totalQty" name="totalQty"
+                                                                                                                                                                                           placeholder="" value="" disabled>
+                                                                                                                                                                                </div>
+                                                                                                                                                                            </div>
+                                                                                                                                                                        </div>
+                                                                                                                <div class="col-xl-2 col-sm-12 col-12">
+                                                                                                                    <div class="mb-3">
+                                                                                                                        <label for="expirationDate" class="form-label">Expiration Date</label>
+                                                                                                                        <div class="input-group">
+                                                                                                                            <span class="input-group-text">
+                                                                                                                                <i class="bi bi-calendar4"></i>
+                                                                                                                            </span>
+                                                                                                                            <input type="text" id="expirationDate" name="expirationDate" class="form-control datepicker-week-numbers">
+                                                                                                                        </div>
+                                                                                                                    </div>
+                                                                                                                </div>
+                                                                                                                <div class="col-xl-2 col-sm-12 col-12">
+                                                                                                                    <div class="mb-3">
+                                                                                                                        <label for="isConsumable" class="form-label">Consumable?</label>
+                                                                                                                        <div class="input-group form-check form-switch">
+                                                                                                                            <input class="form-check-input" type="checkbox" role="switch" id="isConsumable" name="isConsumable">
+                                                                                                                        </div>
+                                                                                                                    </div>
+                                                                                                                </div>
+                                                        
+                                                                                                                 Additional Information Section 
+                                                                                                                <div class="col-12 mt-2 mb-3">
+                                                                                                                    <h6 class="fw-semibold mb-3 border-start border-warning ps-2"
+                                                                                                                        style="border-left-width: 3px !important;">
+                                                                                                                        <i class="bi bi-chat-square-text me-2"></i>Additional Information
+                                                                                                                    </h6>
+                                                                                                                </div>
+                                                                                                                <div class="col-12">
+                                                                                                                    <div class="mb-3">
+                                                                                                                        <label for="remarks" class="form-label">Remarks</label>
+                                                                                                                        <div class="input-group">
+                                                                                                                            <span class="input-group-text"><i class="bi bi-pencil"></i></span>
+                                                                                                                            <textarea class="form-control" id="remarks" name="remarks" placeholder="Enter Message"
+                                                                                                                                      rows="3"></textarea>
                                                                                                                         </div>
                                                                                                                     </div>
                                                                                                                 </div>-->
-                                                        <div class="col-xl-2 col-sm-12 col-12">
-                                                            <div class="mb-3">
-                                                                <label for="expirationDate" class="form-label">Expiration Date</label>
-                                                                <div class="input-group">
-                                                                    <span class="input-group-text">
-                                                                        <i class="bi bi-calendar4"></i>
-                                                                    </span>
-                                                                    <input type="text" id="expirationDate" name="expirationDate" class="form-control datepicker-week-numbers">
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                        <div class="col-xl-2 col-sm-12 col-12">
-                                                            <div class="mb-3">
-                                                                <label for="isConsumable" class="form-label">Consumable?</label>
-                                                                <div class="input-group form-check form-switch">
-                                                                    <input class="form-check-input" type="checkbox" role="switch" id="isConsumable" name="isConsumable">
-                                                                </div>
-                                                            </div>
-                                                        </div>
-
-                                                        <!-- Additional Information Section -->
-                                                        <div class="col-12 mt-2 mb-3">
-                                                            <h6 class="fw-semibold mb-3 border-start border-warning ps-2"
-                                                                style="border-left-width: 3px !important;">
-                                                                <i class="bi bi-chat-square-text me-2"></i>Additional Information
-                                                            </h6>
-                                                        </div>
-                                                        <div class="col-12">
-                                                            <div class="mb-3">
-                                                                <label for="remarks" class="form-label">Remarks</label>
-                                                                <div class="input-group">
-                                                                    <span class="input-group-text"><i class="bi bi-pencil"></i></span>
-                                                                    <textarea class="form-control" id="remarks" name="remarks" placeholder="Enter Message"
-                                                                              rows="3"></textarea>
-                                                                </div>
-                                                            </div>
-                                                        </div>
 
                                                         <!-- Form actions start -->
                                                         <div class="col-md-12">
@@ -3423,7 +3381,7 @@
                                                             <!--</div>-->
                                                             <!--<div class="justify-content-start">-->
                                                             <!--<button type="button" class="btn btn-light">Cancel</button>-->
-                                                            <a href="${contextPath}/hw/item/" class="btn btn-dark float-start">Back</a>
+                                                            <a href="${contextPath}/hw" class="btn btn-dark float-start">Back</a>
                                                             <!--</div>-->
                                                         </div>
                                                         <!-- Form actions end -->
@@ -3501,64 +3459,81 @@
             <img class="img3" src="${contextPath}/resources/onsemi logo.webp" alt="onsemi">
             <span>© HEATs 2025</span>
         </div>
-    </div>
-</s:layout-component>
-<s:layout-component name="page_js">
+        </div>
+    </s:layout-component>
+    <s:layout-component name="page_js">
 
-    <!-- Date Range JS -->
-    <script src="${contextPath}/resources/statflow/vendor/daterange/daterange.js"></script>
-    <script src="${contextPath}/resources/statflow/vendor/daterange/custom-daterange.js"></script>
+        <!-- Date Range JS -->
+        <script src="${contextPath}/resources/statflow/vendor/daterange/daterange.js"></script>
+        <script src="${contextPath}/resources/statflow/vendor/daterange/custom-daterange.js"></script>
 
-    <!-- Data Tables -->
-    <script src="${contextPath}/resources/statflow/vendor/datatables/dataTables.min.js"></script>
-    <script src="${contextPath}/resources/statflow/vendor/datatables/dataTables.bootstrap.min.js"></script>
+        <!-- Data Tables -->
+        <script src="${contextPath}/resources/statflow/vendor/datatables/dataTables.min.js"></script>
+        <script src="${contextPath}/resources/statflow/vendor/datatables/dataTables.bootstrap.min.js"></script>
 
-    <!-- Custom Data tables -->
-    <script src="${contextPath}/resources/statflow/vendor/datatables/custom/custom-datatables.js"></script>
+        <!-- Custom Data tables -->
+        <script src="${contextPath}/resources/statflow/vendor/datatables/custom/custom-datatables.js"></script>
 
-    <!-- DataTable Buttons -->
-    <script src="${contextPath}/resources/statflow/vendor/datatables/buttons/dataTables.buttons.min.js"></script>
-    <script src="${contextPath}/resources/statflow/vendor/datatables/buttons/jszip.min.js"></script>
-    <script src="${contextPath}/resources/statflow/vendor/datatables/buttons/dataTables.buttons.min.js"></script>
-    <script src="${contextPath}/resources/statflow/vendor/datatables/buttons/pdfmake.min.js"></script>
-    <script src="${contextPath}/resources/statflow/vendor/datatables/buttons/vfs_fonts.js"></script>
-    <script src="${contextPath}/resources/statflow/vendor/datatables/buttons/buttons.html5.min.js"></script>
-    <script src="${contextPath}/resources/statflow/vendor/datatables/buttons/buttons.print.min.js"></script>
-    <script src="${contextPath}/resources/statflow/vendor/datatables/buttons/buttons.colVis.min.js"></script>
+        <!-- DataTable Buttons -->
+        <script src="${contextPath}/resources/statflow/vendor/datatables/buttons/dataTables.buttons.min.js"></script>
+        <script src="${contextPath}/resources/statflow/vendor/datatables/buttons/jszip.min.js"></script>
+        <script src="${contextPath}/resources/statflow/vendor/datatables/buttons/dataTables.buttons.min.js"></script>
+        <script src="${contextPath}/resources/statflow/vendor/datatables/buttons/pdfmake.min.js"></script>
+        <script src="${contextPath}/resources/statflow/vendor/datatables/buttons/vfs_fonts.js"></script>
+        <script src="${contextPath}/resources/statflow/vendor/datatables/buttons/buttons.html5.min.js"></script>
+        <script src="${contextPath}/resources/statflow/vendor/datatables/buttons/buttons.print.min.js"></script>
+        <script src="${contextPath}/resources/statflow/vendor/datatables/buttons/buttons.colVis.min.js"></script>
 
-    <!-- Bootstrap Select JS -->
-    <script src="${contextPath}/resources/statflow/vendor/bs-select/bs-select.min.js"></script>
-    <script src="${contextPath}/resources/statflow/vendor/bs-select/bs-select-custom.js"></script>
-</s:layout-component>
-<s:layout-component name="page_js_inline">
-    <script>
-        
-        $(".datepicker-week-numbers").daterangepicker({
-        singleDatePicker: true,
-        showWeekNumbers: true,
-        startDate: moment().startOf("hour"),
-        endDate: moment().startOf("hour").add(32, "hour"),
-        locale: {
-//		format: "DD/MM/YYYY",
-                format: "YYYY/MM/DD",
-        },
-});
+        <!-- Bootstrap Select JS -->
+        <script src="${contextPath}/resources/statflow/vendor/bs-select/bs-select.min.js"></script>
+        <script src="${contextPath}/resources/statflow/vendor/bs-select/bs-select-custom.js"></script>
+    </s:layout-component>
+    <s:layout-component name="page_js_inline">
+        <script>
 
-        $(document).ready(function () {
+            // Fetch all the forms we want to apply custom Bootstrap validation styles to
+            const forms = document.querySelectorAll('.needs-validation');
 
-//            $('#onHandQty').change(function () {
-////                    $('#totalQty').val(parseInt($('#onHandQty').val()) + parseInt($('#productionQty').val()) + parseInt($('#productionStagingQty').val()) + parseInt($('#repairQty').val()));
-//                $('#totalQty').val(parseInt($('#onHandQty').val()));
-//            });
-            var element = $('#itemTypeRead');
-                    if (!element.val()) {
-//                        alert();
-                          $("#submit").attr("disabled", true);
-                    } else {
-                         $("#submit").removeAttr('disabled');
+            // Loop over them and prevent submission
+            Array.prototype.slice.call(forms).forEach((form) => {
+                form.addEventListener('submit', (event) => {
+                    if (!form.checkValidity()) {
+                        event.preventDefault();
+                        event.stopPropagation();
                     }
+                    form.classList.add('was-validated');
+                }, false);
+            });
 
-        });
-    </script>
-</s:layout-component>
+            $(".datepicker-week-numbers").daterangepicker({
+                singleDatePicker: true,
+                showWeekNumbers: true,
+                startDate: moment().startOf("hour"),
+                endDate: moment().startOf("hour").add(32, "hour"),
+                locale: {
+                    //		format: "DD/MM/YYYY",
+                    format: "YYYY/MM/DD",
+                },
+            });
+
+            $(document).ready(function () {
+                $(".js-example-tags").select2({
+                    tags: true
+                });
+
+                //            $('#onHandQty').change(function () {
+                ////                    $('#totalQty').val(parseInt($('#onHandQty').val()) + parseInt($('#productionQty').val()) + parseInt($('#productionStagingQty').val()) + parseInt($('#repairQty').val()));
+                //                $('#totalQty').val(parseInt($('#onHandQty').val()));
+                //            });
+                var element = $('#itemTypeRead');
+                if (!element.val()) {
+                    //                        alert();
+                    $("#submit").attr("disabled", true);
+                } else {
+                    $("#submit").removeAttr('disabled');
+                }
+
+            });
+        </script>
+    </s:layout-component>
 </s:layout-render>

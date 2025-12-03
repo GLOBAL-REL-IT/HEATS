@@ -224,8 +224,9 @@ public class LDAPUserDAO {
 
     public LDAPUser getByLoginId(String loginId) {
         LDAPUser user = new LDAPUser();
-        String sql = "SELECT u.*, IFNULL(ug.code, '') AS group_code, IFNULL(ug.name, '') AS group_name FROM user_ldap u "
+        String sql = "SELECT u.*, IFNULL(ug.code, '') AS group_code, IFNULL(ug.name, '') AS group_name, uac.* FROM user_ldap u "
                 + "LEFT JOIN user_group ug ON (u.group_id = ug.id) "
+                + "LEFT JOIN user_access_control uac ON u.id = uac.user_id "
                 + "WHERE u.login_id = ?";
         try {
             ResultSetHandler<LDAPUser> h = new ResultSetHandler<LDAPUser>() {
@@ -246,14 +247,17 @@ public class LDAPUserDAO {
                         //auth
                         user.setSrEmailRetrieve(rs.getString("sr_email_retrieve"));
                         user.setScrap(rs.getString("sr_scrap"));
-//                        user.setSrEmailShipping(rs.getString("sr_email_shipping"));
-//                        user.setSrEmailShipToRl(rs.getString("sr_email_ship_to_rl"));
-//                        user.setHwEmailRetrieve(rs.getString("hw_email_retrieve"));
-//                        user.setHwEmailShipToRl(rs.getString("hw_email_ship_to_rl"));
-//                        user.setFeaturesTestEmail(rs.getString("features_test_email"));
-//                        user.setFeaturesTrackGts(rs.getString("features_track_gts"));
-//                        user.setFeaturesTrackInventory(rs.getString("features_track_inventory"));
-//                        user.setFeaturesCreateGts(rs.getString("features_create_gts"));
+                        user.setItemAdd(rs.getString("uac.item_add"));
+                        user.setItemEdit(rs.getString("uac.item_edit"));
+                        user.setItemDelete(rs.getString("uac.item_delete"));
+                        user.setItemActivityConfig(rs.getString("uac.item_activity_config"));
+                        user.setItemActivityAdd(rs.getString("uac.item_activity_add"));
+                        user.setItemActivityEdit(rs.getString("uac.item_activity_edit"));
+                        user.setItemHardwareAdd(rs.getString("uac.item_hardware_add"));
+                        user.setItemHardwareEdit(rs.getString("uac.item_hardware_edit"));
+                        user.setItemHardwareDelete(rs.getString("uac.item_hardware_delete"));
+                        user.setItemMovementAdd(rs.getString("uac.item_movement_add"));
+                        user.setItemSfRecall(rs.getString("uac.item_sf_recall"));
                     }
                     return user;
                 }

@@ -522,9 +522,10 @@ public class SPTSRequestTest {
                 System.out.println("GET BOOKED EQUIPMENT...");
         JSONObject params0 = new JSONObject();
 //        String equipmentID = "H3T 1";
-        params0.put("itemsPKID", "14070");
+        params0.put("pkID", "9");
 //        params0.put("eventNameCode", "HTOL");
-        JSONArray getBookedEquipment2 = SPTSWebService.getTransactionByParam(params0);
+//        JSONArray getBookedEquipment2 = SPTSWebService.getSFItemByParam(params0);
+        JSONArray getBookedEquipment2 = SPTSWebService.getSubTypeAll();
         for (int i = 0; i < getBookedEquipment2.length(); i++) {
             System.out.println(getBookedEquipment2.getJSONObject(i));
         }

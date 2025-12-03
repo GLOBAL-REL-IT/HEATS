@@ -1,10 +1,15 @@
 package com.onsemi.mib.controller;
 
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.base.Strings;
 import com.onsemi.mib.dao.HardwareDAO;
 import com.onsemi.mib.dao.ItemDAO;
 import com.onsemi.mib.dao.HimsRequestDAO;
 import com.onsemi.mib.dao.ItemActivityConfigDAO;
+import com.onsemi.mib.dao.ItemAluConfigDAO;
+import com.onsemi.mib.dao.ItemRecallDAO;
+import com.onsemi.mib.dao.ItemStorageFactoryDAO;
 import com.onsemi.mib.dao.ItemTransactionDAO;
 import com.onsemi.mib.dao.ItemVisualInspectionDAO;
 import com.onsemi.mib.dao.ManualTestDAO;
@@ -17,12 +22,17 @@ import com.onsemi.mib.model.Hardware;
 import com.onsemi.mib.model.Item;
 import com.onsemi.mib.model.HimsInventory;
 import com.onsemi.mib.model.ItemActivityConfig;
+import com.onsemi.mib.model.ItemRecall;
+import com.onsemi.mib.model.ItemStorageFactory;
 import com.onsemi.mib.model.ItemTransaction;
 import com.onsemi.mib.model.ItemVisualInspection;
 import com.onsemi.mib.model.ParameterDetails;
 import com.onsemi.mib.model.Request;
 import com.onsemi.mib.model.UserSession;
+import com.onsemi.mib.model.WhRetrieval;
+import com.onsemi.mib.tools.HimsRetrieve;
 import com.onsemi.mib.tools.QueryResult;
+import com.onsemi.mib.tools.SPTSResponse;
 import com.onsemi.mib.tools.SPTSWebService;
 import com.onsemi.mib.tools.SystemUtil;
 import java.io.File;
@@ -76,7 +86,7 @@ public class ItemController {
     @Autowired
     ServletContext servletContext;
 
-    @RequestMapping(value = "/item", method = {RequestMethod.GET, RequestMethod.POST}) //without checking SPTS data and update to MIB DB
+    @RequestMapping(value = "", method = {RequestMethod.GET, RequestMethod.POST}) //without checking SPTS data and update to MIB DB
     public String request(
             Model model,
             @ModelAttribute UserSession userSession,
@@ -105,16 +115,73 @@ public class ItemController {
         List<ParameterDetails> paramItemUsage = pD.getGroupParameterDetailList("", "001");
         model.addAttribute("paramItemUsage", paramItemUsage);
 
+        pD = new ParameterDetailsDAO();
+        List<ParameterDetails> paramItemUsageEqpt = pD.getGroupParameterDetailList("", "018");
+        model.addAttribute("paramItemUsageEqpt", paramItemUsageEqpt);
+
+        ItemDAO itemD = new ItemDAO();
+        List<Item> listAssemblyId = itemD.getItemAssemblyId("");
+        model.addAttribute("listAssemblyId", listAssemblyId);
+
+        itemD = new ItemDAO();
+        List<Item> listModel = itemD.getItemModel("");
+        model.addAttribute("listModel", listModel);
+
+        itemD = new ItemDAO();
+        List<Item> listManufacturer = itemD.getItemManufacturer("");
+        model.addAttribute("listManufacturer", listManufacturer);
+
+        itemD = new ItemDAO();
+        List<Item> listEqptModel = itemD.getItemEqptModel("");
+        model.addAttribute("listEqptModel", listEqptModel);
+
+        itemD = new ItemDAO();
+        List<Item> listEqptType = itemD.getItemEqptType("");
+        model.addAttribute("listEqptType", listEqptType);
+
+        itemD = new ItemDAO();
+        List<Item> listEqptManufacturer = itemD.getItemEqptManufacturer("");
+        model.addAttribute("listEqptManufacturer", listEqptManufacturer);
+
+        itemD = new ItemDAO();
+        List<Item> listStressType = itemD.getItemStressType("");
+        model.addAttribute("listStressType", listStressType);
+
+        model.addAttribute("userItemAdd", userSession.getItemAdd());
+        model.addAttribute("userItemEdit", userSession.getItemEdit());
+        model.addAttribute("userItemDelete", userSession.getItemDelete());
+        model.addAttribute("userItemHwAdd", userSession.getItemHardwareAdd());
+        model.addAttribute("userItemHwEdit", userSession.getItemHardwareEdit());
+        model.addAttribute("userItemHwDelete", userSession.getItemHardwareDelete());
+        model.addAttribute("userItemActConfig", userSession.getItemActivityConfig());
+        model.addAttribute("userItemActAdd", userSession.getItemActivityAdd());
+        model.addAttribute("userItemActEdit", userSession.getItemActivityEdit());
+        model.addAttribute("userItemMovement", userSession.getItemMovementAdd());
+        model.addAttribute("userItemSfRecall", userSession.getItemSfRecall());
+
         return "item/item";
 //        return "hardware/hardware_json";
     }
 
-    @RequestMapping(value = "/item2", method = {RequestMethod.GET, RequestMethod.POST}) //checking SPTS data and update to MIB DB
+    @RequestMapping(value = "/item2/{itemType}", method = {RequestMethod.GET, RequestMethod.POST}) //checking SPTS data and update to MIB DB
     public String request2(
             Model model,
             @ModelAttribute UserSession userSession,
-            @RequestParam(required = false) String itemType
+            @PathVariable("itemType") String itemType
+    //            @RequestParam(required = false) String itemType
     ) throws IOException {
+
+        model.addAttribute("userItemAdd", userSession.getItemAdd());
+        model.addAttribute("userItemEdit", userSession.getItemEdit());
+        model.addAttribute("userItemDelete", userSession.getItemDelete());
+        model.addAttribute("userItemHwAdd", userSession.getItemHardwareAdd());
+        model.addAttribute("userItemHwEdit", userSession.getItemHardwareEdit());
+        model.addAttribute("userItemHwDelete", userSession.getItemHardwareDelete());
+        model.addAttribute("userItemActConfig", userSession.getItemActivityConfig());
+        model.addAttribute("userItemActAdd", userSession.getItemActivityAdd());
+        model.addAttribute("userItemActEdit", userSession.getItemActivityEdit());
+        model.addAttribute("userItemMovement", userSession.getItemMovementAdd());
+        model.addAttribute("userItemSfRecall", userSession.getItemSfRecall());
 
         JSONArray getItemTypeAll = SPTSWebService.getItemTypeAll();
         List<LinkedHashMap<String, String>> itemTpeAll = SystemUtil.jsonArrayToList(getItemTypeAll);
@@ -139,235 +206,239 @@ public class ItemController {
             //insert into database
             for (int i = 0; i < getItemByParam.length(); i++) {
 
+                Item hw = new Item();
+                hw.setItemType(getItemByParam.getJSONObject(i).getString("ItemType"));
+                hw.setItemId(getItemByParam.getJSONObject(i).getString("ItemID"));
+                hw.setItemName(getItemByParam.getJSONObject(i).getString("ItemName"));
+                if (getItemByParam.getJSONObject(i).has("SubType")) {
+                    hw.setSubType(getItemByParam.getJSONObject(i).getString("SubType"));
+                }
+                if (getItemByParam.getJSONObject(i).has("ALUHrs")) {
+                    hw.setAluHrs(Double.toString(getItemByParam.getJSONObject(i).getDouble("ALUHrs")));
+                }
+                if (getItemByParam.getJSONObject(i).has("AssemblyID")) {
+                    Object assembly = getItemByParam.getJSONObject(i).get("AssemblyID");
+                    if (assembly instanceof String) {
+                        hw.setAssemblyId(getItemByParam.getJSONObject(i).getString("AssemblyID"));
+                    } else {
+                        hw.setAssemblyId(Integer.toString(getItemByParam.getJSONObject(i).getInt("AssemblyID")));
+                    }
+                }
+                if (getItemByParam.getJSONObject(i).has("Complexity")) {
+                    hw.setComplexity(getItemByParam.getJSONObject(i).getString("Complexity"));
+                }
+                if (getItemByParam.getJSONObject(i).has("EquipmentManufacturer")) {
+                    Object assembly = getItemByParam.getJSONObject(i).get("EquipmentManufacturer");
+                    if (assembly instanceof String) {
+                        hw.setEquipmentManufacturer(getItemByParam.getJSONObject(i).getString("EquipmentManufacturer"));
+                    } else {
+                        hw.setEquipmentManufacturer(Integer.toString(getItemByParam.getJSONObject(i).getInt("EquipmentManufacturer")));
+                    }
+                }
+                if (getItemByParam.getJSONObject(i).has("EquipmentModel")) {
+                    Object eqptModel = getItemByParam.getJSONObject(i).get("EquipmentModel");
+                    if (eqptModel instanceof String) {
+                        hw.setEquipmentModel(getItemByParam.getJSONObject(i).getString("EquipmentModel"));
+                    } else {
+                        hw.setEquipmentModel(Integer.toString(getItemByParam.getJSONObject(i).getInt("EquipmentModel")));
+                    }
+                }
+                if (getItemByParam.getJSONObject(i).has("EquipmentType")) {
+                    hw.setEquipmentType(getItemByParam.getJSONObject(i).getString("EquipmentType"));
+                }
+                if (getItemByParam.getJSONObject(i).has("ExpirationDate")) {
+                    String date1 = getItemByParam.getJSONObject(i).getString("ExpirationDate").substring(0, 10);
+                    hw.setExpirationDate(date1);
+                }
+                if (getItemByParam.getJSONObject(i).has("ExternalRecleaningQty")) {
+                    hw.setExternalRecleanQty(Integer.toString(getItemByParam.getJSONObject(i).getInt("ExternalRecleaningQty")));
+                }
+                if (getItemByParam.getJSONObject(i).has("ExternalCleaningQty")) {
+                    hw.setExternalCleanQty(Integer.toString(getItemByParam.getJSONObject(i).getInt("ExternalCleaningQty")));
+                }
+                if (getItemByParam.getJSONObject(i).has("InternalCleaningQty")) {
+                    hw.setInternalCleanQty(Integer.toString(getItemByParam.getJSONObject(i).getInt("InternalCleaningQty")));
+                }
+                if (getItemByParam.getJSONObject(i).has("InternalRecleaningQty")) {
+                    hw.setInternalRecleanQty(Integer.toString(getItemByParam.getJSONObject(i).getInt("InternalRecleaningQty")));
+                }
+                if (getItemByParam.getJSONObject(i).has("IsConsumeable")) {
+                    hw.setIsConsumable(Boolean.toString(getItemByParam.getJSONObject(i).getBoolean("IsConsumeable")));
+                }
+                if (getItemByParam.getJSONObject(i).has("IsCritical")) {
+                    hw.setIsCritical(Boolean.toString(getItemByParam.getJSONObject(i).getBoolean("IsCritical")));
+                }
+                if (getItemByParam.getJSONObject(i).has("Manufacturer")) {
+                    Object assembly = getItemByParam.getJSONObject(i).get("Manufacturer");
+                    if (assembly instanceof String) {
+                        hw.setManufacturer(getItemByParam.getJSONObject(i).getString("Manufacturer"));
+                    } else {
+                        hw.setManufacturer(Integer.toString(getItemByParam.getJSONObject(i).getInt("Manufacturer")));
+                    }
+                }
+                if (getItemByParam.getJSONObject(i).has("MaxQty")) {
+                    hw.setMaxQty(Integer.toString(getItemByParam.getJSONObject(i).getInt("MaxQty")));
+                }
+                if (getItemByParam.getJSONObject(i).has("MinQty")) {
+                    hw.setMinQty(Integer.toString(getItemByParam.getJSONObject(i).getInt("MinQty")));
+                }
+                if (getItemByParam.getJSONObject(i).has("Model")) {
+
+                    Object modelSpts = getItemByParam.getJSONObject(i).get("Model");
+                    if (modelSpts instanceof String) {
+                        hw.setModel(getItemByParam.getJSONObject(i).getString("Model"));
+                    } else {
+                        hw.setModel(Integer.toString(getItemByParam.getJSONObject(i).getInt("Model")));
+                    }
+                }
+                if (getItemByParam.getJSONObject(i).has("OnHandQty")) {
+                    hw.setOnHandQty(Integer.toString(getItemByParam.getJSONObject(i).getInt("OnHandQty")));
+                }
+                if (getItemByParam.getJSONObject(i).has("OtherONQty")) {
+                    hw.setOtherOnsemiQty(Integer.toString(getItemByParam.getJSONObject(i).getInt("OtherONQty")));
+                }
+                if (getItemByParam.getJSONObject(i).has("OtherQty")) {
+                    hw.setOtherQty(Integer.toString(getItemByParam.getJSONObject(i).getInt("OtherQty")));
+                }
+                if (getItemByParam.getJSONObject(i).has("PMWW1")) {
+                    Object assembly = getItemByParam.getJSONObject(i).get("PMWW1");
+                    if (assembly instanceof String) {
+                        hw.setPmWw1(getItemByParam.getJSONObject(i).getString("PMWW1"));
+                    } else {
+                        hw.setPmWw1(Integer.toString(getItemByParam.getJSONObject(i).getInt("PMWW1")));
+                    }
+                }
+                if (getItemByParam.getJSONObject(i).has("PMWW2")) {
+                    Object assembly = getItemByParam.getJSONObject(i).get("PMWW2");
+                    if (assembly instanceof String) {
+                        hw.setPmWw2(getItemByParam.getJSONObject(i).getString("PMWW2"));
+                    } else {
+                        hw.setPmWw2(Integer.toString(getItemByParam.getJSONObject(i).getInt("PMWW2")));
+                    }
+                }
+                if (getItemByParam.getJSONObject(i).has("ProductionQty")) {
+                    hw.setProductionQty(Integer.toString(getItemByParam.getJSONObject(i).getInt("ProductionQty")));
+                }
+                if (getItemByParam.getJSONObject(i).has("ProductionStagingQty")) {
+                    hw.setProductionStagingQty(Integer.toString(getItemByParam.getJSONObject(i).getInt("ProductionStagingQty")));
+                }
+                if (getItemByParam.getJSONObject(i).has("QuarantineQty")) {
+                    hw.setQuarantineQty(Integer.toString(getItemByParam.getJSONObject(i).getInt("QuarantineQty")));
+                }
+                if (getItemByParam.getJSONObject(i).has("Rack")) {
+
+                    Object rack = getItemByParam.getJSONObject(i).get("Rack");
+                    if (rack instanceof String) {
+                        hw.setRack(getItemByParam.getJSONObject(i).getString("Rack"));
+                    } else {
+                        hw.setRack(Integer.toString(getItemByParam.getJSONObject(i).getInt("Rack")));
+                    }
+                }
+                if (getItemByParam.getJSONObject(i).has("Remarks")) {
+                    Object assembly = getItemByParam.getJSONObject(i).get("Remarks");
+                    if (assembly instanceof String) {
+                        hw.setRemarks(getItemByParam.getJSONObject(i).getString("Remarks"));
+                    } else {
+                        hw.setRemarks(Integer.toString(getItemByParam.getJSONObject(i).getInt("Remarks")));
+                    }
+                }
+                if (getItemByParam.getJSONObject(i).has("RepairQty")) {
+                    hw.setRepairQty(Integer.toString(getItemByParam.getJSONObject(i).getInt("RepairQty")));
+                }
+                if (getItemByParam.getJSONObject(i).has("Shelf")) {
+
+                    Object shelfStr = getItemByParam.getJSONObject(i).get("Shelf");
+                    if (shelfStr instanceof String) {
+                        hw.setShelf(getItemByParam.getJSONObject(i).getString("Shelf"));
+                    } else {
+                        hw.setShelf(Integer.toString(getItemByParam.getJSONObject(i).getInt("Shelf")));
+                    }
+                }
+                if (getItemByParam.getJSONObject(i).has("PKID")) {
+                    hw.setSptsPkid(Integer.toString(getItemByParam.getJSONObject(i).getInt("PKID")));
+                }
+                if (getItemByParam.getJSONObject(i).has("StatusName")) {
+                    Object assembly = getItemByParam.getJSONObject(i).get("StatusName");
+                    if (assembly instanceof String) {
+                        hw.setStatus(getItemByParam.getJSONObject(i).getString("StatusName"));
+                        if ("Scrapped".equals(getItemByParam.getJSONObject(i).getString("StatusName"))) {
+                            hw.setFlag("99");
+                        } else {
+                            hw.setFlag("1");
+                        }
+                    } else {
+                        hw.setStatus(Integer.toString(getItemByParam.getJSONObject(i).getInt("StatusName")));
+                        if ("Scrapped".equals(Integer.toString(getItemByParam.getJSONObject(i).getInt("StatusName")))) {
+                            hw.setFlag("99");
+                        } else {
+                            hw.setFlag("1");
+                        }
+                    }
+                }
+                if (getItemByParam.getJSONObject(i).has("StorageFactoryQty")) {
+                    Object storage = getItemByParam.getJSONObject(i).get("StorageFactoryQty");
+                    if (storage instanceof String) {
+                        hw.setStorageFactoryQty(getItemByParam.getJSONObject(i).getString("StorageFactoryQty"));
+                    } else {
+                        hw.setStorageFactoryQty(Integer.toString(getItemByParam.getJSONObject(i).getInt("StorageFactoryQty")));
+                    }
+                }
+                if (getItemByParam.getJSONObject(i).has("StressType")) {
+                    Object assembly = getItemByParam.getJSONObject(i).get("StressType");
+                    if (assembly instanceof String) {
+                        hw.setStressType(getItemByParam.getJSONObject(i).getString("StressType"));
+                    } else {
+                        hw.setStressType(Integer.toString(getItemByParam.getJSONObject(i).getInt("StressType")));
+                    }
+                }
+                if (getItemByParam.getJSONObject(i).has("TotalCost")) {
+                    hw.setTotalCost(Double.toString(getItemByParam.getJSONObject(i).getDouble("TotalCost")));
+                }
+                if (getItemByParam.getJSONObject(i).has("TotalQty")) {
+                    hw.setTotalQty(Integer.toString(getItemByParam.getJSONObject(i).getInt("TotalQty")));
+                }
+                if (getItemByParam.getJSONObject(i).has("UnitCost")) {
+                    hw.setUnitCost(Double.toString(getItemByParam.getJSONObject(i).getDouble("UnitCost")));
+                }
+                if (getItemByParam.getJSONObject(i).has("VendorQty")) {
+                    hw.setVendorQty(Integer.toString(getItemByParam.getJSONObject(i).getInt("VendorQty")));
+                }
+                if (getItemByParam.getJSONObject(i).has("DowntimeUnit")) {
+                    Object assembly = getItemByParam.getJSONObject(i).get("DowntimeUnit");
+                    if (assembly instanceof String) {
+                        hw.setDowntimeUnit(getItemByParam.getJSONObject(i).getString("DowntimeUnit"));
+                    } else {
+                        hw.setDowntimeUnit(Integer.toString(getItemByParam.getJSONObject(i).getInt("DowntimeUnit")));
+                    }
+                }
+                if (getItemByParam.getJSONObject(i).has("DowntimeValue")) {
+                    hw.setDowntimeValue(Double.toString(getItemByParam.getJSONObject(i).getDouble("DowntimeValue")));
+                }
+                if (getItemByParam.getJSONObject(i).has("ImplementationCost")) {
+                    hw.setImplementationCost(Double.toString(getItemByParam.getJSONObject(i).getDouble("ImplementationCost")));
+                }
+                if (getItemByParam.getJSONObject(i).has("ManpowerUnit")) {
+                    Object assembly = getItemByParam.getJSONObject(i).get("ManpowerUnit");
+                    if (assembly instanceof String) {
+                        hw.setManpowerUnit(getItemByParam.getJSONObject(i).getString("ManpowerUnit"));
+                    } else {
+                        hw.setManpowerUnit(Integer.toString(getItemByParam.getJSONObject(i).getInt("ManpowerUnit")));
+                    }
+                }
+                if (getItemByParam.getJSONObject(i).has("ManpowerValue")) {
+                    hw.setManpowerValue(Double.toString(getItemByParam.getJSONObject(i).getDouble("ManpowerValue")));
+                }
+
                 ItemDAO hwD = new ItemDAO();
                 int countPkid = hwD.getCountPkid(Integer.toString(getItemByParam.getJSONObject(i).getInt("PKID")));
+
                 if (countPkid == 0) {
-
-                    Item hw = new Item();
-                    hw.setItemType(getItemByParam.getJSONObject(i).getString("ItemType"));
-                    hw.setItemId(getItemByParam.getJSONObject(i).getString("ItemID"));
-                    hw.setItemName(getItemByParam.getJSONObject(i).getString("ItemName"));
-                    if (getItemByParam.getJSONObject(i).has("SubType")) {
-                        hw.setSubType(getItemByParam.getJSONObject(i).getString("SubType"));
-                    }
-                    if (getItemByParam.getJSONObject(i).has("ALUHrs")) {
-                        hw.setAluHrs(Double.toString(getItemByParam.getJSONObject(i).getDouble("ALUHrs")));
-                    }
-                    if (getItemByParam.getJSONObject(i).has("AssemblyID")) {
-                        Object assembly = getItemByParam.getJSONObject(i).get("AssemblyID");
-                        if (assembly instanceof String) {
-                            hw.setAssemblyId(getItemByParam.getJSONObject(i).getString("AssemblyID"));
-                        } else {
-                            hw.setAssemblyId(Integer.toString(getItemByParam.getJSONObject(i).getInt("AssemblyID")));
-                        }
-                    }
-                    if (getItemByParam.getJSONObject(i).has("Complexity")) {
-                        hw.setComplexity(getItemByParam.getJSONObject(i).getString("Complexity"));
-                    }
-                    if (getItemByParam.getJSONObject(i).has("EquipmentManufacturer")) {
-                        Object assembly = getItemByParam.getJSONObject(i).get("EquipmentManufacturer");
-                        if (assembly instanceof String) {
-                            hw.setEquipmentManufacturer(getItemByParam.getJSONObject(i).getString("EquipmentManufacturer"));
-                        } else {
-                            hw.setEquipmentManufacturer(Integer.toString(getItemByParam.getJSONObject(i).getInt("EquipmentManufacturer")));
-                        }
-                    }
-                    if (getItemByParam.getJSONObject(i).has("EquipmentModel")) {
-                        Object eqptModel = getItemByParam.getJSONObject(i).get("EquipmentModel");
-                        if (eqptModel instanceof String) {
-                            hw.setEquipmentModel(getItemByParam.getJSONObject(i).getString("EquipmentModel"));
-                        } else {
-                            hw.setEquipmentModel(Integer.toString(getItemByParam.getJSONObject(i).getInt("EquipmentModel")));
-                        }
-                    }
-                    if (getItemByParam.getJSONObject(i).has("EquipmentType")) {
-                        hw.setEquipmentType(getItemByParam.getJSONObject(i).getString("EquipmentType"));
-                    }
-                    if (getItemByParam.getJSONObject(i).has("ExpirationDate")) {
-                        String date1 = getItemByParam.getJSONObject(i).getString("ExpirationDate").substring(0, 10);
-                        hw.setExpirationDate(date1);
-                    }
-                    if (getItemByParam.getJSONObject(i).has("ExternalRecleaningQty")) {
-                        hw.setExternalRecleanQty(Integer.toString(getItemByParam.getJSONObject(i).getInt("ExternalRecleaningQty")));
-                    }
-                    if (getItemByParam.getJSONObject(i).has("ExternalCleaningQty")) {
-                        hw.setExternalCleanQty(Integer.toString(getItemByParam.getJSONObject(i).getInt("ExternalCleaningQty")));
-                    }
-                    if (getItemByParam.getJSONObject(i).has("InternalCleaningQty")) {
-                        hw.setInternalCleanQty(Integer.toString(getItemByParam.getJSONObject(i).getInt("InternalCleaningQty")));
-                    }
-                    if (getItemByParam.getJSONObject(i).has("InternalRecleaningQty")) {
-                        hw.setInternalRecleanQty(Integer.toString(getItemByParam.getJSONObject(i).getInt("InternalRecleaningQty")));
-                    }
-                    if (getItemByParam.getJSONObject(i).has("IsConsumeable")) {
-                        hw.setIsConsumable(Boolean.toString(getItemByParam.getJSONObject(i).getBoolean("IsConsumeable")));
-                    }
-                    if (getItemByParam.getJSONObject(i).has("IsCritical")) {
-                        hw.setIsCritical(Boolean.toString(getItemByParam.getJSONObject(i).getBoolean("IsCritical")));
-                    }
-                    if (getItemByParam.getJSONObject(i).has("Manufacturer")) {
-                        Object assembly = getItemByParam.getJSONObject(i).get("Manufacturer");
-                        if (assembly instanceof String) {
-                            hw.setManufacturer(getItemByParam.getJSONObject(i).getString("Manufacturer"));
-                        } else {
-                            hw.setManufacturer(Integer.toString(getItemByParam.getJSONObject(i).getInt("Manufacturer")));
-                        }
-                    }
-                    if (getItemByParam.getJSONObject(i).has("MaxQty")) {
-                        hw.setMaxQty(Integer.toString(getItemByParam.getJSONObject(i).getInt("MaxQty")));
-                    }
-                    if (getItemByParam.getJSONObject(i).has("MinQty")) {
-                        hw.setMinQty(Integer.toString(getItemByParam.getJSONObject(i).getInt("MinQty")));
-                    }
-                    if (getItemByParam.getJSONObject(i).has("Model")) {
-
-                        Object modelSpts = getItemByParam.getJSONObject(i).get("Model");
-                        if (modelSpts instanceof String) {
-                            hw.setModel(getItemByParam.getJSONObject(i).getString("Model"));
-                        } else {
-                            hw.setModel(Integer.toString(getItemByParam.getJSONObject(i).getInt("Model")));
-                        }
-                    }
-                    if (getItemByParam.getJSONObject(i).has("OnHandQty")) {
-                        hw.setOnHandQty(Integer.toString(getItemByParam.getJSONObject(i).getInt("OnHandQty")));
-                    }
-                    if (getItemByParam.getJSONObject(i).has("OtherOnsemiQty")) {
-                        hw.setOtherOnsemiQty(Integer.toString(getItemByParam.getJSONObject(i).getInt("OtherOnsemiQty")));
-                    }
-                    if (getItemByParam.getJSONObject(i).has("OtherQty")) {
-                        hw.setOtherQty(Integer.toString(getItemByParam.getJSONObject(i).getInt("OtherQty")));
-                    }
-                    if (getItemByParam.getJSONObject(i).has("PMWW1")) {
-                        Object assembly = getItemByParam.getJSONObject(i).get("PMWW1");
-                        if (assembly instanceof String) {
-                            hw.setPmWw1(getItemByParam.getJSONObject(i).getString("PMWW1"));
-                        } else {
-                            hw.setPmWw1(Integer.toString(getItemByParam.getJSONObject(i).getInt("PMWW1")));
-                        }
-                    }
-                    if (getItemByParam.getJSONObject(i).has("PMWW2")) {
-                        Object assembly = getItemByParam.getJSONObject(i).get("PMWW2");
-                        if (assembly instanceof String) {
-                            hw.setPmWw2(getItemByParam.getJSONObject(i).getString("PMWW2"));
-                        } else {
-                            hw.setPmWw2(Integer.toString(getItemByParam.getJSONObject(i).getInt("PMWW2")));
-                        }
-                    }
-                    if (getItemByParam.getJSONObject(i).has("ProductionQty")) {
-                        hw.setProductionQty(Integer.toString(getItemByParam.getJSONObject(i).getInt("ProductionQty")));
-                    }
-                    if (getItemByParam.getJSONObject(i).has("ProductionStagingQty")) {
-                        hw.setProductionStagingQty(Integer.toString(getItemByParam.getJSONObject(i).getInt("ProductionStagingQty")));
-                    }
-                    if (getItemByParam.getJSONObject(i).has("QuarantineQty")) {
-                        hw.setQuarantineQty(Integer.toString(getItemByParam.getJSONObject(i).getInt("QuarantineQty")));
-                    }
-                    if (getItemByParam.getJSONObject(i).has("Rack")) {
-
-                        Object rack = getItemByParam.getJSONObject(i).get("Rack");
-                        if (rack instanceof String) {
-                            hw.setRack(getItemByParam.getJSONObject(i).getString("Rack"));
-                        } else {
-                            hw.setRack(Integer.toString(getItemByParam.getJSONObject(i).getInt("Rack")));
-                        }
-                    }
-                    if (getItemByParam.getJSONObject(i).has("Remarks")) {
-                        Object assembly = getItemByParam.getJSONObject(i).get("Remarks");
-                        if (assembly instanceof String) {
-                            hw.setRemarks(getItemByParam.getJSONObject(i).getString("Remarks"));
-                        } else {
-                            hw.setRemarks(Integer.toString(getItemByParam.getJSONObject(i).getInt("Remarks")));
-                        }
-                    }
-                    if (getItemByParam.getJSONObject(i).has("RepairQty")) {
-                        hw.setRepairQty(Integer.toString(getItemByParam.getJSONObject(i).getInt("RepairQty")));
-                    }
-                    if (getItemByParam.getJSONObject(i).has("Shelf")) {
-
-                        Object shelfStr = getItemByParam.getJSONObject(i).get("Shelf");
-                        if (shelfStr instanceof String) {
-                            hw.setShelf(getItemByParam.getJSONObject(i).getString("Shelf"));
-                        } else {
-                            hw.setShelf(Integer.toString(getItemByParam.getJSONObject(i).getInt("Shelf")));
-                        }
-                    }
-                    if (getItemByParam.getJSONObject(i).has("PKID")) {
-                        hw.setSptsPkid(Integer.toString(getItemByParam.getJSONObject(i).getInt("PKID")));
-                    }
-                    if (getItemByParam.getJSONObject(i).has("StatusName")) {
-                        Object assembly = getItemByParam.getJSONObject(i).get("StatusName");
-                        if (assembly instanceof String) {
-                            hw.setStatus(getItemByParam.getJSONObject(i).getString("StatusName"));
-                            if ("Scrapped".equals(getItemByParam.getJSONObject(i).getString("StatusName"))) {
-                                hw.setFlag("99");
-                            } else {
-                                hw.setFlag("1");
-                            }
-                        } else {
-                            hw.setStatus(Integer.toString(getItemByParam.getJSONObject(i).getInt("StatusName")));
-                            if ("Scrapped".equals(Integer.toString(getItemByParam.getJSONObject(i).getInt("StatusName")))) {
-                                hw.setFlag("99");
-                            } else {
-                                hw.setFlag("1");
-                            }
-                        }
-                    }
-                    if (getItemByParam.getJSONObject(i).has("StorageFactoryQty")) {
-                        Object storage = getItemByParam.getJSONObject(i).get("StorageFactoryQty");
-                        if (storage instanceof String) {
-                            hw.setStorageFactoryQty(getItemByParam.getJSONObject(i).getString("StorageFactoryQty"));
-                        } else {
-                            hw.setStorageFactoryQty(Integer.toString(getItemByParam.getJSONObject(i).getInt("StorageFactoryQty")));
-                        }
-                    }
-                    if (getItemByParam.getJSONObject(i).has("StressType")) {
-                        Object assembly = getItemByParam.getJSONObject(i).get("StressType");
-                        if (assembly instanceof String) {
-                            hw.setStressType(getItemByParam.getJSONObject(i).getString("StressType"));
-                        } else {
-                            hw.setStressType(Integer.toString(getItemByParam.getJSONObject(i).getInt("StressType")));
-                        }
-                    }
-                    if (getItemByParam.getJSONObject(i).has("TotalCost")) {
-                        hw.setTotalCost(Double.toString(getItemByParam.getJSONObject(i).getDouble("TotalCost")));
-                    }
-                    if (getItemByParam.getJSONObject(i).has("TotalQty")) {
-                        hw.setTotalQty(Integer.toString(getItemByParam.getJSONObject(i).getInt("TotalQty")));
-                    }
-                    if (getItemByParam.getJSONObject(i).has("UnitCost")) {
-                        hw.setUnitCost(Double.toString(getItemByParam.getJSONObject(i).getDouble("UnitCost")));
-                    }
-                    if (getItemByParam.getJSONObject(i).has("VendorQty")) {
-                        hw.setVendorQty(Integer.toString(getItemByParam.getJSONObject(i).getInt("VendorQty")));
-                    }
-                    if (getItemByParam.getJSONObject(i).has("DowntimeUnit")) {
-                        Object assembly = getItemByParam.getJSONObject(i).get("DowntimeUnit");
-                        if (assembly instanceof String) {
-                            hw.setDowntimeUnit(getItemByParam.getJSONObject(i).getString("DowntimeUnit"));
-                        } else {
-                            hw.setDowntimeUnit(Integer.toString(getItemByParam.getJSONObject(i).getInt("DowntimeUnit")));
-                        }
-                    }
-                    if (getItemByParam.getJSONObject(i).has("DowntimeValue")) {
-                        hw.setDowntimeValue(Double.toString(getItemByParam.getJSONObject(i).getDouble("DowntimeValue")));
-                    }
-                    if (getItemByParam.getJSONObject(i).has("ImplementationCost")) {
-                        hw.setImplementationCost(Double.toString(getItemByParam.getJSONObject(i).getDouble("ImplementationCost")));
-                    }
-                    if (getItemByParam.getJSONObject(i).has("ManpowerUnit")) {
-                        Object assembly = getItemByParam.getJSONObject(i).get("ManpowerUnit");
-                        if (assembly instanceof String) {
-                            hw.setManpowerUnit(getItemByParam.getJSONObject(i).getString("ManpowerUnit"));
-                        } else {
-                            hw.setManpowerUnit(Integer.toString(getItemByParam.getJSONObject(i).getInt("ManpowerUnit")));
-                        }
-                    }
-                    if (getItemByParam.getJSONObject(i).has("ManpowerValue")) {
-                        hw.setManpowerValue(Double.toString(getItemByParam.getJSONObject(i).getDouble("ManpowerValue")));
-                    }
-
                     hwD = new ItemDAO();
                     QueryResult q = hwD.insertHardwareDetail(hw);
+                    countAdd += q.getResult();
+                } else if (countPkid == 1) {
+                    hwD = new ItemDAO();
+                    QueryResult q = hwD.updateHardwareDetailFromSpts(hw);
                     countAdd += q.getResult();
                 }
                 count += 1;
@@ -409,6 +480,8 @@ public class ItemController {
         int countAdd = 0;
         int countTrans = 0;
         int countTransAdd = 0;
+        int countSf = 0;
+        int countSfAdd = 0;
 
         //insert into database
         for (int i = 0; i < getItemByParam.length(); i++) {
@@ -508,8 +581,8 @@ public class ItemController {
                 if (getItemByParam.getJSONObject(i).has("OnHandQty")) {
                     hw.setOnHandQty(Integer.toString(getItemByParam.getJSONObject(i).getInt("OnHandQty")));
                 }
-                if (getItemByParam.getJSONObject(i).has("OtherOnsemiQty")) {
-                    hw.setOtherOnsemiQty(Integer.toString(getItemByParam.getJSONObject(i).getInt("OtherOnsemiQty")));
+                if (getItemByParam.getJSONObject(i).has("OtherONQty")) {
+                    hw.setOtherOnsemiQty(Integer.toString(getItemByParam.getJSONObject(i).getInt("OtherONQty")));
                 }
                 if (getItemByParam.getJSONObject(i).has("OtherQty")) {
                     hw.setOtherQty(Integer.toString(getItemByParam.getJSONObject(i).getInt("OtherQty")));
@@ -694,6 +767,45 @@ public class ItemController {
         }
         LOGGER.info("Total data Trans: " + countTrans);
         LOGGER.info("Total insert Trans: " + countTransAdd);
+
+        //add storage factory data to DB
+        JSONObject paramsSf = new JSONObject();
+        paramsSf.put("itemPKID", pkID);
+        JSONArray getSFItemByParam = SPTSWebService.getSFItemByParam(paramsSf);
+
+        for (int i = 0; i < getSFItemByParam.length(); i++) {
+
+            ItemStorageFactoryDAO itemSfD = new ItemStorageFactoryDAO();
+            int countSf1 = itemSfD.getCountPkidAndItemPkid(Integer.toString(getSFItemByParam.getJSONObject(i).getInt("PKID")), Integer.toString(getSFItemByParam.getJSONObject(i).getInt("ItemPKID")));
+            if (countSf1 == 0) {
+                ItemStorageFactory itemSf = new ItemStorageFactory();
+                itemSf.setSfPkid(Integer.toString(getSFItemByParam.getJSONObject(i).getInt("PKID")));
+                itemSf.setItemPkid(Integer.toString(getSFItemByParam.getJSONObject(i).getInt("ItemPKID")));
+                if (getSFItemByParam.getJSONObject(i).has("TransTypeName")) {
+                    itemSf.setMovementType(getSFItemByParam.getJSONObject(i).getString("TransTypeName"));
+                }
+                if (getSFItemByParam.getJSONObject(i).has("TransQty")) {
+                    itemSf.setQty(Integer.toString(getSFItemByParam.getJSONObject(i).getInt("TransQty")));
+                }
+                if (getSFItemByParam.getJSONObject(i).has("SFRack")) {
+                    itemSf.setRack(getSFItemByParam.getJSONObject(i).getString("SFRack"));
+                }
+                if (getSFItemByParam.getJSONObject(i).has("SFShelf")) {
+                    itemSf.setShelf(getSFItemByParam.getJSONObject(i).getString("SFShelf"));
+                }
+                if (getSFItemByParam.getJSONObject(i).has("DateTime")) {
+                    String dateTimeSf = getSFItemByParam.getJSONObject(i).getString("DateTime").substring(0, 10) + " " + getSFItemByParam.getJSONObject(i).getString("DateTime").substring(11, 19);
+                    itemSf.setMovementDatetime(dateTimeSf);
+                }
+                itemSf.setFlag("0");
+                itemSfD = new ItemStorageFactoryDAO();
+                QueryResult q = itemSfD.insertItemStorageFactory(itemSf);
+                countSfAdd += q.getResult();
+            }
+            countSf += 1;
+        }
+        LOGGER.info("Total data SF: " + countSf);
+        LOGGER.info("Total insert SF: " + countSfAdd);
 
         return hw;
     }
@@ -1002,6 +1114,188 @@ public class ItemController {
             jsonArray.put(jsonObject);
         }
 
+        return jsonArray.toString();
+    }
+
+    @RequestMapping(value = "/item/ajaxTransactionQuery", method = {RequestMethod.GET, RequestMethod.POST})
+    @ResponseBody
+    public String ajaxTransactionQuery(
+            @ModelAttribute UserSession userSession,
+            Model model,
+            HttpServletRequest request,
+            @RequestParam(required = false) String itemPKID
+    ) throws IOException {
+
+        int countTrans = 0;
+        int countTransAdd = 0;
+
+        //add transaction to DB
+        JSONObject params2 = new JSONObject();
+        params2.put("itemsPKID", itemPKID);
+        JSONArray getTransactionByParam = SPTSWebService.getTransactionByParam(params2);
+
+        for (int i = 0; i < getTransactionByParam.length(); i++) {
+
+            ItemTransactionDAO itemD = new ItemTransactionDAO();
+            int countPkid = itemD.getCountPkidAndItemPkid(Integer.toString(getTransactionByParam.getJSONObject(i).getInt("PKID")), Integer.toString(getTransactionByParam.getJSONObject(i).getInt("ItemsPKID")));
+            if (countPkid == 0) {
+                ItemTransaction item = new ItemTransaction();
+                item.setSptsPkid(Integer.toString(getTransactionByParam.getJSONObject(i).getInt("PKID")));
+                item.setItemPkid(Integer.toString(getTransactionByParam.getJSONObject(i).getInt("ItemsPKID")));
+                item.setSiteName(getTransactionByParam.getJSONObject(i).getString("SiteName"));
+                String dateTime = getTransactionByParam.getJSONObject(i).getString("DateTime").substring(0, 10) + " " + getTransactionByParam.getJSONObject(i).getString("DateTime").substring(11, 19);
+                item.setDateTime(dateTime);
+                item.setTransType(Integer.toString(getTransactionByParam.getJSONObject(i).getInt("TransType")));
+                item.setTransTypeName(getTransactionByParam.getJSONObject(i).getString("TransTypeName"));
+                item.setTransQty(Integer.toString(getTransactionByParam.getJSONObject(i).getInt("TransQty")));
+                if (getTransactionByParam.getJSONObject(i).has("TransInQty")) {
+                    item.setTransInQty(Integer.toString(getTransactionByParam.getJSONObject(i).getInt("TransInQty")));
+                }
+                if (getTransactionByParam.getJSONObject(i).has("TransOutQty")) {
+                    item.setTransOutQty(Integer.toString(getTransactionByParam.getJSONObject(i).getInt("TransOutQty")));
+                }
+                if (getTransactionByParam.getJSONObject(i).has("LifetimeUsageHrs")) {
+                    item.setAlu(Double.toString(getTransactionByParam.getJSONObject(i).getDouble("LifetimeUsageHrs")));
+                }
+                if (getTransactionByParam.getJSONObject(i).has("Remarks")) {
+                    item.setRemarks(getTransactionByParam.getJSONObject(i).getString("Remarks"));
+                }
+
+                itemD = new ItemTransactionDAO();
+                QueryResult qI = itemD.insertItemTransaction(item);
+                countTransAdd += qI.getResult();
+            }
+            countTrans += 1;
+        }
+        LOGGER.info("Total data Trans: " + countTrans);
+        LOGGER.info("Total insert Trans: " + countTransAdd);
+
+        ItemTransactionDAO hwD = new ItemTransactionDAO();
+        List<ItemTransaction> itemList = hwD.getItemTransactionListByItemPkid(itemPKID);
+
+        JSONArray jsonArray = new JSONArray();
+
+//        {"data": "itemId"},
+        for (ItemTransaction itm : itemList) {
+            JSONObject jsonObject = new JSONObject();
+            jsonObject.put("itemId", Strings.nullToEmpty(itm.getItemId()));
+            jsonObject.put("dateTime", Strings.nullToEmpty(itm.getDateTime()));
+            jsonObject.put("transTypeName", Strings.nullToEmpty(itm.getTransTypeName()));
+            jsonObject.put("transInQty", Strings.nullToEmpty(itm.getTransInQty()));
+            jsonObject.put("transOutQty", Strings.nullToEmpty(itm.getTransOutQty()));
+            jsonObject.put("alu", Strings.nullToEmpty(itm.getAlu()));
+            jsonObject.put("remarks", Strings.nullToEmpty(itm.getRemarks()));
+            jsonArray.put(jsonObject);
+        }
+
+        return jsonArray.toString();
+    }
+
+    @RequestMapping(value = "/item/ajaxStorage", method = {RequestMethod.GET, RequestMethod.POST})
+    @ResponseBody
+    public String ajaxStorage(
+            @ModelAttribute UserSession userSession,
+            Model model,
+            HttpServletRequest request,
+            @RequestParam(required = false) String itemPKID
+    ) throws IOException, ClassNotFoundException, SQLException {
+
+//        LOGGER.info("SINI MASUK NK CHEKC DATA UNTUK SF");
+//        LOGGER.info("itemPKID: " + itemPKID);
+        JSONArray jsonArray = new JSONArray();
+
+        if (itemPKID == null || "".equals(itemPKID)) {
+
+            jsonArray = new JSONArray();
+
+            JSONObject jsonObject = new JSONObject();
+            jsonObject.put("itemId", "");
+            jsonObject.put("rack", "");
+            jsonObject.put("shelf", "");
+            jsonObject.put("qty", "");
+            jsonObject.put("movementDateTime", "");
+            jsonObject.put("boxNo", "");
+            jsonObject.put("invId", "");
+//            jsonObject.put("movementType", Strings.nullToEmpty(itm.getMovementType()));
+            jsonArray.put(jsonObject);
+        } else {
+//            ItemStorageFactoryDAO hwD = new ItemStorageFactoryDAO();
+//            List<ItemStorageFactory> itemList = hwD.getItemStorageFactoryListByItemPkid(itemPKID);
+
+            ItemDAO itemD = new ItemDAO();
+            Item item = itemD.getHardwareDetailByPkid(itemPKID);
+            String itemType = item.getItemType();
+            String itemId = item.getItemId();
+            String subType = item.getSubType();
+            LOGGER.info("itemType: " + itemType);
+            LOGGER.info("subType: " + subType);
+
+            String whereClause = "";
+
+            if ("BIB CARD".equals(itemType) || "BIB Card".equals(itemType)) {
+                if (null == subType) {
+                    whereClause = " equipment_id = '" + itemId + "' ";
+                } else {
+                    switch (subType) {
+                        case "Load Card":
+                        case "LOAD CARD":
+                        case "LC_DUT":
+                            whereClause = " load_card_id = '" + itemId + "' ";
+                            break;
+                        case "Program Card":
+                        case "PROGRAM CARD":
+                        case "PC_DUT":
+                            whereClause = " program_card_id = '" + itemId + "' ";
+                            break;
+                        default:
+                            whereClause = " equipment_id = '" + itemId + "' ";
+                            break;
+                    }
+                }
+            } else if (itemType.contains("PCB")) {
+                if (itemId.contains("QUAL A")) {
+                    whereClause = " pcb_a = '" + itemId + "' ";
+                } else if (itemId.contains("QUAL B")) {
+                    whereClause = " pcb_b = '" + itemId + "' ";
+                } else if (itemId.contains("QUAL C")) {
+                    whereClause = " pcb_c = '" + itemId + "' ";
+                } else if (itemId.contains("CONTROL")) {
+                    whereClause = " pcb_ctr = '" + itemId + "' ";
+                } else {
+                    whereClause = " equipment_id = '" + itemId + "' ";
+                }
+            } else {
+                whereClause = " equipment_id = '" + itemId + "' ";
+            }
+
+            HimsRequestDAO himsD = new HimsRequestDAO();
+            List<HimsInventory> hims = himsD.getWhInventoryActiveListByItemId(whereClause);
+
+            jsonArray = new JSONArray();
+
+            for (HimsInventory itm : hims) {
+                JSONObject jsonObject = new JSONObject();
+                jsonObject.put("itemId", Strings.nullToEmpty(itemId));
+                jsonObject.put("rack", Strings.nullToEmpty(itm.getInventoryRack()));
+                jsonObject.put("shelf", Strings.nullToEmpty(itm.getInventoryShelf()));
+                jsonObject.put("qty", Strings.nullToEmpty(itm.getQuantity()));
+                jsonObject.put("movementDateTime", Strings.nullToEmpty(itm.getInventoryDate()));
+                jsonObject.put("boxNo", Strings.nullToEmpty(itm.getBoxNo()));
+                jsonObject.put("invId", Strings.nullToEmpty(itm.getId()));
+                jsonArray.put(jsonObject);
+            }
+        }
+
+//        for (ItemStorageFactory itm : itemList) {
+//            JSONObject jsonObject = new JSONObject();
+//            jsonObject.put("itemId", Strings.nullToEmpty(itm.getItemId()));
+//            jsonObject.put("rack", Strings.nullToEmpty(itm.getRack()));
+//            jsonObject.put("shelf", Strings.nullToEmpty(itm.getShelf()));
+//            jsonObject.put("qty", Strings.nullToEmpty(itm.getQty()));
+//            jsonObject.put("movementDateTime", Strings.nullToEmpty(itm.getMovementDatetime()));
+//            jsonObject.put("movementType", Strings.nullToEmpty(itm.getMovementType()));
+//            jsonArray.put(jsonObject);
+//        }
         return jsonArray.toString();
     }
 
@@ -1784,8 +2078,40 @@ public class ItemController {
         List<ParameterDetails> paramItemUsage = pD.getGroupParameterDetailList("", "001");
         model.addAttribute("paramItemUsage", paramItemUsage);
 
+        pD = new ParameterDetailsDAO();
+        List<ParameterDetails> paramItemUsageEqpt = pD.getGroupParameterDetailList("", "018");
+        model.addAttribute("paramItemUsageEqpt", paramItemUsageEqpt);
+
         model.addAttribute("itemType", itemType);
-        LOGGER.info("itemType: " + itemType);
+//        LOGGER.info("itemType: " + itemType);
+
+        ItemDAO itemD = new ItemDAO();
+        List<Item> listAssemblyId = itemD.getItemAssemblyId("");
+        model.addAttribute("listAssemblyId", listAssemblyId);
+
+        itemD = new ItemDAO();
+        List<Item> listModel = itemD.getItemModel("");
+        model.addAttribute("listModel", listModel);
+
+        itemD = new ItemDAO();
+        List<Item> listManufacturer = itemD.getItemManufacturer("");
+        model.addAttribute("listManufacturer", listManufacturer);
+
+        itemD = new ItemDAO();
+        List<Item> listEqptModel = itemD.getItemEqptModel("");
+        model.addAttribute("listEqptModel", listEqptModel);
+
+        itemD = new ItemDAO();
+        List<Item> listEqptType = itemD.getItemEqptType("");
+        model.addAttribute("listEqptType", listEqptType);
+
+        itemD = new ItemDAO();
+        List<Item> listEqptManufacturer = itemD.getItemEqptManufacturer("");
+        model.addAttribute("listEqptManufacturer", listEqptManufacturer);
+
+        itemD = new ItemDAO();
+        List<Item> listStressType = itemD.getItemStressType("");
+        model.addAttribute("listStressType", listStressType);
 
         return "item/item_add";
     }
@@ -1803,7 +2129,7 @@ public class ItemController {
             @RequestParam(required = false) String assemblyId,
             @RequestParam(required = false) String itemUsage,
             @RequestParam(required = false) String model2,
-            @RequestParam(required = false) String manufacture,
+            @RequestParam(required = false) String manufacturer,
             @RequestParam(required = false) String unitCost,
             @RequestParam(required = false) String equipmentType,
             @RequestParam(required = false) String equipmentModel,
@@ -1830,7 +2156,7 @@ public class ItemController {
             @RequestParam(required = false) String isConsumable,
             @RequestParam(required = false) String remarks,
             @RequestParam(required = false) String expirationDate
-    ) {
+    ) throws IOException {
 
         Item item = new Item();
         LOGGER.info("itemTypeRead: " + itemTypeRead);
@@ -1913,7 +2239,7 @@ public class ItemController {
         }
         item.setIsConsumable(isConsumable);
         item.setModel(model2);
-        item.setManufacturer(manufacture);
+        item.setManufacturer(manufacturer);
         item.setEquipmentType(equipmentType);
         item.setEquipmentModel(equipmentModel);
         item.setEquipmentManufacturer(equipmentManufacturer);
@@ -1941,18 +2267,364 @@ public class ItemController {
             if (i.getResult() == 1) {
                 redirectAttrs.addFlashAttribute("success", "Succesfully registered Item ID: " + itemId);
                 if ("BIB".equals(itemTypeRead) || "BIB Card".equals(itemTypeRead)) {
-//                    return "redirect:/hw/item/add";
                     return "redirect:/hw/item/addActivity/" + i.getGeneratedKey();
-//                    return "redirect:/hw/item/add2/" + i.getGeneratedKey();
                 } else {
-                    return "redirect:/";
+                    //insert into SPTS
+                    JSONObject addItem = new JSONObject();
+                    addItem.put("itemID", itemId);
+                    addItem.put("itemName", itemName);
+                    addItem.put("onHandQty", onHandQty);
+                    addItem.put("prodQty", productionQty);
+                    addItem.put("repairQty", repairQty);
+                    addItem.put("otherQty", otherQty);
+                    addItem.put("quarantineQty", quarantineQty);
+                    addItem.put("externalCleaningQty", externalCleanQty);
+                    addItem.put("externalRecleaningQty", externalRecleanQty);
+                    addItem.put("internalCleaningQty", internalCleanQty);
+                    addItem.put("internalRecleaningQty", internalRecleanQty);
+                    addItem.put("storageFactoryQty", storageFactoryQty);
+                    addItem.put("prodStagingQty", productionStagingQty);
+                    addItem.put("otherONQty", otherOnsemiQty);
+                    addItem.put("vendorQty", vendorQty);
+                    addItem.put("minQty", minQty);
+                    addItem.put("maxQty", maxQty);
+                    addItem.put("unit", "pcs");
+                    addItem.put("unitCost", unitCost);
+                    addItem.put("rack", rack);
+                    addItem.put("shelf", shelf);
+                    addItem.put("model", model2);
+                    addItem.put("manufacturer", manufacturer);
+                    addItem.put("equipmentType", equipmentType);
+                    addItem.put("equipmentModel", equipmentModel);
+                    addItem.put("equipmentManufacturer", equipmentManufacturer);
+                    addItem.put("stressType", stressType);
+                    addItem.put("isCritical", "0");
+                    if ("true".equals(isConsumable)) {
+                        addItem.put("isConsumeable", "1");
+                    } else {
+                        addItem.put("isConsumeable", "0");
+                    }
+                    addItem.put("itemType", itemTypeRead);
+                    addItem.put("subType", subType);
+                    addItem.put("assemblyID", assemblyId);
+                    addItem.put("remarks", remarks);
+                    addItem.put("expirationDate", expirationDate);
+//                    addItem.put("downtimeValue", downtimeValue);
+//                    addItem.put("downtimeUnit", downtimeUnit);
+//                    addItem.put("implementationCost", implementationCost);
+//                    addItem.put("manpowerValue", manpowerValue);
+//                    addItem.put("manpowerUnit", manpowerUnit);
+                    addItem.put("complexityScore", "0");
+
+                    SPTSResponse sr = SPTSWebService.insertItem(addItem);
+
+                    if (sr.getStatus()) {
+                        redirectAttrs.addFlashAttribute("success", "Item added!");
+                        //update SPTS PKID into MIB DB
+                        item = new Item();
+                        item.setSptsPkid(sr.getResponseId().toString());
+                        item.setId(i.getGeneratedKey());
+
+                        itemD = new ItemDAO();
+                        QueryResult i2 = itemD.updateItemSPTSPKID(item);
+
+//                        return "redirect:/spts/edit/" + sr.getResponseId();
+                        return "redirect:/";
+                    } else {
+                        LinkedHashMap<String, String> item2;
+                        ObjectMapper mapper = new ObjectMapper();
+                        item2 = mapper.readValue(addItem.toString(), new TypeReference<LinkedHashMap<String, String>>() {
+                        });
+                        String errorMessage;
+                        if (sr.getErrorDetail().equals("")) {
+                            errorMessage = sr.getErrorCode() + " - " + sr.getErrorMessage();
+                        } else {
+                            errorMessage = sr.getErrorCode() + " - " + sr.getErrorDetail();
+                        }
+                        model.addAttribute("error", errorMessage);
+                        model.addAttribute("item2", item2);
+                        redirectAttrs.addFlashAttribute("error", errorMessage);
+//                        return "spts/add";
+                        return "redirect:/";
+                    }
+
+//                    return "redirect:/";
                 }
             } else {
                 redirectAttrs.addFlashAttribute("error", "Failed to registered Item ID: " + itemId + ". Pls contact system admin.");
                 return "redirect:/hw/item/add";
             }
-//            return returnPage;
         }
+    }
+
+    @RequestMapping(value = "/item/update", method = {RequestMethod.GET, RequestMethod.POST})
+    public String itemUpdate(
+            Model model2,
+            Locale locale,
+            RedirectAttributes redirectAttrs,
+            @ModelAttribute UserSession userSession,
+            @RequestParam(required = false) String itemPKID,
+            @RequestParam(required = false) String mibId,
+            @RequestParam(required = false) String itemType2,
+            @RequestParam(required = false) String subType,
+            @RequestParam(required = false) String itemId,
+            @RequestParam(required = false) String itemName,
+            @RequestParam(required = false) String assemblyId,
+            @RequestParam(required = false) String itemUsage,
+            @RequestParam(required = false) String model,
+            @RequestParam(required = false) String manufacturer,
+            @RequestParam(required = false) String unitCost,
+            @RequestParam(required = false) String equipmentType,
+            @RequestParam(required = false) String equipmentModel,
+            @RequestParam(required = false) String equipmentManufacturer,
+            @RequestParam(required = false) String minQty,
+            @RequestParam(required = false) String maxQty,
+            @RequestParam(required = false) String rack,
+            @RequestParam(required = false) String shelf,
+            @RequestParam(required = false) String stressType,
+            @RequestParam(required = false) String onHandQty,
+            @RequestParam(required = false) String productionQty,
+            @RequestParam(required = false) String otherOnsemiQty,
+            @RequestParam(required = false) String productionStagingQty,
+            @RequestParam(required = false) String repairQty,
+            @RequestParam(required = false) String quarantineQty,
+            @RequestParam(required = false) String externalCleanQty,
+            @RequestParam(required = false) String externalRecleanQty,
+            @RequestParam(required = false) String internalCleanQty,
+            @RequestParam(required = false) String internalRecleanQty,
+            @RequestParam(required = false) String otherQty,
+            @RequestParam(required = false) String vendorQty,
+            @RequestParam(required = false) String storageFactoryQty,
+            @RequestParam(required = false) String totalQty,
+            @RequestParam(required = false) String isConsumable,
+            @RequestParam(required = false) String remarks,
+            @RequestParam(required = false) String status,
+            @RequestParam(required = false) String aluHrs,
+            @RequestParam(required = false) String expirationDate
+    ) throws IOException {
+
+        if (productionQty == null || "".equals(productionQty)) {
+            productionQty = "0";
+        }
+        if (productionStagingQty == null || "".equals(productionStagingQty)) {
+            productionStagingQty = "0";
+        }
+        if (repairQty == null || "".equals(repairQty)) {
+            repairQty = "0";
+        }
+        if (otherQty == null || "".equals(otherQty)) {
+            otherQty = "0";
+        }
+        if (quarantineQty == null || "".equals(quarantineQty)) {
+            quarantineQty = "0";
+        }
+        if (externalCleanQty == null || "".equals(externalCleanQty)) {
+            externalCleanQty = "0";
+        }
+        if (externalRecleanQty == null || "".equals(externalRecleanQty)) {
+            externalRecleanQty = "0";
+        }
+        if (internalCleanQty == null || "".equals(internalCleanQty)) {
+            internalCleanQty = "0";
+        }
+        if (internalRecleanQty == null || "".equals(internalRecleanQty)) {
+            internalRecleanQty = "0";
+        }
+        if (storageFactoryQty == null || "".equals(storageFactoryQty)) {
+            storageFactoryQty = "0";
+        }
+        if (otherOnsemiQty == null || "".equals(otherOnsemiQty)) {
+            otherOnsemiQty = "0";
+        }
+        if (vendorQty == null || "".equals(vendorQty)) {
+            vendorQty = "0";
+        }
+
+        //get version from spts first
+        String version = "";
+        JSONObject params = new JSONObject();
+        params.put("pkID", itemPKID);
+        JSONArray getItemByParam = SPTSWebService.getItemByParam(params);
+        for (int i = 0; i < getItemByParam.length(); i++) {
+            version = getItemByParam.getJSONObject(i).getString("Version");
+        }
+        //update to SPTS first then to local DB
+        JSONObject addItem = new JSONObject();
+        addItem.put("pkID", itemPKID);
+        addItem.put("version", version);
+        addItem.put("itemID", itemId);
+        addItem.put("itemName", itemName);
+        addItem.put("onHandQty", onHandQty);
+        addItem.put("prodQty", productionQty);
+        addItem.put("repairQty", repairQty);
+        addItem.put("otherQty", otherQty);
+        addItem.put("quarantineQty", quarantineQty);
+        addItem.put("externalCleaningQty", externalCleanQty);
+        addItem.put("externalRecleaningQty", externalRecleanQty);
+        addItem.put("internalCleaningQty", internalCleanQty);
+        addItem.put("internalRecleaningQty", internalRecleanQty);
+        addItem.put("storageFactoryQty", storageFactoryQty);
+        addItem.put("prodStagingQty", productionStagingQty);
+        addItem.put("otherONQty", otherOnsemiQty);
+        addItem.put("vendorQty", vendorQty);
+        addItem.put("unit", "pcs");
+//        if (minQty != null || !"".equals(minQty)) {
+        addItem.put("minQty", minQty);
+//        }
+//        if (maxQty != null || !"".equals(maxQty)) {
+        addItem.put("maxQty", maxQty);
+//        }
+//        if (unitCost != null || !"".equals(unitCost)) {
+        addItem.put("unitCost", unitCost);
+//        }
+//        if (rack != null || !"".equals(rack)) {
+        addItem.put("rack", rack);
+//        }
+//        if (shelf != null || !"".equals(shelf)) {
+        addItem.put("shelf", shelf);
+//        }
+//        if (model2 != null || !"".equals(model2)) {
+        addItem.put("model", model);
+//        }
+//        if (manufacturer != null || !"".equals(manufacturer)) {
+        addItem.put("manufacturer", manufacturer);
+//        }
+//        if (equipmentType != null || !"".equals(equipmentType)) {
+        addItem.put("equipmentType", equipmentType);
+//        }
+//        if (equipmentModel != null || !"".equals(equipmentModel)) {
+        addItem.put("equipmentModel", equipmentModel);
+//        }
+//        if (equipmentManufacturer != null || !"".equals(equipmentManufacturer)) {
+        addItem.put("equipmentManufacturer", equipmentManufacturer);
+//        }
+//        if (stressType != null || !"".equals(stressType)) {
+        addItem.put("stressType", stressType);
+//        }
+//        if (itemType2 != null || !"".equals(itemType2)) {
+        addItem.put("itemType", itemType2);
+//        }
+//        if (subType != null || !"".equals(subType)) {
+        addItem.put("subType", subType);
+//        }
+//        if (assemblyId != null || !"".equals(assemblyId)) {
+        addItem.put("assemblyID", assemblyId);
+//        }
+//        if (remarks != null || !"".equals(remarks)) {
+        addItem.put("remarks", remarks);
+//        }
+//        if (expirationDate != null || !"".equals(expirationDate)) {
+        addItem.put("expirationDate", expirationDate);
+//        }
+//        if (aluHrs != null || !"".equals(aluHrs)) {
+        addItem.put("aluHrs", aluHrs);
+//        }
+        if ("on".equals(isConsumable)) {
+            addItem.put("isConsumeable", "1");
+        } else {
+            addItem.put("isConsumeable", "0");
+        }
+        addItem.put("complexityScore", "0");
+        addItem.put("isCritical", "0");
+
+        SPTSResponse sr = SPTSWebService.updateItem(addItem);
+        if (sr.getStatus()) {
+            redirectAttrs.addFlashAttribute("success", "Item updated!");
+            LOGGER.info("+++++++++SPTS Updated+++++++++++");
+            //update SPTS PKID into MIB DB
+
+            Item item = new Item();
+            item.setId(mibId);
+            item.setSptsPkid(itemPKID);
+            item.setItemType(itemType2);
+            item.setSubType(subType);
+            item.setSiteName("Seremban");
+            item.setItemId(itemId);
+            item.setItemName(itemName);
+            item.setAssemblyId(assemblyId);
+            item.setRack(rack);
+            item.setShelf(shelf);
+            item.setItemUsage(itemUsage);
+            item.setOnHandQty(onHandQty);
+
+            item.setProductionQty(productionQty);
+            item.setProductionStagingQty(productionStagingQty);
+            item.setRepairQty(repairQty);
+            item.setOtherQty(otherQty);
+            item.setQuarantineQty(quarantineQty);
+            item.setExternalCleanQty(externalCleanQty);
+            item.setExternalRecleanQty(externalRecleanQty);
+            item.setInternalCleanQty(internalCleanQty);
+            item.setInternalRecleanQty(internalRecleanQty);
+            item.setStorageFactoryQty(storageFactoryQty);
+            item.setOtherOnsemiQty(otherOnsemiQty);
+            item.setVendorQty(vendorQty);
+
+            int totalQ = Integer.parseInt(onHandQty) + Integer.parseInt(productionQty) + Integer.parseInt(productionStagingQty) + Integer.parseInt(repairQty) + Integer.parseInt(otherQty) + Integer.parseInt(quarantineQty) + Integer.parseInt(externalCleanQty)
+                    + Integer.parseInt(externalRecleanQty) + Integer.parseInt(internalCleanQty) + Integer.parseInt(internalRecleanQty) + Integer.parseInt(storageFactoryQty) + Integer.parseInt(otherOnsemiQty) + Integer.parseInt(vendorQty);
+
+            item.setTotalQty(Integer.toString(totalQ));
+            item.setUnitCost(unitCost);
+
+            Double totalCost = totalQ * Double.parseDouble(unitCost);
+            item.setTotalCost(totalCost.toString());
+
+            item.setMinQty(minQty);
+            item.setMaxQty(maxQty);
+            item.setExpirationDate(expirationDate);
+            if ("on".equals(isConsumable)) {
+                isConsumable = "true";
+            } else {
+                isConsumable = "false";
+            }
+            item.setIsConsumable(isConsumable);
+            item.setModel(model);
+            item.setManufacturer(manufacturer);
+            item.setEquipmentType(equipmentType);
+            item.setEquipmentModel(equipmentModel);
+            item.setEquipmentManufacturer(equipmentManufacturer);
+            item.setStressType(stressType);
+            item.setRemarks(remarks);
+            item.setAluHrs(aluHrs);
+            item.setCreatedBy(userSession.getFullname());
+            item.setStatus(status);
+            item.setFlag("1");
+            //check if itemID exist or not
+            ItemDAO itemD = new ItemDAO();
+            int count = itemD.getCountItemIdAndNotMibId(itemId, mibId);
+            if (count > 0) {
+                redirectAttrs.addFlashAttribute("error", "Duplicate Item ID: " + itemId + ". Pls register with different Item ID.");
+                return "redirect:/hw";
+            } else {
+                itemD = new ItemDAO();
+                QueryResult i = itemD.updateHardwareDetail(item);
+
+                if (i.getResult() == 1) {
+                    redirectAttrs.addFlashAttribute("success", "Succesfully update Item ID: " + itemId);
+                    return "redirect:/hw";
+                } else {
+                    redirectAttrs.addFlashAttribute("error", "Failed to update Item ID: " + itemId + ". Pls contact system admin.");
+                    return "redirect:/hw";
+                }
+            }
+        } else {
+            LinkedHashMap<String, String> item2;
+            ObjectMapper mapper = new ObjectMapper();
+            item2 = mapper.readValue(addItem.toString(), new TypeReference<LinkedHashMap<String, String>>() {
+            });
+            String errorMessage;
+            if (sr.getErrorDetail().equals("")) {
+                errorMessage = sr.getErrorCode() + " - " + sr.getErrorMessage();
+            } else {
+                errorMessage = sr.getErrorCode() + " - " + sr.getErrorDetail();
+            }
+            model2.addAttribute("error", errorMessage);
+            model2.addAttribute("item2", item2);
+            redirectAttrs.addFlashAttribute("error", errorMessage);
+//                        return "spts/add";
+            return "redirect:/hw";
+        }
+
     }
 
     @RequestMapping(value = "/item/pending", method = {RequestMethod.GET, RequestMethod.POST}) //list of pending VM or functional test for new item registration
@@ -1964,6 +2636,18 @@ public class ItemController {
         ItemDAO itemD = new ItemDAO();
         List<Item> item = itemD.getItemListPendingVMFunctionalTest();
         model.addAttribute("item", item);
+
+        model.addAttribute("userItemAdd", userSession.getItemAdd());
+        model.addAttribute("userItemEdit", userSession.getItemEdit());
+        model.addAttribute("userItemDelete", userSession.getItemDelete());
+        model.addAttribute("userItemHwAdd", userSession.getItemHardwareAdd());
+        model.addAttribute("userItemHwEdit", userSession.getItemHardwareEdit());
+        model.addAttribute("userItemHwDelete", userSession.getItemHardwareDelete());
+        model.addAttribute("userItemActConfig", userSession.getItemActivityConfig());
+        model.addAttribute("userItemActAdd", userSession.getItemActivityAdd());
+        model.addAttribute("userItemActEdit", userSession.getItemActivityEdit());
+        model.addAttribute("userItemMovement", userSession.getItemMovementAdd());
+        model.addAttribute("userItemSfRecall", userSession.getItemSfRecall());
 
         return "item/item_pending";
     }
@@ -2615,6 +3299,9 @@ public class ItemController {
 
         model.addAttribute("item", item);
         model.addAttribute("activity", paramItemUsage);
+
+        model.addAttribute("userItemActAdd", userSession.getItemActivityAdd());
+
         return "item/item_check";
     }
 
@@ -2654,15 +3341,15 @@ public class ItemController {
         } else {
             itemA.setBibTest("No");
         }
-        
+
         ManualTestDAO test = new ManualTestDAO();
         int saizQty = Integer.parseInt(qtyField);
         int saizDut = Integer.parseInt(dutField);
-        
+
         String status = "";
         String user = userSession.getLoginId();
         String flag = "1";
-        
+
         if ("on".equals(manualTestCheck)) {
             itemA.setManualTest("Yes");
             QueryResult q0 = test.insertManualTest(mibItemId, qtyField, dutField, manComp, user, flag);
@@ -2673,23 +3360,23 @@ public class ItemController {
                 if (!"0".equals(q1.getGeneratedKey())) {
                     qtyId = q1.getGeneratedKey();
                 } else {
-                    
+
                 }
-                for (int c2 = 1; c2<=saizDut; c2++) {
+                for (int c2 = 1; c2 <= saizDut; c2++) {
                     String dutId = "0";
                     test = new ManualTestDAO();
                     QueryResult q2 = test.insertManual02(mibItemId, qtyId, String.valueOf(c2), user, flag);
                     if (!"0".equals(q2.getGeneratedKey())) {
                         dutId = q2.getGeneratedKey();
                     } else {
-                        
+
                     }
                     int saiz = nameRows.size();
-                    for (int i=0; i<saiz; i++) {
+                    for (int i = 0; i < saiz; i++) {
                         test = new ManualTestDAO();
                         QueryResult q3 = test.insertManual03(mibItemId, qtyId, dutId, nameRows.get(i), num1Rows.get(i), num3Rows.get(i), num4Rows.get(i), num2Rows.get(i), status, user, flag);
                         if (!"0".equals(q3.getGeneratedKey())) {
-                            
+
                         }
                     }
                 }
@@ -2720,10 +3407,14 @@ public class ItemController {
         QueryResult itemQ = itemD.insertItemActivityConfig(itemA);
         if (!"0".equals(itemQ.getGeneratedKey())) {
 
+            ItemDAO itemD2 = new ItemDAO();
+            Item item2 = itemD2.getHardwareDetail(dutField);
+
             //update status on Item table
             Item item = new Item();
             item.setId(mibItemId);
-            item.setStatus("Pending Visual Inspection");
+//            item.setStatus("Pending Visual Inspection");
+            item.setStatus(item2.getStatus());
             item.setFlag("0");
 
             ItemDAO itemDA = new ItemDAO();
@@ -2737,6 +3428,23 @@ public class ItemController {
 
         redirectAttrs.addFlashAttribute("error", "Failed to save Activity Configuration. Pls Contact System Admin");
         return "redirect:/hw/item/add2/" + mibItemId;
+    }
+
+    @RequestMapping(value = "/item/editActivity/{id}", method = {RequestMethod.GET, RequestMethod.POST})
+    public String editActivity(
+            Model model,
+            @ModelAttribute UserSession userSession,
+            @PathVariable("id") String id
+    ) {
+
+        ItemActivityConfigDAO itemD = new ItemActivityConfigDAO();
+        ItemActivityConfig item = itemD.getItemActivityConfigWithItemDetail(id);
+        model.addAttribute("item", item);
+
+        model.addAttribute("userItemActEdit", userSession.getItemActivityEdit());
+
+//        return "admin/bib_config_edit";
+        return "item/item_check_edit";
     }
 
     @RequestMapping(value = "/equipment", method = RequestMethod.GET)
@@ -2758,6 +3466,749 @@ public class ItemController {
         LOGGER.info("count : " + count);
         model.addAttribute("requestList", requestList);
         return "item/himsList";
+    }
+
+    @RequestMapping(value = "/item/retrieveSF/{invId}/{pkid}", method = {RequestMethod.GET, RequestMethod.POST})
+    public String retrieveSF(
+            Model model,
+            Locale locale,
+            RedirectAttributes redirectAttrs,
+            @ModelAttribute UserSession userSession,
+            @PathVariable("invId") String invId,
+            @PathVariable("pkid") String pkid
+    ) throws ClassNotFoundException, SQLException {
+
+        String himsRetrieve = HimsRetrieve.himsRetrieve(servletContext, userSession, invId);
+
+        if (himsRetrieve.contains("Successfully")) {
+            LOGGER.info("+++++++Retrieve Success+++++++");
+            redirectAttrs.addFlashAttribute("success", "Item successfully recall from Storage Factory");
+        } else {
+            LOGGER.info("+++++++Retrieve Failed+++++++");
+            redirectAttrs.addFlashAttribute("error", "Failed to recall from Storage Factory. Pls contact system admin for more detail");
+        }
+
+        return "redirect:/hw/item/ListRetrieveSF";
+    }
+
+    @RequestMapping(value = "/item/ListRetrieveSF", method = RequestMethod.GET)
+    public String ListRetrieveSF(
+            Model model,
+            @ModelAttribute UserSession userSession
+    ) throws ClassNotFoundException, SQLException {
+
+        ItemRecallDAO itemRecallD = new ItemRecallDAO();
+        List<ItemRecall> itemRecall = itemRecallD.getItemRecallListFlagZero();
+
+        for (int i = 0; i < itemRecall.size(); i++) {
+            HimsRequestDAO requestDAO = new HimsRequestDAO();
+            WhRetrieval hims = requestDAO.getWhRetrievalForHeatsRecall(itemRecall.get(i).getHimsRetrieveId());
+
+            requestDAO = new HimsRequestDAO();
+            int count = requestDAO.getCountRetrieveId(itemRecall.get(i).getHimsRetrieveId());
+
+            if (count > 0) {
+                ItemRecall item = new ItemRecall();
+                item.setStatus(hims.getStatus());
+                if ("Closed".equals(hims.getStatus())) {
+                    item.setFlag("1");
+                } else {
+                    item.setFlag("0");
+                }
+                item.setId(itemRecall.get(i).getId());
+                itemRecallD = new ItemRecallDAO();
+                QueryResult q = itemRecallD.updateItemRecallStatusAndFlag(item);
+            }
+        }
+
+        itemRecallD = new ItemRecallDAO();
+        List<ItemRecall> itemRecallFlagZero = itemRecallD.getItemRecallListFlagZero();
+
+        model.addAttribute("itemRecallFlagZero", itemRecallFlagZero);
+        return "item/item_retrieve_sf";
+    }
+
+    @RequestMapping(value = "/item/transaction/{pkid}", method = RequestMethod.GET)
+    public String addTransaction(
+            Model model,
+            @ModelAttribute UserSession userSession,
+            @PathVariable("pkid") String pkid
+    ) {
+
+        ItemDAO itemD = new ItemDAO();
+        Item item = itemD.getHardwareDetailByPkid(pkid);
+
+        ItemAluConfigDAO itemA = new ItemAluConfigDAO();
+        int countAlu = itemA.getCountItemType(item.getItemType());
+
+        model.addAttribute("item", item);
+        model.addAttribute("countAlu", countAlu);
+        return "item/item_transaction";
+    }
+
+    @RequestMapping(value = "/item/transaction/save", method = {RequestMethod.GET, RequestMethod.POST})
+    public String addTransactionSave(
+            Model model,
+            Locale locale,
+            RedirectAttributes redirectAttrs,
+            @ModelAttribute UserSession userSession,
+            @RequestParam(required = false) String mibItemId,
+            @RequestParam(required = false) String sptsPkid,
+            @RequestParam(required = false) String countAlu,
+            @RequestParam(required = false) String transaction,
+            @RequestParam(required = false) String transactionToFrom,
+            @RequestParam(required = false) String qty,
+            @RequestParam(required = false) String alu,
+            @RequestParam(required = false) String remarks,
+            @RequestParam(required = false) String transactionDate,
+            @RequestParam(required = false) String winchesterChamberLeakageTest
+    ) throws IOException {
+
+        ItemDAO itemD = new ItemDAO();
+        Item item = itemD.getHardwareDetail(mibItemId);
+
+//        TransType:- 1 = In, 2 = Out for Production, 3 = Out for Repairing, 4 = Out for Other Reason, 5 = Out for Adjustment, 6 = Production Return, 7 = Repairing Return, 8 = Others Return
+//	, 9 = Out For Quarantine, 10 = Out For External Cleaning, 11 = Out For External Re-Cleaning, 12 = Out For Internal Cleaning, 13 = Out For Internal Re-Cleaning
+//	, 14 = Return From Quarantine, 15 = Return From External Cleaning, 16 = Return From External Re-Cleaning, 17 = Return From Internal Cleaning, 18 = Return From Internal Re-Cleaning
+//	, 19 = Out for Storage Factory, 20 = Return From Storage Factory, 21 = Shipped to Other ON Semi Site, 22 = Return From Other ON Semi Site, 23 = Shipped to Vendor, 24 = Return From Vendor
+//	, 25 = Out_For_Production_Staging, 26 = Return_From_Production_Staging, 27 = Out_For_Production_From_Staging, 28 = Return_From_Production_To_Staging
+        String transtype = "";
+
+        if ("New".equals(transaction)) {
+            transtype = "1";
+        } else if ("Out".equals(transaction) && "Production".equals(transactionToFrom)) {
+            transtype = "2";
+        } else if ("Out".equals(transaction) && "Repair".equals(transactionToFrom)) {
+            transtype = "3";
+        } else if ("Out".equals(transaction) && "Other".equals(transactionToFrom)) {
+            transtype = "4";
+        } else if ("Out".equals(transaction) && "Adjustment".equals(transactionToFrom)) {
+            transtype = "5";
+        } else if ("Return".equals(transaction) && "Production".equals(transactionToFrom)) {
+            transtype = "6";
+        } else if ("Return".equals(transaction) && "Repair".equals(transactionToFrom)) {
+            transtype = "7";
+        } else if ("Return".equals(transaction) && "Other".equals(transactionToFrom)) {
+            transtype = "8";
+        } else if ("Out".equals(transaction) && "Quarantine".equals(transactionToFrom)) {
+            transtype = "9";
+        } else if ("Out".equals(transaction) && "External Clean".equals(transactionToFrom)) {
+            transtype = "10";
+        } else if ("Out".equals(transaction) && "External Re-clean".equals(transactionToFrom)) {
+            transtype = "11";
+        } else if ("Out".equals(transaction) && "Internal Clean".equals(transactionToFrom)) {
+            transtype = "12";
+        } else if ("Out".equals(transaction) && "Internal Re-clean".equals(transactionToFrom)) {
+            transtype = "13";
+        } else if ("Return".equals(transaction) && "Quarantine".equals(transactionToFrom)) {
+            transtype = "14";
+        } else if ("Return".equals(transaction) && "External Clean".equals(transactionToFrom)) {
+            transtype = "15";
+        } else if ("Return".equals(transaction) && "External Re-clean".equals(transactionToFrom)) {
+            transtype = "16";
+        } else if ("Return".equals(transaction) && "Internal Clean".equals(transactionToFrom)) {
+            transtype = "17";
+        } else if ("Return".equals(transaction) && "Internal Re-clean".equals(transactionToFrom)) {
+            transtype = "18";
+        } else if ("Out".equals(transaction) && "Storage Factory".equals(transactionToFrom)) {
+            transtype = "19";
+        } else if ("Return".equals(transaction) && "Storage Factory".equals(transactionToFrom)) {
+            transtype = "20";
+        } else if ("Out".equals(transaction) && "Other Onsemi".equals(transactionToFrom)) {
+            transtype = "21";
+        } else if ("Return".equals(transaction) && "Other Onsemi".equals(transactionToFrom)) {
+            transtype = "22";
+        } else if ("Out".equals(transaction) && "Vendor".equals(transactionToFrom)) {
+            transtype = "23";
+        } else if ("Return".equals(transaction) && "Vendor".equals(transactionToFrom)) {
+            transtype = "24";
+        } else if ("Out".equals(transaction) && "Production Staging".equals(transactionToFrom)) {
+            transtype = "25";
+        } else if ("Return".equals(transaction) && "Production Staging".equals(transactionToFrom)) {
+            transtype = "26";
+        } else if ("Out".equals(transaction) && "Out Production From Staging".equals(transactionToFrom)) {
+            transtype = "27";
+        } else if ("Return".equals(transaction) && "Retun Production to Staging".equals(transactionToFrom)) {
+            transtype = "28";
+        }
+
+        LOGGER.info("transactionDate : " + transactionDate);
+        LOGGER.info("sptsPkid : " + sptsPkid);
+        LOGGER.info("transtype : " + transtype);
+        LOGGER.info("alu : " + alu);
+        LOGGER.info("countAlu: " + countAlu);
+        //update to SPTS
+        JSONObject params2 = new JSONObject();
+        String date1 = transactionDate.substring(0, 10);
+        String time = transactionDate.substring(11, 19);
+        String completeDateTime = date1 + "T" + time;
+        LOGGER.info("completeDateTime : " + completeDateTime);
+
+        params2.put("dateTime", completeDateTime);
+        params2.put("itemsPKID", sptsPkid);
+        params2.put("transType", transtype);
+        params2.put("transQty", qty);
+        params2.put("remarks", remarks);
+        if ("1".equals(countAlu)) {
+            if ("2".equals(transtype) || "6".equals(transtype) || "27".equals(transtype) || "28".equals(transtype)) {
+                LOGGER.info("masuk jugak!!!!!!!!");
+                params2.put("lifetimeUsageHrs", alu);
+            }
+
+        }
+        SPTSResponse TransPkid = SPTSWebService.insertTransaction(params2);
+
+        if (TransPkid.getResponseId() > 0) {
+            LOGGER.info("transaction done item ");
+
+            //update HEATS table
+            //check if any info from SPTS need to update to MIB DB
+            //update SPTS data per item type into MIB DB
+            JSONObject params = new JSONObject();
+            params.put("pkID", sptsPkid);
+            JSONArray getItemByParam = SPTSWebService.getItemByParam(params);
+
+            int count = 0;
+            int countAdd = 0;
+            int countTrans = 0;
+            int countTransAdd = 0;
+            int countSf = 0;
+            int countSfAdd = 0;
+
+            //insert into database
+            for (int i = 0; i < getItemByParam.length(); i++) {
+
+                ItemDAO hwD = new ItemDAO();
+                int countPkid = hwD.getCountPkid(Integer.toString(getItemByParam.getJSONObject(i).getInt("PKID")));
+                if (countPkid == 1) {
+
+                    Item hw = new Item();
+//                if (getItemByParam.getJSONObject(i).has("PKID")) {
+                    hw.setSptsPkid(Integer.toString(getItemByParam.getJSONObject(i).getInt("PKID")));
+//                }
+                    hw.setItemType(getItemByParam.getJSONObject(i).getString("ItemType"));
+                    hw.setItemId(getItemByParam.getJSONObject(i).getString("ItemID"));
+                    hw.setItemName(getItemByParam.getJSONObject(i).getString("ItemName"));
+                    if (getItemByParam.getJSONObject(i).has("SubType")) {
+                        hw.setSubType(getItemByParam.getJSONObject(i).getString("SubType"));
+                    }
+                    if (getItemByParam.getJSONObject(i).has("ALUHrs")) {
+                        hw.setAluHrs(Double.toString(getItemByParam.getJSONObject(i).getDouble("ALUHrs")));
+                    }
+                    if (getItemByParam.getJSONObject(i).has("AssemblyID")) {
+                        Object assembly = getItemByParam.getJSONObject(i).get("AssemblyID");
+                        if (assembly instanceof String) {
+                            hw.setAssemblyId(getItemByParam.getJSONObject(i).getString("AssemblyID"));
+                        } else {
+                            hw.setAssemblyId(Integer.toString(getItemByParam.getJSONObject(i).getInt("AssemblyID")));
+                        }
+                    }
+                    if (getItemByParam.getJSONObject(i).has("Complexity")) {
+                        hw.setComplexity(getItemByParam.getJSONObject(i).getString("Complexity"));
+                    }
+                    if (getItemByParam.getJSONObject(i).has("EquipmentManufacturer")) {
+                        Object assembly = getItemByParam.getJSONObject(i).get("EquipmentManufacturer");
+                        if (assembly instanceof String) {
+                            hw.setEquipmentManufacturer(getItemByParam.getJSONObject(i).getString("EquipmentManufacturer"));
+                        } else {
+                            hw.setEquipmentManufacturer(Integer.toString(getItemByParam.getJSONObject(i).getInt("EquipmentManufacturer")));
+                        }
+                    }
+                    if (getItemByParam.getJSONObject(i).has("EquipmentModel")) {
+                        Object eqptModel = getItemByParam.getJSONObject(i).get("EquipmentModel");
+                        if (eqptModel instanceof String) {
+                            hw.setEquipmentModel(getItemByParam.getJSONObject(i).getString("EquipmentModel"));
+                        } else {
+                            hw.setEquipmentModel(Integer.toString(getItemByParam.getJSONObject(i).getInt("EquipmentModel")));
+                        }
+                    }
+                    if (getItemByParam.getJSONObject(i).has("EquipmentType")) {
+                        hw.setEquipmentType(getItemByParam.getJSONObject(i).getString("EquipmentType"));
+                    }
+                    if (getItemByParam.getJSONObject(i).has("ExpirationDate")) {
+                        String date2 = getItemByParam.getJSONObject(i).getString("ExpirationDate").substring(0, 10);
+                        hw.setExpirationDate(date2);
+                    }
+                    if (getItemByParam.getJSONObject(i).has("ExternalRecleaningQty")) {
+                        hw.setExternalRecleanQty(Integer.toString(getItemByParam.getJSONObject(i).getInt("ExternalRecleaningQty")));
+                    }
+                    if (getItemByParam.getJSONObject(i).has("ExternalCleaningQty")) {
+                        hw.setExternalCleanQty(Integer.toString(getItemByParam.getJSONObject(i).getInt("ExternalCleaningQty")));
+                    }
+                    if (getItemByParam.getJSONObject(i).has("InternalCleaningQty")) {
+                        hw.setInternalCleanQty(Integer.toString(getItemByParam.getJSONObject(i).getInt("InternalCleaningQty")));
+                    }
+                    if (getItemByParam.getJSONObject(i).has("InternalRecleaningQty")) {
+                        hw.setInternalRecleanQty(Integer.toString(getItemByParam.getJSONObject(i).getInt("InternalRecleaningQty")));
+                    }
+                    if (getItemByParam.getJSONObject(i).has("IsConsumeable")) {
+                        hw.setIsConsumable(Boolean.toString(getItemByParam.getJSONObject(i).getBoolean("IsConsumeable")));
+                    }
+                    if (getItemByParam.getJSONObject(i).has("IsCritical")) {
+                        hw.setIsCritical(Boolean.toString(getItemByParam.getJSONObject(i).getBoolean("IsCritical")));
+                    }
+                    if (getItemByParam.getJSONObject(i).has("Manufacturer")) {
+                        Object assembly = getItemByParam.getJSONObject(i).get("Manufacturer");
+                        if (assembly instanceof String) {
+                            hw.setManufacturer(getItemByParam.getJSONObject(i).getString("Manufacturer"));
+                        } else {
+                            hw.setManufacturer(Integer.toString(getItemByParam.getJSONObject(i).getInt("Manufacturer")));
+                        }
+                    }
+                    if (getItemByParam.getJSONObject(i).has("MaxQty")) {
+                        hw.setMaxQty(Integer.toString(getItemByParam.getJSONObject(i).getInt("MaxQty")));
+                    }
+                    if (getItemByParam.getJSONObject(i).has("MinQty")) {
+                        hw.setMinQty(Integer.toString(getItemByParam.getJSONObject(i).getInt("MinQty")));
+                    }
+                    if (getItemByParam.getJSONObject(i).has("Model")) {
+
+                        Object modelSpts = getItemByParam.getJSONObject(i).get("Model");
+                        if (modelSpts instanceof String) {
+                            hw.setModel(getItemByParam.getJSONObject(i).getString("Model"));
+                        } else {
+                            hw.setModel(Integer.toString(getItemByParam.getJSONObject(i).getInt("Model")));
+                        }
+                    }
+                    if (getItemByParam.getJSONObject(i).has("OnHandQty")) {
+                        hw.setOnHandQty(Integer.toString(getItemByParam.getJSONObject(i).getInt("OnHandQty")));
+                    }
+                    if (getItemByParam.getJSONObject(i).has("OtherONQty")) {
+                        hw.setOtherOnsemiQty(Integer.toString(getItemByParam.getJSONObject(i).getInt("OtherONQty")));
+                    }
+                    if (getItemByParam.getJSONObject(i).has("OtherQty")) {
+                        hw.setOtherQty(Integer.toString(getItemByParam.getJSONObject(i).getInt("OtherQty")));
+                    }
+                    if (getItemByParam.getJSONObject(i).has("PMWW1")) {
+                        Object assembly = getItemByParam.getJSONObject(i).get("PMWW1");
+                        if (assembly instanceof String) {
+                            hw.setPmWw1(getItemByParam.getJSONObject(i).getString("PMWW1"));
+                        } else {
+                            hw.setPmWw1(Integer.toString(getItemByParam.getJSONObject(i).getInt("PMWW1")));
+                        }
+                    }
+                    if (getItemByParam.getJSONObject(i).has("PMWW2")) {
+                        Object assembly = getItemByParam.getJSONObject(i).get("PMWW2");
+                        if (assembly instanceof String) {
+                            hw.setPmWw2(getItemByParam.getJSONObject(i).getString("PMWW2"));
+                        } else {
+                            hw.setPmWw2(Integer.toString(getItemByParam.getJSONObject(i).getInt("PMWW2")));
+                        }
+                    }
+                    if (getItemByParam.getJSONObject(i).has("ProductionQty")) {
+                        hw.setProductionQty(Integer.toString(getItemByParam.getJSONObject(i).getInt("ProductionQty")));
+                    }
+                    if (getItemByParam.getJSONObject(i).has("ProductionStagingQty")) {
+                        hw.setProductionStagingQty(Integer.toString(getItemByParam.getJSONObject(i).getInt("ProductionStagingQty")));
+                    }
+                    if (getItemByParam.getJSONObject(i).has("QuarantineQty")) {
+                        hw.setQuarantineQty(Integer.toString(getItemByParam.getJSONObject(i).getInt("QuarantineQty")));
+                    }
+                    if (getItemByParam.getJSONObject(i).has("Rack")) {
+
+                        Object rack = getItemByParam.getJSONObject(i).get("Rack");
+                        if (rack instanceof String) {
+                            hw.setRack(getItemByParam.getJSONObject(i).getString("Rack"));
+                        } else {
+                            hw.setRack(Integer.toString(getItemByParam.getJSONObject(i).getInt("Rack")));
+                        }
+                    }
+                    if (getItemByParam.getJSONObject(i).has("Remarks")) {
+                        Object assembly = getItemByParam.getJSONObject(i).get("Remarks");
+                        if (assembly instanceof String) {
+                            hw.setRemarks(getItemByParam.getJSONObject(i).getString("Remarks"));
+                        } else {
+                            hw.setRemarks(Integer.toString(getItemByParam.getJSONObject(i).getInt("Remarks")));
+                        }
+                    }
+                    if (getItemByParam.getJSONObject(i).has("RepairQty")) {
+                        hw.setRepairQty(Integer.toString(getItemByParam.getJSONObject(i).getInt("RepairQty")));
+                    }
+                    if (getItemByParam.getJSONObject(i).has("Shelf")) {
+
+                        Object shelfStr = getItemByParam.getJSONObject(i).get("Shelf");
+                        if (shelfStr instanceof String) {
+                            hw.setShelf(getItemByParam.getJSONObject(i).getString("Shelf"));
+                        } else {
+                            hw.setShelf(Integer.toString(getItemByParam.getJSONObject(i).getInt("Shelf")));
+                        }
+                    }
+                    if (getItemByParam.getJSONObject(i).has("StatusName")) {
+                        Object assembly = getItemByParam.getJSONObject(i).get("StatusName");
+                        if (assembly instanceof String) {
+                            hw.setStatus(getItemByParam.getJSONObject(i).getString("StatusName"));
+                            if ("Scrapped".equals(getItemByParam.getJSONObject(i).getString("StatusName"))) {
+                                hw.setFlag("99");
+                            } else {
+                                hw.setFlag("1");
+                            }
+                        } else {
+                            hw.setStatus(Integer.toString(getItemByParam.getJSONObject(i).getInt("StatusName")));
+                            if ("Scrapped".equals(Integer.toString(getItemByParam.getJSONObject(i).getInt("StatusName")))) {
+                                hw.setFlag("99");
+                            } else {
+                                hw.setFlag("1");
+                            }
+                        }
+                    }
+                    if (getItemByParam.getJSONObject(i).has("StorageFactoryQty")) {
+                        Object storage = getItemByParam.getJSONObject(i).get("StorageFactoryQty");
+                        if (storage instanceof String) {
+                            hw.setStorageFactoryQty(getItemByParam.getJSONObject(i).getString("StorageFactoryQty"));
+                        } else {
+                            hw.setStorageFactoryQty(Integer.toString(getItemByParam.getJSONObject(i).getInt("StorageFactoryQty")));
+                        }
+                    }
+                    if (getItemByParam.getJSONObject(i).has("StressType")) {
+                        Object assembly = getItemByParam.getJSONObject(i).get("StressType");
+                        if (assembly instanceof String) {
+                            hw.setStressType(getItemByParam.getJSONObject(i).getString("StressType"));
+                        } else {
+                            hw.setStressType(Integer.toString(getItemByParam.getJSONObject(i).getInt("StressType")));
+                        }
+                    }
+                    if (getItemByParam.getJSONObject(i).has("TotalCost")) {
+                        hw.setTotalCost(Double.toString(getItemByParam.getJSONObject(i).getDouble("TotalCost")));
+                    }
+                    if (getItemByParam.getJSONObject(i).has("TotalQty")) {
+                        hw.setTotalQty(Integer.toString(getItemByParam.getJSONObject(i).getInt("TotalQty")));
+                    }
+                    if (getItemByParam.getJSONObject(i).has("UnitCost")) {
+                        hw.setUnitCost(Double.toString(getItemByParam.getJSONObject(i).getDouble("UnitCost")));
+                    }
+                    if (getItemByParam.getJSONObject(i).has("VendorQty")) {
+                        hw.setVendorQty(Integer.toString(getItemByParam.getJSONObject(i).getInt("VendorQty")));
+                    }
+                    if (getItemByParam.getJSONObject(i).has("DowntimeUnit")) {
+                        Object assembly = getItemByParam.getJSONObject(i).get("DowntimeUnit");
+                        if (assembly instanceof String) {
+                            hw.setDowntimeUnit(getItemByParam.getJSONObject(i).getString("DowntimeUnit"));
+                        } else {
+                            hw.setDowntimeUnit(Integer.toString(getItemByParam.getJSONObject(i).getInt("DowntimeUnit")));
+                        }
+                    }
+                    if (getItemByParam.getJSONObject(i).has("DowntimeValue")) {
+                        hw.setDowntimeValue(Double.toString(getItemByParam.getJSONObject(i).getDouble("DowntimeValue")));
+                    }
+                    if (getItemByParam.getJSONObject(i).has("ImplementationCost")) {
+                        hw.setImplementationCost(Double.toString(getItemByParam.getJSONObject(i).getDouble("ImplementationCost")));
+                    }
+                    if (getItemByParam.getJSONObject(i).has("ManpowerUnit")) {
+                        Object assembly = getItemByParam.getJSONObject(i).get("ManpowerUnit");
+                        if (assembly instanceof String) {
+                            hw.setManpowerUnit(getItemByParam.getJSONObject(i).getString("ManpowerUnit"));
+                        } else {
+                            hw.setManpowerUnit(Integer.toString(getItemByParam.getJSONObject(i).getInt("ManpowerUnit")));
+                        }
+                    }
+                    if (getItemByParam.getJSONObject(i).has("ManpowerValue")) {
+                        hw.setManpowerValue(Double.toString(getItemByParam.getJSONObject(i).getDouble("ManpowerValue")));
+                    }
+
+                    hwD = new ItemDAO();
+                    QueryResult q = hwD.updateHardwareDetailFromSpts(hw);
+                    countAdd += q.getResult();
+                }
+                count += 1;
+            }
+
+            LOGGER.info("Total data: " + count);
+            LOGGER.info("Total insert: " + countAdd);
+
+            //add transaction to DB
+            JSONObject params3 = new JSONObject();
+            params3.put("itemsPKID", sptsPkid);
+            JSONArray getTransactionByParam = SPTSWebService.getTransactionByParam(params3);
+
+            for (int i = 0; i < getTransactionByParam.length(); i++) {
+
+                ItemTransactionDAO itemTransD = new ItemTransactionDAO();
+                int countPkid = itemTransD.getCountPkidAndItemPkid(Integer.toString(getTransactionByParam.getJSONObject(i).getInt("PKID")), Integer.toString(getTransactionByParam.getJSONObject(i).getInt("ItemsPKID")));
+                if (countPkid == 0) {
+                    ItemTransaction itemTran = new ItemTransaction();
+                    itemTran.setSptsPkid(Integer.toString(getTransactionByParam.getJSONObject(i).getInt("PKID")));
+                    itemTran.setItemPkid(Integer.toString(getTransactionByParam.getJSONObject(i).getInt("ItemsPKID")));
+                    itemTran.setSiteName(getTransactionByParam.getJSONObject(i).getString("SiteName"));
+                    String dateTime = getTransactionByParam.getJSONObject(i).getString("DateTime").substring(0, 10) + " " + getTransactionByParam.getJSONObject(i).getString("DateTime").substring(11, 19);
+                    itemTran.setDateTime(dateTime);
+                    itemTran.setTransType(Integer.toString(getTransactionByParam.getJSONObject(i).getInt("TransType")));
+                    itemTran.setTransTypeName(getTransactionByParam.getJSONObject(i).getString("TransTypeName"));
+                    itemTran.setTransQty(Integer.toString(getTransactionByParam.getJSONObject(i).getInt("TransQty")));
+                    if (getTransactionByParam.getJSONObject(i).has("TransInQty")) {
+                        itemTran.setTransInQty(Integer.toString(getTransactionByParam.getJSONObject(i).getInt("TransInQty")));
+                    }
+                    if (getTransactionByParam.getJSONObject(i).has("TransOutQty")) {
+                        itemTran.setTransOutQty(Integer.toString(getTransactionByParam.getJSONObject(i).getInt("TransOutQty")));
+                    }
+                    if (getTransactionByParam.getJSONObject(i).has("LifetimeUsageHrs")) {
+                        itemTran.setAlu(Double.toString(getTransactionByParam.getJSONObject(i).getDouble("LifetimeUsageHrs")));
+                    }
+                    if (getTransactionByParam.getJSONObject(i).has("Remarks")) {
+                        itemTran.setRemarks(getTransactionByParam.getJSONObject(i).getString("Remarks"));
+                    }
+
+                    itemTransD = new ItemTransactionDAO();
+                    QueryResult qI = itemTransD.insertItemTransaction(itemTran);
+                    countTransAdd += qI.getResult();
+                }
+                countTrans += 1;
+            }
+            LOGGER.info("Total data Trans: " + countTrans);
+            LOGGER.info("Total insert Trans: " + countTransAdd);
+
+            redirectAttrs.addFlashAttribute("success", "Transaction is added");
+//            return "redirect:/hw/item";
+            return "redirect:/hw";
+        } else {
+            LOGGER.info("TransPkid.getResponseId(): " + TransPkid.getResponseId());
+            redirectAttrs.addFlashAttribute("error", "Failed to save transaction. Pls contact system admin for more detail.");
+            return "redirect:/hw/item/transaction/" + sptsPkid;
+        }
+
+    }
+
+    @RequestMapping(value = "/item/query", method = {RequestMethod.GET, RequestMethod.POST})
+    public String query(
+            Model model,
+            Locale locale,
+            RedirectAttributes redirectAttrs,
+            @ModelAttribute UserSession userSession,
+            @RequestParam(required = false) String itemType,
+            @RequestParam(required = false) String subType,
+            @RequestParam(required = false) String itemId,
+            @RequestParam(required = false) String itemName,
+            @RequestParam(required = false) String assemblyId,
+            //            @RequestParam(required = false) String hardwareId,
+            @RequestParam(required = false) String stressType,
+            @RequestParam(required = false) String status,
+            //            @RequestParam(required = false) String ateItemUsage,
+            //            @RequestParam(required = false) String eqptItemUsage,
+            @RequestParam(required = false) String model2,
+            @RequestParam(required = false) String manufacturer,
+            @RequestParam(required = false) String equipmentType,
+            @RequestParam(required = false) String equipmentModel,
+            @RequestParam(required = false) String equipmentManufacturer) throws IOException {
+
+        String query = "";
+        int count = 0;
+
+        JSONArray getItemTypeAll = SPTSWebService.getItemTypeAll();
+
+        for (int i = 0; i < getItemTypeAll.length(); i++) {
+
+            ParameterDetailsDAO pD = new ParameterDetailsDAO();
+            String masterCode = "002";
+            String detailcode = pD.getNextDetailCode(masterCode);
+            pD = new ParameterDetailsDAO();
+            int countItemType = pD.getCountMasterCodeAndName(masterCode, getItemTypeAll.getJSONObject(i).getString("ItemType"));
+
+            if (countItemType == 0) {
+                ParameterDetails param = new ParameterDetails();
+                param.setMasterCode(masterCode);
+                param.setDetailCode(detailcode);
+                param.setName(getItemTypeAll.getJSONObject(i).getString("ItemType"));
+                param.setCreatedBy(userSession.getId());
+                pD = new ParameterDetailsDAO();
+                QueryResult q = pD.insertParameterDetails(param);
+            }
+        }
+
+        ParameterDetailsDAO pD = new ParameterDetailsDAO();
+        List<ParameterDetails> paramItemType = pD.getGroupParameterDetailList("", "002");
+        model.addAttribute("paramItemType", paramItemType);
+
+        pD = new ParameterDetailsDAO();
+        List<ParameterDetails> paramItemUsage = pD.getGroupParameterDetailList("", "001");
+        model.addAttribute("paramItemUsage", paramItemUsage);
+
+        pD = new ParameterDetailsDAO();
+        List<ParameterDetails> paramItemUsageEqpt = pD.getGroupParameterDetailList("", "018");
+        model.addAttribute("paramItemUsageEqpt", paramItemUsageEqpt);
+
+        ItemDAO itemD = new ItemDAO();
+        List<Item> listAssemblyId = itemD.getItemAssemblyId("");
+        model.addAttribute("listAssemblyId", listAssemblyId);
+
+        itemD = new ItemDAO();
+        List<Item> listModel = itemD.getItemModel("");
+        model.addAttribute("listModel", listModel);
+
+        itemD = new ItemDAO();
+        List<Item> listManufacturer = itemD.getItemManufacturer("");
+        model.addAttribute("listManufacturer", listManufacturer);
+
+        itemD = new ItemDAO();
+        List<Item> listEqptModel = itemD.getItemEqptModel("");
+        model.addAttribute("listEqptModel", listEqptModel);
+
+        itemD = new ItemDAO();
+        List<Item> listEqptType = itemD.getItemEqptType("");
+        model.addAttribute("listEqptType", listEqptType);
+
+        itemD = new ItemDAO();
+        List<Item> listEqptManufacturer = itemD.getItemEqptManufacturer("");
+        model.addAttribute("listEqptManufacturer", listEqptManufacturer);
+
+        itemD = new ItemDAO();
+        List<Item> listStressType = itemD.getItemStressType("");
+        model.addAttribute("listStressType", listStressType);
+
+        itemD = new ItemDAO();
+        List<Item> listStatus = itemD.getItemStatus();
+        model.addAttribute("listStatus", listStatus);
+
+        itemD = new ItemDAO();
+        List<Item> listSubType = itemD.getItemSubType();
+        model.addAttribute("listSubType", listSubType);
+
+        if (itemType != null) {
+            if (!itemType.equals("")) {
+                count++;
+                if (count == 1) {
+                    query = query + " WHERE item_type = '" + itemType + "\' ";
+                } else if (count > 1) {
+                    query = query + " AND item_type = ''" + itemType + "\' ";
+                }
+            }
+        }
+
+        if (subType != null) {
+            if (!subType.equals("")) {
+                count++;
+                if (count == 1) {
+                    query = query + " WHERE sub_type = '" + subType + "\' ";
+                } else if (count > 1) {
+                    query = query + " AND rmslot_event = '" + subType + "\' ";
+                }
+            }
+        }
+
+        if (itemId != null) {
+            if (!itemId.equals("")) {
+                count++;
+                if (count == 1) {
+                    query = query + " WHERE item_id LIKE \'%" + itemId + "%' ";
+                } else if (count > 1) {
+                    query = query + " AND item_id LIKE \'%" + itemId + "%' ";
+                }
+            }
+        }
+
+        if (itemName != null) {
+            if (!itemName.equals("")) {
+                count++;
+                if (count == 1) {
+                    query = query + " WHERE item_name LIKE \'%" + itemName + "%' ";
+                } else if (count > 1) {
+                    query = query + " AND item_name LIKE \'%" + itemName + "%' ";
+                }
+            }
+        }
+
+        if (assemblyId != null) {
+            if (!assemblyId.equals("")) {
+                count++;
+                if (count == 1) {
+                    query = query + " WHERE assembly_id = '" + assemblyId + "\' ";
+                } else if (count > 1) {
+                    query = query + " AND assembly_id = '" + assemblyId + "\' ";
+                }
+            }
+        }
+
+        if (stressType != null) {
+            if (!stressType.equals("")) {
+                count++;
+                if (count == 1) {
+                    query = query + " WHERE stress_type = '" + stressType + "\' ";
+                } else if (count > 1) {
+                    query = query + " AND stress_type = '" + stressType + "\' ";
+                }
+            }
+        }
+
+        if (model2 != null) {
+            if (!model2.equals("")) {
+                count++;
+                if (count == 1) {
+                    query = query + " WHERE model = '" + model2 + "\' ";
+                } else if (count > 1) {
+                    query = query + " AND model = '" + model2 + "\' ";
+                }
+            }
+        }
+
+        if (manufacturer != null) {
+            if (!manufacturer.equals("")) {
+                count++;
+                if (count == 1) {
+                    query = query + " WHERE manufacturer = '" + manufacturer + "\' ";
+                } else if (count > 1) {
+                    query = query + " AND manufacturer = '" + manufacturer + "\' ";
+                }
+            }
+        }
+
+        if (equipmentType != null) {
+            if (!equipmentType.equals("")) {
+                count++;
+                if (count == 1) {
+                    query = query + " WHERE equipment_type = '" + equipmentType + "\' ";
+                } else if (count > 1) {
+                    query = query + " AND equipment_type = '" + equipmentType + "\' ";
+                }
+            }
+        }
+
+        if (equipmentModel != null) {
+            if (!equipmentModel.equals("")) {
+                count++;
+                if (count == 1) {
+                    query = query + " WHERE equipment_model = '" + equipmentModel + "\' ";
+                } else if (count > 1) {
+                    query = query + " AND equipment_model = '" + equipmentModel + "\' ";
+                }
+            }
+        }
+
+        if (equipmentManufacturer != null) {
+            if (!equipmentManufacturer.equals("")) {
+                count++;
+                if (count == 1) {
+                    query = query + " WHERE equipment_manufacturer = '" + equipmentManufacturer + "\' ";
+                } else if (count > 1) {
+                    query = query + " AND equipment_manufacturer = '" + equipmentManufacturer + "\' ";
+                }
+            }
+        }
+
+        if (status != null) {
+            if (!status.equals("")) {
+                count++;
+                if (count == 1) {
+                    query = query + " WHERE status = '" + status + "\' ";
+                } else if (count > 1) {
+                    query = query + " AND status = '" + status + "\' ";
+                }
+            }
+        }
+
+        String finalQuery = "";
+
+        if (count != 0) {
+            finalQuery = "SELECT * FROM item " + query + " ORDER BY item_type, item_id";
+
+        } else {
+            finalQuery = "SELECT * FROM item WHERE flag = '1000'";
+        }
+
+        System.out.println("finalQuery: " + finalQuery);
+
+        itemD = new ItemDAO();
+        List<Item> resultQuery = itemD.getitemQuery(finalQuery);
+        model.addAttribute("resultQuery", resultQuery);
+
+        return "item/query";
     }
 
     @RequestMapping(value = "/view/{reqId}", method = RequestMethod.GET)

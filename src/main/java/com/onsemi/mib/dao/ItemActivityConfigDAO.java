@@ -284,7 +284,7 @@ public class ItemActivityConfigDAO {
         }
         return itemactivityConfig;
     }
-    
+
     public ItemActivityConfig getItemActivityByItemId(String itemId) {
         String sql = "SELECT * FROM item_activity_config WHERE mib_item_id = '" + itemId + "'";
         ItemActivityConfig itemactivityConfig = null;
@@ -320,6 +320,33 @@ public class ItemActivityConfigDAO {
             }
         }
         return itemactivityConfig;
+    }
+
+    public Integer getCountByMibItemId(String mibItemId) {
+        Integer count = null;
+        try {
+            PreparedStatement ps = conn.prepareStatement(
+                    "SELECT COUNT(*) AS count FROM item_activity_config con WHERE con.mib_item_id = '" + mibItemId + "'"
+            );
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                count = rs.getInt("count");
+            }
+            rs.close();
+
+            ps.close();
+        } catch (SQLException e) {
+            LOGGER.error(e.getMessage());
+        } finally {
+            if (conn != null) {
+                try {
+                    conn.close();
+                } catch (SQLException e) {
+                    LOGGER.error(e.getMessage());
+                }
+            }
+        }
+        return count;
     }
 
 }

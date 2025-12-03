@@ -1,13 +1,16 @@
 package com.onsemi.mib.controller;
 
 import com.onsemi.mib.dao.ItemActivityConfigDAO;
+import com.onsemi.mib.dao.ItemAluConfigDAO;
 import com.onsemi.mib.dao.ItemDAO;
 import com.onsemi.mib.dao.LDAPUserDAO;
 import java.util.List;
 import java.util.Locale;
 import javax.servlet.http.HttpServletRequest;
 import com.onsemi.mib.dao.MenuDAO;
+import com.onsemi.mib.dao.ParameterDetailsDAO;
 import com.onsemi.mib.dao.SREventListDAO;
+import com.onsemi.mib.dao.UserAccessControlDAO;
 import com.onsemi.mib.dao.UserDAO;
 import com.onsemi.mib.dao.UserGroupAccessDAO;
 import com.onsemi.mib.dao.UserGroupDAO;
@@ -15,15 +18,19 @@ import com.onsemi.mib.dao.UserManualDAO;
 import com.onsemi.mib.model.EventGroup;
 import com.onsemi.mib.model.Item;
 import com.onsemi.mib.model.ItemActivityConfig;
+import com.onsemi.mib.model.ItemAluConfig;
 import com.onsemi.mib.model.JSONResponse;
 import com.onsemi.mib.model.LDAPUser;
 import com.onsemi.mib.model.Menu;
+import com.onsemi.mib.model.ParameterDetails;
 import com.onsemi.mib.tools.QueryResult;
 import com.onsemi.mib.model.User;
+import com.onsemi.mib.model.UserAccessControl;
 import com.onsemi.mib.model.UserGroup;
 import com.onsemi.mib.model.UserGroupAccess;
 import com.onsemi.mib.model.UserManual;
 import com.onsemi.mib.model.UserSession;
+import com.onsemi.mib.tools.SPTSWebService;
 import com.onsemi.mib.tools.SpmlUtil;
 import java.io.File;
 import java.io.FileInputStream;
@@ -42,6 +49,7 @@ import javax.naming.directory.SearchControls;
 import javax.naming.directory.SearchResult;
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletResponse;
+import org.json.JSONArray;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -101,9 +109,9 @@ public class AdminController {
         String loginId = userSession.getLoginId();
         UserDAO userDao = new UserDAO();
         LDAPUser ldapUser = userDao.getUserAccess(loginId);
-        String testEmailAccess = ldapUser.getFeaturesTestEmail();
+//        String testEmailAccess = ldapUser.getFeaturesTestEmail();
 
-        model.addAttribute("testEmailAccess", testEmailAccess);
+//        model.addAttribute("testEmailAccess", testEmailAccess);
         model.addAttribute("userList", ldapUserList);
         model.addAttribute("userGroupList", userGroupList);
         model.addAttribute("selectedGroup", selectedGroup);
@@ -529,12 +537,15 @@ public class AdminController {
             @PathVariable("userId") String userId
     ) {
         UserDAO userDAO = new UserDAO();
-        User user = userDAO.getUser(userId);
+//        User user = userDAO.getUser(userId);
+//        LDAPUser user = userDAO.getUserDetailById(userId);
+        LDAPUser user = userDAO.getUserAccess(userId);
         UserGroupDAO userGroupDAO = new UserGroupDAO();
         List<UserGroup> userGroupList = userGroupDAO.getGroupList(user.getGroupId());
         model.addAttribute("user", user);
         model.addAttribute("userGroupList", userGroupList);
-        return "admin/user_edit";
+//        return "admin/user_edit";
+        return "admin/ldap_user_edit";
     }
 
     @RequestMapping(value = "/user/update", method = {RequestMethod.GET, RequestMethod.POST})
@@ -560,6 +571,58 @@ public class AdminController {
         UserDAO userDAO = new UserDAO();
         QueryResult queryResult = userDAO.updateUser(user);
         if (queryResult.getResult() == 1) {
+            redirectAttrs.addFlashAttribute("success", messageSource.getMessage("admin.label.user.update.success", args, locale));
+        } else {
+            redirectAttrs.addFlashAttribute("error", messageSource.getMessage("admin.label.user.update.error", args, locale));
+        }
+        return "redirect:/admin/user/edit/" + userId;
+    }
+
+    @RequestMapping(value = "/user/updateAccess", method = {RequestMethod.GET, RequestMethod.POST})
+    public String updateAccess(
+            Model model,
+            Locale locale,
+            RedirectAttributes redirectAttrs,
+            @ModelAttribute UserSession userSession,
+            @RequestParam(required = false) String userId,
+            @RequestParam(required = false) String itemAdd,
+            @RequestParam(required = false) String itemEdit,
+            @RequestParam(required = false) String itemDelete,
+            @RequestParam(required = false) String itemHwAdd,
+            @RequestParam(required = false) String itemHwEdit,
+            @RequestParam(required = false) String itemHwDelete,
+            @RequestParam(required = false) String itemActConfig,
+            @RequestParam(required = false) String itemActAdd,
+            @RequestParam(required = false) String itemActEdit,
+            @RequestParam(required = false) String itemMovementAdd,
+            @RequestParam(required = false) String itemSfRecall
+    ) {
+        UserAccessControl uac = new UserAccessControl();
+        uac.setUserId(userId);
+        uac.setItemAdd(itemAdd);
+        uac.setItemEdit(itemEdit);
+        uac.setItemDelete(itemDelete);
+        uac.setItemHardwareAdd(itemHwAdd);
+        uac.setItemHardwareEdit(itemHwEdit);
+        uac.setItemHardwareDelete(itemHwDelete);
+        uac.setItemActivityConfig(itemActConfig);
+        uac.setItemActivityAdd(itemActAdd);
+        uac.setItemActivityEdit(itemActEdit);
+        uac.setItemMovementAdd(itemMovementAdd);
+        uac.setItemSfRecall(itemSfRecall);
+
+        UserAccessControlDAO uacD = new UserAccessControlDAO();
+        int count = uacD.getCountByUserId(userId);
+
+        uacD = new UserAccessControlDAO();
+        QueryResult q = new QueryResult();
+        if (count == 0) { //insert
+            q = uacD.insertUserAccessControl(uac);
+        } else {
+            q = uacD.updateUserAccessControlByUserId(uac);
+        }
+
+        if (q.getResult() == 1) {
             redirectAttrs.addFlashAttribute("success", messageSource.getMessage("admin.label.user.update.success", args, locale));
         } else {
             redirectAttrs.addFlashAttribute("error", messageSource.getMessage("admin.label.user.update.error", args, locale));
@@ -1139,7 +1202,7 @@ public class AdminController {
         } else {
             itemA.setLeakageTest("No");
         }
-        if ("on".equals(psLeakageTestCheck )) {
+        if ("on".equals(psLeakageTestCheck)) {
             itemA.setPsLeakageTest("Yes");
         } else {
             itemA.setPsLeakageTest("No");
@@ -1156,13 +1219,101 @@ public class AdminController {
         QueryResult itemQ = itemD.updateItemActivityConfig(itemA);
         if (!"0".equals(itemQ.getResult())) {
             redirectAttrs.addFlashAttribute("success", "Activity Configuration Succesfully Updated.");
-            return "redirect:/admin/bibActivity";
+//            return "redirect:/admin/bibActivity";
+            return "redirect:/hw//item/pending";
         } else {
 
         }
 
         redirectAttrs.addFlashAttribute("error", "Failed to update Activity Configuration. Pls Contact System Admin");
         return "redirect:/admin/bibActivity/edit/" + id;
+    }
+
+    @RequestMapping(value = "/aluConfig", method = {RequestMethod.GET, RequestMethod.POST})
+    public String aluConfig(
+            Model model,
+            @ModelAttribute UserSession userSession
+    ) throws IOException {
+
+        JSONArray getItemTypeAll = SPTSWebService.getItemTypeAll();
+
+        for (int i = 0; i < getItemTypeAll.length(); i++) {
+
+            ParameterDetailsDAO pD = new ParameterDetailsDAO();
+            String masterCode = "002";
+            String detailcode = pD.getNextDetailCode(masterCode);
+            pD = new ParameterDetailsDAO();
+            int count = pD.getCountMasterCodeAndName(masterCode, getItemTypeAll.getJSONObject(i).getString("ItemType"));
+
+            if (count == 0) {
+                ParameterDetails param = new ParameterDetails();
+                param.setMasterCode(masterCode);
+                param.setDetailCode(detailcode);
+                param.setName(getItemTypeAll.getJSONObject(i).getString("ItemType"));
+                param.setCreatedBy(userSession.getId());
+                pD = new ParameterDetailsDAO();
+                QueryResult q = pD.insertParameterDetails(param);
+            }
+        }
+
+        ParameterDetailsDAO pD = new ParameterDetailsDAO();
+        List<ParameterDetails> paramItemType = pD.getGroupParameterDetailList("", "002");
+        model.addAttribute("paramItemType", paramItemType);
+
+        ItemAluConfigDAO itemD = new ItemAluConfigDAO();
+        List<ItemAluConfig> Item = itemD.getItemAluConfigList();
+        model.addAttribute("Item", Item);
+
+        return "admin/aluConfig";
+    }
+
+    @RequestMapping(value = "/aluConfig/save", method = {RequestMethod.GET, RequestMethod.POST})
+    public String aluConfigSave(
+            Model model,
+            Locale locale,
+            RedirectAttributes redirectAttrs,
+            @ModelAttribute UserSession userSession,
+            @RequestParam(required = false) String itemType
+    ) {
+        ItemAluConfigDAO itemD = new ItemAluConfigDAO();
+        int count = itemD.getCountItemType(itemType);
+
+        if (count == 0) {
+
+            ItemAluConfig item = new ItemAluConfig();
+            item.setItemType(itemType);
+            item.setCreatedBy(userSession.getFullname());
+
+            itemD = new ItemAluConfigDAO();
+            QueryResult q = itemD.insertItemAluConfig(item);
+            if (q.getResult() > 0) {
+                redirectAttrs.addFlashAttribute("success", "Successfully registered " + itemType + " into the ALU Config List");
+            } else {
+                redirectAttrs.addFlashAttribute("error", "Failed to register " + itemType + " into the list. Pls Contact System Admin for more detail");
+            }
+        } else {
+            redirectAttrs.addFlashAttribute("error", itemType + " already registered. Pls select another Item Type");
+        }
+
+        return "redirect:/admin/aluConfig";
+    }
+
+    @RequestMapping(value = "/aluConfig/delete/{id}", method = {RequestMethod.GET, RequestMethod.POST})
+    public String aluConfigDelete(
+            Model model,
+            Locale locale,
+            RedirectAttributes redirectAttrs,
+            @PathVariable("id") String id
+    ) {
+
+        ItemAluConfigDAO itemD = new ItemAluConfigDAO();
+        QueryResult queryResult = itemD.deleteItemAluConfig(id);
+        if (queryResult.getResult() == 1) {
+            redirectAttrs.addFlashAttribute("success", messageSource.getMessage("Selected Item Type has been deleted successfully.", args, locale));
+        } else {
+            redirectAttrs.addFlashAttribute("error", messageSource.getMessage("Failed to delete the selected Item Type. Please try again.", args, locale));
+        }
+        return "redirect:/admin/aluConfig";
     }
 
 }

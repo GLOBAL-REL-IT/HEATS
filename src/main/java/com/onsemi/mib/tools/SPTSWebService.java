@@ -33,6 +33,7 @@ public class SPTSWebService {
     private static final String SPTS_ACTION_GETRACKALL = "http://tempuri.org/GetRackAll";
     private static final String SPTS_ACTION_GETITEMTYPEALL = "http://tempuri.org/GetItemTypeAll";
     private static final String SPTS_ACTION_GETCARDTYPEALL = "http://tempuri.org/GetCardTypeAll";
+    private static final String SPTS_ACTION_GETSUBTYPEALL = "http://tempuri.org/GetSubTypeAll";
 
     private static final String SPTS_ACTION_INSERTTRANSACTION = "http://tempuri.org/InsertTransaction";
     private static final String SPTS_ACTION_INSERTSFITEM = "http://tempuri.org/InsertSFItem";
@@ -475,6 +476,45 @@ public class SPTSWebService {
             JSONObject soapBody = soapEnvelope.getJSONObject("soap:Body");
             JSONObject getAllItemResponse = soapBody.getJSONObject("GetItemTypeAllResponse");
             JSONObject getAllItemResult = getAllItemResponse.getJSONObject("GetItemTypeAllResult");
+            JSONObject resultContent = getAllItemResult.getJSONObject("diffgr:diffgram");
+            //System.out.println(resultContent.toString());
+            JSONObject itemDS = resultContent.getJSONObject("ItemDS");
+            JSONArray jsonArray = itemDS.optJSONArray("ITEMS");
+            if (jsonArray == null) {
+                JSONObject jo = itemDS.getJSONObject("ITEMS");
+                JSONArray ja = new JSONArray();
+                ja.put(jo);
+                racks = ja;
+            } else {
+                racks = jsonArray;
+            }
+        } else {
+            String errorResponse = postMethod.getResponseBodyAsString();
+            errorResponse(result, errorResponse);
+        }
+        return racks;
+    }
+    
+    public static JSONArray getSubTypeAll() throws IOException {
+        JSONArray racks = new JSONArray();
+        RequestEntity requestEntity = new StringRequestEntity(SPTSRequestXML.getSubTypeAll(), "text/xml", "ISO-8859-1");
+        PostMethod postMethod = new PostMethod(SPTS_WEB_SERVICE_URL);
+        postMethod.setRequestEntity(requestEntity);
+        postMethod.setRequestHeader("SOAPAction", SPTS_ACTION_GETSUBTYPEALL);
+        HttpClient httpClient = new HttpClient();
+        int result = httpClient.executeMethod(postMethod);
+        if (result == 200) {
+            InputStream inputStream = postMethod.getResponseBodyAsStream();
+            StringBuilder stringBuilder = new StringBuilder();
+            Reader reader = new InputStreamReader(inputStream, "UTF-8");
+            copy(reader, stringBuilder);
+            reader.close();
+            String xmlString = stringBuilder.toString();
+            JSONObject jsonObject = XML.toJSONObject(xmlString);
+            JSONObject soapEnvelope = jsonObject.getJSONObject("soap:Envelope");
+            JSONObject soapBody = soapEnvelope.getJSONObject("soap:Body");
+            JSONObject getAllItemResponse = soapBody.getJSONObject("GetSubTypeAllResponse");
+            JSONObject getAllItemResult = getAllItemResponse.getJSONObject("GetSubTypeAllResult");
             JSONObject resultContent = getAllItemResult.getJSONObject("diffgr:diffgram");
             //System.out.println(resultContent.toString());
             JSONObject itemDS = resultContent.getJSONObject("ItemDS");

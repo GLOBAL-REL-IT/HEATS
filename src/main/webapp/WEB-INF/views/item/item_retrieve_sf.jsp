@@ -112,20 +112,13 @@
                     <!-- Card start -->
                     <div class="card mb-4">
                         <div class="card-header">
-                            <h5 class="card-title">Hardware Module - <span style="color:#D97D55">Pending VM / Functional Test for BIB & BIB Cards</span></h5>
+                            <h5 class="card-title">Hardware Module - <span style="color:#D97D55">Recall from Storage Factory</span></h5>
                             <!--<h5 class="card-title">Hardware Module - <span style="color:#D97D55">New Hardware Registration</span></h5>-->
                         </div>
                         <div class="card-body">
 
                             <!-- Row start -->
                             <div class="row gx-3">
-                                <!-- Personal Information Section -->
-                                <!--                                <div class="col-10 mb-3">
-                                                                    <h6 class="fw-semibold mb-3 border-start border-primary ps-2"
-                                                                        style="border-left-width: 3px !important;">
-                                                                        <i class="bi bi-list-ul me-2"></i>List of Parameter
-                                                                    </h6>
-                                                                </div>-->
                                 <div class="card-body">
                                     <div class="table-responsive">
                                         <table id="customButtons1" class="table custom-table pending">
@@ -133,63 +126,26 @@
                                                 <tr>
                                                     <th><span>No</span></th>
                                                     <th><span>Item Type</span></th>
-                                                    <th><span>Sub Type</span></th>
                                                     <th><span>Item ID</span></th>
-                                                    <th><span>Item Name</span></th>
-                                                    <th><span>Assembly ID</span></th>
-                                                    <th><span>Registered By</span></th>
-                                                    <th><span>Registered Date</span></th>
+                                                    <th><span>Box No</span></th>
+                                                    <th><span>Qty</span></th>
+                                                    <th><span>Request By</span></th>
+                                                    <th><span>Request Date</span></th>
                                                     <th><span>Status</span></th>
-                                                    <th class="col-1"><span>Manage</span></th>
+                                                    <!--<th class="col-1"><span>Manage</span></th>-->
                                                 </tr>
                                             </thead>
                                             <tbody>
-                                                <c:forEach items="${item}" var="parameterMaster" varStatus="parameterMasterLoop">
+                                                <c:forEach items="${itemRecallFlagZero}" var="parameterMaster" varStatus="parameterMasterLoop">
                                                     <tr>
                                                         <td><c:out value="${parameterMasterLoop.index+1}"/></td>
                                                         <td><c:out value="${parameterMaster.itemType}"/></td>
-                                                        <td id="modal_delete_info_${parameterMaster.id}"><c:out value="${parameterMaster.subType}"/></td>
                                                         <td><c:out value="${parameterMaster.itemId}"/></td>
-                                                        <td><c:out value="${parameterMaster.itemName}"/></td>
-                                                        <td><c:out value="${parameterMaster.assemblyId}"/></td>
+                                                        <td><c:out value="${parameterMaster.boxNo}"/></td>
+                                                        <td><c:out value="${parameterMaster.qty}"/></td>
                                                         <td><c:out value="${parameterMaster.createdBy}"/></td>
                                                         <td><c:out value="${parameterMaster.createdDate}"/></td>
                                                         <td><c:out value="${parameterMaster.status}"/></td>
-                                                        <td align="center">
-                                                            <c:set var="String1" value="${parameterMaster.activityId}"/>
-                                                            <c:if test="${userItemActConfig == 'Yes'}">
-                                                                <c:choose>
-                                                                    <c:when test="${empty String1}">
-                                                                        <c:if test="${userItemActAdd == 'Yes'}">
-                                                                            <a href="${contextPath}/hw/item/addActivity/${parameterMaster.id}" class="table-link" title="Activity Config">
-                                                                                <i class="bi bi-toggles h3"></i>
-                                                                            </a>
-                                                                        </c:if>
-                                                                    </c:when>
-                                                                    <c:otherwise>
-                                                                        <c:if test="${userItemActEdit == 'Yes'}">
-                                                                            <a href="${contextPath}/hw/item/editActivity/${parameterMaster.activityId}" class="table-link" title="Activity Config">
-                                                                                <i class="bi bi-toggles h3"></i>
-                                                                            </a>
-                                                                        </c:if>
-                                                                    </c:otherwise>
-                                                                </c:choose>
-                                                            </c:if>
-                                                            <c:set var="String" value="${parameterMaster.status}"/>
-                                                            <c:choose>
-                                                                <c:when test="${(fn:contains(String, 'Activity Selection'))}">
-                                                                    <a href="${contextPath}/hw/item/addActivity/${parameterMaster.id}" class="table-link" title="Manage">
-                                                                        <i class="bi bi-box-arrow-in-right h3"></i>
-                                                                    </a>
-                                                                </c:when>
-                                                                <c:otherwise>
-                                                                    <a href="${contextPath}/hw/item/add2/${parameterMaster.id}" class="table-link" title="Manage">
-                                                                        <i class="bi bi-box-arrow-in-right h3"></i>
-                                                                    </a>
-                                                                </c:otherwise>
-                                                            </c:choose>
-
-                                                        </td>
                                                     </tr>
                                                 </c:forEach>
                                             </tbody>

@@ -443,9 +443,60 @@ public class UserDAO {
     }
 
     public LDAPUser getUserAccess(String userId) {
-        String sql = "SELECT * "
-                + "FROM user_ldap u "
-                + "WHERE login_id = '" + userId + "' ";
+        String sql = "SELECT u.*, IFNULL(ug.code, '') AS group_code, IFNULL(ug.name, '') AS group_name, uac.* FROM user_ldap u "
+                + "LEFT JOIN user_group ug ON (u.group_id = ug.id) "
+                + "LEFT JOIN user_access_control uac ON u.id = uac.user_id "
+                + "WHERE u.id = '" + userId + "' ";
+        LDAPUser userAccess = null;
+        try {
+            PreparedStatement ps = conn.prepareStatement(sql);
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                userAccess = new LDAPUser();
+                userAccess.setId(rs.getString("u.id"));
+                userAccess.setLoginId(rs.getString("u.login_id"));
+                userAccess.setOncid(rs.getString("u.oncid"));
+                userAccess.setFirstname(rs.getString("u.firstname"));
+                userAccess.setLastname(rs.getString("u.lastname"));
+                userAccess.setEmail(rs.getString("u.email"));
+                userAccess.setTitle(rs.getString("u.title"));
+                userAccess.setGroupId(rs.getString("u.group_id"));
+                userAccess.setIsActive(rs.getString("u.is_active"));
+                userAccess.setGroupCode(rs.getString("group_code"));
+                userAccess.setGroupName(rs.getString("group_name"));
+                //
+                userAccess.setItemAdd(rs.getString("uac.item_add"));
+                userAccess.setItemEdit(rs.getString("uac.item_edit"));
+                userAccess.setItemDelete(rs.getString("uac.item_delete"));
+                userAccess.setItemActivityConfig(rs.getString("uac.item_activity_config"));
+                userAccess.setItemActivityAdd(rs.getString("uac.item_activity_add"));
+                userAccess.setItemActivityEdit(rs.getString("uac.item_activity_edit"));
+                userAccess.setItemHardwareAdd(rs.getString("uac.item_hardware_add"));
+                userAccess.setItemHardwareEdit(rs.getString("uac.item_hardware_edit"));
+                userAccess.setItemHardwareDelete(rs.getString("uac.item_hardware_delete"));
+                userAccess.setItemMovementAdd(rs.getString("uac.item_movement_add"));
+                userAccess.setItemSfRecall(rs.getString("uac.item_sf_recall"));
+            }
+            rs.close();
+            ps.close();
+        } catch (SQLException e) {
+            LOGGER.error(e.getMessage());
+        } finally {
+            if (conn != null) {
+                try {
+                    conn.close();
+                } catch (SQLException e) {
+                    LOGGER.error(e.getMessage());
+                }
+            }
+        }
+        return userAccess;
+    }
+
+    public LDAPUser getUserDetailById(String userId) {
+        String sql = "SELECT u.*, ug.code AS group_code, ug.name AS group_name FROM user_ldap u "
+                + "LEFT JOIN user_group ug ON (u.group_id = ug.id) "
+                + "WHERE u.id = '" + userId + "'";
         LDAPUser userAccess = null;
         try {
             PreparedStatement ps = conn.prepareStatement(sql);
@@ -461,15 +512,8 @@ public class UserDAO {
                 userAccess.setTitle(rs.getString("title"));
                 userAccess.setGroupId(rs.getString("group_id"));
                 userAccess.setIsActive(rs.getString("is_active"));
-                userAccess.setSrEmailRetrieve(rs.getString("sr_email_retrieve"));
-                userAccess.setScrap(rs.getString("sr_scrap"));
-//                userAccess.setSrEmailShipping(rs.getString("sr_email_shipping"));
-//                userAccess.setHwEmailShipping(rs.getString("hw_email_shipping"));
-//                userAccess.setHwEmailRetrieve(rs.getString("hw_email_retrieve"));
-//                userAccess.setFeaturesTestEmail(rs.getString("features_test_email"));
-//                userAccess.setFeaturesTrackGts(rs.getString("features_track_gts"));
-//                userAccess.setFeaturesTrackInventory(rs.getString("features_track_inventory"));
-//                userAccess.setFeaturesCreateGts(rs.getString("features_create_gts"));
+                userAccess.setGroupCode(rs.getString("group_code"));
+                userAccess.setGroupName(rs.getString("group_name"));
             }
             rs.close();
             ps.close();

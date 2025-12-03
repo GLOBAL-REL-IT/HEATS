@@ -125,6 +125,7 @@
                                             <div class="col-sm-6">
                                                 <input type="text" class="form-control" id="itemId" name="itemId" value="${item.itemType}" disabled>
                                                 <input type="hidden" class="form-control" id="mibItemId" name="mibItemId" value="${item.id}">
+                                                <input type="hidden" class="form-control" id="userItemActAdd" name="userItemActAdd" value="${userItemActAdd}">
                                             </div>
                                         </div>
                                     </div>
@@ -225,7 +226,7 @@
                                 </div>
                                 <!-- Form actions start -->
                                 <div class="col-md-12">
-                                    <button type="submit" id="submit" id="submit" class="btn btn-primary float-end">Save</button>
+                                    <button type="submit" id="submit" id="submit" class="btn btn-primary float-end" <c:if test="${userItemActAdd ne 'Yes'}">disabled</c:if>>Save</button>
                                     <a href="${contextPath}/hw/item/pending" class="btn btn-dark float-start">Back</a>
                                 </div>
                                 <!-- Form actions end -->
@@ -270,290 +271,220 @@
 </s:layout-component>
 <s:layout-component name="page_js_inline">
     <script>
-//            function createRows() {
-//                const numRows = document.getElementById('manComp').value;
-//                const tableBody = document.querySelector('#manual_test_component tbody');
-//                tableBody.innerHTML = '';
-//
-//                for (let w=1; w<=numRows; w++) {
-//                    const newRow = tableBody.insertRow();
-////                    newRow.insertCell(0).innerHTML = `${w}`;
-//                    const cell = newRow.insertCell(0);
-//                    cell.textContent = w; // Safer alternative
-//
-//                    const inputText1 = document.createElement('input');
-//                    inputText1.type = 'text';
-//                    inputText1.id = 'text1[]';
-//                    inputText1.name = 'text1[]';
-//                    newRow.insertCell(1).appendChild(inputText1);
-//
-////                    const inputText2 = document.createElement('input');
-////                    inputText2.type = 'text';
-////                    inputText2.id = 'text2[]';
-////                    inputText2.name = 'text2[]';
-////                    newRow.insertCell(2).appendChild(inputText2);
-//
-//                    const selectList = document.createElement("select");
-//                    selectList.name = 'dropdown[]';
-//                    const options = ['Resistor', 'Capasitor', 'Zener', 'Fuse', 'Diode'];
-//                    options.forEach(optionText => {
-//                        const option = document.createElement("option");
-//                        option.value = optionText;
-//                        option.text = optionText;
-//                        selectList.appendChild(option);
-//                    });
-//                    newRow.insertCell(2).appendChild(selectList);
-//
-//                    const inputNum1 = document.createElement('input');
-//                    inputNum1.type = 'number';
-//                    inputNum1.value = 0;
-////                    inputNum1.id = `num1_row${w}`;
-//                    inputNum1.id = 'num1_row['+w+']';
-//                    inputNum1.name = 'num1[]';
-//                    newRow.insertCell(3).appendChild(inputNum1);
-//
-//                    const inputNum2 = document.createElement('input');
-//                    inputNum2.type = 'number';
-//                    inputNum2.value = 0;
-//                    inputNum2.id = 'num2_row['+w+']';
-//                    inputNum2.name = 'num2[]';
-//                    newRow.insertCell(4).appendChild(inputNum2);
-//
-//                    const inputNum3 = document.createElement('input');
-//                    inputNum3.type = 'number';
-//                    inputNum3.id = 'num3_row['+w+']';
-//                    inputNum3.readOnly = true;
-//                    inputNum3.name = 'num3[]';
-//                    newRow.insertCell(5).appendChild(inputNum3);
-//
-//                    const inputNum4 = document.createElement('input');
-//                    inputNum4.type = 'number';
-//                    inputNum4.id = 'num4_row['+w+']';
-//                    inputNum4.readOnly = true;
-//                    inputNum4.name = 'num4[]';
-//                    newRow.insertCell(6).appendChild(inputNum4);
-//
-//                    inputNum1.addEventListener('input', () => calculate(w));
-//                    inputNum2.addEventListener('input', () => calculate(w));
-//                    calculate(w);
-//                }
-//            }
-//            
-//            function calculate(rowId) {
-//                const num1 = parseFloat(document.getElementById('num1_row['+rowId+']').value) || 0;
-//                const num2 = parseFloat(document.getElementById('num2_row['+rowId+']').value) || 0;
-//                
-//                const beza = num1 * num2 / 100;    
-//                const lower = num1 - beza;
-//                const upper = num1 + beza;
-//
-//                document.getElementById('num3_row['+rowId+']').value = lower;
-//                document.getElementById('num4_row['+rowId+']').value = upper;
-//            }
-            function createRows() {
-                const numRows = document.getElementById('manComp').value;
-                const tableBody = document.querySelector('#manual_test_component tbody');
-                tableBody.innerHTML = '';
 
-                for (let w = 1; w <= numRows; w++) {
-                    const newRow = tableBody.insertRow();
-                    newRow.id = 'row_' + w;
+                                                        var userItemActAdd = document.getElementById("userItemActAdd");
+                                                        if (userItemActAdd.value !== "Yes") {
+//                                                            alert();
+                                                            var allInputs = document.getElementsByTagName("input");
+                                                            for (var i = 0; i < allInputs.length; i++) {
+                                                                allInputs[i].disabled = true;
+                                                            }
+                                                        }
 
-                    // Item #
-                    newRow.insertCell(0).textContent = w;
+                                                        function createRows() {
+                                                            const numRows = document.getElementById('manComp').value;
+                                                            const tableBody = document.querySelector('#manual_test_component tbody');
+                                                            tableBody.innerHTML = '';
 
-                    // Name (component_name) - Now required
-                    const inputName = document.createElement('input');
-                    inputName.type = 'text';
-                    inputName.name = 'component_name[]';
-                    inputName.className = 'standard-input';
-                    inputName.required = true; // Added required attribute
-                    newRow.insertCell(1).appendChild(inputName);
+                                                            for (let w = 1; w <= numRows; w++) {
+                                                                const newRow = tableBody.insertRow();
+                                                                newRow.id = 'row_' + w;
 
-                    // Type (component_type)
-                    const selectList = document.createElement("select");
-                    selectList.name = 'component_type[]';
-                    selectList.className = 'standard-input';
-                    selectList.onchange = () => handleDropdownChange(w);
-                    const options = ['Resistor', 'Capacitor', 'Zener', 'Fuse', 'Diode'];
-                    options.forEach(optionText => {
-                        const option = document.createElement("option");
-                        option.value = optionText;
-                        option.text = optionText;
-                        selectList.appendChild(option);
-                    });
-                    newRow.insertCell(2).appendChild(selectList);
+                                                                // Item #
+                                                                newRow.insertCell(0).textContent = w;
 
-                    // Value Cell (actual_value)
-                    const valueCell = newRow.insertCell(3);
-                    valueCell.id = 'value_cell_' + w;
-                    const inputValue = document.createElement('input');
-                    inputValue.type = 'number';
-                    inputValue.value = 0;
-                    inputValue.id = 'value_input_' + w;
-                    inputValue.name = 'actual_value[]';
-                    inputValue.className = 'standard-input';
-                    inputValue.required = true; // Added required attribute
-                    valueCell.appendChild(inputValue);
+                                                                // Name (component_name) - Now required
+                                                                const inputName = document.createElement('input');
+                                                                inputName.type = 'text';
+                                                                inputName.name = 'component_name[]';
+                                                                inputName.className = 'standard-input';
+                                                                inputName.required = true; // Added required attribute
+                                                                newRow.insertCell(1).appendChild(inputName);
 
-                    const completeInput = document.createElement('input');
-                    completeInput.type = 'text';
-                    completeInput.value = 'SHORT / OPEN'; // Set the display value
-                    completeInput.id = 'complete_input_' + w;
-                    completeInput.name = 'actual_value_hide[]';
-                    completeInput.className = 'complete-input hidden';
-                    completeInput.readOnly = true; // Make the visual display read-only
-                    valueCell.appendChild(completeInput);
+                                                                // Type (component_type)
+                                                                const selectList = document.createElement("select");
+                                                                selectList.name = 'component_type[]';
+                                                                selectList.className = 'standard-input';
+                                                                selectList.onchange = () => handleDropdownChange(w);
+                                                                const options = ['Resistor', 'Capacitor', 'Zener', 'Fuse', 'Diode'];
+                                                                options.forEach(optionText => {
+                                                                    const option = document.createElement("option");
+                                                                    option.value = optionText;
+                                                                    option.text = optionText;
+                                                                    selectList.appendChild(option);
+                                                                });
+                                                                newRow.insertCell(2).appendChild(selectList);
 
-                    // Percentage Cell (percentage)
-                    const percentCell = newRow.insertCell(4);
-                    percentCell.id = 'percent_cell_' + w;
-                    const inputPercent = document.createElement('input');
-                    inputPercent.type = 'number';
-                    inputPercent.value = 0;
-                    inputPercent.id = 'percent_input_' + w;
-                    inputPercent.name = 'percentage[]';
-                    inputPercent.className = 'standard-input';
-                    inputPercent.required = true; // Added required attribute
-                    percentCell.appendChild(inputPercent);
+                                                                // Value Cell (actual_value)
+                                                                const valueCell = newRow.insertCell(3);
+                                                                valueCell.id = 'value_cell_' + w;
+                                                                const inputValue = document.createElement('input');
+                                                                inputValue.type = 'number';
+                                                                inputValue.value = 0;
+                                                                inputValue.id = 'value_input_' + w;
+                                                                inputValue.name = 'actual_value[]';
+                                                                inputValue.className = 'standard-input';
+                                                                inputValue.required = true; // Added required attribute
+                                                                valueCell.appendChild(inputValue);
 
-                    // Lower Limit Cell (lower)
-                    const lowerCell = newRow.insertCell(5);
-                    lowerCell.id = 'lower_cell_' + w;
-                    const inputLower = document.createElement('input');
-                    inputLower.type = 'number';
-                    inputLower.id = 'lower_input_' + w;
-                    inputLower.readOnly = true;
-                    inputLower.name = 'lower[]';
-                    inputLower.className = 'standard-input';
-                    lowerCell.appendChild(inputLower);
+                                                                const completeInput = document.createElement('input');
+                                                                completeInput.type = 'text';
+                                                                completeInput.value = 'SHORT / OPEN'; // Set the display value
+                                                                completeInput.id = 'complete_input_' + w;
+                                                                completeInput.name = 'actual_value_hide[]';
+                                                                completeInput.className = 'complete-input hidden';
+                                                                completeInput.readOnly = true; // Make the visual display read-only
+                                                                valueCell.appendChild(completeInput);
 
-                    // Upper Limit Cell (upper)
-                    const upperCell = newRow.insertCell(6);
-                    upperCell.id = 'upper_cell_' + w;
-                    const inputUpper = document.createElement('input');
-                    inputUpper.type = 'number';
-                    inputUpper.id = 'upper_input_' + w;
-                    inputUpper.readOnly = true;
-                    inputUpper.name = 'upper[]';
-                    inputUpper.className = 'standard-input';
-                    upperCell.appendChild(inputUpper);
+                                                                // Percentage Cell (percentage)
+                                                                const percentCell = newRow.insertCell(4);
+                                                                percentCell.id = 'percent_cell_' + w;
+                                                                const inputPercent = document.createElement('input');
+                                                                inputPercent.type = 'number';
+                                                                inputPercent.value = 0;
+                                                                inputPercent.id = 'percent_input_' + w;
+                                                                inputPercent.name = 'percentage[]';
+                                                                inputPercent.className = 'standard-input';
+                                                                inputPercent.required = true; // Added required attribute
+                                                                percentCell.appendChild(inputPercent);
 
-                    // Add event listeners for calculation
-                    inputValue.addEventListener('input', () => calculate(w));
-                    inputPercent.addEventListener('input', () => calculate(w));
+                                                                // Lower Limit Cell (lower)
+                                                                const lowerCell = newRow.insertCell(5);
+                                                                lowerCell.id = 'lower_cell_' + w;
+                                                                const inputLower = document.createElement('input');
+                                                                inputLower.type = 'number';
+                                                                inputLower.id = 'lower_input_' + w;
+                                                                inputLower.readOnly = true;
+                                                                inputLower.name = 'lower[]';
+                                                                inputLower.className = 'standard-input';
+                                                                lowerCell.appendChild(inputLower);
 
-                    handleDropdownChange(w);
-                }
-            }
+                                                                // Upper Limit Cell (upper)
+                                                                const upperCell = newRow.insertCell(6);
+                                                                upperCell.id = 'upper_cell_' + w;
+                                                                const inputUpper = document.createElement('input');
+                                                                inputUpper.type = 'number';
+                                                                inputUpper.id = 'upper_input_' + w;
+                                                                inputUpper.readOnly = true;
+                                                                inputUpper.name = 'upper[]';
+                                                                inputUpper.className = 'standard-input';
+                                                                upperCell.appendChild(inputUpper);
 
-            function calculate(rowId) {
-                const selectElement = document.querySelector('#row_' + rowId + ' select[name="component_type[]"]');
+                                                                // Add event listeners for calculation
+                                                                inputValue.addEventListener('input', () => calculate(w));
+                                                                inputPercent.addEventListener('input', () => calculate(w));
 
-                if (selectElement.value === 'Fuse') {
-                    return;
-                }
+                                                                handleDropdownChange(w);
+                                                            }
+                                                        }
 
-                const actualValue = parseFloat(document.getElementById('value_input_' + rowId).value) || 0;
-                const percentage = parseFloat(document.getElementById('percent_input_' + rowId).value) || 0;
+                                                        function calculate(rowId) {
+                                                            const selectElement = document.querySelector('#row_' + rowId + ' select[name="component_type[]"]');
 
-                const toleranceAmount = (actualValue * percentage) / 100;
-                const lowerLimit = actualValue - toleranceAmount;
-                const upperLimit = actualValue + toleranceAmount;
+                                                            if (selectElement.value === 'Fuse') {
+                                                                return;
+                                                            }
 
-                document.getElementById('lower_input_' + rowId).value = lowerLimit.toFixed(2);
-                document.getElementById('upper_input_' + rowId).value = upperLimit.toFixed(2);
-            }
+                                                            const actualValue = parseFloat(document.getElementById('value_input_' + rowId).value) || 0;
+                                                            const percentage = parseFloat(document.getElementById('percent_input_' + rowId).value) || 0;
 
-            function handleDropdownChange(rowId) {
-                const selectElement = document.querySelector('#row_' + rowId + ' select[name="component_type[]"]');
+                                                            const toleranceAmount = (actualValue * percentage) / 100;
+                                                            const lowerLimit = actualValue - toleranceAmount;
+                                                            const upperLimit = actualValue + toleranceAmount;
 
-                // Input references
-                const valueInput = document.getElementById('value_input_' + rowId);
-                const percentInput = document.getElementById('percent_input_' + rowId);
-                const completeInput = document.getElementById('complete_input_' + rowId);
-                const lowerInput = document.getElementById('lower_input_' + rowId);
-                const upperInput = document.getElementById('upper_input_' + rowId);
+                                                            document.getElementById('lower_input_' + rowId).value = lowerLimit.toFixed(2);
+                                                            document.getElementById('upper_input_' + rowId).value = upperLimit.toFixed(2);
+                                                        }
 
-                // Cell references
-                const valueCell = document.getElementById('value_cell_' + rowId);
-                const percentCell = document.getElementById('percent_cell_' + rowId);
-                const lowerCell = document.getElementById('lower_cell_' + rowId);
-                const upperCell = document.getElementById('upper_cell_' + rowId);
+                                                        function handleDropdownChange(rowId) {
+                                                            const selectElement = document.querySelector('#row_' + rowId + ' select[name="component_type[]"]');
 
-                if (selectElement.value === 'Fuse') {
-                    // Set required values for hidden inputs
-                    // We clear the numerical input value since the string input will carry the name
-                    valueInput.value = '1';
-                    percentInput.value = 0;
-                    lowerInput.value = 0;
-                    upperInput.value = 1;
+                                                            // Input references
+                                                            const valueInput = document.getElementById('value_input_' + rowId);
+                                                            const percentInput = document.getElementById('percent_input_' + rowId);
+                                                            const completeInput = document.getElementById('complete_input_' + rowId);
+                                                            const lowerInput = document.getElementById('lower_input_' + rowId);
+                                                            const upperInput = document.getElementById('upper_input_' + rowId);
 
-                    // Remove 'required' from hidden standard inputs
-                    valueInput.removeAttribute('required');
-                    percentInput.removeAttribute('required');
-                    // Add 'required' to the visible "COMPLETE" input if needed (though it has a default value)
-                    // completeInput.setAttribute('required', true); // Optional, since value is hardcoded
+                                                            // Cell references
+                                                            const valueCell = document.getElementById('value_cell_' + rowId);
+                                                            const percentCell = document.getElementById('percent_cell_' + rowId);
+                                                            const lowerCell = document.getElementById('lower_cell_' + rowId);
+                                                            const upperCell = document.getElementById('upper_cell_' + rowId);
 
-                    // Hide standard inputs and cells
-                    valueInput.classList.add('hidden');
-                    percentInput.classList.add('hidden');
-                    lowerInput.classList.add('hidden');
-                    upperInput.classList.add('hidden');
-                    percentCell.classList.add('hidden');
-                    lowerCell.classList.add('hidden');
-                    upperCell.classList.add('hidden');
+                                                            if (selectElement.value === 'Fuse') {
+                                                                // Set required values for hidden inputs
+                                                                // We clear the numerical input value since the string input will carry the name
+                                                                valueInput.value = '1';
+                                                                percentInput.value = 0;
+                                                                lowerInput.value = 0;
+                                                                upperInput.value = 1;
 
-                    // Show the 'COMPLETE' input field in the value cell
-                    completeInput.classList.remove('hidden');
+                                                                // Remove 'required' from hidden standard inputs
+                                                                valueInput.removeAttribute('required');
+                                                                percentInput.removeAttribute('required');
+                                                                // Add 'required' to the visible "COMPLETE" input if needed (though it has a default value)
+                                                                // completeInput.setAttribute('required', true); // Optional, since value is hardcoded
 
-                    // Merge the value cell across the 4 columns
-                    valueCell.colSpan = 4;
+                                                                // Hide standard inputs and cells
+                                                                valueInput.classList.add('hidden');
+                                                                percentInput.classList.add('hidden');
+                                                                lowerInput.classList.add('hidden');
+                                                                upperInput.classList.add('hidden');
+                                                                percentCell.classList.add('hidden');
+                                                                lowerCell.classList.add('hidden');
+                                                                upperCell.classList.add('hidden');
 
-                } else {
-                    valueInput.value = 1; // Clear numerical value input
-                    percentInput.value = 0;
-                    upperInput.value = 1;
-                    lowerInput.value = 0;
-                    // Restore 'required' for standard inputs
-                    valueInput.setAttribute('required', true);
-                    percentInput.setAttribute('required', true);
-                    // completeInput.removeAttribute('required'); // If added above
+                                                                // Show the 'COMPLETE' input field in the value cell
+                                                                completeInput.classList.remove('hidden');
 
-                    // Show standard inputs and restore cell visibility
-                    valueInput.classList.remove('hidden');
-                    percentInput.classList.remove('hidden');
-                    lowerInput.classList.remove('hidden');
-                    upperInput.classList.remove('hidden');
-                    percentCell.classList.remove('hidden');
-                    lowerCell.classList.remove('hidden');
-                    upperCell.classList.remove('hidden');
+                                                                // Merge the value cell across the 4 columns
+                                                                valueCell.colSpan = 4;
 
-                    // Hide the 'COMPLETE' input
-                    completeInput.classList.add('hidden');
+                                                            } else {
+                                                                valueInput.value = 1; // Clear numerical value input
+                                                                percentInput.value = 0;
+                                                                upperInput.value = 1;
+                                                                lowerInput.value = 0;
+                                                                // Restore 'required' for standard inputs
+                                                                valueInput.setAttribute('required', true);
+                                                                percentInput.setAttribute('required', true);
+                                                                // completeInput.removeAttribute('required'); // If added above
 
-                    // Reset colspan
-                    valueCell.colSpan = 1;
+                                                                // Show standard inputs and restore cell visibility
+                                                                valueInput.classList.remove('hidden');
+                                                                percentInput.classList.remove('hidden');
+                                                                lowerInput.classList.remove('hidden');
+                                                                upperInput.classList.remove('hidden');
+                                                                percentCell.classList.remove('hidden');
+                                                                lowerCell.classList.remove('hidden');
+                                                                upperCell.classList.remove('hidden');
 
-                    calculate(rowId);
-                }
-            }
+                                                                // Hide the 'COMPLETE' input
+                                                                completeInput.classList.add('hidden');
 
-            function toggleVisibility() {
-                var checkbox = document.getElementById("manualTestCheck");
-                var inputContainer = document.getElementById("additionalInputs");
+                                                                // Reset colspan
+                                                                valueCell.colSpan = 1;
 
-                if (checkbox.checked) {
-                    inputContainer.classList.remove("hidden");
-                } else {
-                    inputContainer.classList.add("hidden");
-                }
-            }
-            
-            document.addEventListener('DOMContentLoaded', (event) => {
-                createRows(); // Create initial rows on page load
-                toggleVisibility();
-            });
+                                                                calculate(rowId);
+                                                            }
+                                                        }
+
+                                                        function toggleVisibility() {
+                                                            var checkbox = document.getElementById("manualTestCheck");
+                                                            var inputContainer = document.getElementById("additionalInputs");
+
+                                                            if (checkbox.checked) {
+                                                                inputContainer.classList.remove("hidden");
+                                                            } else {
+                                                                inputContainer.classList.add("hidden");
+                                                            }
+                                                        }
+
+                                                        document.addEventListener('DOMContentLoaded', (event) => {
+                                                            createRows(); // Create initial rows on page load
+                                                            toggleVisibility();
+                                                        });
     </script>
 </s:layout-component>
 </s:layout-render>

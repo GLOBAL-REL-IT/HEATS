@@ -157,6 +157,16 @@ public class SPTSRequestXML {
         return xmlString;
     }
     
+    public static String getSubTypeAll() throws IOException {
+        String xmlString = "<?xml version=\"1.0\" encoding=\"utf-8\"?>"
+                + "<soap:Envelope xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\" xmlns:soap=\"http://schemas.xmlsoap.org/soap/envelope/\">"
+                + "<soap:Body>"
+                + "<GetSubTypeAll xmlns=\"http://tempuri.org/\" />"
+                + "</soap:Body>"
+                + "</soap:Envelope>";
+        return xmlString;
+    }
+    
     public static String getCardTypeAll() throws IOException {
         String xmlString = "<?xml version=\"1.0\" encoding=\"utf-8\"?>"
                 + "<soap:Envelope xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\" xmlns:soap=\"http://schemas.xmlsoap.org/soap/envelope/\">"
