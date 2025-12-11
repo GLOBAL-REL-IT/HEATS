@@ -3472,8 +3472,7 @@
             endDate: moment().startOf("hour").add(32, "hour"),
             locale: {
                 //		format: "DD/MM/YYYY",
-//                format: "YYYY/MM/DD",
-                format: "YYYY-MM-DD",
+                format: "YYYY/MM/DD",
             },
         });
 

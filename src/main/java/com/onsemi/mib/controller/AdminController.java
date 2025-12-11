@@ -595,7 +595,20 @@ public class AdminController {
             @RequestParam(required = false) String itemActAdd,
             @RequestParam(required = false) String itemActEdit,
             @RequestParam(required = false) String itemMovementAdd,
-            @RequestParam(required = false) String itemSfRecall
+            @RequestParam(required = false) String itemSfRecall,
+            @RequestParam(required = false) String eqptAdd,
+            @RequestParam(required = false) String eqptEdit,
+            @RequestParam(required = false) String eqptDelete,
+            @RequestParam(required = false) String eqptFamilyAdd,
+            @RequestParam(required = false) String eqptFamilyDelete,
+            @RequestParam(required = false) String eqptRelTestGroupAdd,
+            @RequestParam(required = false) String eqptRelTestGroupDelete,
+            @RequestParam(required = false) String eqptTechAdd,
+            @RequestParam(required = false) String eqptTechDelete,
+            @RequestParam(required = false) String eqptMonAdd,
+            @RequestParam(required = false) String eqptMonDelete,
+            @RequestParam(required = false) String eqptViMonAdd,
+            @RequestParam(required = false) String eqptViMonDelete
     ) {
         UserAccessControl uac = new UserAccessControl();
         uac.setUserId(userId);
@@ -610,6 +623,19 @@ public class AdminController {
         uac.setItemActivityEdit(itemActEdit);
         uac.setItemMovementAdd(itemMovementAdd);
         uac.setItemSfRecall(itemSfRecall);
+        uac.setEqptAdd(eqptAdd);
+        uac.setEqptEdit(eqptEdit);
+        uac.setEqptDelete(eqptDelete);
+        uac.setEqptFamilyAdd(eqptFamilyAdd);
+        uac.setEqptFamilyDelete(eqptFamilyDelete);
+        uac.setEqptRelTestGroupAdd(eqptRelTestGroupAdd);
+        uac.setEqptRelTestGroupDelete(eqptRelTestGroupDelete);
+        uac.setEqptTechAdd(eqptTechAdd);
+        uac.setEqptTechDelete(eqptTechDelete);
+        uac.setEqptMonAdd(eqptMonAdd);
+        uac.setEqptMonDelete(eqptMonDelete);
+        uac.setEqptViMonAdd(eqptViMonAdd);
+        uac.setEqptViMonDelete(eqptViMonDelete);
 
         UserAccessControlDAO uacD = new UserAccessControlDAO();
         int count = uacD.getCountByUserId(userId);

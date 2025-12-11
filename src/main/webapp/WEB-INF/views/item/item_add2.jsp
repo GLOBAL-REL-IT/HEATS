@@ -29,33 +29,31 @@
                 text-align:right;
             }
 
-            .select2-container-active .select2-choice,
-            .select2-container-active .select2-choices {
-                border: 1px solid $input-border-focus !important;
-                -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, .075), 0 0 6px #009d9b !important;
-                box-shadow: inset 0 1px 1px rgba(0, 0, 0, .075), 0 0 6px #009d9b !important;
-                -webkit-box-shadow: inset 0 1px 1px rgba(0,0,0,.075), 0 0 8px rgba(102, 175, 233, .6) !important;
-                box-shadow: inset 0 1px 1px rgba(0,0,0,.075), 0 0 8px rgba(102, 175, 233, .6) !important;
+            .select2-dropdown.select2-dropdown--below{
+                /*width: 148px !important;*/
             }
 
-            .select2-dropdown-open .select2-choice {
-                border-bottom: 0 !important;
-                background-image: none;
-                background-color: #fff;
-                filter: none;
-                -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, .075), 0 0 6px #009d9b !important;
-                box-shadow: inset 0 1px 1px rgba(0, 0, 0, .075), 0 0 6px #009d9b !important;
+            .select2-container--default .select2-selection--single{
+                border: 1.5px solid #000;
+                border-radius: 0.5rem;
+                box-shadow: 2.5px 3px 0 #000;
+                outline: none;
+                transition: ease 0.25s;
+            }
+            
+            .input {
+                /*max-width: 190px;*/
+                /*padding: 0.875rem;*/
+                /*font-size: 1rem;*/
+                border: 1.5px solid #000;
+                border-radius: 0.5rem;
+                box-shadow: 2.5px 3px 0 #000;
+                outline: none;
+                transition: ease 0.25s;
             }
 
-            .select2-dropdown-open.select2-drop-above .select2-choice,
-            .select2-dropdown-open.select2-drop-above .select2-choices {
-                border: 1px solid $input-border-focus !important;
-                border-top: 0 !important;
-                background-image: none;
-                background-color: #fff;
-                filter: none;
-                -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, .075), 0 0 6px #009d9b !important;
-                box-shadow: inset 0 1px 1px rgba(0, 0, 0, .075), 0 0 6px #009d9b !important;
+            .input:focus {
+                box-shadow: 5.5px 7px 0 black;
             }
 
             .no-border {
@@ -248,7 +246,7 @@
                                                         <div class="col-xl-3 col-sm-12 col-12">
                                                             <div class="mb-3">
                                                                 <label for="subType" class="form-label">Item Type</label>
-                                                                <div class="input-group">
+                                                                <div class="input input-group">
                                                                     <!--<span class="input-group-text"><i class="bi bi-person"></i></span>-->
                                                                     <input type="text" class="form-control" id="itemTypeRead" name="itemTypeRead" placeholder="" value="${item.itemType}" readonly>
                                                                     <input type="hidden" class="form-control" id="itemPKID" name="itemPKID" placeholder="" value="${item.sptsPkid}">
@@ -259,7 +257,7 @@
                                                         <div class="col-xl-2 col-sm-12 col-12">
                                                             <div class="mb-3">
                                                                 <label for="subType" class="form-label">Sub Type</label>
-                                                                <div class="input-group">
+                                                                <div class="input input-group">
                                                                     <!--<span class="input-group-text"><i class="bi bi-person"></i></span>-->
                                                                     <input type="text" class="form-control" id="subType" name="subType" placeholder="" value="${item.subType}">
                                                                 </div>
@@ -268,7 +266,7 @@
                                                         <div class="form-group required col-xl-3 col-sm-12 col-12">
                                                             <div class="mb-3">
                                                                 <label for="itemId" class="form-label">Item ID</label>
-                                                                <div class="input-group">
+                                                                <div class="input input-group">
                                                                     <!--<span class="input-group-text"><i class="bi bi-envelope"></i></span>-->
                                                                     <input type="text" class="form-control" id="itemId" name="itemId" placeholder="" value="${item.itemId}" required>
                                                                 </div>
@@ -277,7 +275,7 @@
                                                         <div class="form-group required col-xl-4 col-sm-12 col-12">
                                                             <div class="mb-3">
                                                                 <label for="itemName" class="form-label">Item Name</label>
-                                                                <div class="input-group">
+                                                                <div class="input input-group">
                                                                     <!--<span class="input-group-text"><i class="bi bi-telephone"></i></span>-->
                                                                     <input type="text" class="form-control" id="itemName" name="itemName" placeholder="" value="${item.itemName}" required>
                                                                 </div>
@@ -286,7 +284,7 @@
                                                         <div class="visually-hidden col-xl-4 col-sm-12 col-12">
                                                             <div class="mb-3">
                                                                 <label for="aluHrs" class="form-label">ALU</label>
-                                                                <div class="input-group">
+                                                                <div class="input input-group">
                                                                     <span class="input-group-text"><i class="bi bi-envelope"></i></span>
                                                                     <input type="text" class="form-control" id="aluHrs" name="aluHrs" placeholder="" value="${item.aluHrs}">
                                                                 </div>
@@ -295,7 +293,7 @@
                                                         <div class="form-group required col-xl-4 col-sm-12 col-12">
                                                             <div class="mb-3">
                                                                 <label for="assemblyId" class="form-label">Assembly ID</label>
-                                                                <div class="input-group">
+                                                                <div class="input input-group">
                                                                     <!--<span class="input-group-text"><i class="bi bi-telephone"></i></span>-->
                                                                     <input type="text" class="form-control" id="assemblyId" name="assemblyId" placeholder="" value="${item.assemblyId}">
                                                                 </div>
@@ -304,7 +302,7 @@
                                                         <div class="col-xl-4 col-sm-12 col-12">
                                                             <div class="mb-3">
                                                                 <label for="model" class="form-label">Spare Part Model</label>
-                                                                <div class="input-group">
+                                                                <div class="input input-group">
                                                                     <!--<span class="input-group-text"><i class="bi bi-telephone"></i></span>-->
                                                                     <input type="text" class="form-control" id="model2" name="model2" value="${item.model}">
                                                                 </div>
@@ -314,7 +312,7 @@
                                                         <div class="col-xl-4 col-sm-12 col-12">
                                                             <div class="mb-3">
                                                                 <label for="manufacturer" class="form-label">Spare Part Manufacturer</label>
-                                                                <div class="input-group">
+                                                                <div class="input input-group">
                                                                     <!--<span class="input-group-text"><i class="bi bi-person"></i></span>-->
                                                                     <input type="text" class="form-control" id="manufacturer" name="manufacturer" placeholder="" value="${item.manufacturer}">
                                                                 </div>
@@ -323,7 +321,7 @@
                                                         <div class="form-group required col-xl-4 col-sm-12 col-12">
                                                             <div class="mb-3">
                                                                 <label for="unitCost" class="form-label">Unit cost (USD)</label>
-                                                                <div class="input-group">
+                                                                <div class="input input-group">
                                                                     <!--<span class="input-group-text"><i class="bi bi-envelope"></i></span>-->
                                                                     <input type="number" step="0.01" class="form-control" id="unitCost" name="unitCost" placeholder="" value="${item.unitCost}" required>
                                                                 </div>
@@ -332,7 +330,7 @@
                                                         <div class="col-xl-4 col-sm-12 col-12">
                                                             <div class="mb-3">
                                                                 <label for="equipmentType" class="form-label">Equipment Type</label>
-                                                                <div class="input-group">
+                                                                <div class="input input-group">
                                                                     <!--<span class="input-group-text"><i class="bi bi-person"></i></span>-->
                                                                     <input type="text" class="form-control" id="equipmentType" name="equipmentType" placeholder="" value="${item.equipmentType}">
                                                                 </div>
@@ -341,7 +339,7 @@
                                                         <div class="col-xl-4 col-sm-12 col-12">
                                                             <div class="mb-3">
                                                                 <label for="equipmentModel" class="form-label">Equipment Model</label>
-                                                                <div class="input-group">
+                                                                <div class="input input-group">
                                                                     <!--<span class="input-group-text"><i class="bi bi-envelope"></i></span>-->
                                                                     <input type="text" class="form-control" id="equipmentModel" name="equipmentModel" value="${item.equipmentModel}">
                                                                 </div>
@@ -350,7 +348,7 @@
                                                         <div class="col-xl-4 col-sm-12 col-12">
                                                             <div class="mb-3">
                                                                 <label for="equipmentManufacturer" class="form-label">Eqpt Manufacturer</label>
-                                                                <div class="input-group">
+                                                                <div class="input input-group">
                                                                     <!--<span class="input-group-text"><i class="bi bi-telephone"></i></span>-->
                                                                     <input type="text" class="form-control" id="equipmentManufacturer" name="equipmentManufacturer" value="${item.equipmentManufacturer}" >
                                                                 </div>
@@ -360,7 +358,7 @@
                                                         <div class="form-group required col-xl-1 col-sm-12 col-12">
                                                             <div class="mb-3">
                                                                 <label for="minQty" class="form-label">Min. Qty</label>
-                                                                <div class="input-group">
+                                                                <div class="input input-group">
                                                                     <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
                                                                     <input type="number" class="form-control" id="minQty" name="minQty" placeholder="" value="${item.minQty}" required>
                                                                 </div>
@@ -369,7 +367,7 @@
                                                         <div class="form-group required col-xl-1 col-sm-12 col-12">
                                                             <div class="mb-3">
                                                                 <label for="maxQty" class="form-label">Max. Qty</label>
-                                                                <div class="input-group">
+                                                                <div class="input input-group">
                                                                     <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
                                                                     <input type="number" class="form-control" id="maxQty" name="maxQty" placeholder="" value="${item.maxQty}" required>
                                                                 </div>
@@ -378,7 +376,7 @@
                                                         <div class="col-xl-3 col-sm-12 col-12">
                                                             <div class="mb-3">
                                                                 <label for="rack" class="form-label">Rack</label>
-                                                                <div class="input-group">
+                                                                <div class="input input-group">
                                                                     <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
                                                                     <input type="text" class="form-control" id="rack" name="rack" placeholder="" value="${item.rack}">
                                                                 </div>
@@ -387,7 +385,7 @@
                                                         <div class="col-xl-3 col-sm-12 col-12">
                                                             <div class="mb-3">
                                                                 <label for="shelf" class="form-label">Shelf</label>
-                                                                <div class="input-group">
+                                                                <div class="input input-group">
                                                                     <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
                                                                     <input type="text" class="form-control" id="shelf" name="shelf" placeholder="" value="${item.shelf}">
                                                                 </div>
@@ -396,7 +394,7 @@
                                                         <div class="form-group required col-xl-4 col-sm-12 col-12">
                                                             <div class="mb-3">
                                                                 <label for="stressType" class="form-label">Stress Type</label>
-                                                                <div class="input-group">
+                                                                <div class="input input-group">
                                                                     <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
                                                                     <input type="text" class="form-control" id="stressType" name="stressType" placeholder="" value="${item.stressType}">
                                                                 </div>
@@ -405,7 +403,7 @@
                                                         <div class="form-group required col-xl-2 col-sm-12 col-12">
                                                             <div class="mb-3">
                                                                 <label for="onHandQty" class="form-label">On Hand Qty</label>
-                                                                <div class="input-group">
+                                                                <div class="input input-group">
                                                                     <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
                                                                     <input type="number" class="form-control" id="onHandQty" name="onHandQty" placeholder="" value="${item.onHandQty}" required>
                                                                 </div>
@@ -414,7 +412,7 @@
                                                         <div class="col-xl-2 col-sm-12 col-12">
                                                             <div class="mb-3">
                                                                 <label for="productionQty" class="form-label">Prod. Qty</label>
-                                                                <div class="input-group">
+                                                                <div class="input input-group">
                                                                     <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
                                                                     <input type="number" class="form-control" id="productionQty" name="productionQty" placeholder="" value="${item.productionQty}">
                                                                 </div>
@@ -423,7 +421,7 @@
                                                         <div class="col-xl-2 col-sm-12 col-12">
                                                             <div class="mb-3">
                                                                 <label for="productionStagingQty" class="form-label">Prod. Staging Qty</label>
-                                                                <div class="input-group">
+                                                                <div class="input input-group">
                                                                     <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
                                                                     <input type="number" class="form-control" id="productionStagingQty" name="productionStagingQty" placeholder="" value="${item.productionStagingQty}">
                                                                 </div>
@@ -432,7 +430,7 @@
                                                         <div class="col-xl-2 col-sm-12 col-12">
                                                             <div class="mb-3">
                                                                 <label for="repairQty" class="form-label">Repair Qty</label>
-                                                                <div class="input-group">
+                                                                <div class="input input-group">
                                                                     <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
                                                                     <input type="number" class="form-control" id="repairQty" name="repairQty" placeholder="" value="${item.repairQty}">
                                                                 </div>
@@ -441,7 +439,7 @@
                                                         <div class="col-xl-2 col-sm-12 col-12">
                                                             <div class="mb-3">
                                                                 <label for="quarantineQty" class="form-label">Quarantine Qty</label>
-                                                                <div class="input-group">
+                                                                <div class="input input-group">
                                                                     <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
                                                                     <input type="number" class="form-control" id="quarantineQty" name="quarantineQty" placeholder="" value="${item.quarantineQty}">
                                                                 </div>
@@ -450,7 +448,7 @@
                                                         <div class="col-xl-2 col-sm-12 col-12">
                                                             <div class="mb-3">
                                                                 <label for="externalCleanQty" class="form-label">Ext Clean Qty</label>
-                                                                <div class="input-group">
+                                                                <div class="input input-group">
                                                                     <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
                                                                     <input type="number" class="form-control" id="externalCleanQty" name="externalCleanQty" placeholder="" value="${item.externalCleanQty}">
                                                                 </div>
@@ -459,7 +457,7 @@
                                                         <div class="col-xl-2 col-sm-12 col-12">
                                                             <div class="mb-3">
                                                                 <label for="externalRecleanQty" class="form-label">Ext Re-clean Qty</label>
-                                                                <div class="input-group">
+                                                                <div class="input input-group">
                                                                     <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
                                                                     <input type="number" class="form-control" id="externalRecleanQty" name="externalRecleanQty" placeholder="" value="${item.externalRecleanQty}">
                                                                 </div>
@@ -468,7 +466,7 @@
                                                         <div class="col-xl-2 col-sm-12 col-12">
                                                             <div class="mb-3">
                                                                 <label for="internalCleanQty" class="form-label">Int. Clean Qty</label>
-                                                                <div class="input-group">
+                                                                <div class="input input-group">
                                                                     <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
                                                                     <input type="number" class="form-control" id="internalCleanQty" name="internalCleanQty" placeholder="" value="${item.internalCleanQty}">
                                                                 </div>
@@ -477,7 +475,7 @@
                                                         <div class="col-xl-2 col-sm-12 col-12">
                                                             <div class="mb-3">
                                                                 <label for="internalRecleanQty" class="form-label">Int. Re-Clean Qty</label>
-                                                                <div class="input-group">
+                                                                <div class="input input-group">
                                                                     <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
                                                                     <input type="number" class="form-control" id="internalRecleanQty" name="internalRecleanQty" placeholder="" value="${item.internalRecleanQty}">
                                                                 </div>
@@ -486,7 +484,7 @@
                                                         <div class="col-xl-2 col-sm-12 col-12">
                                                             <div class="mb-3">
                                                                 <label for="otherQty" class="form-label">Other Qty</label>
-                                                                <div class="input-group">
+                                                                <div class="input input-group">
                                                                     <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
                                                                     <input type="number" class="form-control" id="otherQty" name="otherQty" placeholder="" value="${item.otherQty}">
                                                                 </div>
@@ -495,7 +493,7 @@
                                                         <div class="col-xl-2 col-sm-12 col-12">
                                                             <div class="mb-3">
                                                                 <label for="vendorQty" class="form-label">Vendor Qty</label>
-                                                                <div class="input-group">
+                                                                <div class="input input-group">
                                                                     <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
                                                                     <input type="number" class="form-control" id="vendorQty" name="vendorQty" placeholder="" value="${item.vendorQty}">
                                                                 </div>
@@ -503,7 +501,7 @@
                                                         </div><div class="col-xl-2 col-sm-12 col-12">
                                                             <div class="mb-3">
                                                                 <label for="otherOnsemiQty" class="form-label">Other onsemi Qty</label>
-                                                                <div class="input-group">
+                                                                <div class="input input-group">
                                                                     <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
                                                                     <input type="number" class="form-control" id="otherOnsemiQty" name="otherOnsemiQty" placeholder="" value="${item.otherOnsemiQty}">
                                                                 </div>
@@ -512,7 +510,7 @@
                                                         <div class="col-xl-2 col-sm-12 col-12">
                                                             <div class="mb-3">
                                                                 <label for="storageFactoryQty" class="form-label">Storage Factory Qty</label>
-                                                                <div class="input-group">
+                                                                <div class="input input-group">
                                                                     <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
                                                                     <input type="number" class="form-control" id="storageFactoryQty" name="storageFactoryQty" placeholder="" value="${item.storageFactoryQty}">
                                                                 </div>
@@ -521,7 +519,7 @@
                                                         <div class="col-xl-2 col-sm-12 col-12">
                                                             <div class="mb-3">
                                                                 <label for="totalQty" class="form-label">Total Qty</label>
-                                                                <div class="input-group">
+                                                                <div class="input input-group">
                                                                     <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
                                                                     <input type="number" class="form-control" id="totalQty" name="totalQty"
                                                                            placeholder="" value="${item.totalQty}" readonly>
@@ -531,7 +529,7 @@
                                                         <div class="col-xl-2 col-sm-12 col-12">
                                                             <div class="mb-3">
                                                                 <label for="expirationDate" class="form-label">Expiration Date</label>
-                                                                <div class="input-group">
+                                                                <div class="input input-group">
                                                                     <span class="input-group-text">
                                                                         <i class="bi bi-calendar4"></i>
                                                                     </span>
@@ -543,7 +541,7 @@
                                                             <div class="mb-3">
                                                                 <label for="isConsumable" class="form-label">Consumable?</label>
                                                                 <div class="input-group form-check form-switch">
-                                                                    <input class="form-check-input" type="checkbox" role="switch" id="isConsumable" name="isConsumable" ${isConsumable}>
+                                                                    <input class="input form-check-input" type="checkbox" role="switch" id="isConsumable" name="isConsumable" ${isConsumable}>
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -558,9 +556,9 @@
                                                         <div class="col-12">
                                                             <div class="mb-3">
                                                                 <label for="remarks" class="form-label">Remarks</label>
-                                                                <div class="input-group">
+                                                                <div class="input input-group">
                                                                     <span class="input-group-text"><i class="bi bi-pencil"></i></span>
-                                                                    <textarea class="form-control" id="remarks" name="remarks" placeholder="Enter Message"
+                                                                    <textarea class="input form-control" id="remarks" name="remarks" placeholder="Enter Message"
                                                                               rows="3">${item.remarks}</textarea>
                                                                 </div>
                                                             </div>
@@ -592,7 +590,7 @@
                                                         <div class="col-xl-2 col-sm-12 col-12">
                                                             <div class="mb-3">
                                                                 <label for="subType" class="form-label">Item Type</label>
-                                                                <div class="input-group">
+                                                                <div class="input input-group">
                                                                     <!--<span class="input-group-text"><i class="bi bi-person"></i></span>-->
                                                                     <input type="text" class="form-control" id="itemTypeRead" name="itemTypeRead" placeholder="" value="${item.itemType}" readonly>
                                                                     <input type="hidden" class="form-control" id="itemPKID" name="itemPKID" placeholder="" value="${item.sptsPkid}">
@@ -603,7 +601,7 @@
                                                         <div class="col-xl-2 col-sm-12 col-12">
                                                             <div class="mb-3">
                                                                 <label for="subType" class="form-label">Sub Type</label>
-                                                                <div class="input-group">
+                                                                <div class="input input-group">
                                                                     <!--<span class="input-group-text"><i class="bi bi-person"></i></span>-->
                                                                     <input type="text" class="form-control" id="subType" name="subType" placeholder="" value="${item.subType}">
                                                                 </div>
@@ -612,7 +610,7 @@
                                                         <div class="form-group required col-xl-4 col-sm-12 col-12">
                                                             <div class="mb-3">
                                                                 <label for="itemId" class="form-label">Item ID</label>
-                                                                <div class="input-group">
+                                                                <div class="input input-group">
                                                                     <!--<span class="input-group-text"><i class="bi bi-envelope"></i></span>-->
                                                                     <input type="text" class="form-control" id="itemId" name="itemId" placeholder="" value="${item.itemId}" required>
                                                                 </div>
@@ -621,7 +619,7 @@
                                                         <div class="form-group required col-xl-4 col-sm-12 col-12">
                                                             <div class="mb-3">
                                                                 <label for="itemName" class="form-label">Item Name</label>
-                                                                <div class="input-group">
+                                                                <div class="input input-group">
                                                                     <!--<span class="input-group-text"><i class="bi bi-telephone"></i></span>-->
                                                                     <input type="text" class="form-control" id="itemName" name="itemName" placeholder="" value="${item.itemName}" required>
                                                                 </div>
@@ -630,7 +628,7 @@
                                                         <div class="visually-hidden col-xl-4 col-sm-12 col-12">
                                                             <div class="mb-3">
                                                                 <label for="aluHrs" class="form-label">ALU</label>
-                                                                <div class="input-group">
+                                                                <div class="input input-group">
                                                                     <!--<span class="input-group-text"><i class="bi bi-envelope"></i></span>-->
                                                                     <input type="text" class="form-control" id="aluHrs" name="aluHrs" placeholder="" value="${item.aluHrs}">
                                                                 </div>
@@ -639,7 +637,7 @@
                                                         <div class="visually-hidden col-xl-4 col-sm-12 col-12">
                                                             <div class="mb-3">
                                                                 <label for="assemblyId" class="form-label">Assembly ID</label>
-                                                                <div class="input-group">
+                                                                <div class="input input-group">
                                                                     <!--<span class="input-group-text"><i class="bi bi-telephone"></i></span>-->
                                                                     <input type="text" class="form-control" id="assemblyId" name="assemblyId" placeholder="" value="${item.assemblyId}">
                                                                 </div>
@@ -648,7 +646,7 @@
                                                         <div class="visually-hidden col-xl-4 col-sm-12 col-12">
                                                             <div class="mb-3">
                                                                 <label for="model" class="form-label">Spare Part Model</label>
-                                                                <div class="input-group">
+                                                                <div class="input input-group">
                                                                     <!--<span class="input-group-text"><i class="bi bi-telephone"></i></span>-->
                                                                     <input type="text" class="form-control" id="model2" name="model2" value="${item.model}">
                                                                 </div>
@@ -658,7 +656,7 @@
                                                         <div class="col-xl-4 col-sm-12 col-12">
                                                             <div class="mb-3">
                                                                 <label for="manufacturer" class="form-label">Spare Part Manufacturer</label>
-                                                                <div class="input-group">
+                                                                <div class="input input-group">
                                                                     <!--<span class="input-group-text"><i class="bi bi-person"></i></span>-->
                                                                     <input type="text" class="form-control" id="manufacturer" name="manufacturer" placeholder="" value="${item.manufacturer}">
                                                                 </div>
@@ -667,7 +665,7 @@
                                                         <div class="form-group required col-xl-4 col-sm-12 col-12">
                                                             <div class="mb-3">
                                                                 <label for="unitCost" class="form-label">Unit cost (USD)</label>
-                                                                <div class="input-group">
+                                                                <div class="input input-group">
                                                                     <!--<span class="input-group-text"><i class="bi bi-envelope"></i></span>-->
                                                                     <input type="number" step="0.01" class="form-control" id="unitCost" name="unitCost" placeholder="" value="${item.unitCost}" required>
                                                                 </div>
@@ -676,7 +674,7 @@
                                                         <div class="col-xl-4 col-sm-12 col-12">
                                                             <div class="mb-3">
                                                                 <label for="equipmentType" class="form-label">Equipment Type</label>
-                                                                <div class="input-group">
+                                                                <div class="input input-group">
                                                                     <!--<span class="input-group-text"><i class="bi bi-person"></i></span>-->
                                                                     <input type="text" class="form-control" id="equipmentType" name="equipmentType" placeholder="" value="${item.equipmentType}">
                                                                 </div>
@@ -685,7 +683,7 @@
                                                         <div class="visually-hidden col-xl-4 col-sm-12 col-12">
                                                             <div class="mb-3">
                                                                 <label for="equipmentModel" class="form-label">Equipment Model</label>
-                                                                <div class="input-group">
+                                                                <div class="input input-group">
                                                                     <!--<span class="input-group-text"><i class="bi bi-envelope"></i></span>-->
                                                                     <input type="text" class="form-control" id="equipmentModel" name="equipmentModel" value="${item.equipmentModel}">
                                                                 </div>
@@ -694,7 +692,7 @@
                                                         <div class="visually-hidden col-xl-4 col-sm-12 col-12">
                                                             <div class="mb-3">
                                                                 <label for="equipmentManufacturer" class="form-label">Eqpt Manufacturer</label>
-                                                                <div class="input-group">
+                                                                <div class="input input-group">
                                                                     <!--<span class="input-group-text"><i class="bi bi-telephone"></i></span>-->
                                                                     <input type="text" class="form-control" id="equipmentManufacturer" name="equipmentManufacturer" value="${item.equipmentManufacturer}" >
                                                                 </div>
@@ -704,7 +702,7 @@
                                                         <div class="form-group required col-xl-1 col-sm-12 col-12">
                                                             <div class="mb-3">
                                                                 <label for="minQty" class="form-label">Min. Qty</label>
-                                                                <div class="input-group">
+                                                                <div class="input input-group">
                                                                     <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
                                                                     <input type="number" class="form-control" id="minQty" name="minQty"
                                                                            placeholder="" value="${item.minQty}" required>
@@ -714,7 +712,7 @@
                                                         <div class="form-group required col-xl-1 col-sm-12 col-12">
                                                             <div class="mb-3">
                                                                 <label for="maxQty" class="form-label">Max. Qty</label>
-                                                                <div class="input-group">
+                                                                <div class="input input-group">
                                                                     <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
                                                                     <input type="number" class="form-control" id="maxQty" name="maxQty"
                                                                            placeholder="" value="${item.maxQty}" required>
@@ -724,7 +722,7 @@
                                                         <div class="col-xl-3 col-sm-12 col-12">
                                                             <div class="mb-3">
                                                                 <label for="rack" class="form-label">Rack</label>
-                                                                <div class="input-group">
+                                                                <div class="input input-group">
                                                                     <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
                                                                     <input type="text" class="form-control" id="rack" name="rack"
                                                                            placeholder="" value="${item.rack}">
@@ -734,7 +732,7 @@
                                                         <div class="col-xl-3 col-sm-12 col-12">
                                                             <div class="mb-3">
                                                                 <label for="shelf" class="form-label">Shelf</label>
-                                                                <div class="input-group">
+                                                                <div class="input input-group">
                                                                     <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
                                                                     <input type="text" class="form-control" id="shelf" name="shelf"
                                                                            placeholder="" value="${item.shelf}">
@@ -744,7 +742,7 @@
                                                         <div class="visually-hidden col-xl-4 col-sm-12 col-12">
                                                             <div class="mb-3">
                                                                 <label for="stressType" class="form-label">Stress Type</label>
-                                                                <div class="input-group">
+                                                                <div class="input input-group">
                                                                     <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
                                                                     <input type="text" class="form-control" id="stressType" name="stressType"
                                                                            placeholder="" value="${item.stressType}">
@@ -754,7 +752,7 @@
                                                         <div class="form-group required col-xl-2 col-sm-12 col-12">
                                                             <div class="mb-3">
                                                                 <label for="onHandQty" class="form-label">On Hand Qty</label>
-                                                                <div class="input-group">
+                                                                <div class="input input-group">
                                                                     <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
                                                                     <input type="number" class="form-control" id="onHandQty" name="onHandQty"
                                                                            placeholder="" value="${item.onHandQty}" required>
@@ -764,7 +762,7 @@
                                                         <div class="col-xl-2 col-sm-12 col-12">
                                                             <div class="mb-3">
                                                                 <label for="productionQty" class="form-label">Prod. Qty</label>
-                                                                <div class="input-group">
+                                                                <div class="input input-group">
                                                                     <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
                                                                     <input type="number" class="form-control" id="productionQty" name="productionQty"
                                                                            placeholder="" value="${item.productionQty}">
@@ -774,7 +772,7 @@
                                                         <div class="visually-hidden col-xl-2 col-sm-12 col-12">
                                                             <div class="mb-3">
                                                                 <label for="productionStagingQty" class="form-label">Prod. Staging Qty</label>
-                                                                <div class="input-group">
+                                                                <div class="input input-group">
                                                                     <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
                                                                     <input type="number" class="form-control" id="productionStagingQty" name="productionStagingQty"
                                                                            placeholder="" value="${item.productionStagingQty}">
@@ -784,7 +782,7 @@
                                                         <div class="visually-hidden col-xl-2 col-sm-12 col-12">
                                                             <div class="mb-3">
                                                                 <label for="repairQty" class="form-label">Repair Qty</label>
-                                                                <div class="input-group">
+                                                                <div class="input input-group">
                                                                     <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
                                                                     <input type="number" class="form-control" <input type="number" class="form-control" id="repairQty" name="repairQty" placeholder="" value="${item.repairQty}">
                                                                 </div>
@@ -793,7 +791,7 @@
                                                         <div class="visually-hidden col-xl-2 col-sm-12 col-12">
                                                             <div class="mb-3">
                                                                 <label for="quarantineQty" class="form-label">Quarantine Qty</label>
-                                                                <div class="input-group">
+                                                                <div class="input input-group">
                                                                     <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
                                                                     <input type="number" class="form-control" <input type="number" class="form-control" id="quarantineQty" name="quarantineQty" placeholder="" value="${item.quarantineQty}">
                                                                 </div>
@@ -802,7 +800,7 @@
                                                         <div class="visually-hidden col-xl-2 col-sm-12 col-12">
                                                             <div class="mb-3">
                                                                 <label for="externalCleanQty" class="form-label">Ext Clean Qty</label>
-                                                                <div class="input-group">
+                                                                <div class="input input-group">
                                                                     <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
                                                                     <input type="number" class="form-control" id="externalCleanQty" name="externalCleanQty" placeholder="" value="${item.externalCleanQty}">
                                                                 </div>
@@ -811,7 +809,7 @@
                                                         <div class="visually-hidden col-xl-2 col-sm-12 col-12">
                                                             <div class="mb-3">
                                                                 <label for="externalRecleanQty" class="form-label">Ext Re-clean Qty</label>
-                                                                <div class="input-group">
+                                                                <div class="input input-group">
                                                                     <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
                                                                     <input type="number" class="form-control" id="externalRecleanQty" name="externalRecleanQty" placeholder="" value="${item.externalRecleanQty}">
                                                                 </div>
@@ -820,7 +818,7 @@
                                                         <div class="visually-hidden col-xl-2 col-sm-12 col-12">
                                                             <div class="mb-3">
                                                                 <label for="internalCleanQty" class="form-label">Int. Clean Qty</label>
-                                                                <div class="input-group">
+                                                                <div class="input input-group">
                                                                     <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
                                                                     <input type="number" class="form-control" id="internalCleanQty" name="internalCleanQty" placeholder="" value="${item.internalCleanQty}">
                                                                 </div>
@@ -829,7 +827,7 @@
                                                         <div class="visually-hidden col-xl-2 col-sm-12 col-12">
                                                             <div class="mb-3">
                                                                 <label for="internalRecleanQty" class="form-label">Int. Re-Clean Qty</label>
-                                                                <div class="input-group">
+                                                                <div class="input input-group">
                                                                     <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
                                                                     <input type="number" class="form-control" id="internalRecleanQty" name="internalRecleanQty" placeholder="" value="${item.internalRecleanQty}">
                                                                 </div>
@@ -838,7 +836,7 @@
                                                         <div class="col-xl-2 col-sm-12 col-12">
                                                             <div class="mb-3">
                                                                 <label for="otherQty" class="form-label">Other Qty</label>
-                                                                <div class="input-group">
+                                                                <div class="input input-group">
                                                                     <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
                                                                     <input type="number" class="form-control" id="otherQty" name="otherQty" placeholder="" value="${item.otherQty}">
                                                                 </div>
@@ -847,7 +845,7 @@
                                                         <div class="visually-hidden col-xl-2 col-sm-12 col-12">
                                                             <div class="mb-3">
                                                                 <label for="vendorQty" class="form-label">Vendor Qty</label>
-                                                                <div class="input-group">
+                                                                <div class="input input-group">
                                                                     <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
                                                                     <input type="number" class="form-control" id="vendorQty" name="vendorQty" placeholder="" value="${item.vendorQty}">
                                                                 </div>
@@ -855,7 +853,7 @@
                                                         </div><div class="visually-hidden col-xl-2 col-sm-12 col-12">
                                                             <div class="mb-3">
                                                                 <label for="otherOnsemiQty" class="form-label">Other onsemi Qty</label>
-                                                                <div class="input-group">
+                                                                <div class="input input-group">
                                                                     <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
                                                                     <input type="number" class="form-control" id="otherOnsemiQty" name="otherOnsemiQty" placeholder="" value="${item.otherOnsemiQty}">
                                                                 </div>
@@ -864,7 +862,7 @@
                                                         <div class="col-xl-2 col-sm-12 col-12">
                                                             <div class="mb-3">
                                                                 <label for="storageFactoryQty" class="form-label">Storage Factory Qty</label>
-                                                                <div class="input-group">
+                                                                <div class="input input-group">
                                                                     <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
                                                                     <input type="number" class="form-control" id="storageFactoryQty" name="storageFactoryQty" placeholder="" value="${item.storageFactoryQty}">
                                                                 </div>
@@ -873,7 +871,7 @@
                                                         <div class="col-xl-2 col-sm-12 col-12">
                                                             <div class="mb-3">
                                                                 <label for="expirationDate" class="form-label">Expiration Date</label>
-                                                                <div class="input-group">
+                                                                <div class="input input-group">
                                                                     <span class="input-group-text">
                                                                         <i class="bi bi-calendar4"></i>
                                                                     </span>
@@ -885,7 +883,7 @@
                                                             <div class="mb-3">
                                                                 <label for="isConsumable" class="form-label">Consumable?</label>
                                                                 <div class="input-group form-check form-switch">
-                                                                    <input class="form-check-input" type="checkbox" role="switch" id="isConsumable" name="isConsumable" ${isConsumable}>
+                                                                    <input class="input form-check-input" type="checkbox" role="switch" id="isConsumable" name="isConsumable" ${isConsumable}>
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -900,9 +898,9 @@
                                                         <div class="col-12">
                                                             <div class="mb-3">
                                                                 <label for="remarks" class="form-label">Remarks</label>
-                                                                <div class="input-group">
+                                                                <div class="input input-group">
                                                                     <span class="input-group-text"><i class="bi bi-pencil"></i></span>
-                                                                    <textarea class="form-control" id="remarks" name="remarks" placeholder="Enter Message"
+                                                                    <textarea class="input form-control" id="remarks" name="remarks" placeholder="Enter Message"
                                                                               rows="3">${item.remarks}</textarea>
                                                                 </div>
                                                             </div>
@@ -934,7 +932,7 @@
                                                         <div class="col-xl-2 col-sm-12 col-12">
                                                             <div class="mb-3">
                                                                 <label for="subType" class="form-label">Item Type</label>
-                                                                <div class="input-group">
+                                                                <div class="input input-group">
                                                                     <!--<span class="input-group-text"><i class="bi bi-person"></i></span>-->
                                                                     <input type="text" class="form-control" id="itemTypeRead" name="itemTypeRead" placeholder="" value="${item.itemType}" readonly>
                                                                     <input type="hidden" class="form-control" id="itemPKID" name="itemPKID" placeholder="" value="${item.sptsPkid}">
@@ -945,7 +943,7 @@
                                                         <div class="col-xl-2 col-sm-12 col-12">
                                                             <div class="mb-3">
                                                                 <label for="subType" class="form-label">Sub Type</label>
-                                                                <div class="input-group">
+                                                                <div class="input input-group">
                                                                     <!--<span class="input-group-text"><i class="bi bi-person"></i></span>-->
                                                                     <input type="text" class="form-control" id="subType" name="subType" placeholder="" value="${item.subType}">
                                                                 </div>
@@ -954,7 +952,7 @@
                                                         <div class="form-group required col-xl-4 col-sm-12 col-12">
                                                             <div class="mb-3">
                                                                 <label for="itemId" class="form-label">Item ID</label>
-                                                                <div class="input-group">
+                                                                <div class="input input-group">
                                                                     <!--<span class="input-group-text"><i class="bi bi-envelope"></i></span>-->
                                                                     <input type="text" class="form-control" id="itemId" name="itemId" placeholder="" value="${item.itemId}" required>
                                                                 </div>
@@ -963,7 +961,7 @@
                                                         <div class="form-group required col-xl-4 col-sm-12 col-12">
                                                             <div class="mb-3">
                                                                 <label for="itemName" class="form-label">Item Name</label>
-                                                                <div class="input-group">
+                                                                <div class="input input-group">
                                                                     <!--<span class="input-group-text"><i class="bi bi-telephone"></i></span>-->
                                                                     <input type="text" class="form-control" id="itemName" name="itemName" placeholder="" value="${item.itemName}" required>
                                                                 </div>
@@ -972,7 +970,7 @@
                                                         <div class="form-group required col-xl-4 col-sm-12 col-12">
                                                             <div class="mb-3">
                                                                 <label for="itemUsage" class="form-label">Item Usage</label>
-                                                                <div class="input-group">
+                                                                <div class="input input-group">
                                                                     <select class="select-single js-states form-control" id="itemUsage" name="itemUsage"
                                                                             title="Select Item Usage" data-live-search="true" style="width: 100%">
                                                                         <option></option>
@@ -986,7 +984,7 @@
                                                         <div class="visually-hidden col-xl-4 col-sm-12 col-12">
                                                             <div class="mb-3">
                                                                 <label for="assemblyId" class="form-label">Assembly ID</label>
-                                                                <div class="input-group">
+                                                                <div class="input input-group">
                                                                     <!--<span class="input-group-text"><i class="bi bi-telephone"></i></span>-->
                                                                     <input type="text" class="form-control" id="assemblyId" name="assemblyId" placeholder="" value="${item.assemblyId}">
                                                                 </div>
@@ -995,7 +993,7 @@
                                                         <div class="col-xl-4 col-sm-12 col-12">
                                                             <div class="mb-3">
                                                                 <label for="model" class="form-label">Spare Part Model</label>
-                                                                <div class="input-group">
+                                                                <div class="input input-group">
                                                                     <!--<span class="input-group-text"><i class="bi bi-telephone"></i></span>-->
                                                                     <input type="text" class="form-control" id="model2" name="model2" value="${item.model}">
                                                                 </div>
@@ -1005,7 +1003,7 @@
                                                         <div class="col-xl-4 col-sm-12 col-12">
                                                             <div class="mb-3">
                                                                 <label for="manufacturer" class="form-label">Spare Part Manufacturer</label>
-                                                                <div class="input-group">
+                                                                <div class="input input-group">
                                                                     <!--<span class="input-group-text"><i class="bi bi-person"></i></span>-->
                                                                     <input type="text" class="form-control" id="manufacturer" name="manufacturer" placeholder="" value="${item.manufacturer}">
                                                                 </div>
@@ -1014,7 +1012,7 @@
                                                         <div class="form-group required col-xl-4 col-sm-12 col-12">
                                                             <div class="mb-3">
                                                                 <label for="unitCost" class="form-label">Unit cost (USD)</label>
-                                                                <div class="input-group">
+                                                                <div class="input input-group">
                                                                     <!--<span class="input-group-text"><i class="bi bi-envelope"></i></span>-->
                                                                     <input type="number" step="0.01" class="form-control" id="unitCost" name="unitCost" placeholder="" value="${item.unitCost}" required>
                                                                 </div>
@@ -1023,7 +1021,7 @@
                                                         <div class="col-xl-4 col-sm-12 col-12">
                                                             <div class="mb-3">
                                                                 <label for="equipmentType" class="form-label">Equipment Type</label>
-                                                                <div class="input-group">
+                                                                <div class="input input-group">
                                                                     <!--<span class="input-group-text"><i class="bi bi-person"></i></span>-->
                                                                     <input type="text" class="form-control" id="equipmentType" name="equipmentType" placeholder="" value="${item.equipmentType}">
                                                                 </div>
@@ -1032,7 +1030,7 @@
                                                         <div class="col-xl-4 col-sm-12 col-12">
                                                             <div class="mb-3">
                                                                 <label for="equipmentModel" class="form-label">Equipment Model</label>
-                                                                <div class="input-group">
+                                                                <div class="input input-group">
                                                                     <!--<span class="input-group-text"><i class="bi bi-envelope"></i></span>-->
                                                                     <input type="text" class="form-control" id="equipmentModel" name="equipmentModel" value="${item.equipmentModel}">
                                                                 </div>
@@ -1041,7 +1039,7 @@
                                                         <div class="col-xl-4 col-sm-12 col-12">
                                                             <div class="mb-3">
                                                                 <label for="equipmentManufacturer" class="form-label">Eqpt Manufacturer</label>
-                                                                <div class="input-group">
+                                                                <div class="input input-group">
                                                                     <!--<span class="input-group-text"><i class="bi bi-telephone"></i></span>-->
                                                                     <input type="text" class="form-control" id="equipmentManufacturer" name="equipmentManufacturer" value="${item.equipmentManufacturer}" >
                                                                 </div>
@@ -1051,7 +1049,7 @@
                                                         <div class="form-group required col-xl-1 col-sm-12 col-12">
                                                             <div class="mb-3">
                                                                 <label for="minQty" class="form-label">Min. Qty</label>
-                                                                <div class="input-group">
+                                                                <div class="input input-group">
                                                                     <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
                                                                     <input type="number" class="form-control" id="minQty" name="minQty"
                                                                            placeholder="" value="${item.minQty}" required>
@@ -1061,7 +1059,7 @@
                                                         <div class="form-group required col-xl-1 col-sm-12 col-12">
                                                             <div class="mb-3">
                                                                 <label for="maxQty" class="form-label">Max. Qty</label>
-                                                                <div class="input-group">
+                                                                <div class="input input-group">
                                                                     <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
                                                                     <input type="number" class="form-control" id="maxQty" name="maxQty"
                                                                            placeholder="" value="${item.maxQty}" required>
@@ -1071,7 +1069,7 @@
                                                         <div class="col-xl-3 col-sm-12 col-12">
                                                             <div class="mb-3">
                                                                 <label for="rack" class="form-label">Rack</label>
-                                                                <div class="input-group">
+                                                                <div class="input input-group">
                                                                     <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
                                                                     <input type="text" class="form-control" id="rack" name="rack"
                                                                            placeholder="" value="${item.rack}">
@@ -1081,7 +1079,7 @@
                                                         <div class="col-xl-3 col-sm-12 col-12">
                                                             <div class="mb-3">
                                                                 <label for="shelf" class="form-label">Shelf</label>
-                                                                <div class="input-group">
+                                                                <div class="input input-group">
                                                                     <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
                                                                     <input type="text" class="form-control" id="shelf" name="shelf"
                                                                            placeholder="" value="${item.shelf}">
@@ -1091,7 +1089,7 @@
                                                         <div class="visually-hidden col-xl-4 col-sm-12 col-12">
                                                             <div class="mb-3">
                                                                 <label for="stressType" class="form-label">Stress Type</label>
-                                                                <div class="input-group">
+                                                                <div class="input input-group">
                                                                     <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
                                                                     <input type="text" class="form-control" id="stressType" name="stressType"
                                                                            placeholder="" value="${item.stressType}">
@@ -1101,7 +1099,7 @@
                                                         <div class="form-group required col-xl-2 col-sm-12 col-12">
                                                             <div class="mb-3">
                                                                 <label for="onHandQty" class="form-label">On Hand Qty</label>
-                                                                <div class="input-group">
+                                                                <div class="input input-group">
                                                                     <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
                                                                     <input type="number" class="form-control" id="onHandQty" name="onHandQty"
                                                                            placeholder="" value="${item.onHandQty}" required>
@@ -1111,7 +1109,7 @@
                                                         <div class="col-xl-2 col-sm-12 col-12">
                                                             <div class="mb-3">
                                                                 <label for="productionQty" class="form-label">Prod. Qty</label>
-                                                                <div class="input-group">
+                                                                <div class="input input-group">
                                                                     <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
                                                                     <input type="number" class="form-control" id="productionQty" name="productionQty"
                                                                            placeholder="" value="${item.productionQty}">
@@ -1121,7 +1119,7 @@
                                                         <div class="visually-hidden col-xl-2 col-sm-12 col-12">
                                                             <div class="mb-3">
                                                                 <label for="productionStagingQty" class="form-label">Prod. Staging Qty</label>
-                                                                <div class="input-group">
+                                                                <div class="input input-group">
                                                                     <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
                                                                     <input type="number" class="form-control" id="productionStagingQty" name="productionStagingQty"
                                                                            placeholder="" value="${item.productionStagingQty}">
@@ -1131,7 +1129,7 @@
                                                         <div class="col-xl-2 col-sm-12 col-12">
                                                             <div class="mb-3">
                                                                 <label for="repairQty" class="form-label">Repair Qty</label>
-                                                                <div class="input-group">
+                                                                <div class="input input-group">
                                                                     <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
                                                                     <input type="number" class="form-control" <input type="number" class="form-control" id="repairQty" name="repairQty" placeholder="" value="${item.repairQty}">
                                                                 </div>
@@ -1140,7 +1138,7 @@
                                                         <div class="col-xl-2 col-sm-12 col-12">
                                                             <div class="mb-3">
                                                                 <label for="quarantineQty" class="form-label">Quarantine Qty</label>
-                                                                <div class="input-group">
+                                                                <div class="input input-group">
                                                                     <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
                                                                     <input type="number" class="form-control" <input type="number" class="form-control" id="quarantineQty" name="quarantineQty" placeholder="" value="${item.quarantineQty}">
                                                                 </div>
@@ -1149,7 +1147,7 @@
                                                         <div class="visually-hidden col-xl-2 col-sm-12 col-12">
                                                             <div class="mb-3">
                                                                 <label for="externalCleanQty" class="form-label">Ext Clean Qty</label>
-                                                                <div class="input-group">
+                                                                <div class="input input-group">
                                                                     <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
                                                                     <input type="number" class="form-control" id="externalCleanQty" name="externalCleanQty" placeholder="" value="${item.externalCleanQty}">
                                                                 </div>
@@ -1158,7 +1156,7 @@
                                                         <div class="visually-hidden col-xl-2 col-sm-12 col-12">
                                                             <div class="mb-3">
                                                                 <label for="externalRecleanQty" class="form-label">Ext Re-clean Qty</label>
-                                                                <div class="input-group">
+                                                                <div class="input input-group">
                                                                     <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
                                                                     <input type="number" class="form-control" id="externalRecleanQty" name="externalRecleanQty" placeholder="" value="${item.externalRecleanQty}">
                                                                 </div>
@@ -1167,7 +1165,7 @@
                                                         <div class="visually-hidden col-xl-2 col-sm-12 col-12">
                                                             <div class="mb-3">
                                                                 <label for="internalCleanQty" class="form-label">Int. Clean Qty</label>
-                                                                <div class="input-group">
+                                                                <div class="input input-group">
                                                                     <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
                                                                     <input type="number" class="form-control" id="internalCleanQty" name="internalCleanQty" placeholder="" value="${item.internalCleanQty}">
                                                                 </div>
@@ -1176,7 +1174,7 @@
                                                         <div class="visually-hidden col-xl-2 col-sm-12 col-12">
                                                             <div class="mb-3">
                                                                 <label for="internalRecleanQty" class="form-label">Int. Re-Clean Qty</label>
-                                                                <div class="input-group">
+                                                                <div class="input input-group">
                                                                     <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
                                                                     <input type="number" class="form-control" id="internalRecleanQty" name="internalRecleanQty" placeholder="" value="${item.internalRecleanQty}">
                                                                 </div>
@@ -1185,7 +1183,7 @@
                                                         <div class="col-xl-2 col-sm-12 col-12">
                                                             <div class="mb-3">
                                                                 <label for="otherQty" class="form-label">Other Qty</label>
-                                                                <div class="input-group">
+                                                                <div class="input input-group">
                                                                     <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
                                                                     <input type="number" class="form-control" id="otherQty" name="otherQty" placeholder="" value="${item.otherQty}">
                                                                 </div>
@@ -1194,7 +1192,7 @@
                                                         <div class="col-xl-2 col-sm-12 col-12">
                                                             <div class="mb-3">
                                                                 <label for="vendorQty" class="form-label">Vendor Qty</label>
-                                                                <div class="input-group">
+                                                                <div class="input input-group">
                                                                     <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
                                                                     <input type="number" class="form-control" id="vendorQty" name="vendorQty" placeholder="" value="${item.vendorQty}">
                                                                 </div>
@@ -1202,7 +1200,7 @@
                                                         </div><div class="col-xl-2 col-sm-12 col-12">
                                                             <div class="mb-3">
                                                                 <label for="otherOnsemiQty" class="form-label">Other onsemi Qty</label>
-                                                                <div class="input-group">
+                                                                <div class="input input-group">
                                                                     <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
                                                                     <input type="number" class="form-control" id="otherOnsemiQty" name="otherOnsemiQty" placeholder="" value="${item.otherOnsemiQty}">
                                                                 </div>
@@ -1211,7 +1209,7 @@
                                                         <div class="col-xl-2 col-sm-12 col-12">
                                                             <div class="mb-3">
                                                                 <label for="storageFactoryQty" class="form-label">Storage Factory Qty</label>
-                                                                <div class="input-group">
+                                                                <div class="input input-group">
                                                                     <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
                                                                     <input type="number" class="form-control" id="storageFactoryQty" name="storageFactoryQty" placeholder="" value="${item.storageFactoryQty}">
                                                                 </div>
@@ -1220,7 +1218,7 @@
                                                         <div class="col-xl-2 col-sm-12 col-12">
                                                             <div class="mb-3">
                                                                 <label for="totalQty" class="form-label">Total Qty</label>
-                                                                <div class="input-group">
+                                                                <div class="input input-group">
                                                                     <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
                                                                     <input type="number" class="form-control" id="totalQty" name="totalQty"
                                                                            placeholder="" value="${item.totalQty}" readonly>
@@ -1231,7 +1229,7 @@
                                                             <div class="mb-3">
                                                                 <label for="isConsumable" class="form-label">Consumable?</label>
                                                                 <div class="input-group form-check form-switch">
-                                                                    <input class="form-check-input" type="checkbox" role="switch" id="isConsumable" name="isConsumable" ${isConsumable}>
+                                                                    <input class="input form-check-input" type="checkbox" role="switch" id="isConsumable" name="isConsumable" ${isConsumable}>
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -1246,9 +1244,9 @@
                                                         <div class="col-12">
                                                             <div class="mb-3">
                                                                 <label for="remarks" class="form-label">Remarks</label>
-                                                                <div class="input-group">
+                                                                <div class="input input-group">
                                                                     <span class="input-group-text"><i class="bi bi-pencil"></i></span>
-                                                                    <textarea class="form-control" id="remarks" name="remarks" placeholder="Enter Message"
+                                                                    <textarea class="input form-control" id="remarks" name="remarks" placeholder="Enter Message"
                                                                               rows="3">${item.remarks}</textarea>
                                                                 </div>
                                                             </div>
@@ -1280,7 +1278,7 @@
                                                         <div class="col-xl-2 col-sm-12 col-12">
                                                             <div class="mb-3">
                                                                 <label for="subType" class="form-label">Item Type</label>
-                                                                <div class="input-group">
+                                                                <div class="input input-group">
                                                                     <!--<span class="input-group-text"><i class="bi bi-person"></i></span>-->
                                                                     <input type="text" class="form-control" id="itemTypeRead" name="itemTypeRead" placeholder="" value="${item.itemType}" readonly>
                                                                     <input type="hidden" class="form-control" id="itemPKID" name="itemPKID" placeholder="" value="${item.sptsPkid}">
@@ -1291,7 +1289,7 @@
                                                         <div class="form-group required col-xl-2 col-sm-12 col-12">
                                                             <div class="mb-3">
                                                                 <label for="subType" class="form-label">Sub Type</label>
-                                                                <div class="input-group">
+                                                                <div class="input input-group">
                                                                     <!--<span class="input-group-text"><i class="bi bi-person"></i></span>-->
                                                                     <input type="text" class="form-control" id="subType" name="subType" placeholder="" value="${item.subType}">
                                                                 </div>
@@ -1300,7 +1298,7 @@
                                                         <div class="form-group required col-xl-4 col-sm-12 col-12">
                                                             <div class="mb-3">
                                                                 <label for="itemId" class="form-label">Item ID</label>
-                                                                <div class="input-group">
+                                                                <div class="input input-group">
                                                                     <!--<span class="input-group-text"><i class="bi bi-envelope"></i></span>-->
                                                                     <input type="text" class="form-control" id="itemId" name="itemId" placeholder="" value="${item.itemId}" required>
                                                                 </div>
@@ -1309,7 +1307,7 @@
                                                         <div class="form-group required col-xl-4 col-sm-12 col-12">
                                                             <div class="mb-3">
                                                                 <label for="itemName" class="form-label">Item Name</label>
-                                                                <div class="input-group">
+                                                                <div class="input input-group">
                                                                     <!--<span class="input-group-text"><i class="bi bi-telephone"></i></span>-->
                                                                     <input type="text" class="form-control" id="itemName" name="itemName" placeholder="" value="${item.itemName}" required>
                                                                 </div>
@@ -1318,7 +1316,7 @@
                                                         <div class="form-group required col-xl-4 col-sm-12 col-12">
                                                             <div class="mb-3">
                                                                 <label for="itemUsage" class="form-label">Item Usage</label>
-                                                                <div class="input-group">
+                                                                <div class="input input-group">
                                                                     <select class="select-single js-states form-control" id="itemUsage" name="itemUsage"
                                                                             title="Select Item Usage" data-live-search="true" style="width: 100%">
                                                                         <option></option>
@@ -1332,7 +1330,7 @@
                                                         <div class="visually-hidden col-xl-4 col-sm-12 col-12">
                                                             <div class="mb-3">
                                                                 <label for="assemblyId" class="form-label">Assembly ID</label>
-                                                                <div class="input-group">
+                                                                <div class="input input-group">
                                                                     <!--<span class="input-group-text"><i class="bi bi-telephone"></i></span>-->
                                                                     <input type="text" class="form-control" id="assemblyId" name="assemblyId" placeholder="" value="${item.assemblyId}">
                                                                 </div>
@@ -1341,7 +1339,7 @@
                                                         <div class="col-xl-4 col-sm-12 col-12">
                                                             <div class="mb-3">
                                                                 <label for="model" class="form-label">Spare Part Model</label>
-                                                                <div class="input-group">
+                                                                <div class="input input-group">
                                                                     <!--<span class="input-group-text"><i class="bi bi-telephone"></i></span>-->
                                                                     <input type="text" class="form-control" id="model2" name="model2" value="${item.model}">
                                                                 </div>
@@ -1351,7 +1349,7 @@
                                                         <div class="col-xl-4 col-sm-12 col-12">
                                                             <div class="mb-3">
                                                                 <label for="manufacturer" class="form-label">Spare Part Manufacturer</label>
-                                                                <div class="input-group">
+                                                                <div class="input input-group">
                                                                     <!--<span class="input-group-text"><i class="bi bi-person"></i></span>-->
                                                                     <input type="text" class="form-control" id="manufacturer" name="manufacturer" placeholder="" value="${item.manufacturer}">
                                                                 </div>
@@ -1360,7 +1358,7 @@
                                                         <div class="form-group required col-xl-4 col-sm-12 col-12">
                                                             <div class="mb-3">
                                                                 <label for="unitCost" class="form-label">Unit cost (USD)</label>
-                                                                <div class="input-group">
+                                                                <div class="input input-group">
                                                                     <!--<span class="input-group-text"><i class="bi bi-envelope"></i></span>-->
                                                                     <input type="number" step="0.01" class="form-control" id="unitCost" name="unitCost" placeholder="" value="${item.unitCost}" required>
                                                                 </div>
@@ -1369,7 +1367,7 @@
                                                         <div class="col-xl-4 col-sm-12 col-12">
                                                             <div class="mb-3">
                                                                 <label for="equipmentType" class="form-label">Equipment Type</label>
-                                                                <div class="input-group">
+                                                                <div class="input input-group">
                                                                     <!--<span class="input-group-text"><i class="bi bi-person"></i></span>-->
                                                                     <input type="text" class="form-control" id="equipmentType" name="equipmentType" placeholder="" value="${item.equipmentType}">
                                                                 </div>
@@ -1378,7 +1376,7 @@
                                                         <div class="col-xl-4 col-sm-12 col-12">
                                                             <div class="mb-3">
                                                                 <label for="equipmentModel" class="form-label">Equipment Model</label>
-                                                                <div class="input-group">
+                                                                <div class="input input-group">
                                                                     <!--<span class="input-group-text"><i class="bi bi-envelope"></i></span>-->
                                                                     <input type="text" class="form-control" id="equipmentModel" name="equipmentModel" value="${item.equipmentModel}">
                                                                 </div>
@@ -1387,7 +1385,7 @@
                                                         <div class="col-xl-4 col-sm-12 col-12">
                                                             <div class="mb-3">
                                                                 <label for="equipmentManufacturer" class="form-label">Eqpt Manufacturer</label>
-                                                                <div class="input-group">
+                                                                <div class="input input-group">
                                                                     <!--<span class="input-group-text"><i class="bi bi-telephone"></i></span>-->
                                                                     <input type="text" class="form-control" id="equipmentManufacturer" name="equipmentManufacturer" value="${item.equipmentManufacturer}" >
                                                                 </div>
@@ -1397,7 +1395,7 @@
                                                         <div class="form-group required col-xl-1 col-sm-12 col-12">
                                                             <div class="mb-3">
                                                                 <label for="minQty" class="form-label">Min. Qty</label>
-                                                                <div class="input-group">
+                                                                <div class="input input-group">
                                                                     <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
                                                                     <input type="number" class="form-control" id="minQty" name="minQty"
                                                                            placeholder="" value="${item.minQty}" required>
@@ -1407,7 +1405,7 @@
                                                         <div class="form-group required col-xl-1 col-sm-12 col-12">
                                                             <div class="mb-3">
                                                                 <label for="maxQty" class="form-label">Max. Qty</label>
-                                                                <div class="input-group">
+                                                                <div class="input input-group">
                                                                     <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
                                                                     <input type="number" class="form-control" id="maxQty" name="maxQty"
                                                                            placeholder="" value="${item.maxQty}" required>
@@ -1417,7 +1415,7 @@
                                                         <div class="col-xl-3 col-sm-12 col-12">
                                                             <div class="mb-3">
                                                                 <label for="rack" class="form-label">Rack</label>
-                                                                <div class="input-group">
+                                                                <div class="input input-group">
                                                                     <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
                                                                     <input type="text" class="form-control" id="rack" name="rack"
                                                                            placeholder="" value="${item.rack}">
@@ -1427,7 +1425,7 @@
                                                         <div class="col-xl-3 col-sm-12 col-12">
                                                             <div class="mb-3">
                                                                 <label for="shelf" class="form-label">Shelf</label>
-                                                                <div class="input-group">
+                                                                <div class="input input-group">
                                                                     <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
                                                                     <input type="text" class="form-control" id="shelf" name="shelf"
                                                                            placeholder="" value="${item.shelf}">
@@ -1437,7 +1435,7 @@
                                                         <div class="visually-hidden col-xl-4 col-sm-12 col-12">
                                                             <div class="mb-3">
                                                                 <label for="stressType" class="form-label">Stress Type</label>
-                                                                <div class="input-group">
+                                                                <div class="input input-group">
                                                                     <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
                                                                     <input type="text" class="form-control" id="stressType" name="stressType"
                                                                            placeholder="" value="${item.stressType}">
@@ -1447,7 +1445,7 @@
                                                         <div class="form-group required col-xl-2 col-sm-12 col-12">
                                                             <div class="mb-3">
                                                                 <label for="onHandQty" class="form-label">On Hand Qty</label>
-                                                                <div class="input-group">
+                                                                <div class="input input-group">
                                                                     <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
                                                                     <input type="number" class="form-control" id="onHandQty" name="onHandQty"
                                                                            placeholder="" value="${item.onHandQty}" required>
@@ -1457,7 +1455,7 @@
                                                         <div class="visually-hidden col-xl-2 col-sm-12 col-12">
                                                             <div class="mb-3">
                                                                 <label for="productionQty" class="form-label">Prod. Qty</label>
-                                                                <div class="input-group">
+                                                                <div class="input input-group">
                                                                     <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
                                                                     <input type="number" class="form-control" id="productionQty" name="productionQty"
                                                                            placeholder="" value="${item.productionQty}">
@@ -1467,7 +1465,7 @@
                                                         <div class="visually-hidden col-xl-2 col-sm-12 col-12">
                                                             <div class="mb-3">
                                                                 <label for="productionStagingQty" class="form-label">Prod. Staging Qty</label>
-                                                                <div class="input-group">
+                                                                <div class="input input-group">
                                                                     <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
                                                                     <input type="number" class="form-control" id="productionStagingQty" name="productionStagingQty"
                                                                            placeholder="" value="${item.productionStagingQty}">
@@ -1477,7 +1475,7 @@
                                                         <div class="col-xl-2 col-sm-12 col-12">
                                                             <div class="mb-3">
                                                                 <label for="repairQty" class="form-label">Repair Qty</label>
-                                                                <div class="input-group">
+                                                                <div class="input input-group">
                                                                     <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
                                                                     <input type="number" class="form-control" <input type="number" class="form-control" id="repairQty" name="repairQty" placeholder="" value="${item.repairQty}">
                                                                 </div>
@@ -1486,7 +1484,7 @@
                                                         <div class="visually-hidden col-xl-2 col-sm-12 col-12">
                                                             <div class="mb-3">
                                                                 <label for="quarantineQty" class="form-label">Quarantine Qty</label>
-                                                                <div class="input-group">
+                                                                <div class="input input-group">
                                                                     <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
                                                                     <input type="number" class="form-control" <input type="number" class="form-control" id="quarantineQty" name="quarantineQty" placeholder="" value="${item.quarantineQty}">
                                                                 </div>
@@ -1495,7 +1493,7 @@
                                                         <div class="visually-hidden col-xl-2 col-sm-12 col-12">
                                                             <div class="mb-3">
                                                                 <label for="externalCleanQty" class="form-label">Ext Clean Qty</label>
-                                                                <div class="input-group">
+                                                                <div class="input input-group">
                                                                     <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
                                                                     <input type="number" class="form-control" id="externalCleanQty" name="externalCleanQty" placeholder="" value="${item.externalCleanQty}">
                                                                 </div>
@@ -1504,7 +1502,7 @@
                                                         <div class="visually-hidden col-xl-2 col-sm-12 col-12">
                                                             <div class="mb-3">
                                                                 <label for="externalRecleanQty" class="form-label">Ext Re-clean Qty</label>
-                                                                <div class="input-group">
+                                                                <div class="input input-group">
                                                                     <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
                                                                     <input type="number" class="form-control" id="externalRecleanQty" name="externalRecleanQty" placeholder="" value="${item.externalRecleanQty}">
                                                                 </div>
@@ -1513,7 +1511,7 @@
                                                         <div class="visually-hidden col-xl-2 col-sm-12 col-12">
                                                             <div class="mb-3">
                                                                 <label for="internalCleanQty" class="form-label">Int. Clean Qty</label>
-                                                                <div class="input-group">
+                                                                <div class="input input-group">
                                                                     <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
                                                                     <input type="number" class="form-control" id="internalCleanQty" name="internalCleanQty" placeholder="" value="${item.internalCleanQty}">
                                                                 </div>
@@ -1522,7 +1520,7 @@
                                                         <div class="visually-hidden col-xl-2 col-sm-12 col-12">
                                                             <div class="mb-3">
                                                                 <label for="internalRecleanQty" class="form-label">Int. Re-Clean Qty</label>
-                                                                <div class="input-group">
+                                                                <div class="input input-group">
                                                                     <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
                                                                     <input type="number" class="form-control" id="internalRecleanQty" name="internalRecleanQty" placeholder="" value="${item.internalRecleanQty}">
                                                                 </div>
@@ -1531,7 +1529,7 @@
                                                         <div class="col-xl-2 col-sm-12 col-12">
                                                             <div class="mb-3">
                                                                 <label for="otherQty" class="form-label">Other Qty</label>
-                                                                <div class="input-group">
+                                                                <div class="input input-group">
                                                                     <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
                                                                     <input type="number" class="form-control" id="otherQty" name="otherQty" placeholder="" value="${item.otherQty}">
                                                                 </div>
@@ -1540,7 +1538,7 @@
                                                         <div class="col-xl-2 col-sm-12 col-12">
                                                             <div class="mb-3">
                                                                 <label for="vendorQty" class="form-label">Vendor Qty</label>
-                                                                <div class="input-group">
+                                                                <div class="input input-group">
                                                                     <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
                                                                     <input type="number" class="form-control" id="vendorQty" name="vendorQty" placeholder="" value="${item.vendorQty}">
                                                                 </div>
@@ -1548,7 +1546,7 @@
                                                         </div><div class="col-xl-2 col-sm-12 col-12">
                                                             <div class="mb-3">
                                                                 <label for="otherOnsemiQty" class="form-label">Other onsemi Qty</label>
-                                                                <div class="input-group">
+                                                                <div class="input input-group">
                                                                     <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
                                                                     <input type="number" class="form-control" id="otherOnsemiQty" name="otherOnsemiQty" placeholder="" value="${item.otherOnsemiQty}">
                                                                 </div>
@@ -1557,7 +1555,7 @@
                                                         <div class="col-xl-2 col-sm-12 col-12">
                                                             <div class="mb-3">
                                                                 <label for="storageFactoryQty" class="form-label">Storage Factory Qty</label>
-                                                                <div class="input-group">
+                                                                <div class="input input-group">
                                                                     <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
                                                                     <input type="number" class="form-control" id="storageFactoryQty" name="storageFactoryQty" placeholder="" value="${item.storageFactoryQty}">
                                                                 </div>
@@ -1566,7 +1564,7 @@
                                                         <div class="col-xl-2 col-sm-12 col-12">
                                                             <div class="mb-3">
                                                                 <label for="totalQty" class="form-label">Total Qty</label>
-                                                                <div class="input-group">
+                                                                <div class="input input-group">
                                                                     <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
                                                                     <input type="number" class="form-control" id="totalQty" name="totalQty"
                                                                            placeholder="" value="${item.totalQty}" readonly>
@@ -1577,7 +1575,7 @@
                                                             <div class="mb-3">
                                                                 <label for="isConsumable" class="form-label">Consumable?</label>
                                                                 <div class="input-group form-check form-switch">
-                                                                    <input class="form-check-input" type="checkbox" role="switch" id="isConsumable" name="isConsumable" ${isConsumable}>
+                                                                    <input class="input form-check-input" type="checkbox" role="switch" id="isConsumable" name="isConsumable" ${isConsumable}>
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -1592,9 +1590,9 @@
                                                         <div class="col-12">
                                                             <div class="mb-3">
                                                                 <label for="remarks" class="form-label">Remarks</label>
-                                                                <div class="input-group">
+                                                                <div class="input input-group">
                                                                     <span class="input-group-text"><i class="bi bi-pencil"></i></span>
-                                                                    <textarea class="form-control" id="remarks" name="remarks" placeholder="Enter Message"
+                                                                    <textarea class="input form-control" id="remarks" name="remarks" placeholder="Enter Message"
                                                                               rows="3">${item.remarks}</textarea>
                                                                 </div>
                                                             </div>
@@ -1626,7 +1624,7 @@
                                                         <div class="col-xl-2 col-sm-12 col-12">
                                                             <div class="mb-3">
                                                                 <label for="subType" class="form-label">Item Type</label>
-                                                                <div class="input-group">
+                                                                <div class="input input-group">
                                                                     <!--<span class="input-group-text"><i class="bi bi-person"></i></span>-->
                                                                     <input type="text" class="form-control" id="itemTypeRead" name="itemTypeRead" placeholder="" value="${item.itemType}" readonly>
                                                                     <input type="hidden" class="form-control" id="itemPKID" name="itemPKID" placeholder="" value="${item.sptsPkid}">
@@ -1637,7 +1635,7 @@
                                                         <div class="col-xl-2 col-sm-12 col-12">
                                                             <div class="mb-3">
                                                                 <label for="subType" class="form-label">Sub Type</label>
-                                                                <div class="input-group">
+                                                                <div class="input input-group">
                                                                     <!--<span class="input-group-text"><i class="bi bi-person"></i></span>-->
                                                                     <input type="text" class="form-control" id="subType" name="subType" placeholder="" value="${item.subType}">
                                                                 </div>
@@ -1646,7 +1644,7 @@
                                                         <div class="form-group required col-xl-4 col-sm-12 col-12">
                                                             <div class="mb-3">
                                                                 <label for="itemId" class="form-label">Item ID</label>
-                                                                <div class="input-group">
+                                                                <div class="input input-group">
                                                                     <!--<span class="input-group-text"><i class="bi bi-envelope"></i></span>-->
                                                                     <input type="text" class="form-control" id="itemId" name="itemId" placeholder="" value="${item.itemId}" required>
                                                                 </div>
@@ -1655,7 +1653,7 @@
                                                         <div class="form-group required col-xl-4 col-sm-12 col-12">
                                                             <div class="mb-3">
                                                                 <label for="itemName" class="form-label">Item Name</label>
-                                                                <div class="input-group">
+                                                                <div class="input input-group">
                                                                     <!--<span class="input-group-text"><i class="bi bi-telephone"></i></span>-->
                                                                     <input type="text" class="form-control" id="itemName" name="itemName" placeholder="" value="${item.itemName}" required>
                                                                 </div>
@@ -1664,7 +1662,7 @@
                                                         <div class="visually-hidden col-xl-4 col-sm-12 col-12">
                                                             <div class="mb-3">
                                                                 <label for="aluHrs" class="form-label">ALU</label>
-                                                                <div class="input-group">
+                                                                <div class="input input-group">
                                                                     <!--<span class="input-group-text"><i class="bi bi-envelope"></i></span>-->
                                                                     <input type="text" class="form-control" id="aluHrs" name="aluHrs" placeholder="" value="${item.aluHrs}">
                                                                 </div>
@@ -1673,7 +1671,7 @@
                                                         <div class="visually-hidden form-group required col-xl-4 col-sm-12 col-12">
                                                             <div class="mb-3">
                                                                 <label for="assemblyId" class="form-label">Assembly ID</label>
-                                                                <div class="input-group">
+                                                                <div class="input input-group">
                                                                     <!--<span class="input-group-text"><i class="bi bi-telephone"></i></span>-->
                                                                     <input type="text" class="form-control" id="assemblyId" name="assemblyId" placeholder="" value="${item.assemblyId}">
                                                                 </div>
@@ -1682,7 +1680,7 @@
                                                         <div class="col-xl-4 col-sm-12 col-12">
                                                             <div class="mb-3">
                                                                 <label for="model" class="form-label">Spare Part Model</label>
-                                                                <div class="input-group">
+                                                                <div class="input input-group">
                                                                     <!--<span class="input-group-text"><i class="bi bi-telephone"></i></span>-->
                                                                     <input type="text" class="form-control" id="model2" name="model2" value="${item.model}">
                                                                 </div>
@@ -1692,7 +1690,7 @@
                                                         <div class="col-xl-4 col-sm-12 col-12">
                                                             <div class="mb-3">
                                                                 <label for="manufacturer" class="form-label">Spare Part Manufacturer</label>
-                                                                <div class="input-group">
+                                                                <div class="input input-group">
                                                                     <!--<span class="input-group-text"><i class="bi bi-person"></i></span>-->
                                                                     <input type="text" class="form-control" id="manufacturer" name="manufacturer" placeholder="" value="${item.manufacturer}">
                                                                 </div>
@@ -1701,7 +1699,7 @@
                                                         <div class="form-group required col-xl-4 col-sm-12 col-12">
                                                             <div class="mb-3">
                                                                 <label for="unitCost" class="form-label">Unit cost (USD)</label>
-                                                                <div class="input-group">
+                                                                <div class="input input-group">
                                                                     <!--<span class="input-group-text"><i class="bi bi-envelope"></i></span>-->
                                                                     <input type="number" step="0.01" class="form-control" id="unitCost" name="unitCost" placeholder="" value="${item.unitCost}" required>
                                                                 </div>
@@ -1710,7 +1708,7 @@
                                                         <div class="col-xl-4 col-sm-12 col-12">
                                                             <div class="mb-3">
                                                                 <label for="equipmentType" class="form-label">Equipment Type</label>
-                                                                <div class="input-group">
+                                                                <div class="input input-group">
                                                                     <!--<span class="input-group-text"><i class="bi bi-person"></i></span>-->
                                                                     <input type="text" class="form-control" id="equipmentType" name="equipmentType" placeholder="" value="${item.equipmentType}">
                                                                 </div>
@@ -1719,7 +1717,7 @@
                                                         <div class="col-xl-4 col-sm-12 col-12">
                                                             <div class="mb-3">
                                                                 <label for="equipmentModel" class="form-label">Equipment Model</label>
-                                                                <div class="input-group">
+                                                                <div class="input input-group">
                                                                     <!--<span class="input-group-text"><i class="bi bi-envelope"></i></span>-->
                                                                     <input type="text" class="form-control" id="equipmentModel" name="equipmentModel" value="${item.equipmentModel}">
                                                                 </div>
@@ -1728,7 +1726,7 @@
                                                         <div class="col-xl-4 col-sm-12 col-12">
                                                             <div class="mb-3">
                                                                 <label for="equipmentManufacturer" class="form-label">Eqpt Manufacturer</label>
-                                                                <div class="input-group">
+                                                                <div class="input input-group">
                                                                     <!--<span class="input-group-text"><i class="bi bi-telephone"></i></span>-->
                                                                     <input type="text" class="form-control" id="equipmentManufacturer" name="equipmentManufacturer" value="${item.equipmentManufacturer}" >
                                                                 </div>
@@ -1738,7 +1736,7 @@
                                                         <div class="form-group required col-xl-1 col-sm-12 col-12">
                                                             <div class="mb-3">
                                                                 <label for="minQty" class="form-label">Min. Qty</label>
-                                                                <div class="input-group">
+                                                                <div class="input input-group">
                                                                     <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
                                                                     <input type="number" class="form-control" id="minQty" name="minQty"
                                                                            placeholder="" value="${item.minQty}" required>
@@ -1748,7 +1746,7 @@
                                                         <div class="form-group required col-xl-1 col-sm-12 col-12">
                                                             <div class="mb-3">
                                                                 <label for="maxQty" class="form-label">Max. Qty</label>
-                                                                <div class="input-group">
+                                                                <div class="input input-group">
                                                                     <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
                                                                     <input type="number" class="form-control" id="maxQty" name="maxQty"
                                                                            placeholder="" value="${item.maxQty}" required>
@@ -1758,7 +1756,7 @@
                                                         <div class="col-xl-3 col-sm-12 col-12">
                                                             <div class="mb-3">
                                                                 <label for="rack" class="form-label">Rack</label>
-                                                                <div class="input-group">
+                                                                <div class="input input-group">
                                                                     <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
                                                                     <input type="text" class="form-control" id="rack" name="rack"
                                                                            placeholder="" value="${item.rack}">
@@ -1768,7 +1766,7 @@
                                                         <div class="col-xl-3 col-sm-12 col-12">
                                                             <div class="mb-3">
                                                                 <label for="shelf" class="form-label">Shelf</label>
-                                                                <div class="input-group">
+                                                                <div class="input input-group">
                                                                     <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
                                                                     <input type="text" class="form-control" id="shelf" name="shelf"
                                                                            placeholder="" value="${item.shelf}">
@@ -1778,7 +1776,7 @@
                                                         <div class="visually-hidden col-xl-4 col-sm-12 col-12">
                                                             <div class="mb-3">
                                                                 <label for="stressType" class="form-label">Stress Type</label>
-                                                                <div class="input-group">
+                                                                <div class="input input-group">
                                                                     <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
                                                                     <input type="text" class="form-control" id="stressType" name="stressType"
                                                                            placeholder="" value="${item.stressType}">
@@ -1788,7 +1786,7 @@
                                                         <div class="form-group required col-xl-2 col-sm-12 col-12">
                                                             <div class="mb-3">
                                                                 <label for="onHandQty" class="form-label">On Hand Qty</label>
-                                                                <div class="input-group">
+                                                                <div class="input input-group">
                                                                     <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
                                                                     <input type="number" class="form-control" id="onHandQty" name="onHandQty"
                                                                            placeholder="" value="${item.onHandQty}" required>
@@ -1798,7 +1796,7 @@
                                                         <div class="col-xl-2 col-sm-12 col-12">
                                                             <div class="mb-3">
                                                                 <label for="productionQty" class="form-label">Prod. Qty</label>
-                                                                <div class="input-group">
+                                                                <div class="input input-group">
                                                                     <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
                                                                     <input type="number" class="form-control" id="productionQty" name="productionQty"
                                                                            placeholder="" value="${item.productionQty}">
@@ -1808,7 +1806,7 @@
                                                         <div class="visually-hidden col-xl-2 col-sm-12 col-12">
                                                             <div class="mb-3">
                                                                 <label for="productionStagingQty" class="form-label">Prod. Staging Qty</label>
-                                                                <div class="input-group">
+                                                                <div class="input input-group">
                                                                     <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
                                                                     <input type="number" class="form-control" id="productionStagingQty" name="productionStagingQty"
                                                                            placeholder="" value="${item.productionStagingQty}">
@@ -1818,7 +1816,7 @@
                                                         <div class="visually-hidden col-xl-2 col-sm-12 col-12">
                                                             <div class="mb-3">
                                                                 <label for="repairQty" class="form-label">Repair Qty</label>
-                                                                <div class="input-group">
+                                                                <div class="input input-group">
                                                                     <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
                                                                     <input type="number" class="form-control" <input type="number" class="form-control" id="repairQty" name="repairQty" placeholder="" value="${item.repairQty}">
                                                                 </div>
@@ -1827,7 +1825,7 @@
                                                         <div class="visually-hidden col-xl-2 col-sm-12 col-12">
                                                             <div class="mb-3">
                                                                 <label for="quarantineQty" class="form-label">Quarantine Qty</label>
-                                                                <div class="input-group">
+                                                                <div class="input input-group">
                                                                     <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
                                                                     <input type="number" class="form-control" <input type="number" class="form-control" id="quarantineQty" name="quarantineQty" placeholder="" value="${item.quarantineQty}">
                                                                 </div>
@@ -1836,7 +1834,7 @@
                                                         <div class="visually-hidden col-xl-2 col-sm-12 col-12">
                                                             <div class="mb-3">
                                                                 <label for="externalCleanQty" class="form-label">Ext Clean Qty</label>
-                                                                <div class="input-group">
+                                                                <div class="input input-group">
                                                                     <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
                                                                     <input type="number" class="form-control" id="externalCleanQty" name="externalCleanQty" placeholder="" value="${item.externalCleanQty}">
                                                                 </div>
@@ -1845,7 +1843,7 @@
                                                         <div class="visually-hidden col-xl-2 col-sm-12 col-12">
                                                             <div class="mb-3">
                                                                 <label for="externalRecleanQty" class="form-label">Ext Re-clean Qty</label>
-                                                                <div class="input-group">
+                                                                <div class="input input-group">
                                                                     <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
                                                                     <input type="number" class="form-control" id="externalRecleanQty" name="externalRecleanQty" placeholder="" value="${item.externalRecleanQty}">
                                                                 </div>
@@ -1854,7 +1852,7 @@
                                                         <div class="visually-hidden col-xl-2 col-sm-12 col-12">
                                                             <div class="mb-3">
                                                                 <label for="internalCleanQty" class="form-label">Int. Clean Qty</label>
-                                                                <div class="input-group">
+                                                                <div class="input input-group">
                                                                     <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
                                                                     <input type="number" class="form-control" id="internalCleanQty" name="internalCleanQty" placeholder="" value="${item.internalCleanQty}">
                                                                 </div>
@@ -1863,7 +1861,7 @@
                                                         <div class="visually-hidden col-xl-2 col-sm-12 col-12">
                                                             <div class="mb-3">
                                                                 <label for="internalRecleanQty" class="form-label">Int. Re-Clean Qty</label>
-                                                                <div class="input-group">
+                                                                <div class="input input-group">
                                                                     <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
                                                                     <input type="number" class="form-control" id="internalRecleanQty" name="internalRecleanQty" placeholder="" value="${item.internalRecleanQty}">
                                                                 </div>
@@ -1872,7 +1870,7 @@
                                                         <div class="col-xl-2 col-sm-12 col-12">
                                                             <div class="mb-3">
                                                                 <label for="otherQty" class="form-label">Other Qty</label>
-                                                                <div class="input-group">
+                                                                <div class="input input-group">
                                                                     <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
                                                                     <input type="number" class="form-control" id="otherQty" name="otherQty" placeholder="" value="${item.otherQty}">
                                                                 </div>
@@ -1881,7 +1879,7 @@
                                                         <div class="visually-hidden col-xl-2 col-sm-12 col-12">
                                                             <div class="mb-3">
                                                                 <label for="vendorQty" class="form-label">Vendor Qty</label>
-                                                                <div class="input-group">
+                                                                <div class="input input-group">
                                                                     <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
                                                                     <input type="number" class="form-control" id="vendorQty" name="vendorQty" placeholder="" value="${item.vendorQty}">
                                                                 </div>
@@ -1889,7 +1887,7 @@
                                                         </div><div class="visually-hidden col-xl-2 col-sm-12 col-12">
                                                             <div class="mb-3">
                                                                 <label for="otherOnsemiQty" class="form-label">Other onsemi Qty</label>
-                                                                <div class="input-group">
+                                                                <div class="input input-group">
                                                                     <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
                                                                     <input type="number" class="form-control" id="otherOnsemiQty" name="otherOnsemiQty" placeholder="" value="${item.otherOnsemiQty}">
                                                                 </div>
@@ -1898,7 +1896,7 @@
                                                         <div class="col-xl-2 col-sm-12 col-12">
                                                             <div class="mb-3">
                                                                 <label for="storageFactoryQty" class="form-label">Storage Factory Qty</label>
-                                                                <div class="input-group">
+                                                                <div class="input input-group">
                                                                     <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
                                                                     <input type="number" class="form-control" id="storageFactoryQty" name="storageFactoryQty" placeholder="" value="${item.storageFactoryQty}">
                                                                 </div>
@@ -1907,7 +1905,7 @@
                                                         <div class="col-xl-2 col-sm-12 col-12">
                                                             <div class="mb-3">
                                                                 <label for="totalQty" class="form-label">Total Qty</label>
-                                                                <div class="input-group">
+                                                                <div class="input input-group">
                                                                     <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
                                                                     <input type="number" class="form-control" id="totalQty" name="totalQty"
                                                                            placeholder="" value="${item.totalQty}" readonly>
@@ -1918,7 +1916,7 @@
                                                             <div class="mb-3">
                                                                 <label for="isConsumable" class="form-label">Consumable?</label>
                                                                 <div class="input-group form-check form-switch">
-                                                                    <input class="form-check-input" type="checkbox" role="switch" id="isConsumable" name="isConsumable" ${isConsumable}>
+                                                                    <input class="input form-check-input" type="checkbox" role="switch" id="isConsumable" name="isConsumable" ${isConsumable}>
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -1933,9 +1931,9 @@
                                                         <div class="col-12">
                                                             <div class="mb-3">
                                                                 <label for="remarks" class="form-label">Remarks</label>
-                                                                <div class="input-group">
+                                                                <div class="input input-group">
                                                                     <span class="input-group-text"><i class="bi bi-pencil"></i></span>
-                                                                    <textarea class="form-control" id="remarks" name="remarks" placeholder="Enter Message"
+                                                                    <textarea class="input form-control" id="remarks" name="remarks" placeholder="Enter Message"
                                                                               rows="3">${item.remarks}</textarea>
                                                                 </div>
                                                             </div>
@@ -1967,7 +1965,7 @@
                                                         <div class="col-xl-2 col-sm-12 col-12">
                                                             <div class="mb-3">
                                                                 <label for="subType" class="form-label">Item Type</label>
-                                                                <div class="input-group">
+                                                                <div class="input input-group">
                                                                     <!--<span class="input-group-text"><i class="bi bi-person"></i></span>-->
                                                                     <input type="text" class="form-control" id="itemTypeRead" name="itemTypeRead" placeholder="" value="${item.itemType}" readonly>
                                                                     <input type="hidden" class="form-control" id="itemPKID" name="itemPKID" placeholder="" value="${item.sptsPkid}">
@@ -1978,7 +1976,7 @@
                                                         <div class="col-xl-2 col-sm-12 col-12">
                                                             <div class="mb-3">
                                                                 <label for="subType" class="form-label">Sub Type</label>
-                                                                <div class="input-group">
+                                                                <div class="input input-group">
                                                                     <!--<span class="input-group-text"><i class="bi bi-person"></i></span>-->
                                                                     <input type="text" class="form-control" id="subType" name="subType" placeholder="" value="${item.subType}">
                                                                 </div>
@@ -1987,7 +1985,7 @@
                                                         <div class="form-group required col-xl-4 col-sm-12 col-12">
                                                             <div class="mb-3">
                                                                 <label for="itemId" class="form-label">Item ID</label>
-                                                                <div class="input-group">
+                                                                <div class="input input-group">
                                                                     <!--<span class="input-group-text"><i class="bi bi-envelope"></i></span>-->
                                                                     <input type="text" class="form-control" id="itemId" name="itemId" placeholder="" value="${item.itemId}" required>
                                                                 </div>
@@ -1996,7 +1994,7 @@
                                                         <div class="form-group required col-xl-4 col-sm-12 col-12">
                                                             <div class="mb-3">
                                                                 <label for="itemName" class="form-label">Item Name</label>
-                                                                <div class="input-group">
+                                                                <div class="input input-group">
                                                                     <!--<span class="input-group-text"><i class="bi bi-telephone"></i></span>-->
                                                                     <input type="text" class="form-control" id="itemName" name="itemName" placeholder="" value="${item.itemName}" required>
                                                                 </div>
@@ -2005,7 +2003,7 @@
                                                         <div class="visually-hidden col-xl-4 col-sm-12 col-12">
                                                             <div class="mb-3">
                                                                 <label for="aluHrs" class="form-label">ALU</label>
-                                                                <div class="input-group">
+                                                                <div class="input input-group">
                                                                     <!--<span class="input-group-text"><i class="bi bi-envelope"></i></span>-->
                                                                     <input type="text" class="form-control" id="aluHrs" name="aluHrs" placeholder="" value="${item.aluHrs}">
                                                                 </div>
@@ -2014,7 +2012,7 @@
                                                         <div class="visually-hidden col-xl-4 col-sm-12 col-12">
                                                             <div class="mb-3">
                                                                 <label for="assemblyId" class="form-label">Assembly ID</label>
-                                                                <div class="input-group">
+                                                                <div class="input input-group">
                                                                     <!--<span class="input-group-text"><i class="bi bi-telephone"></i></span>-->
                                                                     <input type="text" class="form-control" id="assemblyId" name="assemblyId" placeholder="" value="${item.assemblyId}">
                                                                 </div>
@@ -2023,7 +2021,7 @@
                                                         <div class="visually-hidden col-xl-4 col-sm-12 col-12">
                                                             <div class="mb-3">
                                                                 <label for="model" class="form-label">Spare Part Model</label>
-                                                                <div class="input-group">
+                                                                <div class="input input-group">
                                                                     <!--<span class="input-group-text"><i class="bi bi-telephone"></i></span>-->
                                                                     <input type="text" class="form-control" id="model2" name="model2" value="${item.model}">
                                                                 </div>
@@ -2033,7 +2031,7 @@
                                                         <div class="visually-hidden col-xl-4 col-sm-12 col-12">
                                                             <div class="mb-3">
                                                                 <label for="manufacturer" class="form-label">Spare Part Manufacturer</label>
-                                                                <div class="input-group">
+                                                                <div class="input input-group">
                                                                     <!--<span class="input-group-text"><i class="bi bi-person"></i></span>-->
                                                                     <input type="text" class="form-control" id="manufacturer" name="manufacturer" placeholder="" value="${item.manufacturer}">
                                                                 </div>
@@ -2042,7 +2040,7 @@
                                                         <div class="form-group required col-xl-4 col-sm-12 col-12">
                                                             <div class="mb-3">
                                                                 <label for="unitCost" class="form-label">Unit cost (USD)</label>
-                                                                <div class="input-group">
+                                                                <div class="input input-group">
                                                                     <!--<span class="input-group-text"><i class="bi bi-envelope"></i></span>-->
                                                                     <input type="number" step="0.01" class="form-control" id="unitCost" name="unitCost" placeholder="" value="${item.unitCost}" required>
                                                                 </div>
@@ -2051,7 +2049,7 @@
                                                         <div class="visually-hidden col-xl-4 col-sm-12 col-12">
                                                             <div class="mb-3">
                                                                 <label for="equipmentType" class="form-label">Equipment Type</label>
-                                                                <div class="input-group">
+                                                                <div class="input input-group">
                                                                     <!--<span class="input-group-text"><i class="bi bi-person"></i></span>-->
                                                                     <input type="text" class="form-control" id="equipmentType" name="equipmentType" placeholder="" value="${item.equipmentType}">
                                                                 </div>
@@ -2060,7 +2058,7 @@
                                                         <div class="visually-hidden col-xl-4 col-sm-12 col-12">
                                                             <div class="mb-3">
                                                                 <label for="equipmentModel" class="form-label">Equipment Model</label>
-                                                                <div class="input-group">
+                                                                <div class="input input-group">
                                                                     <!--<span class="input-group-text"><i class="bi bi-envelope"></i></span>-->
                                                                     <input type="text" class="form-control" id="equipmentModel" name="equipmentModel" value="${item.equipmentModel}">
                                                                 </div>
@@ -2069,7 +2067,7 @@
                                                         <div class="visually-hidden col-xl-4 col-sm-12 col-12">
                                                             <div class="mb-3">
                                                                 <label for="equipmentManufacturer" class="form-label">Eqpt Manufacturer</label>
-                                                                <div class="input-group">
+                                                                <div class="input input-group">
                                                                     <!--<span class="input-group-text"><i class="bi bi-telephone"></i></span>-->
                                                                     <input type="text" class="form-control" id="equipmentManufacturer" name="equipmentManufacturer" value="${item.equipmentManufacturer}" >
                                                                 </div>
@@ -2079,7 +2077,7 @@
                                                         <div class="form-group required col-xl-1 col-sm-12 col-12">
                                                             <div class="mb-3">
                                                                 <label for="minQty" class="form-label">Min. Qty</label>
-                                                                <div class="input-group">
+                                                                <div class="input input-group">
                                                                     <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
                                                                     <input type="number" class="form-control" id="minQty" name="minQty"
                                                                            placeholder="" value="${item.minQty}" required>
@@ -2089,7 +2087,7 @@
                                                         <div class="form-group required col-xl-1 col-sm-12 col-12">
                                                             <div class="mb-3">
                                                                 <label for="maxQty" class="form-label">Max. Qty</label>
-                                                                <div class="input-group">
+                                                                <div class="input input-group">
                                                                     <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
                                                                     <input type="number" class="form-control" id="maxQty" name="maxQty"
                                                                            placeholder="" value="${item.maxQty}" required>
@@ -2099,7 +2097,7 @@
                                                         <div class="col-xl-3 col-sm-12 col-12">
                                                             <div class="mb-3">
                                                                 <label for="rack" class="form-label">Rack</label>
-                                                                <div class="input-group">
+                                                                <div class="input input-group">
                                                                     <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
                                                                     <input type="text" class="form-control" id="rack" name="rack"
                                                                            placeholder="" value="${item.rack}">
@@ -2109,7 +2107,7 @@
                                                         <div class="col-xl-3 col-sm-12 col-12">
                                                             <div class="mb-3">
                                                                 <label for="shelf" class="form-label">Shelf</label>
-                                                                <div class="input-group">
+                                                                <div class="input input-group">
                                                                     <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
                                                                     <input type="text" class="form-control" id="shelf" name="shelf"
                                                                            placeholder="" value="${item.shelf}">
@@ -2119,7 +2117,7 @@
                                                         <div class="visually-hidden col-xl-4 col-sm-12 col-12">
                                                             <div class="mb-3">
                                                                 <label for="stressType" class="form-label">Stress Type</label>
-                                                                <div class="input-group">
+                                                                <div class="input input-group">
                                                                     <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
                                                                     <input type="text" class="form-control" id="stressType" name="stressType"
                                                                            placeholder="" value="${item.stressType}">
@@ -2129,7 +2127,7 @@
                                                         <div class="form-group required col-xl-2 col-sm-12 col-12">
                                                             <div class="mb-3">
                                                                 <label for="onHandQty" class="form-label">On Hand Qty</label>
-                                                                <div class="input-group">
+                                                                <div class="input input-group">
                                                                     <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
                                                                     <input type="number" class="form-control" id="onHandQty" name="onHandQty"
                                                                            placeholder="" value="${item.onHandQty}" required>
@@ -2139,7 +2137,7 @@
                                                         <div class="col-xl-2 col-sm-12 col-12">
                                                             <div class="mb-3">
                                                                 <label for="productionQty" class="form-label">Prod. Qty</label>
-                                                                <div class="input-group">
+                                                                <div class="input input-group">
                                                                     <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
                                                                     <input type="number" class="form-control" id="productionQty" name="productionQty"
                                                                            placeholder="" value="${item.productionQty}">
@@ -2149,7 +2147,7 @@
                                                         <div class="visually-hidden col-xl-2 col-sm-12 col-12">
                                                             <div class="mb-3">
                                                                 <label for="productionStagingQty" class="form-label">Prod. Staging Qty</label>
-                                                                <div class="input-group">
+                                                                <div class="input input-group">
                                                                     <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
                                                                     <input type="number" class="form-control" id="productionStagingQty" name="productionStagingQty"
                                                                            placeholder="" value="${item.productionStagingQty}">
@@ -2159,7 +2157,7 @@
                                                         <div class="visually-hidden col-xl-2 col-sm-12 col-12">
                                                             <div class="mb-3">
                                                                 <label for="repairQty" class="form-label">Repair Qty</label>
-                                                                <div class="input-group">
+                                                                <div class="input input-group">
                                                                     <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
                                                                     <input type="number" class="form-control" <input type="number" class="form-control" id="repairQty" name="repairQty" placeholder="" value="${item.repairQty}">
                                                                 </div>
@@ -2168,7 +2166,7 @@
                                                         <div class="visually-hidden col-xl-2 col-sm-12 col-12">
                                                             <div class="mb-3">
                                                                 <label for="quarantineQty" class="form-label">Quarantine Qty</label>
-                                                                <div class="input-group">
+                                                                <div class="input input-group">
                                                                     <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
                                                                     <input type="number" class="form-control" <input type="number" class="form-control" id="quarantineQty" name="quarantineQty" placeholder="" value="${item.quarantineQty}">
                                                                 </div>
@@ -2177,7 +2175,7 @@
                                                         <div class="visually-hidden col-xl-2 col-sm-12 col-12">
                                                             <div class="mb-3">
                                                                 <label for="externalCleanQty" class="form-label">Ext Clean Qty</label>
-                                                                <div class="input-group">
+                                                                <div class="input input-group">
                                                                     <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
                                                                     <input type="number" class="form-control" id="externalCleanQty" name="externalCleanQty" placeholder="" value="${item.externalCleanQty}">
                                                                 </div>
@@ -2186,7 +2184,7 @@
                                                         <div class="visually-hidden col-xl-2 col-sm-12 col-12">
                                                             <div class="mb-3">
                                                                 <label for="externalRecleanQty" class="form-label">Ext Re-clean Qty</label>
-                                                                <div class="input-group">
+                                                                <div class="input input-group">
                                                                     <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
                                                                     <input type="number" class="form-control" id="externalRecleanQty" name="externalRecleanQty" placeholder="" value="${item.externalRecleanQty}">
                                                                 </div>
@@ -2195,7 +2193,7 @@
                                                         <div class="visually-hidden col-xl-2 col-sm-12 col-12">
                                                             <div class="mb-3">
                                                                 <label for="internalCleanQty" class="form-label">Int. Clean Qty</label>
-                                                                <div class="input-group">
+                                                                <div class="input input-group">
                                                                     <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
                                                                     <input type="number" class="form-control" id="internalCleanQty" name="internalCleanQty" placeholder="" value="${item.internalCleanQty}">
                                                                 </div>
@@ -2204,7 +2202,7 @@
                                                         <div class="visually-hidden col-xl-2 col-sm-12 col-12">
                                                             <div class="mb-3">
                                                                 <label for="internalRecleanQty" class="form-label">Int. Re-Clean Qty</label>
-                                                                <div class="input-group">
+                                                                <div class="input input-group">
                                                                     <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
                                                                     <input type="number" class="form-control" id="internalRecleanQty" name="internalRecleanQty" placeholder="" value="${item.internalRecleanQty}">
                                                                 </div>
@@ -2213,7 +2211,7 @@
                                                         <div class="col-xl-2 col-sm-12 col-12">
                                                             <div class="mb-3">
                                                                 <label for="otherQty" class="form-label">Other Qty</label>
-                                                                <div class="input-group">
+                                                                <div class="input input-group">
                                                                     <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
                                                                     <input type="number" class="form-control" id="otherQty" name="otherQty" placeholder="" value="${item.otherQty}">
                                                                 </div>
@@ -2222,7 +2220,7 @@
                                                         <div class="visually-hidden col-xl-2 col-sm-12 col-12">
                                                             <div class="mb-3">
                                                                 <label for="vendorQty" class="form-label">Vendor Qty</label>
-                                                                <div class="input-group">
+                                                                <div class="input input-group">
                                                                     <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
                                                                     <input type="number" class="form-control" id="vendorQty" name="vendorQty" placeholder="" value="${item.vendorQty}">
                                                                 </div>
@@ -2230,7 +2228,7 @@
                                                         </div><div class="col-xl-2 col-sm-12 col-12">
                                                             <div class="mb-3">
                                                                 <label for="otherOnsemiQty" class="form-label">Other onsemi Qty</label>
-                                                                <div class="input-group">
+                                                                <div class="input input-group">
                                                                     <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
                                                                     <input type="number" class="form-control" id="otherOnsemiQty" name="otherOnsemiQty" placeholder="" value="${item.otherOnsemiQty}">
                                                                 </div>
@@ -2239,7 +2237,7 @@
                                                         <div class="col-xl-2 col-sm-12 col-12">
                                                             <div class="mb-3">
                                                                 <label for="storageFactoryQty" class="form-label">Storage Factory Qty</label>
-                                                                <div class="input-group">
+                                                                <div class="input input-group">
                                                                     <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
                                                                     <input type="number" class="form-control" id="storageFactoryQty" name="storageFactoryQty" placeholder="" value="${item.storageFactoryQty}">
                                                                 </div>
@@ -2248,7 +2246,7 @@
                                                         <div class="col-xl-2 col-sm-12 col-12">
                                                             <div class="mb-3">
                                                                 <label for="totalQty" class="form-label">Total Qty</label>
-                                                                <div class="input-group">
+                                                                <div class="input input-group">
                                                                     <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
                                                                     <input type="number" class="form-control" id="totalQty" name="totalQty"
                                                                            placeholder="" value="${item.totalQty}" readonly>
@@ -2259,7 +2257,7 @@
                                                             <div class="mb-3">
                                                                 <label for="isConsumable" class="form-label">Consumable?</label>
                                                                 <div class="input-group form-check form-switch">
-                                                                    <input class="form-check-input" type="checkbox" role="switch" id="isConsumable" name="isConsumable" ${isConsumable}>
+                                                                    <input class="input form-check-input" type="checkbox" role="switch" id="isConsumable" name="isConsumable" ${isConsumable}>
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -2274,9 +2272,9 @@
                                                         <div class="col-12">
                                                             <div class="mb-3">
                                                                 <label for="remarks" class="form-label">Remarks</label>
-                                                                <div class="input-group">
+                                                                <div class="input input-group">
                                                                     <span class="input-group-text"><i class="bi bi-pencil"></i></span>
-                                                                    <textarea class="form-control" id="remarks" name="remarks" placeholder="Enter Message"
+                                                                    <textarea class="input form-control" id="remarks" name="remarks" placeholder="Enter Message"
                                                                               rows="3">${item.remarks}</textarea>
                                                                 </div>
                                                             </div>
@@ -2308,7 +2306,7 @@
                                                         <div class="col-xl-2 col-sm-12 col-12">
                                                             <div class="mb-3">
                                                                 <label for="subType" class="form-label">Item Type</label>
-                                                                <div class="input-group">
+                                                                <div class="input input-group">
                                                                     <!--<span class="input-group-text"><i class="bi bi-person"></i></span>-->
                                                                     <input type="text" class="form-control" id="itemTypeRead" name="itemTypeRead" placeholder="" value="${item.itemType}" readonly>
                                                                     <input type="hidden" class="form-control" id="itemPKID" name="itemPKID" placeholder="" value="${item.sptsPkid}">
@@ -2319,7 +2317,7 @@
                                                         <div class="col-xl-2 col-sm-12 col-12">
                                                             <div class="mb-3">
                                                                 <label for="subType" class="form-label">Sub Type</label>
-                                                                <div class="input-group">
+                                                                <div class="input input-group">
                                                                     <!--<span class="input-group-text"><i class="bi bi-person"></i></span>-->
                                                                     <input type="text" class="form-control" id="subType" name="subType" placeholder="" value="${item.subType}">
                                                                 </div>
@@ -2328,7 +2326,7 @@
                                                         <div class="form-group required col-xl-4 col-sm-12 col-12">
                                                             <div class="mb-3">
                                                                 <label for="itemId" class="form-label">Item ID</label>
-                                                                <div class="input-group">
+                                                                <div class="input input-group">
                                                                     <!--<span class="input-group-text"><i class="bi bi-envelope"></i></span>-->
                                                                     <input type="text" class="form-control" id="itemId" name="itemId" placeholder="" value="${item.itemId}" required>
                                                                 </div>
@@ -2337,7 +2335,7 @@
                                                         <div class="form-group required col-xl-4 col-sm-12 col-12">
                                                             <div class="mb-3">
                                                                 <label for="itemName" class="form-label">Item Name</label>
-                                                                <div class="input-group">
+                                                                <div class="input input-group">
                                                                     <!--<span class="input-group-text"><i class="bi bi-telephone"></i></span>-->
                                                                     <input type="text" class="form-control" id="itemName" name="itemName" placeholder="" value="${item.itemName}" required>
                                                                 </div>
@@ -2346,7 +2344,7 @@
                                                         <div class="visually-hidden col-xl-4 col-sm-12 col-12">
                                                             <div class="mb-3">
                                                                 <label for="aluHrs" class="form-label">ALU</label>
-                                                                <div class="input-group">
+                                                                <div class="input input-group">
                                                                     <!--<span class="input-group-text"><i class="bi bi-envelope"></i></span>-->
                                                                     <input type="text" class="form-control" id="aluHrs" name="aluHrs" placeholder="" value="${item.aluHrs}">
                                                                 </div>
@@ -2355,7 +2353,7 @@
                                                         <div class="visually-hidden form-group required col-xl-4 col-sm-12 col-12">
                                                             <div class="mb-3">
                                                                 <label for="assemblyId" class="form-label">Assembly ID</label>
-                                                                <div class="input-group">
+                                                                <div class="input input-group">
                                                                     <!--<span class="input-group-text"><i class="bi bi-telephone"></i></span>-->
                                                                     <input type="text" class="form-control" id="assemblyId" name="assemblyId" placeholder="" value="${item.assemblyId}">
                                                                 </div>
@@ -2364,7 +2362,7 @@
                                                         <div class="visually-hidden col-xl-4 col-sm-12 col-12">
                                                             <div class="mb-3">
                                                                 <label for="model" class="form-label">Spare Part Model</label>
-                                                                <div class="input-group">
+                                                                <div class="input input-group">
                                                                     <!--<span class="input-group-text"><i class="bi bi-telephone"></i></span>-->
                                                                     <input type="text" class="form-control" id="model2" name="model2" value="${item.model}">
                                                                 </div>
@@ -2374,7 +2372,7 @@
                                                         <div class="col-xl-4 col-sm-12 col-12">
                                                             <div class="mb-3">
                                                                 <label for="manufacturer" class="form-label">Spare Part Manufacturer</label>
-                                                                <div class="input-group">
+                                                                <div class="input input-group">
                                                                     <!--<span class="input-group-text"><i class="bi bi-person"></i></span>-->
                                                                     <input type="text" class="form-control" id="manufacturer" name="manufacturer" placeholder="" value="${item.manufacturer}">
                                                                 </div>
@@ -2383,7 +2381,7 @@
                                                         <div class="form-group required col-xl-4 col-sm-12 col-12">
                                                             <div class="mb-3">
                                                                 <label for="unitCost" class="form-label">Unit cost (USD)</label>
-                                                                <div class="input-group">
+                                                                <div class="input input-group">
                                                                     <!--<span class="input-group-text"><i class="bi bi-envelope"></i></span>-->
                                                                     <input type="number" step="0.01" class="form-control" id="unitCost" name="unitCost" placeholder="" value="${item.unitCost}" required>
                                                                 </div>
@@ -2392,7 +2390,7 @@
                                                         <div class="visually-hidden col-xl-4 col-sm-12 col-12">
                                                             <div class="mb-3">
                                                                 <label for="equipmentType" class="form-label">Equipment Type</label>
-                                                                <div class="input-group">
+                                                                <div class="input input-group">
                                                                     <!--<span class="input-group-text"><i class="bi bi-person"></i></span>-->
                                                                     <input type="text" class="form-control" id="equipmentType" name="equipmentType" placeholder="" value="${item.equipmentType}">
                                                                 </div>
@@ -2401,7 +2399,7 @@
                                                         <div class="visually-hidden col-xl-4 col-sm-12 col-12">
                                                             <div class="mb-3">
                                                                 <label for="equipmentModel" class="form-label">Equipment Model</label>
-                                                                <div class="input-group">
+                                                                <div class="input input-group">
                                                                     <!--<span class="input-group-text"><i class="bi bi-envelope"></i></span>-->
                                                                     <input type="text" class="form-control" id="equipmentModel" name="equipmentModel" value="${item.equipmentModel}">
                                                                 </div>
@@ -2410,7 +2408,7 @@
                                                         <div class="visually-hidden col-xl-4 col-sm-12 col-12">
                                                             <div class="mb-3">
                                                                 <label for="equipmentManufacturer" class="form-label">Eqpt Manufacturer</label>
-                                                                <div class="input-group">
+                                                                <div class="input input-group">
                                                                     <!--<span class="input-group-text"><i class="bi bi-telephone"></i></span>-->
                                                                     <input type="text" class="form-control" id="equipmentManufacturer" name="equipmentManufacturer" value="${item.equipmentManufacturer}" >
                                                                 </div>
@@ -2420,7 +2418,7 @@
                                                         <div class="form-group required col-xl-1 col-sm-12 col-12">
                                                             <div class="mb-3">
                                                                 <label for="minQty" class="form-label">Min. Qty</label>
-                                                                <div class="input-group">
+                                                                <div class="input input-group">
                                                                     <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
                                                                     <input type="number" class="form-control" id="minQty" name="minQty"
                                                                            placeholder="" value="${item.minQty}" required>
@@ -2430,7 +2428,7 @@
                                                         <div class="form-group required col-xl-1 col-sm-12 col-12">
                                                             <div class="mb-3">
                                                                 <label for="maxQty" class="form-label">Max. Qty</label>
-                                                                <div class="input-group">
+                                                                <div class="input input-group">
                                                                     <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
                                                                     <input type="number" class="form-control" id="maxQty" name="maxQty"
                                                                            placeholder="" value="${item.maxQty}" required>
@@ -2440,7 +2438,7 @@
                                                         <div class="col-xl-3 col-sm-12 col-12">
                                                             <div class="mb-3">
                                                                 <label for="rack" class="form-label">Rack</label>
-                                                                <div class="input-group">
+                                                                <div class="input input-group">
                                                                     <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
                                                                     <input type="text" class="form-control" id="rack" name="rack"
                                                                            placeholder="" value="${item.rack}">
@@ -2450,7 +2448,7 @@
                                                         <div class="col-xl-3 col-sm-12 col-12">
                                                             <div class="mb-3">
                                                                 <label for="shelf" class="form-label">Shelf</label>
-                                                                <div class="input-group">
+                                                                <div class="input input-group">
                                                                     <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
                                                                     <input type="text" class="form-control" id="shelf" name="shelf"
                                                                            placeholder="" value="${item.shelf}">
@@ -2460,7 +2458,7 @@
                                                         <div class="visually-hidden col-xl-4 col-sm-12 col-12">
                                                             <div class="mb-3">
                                                                 <label for="stressType" class="form-label">Stress Type</label>
-                                                                <div class="input-group">
+                                                                <div class="input input-group">
                                                                     <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
                                                                     <input type="text" class="form-control" id="stressType" name="stressType"
                                                                            placeholder="" value="${item.stressType}">
@@ -2470,7 +2468,7 @@
                                                         <div class="form-group required col-xl-2 col-sm-12 col-12">
                                                             <div class="mb-3">
                                                                 <label for="onHandQty" class="form-label">On Hand Qty</label>
-                                                                <div class="input-group">
+                                                                <div class="input input-group">
                                                                     <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
                                                                     <input type="number" class="form-control" id="onHandQty" name="onHandQty"
                                                                            placeholder="" value="${item.onHandQty}" required>
@@ -2480,7 +2478,7 @@
                                                         <div class="visually-hidden col-xl-2 col-sm-12 col-12">
                                                             <div class="mb-3">
                                                                 <label for="productionQty" class="form-label">Prod. Qty</label>
-                                                                <div class="input-group">
+                                                                <div class="input input-group">
                                                                     <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
                                                                     <input type="number" class="form-control" id="productionQty" name="productionQty"
                                                                            placeholder="" value="${item.productionQty}">
@@ -2490,7 +2488,7 @@
                                                         <div class="visually-hidden col-xl-2 col-sm-12 col-12">
                                                             <div class="mb-3">
                                                                 <label for="productionStagingQty" class="form-label">Prod. Staging Qty</label>
-                                                                <div class="input-group">
+                                                                <div class="input input-group">
                                                                     <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
                                                                     <input type="number" class="form-control" id="productionStagingQty" name="productionStagingQty"
                                                                            placeholder="" value="${item.productionStagingQty}">
@@ -2500,7 +2498,7 @@
                                                         <div class="visually-hidden col-xl-2 col-sm-12 col-12">
                                                             <div class="mb-3">
                                                                 <label for="repairQty" class="form-label">Repair Qty</label>
-                                                                <div class="input-group">
+                                                                <div class="input input-group">
                                                                     <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
                                                                     <input type="number" class="form-control" <input type="number" class="form-control" id="repairQty" name="repairQty" placeholder="" value="${item.repairQty}">
                                                                 </div>
@@ -2509,7 +2507,7 @@
                                                         <div class="visually-hidden col-xl-2 col-sm-12 col-12">
                                                             <div class="mb-3">
                                                                 <label for="quarantineQty" class="form-label">Quarantine Qty</label>
-                                                                <div class="input-group">
+                                                                <div class="input input-group">
                                                                     <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
                                                                     <input type="number" class="form-control" <input type="number" class="form-control" id="quarantineQty" name="quarantineQty" placeholder="" value="${item.quarantineQty}">
                                                                 </div>
@@ -2518,7 +2516,7 @@
                                                         <div class="visually-hidden col-xl-2 col-sm-12 col-12">
                                                             <div class="mb-3">
                                                                 <label for="externalCleanQty" class="form-label">Ext Clean Qty</label>
-                                                                <div class="input-group">
+                                                                <div class="input input-group">
                                                                     <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
                                                                     <input type="number" class="form-control" id="externalCleanQty" name="externalCleanQty" placeholder="" value="${item.externalCleanQty}">
                                                                 </div>
@@ -2527,7 +2525,7 @@
                                                         <div class="visually-hidden col-xl-2 col-sm-12 col-12">
                                                             <div class="mb-3">
                                                                 <label for="externalRecleanQty" class="form-label">Ext Re-clean Qty</label>
-                                                                <div class="input-group">
+                                                                <div class="input input-group">
                                                                     <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
                                                                     <input type="number" class="form-control" id="externalRecleanQty" name="externalRecleanQty" placeholder="" value="${item.externalRecleanQty}">
                                                                 </div>
@@ -2536,7 +2534,7 @@
                                                         <div class="visually-hidden col-xl-2 col-sm-12 col-12">
                                                             <div class="mb-3">
                                                                 <label for="internalCleanQty" class="form-label">Int. Clean Qty</label>
-                                                                <div class="input-group">
+                                                                <div class="input input-group">
                                                                     <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
                                                                     <input type="number" class="form-control" id="internalCleanQty" name="internalCleanQty" placeholder="" value="${item.internalCleanQty}">
                                                                 </div>
@@ -2545,7 +2543,7 @@
                                                         <div class="visually-hidden col-xl-2 col-sm-12 col-12">
                                                             <div class="mb-3">
                                                                 <label for="internalRecleanQty" class="form-label">Int. Re-Clean Qty</label>
-                                                                <div class="input-group">
+                                                                <div class="input input-group">
                                                                     <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
                                                                     <input type="number" class="form-control" id="internalRecleanQty" name="internalRecleanQty" placeholder="" value="${item.internalRecleanQty}">
                                                                 </div>
@@ -2554,7 +2552,7 @@
                                                         <div class="col-xl-2 col-sm-12 col-12">
                                                             <div class="mb-3">
                                                                 <label for="otherQty" class="form-label">Other Qty</label>
-                                                                <div class="input-group">
+                                                                <div class="input input-group">
                                                                     <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
                                                                     <input type="number" class="form-control" id="otherQty" name="otherQty" placeholder="" value="${item.otherQty}">
                                                                 </div>
@@ -2563,7 +2561,7 @@
                                                         <div class="visually-hidden col-xl-2 col-sm-12 col-12">
                                                             <div class="mb-3">
                                                                 <label for="vendorQty" class="form-label">Vendor Qty</label>
-                                                                <div class="input-group">
+                                                                <div class="input input-group">
                                                                     <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
                                                                     <input type="number" class="form-control" id="vendorQty" name="vendorQty" placeholder="" value="${item.vendorQty}">
                                                                 </div>
@@ -2571,7 +2569,7 @@
                                                         </div><div class="visually-hidden col-xl-2 col-sm-12 col-12">
                                                             <div class="mb-3">
                                                                 <label for="otherOnsemiQty" class="form-label">Other onsemi Qty</label>
-                                                                <div class="input-group">
+                                                                <div class="input input-group">
                                                                     <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
                                                                     <input type="number" class="form-control" id="otherOnsemiQty" name="otherOnsemiQty" placeholder="" value="${item.otherOnsemiQty}">
                                                                 </div>
@@ -2580,7 +2578,7 @@
                                                         <div class="col-xl-2 col-sm-12 col-12">
                                                             <div class="mb-3">
                                                                 <label for="storageFactoryQty" class="form-label">Storage Factory Qty</label>
-                                                                <div class="input-group">
+                                                                <div class="input input-group">
                                                                     <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
                                                                     <input type="number" class="form-control" id="storageFactoryQty" name="storageFactoryQty" placeholder="" value="${item.storageFactoryQty}">
                                                                 </div>
@@ -2589,7 +2587,7 @@
                                                         <div class="col-xl-2 col-sm-12 col-12">
                                                             <div class="mb-3">
                                                                 <label for="totalQty" class="form-label">Total Qty</label>
-                                                                <div class="input-group">
+                                                                <div class="input input-group">
                                                                     <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
                                                                     <input type="number" class="form-control" id="totalQty" name="totalQty"
                                                                            placeholder="" value="${item.totalQty}" readonly>
@@ -2599,7 +2597,7 @@
                                                         <div class="col-xl-2 col-sm-12 col-12">
                                                             <div class="mb-3">
                                                                 <label for="expirationDate" class="form-label">Expiration Date</label>
-                                                                <div class="input-group">
+                                                                <div class="input input-group">
                                                                     <span class="input-group-text">
                                                                         <i class="bi bi-calendar4"></i>
                                                                     </span>
@@ -2611,7 +2609,7 @@
                                                             <div class="mb-3">
                                                                 <label for="isConsumable" class="form-label">Consumable?</label>
                                                                 <div class="input-group form-check form-switch">
-                                                                    <input class="form-check-input" type="checkbox" role="switch" id="isConsumable" name="isConsumable" ${isConsumable}>
+                                                                    <input class="input form-check-input" type="checkbox" role="switch" id="isConsumable" name="isConsumable" ${isConsumable}>
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -2626,9 +2624,9 @@
                                                         <div class="col-12">
                                                             <div class="mb-3">
                                                                 <label for="remarks" class="form-label">Remarks</label>
-                                                                <div class="input-group">
+                                                                <div class="input input-group">
                                                                     <span class="input-group-text"><i class="bi bi-pencil"></i></span>
-                                                                    <textarea class="form-control" id="remarks" name="remarks" placeholder="Enter Message"
+                                                                    <textarea class="input form-control" id="remarks" name="remarks" placeholder="Enter Message"
                                                                               rows="3">${item.remarks}</textarea>
                                                                 </div>
                                                             </div>
@@ -2660,7 +2658,7 @@
                                                         <div class="col-xl-2 col-sm-12 col-12">
                                                             <div class="mb-3">
                                                                 <label for="subType" class="form-label">Item Type</label>
-                                                                <div class="input-group">
+                                                                <div class="input input-group">
                                                                     <!--<span class="input-group-text"><i class="bi bi-person"></i></span>-->
                                                                     <input type="text" class="form-control" id="itemTypeRead" name="itemTypeRead" placeholder="" value="${item.itemType}" readonly>
                                                                     <input type="hidden" class="form-control" id="itemPKID" name="itemPKID" placeholder="" value="${item.sptsPkid}">
@@ -2671,7 +2669,7 @@
                                                         <div class="col-xl-2 col-sm-12 col-12">
                                                             <div class="mb-3">
                                                                 <label for="subType" class="form-label">Sub Type</label>
-                                                                <div class="input-group">
+                                                                <div class="input input-group">
                                                                     <!--<span class="input-group-text"><i class="bi bi-person"></i></span>-->
                                                                     <input type="text" class="form-control" id="subType" name="subType" placeholder="" value="${item.subType}">
                                                                 </div>
@@ -2680,7 +2678,7 @@
                                                         <div class="form-group required col-xl-4 col-sm-12 col-12">
                                                             <div class="mb-3">
                                                                 <label for="itemId" class="form-label">Item ID</label>
-                                                                <div class="input-group">
+                                                                <div class="input input-group">
                                                                     <!--<span class="input-group-text"><i class="bi bi-envelope"></i></span>-->
                                                                     <input type="text" class="form-control" id="itemId" name="itemId" placeholder="" value="${item.itemId}" required>
                                                                 </div>
@@ -2689,7 +2687,7 @@
                                                         <div class="form-group required col-xl-4 col-sm-12 col-12">
                                                             <div class="mb-3">
                                                                 <label for="itemName" class="form-label">Item Name</label>
-                                                                <div class="input-group">
+                                                                <div class="input input-group">
                                                                     <!--<span class="input-group-text"><i class="bi bi-telephone"></i></span>-->
                                                                     <input type="text" class="form-control" id="itemName" name="itemName" placeholder="" value="${item.itemName}" required>
                                                                 </div>
@@ -2698,7 +2696,7 @@
                                                         <div class="visually-hidden col-xl-4 col-sm-12 col-12">
                                                             <div class="mb-3">
                                                                 <label for="aluHrs" class="form-label">ALU</label>
-                                                                <div class="input-group">
+                                                                <div class="input input-group">
                                                                     <!--<span class="input-group-text"><i class="bi bi-envelope"></i></span>-->
                                                                     <input type="text" class="form-control" id="aluHrs" name="aluHrs" placeholder="" value="${item.aluHrs}">
                                                                 </div>
@@ -2707,7 +2705,7 @@
                                                         <div class="visually-hidden form-group required col-xl-4 col-sm-12 col-12">
                                                             <div class="mb-3">
                                                                 <label for="assemblyId" class="form-label">Assembly ID</label>
-                                                                <div class="input-group">
+                                                                <div class="input input-group">
                                                                     <!--<span class="input-group-text"><i class="bi bi-telephone"></i></span>-->
                                                                     <input type="text" class="form-control" id="assemblyId" name="assemblyId" placeholder="" value="${item.assemblyId}">
                                                                 </div>
@@ -2716,7 +2714,7 @@
                                                         <div class="visually-hidden col-xl-4 col-sm-12 col-12">
                                                             <div class="mb-3">
                                                                 <label for="model" class="form-label">Spare Part Model</label>
-                                                                <div class="input-group">
+                                                                <div class="input input-group">
                                                                     <!--<span class="input-group-text"><i class="bi bi-telephone"></i></span>-->
                                                                     <input type="text" class="form-control" id="model2" name="model2" value="${item.model}">
                                                                 </div>
@@ -2726,7 +2724,7 @@
                                                         <div class="col-xl-4 col-sm-12 col-12">
                                                             <div class="mb-3">
                                                                 <label for="manufacturer" class="form-label">Spare Part Manufacturer</label>
-                                                                <div class="input-group">
+                                                                <div class="input input-group">
                                                                     <!--<span class="input-group-text"><i class="bi bi-person"></i></span>-->
                                                                     <input type="text" class="form-control" id="manufacturer" name="manufacturer" placeholder="" value="${item.manufacturer}">
                                                                 </div>
@@ -2735,7 +2733,7 @@
                                                         <div class="form-group required col-xl-4 col-sm-12 col-12">
                                                             <div class="mb-3">
                                                                 <label for="unitCost" class="form-label">Unit cost (USD)</label>
-                                                                <div class="input-group">
+                                                                <div class="input input-group">
                                                                     <!--<span class="input-group-text"><i class="bi bi-envelope"></i></span>-->
                                                                     <input type="number" step="0.01" class="form-control" id="unitCost" name="unitCost" placeholder="" value="${item.unitCost}" required>
                                                                 </div>
@@ -2744,7 +2742,7 @@
                                                         <div class="visually-hidden col-xl-4 col-sm-12 col-12">
                                                             <div class="mb-3">
                                                                 <label for="equipmentType" class="form-label">Equipment Type</label>
-                                                                <div class="input-group">
+                                                                <div class="input input-group">
                                                                     <!--<span class="input-group-text"><i class="bi bi-person"></i></span>-->
                                                                     <input type="text" class="form-control" id="equipmentType" name="equipmentType" placeholder="" value="${item.equipmentType}">
                                                                 </div>
@@ -2753,7 +2751,7 @@
                                                         <div class="visually-hidden col-xl-4 col-sm-12 col-12">
                                                             <div class="mb-3">
                                                                 <label for="equipmentModel" class="form-label">Equipment Model</label>
-                                                                <div class="input-group">
+                                                                <div class="input input-group">
                                                                     <!--<span class="input-group-text"><i class="bi bi-envelope"></i></span>-->
                                                                     <input type="text" class="form-control" id="equipmentModel" name="equipmentModel" value="${item.equipmentModel}">
                                                                 </div>
@@ -2762,7 +2760,7 @@
                                                         <div class="visually-hidden col-xl-4 col-sm-12 col-12">
                                                             <div class="mb-3">
                                                                 <label for="equipmentManufacturer" class="form-label">Eqpt Manufacturer</label>
-                                                                <div class="input-group">
+                                                                <div class="input input-group">
                                                                     <!--<span class="input-group-text"><i class="bi bi-telephone"></i></span>-->
                                                                     <input type="text" class="form-control" id="equipmentManufacturer" name="equipmentManufacturer" value="${item.equipmentManufacturer}" >
                                                                 </div>
@@ -2772,7 +2770,7 @@
                                                         <div class="form-group required col-xl-1 col-sm-12 col-12">
                                                             <div class="mb-3">
                                                                 <label for="minQty" class="form-label">Min. Qty</label>
-                                                                <div class="input-group">
+                                                                <div class="input input-group">
                                                                     <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
                                                                     <input type="number" class="form-control" id="minQty" name="minQty"
                                                                            placeholder="" value="${item.minQty}" required>
@@ -2782,7 +2780,7 @@
                                                         <div class="form-group required col-xl-1 col-sm-12 col-12">
                                                             <div class="mb-3">
                                                                 <label for="maxQty" class="form-label">Max. Qty</label>
-                                                                <div class="input-group">
+                                                                <div class="input input-group">
                                                                     <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
                                                                     <input type="number" class="form-control" id="maxQty" name="maxQty"
                                                                            placeholder="" value="${item.maxQty}" required>
@@ -2792,7 +2790,7 @@
                                                         <div class="col-xl-3 col-sm-12 col-12">
                                                             <div class="mb-3">
                                                                 <label for="rack" class="form-label">Rack</label>
-                                                                <div class="input-group">
+                                                                <div class="input input-group">
                                                                     <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
                                                                     <input type="text" class="form-control" id="rack" name="rack"
                                                                            placeholder="" value="${item.rack}">
@@ -2802,7 +2800,7 @@
                                                         <div class="col-xl-3 col-sm-12 col-12">
                                                             <div class="mb-3">
                                                                 <label for="shelf" class="form-label">Shelf</label>
-                                                                <div class="input-group">
+                                                                <div class="input input-group">
                                                                     <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
                                                                     <input type="text" class="form-control" id="shelf" name="shelf"
                                                                            placeholder="" value="${item.shelf}">
@@ -2812,7 +2810,7 @@
                                                         <div class="visually-hidden form-group required col-xl-4 col-sm-12 col-12">
                                                             <div class="mb-3">
                                                                 <label for="stressType" class="form-label">Stress Type</label>
-                                                                <div class="input-group">
+                                                                <div class="input input-group">
                                                                     <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
                                                                     <input type="text" class="form-control" id="stressType" name="stressType"
                                                                            placeholder="" value="${item.stressType}">
@@ -2822,7 +2820,7 @@
                                                         <div class="form-group required col-xl-2 col-sm-12 col-12">
                                                             <div class="mb-3">
                                                                 <label for="onHandQty" class="form-label">On Hand Qty</label>
-                                                                <div class="input-group">
+                                                                <div class="input input-group">
                                                                     <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
                                                                     <input type="number" class="form-control" id="onHandQty" name="onHandQty"
                                                                            placeholder="" value="${item.onHandQty}" required>
@@ -2832,7 +2830,7 @@
                                                         <div class="visually-hidden col-xl-2 col-sm-12 col-12">
                                                             <div class="mb-3">
                                                                 <label for="productionQty" class="form-label">Prod. Qty</label>
-                                                                <div class="input-group">
+                                                                <div class="input input-group">
                                                                     <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
                                                                     <input type="number" class="form-control" id="productionQty" name="productionQty"
                                                                            placeholder="" value="${item.productionQty}">
@@ -2842,7 +2840,7 @@
                                                         <div class="visually-hidden col-xl-2 col-sm-12 col-12">
                                                             <div class="mb-3">
                                                                 <label for="productionStagingQty" class="form-label">Prod. Staging Qty</label>
-                                                                <div class="input-group">
+                                                                <div class="input input-group">
                                                                     <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
                                                                     <input type="number" class="form-control" id="productionStagingQty" name="productionStagingQty"
                                                                            placeholder="" value="${item.productionStagingQty}">
@@ -2852,7 +2850,7 @@
                                                         <div class="col-xl-2 col-sm-12 col-12">
                                                             <div class="mb-3">
                                                                 <label for="repairQty" class="form-label">Repair Qty</label>
-                                                                <div class="input-group">
+                                                                <div class="input input-group">
                                                                     <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
                                                                     <input type="number" class="form-control" <input type="number" class="form-control" id="repairQty" name="repairQty" placeholder="" value="${item.repairQty}">
                                                                 </div>
@@ -2861,7 +2859,7 @@
                                                         <div class="visually-hidden col-xl-2 col-sm-12 col-12">
                                                             <div class="mb-3">
                                                                 <label for="quarantineQty" class="form-label">Quarantine Qty</label>
-                                                                <div class="input-group">
+                                                                <div class="input input-group">
                                                                     <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
                                                                     <input type="number" class="form-control" <input type="number" class="form-control" id="quarantineQty" name="quarantineQty" placeholder="" value="${item.quarantineQty}">
                                                                 </div>
@@ -2870,7 +2868,7 @@
                                                         <div class="visually-hidden col-xl-2 col-sm-12 col-12">
                                                             <div class="mb-3">
                                                                 <label for="externalCleanQty" class="form-label">Ext Clean Qty</label>
-                                                                <div class="input-group">
+                                                                <div class="input input-group">
                                                                     <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
                                                                     <input type="number" class="form-control" id="externalCleanQty" name="externalCleanQty" placeholder="" value="${item.externalCleanQty}">
                                                                 </div>
@@ -2879,7 +2877,7 @@
                                                         <div class="visually-hidden col-xl-2 col-sm-12 col-12">
                                                             <div class="mb-3">
                                                                 <label for="externalRecleanQty" class="form-label">Ext Re-clean Qty</label>
-                                                                <div class="input-group">
+                                                                <div class="input input-group">
                                                                     <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
                                                                     <input type="number" class="form-control" id="externalRecleanQty" name="externalRecleanQty" placeholder="" value="${item.externalRecleanQty}">
                                                                 </div>
@@ -2888,7 +2886,7 @@
                                                         <div class="visually-hidden col-xl-2 col-sm-12 col-12">
                                                             <div class="mb-3">
                                                                 <label for="internalCleanQty" class="form-label">Int. Clean Qty</label>
-                                                                <div class="input-group">
+                                                                <div class="input input-group">
                                                                     <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
                                                                     <input type="number" class="form-control" id="internalCleanQty" name="internalCleanQty" placeholder="" value="${item.internalCleanQty}">
                                                                 </div>
@@ -2897,7 +2895,7 @@
                                                         <div class="visually-hidden col-xl-2 col-sm-12 col-12">
                                                             <div class="mb-3">
                                                                 <label for="internalRecleanQty" class="form-label">Int. Re-Clean Qty</label>
-                                                                <div class="input-group">
+                                                                <div class="input input-group">
                                                                     <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
                                                                     <input type="number" class="form-control" id="internalRecleanQty" name="internalRecleanQty" placeholder="" value="${item.internalRecleanQty}">
                                                                 </div>
@@ -2906,7 +2904,7 @@
                                                         <div class="col-xl-2 col-sm-12 col-12">
                                                             <div class="mb-3">
                                                                 <label for="otherQty" class="form-label">Other Qty</label>
-                                                                <div class="input-group">
+                                                                <div class="input input-group">
                                                                     <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
                                                                     <input type="number" class="form-control" id="otherQty" name="otherQty" placeholder="" value="${item.otherQty}">
                                                                 </div>
@@ -2915,7 +2913,7 @@
                                                         <div class="visually-hidden col-xl-2 col-sm-12 col-12">
                                                             <div class="mb-3">
                                                                 <label for="vendorQty" class="form-label">Vendor Qty</label>
-                                                                <div class="input-group">
+                                                                <div class="input input-group">
                                                                     <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
                                                                     <input type="number" class="form-control" id="vendorQty" name="vendorQty" placeholder="" value="${item.vendorQty}">
                                                                 </div>
@@ -2923,7 +2921,7 @@
                                                         </div><div class="visually-hidden col-xl-2 col-sm-12 col-12">
                                                             <div class="mb-3">
                                                                 <label for="otherOnsemiQty" class="form-label">Other onsemi Qty</label>
-                                                                <div class="input-group">
+                                                                <div class="input input-group">
                                                                     <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
                                                                     <input type="number" class="form-control" id="otherOnsemiQty" name="otherOnsemiQty" placeholder="" value="${item.otherOnsemiQty}">
                                                                 </div>
@@ -2932,7 +2930,7 @@
                                                         <div class="col-xl-2 col-sm-12 col-12">
                                                             <div class="mb-3">
                                                                 <label for="storageFactoryQty" class="form-label">Storage Factory Qty</label>
-                                                                <div class="input-group">
+                                                                <div class="input input-group">
                                                                     <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
                                                                     <input type="number" class="form-control" id="storageFactoryQty" name="storageFactoryQty" placeholder="" value="${item.storageFactoryQty}">
                                                                 </div>
@@ -2941,7 +2939,7 @@
                                                         <div class="col-xl-2 col-sm-12 col-12">
                                                             <div class="mb-3">
                                                                 <label for="totalQty" class="form-label">Total Qty</label>
-                                                                <div class="input-group">
+                                                                <div class="input input-group">
                                                                     <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
                                                                     <input type="number" class="form-control" id="totalQty" name="totalQty"
                                                                            placeholder="" value="${item.totalQty}" readonly>
@@ -2952,7 +2950,7 @@
                                                             <div class="mb-3">
                                                                 <label for="isConsumable" class="form-label">Consumable?</label>
                                                                 <div class="input-group form-check form-switch">
-                                                                    <input class="form-check-input" type="checkbox" role="switch" id="isConsumable" name="isConsumable" ${isConsumable}>
+                                                                    <input class="input form-check-input" type="checkbox" role="switch" id="isConsumable" name="isConsumable" ${isConsumable}>
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -2967,9 +2965,9 @@
                                                         <div class="col-12">
                                                             <div class="mb-3">
                                                                 <label for="remarks" class="form-label">Remarks</label>
-                                                                <div class="input-group">
+                                                                <div class="input input-group">
                                                                     <span class="input-group-text"><i class="bi bi-pencil"></i></span>
-                                                                    <textarea class="form-control" id="remarks" name="remarks" placeholder="Enter Message"
+                                                                    <textarea class="input form-control" id="remarks" name="remarks" placeholder="Enter Message"
                                                                               rows="3">${item.remarks}</textarea>
                                                                 </div>
                                                             </div>
@@ -3001,7 +2999,7 @@
                                                         <div class="col-xl-2 col-sm-12 col-12">
                                                             <div class="mb-3">
                                                                 <label for="subType" class="form-label">Item Type</label>
-                                                                <div class="input-group">
+                                                                <div class="input input-group">
                                                                     <!--<span class="input-group-text"><i class="bi bi-person"></i></span>-->
                                                                     <input type="text" class="form-control" id="itemTypeRead" name="itemTypeRead" placeholder="" value="${item.itemType}" readonly>
                                                                     <input type="hidden" class="form-control" id="itemPKID" name="itemPKID" placeholder="" value="${item.sptsPkid}">
@@ -3012,7 +3010,7 @@
                                                         <div class="form-group required col-xl-2 col-sm-12 col-12">
                                                             <div class="mb-3">
                                                                 <label for="subType" class="form-label">Sub Type</label>
-                                                                <div class="input-group">
+                                                                <div class="input input-group">
                                                                     <!--<span class="input-group-text"><i class="bi bi-person"></i></span>-->
                                                                     <input type="text" class="form-control" id="subType" name="subType" placeholder="" value="${item.subType}">
                                                                 </div>
@@ -3021,7 +3019,7 @@
                                                         <div class="form-group required col-xl-4 col-sm-12 col-12">
                                                             <div class="mb-3">
                                                                 <label for="itemId" class="form-label">Item ID</label>
-                                                                <div class="input-group">
+                                                                <div class="input input-group">
                                                                     <!--<span class="input-group-text"><i class="bi bi-envelope"></i></span>-->
                                                                     <input type="text" class="form-control" id="itemId" name="itemId" placeholder="" value="${item.itemId}" required>
                                                                 </div>
@@ -3030,7 +3028,7 @@
                                                         <div class="form-group required col-xl-4 col-sm-12 col-12">
                                                             <div class="mb-3">
                                                                 <label for="itemName" class="form-label">Item Name</label>
-                                                                <div class="input-group">
+                                                                <div class="input input-group">
                                                                     <!--<span class="input-group-text"><i class="bi bi-telephone"></i></span>-->
                                                                     <input type="text" class="form-control" id="itemName" name="itemName" placeholder="" value="${item.itemName}" required>
                                                                 </div>
@@ -3039,7 +3037,7 @@
                                                         <div class="visually-hidden col-xl-4 col-sm-12 col-12">
                                                             <div class="mb-3">
                                                                 <label for="aluHrs" class="form-label">ALU</label>
-                                                                <div class="input-group">
+                                                                <div class="input input-group">
                                                                     <!--<span class="input-group-text"><i class="bi bi-envelope"></i></span>-->
                                                                     <input type="text" class="form-control" id="aluHrs" name="aluHrs" placeholder="" value="${item.aluHrs}">
                                                                 </div>
@@ -3048,7 +3046,7 @@
                                                         <div class="col-xl-4 col-sm-12 col-12">
                                                             <div class="mb-3">
                                                                 <label for="assemblyId" class="form-label">Assembly ID</label>
-                                                                <div class="input-group">
+                                                                <div class="input input-group">
                                                                     <!--<span class="input-group-text"><i class="bi bi-telephone"></i></span>-->
                                                                     <input type="text" class="form-control" id="assemblyId" name="assemblyId" placeholder="" value="${item.assemblyId}">
                                                                 </div>
@@ -3057,7 +3055,7 @@
                                                         <div class="col-xl-4 col-sm-12 col-12">
                                                             <div class="mb-3">
                                                                 <label for="model" class="form-label">Spare Part Model</label>
-                                                                <div class="input-group">
+                                                                <div class="input input-group">
                                                                     <!--<span class="input-group-text"><i class="bi bi-telephone"></i></span>-->
                                                                     <input type="text" class="form-control" id="model2" name="model2" value="${item.model}">
                                                                 </div>
@@ -3067,7 +3065,7 @@
                                                         <div class="col-xl-4 col-sm-12 col-12">
                                                             <div class="mb-3">
                                                                 <label for="manufacturer" class="form-label">Spare Part Manufacturer</label>
-                                                                <div class="input-group">
+                                                                <div class="input input-group">
                                                                     <!--<span class="input-group-text"><i class="bi bi-person"></i></span>-->
                                                                     <input type="text" class="form-control" id="manufacturer" name="manufacturer" placeholder="" value="${item.manufacturer}">
                                                                 </div>
@@ -3076,7 +3074,7 @@
                                                         <div class="form-group required col-xl-4 col-sm-12 col-12">
                                                             <div class="mb-3">
                                                                 <label for="unitCost" class="form-label">Unit cost (USD)</label>
-                                                                <div class="input-group">
+                                                                <div class="input input-group">
                                                                     <!--<span class="input-group-text"><i class="bi bi-envelope"></i></span>-->
                                                                     <input type="number" step="0.01" class="form-control" id="unitCost" name="unitCost" placeholder="" value="${item.unitCost}" required>
                                                                 </div>
@@ -3085,7 +3083,7 @@
                                                         <div class="col-xl-4 col-sm-12 col-12">
                                                             <div class="mb-3">
                                                                 <label for="equipmentType" class="form-label">Equipment Type</label>
-                                                                <div class="input-group">
+                                                                <div class="input input-group">
                                                                     <!--<span class="input-group-text"><i class="bi bi-person"></i></span>-->
                                                                     <input type="text" class="form-control" id="equipmentType" name="equipmentType" placeholder="" value="${item.equipmentType}">
                                                                 </div>
@@ -3094,7 +3092,7 @@
                                                         <div class="col-xl-4 col-sm-12 col-12">
                                                             <div class="mb-3">
                                                                 <label for="equipmentModel" class="form-label">Equipment Model</label>
-                                                                <div class="input-group">
+                                                                <div class="input input-group">
                                                                     <!--<span class="input-group-text"><i class="bi bi-envelope"></i></span>-->
                                                                     <input type="text" class="form-control" id="equipmentModel" name="equipmentModel" value="${item.equipmentModel}">
                                                                 </div>
@@ -3103,7 +3101,7 @@
                                                         <div class="col-xl-4 col-sm-12 col-12">
                                                             <div class="mb-3">
                                                                 <label for="equipmentManufacturer" class="form-label">Eqpt Manufacturer</label>
-                                                                <div class="input-group">
+                                                                <div class="input input-group">
                                                                     <!--<span class="input-group-text"><i class="bi bi-telephone"></i></span>-->
                                                                     <input type="text" class="form-control" id="equipmentManufacturer" name="equipmentManufacturer" value="${item.equipmentManufacturer}" >
                                                                 </div>
@@ -3113,7 +3111,7 @@
                                                         <div class="form-group required col-xl-1 col-sm-12 col-12">
                                                             <div class="mb-3">
                                                                 <label for="minQty" class="form-label">Min. Qty</label>
-                                                                <div class="input-group">
+                                                                <div class="input input-group">
                                                                     <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
                                                                     <input type="number" class="form-control" id="minQty" name="minQty"
                                                                            placeholder="" value="${item.minQty}" required>
@@ -3123,7 +3121,7 @@
                                                         <div class="form-group required col-xl-1 col-sm-12 col-12">
                                                             <div class="mb-3">
                                                                 <label for="maxQty" class="form-label">Max. Qty</label>
-                                                                <div class="input-group">
+                                                                <div class="input input-group">
                                                                     <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
                                                                     <input type="number" class="form-control" id="maxQty" name="maxQty"
                                                                            placeholder="" value="${item.maxQty}" required>
@@ -3133,7 +3131,7 @@
                                                         <div class="col-xl-3 col-sm-12 col-12">
                                                             <div class="mb-3">
                                                                 <label for="rack" class="form-label">Rack</label>
-                                                                <div class="input-group">
+                                                                <div class="input input-group">
                                                                     <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
                                                                     <input type="text" class="form-control" id="rack" name="rack"
                                                                            placeholder="" value="${item.rack}">
@@ -3143,7 +3141,7 @@
                                                         <div class="col-xl-3 col-sm-12 col-12">
                                                             <div class="mb-3">
                                                                 <label for="shelf" class="form-label">Shelf</label>
-                                                                <div class="input-group">
+                                                                <div class="input input-group">
                                                                     <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
                                                                     <input type="text" class="form-control" id="shelf" name="shelf"
                                                                            placeholder="" value="${item.shelf}">
@@ -3153,7 +3151,7 @@
                                                         <div class="form-group required col-xl-4 col-sm-12 col-12">
                                                             <div class="mb-3">
                                                                 <label for="stressType" class="form-label">Stress Type</label>
-                                                                <div class="input-group">
+                                                                <div class="input input-group">
                                                                     <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
                                                                     <input type="text" class="form-control" id="stressType" name="stressType"
                                                                            placeholder="" value="${item.stressType}">
@@ -3163,7 +3161,7 @@
                                                         <div class="form-group required col-xl-2 col-sm-12 col-12">
                                                             <div class="mb-3">
                                                                 <label for="onHandQty" class="form-label">On Hand Qty</label>
-                                                                <div class="input-group">
+                                                                <div class="input input-group">
                                                                     <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
                                                                     <input type="number" class="form-control" id="onHandQty" name="onHandQty"
                                                                            placeholder="" value="${item.onHandQty}" required>
@@ -3173,7 +3171,7 @@
                                                         <div class="col-xl-2 col-sm-12 col-12">
                                                             <div class="mb-3">
                                                                 <label for="productionQty" class="form-label">Prod. Qty</label>
-                                                                <div class="input-group">
+                                                                <div class="input input-group">
                                                                     <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
                                                                     <input type="number" class="form-control" id="productionQty" name="productionQty"
                                                                            placeholder="" value="${item.productionQty}">
@@ -3183,7 +3181,7 @@
                                                         <div class="col-xl-2 col-sm-12 col-12">
                                                             <div class="mb-3">
                                                                 <label for="productionStagingQty" class="form-label">Prod. Staging Qty</label>
-                                                                <div class="input-group">
+                                                                <div class="input input-group">
                                                                     <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
                                                                     <input type="number" class="form-control" id="productionStagingQty" name="productionStagingQty"
                                                                            placeholder="" value="${item.productionStagingQty}">
@@ -3193,7 +3191,7 @@
                                                         <div class="col-xl-2 col-sm-12 col-12">
                                                             <div class="mb-3">
                                                                 <label for="repairQty" class="form-label">Repair Qty</label>
-                                                                <div class="input-group">
+                                                                <div class="input input-group">
                                                                     <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
                                                                     <input type="number" class="form-control" <input type="number" class="form-control" id="repairQty" name="repairQty" placeholder="" value="${item.repairQty}">
                                                                 </div>
@@ -3202,7 +3200,7 @@
                                                         <div class="col-xl-2 col-sm-12 col-12">
                                                             <div class="mb-3">
                                                                 <label for="quarantineQty" class="form-label">Quarantine Qty</label>
-                                                                <div class="input-group">
+                                                                <div class="input input-group">
                                                                     <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
                                                                     <input type="number" class="form-control" <input type="number" class="form-control" id="quarantineQty" name="quarantineQty" placeholder="" value="${item.quarantineQty}">
                                                                 </div>
@@ -3211,7 +3209,7 @@
                                                         <div class="col-xl-2 col-sm-12 col-12">
                                                             <div class="mb-3">
                                                                 <label for="externalCleanQty" class="form-label">Ext Clean Qty</label>
-                                                                <div class="input-group">
+                                                                <div class="input input-group">
                                                                     <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
                                                                     <input type="number" class="form-control" id="externalCleanQty" name="externalCleanQty" placeholder="" value="${item.externalCleanQty}">
                                                                 </div>
@@ -3220,7 +3218,7 @@
                                                         <div class="col-xl-2 col-sm-12 col-12">
                                                             <div class="mb-3">
                                                                 <label for="externalRecleanQty" class="form-label">Ext Re-clean Qty</label>
-                                                                <div class="input-group">
+                                                                <div class="input input-group">
                                                                     <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
                                                                     <input type="number" class="form-control" id="externalRecleanQty" name="externalRecleanQty" placeholder="" value="${item.externalRecleanQty}">
                                                                 </div>
@@ -3229,7 +3227,7 @@
                                                         <div class="col-xl-2 col-sm-12 col-12">
                                                             <div class="mb-3">
                                                                 <label for="internalCleanQty" class="form-label">Int. Clean Qty</label>
-                                                                <div class="input-group">
+                                                                <div class="input input-group">
                                                                     <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
                                                                     <input type="number" class="form-control" id="internalCleanQty" name="internalCleanQty" placeholder="" value="${item.internalCleanQty}">
                                                                 </div>
@@ -3238,7 +3236,7 @@
                                                         <div class="col-xl-2 col-sm-12 col-12">
                                                             <div class="mb-3">
                                                                 <label for="internalRecleanQty" class="form-label">Int. Re-Clean Qty</label>
-                                                                <div class="input-group">
+                                                                <div class="input input-group">
                                                                     <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
                                                                     <input type="number" class="form-control" id="internalRecleanQty" name="internalRecleanQty" placeholder="" value="${item.internalRecleanQty}">
                                                                 </div>
@@ -3247,7 +3245,7 @@
                                                         <div class="col-xl-2 col-sm-12 col-12">
                                                             <div class="mb-3">
                                                                 <label for="otherQty" class="form-label">Other Qty</label>
-                                                                <div class="input-group">
+                                                                <div class="input input-group">
                                                                     <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
                                                                     <input type="number" class="form-control" id="otherQty" name="otherQty" placeholder="" value="${item.otherQty}">
                                                                 </div>
@@ -3256,7 +3254,7 @@
                                                         <div class="col-xl-2 col-sm-12 col-12">
                                                             <div class="mb-3">
                                                                 <label for="vendorQty" class="form-label">Vendor Qty</label>
-                                                                <div class="input-group">
+                                                                <div class="input input-group">
                                                                     <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
                                                                     <input type="number" class="form-control" id="vendorQty" name="vendorQty" placeholder="" value="${item.vendorQty}">
                                                                 </div>
@@ -3265,7 +3263,7 @@
                                                         <div class="col-xl-2 col-sm-12 col-12">
                                                             <div class="mb-3">
                                                                 <label for="otherOnsemiQty" class="form-label">Other onsemi Qty</label>
-                                                                <div class="input-group">
+                                                                <div class="input input-group">
                                                                     <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
                                                                     <input type="number" class="form-control" id="otherOnsemiQty" name="otherOnsemiQty" placeholder="" value="${item.otherOnsemiQty}">
                                                                 </div>
@@ -3274,7 +3272,7 @@
                                                         <div class="col-xl-2 col-sm-12 col-12">
                                                             <div class="mb-3">
                                                                 <label for="storageFactoryQty" class="form-label">Storage Factory Qty</label>
-                                                                <div class="input-group">
+                                                                <div class="input input-group">
                                                                     <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
                                                                     <input type="number" class="form-control" id="storageFactoryQty" name="storageFactoryQty" placeholder="" value="${item.storageFactoryQty}">
                                                                 </div>
@@ -3283,7 +3281,7 @@
                                                         <div class="col-xl-2 col-sm-12 col-12">
                                                             <div class="mb-3">
                                                                 <label for="totalQty" class="form-label">Total Qty</label>
-                                                                <div class="input-group">
+                                                                <div class="input input-group">
                                                                     <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
                                                                     <input type="number" class="form-control" id="totalQty" name="totalQty"
                                                                            placeholder="" value="${item.totalQty}" readonly>
@@ -3293,7 +3291,7 @@
                                                         <div class="col-xl-2 col-sm-12 col-12">
                                                             <div class="mb-3">
                                                                 <label for="expirationDate" class="form-label">Expiration Date</label>
-                                                                <div class="input-group">
+                                                                <div class="input input-group">
                                                                     <span class="input-group-text">
                                                                         <i class="bi bi-calendar4"></i>
                                                                     </span>
@@ -3305,7 +3303,7 @@
                                                             <div class="mb-3">
                                                                 <label for="isConsumable" class="form-label">Consumable?</label>
                                                                 <div class="input-group form-check form-switch">
-                                                                    <input class="form-check-input" type="checkbox" role="switch" id="isConsumable" name="isConsumable" ${isConsumable}>
+                                                                    <input class="input form-check-input" type="checkbox" role="switch" id="isConsumable" name="isConsumable" ${isConsumable}>
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -3320,9 +3318,9 @@
                                                         <div class="col-12">
                                                             <div class="mb-3">
                                                                 <label for="remarks" class="form-label">Remarks</label>
-                                                                <div class="input-group">
+                                                                <div class="input input-group">
                                                                     <span class="input-group-text"><i class="bi bi-pencil"></i></span>
-                                                                    <textarea class="form-control" id="remarks" name="remarks" placeholder="Enter Message"
+                                                                    <textarea class="input form-control" id="remarks" name="remarks" placeholder="Enter Message"
                                                                               rows="3">${item.remarks}</textarea>
                                                                 </div>
                                                             </div>
@@ -3385,7 +3383,7 @@
                                                                     <div class="col-xl-2 col-sm-12 col-12">
                                                                         <div class="mb-2">
                                                                             <label for="pcbRejectQty" class="form-label">Reject Qty</label>
-                                                                            <div class="input-group">
+                                                                            <div class="input input-group">
                                                                                 <!--<span class="input-group-text"><i class="bi bi-person"></i></span>-->
                                                                                 <input type="number" class="form-control" id="pcbRejectQty" name="pcbRejectQty" placeholder="" value="${itemVm.pcbRejectQty}">
                                                                         </div>
@@ -3394,7 +3392,7 @@
                                                                 <div class="col-xl-4 col-sm-12 col-12">
                                                                     <div class="mb-2">
                                                                         <label for="metalFrameReject" class="form-label">Reject Criteria</label>
-                                                                        <div class="input-group">
+                                                                        <div class="input input-group">
                                                                             <!--<select class="select-single js-states form-control" id="pcbReject" name="pcbReject"-->
                                                                                     <select class="form-control" id="pcbReject" name="pcbReject"
                                                                                     title="Select Item Usage" data-live-search="true" style="width: 100%">
@@ -3409,7 +3407,7 @@
                                                                 <div class="form-group col-xl-6 col-sm-12 col-12">
                                                                     <div class="mb-2">
                                                                         <label for="pcbRejectUpload" class="form-label">Upload</label>
-                                                                        <div class="input-group">
+                                                                        <div class="input input-group">
                                                                             <input class="form-control" type="file" id="pcbRejectUpload" name="pcbRejectUpload">
                                                                         </div>
                                                                     </div>
@@ -3455,7 +3453,7 @@
                                                                     <div class="col-xl-2 col-sm-12 col-12">
                                                                         <div class="mb-2">
                                                                             <label for="handleRejectQty" class="form-label">Reject Qty</label>
-                                                                            <div class="input-group">
+                                                                            <div class="input input-group">
                                                                                 <!--<span class="input-group-text"><i class="bi bi-person"></i></span>-->
                                                                                 <input type="number" class="form-control" id="handleRejectQty" name="handleRejectQty" placeholder="" value="">
                                                                             </div>
@@ -3464,7 +3462,7 @@
                                                                     <div class="col-xl-4 col-sm-12 col-12">
                                                                         <div class="mb-2">
                                                                             <label for="handleReject" class="form-label">Reject Criteria</label>
-                                                                            <div class="input-group">
+                                                                            <div class="input input-group">
                                                                                 <select class="form-control" id="handleReject" name="handleReject"
                                                                                         title="Select Item Usage" data-live-search="true" style="width: 100%">
                                                                                     <option></option>
@@ -3478,7 +3476,7 @@
                                                                 <div class="form-group col-xl-6 col-sm-12 col-12">
                                                                     <div class="mb-2">
                                                                         <label for="handleRejectUpload" class="form-label">Upload</label>
-                                                                        <div class="input-group">
+                                                                        <div class="input input-group">
                                                                             <input class="form-control" type="file" id="handleRejectUpload" name="handleRejectUpload">
                                                                         </div>
                                                                     </div>
@@ -3523,7 +3521,7 @@
                                                                     <div class="col-xl-2 col-sm-12 col-12">
                                                                         <div class="mb-2">
                                                                             <label for="metalFrameRejectQty" class="form-label">Reject Qty</label>
-                                                                            <div class="input-group">
+                                                                            <div class="input input-group">
                                                                                 <!--<span class="input-group-text"><i class="bi bi-person"></i></span>-->
                                                                                 <input type="number" class="form-control" id="metalFrameRejectQty" name="metalFrameRejectQty" placeholder="" value="">
                                                                             </div>
@@ -3532,7 +3530,7 @@
                                                                     <div class="col-xl-4 col-sm-12 col-12">
                                                                         <div class="mb-2">
                                                                             <label for="metalFrameReject" class="form-label">Reject Criteria</label>
-                                                                            <div class="input-group">
+                                                                            <div class="input input-group">
                                                                                 <select class="form-control" id="metalFrameReject" name="metalFrameReject"
                                                                                         title="Select Item Usage" data-live-search="true" style="width: 100%">
                                                                                     <option></option>
@@ -3546,7 +3544,7 @@
                                                                 <div class="form-group col-xl-6 col-sm-12 col-12">
                                                                     <div class="mb-2">
                                                                         <label for="metalFrameRejectUpload" class="form-label">Upload</label>
-                                                                        <div class="input-group">
+                                                                        <div class="input input-group">
                                                                             <input class="form-control" type="file" id="metalFrameRejectUpload" name="metalFrameRejectUpload">
                                                                         </div>
                                                                     </div>
@@ -3591,7 +3589,7 @@
                                                                     <div class="col-xl-2 col-sm-12 col-12">
                                                                         <div class="mb-2">
                                                                             <label for="hardwareFasternersRejectQty" class="form-label">Reject Qty</label>
-                                                                            <div class="input-group">
+                                                                            <div class="input input-group">
                                                                                 <!--<span class="input-group-text"><i class="bi bi-person"></i></span>-->
                                                                                 <input type="number" class="form-control" id="hardwareFasternersRejectQty" name="hardwareFasternersRejectQty" placeholder="" value="">
                                                                             </div>
@@ -3600,7 +3598,7 @@
                                                                     <div class="col-xl-4 col-sm-12 col-12">
                                                                         <div class="mb-2">
                                                                             <label for="metalFrameReject" class="form-label">Reject Criteria</label>
-                                                                            <div class="input-group">
+                                                                            <div class="input input-group">
                                                                                 <select class="form-control" id="hardwareFasternersReject" name="hardwareFasternersReject"
                                                                                         title="Select Item Usage" data-live-search="true" style="width: 100%">
                                                                                     <option></option>
@@ -3614,7 +3612,7 @@
                                                                 <div class="form-group col-xl-6 col-sm-12 col-12">
                                                                     <div class="mb-2">
                                                                         <label for="hardwareFasternersRejectUpload" class="form-label">Upload</label>
-                                                                        <div class="input-group">
+                                                                        <div class="input input-group">
                                                                             <input class="form-control required" type="file" id="hardwareFasternersRejectUpload" name="hardwareFasternersRejectUpload">
                                                                         </div>
                                                                     </div>
@@ -3659,7 +3657,7 @@
                                                                     <div class="col-xl-2 col-sm-12 col-12">
                                                                         <div class="mb-2">
                                                                             <label for="clipHolderRejectQty" class="form-label">Reject Qty</label>
-                                                                            <div class="input-group">
+                                                                            <div class="input input-group">
                                                                                 <!--<span class="input-group-text"><i class="bi bi-person"></i></span>-->
                                                                                 <input type="number" class="form-control" id="clipHolderRejectQty" name="clipHolderRejectQty" placeholder="" value="">
                                                                             </div>
@@ -3668,7 +3666,7 @@
                                                                     <div class="col-xl-4 col-sm-12 col-12">
                                                                         <div class="mb-2">
                                                                             <label for="metalFrameReject" class="form-label">Reject Criteria</label>
-                                                                            <div class="input-group">
+                                                                            <div class="input input-group">
                                                                                 <select class="form-control" id="clipHolderReject" name="clipHolderReject"
                                                                                         title="Select Item Usage" data-live-search="true" style="width: 100%">
                                                                                     <option></option>
@@ -3682,7 +3680,7 @@
                                                                 <div class="form-group col-xl-6 col-sm-12 col-12">
                                                                     <div class="mb-2">
                                                                         <label for="clipHolderRejectUpload" class="form-label">Upload</label>
-                                                                        <div class="input-group">
+                                                                        <div class="input input-group">
                                                                             <input class="form-control" type="file" id="clipHolderRejectUpload" name="clipHolderRejectUpload">
                                                                         </div>
                                                                     </div>
@@ -3727,7 +3725,7 @@
                                                                     <div class="col-xl-2 col-sm-12 col-12">
                                                                         <div class="mb-2">
                                                                             <label for="pcbEdgeFingerRejectQty" class="form-label">Reject Qty</label>
-                                                                            <div class="input-group">
+                                                                            <div class="input input-group">
                                                                                 <!--<span class="input-group-text"><i class="bi bi-person"></i></span>-->
                                                                                 <input type="number" class="form-control" id="pcbEdgeFingerRejectQty" name="pcbEdgeFingerRejectQty" placeholder="" value="">
                                                                             </div>
@@ -3736,7 +3734,7 @@
                                                                     <div class="col-xl-4 col-sm-12 col-12">
                                                                         <div class="mb-2">
                                                                             <label for="metalFrameReject" class="form-label">Reject Criteria</label>
-                                                                            <div class="input-group">
+                                                                            <div class="input input-group">
                                                                                 <select class="form-control" id="pcbEdgeFingerReject" name="pcbEdgeFingerReject"
                                                                                         title="Select Item Usage" data-live-search="true" style="width: 100%">
                                                                                     <option></option>
@@ -3750,7 +3748,7 @@
                                                                 <div class="form-group col-xl-6 col-sm-12 col-12">
                                                                     <div class="mb-2">
                                                                         <label for="pcbEdgeFingerRejectUpload" class="form-label">Upload</label>
-                                                                        <div class="input-group">
+                                                                        <div class="input input-group">
                                                                             <input class="form-control" type="file" id="pcbEdgeFingerRejectUpload" name="pcbEdgeFingerRejectUpload">
                                                                         </div>
                                                                     </div>
@@ -3796,7 +3794,7 @@
                                                                     <div class="col-xl-2 col-sm-12 col-12">
                                                                         <div class="mb-2">
                                                                             <label for="connectorRejectQty" class="form-label">Reject Qty</label>
-                                                                            <div class="input-group">
+                                                                            <div class="input input-group">
                                                                                 <!--<span class="input-group-text"><i class="bi bi-person"></i></span>-->
                                                                                 <input type="number" class="form-control" id="connectorRejectQty" name="connectorRejectQty" placeholder="" value="">
                                                                             </div>
@@ -3805,7 +3803,7 @@
                                                                     <div class="col-xl-4 col-sm-12 col-12">
                                                                         <div class="mb-2">
                                                                             <label for="metalFrameReject" class="form-label">Reject Criteria</label>
-                                                                            <div class="input-group">
+                                                                            <div class="input input-group">
                                                                                 <select class="form-control" id="connectorReject" name="connectorReject"
                                                                                         title="Select Item Usage" data-live-search="true" style="width: 100%">
                                                                                     <option></option>
@@ -3819,7 +3817,7 @@
                                                                 <div class="form-group col-xl-6 col-sm-12 col-12">
                                                                     <div class="mb-2">
                                                                         <label for="connectorRejectUpload" class="form-label">Upload</label>
-                                                                        <div class="input-group">
+                                                                        <div class="input input-group">
                                                                             <input class="form-control" type="file" id="connectorRejectUpload" name="connectorRejectUpload">
                                                                         </div>
                                                                     </div>
@@ -3865,7 +3863,7 @@
                                                                     <div class="col-xl-2 col-sm-12 col-12">
                                                                         <div class="mb-2">
                                                                             <label for="dutSocketsRejectQty" class="form-label">Reject Qty</label>
-                                                                            <div class="input-group">
+                                                                            <div class="input input-group">
                                                                                 <!--<span class="input-group-text"><i class="bi bi-person"></i></span>-->
                                                                                 <input type="number" class="form-control" id="dutSocketsRejectQty" name="dutSocketsRejectQty" placeholder="" value="">
                                                                             </div>
@@ -3874,7 +3872,7 @@
                                                                     <div class="col-xl-4 col-sm-12 col-12">
                                                                         <div class="mb-2">
                                                                             <label for="metalFrameReject" class="form-label">Reject Criteria</label>
-                                                                            <div class="input-group">
+                                                                            <div class="input input-group">
                                                                                 <select class="form-control" id="dutSocketsReject" name="dutSocketsReject"
                                                                                         title="Select Item Usage" data-live-search="true" style="width: 100%">
                                                                                     <option></option>
@@ -3888,7 +3886,7 @@
                                                                 <div class="form-group col-xl-6 col-sm-12 col-12">
                                                                     <div class="mb-2">
                                                                         <label for="dutSocketsRejectUpload" class="form-label">Upload</label>
-                                                                        <div class="input-group">
+                                                                        <div class="input input-group">
                                                                             <input class="form-control" type="file" id="dutSocketsRejectUpload" name="dutSocketsRejectUpload">
                                                                         </div>
                                                                     </div>
@@ -3934,7 +3932,7 @@
                                                                     <div class="col-xl-2 col-sm-12 col-12">
                                                                         <div class="mb-2">
                                                                             <label for="edgeMbBananaRejectQty" class="form-label">Reject Qty</label>
-                                                                            <div class="input-group">
+                                                                            <div class="input input-group">
                                                                                 <!--<span class="input-group-text"><i class="bi bi-person"></i></span>-->
                                                                                 <input type="number" class="form-control" id="edgeMbBananaRejectQty" name="edgeMbBananaRejectQty" placeholder="" value="">
                                                                             </div>
@@ -3943,7 +3941,7 @@
                                                                     <div class="col-xl-4 col-sm-12 col-12">
                                                                         <div class="mb-2">
                                                                             <label for="metalFrameReject" class="form-label">Reject Criteria</label>
-                                                                            <div class="input-group">
+                                                                            <div class="input input-group">
                                                                                 <select class="form-control" id="edgeMbBananaReject" name="edgeMbBananaReject"
                                                                                         title="Select Item Usage" data-live-search="true" style="width: 100%">
                                                                                     <option></option>
@@ -3957,7 +3955,7 @@
                                                                 <div class="form-group col-xl-6 col-sm-12 col-12">
                                                                     <div class="mb-2">
                                                                         <label for="edgeMbBananaRejectUpload" class="form-label">Upload</label>
-                                                                        <div class="input-group">
+                                                                        <div class="input input-group">
                                                                             <input class="form-control" type="file" id="edgeMbBananaRejectUpload" name="edgeMbBananaRejectUpload">
                                                                         </div>
                                                                     </div>
@@ -4003,7 +4001,7 @@
                                                                     <div class="col-xl-2 col-sm-12 col-12">
                                                                         <div class="mb-2">
                                                                             <label for="electComponentRejectQty" class="form-label">Reject Qty</label>
-                                                                            <div class="input-group">
+                                                                            <div class="input input-group">
                                                                                 <!--<span class="input-group-text"><i class="bi bi-person"></i></span>-->
                                                                                 <input type="number" class="form-control" id="electComponentRejectQty" name="electComponentRejectQty" placeholder="" value="">
                                                                             </div>
@@ -4012,7 +4010,7 @@
                                                                     <div class="col-xl-4 col-sm-12 col-12">
                                                                         <div class="mb-2">
                                                                             <label for="metalFrameReject" class="form-label">Reject Criteria</label>
-                                                                            <div class="input-group">
+                                                                            <div class="input input-group">
                                                                                 <select class="form-control" id="electComponentReject" name="electComponentReject"
                                                                                         title="Select Item Usage" data-live-search="true" style="width: 100%">
                                                                                     <option></option>
@@ -4026,7 +4024,7 @@
                                                                 <div class="form-group col-xl-6 col-sm-12 col-12">
                                                                     <div class="mb-2">
                                                                         <label for="electComponentRejectUpload" class="form-label">Upload</label>
-                                                                        <div class="input-group">
+                                                                        <div class="input input-group">
                                                                             <input class="form-control" type="file" id="electComponentRejectUpload" name="electComponentRejectUpload">
                                                                         </div>
                                                                     </div>
@@ -4072,7 +4070,7 @@
                                                                     <div class="col-xl-2 col-sm-12 col-12">
                                                                         <div class="mb-2">
                                                                             <label for="solderJointRejectQty" class="form-label">Reject Qty</label>
-                                                                            <div class="input-group">
+                                                                            <div class="input input-group">
                                                                                 <!--<span class="input-group-text"><i class="bi bi-person"></i></span>-->
                                                                                 <input type="number" class="form-control" id="solderJointRejectQty" name="solderJointRejectQty" placeholder="" value="">
                                                                             </div>
@@ -4081,7 +4079,7 @@
                                                                     <div class="col-xl-4 col-sm-12 col-12">
                                                                         <div class="mb-2">
                                                                             <label for="metalFrameReject" class="form-label">Reject Criteria</label>
-                                                                            <div class="input-group">
+                                                                            <div class="input input-group">
                                                                                 <select class="form-control" id="solderJointReject" name="solderJointReject"
                                                                                         title="Select Item Usage" data-live-search="true" style="width: 100%">
                                                                                     <option></option>
@@ -4095,7 +4093,7 @@
                                                                 <div class="form-group col-xl-6 col-sm-12 col-12">
                                                                     <div class="mb-2">
                                                                         <label for="solderJointRejectUpload" class="form-label">Upload</label>
-                                                                        <div class="input-group">
+                                                                        <div class="input input-group">
                                                                             <input class="form-control" type="file" id="solderJointRejectUpload" name="solderJointRejectUpload">
                                                                         </div>
                                                                     </div>
@@ -4141,7 +4139,7 @@
                                                                     <div class="col-xl-2 col-sm-12 col-12">
                                                                         <div class="mb-2">
                                                                             <label for="winConnectorRejectQty" class="form-label">Reject Qty</label>
-                                                                            <div class="input-group">
+                                                                            <div class="input input-group">
                                                                                 <!--<span class="input-group-text"><i class="bi bi-person"></i></span>-->
                                                                                 <input type="number" class="form-control" id="winConnectorRejectQty" name="winConnectorRejectQty" placeholder="" value="">
                                                                             </div>
@@ -4150,7 +4148,7 @@
                                                                     <div class="col-xl-4 col-sm-12 col-12">
                                                                         <div class="mb-2">
                                                                             <label for="metalFrameReject" class="form-label">Reject Criteria</label>
-                                                                            <div class="input-group">
+                                                                            <div class="input input-group">
                                                                                 <select class="form-control" id="winConnectorReject" name="winConnectorReject"
                                                                                         title="Select Item Usage" data-live-search="true" style="width: 100%">
                                                                                     <option></option>
@@ -4164,7 +4162,7 @@
                                                                 <div class="form-group col-xl-6 col-sm-12 col-12">
                                                                     <div class="mb-2">
                                                                         <label for="winConnectorRejectUpload" class="form-label">Upload</label>
-                                                                        <div class="input-group">
+                                                                        <div class="input input-group">
                                                                             <input class="form-control" type="file" id="winConnectorRejectUpload" name="winConnectorRejectUpload">
                                                                         </div>
                                                                     </div>
@@ -4222,7 +4220,7 @@
                                                                                 <div class="col-xl-1 col-sm-12 col-12">
                                                                                     <div class="mb-3">
                                                                                         <label for="quantity" class="form-label">Quantity</label>
-                                                                                        <div class="input-group">
+                                                                                        <div class="input input-group">
                                                                                             <input type="text" class="form-control" id="totalQty" name="totalQty" placeholder="" value="${item.totalQty}" readonly>
                                                                                             <input type="hidden" class="form-control" id="id" name="id" placeholder="" value="${item.id}">
                                                                                         </div>
@@ -4231,7 +4229,7 @@
                                                                                 <div class="form-group required col-xl-2 col-sm-12 col-12">
                                                                                     <div class="mb-3">
                                                                                         <label for="bibResult" class="form-label">BIB Result</label>
-                                                                                        <div class="input-group">
+                                                                                        <div class="input input-group">
                                                                                             <select class="select-single js-states form-control" id="bibResult" name="bibResult"
                                                                                                     title="Select Item Usage" data-live-search="true" style="width: 100%" required>
                                                                                                 <option></option>
@@ -4245,7 +4243,7 @@
                                                                                 <div class="form-group col-xl-4 col-sm-12 col-12">
                                                                                     <div class="mb-3">
                                                                                         <label for="itemId" class="form-label">Upload Result</label>
-                                                                                        <div class="input-group">
+                                                                                        <div class="input input-group">
                                                                                             <input class="form-control" type="file" id="formFile">
                                                                                         </div>
                                                                                     </div>
@@ -4274,7 +4272,7 @@
 <!--                                                                                <div class="col-xl-1 col-sm-12 col-12">
                                                                                     <div class="mb-3">
                                                                                         <label for="quantity" class="form-label">Quantity</label>
-                                                                                        <div class="input-group">
+                                                                                        <div class="input input-group">
                                                                                             <input type="text" class="form-control" id="totalQty" name="totalQty" placeholder="" value="${item.totalQty}" readonly>
                                                                                             <input type="hidden" class="form-control" id="id" name="id" placeholder="" value="${item.id}">
                                                                                         </div>
@@ -4283,7 +4281,7 @@
                                                                                 <div class="form-group required col-xl-2 col-sm-12 col-12">
                                                                                     <div class="mb-3">
                                                                                         <label for="manResult" class="form-label">Manual Test Result</label>
-                                                                                        <div class="input-group">
+                                                                                        <div class="input input-group">
                                                                                             <select class="select-single js-states form-control" id="manResult" name="manResult"
                                                                                                     title="Select Manual Test Result" data-live-search="true" style="width: 100%" required>
                                                                                                 <option></option>
@@ -4297,7 +4295,7 @@
                                                                                 <div class="form-group col-xl-4 col-sm-12 col-12">
                                                                                     <div class="mb-3">
                                                                                         <label for="itemId" class="form-label">Upload Result</label>
-                                                                                        <div class="input-group">
+                                                                                        <div class="input input-group">
                                                                                             <input class="form-control" type="file" id="formFile">
                                                                                         </div>
                                                                                     </div>
@@ -4546,7 +4544,7 @@
                                                                                 <div class="col-xl-1 col-sm-12 col-12">
                                                                                     <div class="mb-3">
                                                                                         <label for="quantity" class="form-label">Quantity</label>
-                                                                                        <div class="input-group">
+                                                                                        <div class="input input-group">
                                                                                             <input type="text" class="form-control" id="totalQty" name="totalQty" placeholder="" value="${item.totalQty}" readonly>
                                                                                             <input type="hidden" class="form-control" id="id" name="id" placeholder="" value="${item.id}">
                                                                                         </div>
@@ -4555,7 +4553,7 @@
                                                                                 <div class="form-group required col-xl-2 col-sm-12 col-12">
                                                                                     <div class="mb-3">
                                                                                         <label for="leakResult" class="form-label">Leakage Result</label>
-                                                                                        <div class="input-group">
+                                                                                        <div class="input input-group">
                                                                                             <select class="select-single js-states form-control" id="leakResult" name="leakResult"
                                                                                                     title="Select Leakage Result" data-live-search="true" style="width: 100%" required>
                                                                                                 <option></option>
@@ -4569,7 +4567,7 @@
                                                                                 <div class="form-group col-xl-4 col-sm-12 col-12">
                                                                                     <div class="mb-3">
                                                                                         <label for="itemId" class="form-label">Upload Result</label>
-                                                                                        <div class="input-group">
+                                                                                        <div class="input input-group">
                                                                                             <input class="form-control" type="file" id="formFile">
                                                                                         </div>
                                                                                     </div>
@@ -4599,7 +4597,7 @@
                                                                                 <div class="col-xl-1 col-sm-12 col-12">
                                                                                     <div class="mb-3">
                                                                                         <label for="quantity" class="form-label">Quantity</label>
-                                                                                        <div class="input-group">
+                                                                                        <div class="input input-group">
                                                                                             <input type="text" class="form-control" id="totalQty" name="totalQty" placeholder="" value="${item.totalQty}" readonly>
                                                                                             <input type="hidden" class="form-control" id="id" name="id" placeholder="" value="${item.id}">
                                                                                         </div>
@@ -4608,7 +4606,7 @@
                                                                                 <div class="form-group required col-xl-2 col-sm-12 col-12">
                                                                                     <div class="mb-3">
                                                                                         <label for="psResult" class="form-label">Power Supply Leakage Result</label>
-                                                                                        <div class="input-group">
+                                                                                        <div class="input input-group">
                                                                                             <select class="select-single js-states form-control" id="psResult" name="psResult"
                                                                                                     title="Select Leakage Result" data-live-search="true" style="width: 100%" >
                                                                                                 <option></option>
@@ -4622,7 +4620,7 @@
                                                                                 <div class="form-group col-xl-4 col-sm-12 col-12">
                                                                                     <div class="mb-3">
                                                                                         <label for="itemId" class="form-label">Upload Result</label>
-                                                                                        <div class="input-group">
+                                                                                        <div class="input input-group">
                                                                                             <input class="form-control" type="file" id="formFile">
                                                                                         </div>
                                                                                     </div>
@@ -4652,7 +4650,7 @@
                                                                                 <div class="col-xl-1 col-sm-12 col-12">
                                                                                     <div class="mb-3">
                                                                                         <label for="quantity" class="form-label">Quantity</label>
-                                                                                        <div class="input-group">
+                                                                                        <div class="input input-group">
                                                                                             <input type="text" class="form-control" id="totalQty" name="totalQty" placeholder="" value="${item.totalQty}" readonly>
                                                                                             <input type="hidden" class="form-control" id="id" name="id" placeholder="" value="${item.id}">
                                                                                         </div>
@@ -4661,7 +4659,7 @@
                                                                                 <div class="form-group required col-xl-2 col-sm-12 col-12">
                                                                                     <div class="mb-3">
                                                                                         <label for="winResult" class="form-label">Winchester Chamber Leakage Result</label>
-                                                                                        <div class="input-group">
+                                                                                        <div class="input input-group">
                                                                                             <select class="select-single js-states form-control" id="winResult" name="winResult"
                                                                                                     title="Select Winchester Chamber Leakage Result" data-live-search="true" style="width: 100%" required>
                                                                                                 <option></option>
@@ -4675,7 +4673,7 @@
                                                                                 <div class="form-group col-xl-4 col-sm-12 col-12">
                                                                                     <div class="mb-3">
                                                                                         <label for="itemId" class="form-label">Upload Result</label>
-                                                                                        <div class="input-group">
+                                                                                        <div class="input input-group">
                                                                                             <input class="form-control" type="file" id="formFile">
                                                                                         </div>
                                                                                     </div>

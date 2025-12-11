@@ -457,6 +457,38 @@ public class ItemController {
         List<ParameterDetails> paramItemUsage = pD.getGroupParameterDetailList("", "001");
         model.addAttribute("paramItemUsage", paramItemUsage);
 
+        pD = new ParameterDetailsDAO();
+        List<ParameterDetails> paramItemUsageEqpt = pD.getGroupParameterDetailList("", "018");
+        model.addAttribute("paramItemUsageEqpt", paramItemUsageEqpt);
+
+        ItemDAO itemD = new ItemDAO();
+        List<Item> listAssemblyId = itemD.getItemAssemblyId("");
+        model.addAttribute("listAssemblyId", listAssemblyId);
+
+        itemD = new ItemDAO();
+        List<Item> listModel = itemD.getItemModel("");
+        model.addAttribute("listModel", listModel);
+
+        itemD = new ItemDAO();
+        List<Item> listManufacturer = itemD.getItemManufacturer("");
+        model.addAttribute("listManufacturer", listManufacturer);
+
+        itemD = new ItemDAO();
+        List<Item> listEqptModel = itemD.getItemEqptModel("");
+        model.addAttribute("listEqptModel", listEqptModel);
+
+        itemD = new ItemDAO();
+        List<Item> listEqptType = itemD.getItemEqptType("");
+        model.addAttribute("listEqptType", listEqptType);
+
+        itemD = new ItemDAO();
+        List<Item> listEqptManufacturer = itemD.getItemEqptManufacturer("");
+        model.addAttribute("listEqptManufacturer", listEqptManufacturer);
+
+        itemD = new ItemDAO();
+        List<Item> listStressType = itemD.getItemStressType("");
+        model.addAttribute("listStressType", listStressType);
+
         return "item/item";
 //        return "hardware/hardware_json";
     }
@@ -2519,6 +2551,7 @@ public class ItemController {
 //        if (aluHrs != null || !"".equals(aluHrs)) {
         addItem.put("aluHrs", aluHrs);
 //        }
+        LOGGER.info("isConsumable: " + isConsumable);
         if ("on".equals(isConsumable)) {
             addItem.put("isConsumeable", "1");
         } else {
@@ -2622,6 +2655,73 @@ public class ItemController {
             model2.addAttribute("item2", item2);
             redirectAttrs.addFlashAttribute("error", errorMessage);
 //                        return "spts/add";
+            return "redirect:/hw";
+        }
+
+    }
+
+    @RequestMapping(value = "/item/delete/{itemPKID}/{mibId}", method = {RequestMethod.GET, RequestMethod.POST})
+    public String itemDelete(
+            Model model2,
+            Locale locale,
+            RedirectAttributes redirectAttrs,
+            @ModelAttribute UserSession userSession,
+            @PathVariable("itemPKID") String itemPKID,
+            @PathVariable("mibId") String mibId
+    ) throws IOException {
+
+        //get version from spts first
+        String version = "";
+        String itemID = "";
+        JSONObject params = new JSONObject();
+        params.put("pkID", itemPKID);
+        JSONArray getItemByParam = SPTSWebService.getItemByParam(params);
+        for (int i = 0; i < getItemByParam.length(); i++) {
+            version = getItemByParam.getJSONObject(i).getString("Version");
+            itemID = getItemByParam.getJSONObject(i).getString("ItemID");
+        }
+
+        LOGGER.info("version: " + version);
+        //update to SPTS first then to local DB
+        JSONObject addItem = new JSONObject();
+        addItem.put("version", version);
+        addItem.put("pkID", itemPKID);
+
+        SPTSResponse sr = SPTSWebService.disposeItem(addItem);
+        if (sr.getStatus()) {
+            redirectAttrs.addFlashAttribute("success", "Item updated!");
+            LOGGER.info("+++++++++SPTS Updated+++++++++++");
+            //update SPTS PKID into MIB DB
+
+            Item item = new Item();
+            item.setId(mibId);
+            item.setStatus("Scrapped");
+            item.setFlag("99");
+            ItemDAO itemD = new ItemDAO();
+            QueryResult i = itemD.updateItemStatusAndFlag(item);
+
+            if (i.getResult() == 1) {
+                redirectAttrs.addFlashAttribute("success", "Succesfully Scrap Item ID: " + itemID);
+                return "redirect:/hw";
+            } else {
+                redirectAttrs.addFlashAttribute("error", "Failed to Scrap Item ID: " + itemID + ". Pls contact system admin.");
+                return "redirect:/hw";
+            }
+
+        } else {
+            LinkedHashMap<String, String> item2;
+            ObjectMapper mapper = new ObjectMapper();
+            item2 = mapper.readValue(addItem.toString(), new TypeReference<LinkedHashMap<String, String>>() {
+            });
+            String errorMessage;
+            if (sr.getErrorDetail().equals("")) {
+                errorMessage = sr.getErrorCode() + " - " + sr.getErrorMessage();
+            } else {
+                errorMessage = sr.getErrorCode() + " - " + sr.getErrorDetail();
+            }
+            model2.addAttribute("error", errorMessage);
+            model2.addAttribute("item2", item2);
+            redirectAttrs.addFlashAttribute("error", errorMessage);
             return "redirect:/hw";
         }
 

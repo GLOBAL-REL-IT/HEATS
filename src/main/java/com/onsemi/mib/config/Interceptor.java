@@ -96,6 +96,21 @@ public class Interceptor implements HandlerInterceptor {
             user.setItemHardwareDelete("No");
             user.setItemMovementAdd("No");
             user.setItemSfRecall("No");
+
+            user.setEqptAdd("No");
+            user.setEqptEdit("No");
+            user.setEqptDelete("No");
+            user.setEqptFamilyAdd("No");
+            user.setEqptFamilyDelete("No");
+            user.setEqptRelTestGroupAdd("No");
+            user.setEqptRelTestGroupDelete("No");
+            user.setEqptTechAdd("No");
+            user.setEqptTechDelete("No");
+            user.setEqptMonAdd("No");
+            user.setEqptMonDelete("No");
+            user.setEqptViMonAdd("No");
+            user.setEqptViMonDelete("No");
+
             //Set User Session
             userSession.setId(user.getId());
             userSession.setLoginId(user.getLoginId());
@@ -115,6 +130,21 @@ public class Interceptor implements HandlerInterceptor {
             userSession.setItemHardwareDelete(user.getItemHardwareDelete());
             userSession.setItemMovementAdd(user.getItemMovementAdd());
             userSession.setItemSfRecall(user.getItemSfRecall());
+
+            userSession.setEqptAdd(user.getEqptAdd());
+            userSession.setEqptEdit(user.getEqptEdit());
+            userSession.setEqptDelete(user.getEqptDelete());
+            userSession.setEqptFamilyAdd(user.getEqptFamilyAdd());
+            userSession.setEqptFamilyDelete(user.getEqptFamilyDelete());
+            userSession.setEqptRelTestGroupAdd(user.getEqptRelTestGroupAdd());
+            userSession.setEqptRelTestGroupDelete(user.getEqptRelTestGroupDelete());
+            userSession.setEqptTechAdd(user.getEqptTechAdd());
+            userSession.setEqptTechDelete(user.getEqptTechDelete());
+            userSession.setEqptMonAdd(user.getEqptMonAdd());
+            userSession.setEqptMonDelete(user.getEqptMonDelete());
+            userSession.setEqptViMonAdd(user.getEqptViMonAdd());
+            userSession.setEqptViMonDelete(user.getEqptViMonDelete());
+
         } else {
             //Set Registered User (Remain Using User Model)
             user.setId(ldapUser.getId());
@@ -135,6 +165,20 @@ public class Interceptor implements HandlerInterceptor {
             user.setItemHardwareDelete(ldapUser.getItemHardwareDelete());
             user.setItemMovementAdd(ldapUser.getItemMovementAdd());
             user.setItemSfRecall(ldapUser.getItemSfRecall());
+            user.setEqptAdd(ldapUser.getEqptAdd());
+            user.setEqptEdit(ldapUser.getEqptEdit());
+            user.setEqptDelete(ldapUser.getEqptDelete());
+            user.setEqptFamilyAdd(ldapUser.getEqptFamilyAdd());
+            user.setEqptFamilyDelete(ldapUser.getEqptFamilyDelete());
+            user.setEqptRelTestGroupAdd(ldapUser.getEqptRelTestGroupAdd());
+            user.setEqptRelTestGroupDelete(ldapUser.getEqptRelTestGroupDelete());
+            user.setEqptTechAdd(ldapUser.getEqptTechAdd());
+            user.setEqptTechDelete(ldapUser.getEqptTechDelete());
+            user.setEqptMonAdd(ldapUser.getEqptMonAdd());
+            user.setEqptMonDelete(ldapUser.getEqptMonDelete());
+            user.setEqptViMonAdd(ldapUser.getEqptViMonAdd());
+            user.setEqptViMonDelete(ldapUser.getEqptViMonDelete());
+            
             //Set User Session
             userSession.setId(user.getId());
             userSession.setLoginId(user.getLoginId());
@@ -154,6 +198,19 @@ public class Interceptor implements HandlerInterceptor {
             userSession.setItemHardwareDelete(user.getItemHardwareDelete());
             userSession.setItemMovementAdd(user.getItemMovementAdd());
             userSession.setItemSfRecall(user.getItemSfRecall());
+            userSession.setEqptAdd(user.getEqptAdd());
+            userSession.setEqptEdit(user.getEqptEdit());
+            userSession.setEqptDelete(user.getEqptDelete());
+            userSession.setEqptFamilyAdd(user.getEqptFamilyAdd());
+            userSession.setEqptFamilyDelete(user.getEqptFamilyDelete());
+            userSession.setEqptRelTestGroupAdd(user.getEqptRelTestGroupAdd());
+            userSession.setEqptRelTestGroupDelete(user.getEqptRelTestGroupDelete());
+            userSession.setEqptTechAdd(user.getEqptTechAdd());
+            userSession.setEqptTechDelete(user.getEqptTechDelete());
+            userSession.setEqptMonAdd(user.getEqptMonAdd());
+            userSession.setEqptMonDelete(user.getEqptMonDelete());
+            userSession.setEqptViMonAdd(user.getEqptViMonAdd());
+            userSession.setEqptViMonDelete(user.getEqptViMonDelete());
 
         }
 

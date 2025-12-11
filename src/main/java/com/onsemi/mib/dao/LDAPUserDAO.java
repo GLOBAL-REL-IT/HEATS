@@ -258,6 +258,19 @@ public class LDAPUserDAO {
                         user.setItemHardwareDelete(rs.getString("uac.item_hardware_delete"));
                         user.setItemMovementAdd(rs.getString("uac.item_movement_add"));
                         user.setItemSfRecall(rs.getString("uac.item_sf_recall"));
+                        user.setEqptAdd(rs.getString("uac.eqpt_add"));
+                        user.setEqptEdit(rs.getString("uac.eqpt_edit"));
+                        user.setEqptDelete(rs.getString("uac.eqpt_delete"));
+                        user.setEqptFamilyAdd(rs.getString("uac.eqpt_family_add"));
+                        user.setEqptFamilyDelete(rs.getString("uac.eqpt_family_delete"));
+                        user.setEqptRelTestGroupAdd(rs.getString("uac.eqpt_rel_test_group_add"));
+                        user.setEqptRelTestGroupDelete(rs.getString("uac.eqpt_rel__test_group_delete"));
+                        user.setEqptTechAdd(rs.getString("uac.eqpt_tech_add"));
+                        user.setEqptTechDelete(rs.getString("uac.eqpt_tech_delete"));
+                        user.setEqptMonAdd(rs.getString("uac.eqpt_mon_add"));
+                        user.setEqptMonDelete(rs.getString("uac.eqpt_mon_delete"));
+                        user.setEqptViMonAdd(rs.getString("uac.eqpt_vi_mon_add"));
+                        user.setEqptViMonDelete(rs.getString("uac.eqpt_vi_mon_delete"));
                     }
                     return user;
                 }

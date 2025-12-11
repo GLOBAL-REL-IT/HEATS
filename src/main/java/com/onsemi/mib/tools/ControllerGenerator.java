@@ -16,10 +16,10 @@ import org.apache.commons.lang3.StringUtils;
 public class ControllerGenerator {
 
     public static void main(String[] args) {
-        String table = "sr_hostname";
+        String table = "equipment_vi_monitoring";
         String sql = "SELECT * FROM " + table + " LIMIT 1";
         try {
-            Class.forName("com.mysql.cj.jdbc.Drive");
+           Class.forName("com.mysql.cj.jdbc.Driver");
             Connection conn = null;
             conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/mib?serverTimezone=UTC&useLegacyDatetimeCode=false", "root", "root");
             if (conn != null) {
@@ -206,7 +206,7 @@ public class ControllerGenerator {
                         + "\t}\n";
                 classFileContent += "}";
                 System.out.println(classFileContent);
-                String fileLocation = "C:\\D Drive\\New\\OSTORMS\\src\\main\\java\\com\\onsemi\\ostorms\\controller\\";
+                String fileLocation = "C:\\D Drive\\New\\HEATS\\src\\main\\java\\com\\onsemi\\mib\\controller\\";
                 FileUtils.writeStringToFile(new File(fileLocation + className + ".java"), classFileContent);
                 rs.close();
                 ps.close();
@@ -250,6 +250,7 @@ public class ControllerGenerator {
         String b = "";
         for (int i = 0; i < a.length; i++) {
             if (i == 0) {
+                 b += StringUtils.capitalize(a[i]); //added 18092025
             } else {
                 b += StringUtils.capitalize(a[i]);
             }
@@ -262,6 +263,7 @@ public class ControllerGenerator {
         String b = "";
         for (int i = 0; i < a.length; i++) {
             if (i == 0) {
+                  b += a[i];
             } else if (i == 1) {
                 b += a[i];
             } else {

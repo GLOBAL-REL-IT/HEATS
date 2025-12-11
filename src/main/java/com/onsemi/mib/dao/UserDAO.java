@@ -476,6 +476,19 @@ public class UserDAO {
                 userAccess.setItemHardwareDelete(rs.getString("uac.item_hardware_delete"));
                 userAccess.setItemMovementAdd(rs.getString("uac.item_movement_add"));
                 userAccess.setItemSfRecall(rs.getString("uac.item_sf_recall"));
+                userAccess.setEqptAdd(rs.getString("uac.eqpt_add"));
+                userAccess.setEqptEdit(rs.getString("uac.eqpt_edit"));
+                userAccess.setEqptDelete(rs.getString("uac.eqpt_delete"));
+                userAccess.setEqptFamilyAdd(rs.getString("uac.eqpt_family_add"));
+                userAccess.setEqptFamilyDelete(rs.getString("uac.eqpt_family_delete"));
+                userAccess.setEqptRelTestGroupAdd(rs.getString("uac.eqpt_rel_test_group_add"));
+                userAccess.setEqptRelTestGroupDelete(rs.getString("uac.eqpt_rel__test_group_delete"));
+                userAccess.setEqptTechAdd(rs.getString("uac.eqpt_tech_add"));
+                userAccess.setEqptTechDelete(rs.getString("uac.eqpt_tech_delete"));
+                userAccess.setEqptMonAdd(rs.getString("uac.eqpt_mon_add"));
+                userAccess.setEqptMonDelete(rs.getString("uac.eqpt_mon_delete"));
+                userAccess.setEqptViMonAdd(rs.getString("uac.eqpt_vi_mon_add"));
+                userAccess.setEqptViMonDelete(rs.getString("uac.eqpt_vi_mon_delete"));
             }
             rs.close();
             ps.close();

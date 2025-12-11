@@ -166,33 +166,33 @@
                                                 <select id="isActive" name="isActive" class="form-control">
                                                     <option value="0" <c:if test="${user.isActive == '0'}">selected=""</c:if>>Inactive</option>
                                                     <option value="1" <c:if test="${user.isActive == '1'}">selected=""</c:if>>Active</option>
-                                                    </select>                                       
-                                                </div>
+                                                </select>                                       
                                             </div>
                                         </div>
                                     </div>
-                                    <!-- Form actions start -->
-                                    <div class="col-md-12">
-                                        <button type="submit" id="submit" id="submit" class="btn btn-primary float-end">Update</button>
-                                    </div>
-                                    <!-- Form actions end -->
-                                </form>
-                                <!-- Row end -->
+                                </div>
+                                <!-- Form actions start -->
+                                <div class="col-md-12">
+                                    <button type="submit" id="submit" id="submit" class="btn btn-primary float-end">Update</button>
+                                </div>
+                                <!-- Form actions end -->
+                            </form>
+                            <!-- Row end -->
 
-                            </div>
                         </div>
-                        <!-- Card end -->
                     </div>
-                    <div class="col-sm-10 col-12">
-                        <!-- Card start -->
-                        <div class="card mb-4">
-                            <div class="card-header">
-                                <h5 class="card-title">Configuration - <span style="color:#D97D55">Edit User (Access Control)</span></h5>
-                            </div>
+                    <!-- Card end -->
+                </div>
+                <div class="col-sm-10 col-12">
+                    <!-- Card start -->
+                    <div class="card mb-4">
+                        <div class="card-header">
+                            <h5 class="card-title">Configuration - <span style="color:#D97D55">Edit User (Access Control)</span></h5>
+                        </div>
 
-                            <div class="card-body">
-                                <!-- Row start -->
-                                <form class="row g-3 align-items-center" role="form" action="${contextPath}/admin/user/updateAccess" method="post">
+                        <div class="card-body">
+                            <!-- Row start -->
+                            <form class="row g-3 align-items-center" role="form" action="${contextPath}/admin/user/updateAccess" method="post">
                                 <div class="col-12 mb-1">
                                     <h6 class="fw-semibold mb-1 border-start border-primary ps-2"style="border-left-width: 3px !important;">Hardware Module</h6>
                                 </div>
@@ -202,134 +202,196 @@
                                     <div class="form-check form-check-inline">
                                         <input type="hidden" name="userId" value="${user.id}">
                                         <input class="form-check-input" type="checkbox" id="itemAdd" name="itemAdd" value="Yes" <c:if test="${user.itemAdd == 'Yes'}">checked</c:if>>
-                                            <label class="form-check-label" for="inlineCheckbox1">Add Item</label>
-                                        </div>
-                                        <div class="form-check form-check-inline">
-                                            <input class="form-check-input" type="checkbox" id="itemEdit" name="itemEdit" value="Yes" <c:if test="${user.itemEdit == 'Yes'}">checked</c:if>>
-                                            <label class="form-check-label" for="inlineCheckbox1">Edit Item</label>
-                                        </div>
-                                        <div class="form-check form-check-inline">
-                                            <input class="form-check-input" type="checkbox" id="itemDelete" name="itemDelete" value="Yes" <c:if test="${user.itemDelete == 'Yes'}">checked</c:if>>
-                                            <label class="form-check-label" for="inlineCheckbox1">Delete Item</label>
-                                        </div>
-                                        <div class="form-check form-check-inline">
-                                            <input class="form-check-input" type="checkbox" id="itemHwAdd" name="itemHwAdd" value="Yes" <c:if test="${user.itemHardwareAdd == 'Yes'}">checked</c:if>>
-                                            <label class="form-check-label" for="inlineCheckbox1">Add Hardware ID</label>
-                                        </div>
-                                        <div class="form-check form-check-inline">
-                                            <input class="form-check-input" type="checkbox" id="itemHwEdit" name="itemHwEdit" value="Yes" <c:if test="${user.itemHardwareEdit == 'Yes'}">checked</c:if>>
-                                            <label class="form-check-label" for="inlineCheckbox1">Edit Hardware ID</label>
-                                        </div>
-                                        <div class="form-check form-check-inline">
-                                            <input class="form-check-input" type="checkbox" id="itemHwDelete" name="itemHwDelete" value="Yes" <c:if test="${user.itemHardwareDelete == 'Yes'}">checked</c:if>>
-                                            <label class="form-check-label" for="inlineCheckbox1">Delete Hardware ID</label>
-                                        </div>
-                                        <div class="form-check form-check-inline">
-                                            <input class="form-check-input" type="checkbox" id="itemActConfig" name="itemActConfig" value="Yes" <c:if test="${user.itemActivityConfig == 'Yes'}">checked</c:if>>
-                                            <label class="form-check-label" for="inlineCheckbox1">Access Activity Config</label>
-                                        </div>
-                                        <div class="form-check form-check-inline">
-                                            <input class="form-check-input" type="checkbox" id="itemActAdd" name="itemActAdd" value="Yes" <c:if test="${user.itemActivityAdd == 'Yes'}">checked</c:if>>
-                                            <label class="form-check-label" for="inlineCheckbox1">Add Activity Config</label>
-                                        </div>
-                                        <div class="form-check form-check-inline">
-                                            <input class="form-check-input" type="checkbox" id="itemActEdit" name="itemActEdit" value="Yes" <c:if test="${user.itemActivityEdit == 'Yes'}">checked</c:if>>
-                                            <label class="form-check-label" for="inlineCheckbox1">Edit Activity Config</label>
-                                        </div>
-                                        <div class="form-check form-check-inline">
-                                            <input class="form-check-input" type="checkbox" id="itemMovement" name="itemMovementAdd" value="Yes" <c:if test="${user.itemMovementAdd == 'Yes'}">checked</c:if>>
-                                            <label class="form-check-label" for="inlineCheckbox1">Add Item Movement</label>
-                                        </div>
-                                        <div class="form-check form-check-inline">
-                                            <input class="form-check-input" type="checkbox" id="itemSfRecell" name="itemSfRecall" value="Yes" <c:if test="${user.itemSfRecall == 'Yes'}">checked</c:if>>
-                                            <label class="form-check-label" for="inlineCheckbox1">Recall Item from SF</label>
-                                        </div>
-                                        <!--</div>-->
-                                        <!--</div>-->
+                                        <label class="form-check-label" for="inlineCheckbox1">Add Item</label>
                                     </div>
-                                    <!-- Form actions start -->
-                                    <div class="col-md-12">
-                                        <button type="submit" id="submit" id="submit" class="btn btn-primary float-end">Update</button>
+                                    <div class="form-check form-check-inline">
+                                        <input class="form-check-input" type="checkbox" id="itemEdit" name="itemEdit" value="Yes" <c:if test="${user.itemEdit == 'Yes'}">checked</c:if>>
+                                        <label class="form-check-label" for="inlineCheckbox1">Edit Item</label>
                                     </div>
-                                    <!-- Form actions end -->
-                                </form>
-                                <!-- Row end -->
+                                    <div class="form-check form-check-inline">
+                                        <input class="form-check-input" type="checkbox" id="itemDelete" name="itemDelete" value="Yes" <c:if test="${user.itemDelete == 'Yes'}">checked</c:if>>
+                                        <label class="form-check-label" for="inlineCheckbox1">Delete Item</label>
+                                    </div>
+                                    <div class="form-check form-check-inline">
+                                        <input class="form-check-input" type="checkbox" id="itemHwAdd" name="itemHwAdd" value="Yes" <c:if test="${user.itemHardwareAdd == 'Yes'}">checked</c:if>>
+                                        <label class="form-check-label" for="inlineCheckbox1">Add Hardware ID</label>
+                                    </div>
+                                    <div class="form-check form-check-inline">
+                                        <input class="form-check-input" type="checkbox" id="itemHwEdit" name="itemHwEdit" value="Yes" <c:if test="${user.itemHardwareEdit == 'Yes'}">checked</c:if>>
+                                        <label class="form-check-label" for="inlineCheckbox1">Edit Hardware ID</label>
+                                    </div>
+                                    <div class="form-check form-check-inline">
+                                        <input class="form-check-input" type="checkbox" id="itemHwDelete" name="itemHwDelete" value="Yes" <c:if test="${user.itemHardwareDelete == 'Yes'}">checked</c:if>>
+                                        <label class="form-check-label" for="inlineCheckbox1">Delete Hardware ID</label>
+                                    </div>
+                                    <div class="form-check form-check-inline">
+                                        <input class="form-check-input" type="checkbox" id="itemActConfig" name="itemActConfig" value="Yes" <c:if test="${user.itemActivityConfig == 'Yes'}">checked</c:if>>
+                                        <label class="form-check-label" for="inlineCheckbox1">Access Activity Config</label>
+                                    </div>
+                                    <div class="form-check form-check-inline">
+                                        <input class="form-check-input" type="checkbox" id="itemActAdd" name="itemActAdd" value="Yes" <c:if test="${user.itemActivityAdd == 'Yes'}">checked</c:if>>
+                                        <label class="form-check-label" for="inlineCheckbox1">Add Activity Config</label>
+                                    </div>
+                                    <div class="form-check form-check-inline">
+                                        <input class="form-check-input" type="checkbox" id="itemActEdit" name="itemActEdit" value="Yes" <c:if test="${user.itemActivityEdit == 'Yes'}">checked</c:if>>
+                                        <label class="form-check-label" for="inlineCheckbox1">Edit Activity Config</label>
+                                    </div>
+                                    <div class="form-check form-check-inline">
+                                        <input class="form-check-input" type="checkbox" id="itemMovement" name="itemMovementAdd" value="Yes" <c:if test="${user.itemMovementAdd == 'Yes'}">checked</c:if>>
+                                        <label class="form-check-label" for="inlineCheckbox1">Add Item Movement</label>
+                                    </div>
+                                    <div class="form-check form-check-inline">
+                                        <input class="form-check-input" type="checkbox" id="itemSfRecell" name="itemSfRecall" value="Yes" <c:if test="${user.itemSfRecall == 'Yes'}">checked</c:if>>
+                                        <label class="form-check-label" for="inlineCheckbox1">Recall Item from SF</label>
+                                    </div>
+                                    <!--</div>-->
+                                    <!--</div>-->
+                                </div>
+                                <!--eqpt-->
+                                <div class="col-12 mb-1">
+                                    <h6 class="fw-semibold mb-1 border-start border-primary ps-2"style="border-left-width: 3px !important;">Equipment Module</h6>
+                                </div>
+                                <div class="col-12">
+                                    <!--<div class="card mb-4">-->
+                                    <!--<div class="card-body">-->
+                                    <div class="form-check form-check-inline">
+                                        <input class="form-check-input" type="checkbox" id="eqptAdd" name="eqptAdd" value="Yes" <c:if test="${user.eqptAdd == 'Yes'}">checked</c:if>>
+                                        <label class="form-check-label" for="inlineCheckbox1">Add Eqpt</label>
+                                    </div>
+                                    <div class="form-check form-check-inline">
+                                        <input class="form-check-input" type="checkbox" id="eqptEdit" name="eqptEdit" value="Yes" <c:if test="${user.eqptEdit == 'Yes'}">checked</c:if>>
+                                        <label class="form-check-label" for="inlineCheckbox1">Edit Eqpt</label>
+                                    </div>
+                                    <div class="form-check form-check-inline">
+                                        <input class="form-check-input" type="checkbox" id="eqptDelete" name="eqptDelete" value="Yes" <c:if test="${user.eqptDelete == 'Yes'}">checked</c:if>>
+                                        <label class="form-check-label" for="inlineCheckbox1">Delete Eqpt</label>
+                                    </div>
+                                    <div class="form-check form-check-inline">
+                                        <input class="form-check-input" type="checkbox" id="eqptFamilyAdd" name="eqptFamilyAdd" value="Yes" <c:if test="${user.eqptFamilyAdd == 'Yes'}">checked</c:if>>
+                                        <label class="form-check-label" for="inlineCheckbox1">Add Eqpt Family</label>
+                                    </div>
+                                    <div class="form-check form-check-inline">
+                                        <input class="form-check-input" type="checkbox" id="eqptFamilyDelete" name="eqptFamilyDelete" value="Yes" <c:if test="${user.eqptFamilyDelete == 'Yes'}">checked</c:if>>
+                                        <label class="form-check-label" for="inlineCheckbox1">Delete Eqpt Family</label>
+                                    </div>
+                                    <div class="form-check form-check-inline">
+                                        <input class="form-check-input" type="checkbox" id="eqptRelTestGroupAdd" name="eqptRelTestGroupAdd" value="Yes" <c:if test="${user.eqptRelTestGroupAdd == 'Yes'}">checked</c:if>>
+                                        <label class="form-check-label" for="inlineCheckbox1">Add Eqpt Rel Test Group</label>
+                                    </div>
+                                    <div class="form-check form-check-inline">
+                                        <input class="form-check-input" type="checkbox" id="eqptRelTestGroupDelete" name="eqptRelTestGroupDelete" value="Yes" <c:if test="${user.eqptRelTestGroupDelete == 'Yes'}">checked</c:if>>
+                                        <label class="form-check-label" for="inlineCheckbox1">Delete Eqpt Rel Test Group</label>
+                                    </div>
+                                    <div class="form-check form-check-inline">
+                                        <input class="form-check-input" type="checkbox" id="eqptTechAdd" name="eqptTechAdd" value="Yes" <c:if test="${user.eqptTechAdd == 'Yes'}">checked</c:if>>
+                                        <label class="form-check-label" for="inlineCheckbox1">Add Eqpt Tech</label>
+                                    </div>
+                                    <div class="form-check form-check-inline">
+                                        <input class="form-check-input" type="checkbox" id="eqptTechDelete" name="eqptTechDelete" value="Yes" <c:if test="${user.eqptTechDelete == 'Yes'}">checked</c:if>>
+                                        <label class="form-check-label" for="inlineCheckbox1">Delete Eqpt Tech</label>
+                                    </div>
+                                    <div class="form-check form-check-inline">
+                                        <input class="form-check-input" type="checkbox" id="eqptMonAdd" name="eqptMonAdd" value="Yes" <c:if test="${user.eqptMonAdd == 'Yes'}">checked</c:if>>
+                                        <label class="form-check-label" for="inlineCheckbox1">Add Eqpt Monitoring</label>
+                                    </div>
+                                    <div class="form-check form-check-inline">
+                                        <input class="form-check-input" type="checkbox" id="eqptMonDelete" name="eqptMonDelete" value="Yes" <c:if test="${user.eqptMonDelete == 'Yes'}">checked</c:if>>
+                                        <label class="form-check-label" for="inlineCheckbox1">Delete Eqpt Monitoring</label>
+                                    </div>
+                                        <div class="form-check form-check-inline">
+                                        <input class="form-check-input" type="checkbox" id="eqptViMonAdd" name="eqptViMonAdd" value="Yes" <c:if test="${user.eqptViMonAdd == 'Yes'}">checked</c:if>>
+                                        <label class="form-check-label" for="inlineCheckbox1">Add Eqpt VI Monitoring</label>
+                                    </div>
+                                    <div class="form-check form-check-inline">
+                                        <input class="form-check-input" type="checkbox" id="eqptViMonDelete" name="eqptViMonDelete" value="Yes" <c:if test="${user.eqptViMonDelete == 'Yes'}">checked</c:if>>
+                                        <label class="form-check-label" for="inlineCheckbox1">Delete Eqpt VI Monitoring</label>
+                                    </div>
+                                    <!--</div>-->
+                                    <!--</div>-->
+                                </div>
+                                <!-- Form actions start -->
+                                <div class="col-md-12">
+                                    <button type="submit" id="submit" id="submit" class="btn btn-primary float-end">Update</button>
+                                </div>
+                                <!-- Form actions end -->
+                            </form>
+                            <!-- Row end -->
 
-                            </div>
                         </div>
-                        <!-- Card end -->
                     </div>
+                    <!-- Card end -->
                 </div>
-                <!-- Row end -->
-
-
             </div>
-            <!-- Content wrapper end -->
+            <!-- Row end -->
 
-            <!-- App Footer start -->
-            <div class="app-footer">
-                <img class="img3" src="${contextPath}/resources/onsemi logo.webp" alt="onsemi">
+
+        </div>
+        <!-- Content wrapper end -->
+
+        <!-- App Footer start -->
+        <div class="app-footer">
+            <img class="img3" src="${contextPath}/resources/onsemi logo.webp" alt="onsemi">
             <span>© HEATs 2025</span>
         </div>
-    </div>
-</s:layout-component>
-<s:layout-component name="page_js">
-    <script src="${contextPath}/resources/vendor/DataTables/customitem/jquery-3.7.1.min.js"></script>
-    <script src="${contextPath}/resources/vendor/DataTables/customitem/bootstrap.bundle.min.js"></script>
-    <script src="${contextPath}/resources/vendor/DataTables/customitem/dataTables.js"></script>
+        </div>
+    </s:layout-component>
+    <s:layout-component name="page_js">
+        <script src="${contextPath}/resources/vendor/DataTables/customitem/jquery-3.7.1.min.js"></script>
+        <script src="${contextPath}/resources/vendor/DataTables/customitem/bootstrap.bundle.min.js"></script>
+        <script src="${contextPath}/resources/vendor/DataTables/customitem/dataTables.js"></script>
 
-    <!-- Data Tables -->
-    <script src="${contextPath}/resources/statflow/vendor/datatables/dataTables.min.js"></script>
-    <script src="${contextPath}/resources/statflow/vendor/datatables/dataTables.bootstrap.min.js"></script>
+        <!-- Data Tables -->
+        <script src="${contextPath}/resources/statflow/vendor/datatables/dataTables.min.js"></script>
+        <script src="${contextPath}/resources/statflow/vendor/datatables/dataTables.bootstrap.min.js"></script>
 
-    <!-- Custom Data tables -->
-    <script src="${contextPath}/resources/statflow/vendor/datatables/custom/custom-datatables.js"></script>
+        <!-- Custom Data tables -->
+        <script src="${contextPath}/resources/statflow/vendor/datatables/custom/custom-datatables.js"></script>
 
-    <!-- DataTable Buttons -->
-    <script src="${contextPath}/resources/statflow/vendor/datatables/buttons/dataTables.buttons.min.js"></script>
-    <script src="${contextPath}/resources/statflow/vendor/datatables/buttons/jszip.min.js"></script>
-    <script src="${contextPath}/resources/statflow/vendor/datatables/buttons/dataTables.buttons.min.js"></script>
-    <script src="${contextPath}/resources/statflow/vendor/datatables/buttons/pdfmake.min.js"></script>
-    <script src="${contextPath}/resources/statflow/vendor/datatables/buttons/vfs_fonts.js"></script>
-    <script src="${contextPath}/resources/statflow/vendor/datatables/buttons/buttons.html5.min.js"></script>
-    <script src="${contextPath}/resources/statflow/vendor/datatables/buttons/buttons.print.min.js"></script>
-    <script src="${contextPath}/resources/statflow/vendor/datatables/buttons/buttons.colVis.min.js"></script>
+        <!-- DataTable Buttons -->
+        <script src="${contextPath}/resources/statflow/vendor/datatables/buttons/dataTables.buttons.min.js"></script>
+        <script src="${contextPath}/resources/statflow/vendor/datatables/buttons/jszip.min.js"></script>
+        <script src="${contextPath}/resources/statflow/vendor/datatables/buttons/dataTables.buttons.min.js"></script>
+        <script src="${contextPath}/resources/statflow/vendor/datatables/buttons/pdfmake.min.js"></script>
+        <script src="${contextPath}/resources/statflow/vendor/datatables/buttons/vfs_fonts.js"></script>
+        <script src="${contextPath}/resources/statflow/vendor/datatables/buttons/buttons.html5.min.js"></script>
+        <script src="${contextPath}/resources/statflow/vendor/datatables/buttons/buttons.print.min.js"></script>
+        <script src="${contextPath}/resources/statflow/vendor/datatables/buttons/buttons.colVis.min.js"></script>
 
-    <!-- Bootstrap Select JS -->
-    <script src="${contextPath}/resources/statflow/vendor/bs-select/bs-select.min.js"></script>
-    <script src="${contextPath}/resources/statflow/vendor/bs-select/bs-select-custom.js"></script>
-</s:layout-component>
-<s:layout-component name="page_js_inline">
-    <script>
+        <!-- Bootstrap Select JS -->
+        <script src="${contextPath}/resources/statflow/vendor/bs-select/bs-select.min.js"></script>
+        <script src="${contextPath}/resources/statflow/vendor/bs-select/bs-select-custom.js"></script>
+    </s:layout-component>
+    <s:layout-component name="page_js_inline">
+        <script>
 
-        $(document).ready(function () {
-            $('.js-example-basic-single').select2();
-        });
-
-        $(function () {
-            $("#customButtons1").DataTable({
-                lengthMenu: [
-                    [10, 25, 50],
-                    [10, 25, 50, "All"],
-                ],
-                language: {
-                    lengthMenu: "Display _MENU_ Records Per Page",
-                    info: "Showing Page _PAGE_ of _PAGES_",
-                },
-                dom: "Blfrtip",
-                buttons: ["copy", "csv", "pdf", "print"],
+            $(document).ready(function () {
+                $('.js-example-basic-single').select2();
             });
-        });
+
+            $(function () {
+                $("#customButtons1").DataTable({
+                    lengthMenu: [
+                        [10, 25, 50],
+                        [10, 25, 50, "All"],
+                    ],
+                    language: {
+                        lengthMenu: "Display _MENU_ Records Per Page",
+                        info: "Showing Page _PAGE_ of _PAGES_",
+                    },
+                    dom: "Blfrtip",
+                    buttons: ["copy", "csv", "pdf", "print"],
+                });
+            });
 
 
-        function modalDelete(e) {
-            var deleteId = $(e).attr("modaldeleteid");
-            var deleteInfo = $("#modal_delete_info_" + deleteId).html();
-            var deleteUrl = "${contextPath}/admin/aluConfig/delete/" + deleteId;
-            var deleteMsg = "<f:message key='general.label.delete.confirmation'><f:param value='" + deleteInfo + "'/></f:message>";
-            $("#delete_modal .modal-body").html(deleteMsg);
-            $("#modal_delete_button").attr("href", deleteUrl);
-        }
+            function modalDelete(e) {
+                var deleteId = $(e).attr("modaldeleteid");
+                var deleteInfo = $("#modal_delete_info_" + deleteId).html();
+                var deleteUrl = "${contextPath}/admin/aluConfig/delete/" + deleteId;
+                var deleteMsg = "<f:message key='general.label.delete.confirmation'><f:param value='" + deleteInfo + "'/></f:message>";
+                $("#delete_modal .modal-body").html(deleteMsg);
+                $("#modal_delete_button").attr("href", deleteUrl);
+            }
         </script>
-</s:layout-component>
+    </s:layout-component>
 </s:layout-render>

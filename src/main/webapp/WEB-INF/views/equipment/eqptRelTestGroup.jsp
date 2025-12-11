@@ -87,6 +87,21 @@
                 color: #FFFFFF; /* White text for contrast */
             }
 
+            .input {
+                /*max-width: 190px;*/
+                /*padding: 0.875rem;*/
+                /*font-size: 1rem;*/
+                border: 1.5px solid #000;
+                border-radius: 0.5rem;
+                box-shadow: 2.5px 3px 0 #000;
+                outline: none;
+                transition: ease 0.25s;
+            }
+
+            .input:focus {
+                box-shadow: 5.5px 7px 0 black;
+            }
+
         </style>
     </s:layout-component>
     <s:layout-component name="page_container">
@@ -95,37 +110,28 @@
 
             <!-- Row start -->
             <div class="row gx-4">
-                <!--                <nav class="navbar bg-body-tertiary">
-                                    <div class="container-fluid justify-content-start">
-                                        <button class="btn btn-outline-success me-2" type="button">Pending Registration (BIB/ Bib Card)</button>
-                                        <a href="${contextPath}/hw/item/add" class="btn btn-outline-success me-2" role="button">
-                                            <i class='bi bi-plus-square'></i>&nbsp;&nbsp;Add New</a>
-                                        <a href="${contextPath}/hw/item/pending" class="btn btn-outline-success me-2" role="button">
-                                            <i class='bi bi-hourglass'></i>&nbsp;&nbsp;Pending VM/Functional Test</a>
-                                    </div>
-                                </nav>-->
+                <nav class="navbar bg-body-tertiary">
+                    <div class="container-fluid justify-content-start">
+                        <a href="${contextPath}/equipment" class="btn btn-outline-warning me-2" role="button">
+                            <i class='bi bi-arrow-bar-left'></i>&nbsp;&nbsp;Back</a>
+                    </div>
+                </nav>
                 <div class="col-sm-8 col-12">
                     <!-- Card start -->
                     <div class="card mb-4">
                         <div class="card-header">
-                            <h5 class="card-title">Item ALU Config</h5>
+                            <h5 class="card-title">Eqpt Rel Test Group - <span style="color:#D97D55">New Eqpt Rel Test Group Registration</span></h5>
                         </div>
 
                         <div class="card-body">
                             <!-- Row start -->
-                            <form class="row g-3 align-items-center" role="form" action="${contextPath}/admin/aluConfig/save" method="post">
+                            <form class="row g-3 align-items-center needs-validation" role="form" action="${contextPath}/equipment/relTestGroup/save" method="post" novalidate>
                                 <div class="row mb-3">
-                                    <label class="col-sm-1 col-md-1 col-form-label fw-semibold" for="singleSelect">Item Type</label>
-                                    <div class="col-sm-3 col-md-3">
-                                        <div class="row g-1">
-                                            <div class="col-sm-11 col-md-12">
-                                                <select class="js-example-basic-single" id="itemType" name="itemType"
-                                                        style="width: 100%">
-                                                    <option></option>
-                                                    <c:forEach items="${paramItemType}" var="invInner">
-                                                        <option value="${invInner.name}">${invInner.name}</option>
-                                                    </c:forEach>
-                                                </select>
+                                    <label class="col-sm-2 col-md-2 col-form-label fw-semibold" for="singleSelect">Rel Test Group</label>
+                                    <div class="col-sm-6 col-md-6">
+                                        <div class="row g-2">
+                                            <div class="col-sm-12">
+                                                <input type="text" class="form-control" id="relTestGroup" name="relTestGroup" placeholder="" value="" required>
                                             </div>
                                         </div>
                                     </div>
@@ -151,13 +157,12 @@
                     <!-- Card start -->
                     <div class="card mb-4">
                         <div class="card-header">
-                            <!--<h5 class="card-title">Item Type With ALU Calculation</h5>-->
                             <div class="col-12 mb-3">
-                                    <h5 class="fw-semibold mb-3 border-start border-primary ps-2"
-                                        style="border-left-width: 3px !important;">
-                                        <i class="bi bi-list-ul me-2"></i>Item Type With ALU Calculation
-                                    </h5>
-                                </div>
+                                <h5 class="fw-semibold mb-3 border-start border-primary ps-2"
+                                    style="border-left-width: 3px !important;">
+                                    <i class="bi bi-list-ul me-2"></i>List of Eqpt Rel Test Group
+                                </h5>
+                            </div>
                         </div>
                         <div class="card-body">
 
@@ -169,17 +174,17 @@
                                             <thead>
                                                 <tr>
                                                     <th><span>No</span></th>
-                                                    <th><span>Item Type</span></th>
+                                                    <th><span>Eqpt Rel Test Group</span></th>
                                                     <th><span>Registered By</span></th>
                                                     <th><span>Registered Date</span></th>
                                                     <th class="col-1"><span>Manage</span></th>
                                                 </tr>
                                             </thead>
                                             <tbody>
-                                            <c:forEach items="${Item}" var="parameterMaster" varStatus="parameterMasterLoop">
+                                            <c:forEach items="${eqptRelTestGroup}" var="parameterMaster" varStatus="parameterMasterLoop">
                                                 <tr>
                                                     <td><c:out value="${parameterMasterLoop.index+1}"/></td>
-                                                <td id="modal_delete_info_${parameterMaster.id}"><c:out value="${parameterMaster.itemType}"/></td>
+                                                <td id="modal_delete_info_${parameterMaster.id}"><c:out value="${parameterMaster.relTestGroupName}"/></td>
                                                 <td><c:out value="${parameterMaster.createdBy}"/></td>
                                                 <td><c:out value="${parameterMaster.createdDate}"/></td>
                                                 <td align="center">
@@ -242,6 +247,20 @@
     <s:layout-component name="page_js_inline">
         <script>
 
+                                                        // Fetch all the forms we want to apply custom Bootstrap validation styles to
+                                                        const forms = document.querySelectorAll('.needs-validation');
+
+                                                        // Loop over them and prevent submission
+                                                        Array.prototype.slice.call(forms).forEach((form) => {
+                                                            form.addEventListener('submit', (event) => {
+                                                                if (!form.checkValidity()) {
+                                                                    event.preventDefault();
+                                                                    event.stopPropagation();
+                                                                }
+                                                                form.classList.add('was-validated');
+                                                            }, false);
+                                                        });
+
                                                         $(document).ready(function () {
                                                             $('.js-example-basic-single').select2();
                                                         });
@@ -265,7 +284,7 @@
                                                         function modalDelete(e) {
                                                             var deleteId = $(e).attr("modaldeleteid");
                                                             var deleteInfo = $("#modal_delete_info_" + deleteId).html();
-                                                            var deleteUrl = "${contextPath}/admin/aluConfig/delete/" + deleteId;
+                                                            var deleteUrl = "${contextPath}/equipment/relTestGroup/delete/" + deleteId;
                                                             var deleteMsg = "<f:message key='general.label.delete.confirmation'><f:param value='" + deleteInfo + "'/></f:message>";
                                                             $("#delete_modal .modal-body").html(deleteMsg);
                                                             $("#modal_delete_button").attr("href", deleteUrl);

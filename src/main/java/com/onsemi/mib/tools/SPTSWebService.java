@@ -1,10 +1,12 @@
 package com.onsemi.mib.tools;
 
 import static com.google.common.io.CharStreams.copy;
+import com.onsemi.mib.controller.EquipmentController;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
+import java.util.Arrays;
 import java.util.HashMap;
 import org.apache.commons.httpclient.HttpClient;
 import org.apache.commons.httpclient.methods.PostMethod;
@@ -13,8 +15,12 @@ import org.apache.commons.httpclient.methods.StringRequestEntity;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.json.XML;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class SPTSWebService {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(SPTSWebService.class);
 
 //    private static final String SPTS_WEB_SERVICE_URL = "http://sptstest.jorfei.com/SPTSServices/SPTSServices.asmx";
     private static final String SPTS_WEB_SERVICE_URL = "http://mysed-rel-app04/SPTSServices/SPTSServices.asmx";
@@ -27,8 +33,10 @@ public class SPTSWebService {
     private static final String SPTS_ACTION_GETITEMWITHSFBYPARAM = "http://tempuri.org/GetItemWithSFByParam";
     private static final String SPTS_ACTION_INSERTITEM = "http://tempuri.org/InsertItem";
     private static final String SPTS_ACTION_UPDATEITEM = "http://tempuri.org/UpdateItem";
+    private static final String SPTS_ACTION_UPDATEITEMSTATUS = "http://tempuri.org/UpdateItemStatus";
     private static final String SPTS_ACTION_DELETEITEM = "http://tempuri.org/DeleteItem";
     private static final String SPTS_ACTION_GETITEMACTIVITIESBYPARAM = "http://tempuri.org/GetItemActivitiesByParam";
+    private static final String SPTS_ACTION_DISPOSEITEM = "http://tempuri.org/DisposeItem";
     //EXTRA
     private static final String SPTS_ACTION_GETRACKALL = "http://tempuri.org/GetRackAll";
     private static final String SPTS_ACTION_GETITEMTYPEALL = "http://tempuri.org/GetItemTypeAll";
@@ -43,7 +51,38 @@ public class SPTSWebService {
     private static final String SPTS_ACTION_GETSFITEMBYPARAM = "http://tempuri.org/GetSFItemByParam";
     private static final String SPTS_ACTION_GETTRANSACTIONBYPARAM = "http://tempuri.org/GetTransactionByParam";
     private static final String SPTS_ACTION_DELETETRANSACTION = "http://tempuri.org/DeleteTransaction";
-    
+
+    private static final String SPTS_ACTION_GETEQPTFAMILY = "http://tempuri.org/EquipmentFamily_GetByParam";
+    private static final String SPTS_ACTION_GETEQPTFAMILYBYFAMILYNAME = "http://tempuri.org/EquipmentFamily_GetByFamilyName";
+    private static final String SPTS_ACTION_INSERTEQPTFAMILY = "http://tempuri.org/EquipmentFamily_Add";
+    private static final String SPTS_ACTION_DELETEEQPTFAMILY = "http://tempuri.org/EquipmentFamily_Delete";
+
+    private static final String SPTS_ACTION_GETEQPTRELTESTGROUP = "http://tempuri.org/RelTestGroup_GetByParam";
+    private static final String SPTS_ACTION_GETEQPTRELTESTGROUPBYNAME = "http://tempuri.org/RelTestGroup_GetByRelTestGroupName";
+    private static final String SPTS_ACTION_INSERTEQPTRELTESTGROUP = "http://tempuri.org/RelTestGroup_Add";
+    private static final String SPTS_ACTION_DELETEEQPTRELTESTGROUP = "http://tempuri.org/RelTestGroup_Delete";
+
+    private static final String SPTS_ACTION_GETEQPTMONITORINGBYPARAMS = "http://tempuri.org/EquipMonitoring_GetByParams";
+    private static final String SPTS_ACTION_GETEQPTMONITORINGBYPKID = "http://tempuri.org/EquipMonitoring_GetByPKID";
+    private static final String SPTS_ACTION_INSERTEQPTMONITORING = "http://tempuri.org/EquipMonitoring_Insert";
+    private static final String SPTS_ACTION_DELETEEQPTMONITORING = "http://tempuri.org/EquipMonitoring_DeleteByPKID";
+
+    private static final String SPTS_ACTION_GETEQPTTECHBYPARAMS = "http://tempuri.org/EquipTech_GetByParams";
+    private static final String SPTS_ACTION_GETEQPTTECHBYPKID = "http://tempuri.org/EquipTech_GetByPKID";
+    private static final String SPTS_ACTION_INSERTEQPTTECH = "http://tempuri.org/EquipTech_Insert";
+    private static final String SPTS_ACTION_DELETEEQPTTECH = "http://tempuri.org/EquipTech_DeleteByPKID";
+
+    private static final String SPTS_ACTION_GETEQPTVIMONITORINGBYPARAMS = "http://tempuri.org/VIMonitoring_GetByParams";
+    private static final String SPTS_ACTION_GETEQPTVIMONITORINGBBYPKID = "http://tempuri.org/VIMonitoring_GetByPKID";
+    private static final String SPTS_ACTION_INSERTEQPTVIMONITORING = "http://tempuri.org/VIMonitoring_Insert";
+    private static final String SPTS_ACTION_DELETEEQPTVIMONITORING = "http://tempuri.org/VIMonitoring_DeleteByPKID";
+
+    private static final String SPTS_ACTION_GETGLOBALEQPTFAMILYNAMEALL = "http://tempuri.org/GetGlobalEquipmentFamilyNameAll";
+
+    private static final String GETEQPTBYPARAM = "http://tempuri.org/Equipment_GetByParam";
+    private static final String GETSPTSEQPTGETBYPARAM = "http://tempuri.org/SPTSEquipment_GetByParam";
+    private static final String GETEQPTGETBYRELTESTGROUP = "http://tempuri.org/Equipment_GetByRelTestGroup";
+    private static final String GETEQPTSLOTBYEQPTPKID = "http://tempuri.org/EquipmentSlot_GetByEquipmentPKID";
 
     public static JSONArray getItemAll() throws IOException {
         JSONArray items = new JSONArray();
@@ -327,6 +366,102 @@ public class SPTSWebService {
         return sr;
     }
 
+    public static SPTSResponse updateItemStatus(JSONObject params) throws IOException {
+        SPTSResponse sr = new SPTSResponse();
+        RequestEntity requestEntity = new StringRequestEntity(SPTSRequestXML.updateItemStatus(params), "text/xml", "ISO-8859-1");
+        PostMethod postMethod = new PostMethod(SPTS_WEB_SERVICE_URL);
+        postMethod.setRequestEntity(requestEntity);
+        postMethod.setRequestHeader("SOAPAction", SPTS_ACTION_UPDATEITEMSTATUS);
+        HttpClient httpClient = new HttpClient();
+        int result = httpClient.executeMethod(postMethod);
+        if (result == 200) {
+            InputStream inputStream = postMethod.getResponseBodyAsStream();
+            StringBuilder stringBuilder = new StringBuilder();
+            Reader reader = new InputStreamReader(inputStream, "UTF-8");
+            copy(reader, stringBuilder);
+            reader.close();
+            String xmlString = stringBuilder.toString();
+            JSONObject jsonObject = XML.toJSONObject(xmlString);
+            JSONObject soapEnvelope = jsonObject.getJSONObject("soap:Envelope");
+            JSONObject soapBody = soapEnvelope.getJSONObject("soap:Body");
+            JSONObject getAllItemResponse = soapBody.getJSONObject("UpdateItemStatusResponse");
+            Boolean updateResult = getAllItemResponse.getBoolean("UpdateItemStatusResult");
+            if (updateResult) {
+                sr.setStatus(Boolean.TRUE);
+                sr.setResponseCode(result);
+                sr.setResponseId(0);
+                sr.setErrorCode("");
+                sr.setErrorMessage("");
+                sr.setErrorDetail("");
+            } else {
+                sr.setStatus(Boolean.FALSE);
+                sr.setResponseCode(result);
+                sr.setResponseId(0);
+                sr.setErrorCode("200");
+                sr.setErrorMessage("Update failed!");
+                sr.setErrorDetail("");
+            }
+        } else {
+            String errorResponse = postMethod.getResponseBodyAsString();
+            HashMap error = errorResponse(result, errorResponse);
+            sr.setStatus(Boolean.FALSE);
+            sr.setResponseCode(result);
+            sr.setResponseId(0);
+            sr.setErrorCode(error.get("errorCode").toString());
+            sr.setErrorMessage(error.get("errorMessage").toString());
+            sr.setErrorDetail(error.get("errorDetail").toString());
+        }
+        return sr;
+    }
+
+    public static SPTSResponse disposeItem(JSONObject params) throws IOException {
+        SPTSResponse sr = new SPTSResponse();
+        RequestEntity requestEntity = new StringRequestEntity(SPTSRequestXML.disposeItem(params), "text/xml", "ISO-8859-1");
+        PostMethod postMethod = new PostMethod(SPTS_WEB_SERVICE_URL);
+        postMethod.setRequestEntity(requestEntity);
+        postMethod.setRequestHeader("SOAPAction", SPTS_ACTION_DISPOSEITEM);
+        HttpClient httpClient = new HttpClient();
+        int result = httpClient.executeMethod(postMethod);
+        if (result == 200) {
+            InputStream inputStream = postMethod.getResponseBodyAsStream();
+            StringBuilder stringBuilder = new StringBuilder();
+            Reader reader = new InputStreamReader(inputStream, "UTF-8");
+            copy(reader, stringBuilder);
+            reader.close();
+            String xmlString = stringBuilder.toString();
+            JSONObject jsonObject = XML.toJSONObject(xmlString);
+            JSONObject soapEnvelope = jsonObject.getJSONObject("soap:Envelope");
+            JSONObject soapBody = soapEnvelope.getJSONObject("soap:Body");
+            JSONObject getAllItemResponse = soapBody.getJSONObject("DisposeItemResponse");
+            Boolean updateResult = getAllItemResponse.getBoolean("DisposeItemResult");
+            if (updateResult) {
+                sr.setStatus(Boolean.TRUE);
+                sr.setResponseCode(result);
+                sr.setResponseId(0);
+                sr.setErrorCode("");
+                sr.setErrorMessage("");
+                sr.setErrorDetail("");
+            } else {
+                sr.setStatus(Boolean.FALSE);
+                sr.setResponseCode(result);
+                sr.setResponseId(0);
+                sr.setErrorCode("200");
+                sr.setErrorMessage("Update failed!");
+                sr.setErrorDetail("");
+            }
+        } else {
+            String errorResponse = postMethod.getResponseBodyAsString();
+            HashMap error = errorResponse(result, errorResponse);
+            sr.setStatus(Boolean.FALSE);
+            sr.setResponseCode(result);
+            sr.setResponseId(0);
+            sr.setErrorCode(error.get("errorCode").toString());
+            sr.setErrorMessage(error.get("errorMessage").toString());
+            sr.setErrorDetail(error.get("errorDetail").toString());
+        }
+        return sr;
+    }
+
     public static SPTSResponse deleteItem(JSONObject params) throws IOException {
         SPTSResponse sr = new SPTSResponse();
         RequestEntity requestEntity = new StringRequestEntity(SPTSRequestXML.deleteItem(params), "text/xml", "ISO-8859-1");
@@ -494,7 +629,7 @@ public class SPTSWebService {
         }
         return racks;
     }
-    
+
     public static JSONArray getSubTypeAll() throws IOException {
         JSONArray racks = new JSONArray();
         RequestEntity requestEntity = new StringRequestEntity(SPTSRequestXML.getSubTypeAll(), "text/xml", "ISO-8859-1");
@@ -949,6 +1084,1098 @@ public class SPTSWebService {
                 JSONArray jsonArray = itemDS.optJSONArray("ITEMS");
                 if (jsonArray == null) {
                     JSONObject jo = itemDS.getJSONObject("ITEMS");
+                    JSONArray ja = new JSONArray();
+                    ja.put(jo);
+                    items = ja;
+                } else {
+                    items = jsonArray;
+                }
+            } catch (Exception e) {
+                //Ignore
+            }
+        } else {
+            String errorResponse = postMethod.getResponseBodyAsString();
+            errorResponse(result, errorResponse);
+        }
+        return items;
+    }
+
+    public static JSONArray getEqptFamilyByParam(JSONObject params) throws IOException {
+        JSONArray items = new JSONArray();
+        RequestEntity requestEntity = new StringRequestEntity(SPTSRequestXML.getEqptFamily(params), "text/xml", "ISO-8859-1");
+        PostMethod postMethod = new PostMethod(SPTS_WEB_SERVICE_URL);
+        postMethod.setRequestEntity(requestEntity);
+        postMethod.setRequestHeader("SOAPAction", SPTS_ACTION_GETEQPTFAMILY);
+        HttpClient httpClient = new HttpClient();
+        int result = httpClient.executeMethod(postMethod);
+        if (result == 200) {
+            InputStream inputStream = postMethod.getResponseBodyAsStream();
+            StringBuilder stringBuilder = new StringBuilder();
+            Reader reader = new InputStreamReader(inputStream, "UTF-8");
+            copy(reader, stringBuilder);
+            reader.close();
+            String xmlString = stringBuilder.toString();
+            JSONObject jsonObject = XML.toJSONObject(xmlString);
+            JSONObject soapEnvelope = jsonObject.getJSONObject("soap:Envelope");
+            JSONObject soapBody = soapEnvelope.getJSONObject("soap:Body");
+            JSONObject getAllItemResponse = soapBody.getJSONObject("EquipmentFamily_GetByParamResponse");
+            try {
+                JSONObject getAllItemResult = getAllItemResponse.getJSONObject("EquipmentFamily_GetByParamResult");
+                JSONObject resultContent = getAllItemResult.getJSONObject("diffgr:diffgram");
+                JSONObject itemDS = resultContent.getJSONObject("FamilyData");
+                JSONArray jsonArray = itemDS.optJSONArray("Families");
+                if (jsonArray == null) {
+                    JSONObject jo = itemDS.getJSONObject("Families");
+                    JSONArray ja = new JSONArray();
+                    ja.put(jo);
+                    items = ja;
+                } else {
+                    items = jsonArray;
+                }
+            } catch (Exception e) {
+                //Ignore
+            }
+        } else {
+            String errorResponse = postMethod.getResponseBodyAsString();
+            errorResponse(result, errorResponse);
+        }
+        return items;
+    }
+
+    public static JSONArray getEqptFamilyByFamilyName(JSONObject params) throws IOException {
+        JSONArray items = new JSONArray();
+        RequestEntity requestEntity = new StringRequestEntity(SPTSRequestXML.getEqptFamilyByName(params), "text/xml", "ISO-8859-1");
+        PostMethod postMethod = new PostMethod(SPTS_WEB_SERVICE_URL);
+        postMethod.setRequestEntity(requestEntity);
+        postMethod.setRequestHeader("SOAPAction", SPTS_ACTION_GETEQPTFAMILYBYFAMILYNAME);
+        HttpClient httpClient = new HttpClient();
+        int result = httpClient.executeMethod(postMethod);
+        if (result == 200) {
+            InputStream inputStream = postMethod.getResponseBodyAsStream();
+            StringBuilder stringBuilder = new StringBuilder();
+            Reader reader = new InputStreamReader(inputStream, "UTF-8");
+            copy(reader, stringBuilder);
+            reader.close();
+            String xmlString = stringBuilder.toString();
+            JSONObject jsonObject = XML.toJSONObject(xmlString);
+            JSONObject soapEnvelope = jsonObject.getJSONObject("soap:Envelope");
+            JSONObject soapBody = soapEnvelope.getJSONObject("soap:Body");
+            JSONObject getAllItemResponse = soapBody.getJSONObject("EquipmentFamily_GetByFamilyNameResponse");
+            try {
+                JSONObject getAllItemResult = getAllItemResponse.getJSONObject("EquipmentFamily_GetByFamilyNameResult");
+                JSONObject resultContent = getAllItemResult.getJSONObject("diffgr:diffgram");
+                JSONObject itemDS = resultContent.getJSONObject("FamilyData");
+                JSONArray jsonArray = itemDS.optJSONArray("Family");
+                if (jsonArray == null) {
+                    JSONObject jo = itemDS.getJSONObject("Family");
+                    JSONArray ja = new JSONArray();
+                    ja.put(jo);
+                    items = ja;
+                } else {
+                    items = jsonArray;
+                }
+            } catch (Exception e) {
+                //Ignore
+            }
+        } else {
+            String errorResponse = postMethod.getResponseBodyAsString();
+            errorResponse(result, errorResponse);
+        }
+        return items;
+    }
+
+    public static SPTSResponse insertEqptFamily(JSONObject params) throws IOException {
+        SPTSResponse sr = new SPTSResponse();
+        Integer pkID = 0;
+        RequestEntity requestEntity = new StringRequestEntity(SPTSRequestXML.insertEqptFamily(params), "text/xml", "ISO-8859-1");
+        PostMethod postMethod = new PostMethod(SPTS_WEB_SERVICE_URL);
+        postMethod.setRequestEntity(requestEntity);
+        postMethod.setRequestHeader("SOAPAction", SPTS_ACTION_INSERTEQPTFAMILY);
+        HttpClient httpClient = new HttpClient();
+        int result = httpClient.executeMethod(postMethod);
+        if (result == 200) {
+            InputStream inputStream = postMethod.getResponseBodyAsStream();
+            StringBuilder stringBuilder = new StringBuilder();
+            Reader reader = new InputStreamReader(inputStream, "UTF-8");
+            copy(reader, stringBuilder);
+            reader.close();
+            String xmlString = stringBuilder.toString();
+            JSONObject jsonObject = XML.toJSONObject(xmlString);
+            JSONObject soapEnvelope = jsonObject.getJSONObject("soap:Envelope");
+            JSONObject soapBody = soapEnvelope.getJSONObject("soap:Body");
+            JSONObject getAllItemResponse = soapBody.getJSONObject("EquipmentFamily_AddResponse");
+            Boolean insertResult = getAllItemResponse.getBoolean("EquipmentFamily_AddResult");
+            if (insertResult) {
+                sr.setStatus(Boolean.TRUE);
+                sr.setResponseCode(result);
+                sr.setResponseId(0);
+                sr.setErrorCode("");
+                sr.setErrorMessage("");
+                sr.setErrorDetail("");
+            } else {
+                sr.setStatus(Boolean.FALSE);
+                sr.setResponseCode(result);
+                sr.setResponseId(0);
+                sr.setErrorCode("200");
+                sr.setErrorMessage("Update failed!");
+                sr.setErrorDetail("");
+            }
+        } else {
+            String errorResponse = postMethod.getResponseBodyAsString();
+            HashMap error = errorResponse(result, errorResponse);
+            sr.setStatus(Boolean.FALSE);
+            sr.setResponseCode(result);
+            sr.setResponseId(pkID);
+            sr.setErrorCode(error.get("errorCode").toString());
+            sr.setErrorMessage(error.get("errorMessage").toString());
+            sr.setErrorDetail(error.get("errorDetail").toString());
+        }
+        return sr;
+    }
+
+    public static SPTSResponse deleteEqptFamily(JSONObject params) throws IOException {
+        SPTSResponse sr = new SPTSResponse();
+        RequestEntity requestEntity = new StringRequestEntity(SPTSRequestXML.deleteEqptFamily(params), "text/xml", "ISO-8859-1");
+        PostMethod postMethod = new PostMethod(SPTS_WEB_SERVICE_URL);
+        postMethod.setRequestEntity(requestEntity);
+        postMethod.setRequestHeader("SOAPAction", SPTS_ACTION_DELETEEQPTFAMILY);
+        HttpClient httpClient = new HttpClient();
+        int result = httpClient.executeMethod(postMethod);
+        if (result == 200) {
+            InputStream inputStream = postMethod.getResponseBodyAsStream();
+            StringBuilder stringBuilder = new StringBuilder();
+            Reader reader = new InputStreamReader(inputStream, "UTF-8");
+            copy(reader, stringBuilder);
+            reader.close();
+            String xmlString = stringBuilder.toString();
+            JSONObject jsonObject = XML.toJSONObject(xmlString);
+            JSONObject soapEnvelope = jsonObject.getJSONObject("soap:Envelope");
+            JSONObject soapBody = soapEnvelope.getJSONObject("soap:Body");
+            JSONObject getAllItemResponse = soapBody.getJSONObject("EquipmentFamily_DeleteResponse");
+            Boolean deleteResult = getAllItemResponse.getBoolean("EquipmentFamily_DeleteResult");
+            if (deleteResult) {
+                sr.setStatus(Boolean.TRUE);
+                sr.setResponseCode(result);
+                sr.setResponseId(0);
+                sr.setErrorCode("");
+                sr.setErrorMessage("");
+                sr.setErrorDetail("");
+            } else {
+                sr.setStatus(Boolean.FALSE);
+                sr.setResponseCode(result);
+                sr.setResponseId(0);
+                sr.setErrorCode("200");
+                sr.setErrorMessage("Update failed!");
+                sr.setErrorDetail("");
+            }
+        } else {
+            String errorResponse = postMethod.getResponseBodyAsString();
+            HashMap error = errorResponse(result, errorResponse);
+            sr.setStatus(Boolean.FALSE);
+            sr.setResponseCode(result);
+            sr.setResponseId(0);
+            sr.setErrorCode(error.get("errorCode").toString());
+            sr.setErrorMessage(error.get("errorMessage").toString());
+            sr.setErrorDetail(error.get("errorDetail").toString());
+        }
+        return sr;
+    }
+
+    public static JSONArray getEqptRelTestGroupByParam(JSONObject params) throws IOException {
+        JSONArray items = new JSONArray();
+        RequestEntity requestEntity = new StringRequestEntity(SPTSRequestXML.getEqptRelTestGroup(params), "text/xml", "ISO-8859-1");
+        PostMethod postMethod = new PostMethod(SPTS_WEB_SERVICE_URL);
+        postMethod.setRequestEntity(requestEntity);
+        postMethod.setRequestHeader("SOAPAction", SPTS_ACTION_GETEQPTRELTESTGROUP);
+        HttpClient httpClient = new HttpClient();
+        int result = httpClient.executeMethod(postMethod);
+        if (result == 200) {
+            InputStream inputStream = postMethod.getResponseBodyAsStream();
+            StringBuilder stringBuilder = new StringBuilder();
+            Reader reader = new InputStreamReader(inputStream, "UTF-8");
+            copy(reader, stringBuilder);
+            reader.close();
+            String xmlString = stringBuilder.toString();
+            JSONObject jsonObject = XML.toJSONObject(xmlString);
+            JSONObject soapEnvelope = jsonObject.getJSONObject("soap:Envelope");
+            JSONObject soapBody = soapEnvelope.getJSONObject("soap:Body");
+            JSONObject getAllItemResponse = soapBody.getJSONObject("RelTestGroup_GetByParamResponse");
+            try {
+                JSONObject getAllItemResult = getAllItemResponse.getJSONObject("RelTestGroup_GetByParamResult");
+                JSONObject resultContent = getAllItemResult.getJSONObject("diffgr:diffgram");
+                JSONObject itemDS = resultContent.getJSONObject("RelTestGroupData");
+                JSONArray jsonArray = itemDS.optJSONArray("RelTestGroups");
+                if (jsonArray == null) {
+                    JSONObject jo = itemDS.getJSONObject("RelTestGroups");
+                    JSONArray ja = new JSONArray();
+                    ja.put(jo);
+                    items = ja;
+                } else {
+                    items = jsonArray;
+                }
+            } catch (Exception e) {
+                //Ignore
+            }
+        } else {
+            String errorResponse = postMethod.getResponseBodyAsString();
+            errorResponse(result, errorResponse);
+        }
+        return items;
+    }
+
+    public static JSONArray getEqptRelTestGroupByName(JSONObject params) throws IOException {
+        JSONArray items = new JSONArray();
+        RequestEntity requestEntity = new StringRequestEntity(SPTSRequestXML.getEqptRelTestGroupByName(params), "text/xml", "ISO-8859-1");
+        PostMethod postMethod = new PostMethod(SPTS_WEB_SERVICE_URL);
+        postMethod.setRequestEntity(requestEntity);
+        postMethod.setRequestHeader("SOAPAction", SPTS_ACTION_GETEQPTRELTESTGROUPBYNAME);
+        HttpClient httpClient = new HttpClient();
+        int result = httpClient.executeMethod(postMethod);
+        if (result == 200) {
+            InputStream inputStream = postMethod.getResponseBodyAsStream();
+            StringBuilder stringBuilder = new StringBuilder();
+            Reader reader = new InputStreamReader(inputStream, "UTF-8");
+            copy(reader, stringBuilder);
+            reader.close();
+            String xmlString = stringBuilder.toString();
+            JSONObject jsonObject = XML.toJSONObject(xmlString);
+            JSONObject soapEnvelope = jsonObject.getJSONObject("soap:Envelope");
+            JSONObject soapBody = soapEnvelope.getJSONObject("soap:Body");
+            JSONObject getAllItemResponse = soapBody.getJSONObject("RelTestGroup_GetByRelTestGroupNameResponse");
+            try {
+                JSONObject getAllItemResult = getAllItemResponse.getJSONObject("RelTestGroup_GetByRelTestGroupNameResult");
+                JSONObject resultContent = getAllItemResult.getJSONObject("diffgr:diffgram");
+                JSONObject itemDS = resultContent.getJSONObject("RelTestGroupData");
+                JSONArray jsonArray = itemDS.optJSONArray("RelTestGroup");
+                if (jsonArray == null) {
+                    JSONObject jo = itemDS.getJSONObject("RelTestGroup");
+                    JSONArray ja = new JSONArray();
+                    ja.put(jo);
+                    items = ja;
+                } else {
+                    items = jsonArray;
+                }
+            } catch (Exception e) {
+                //Ignore
+            }
+        } else {
+            String errorResponse = postMethod.getResponseBodyAsString();
+            errorResponse(result, errorResponse);
+        }
+        return items;
+    }
+
+    public static SPTSResponse insertEqptRelTestGroup(JSONObject params) throws IOException {
+        SPTSResponse sr = new SPTSResponse();
+        Integer pkID = 0;
+        RequestEntity requestEntity = new StringRequestEntity(SPTSRequestXML.insertEqptRelTestGroup(params), "text/xml", "ISO-8859-1");
+        PostMethod postMethod = new PostMethod(SPTS_WEB_SERVICE_URL);
+        postMethod.setRequestEntity(requestEntity);
+        postMethod.setRequestHeader("SOAPAction", SPTS_ACTION_INSERTEQPTRELTESTGROUP);
+        HttpClient httpClient = new HttpClient();
+        int result = httpClient.executeMethod(postMethod);
+        if (result == 200) {
+            InputStream inputStream = postMethod.getResponseBodyAsStream();
+            StringBuilder stringBuilder = new StringBuilder();
+            Reader reader = new InputStreamReader(inputStream, "UTF-8");
+            copy(reader, stringBuilder);
+            reader.close();
+            String xmlString = stringBuilder.toString();
+            JSONObject jsonObject = XML.toJSONObject(xmlString);
+            JSONObject soapEnvelope = jsonObject.getJSONObject("soap:Envelope");
+            JSONObject soapBody = soapEnvelope.getJSONObject("soap:Body");
+            JSONObject getAllItemResponse = soapBody.getJSONObject("RelTestGroup_AddResponse");
+            Boolean insertResult = getAllItemResponse.getBoolean("RelTestGroup_AddResult");
+            if (insertResult) {
+                sr.setStatus(Boolean.TRUE);
+                sr.setResponseCode(result);
+                sr.setResponseId(0);
+                sr.setErrorCode("");
+                sr.setErrorMessage("");
+                sr.setErrorDetail("");
+            } else {
+                sr.setStatus(Boolean.FALSE);
+                sr.setResponseCode(result);
+                sr.setResponseId(0);
+                sr.setErrorCode("200");
+                sr.setErrorMessage("Update failed!");
+                sr.setErrorDetail("");
+            }
+        } else {
+            String errorResponse = postMethod.getResponseBodyAsString();
+            HashMap error = errorResponse(result, errorResponse);
+            sr.setStatus(Boolean.FALSE);
+            sr.setResponseCode(result);
+            sr.setResponseId(pkID);
+            sr.setErrorCode(error.get("errorCode").toString());
+            sr.setErrorMessage(error.get("errorMessage").toString());
+            sr.setErrorDetail(error.get("errorDetail").toString());
+        }
+        return sr;
+    }
+
+    public static SPTSResponse deleteEqptRelTestGroup(JSONObject params) throws IOException {
+        SPTSResponse sr = new SPTSResponse();
+        RequestEntity requestEntity = new StringRequestEntity(SPTSRequestXML.deleteEqptRelTestGroup(params), "text/xml", "ISO-8859-1");
+        PostMethod postMethod = new PostMethod(SPTS_WEB_SERVICE_URL);
+        postMethod.setRequestEntity(requestEntity);
+        postMethod.setRequestHeader("SOAPAction", SPTS_ACTION_DELETEEQPTRELTESTGROUP);
+        HttpClient httpClient = new HttpClient();
+        int result = httpClient.executeMethod(postMethod);
+        if (result == 200) {
+            InputStream inputStream = postMethod.getResponseBodyAsStream();
+            StringBuilder stringBuilder = new StringBuilder();
+            Reader reader = new InputStreamReader(inputStream, "UTF-8");
+            copy(reader, stringBuilder);
+            reader.close();
+            String xmlString = stringBuilder.toString();
+            JSONObject jsonObject = XML.toJSONObject(xmlString);
+            JSONObject soapEnvelope = jsonObject.getJSONObject("soap:Envelope");
+            JSONObject soapBody = soapEnvelope.getJSONObject("soap:Body");
+            JSONObject getAllItemResponse = soapBody.getJSONObject("RelTestGroup_DeleteResponse");
+            Boolean deleteResult = getAllItemResponse.getBoolean("RelTestGroup_DeleteResult");
+            if (deleteResult) {
+                sr.setStatus(Boolean.TRUE);
+                sr.setResponseCode(result);
+                sr.setResponseId(0);
+                sr.setErrorCode("");
+                sr.setErrorMessage("");
+                sr.setErrorDetail("");
+            } else {
+                sr.setStatus(Boolean.FALSE);
+                sr.setResponseCode(result);
+                sr.setResponseId(0);
+                sr.setErrorCode("200");
+                sr.setErrorMessage("Update failed!");
+                sr.setErrorDetail("");
+            }
+        } else {
+            String errorResponse = postMethod.getResponseBodyAsString();
+            HashMap error = errorResponse(result, errorResponse);
+            sr.setStatus(Boolean.FALSE);
+            sr.setResponseCode(result);
+            sr.setResponseId(0);
+            sr.setErrorCode(error.get("errorCode").toString());
+            sr.setErrorMessage(error.get("errorMessage").toString());
+            sr.setErrorDetail(error.get("errorDetail").toString());
+        }
+        return sr;
+    }
+
+    public static JSONArray getEqptMonitoringByParam(JSONObject params) throws IOException {
+        JSONArray items = new JSONArray();
+        RequestEntity requestEntity = new StringRequestEntity(SPTSRequestXML.getEqptMonitoringByParam(params), "text/xml", "ISO-8859-1");
+        PostMethod postMethod = new PostMethod(SPTS_WEB_SERVICE_URL);
+        postMethod.setRequestEntity(requestEntity);
+        postMethod.setRequestHeader("SOAPAction", SPTS_ACTION_GETEQPTMONITORINGBYPARAMS);
+        HttpClient httpClient = new HttpClient();
+        int result = httpClient.executeMethod(postMethod);
+        if (result == 200) {
+            InputStream inputStream = postMethod.getResponseBodyAsStream();
+            StringBuilder stringBuilder = new StringBuilder();
+            Reader reader = new InputStreamReader(inputStream, "UTF-8");
+            copy(reader, stringBuilder);
+            reader.close();
+            String xmlString = stringBuilder.toString();
+            JSONObject jsonObject = XML.toJSONObject(xmlString);
+            JSONObject soapEnvelope = jsonObject.getJSONObject("soap:Envelope");
+            JSONObject soapBody = soapEnvelope.getJSONObject("soap:Body");
+            JSONObject getAllItemResponse = soapBody.getJSONObject("EquipMonitoring_GetByParamsResponse");
+            try {
+                JSONObject getAllItemResult = getAllItemResponse.getJSONObject("EquipMonitoring_GetByParamsResult");
+                JSONObject resultContent = getAllItemResult.getJSONObject("diffgr:diffgram");
+                JSONObject itemDS = resultContent.getJSONObject("EquipMonitoringData");
+                JSONArray jsonArray = itemDS.optJSONArray("EquipMonitoring");
+                if (jsonArray == null) {
+                    JSONObject jo = itemDS.getJSONObject("EquipMonitoring");
+                    JSONArray ja = new JSONArray();
+                    ja.put(jo);
+                    items = ja;
+                } else {
+                    items = jsonArray;
+                }
+            } catch (Exception e) {
+                //Ignore
+            }
+        } else {
+            String errorResponse = postMethod.getResponseBodyAsString();
+            errorResponse(result, errorResponse);
+        }
+        return items;
+    }
+
+    public static JSONArray getEqptMonitoringByPkid(JSONObject params) throws IOException {
+        JSONArray items = new JSONArray();
+        RequestEntity requestEntity = new StringRequestEntity(SPTSRequestXML.getEqptMonitoringByPkid(params), "text/xml", "ISO-8859-1");
+        PostMethod postMethod = new PostMethod(SPTS_WEB_SERVICE_URL);
+        postMethod.setRequestEntity(requestEntity);
+        postMethod.setRequestHeader("SOAPAction", SPTS_ACTION_GETEQPTMONITORINGBYPKID);
+        HttpClient httpClient = new HttpClient();
+        int result = httpClient.executeMethod(postMethod);
+        if (result == 200) {
+            InputStream inputStream = postMethod.getResponseBodyAsStream();
+            StringBuilder stringBuilder = new StringBuilder();
+            Reader reader = new InputStreamReader(inputStream, "UTF-8");
+            copy(reader, stringBuilder);
+            reader.close();
+            String xmlString = stringBuilder.toString();
+            JSONObject jsonObject = XML.toJSONObject(xmlString);
+            JSONObject soapEnvelope = jsonObject.getJSONObject("soap:Envelope");
+            JSONObject soapBody = soapEnvelope.getJSONObject("soap:Body");
+            JSONObject getAllItemResponse = soapBody.getJSONObject("EquipMonitoring_GetByPKIDResponse");
+            try {
+                JSONObject getAllItemResult = getAllItemResponse.getJSONObject("EquipMonitoring_GetByPKIDResult");
+                JSONObject resultContent = getAllItemResult.getJSONObject("diffgr:diffgram");
+                JSONObject itemDS = resultContent.getJSONObject("EquipMonitoringData");
+                JSONArray jsonArray = itemDS.optJSONArray("EquipMonitoring");
+                if (jsonArray == null) {
+                    JSONObject jo = itemDS.getJSONObject("EquipMonitoring");
+                    JSONArray ja = new JSONArray();
+                    ja.put(jo);
+                    items = ja;
+                } else {
+                    items = jsonArray;
+                }
+            } catch (Exception e) {
+                //Ignore
+            }
+        } else {
+            String errorResponse = postMethod.getResponseBodyAsString();
+            errorResponse(result, errorResponse);
+        }
+        return items;
+    }
+
+    public static SPTSResponse insertEqptMonitoring(JSONObject params) throws IOException {
+        SPTSResponse sr = new SPTSResponse();
+        Integer pkID = 0;
+        RequestEntity requestEntity = new StringRequestEntity(SPTSRequestXML.insertEqptMonitoring(params), "text/xml", "ISO-8859-1");
+        PostMethod postMethod = new PostMethod(SPTS_WEB_SERVICE_URL);
+        postMethod.setRequestEntity(requestEntity);
+        postMethod.setRequestHeader("SOAPAction", SPTS_ACTION_INSERTEQPTMONITORING);
+        HttpClient httpClient = new HttpClient();
+        int result = httpClient.executeMethod(postMethod);
+        if (result == 200) {
+            InputStream inputStream = postMethod.getResponseBodyAsStream();
+            StringBuilder stringBuilder = new StringBuilder();
+            Reader reader = new InputStreamReader(inputStream, "UTF-8");
+            copy(reader, stringBuilder);
+            reader.close();
+            String xmlString = stringBuilder.toString();
+            JSONObject jsonObject = XML.toJSONObject(xmlString);
+            JSONObject soapEnvelope = jsonObject.getJSONObject("soap:Envelope");
+            JSONObject soapBody = soapEnvelope.getJSONObject("soap:Body");
+            JSONObject getAllItemResponse = soapBody.getJSONObject("EquipMonitoring_InsertResponse");
+            pkID = getAllItemResponse.getInt("EquipMonitoring_InsertResult");
+            sr.setStatus(Boolean.TRUE);
+            sr.setResponseCode(result);
+            sr.setResponseId(pkID);
+            sr.setErrorCode("");
+            sr.setErrorMessage("");
+            sr.setErrorDetail("");
+        } else {
+            String errorResponse = postMethod.getResponseBodyAsString();
+            HashMap error = errorResponse(result, errorResponse);
+            sr.setStatus(Boolean.FALSE);
+            sr.setResponseCode(result);
+            sr.setResponseId(pkID);
+            sr.setErrorCode(error.get("errorCode").toString());
+            sr.setErrorMessage(error.get("errorMessage").toString());
+            sr.setErrorDetail(error.get("errorDetail").toString());
+        }
+        return sr;
+    }
+
+    public static SPTSResponse deleteEqptMonitoring(JSONObject params) throws IOException {
+        SPTSResponse sr = new SPTSResponse();
+        RequestEntity requestEntity = new StringRequestEntity(SPTSRequestXML.deleteEqptMonitoring(params), "text/xml", "ISO-8859-1");
+        PostMethod postMethod = new PostMethod(SPTS_WEB_SERVICE_URL);
+        postMethod.setRequestEntity(requestEntity);
+        postMethod.setRequestHeader("SOAPAction", SPTS_ACTION_DELETEEQPTMONITORING);
+        HttpClient httpClient = new HttpClient();
+        int result = httpClient.executeMethod(postMethod);
+        if (result == 200) {
+            InputStream inputStream = postMethod.getResponseBodyAsStream();
+            StringBuilder stringBuilder = new StringBuilder();
+            Reader reader = new InputStreamReader(inputStream, "UTF-8");
+            copy(reader, stringBuilder);
+            reader.close();
+            String xmlString = stringBuilder.toString();
+            JSONObject jsonObject = XML.toJSONObject(xmlString);
+            JSONObject soapEnvelope = jsonObject.getJSONObject("soap:Envelope");
+            JSONObject soapBody = soapEnvelope.getJSONObject("soap:Body");
+            JSONObject getAllItemResponse = soapBody.getJSONObject("EquipMonitoring_DeleteByPKIDResponse");
+            LOGGER.info("getAllItemResponse: " + getAllItemResponse);
+//            Boolean deleteResult = getAllItemResponse.getBoolean("EquipMonitoring_DeleteByPKIDResponse");
+//            Boolean deleteResult = soapBody.getBoolean("EquipMonitoring_DeleteByPKIDResponse");
+//            if (deleteResult) {
+            sr.setStatus(Boolean.TRUE);
+            sr.setResponseCode(result);
+            sr.setResponseId(0);
+            sr.setErrorCode("");
+            sr.setErrorMessage("");
+            sr.setErrorDetail("");
+//            } else {
+//                sr.setStatus(Boolean.FALSE);
+//                sr.setResponseCode(result);
+//                sr.setResponseId(0);
+//                sr.setErrorCode("200");
+//                sr.setErrorMessage("Update failed!");
+//                sr.setErrorDetail("");
+//            }
+        } else {
+            String errorResponse = postMethod.getResponseBodyAsString();
+            HashMap error = errorResponse(result, errorResponse);
+            sr.setStatus(Boolean.FALSE);
+            sr.setResponseCode(result);
+            sr.setResponseId(0);
+            sr.setErrorCode(error.get("errorCode").toString());
+            sr.setErrorMessage(error.get("errorMessage").toString());
+            sr.setErrorDetail(error.get("errorDetail").toString());
+        }
+        return sr;
+    }
+
+    public static JSONArray getEqptTechByParam(JSONObject params) throws IOException {
+        JSONArray items = new JSONArray();
+        RequestEntity requestEntity = new StringRequestEntity(SPTSRequestXML.getEqptTechByParam(params), "text/xml", "ISO-8859-1");
+        PostMethod postMethod = new PostMethod(SPTS_WEB_SERVICE_URL);
+        postMethod.setRequestEntity(requestEntity);
+        postMethod.setRequestHeader("SOAPAction", SPTS_ACTION_GETEQPTTECHBYPARAMS);
+        HttpClient httpClient = new HttpClient();
+        int result = httpClient.executeMethod(postMethod);
+        if (result == 200) {
+            InputStream inputStream = postMethod.getResponseBodyAsStream();
+            StringBuilder stringBuilder = new StringBuilder();
+            Reader reader = new InputStreamReader(inputStream, "UTF-8");
+            copy(reader, stringBuilder);
+            reader.close();
+            String xmlString = stringBuilder.toString();
+            JSONObject jsonObject = XML.toJSONObject(xmlString);
+            JSONObject soapEnvelope = jsonObject.getJSONObject("soap:Envelope");
+            JSONObject soapBody = soapEnvelope.getJSONObject("soap:Body");
+            JSONObject getAllItemResponse = soapBody.getJSONObject("EquipTech_GetByParamsResponse");
+            try {
+                JSONObject getAllItemResult = getAllItemResponse.getJSONObject("EquipTech_GetByParamsResult");
+                JSONObject resultContent = getAllItemResult.getJSONObject("diffgr:diffgram");
+                JSONObject itemDS = resultContent.getJSONObject("EquipTechData");
+                JSONArray jsonArray = itemDS.optJSONArray("EquipTech");
+                if (jsonArray == null) {
+                    JSONObject jo = itemDS.getJSONObject("EquipTech");
+                    JSONArray ja = new JSONArray();
+                    ja.put(jo);
+                    items = ja;
+                } else {
+                    items = jsonArray;
+                }
+            } catch (Exception e) {
+                //Ignore
+            }
+        } else {
+            String errorResponse = postMethod.getResponseBodyAsString();
+            errorResponse(result, errorResponse);
+        }
+        return items;
+    }
+
+    public static JSONArray getEqptTechByPkid(JSONObject params) throws IOException {
+        JSONArray items = new JSONArray();
+        RequestEntity requestEntity = new StringRequestEntity(SPTSRequestXML.getEqptTechByPkid(params), "text/xml", "ISO-8859-1");
+        PostMethod postMethod = new PostMethod(SPTS_WEB_SERVICE_URL);
+        postMethod.setRequestEntity(requestEntity);
+        postMethod.setRequestHeader("SOAPAction", SPTS_ACTION_GETEQPTTECHBYPKID);
+        HttpClient httpClient = new HttpClient();
+        int result = httpClient.executeMethod(postMethod);
+        if (result == 200) {
+            InputStream inputStream = postMethod.getResponseBodyAsStream();
+            StringBuilder stringBuilder = new StringBuilder();
+            Reader reader = new InputStreamReader(inputStream, "UTF-8");
+            copy(reader, stringBuilder);
+            reader.close();
+            String xmlString = stringBuilder.toString();
+            JSONObject jsonObject = XML.toJSONObject(xmlString);
+            JSONObject soapEnvelope = jsonObject.getJSONObject("soap:Envelope");
+            JSONObject soapBody = soapEnvelope.getJSONObject("soap:Body");
+            JSONObject getAllItemResponse = soapBody.getJSONObject("EquipTech_GetByPKIDResponse");
+            try {
+                JSONObject getAllItemResult = getAllItemResponse.getJSONObject("EquipTech_GetByPKIDResult");
+                JSONObject resultContent = getAllItemResult.getJSONObject("diffgr:diffgram");
+                JSONObject itemDS = resultContent.getJSONObject("EquipTechData");
+                JSONArray jsonArray = itemDS.optJSONArray("EquipTech");
+                if (jsonArray == null) {
+                    JSONObject jo = itemDS.getJSONObject("EquipTech");
+                    JSONArray ja = new JSONArray();
+                    ja.put(jo);
+                    items = ja;
+                } else {
+                    items = jsonArray;
+                }
+            } catch (Exception e) {
+                //Ignore
+            }
+        } else {
+            String errorResponse = postMethod.getResponseBodyAsString();
+            errorResponse(result, errorResponse);
+        }
+        return items;
+    }
+
+    public static SPTSResponse insertEqptTech(JSONObject params) throws IOException {
+        SPTSResponse sr = new SPTSResponse();
+        Integer pkID = 0;
+        RequestEntity requestEntity = new StringRequestEntity(SPTSRequestXML.insertEqptTech(params), "text/xml", "ISO-8859-1");
+        PostMethod postMethod = new PostMethod(SPTS_WEB_SERVICE_URL);
+        postMethod.setRequestEntity(requestEntity);
+        postMethod.setRequestHeader("SOAPAction", SPTS_ACTION_INSERTEQPTTECH);
+        HttpClient httpClient = new HttpClient();
+        int result = httpClient.executeMethod(postMethod);
+        if (result == 200) {
+            InputStream inputStream = postMethod.getResponseBodyAsStream();
+            StringBuilder stringBuilder = new StringBuilder();
+            Reader reader = new InputStreamReader(inputStream, "UTF-8");
+            copy(reader, stringBuilder);
+            reader.close();
+            String xmlString = stringBuilder.toString();
+            JSONObject jsonObject = XML.toJSONObject(xmlString);
+            JSONObject soapEnvelope = jsonObject.getJSONObject("soap:Envelope");
+            JSONObject soapBody = soapEnvelope.getJSONObject("soap:Body");
+            JSONObject getAllItemResponse = soapBody.getJSONObject("EquipTech_InsertResponse");
+            pkID = getAllItemResponse.getInt("EquipTech_InsertResult");
+            sr.setStatus(Boolean.TRUE);
+            sr.setResponseCode(result);
+            sr.setResponseId(pkID);
+            sr.setErrorCode("");
+            sr.setErrorMessage("");
+            sr.setErrorDetail("");
+        } else {
+            String errorResponse = postMethod.getResponseBodyAsString();
+            HashMap error = errorResponse(result, errorResponse);
+            sr.setStatus(Boolean.FALSE);
+            sr.setResponseCode(result);
+            sr.setResponseId(pkID);
+            sr.setErrorCode(error.get("errorCode").toString());
+            sr.setErrorMessage(error.get("errorMessage").toString());
+            sr.setErrorDetail(error.get("errorDetail").toString());
+        }
+        return sr;
+    }
+
+    public static SPTSResponse deleteEqptTech(JSONObject params) throws IOException {
+        SPTSResponse sr = new SPTSResponse();
+        RequestEntity requestEntity = new StringRequestEntity(SPTSRequestXML.deleteEqptTech(params), "text/xml", "ISO-8859-1");
+        PostMethod postMethod = new PostMethod(SPTS_WEB_SERVICE_URL);
+        postMethod.setRequestEntity(requestEntity);
+        postMethod.setRequestHeader("SOAPAction", SPTS_ACTION_DELETEEQPTTECH);
+        HttpClient httpClient = new HttpClient();
+        int result = httpClient.executeMethod(postMethod);
+        if (result == 200) {
+            InputStream inputStream = postMethod.getResponseBodyAsStream();
+            StringBuilder stringBuilder = new StringBuilder();
+            Reader reader = new InputStreamReader(inputStream, "UTF-8");
+            copy(reader, stringBuilder);
+            reader.close();
+            String xmlString = stringBuilder.toString();
+            JSONObject jsonObject = XML.toJSONObject(xmlString);
+            JSONObject soapEnvelope = jsonObject.getJSONObject("soap:Envelope");
+            JSONObject soapBody = soapEnvelope.getJSONObject("soap:Body");
+            JSONObject getAllItemResponse = soapBody.getJSONObject("EquipTech_DeleteByPKIDResponse");
+            LOGGER.info("getAllItemResponse: " + getAllItemResponse);
+//            Boolean deleteResult = getAllItemResponse.getBoolean("EquipMonitoring_DeleteByPKIDResponse");
+//            Boolean deleteResult = soapBody.getBoolean("EquipMonitoring_DeleteByPKIDResponse");
+//            if (deleteResult) {
+            sr.setStatus(Boolean.TRUE);
+            sr.setResponseCode(result);
+            sr.setResponseId(0);
+            sr.setErrorCode("");
+            sr.setErrorMessage("");
+            sr.setErrorDetail("");
+//            } else {
+//                sr.setStatus(Boolean.FALSE);
+//                sr.setResponseCode(result);
+//                sr.setResponseId(0);
+//                sr.setErrorCode("200");
+//                sr.setErrorMessage("Update failed!");
+//                sr.setErrorDetail("");
+//            }
+        } else {
+            String errorResponse = postMethod.getResponseBodyAsString();
+            HashMap error = errorResponse(result, errorResponse);
+            sr.setStatus(Boolean.FALSE);
+            sr.setResponseCode(result);
+            sr.setResponseId(0);
+            sr.setErrorCode(error.get("errorCode").toString());
+            sr.setErrorMessage(error.get("errorMessage").toString());
+            sr.setErrorDetail(error.get("errorDetail").toString());
+        }
+        return sr;
+    }
+
+    public static JSONArray getEqptViMonitoringByParam(JSONObject params) throws IOException {
+        JSONArray items = new JSONArray();
+        RequestEntity requestEntity = new StringRequestEntity(SPTSRequestXML.getEqptViMonitoringByParam(params), "text/xml", "ISO-8859-1");
+        PostMethod postMethod = new PostMethod(SPTS_WEB_SERVICE_URL);
+        postMethod.setRequestEntity(requestEntity);
+        postMethod.setRequestHeader("SOAPAction", SPTS_ACTION_GETEQPTVIMONITORINGBYPARAMS);
+        HttpClient httpClient = new HttpClient();
+        int result = httpClient.executeMethod(postMethod);
+        if (result == 200) {
+            InputStream inputStream = postMethod.getResponseBodyAsStream();
+            StringBuilder stringBuilder = new StringBuilder();
+            Reader reader = new InputStreamReader(inputStream, "UTF-8");
+            copy(reader, stringBuilder);
+            reader.close();
+            String xmlString = stringBuilder.toString();
+            JSONObject jsonObject = XML.toJSONObject(xmlString);
+            JSONObject soapEnvelope = jsonObject.getJSONObject("soap:Envelope");
+            JSONObject soapBody = soapEnvelope.getJSONObject("soap:Body");
+            JSONObject getAllItemResponse = soapBody.getJSONObject("VIMonitoring_GetByParamsResponse");
+            try {
+                JSONObject getAllItemResult = getAllItemResponse.getJSONObject("VIMonitoring_GetByParamsResult");
+                JSONObject resultContent = getAllItemResult.getJSONObject("diffgr:diffgram");
+                JSONObject itemDS = resultContent.getJSONObject("VIMonitoringData");
+                JSONArray jsonArray = itemDS.optJSONArray("VIMonitoring");
+                if (jsonArray == null) {
+                    JSONObject jo = itemDS.getJSONObject("VIMonitoring");
+                    JSONArray ja = new JSONArray();
+                    ja.put(jo);
+                    items = ja;
+                } else {
+                    items = jsonArray;
+                }
+            } catch (Exception e) {
+                //Ignore
+            }
+        } else {
+            String errorResponse = postMethod.getResponseBodyAsString();
+            errorResponse(result, errorResponse);
+        }
+        return items;
+    }
+
+    public static JSONArray getEqptViMonitoringByPkid(JSONObject params) throws IOException {
+        JSONArray items = new JSONArray();
+        RequestEntity requestEntity = new StringRequestEntity(SPTSRequestXML.getEqptViMonitoringByPkid(params), "text/xml", "ISO-8859-1");
+        PostMethod postMethod = new PostMethod(SPTS_WEB_SERVICE_URL);
+        postMethod.setRequestEntity(requestEntity);
+        postMethod.setRequestHeader("SOAPAction", SPTS_ACTION_GETEQPTVIMONITORINGBBYPKID);
+        HttpClient httpClient = new HttpClient();
+        int result = httpClient.executeMethod(postMethod);
+        if (result == 200) {
+            InputStream inputStream = postMethod.getResponseBodyAsStream();
+            StringBuilder stringBuilder = new StringBuilder();
+            Reader reader = new InputStreamReader(inputStream, "UTF-8");
+            copy(reader, stringBuilder);
+            reader.close();
+            String xmlString = stringBuilder.toString();
+            JSONObject jsonObject = XML.toJSONObject(xmlString);
+            JSONObject soapEnvelope = jsonObject.getJSONObject("soap:Envelope");
+            JSONObject soapBody = soapEnvelope.getJSONObject("soap:Body");
+            JSONObject getAllItemResponse = soapBody.getJSONObject("VIMonitoring_GetByPKIDResponse");
+            try {
+                JSONObject getAllItemResult = getAllItemResponse.getJSONObject("VIMonitoring_GetByPKIDResult");
+                JSONObject resultContent = getAllItemResult.getJSONObject("diffgr:diffgram");
+                JSONObject itemDS = resultContent.getJSONObject("VIMonitoringData");
+                JSONArray jsonArray = itemDS.optJSONArray("VIMonitoring");
+                if (jsonArray == null) {
+                    JSONObject jo = itemDS.getJSONObject("VIMonitoring");
+                    JSONArray ja = new JSONArray();
+                    ja.put(jo);
+                    items = ja;
+                } else {
+                    items = jsonArray;
+                }
+            } catch (Exception e) {
+                //Ignore
+            }
+        } else {
+            String errorResponse = postMethod.getResponseBodyAsString();
+            errorResponse(result, errorResponse);
+        }
+        return items;
+    }
+
+    public static SPTSResponse insertEqptViMonitoring(JSONObject params) throws IOException {
+        SPTSResponse sr = new SPTSResponse();
+        Integer pkID = 0;
+        RequestEntity requestEntity = new StringRequestEntity(SPTSRequestXML.insertEqptViMonitoring(params), "text/xml", "ISO-8859-1");
+        PostMethod postMethod = new PostMethod(SPTS_WEB_SERVICE_URL);
+        postMethod.setRequestEntity(requestEntity);
+        postMethod.setRequestHeader("SOAPAction", SPTS_ACTION_INSERTEQPTVIMONITORING);
+        HttpClient httpClient = new HttpClient();
+        int result = httpClient.executeMethod(postMethod);
+        if (result == 200) {
+            InputStream inputStream = postMethod.getResponseBodyAsStream();
+            StringBuilder stringBuilder = new StringBuilder();
+            Reader reader = new InputStreamReader(inputStream, "UTF-8");
+            copy(reader, stringBuilder);
+            reader.close();
+            String xmlString = stringBuilder.toString();
+            JSONObject jsonObject = XML.toJSONObject(xmlString);
+            JSONObject soapEnvelope = jsonObject.getJSONObject("soap:Envelope");
+            JSONObject soapBody = soapEnvelope.getJSONObject("soap:Body");
+            JSONObject getAllItemResponse = soapBody.getJSONObject("VIMonitoring_InsertResponse");
+            pkID = getAllItemResponse.getInt("VIMonitoring_InsertResult");
+            sr.setStatus(Boolean.TRUE);
+            sr.setResponseCode(result);
+            sr.setResponseId(pkID);
+            sr.setErrorCode("");
+            sr.setErrorMessage("");
+            sr.setErrorDetail("");
+        } else {
+            String errorResponse = postMethod.getResponseBodyAsString();
+            HashMap error = errorResponse(result, errorResponse);
+            sr.setStatus(Boolean.FALSE);
+            sr.setResponseCode(result);
+            sr.setResponseId(pkID);
+            sr.setErrorCode(error.get("errorCode").toString());
+            sr.setErrorMessage(error.get("errorMessage").toString());
+            sr.setErrorDetail(error.get("errorDetail").toString());
+        }
+        return sr;
+    }
+
+    public static SPTSResponse deleteEqptViMonitoring(JSONObject params) throws IOException {
+        SPTSResponse sr = new SPTSResponse();
+        RequestEntity requestEntity = new StringRequestEntity(SPTSRequestXML.deleteEqptViMonitoring(params), "text/xml", "ISO-8859-1");
+        PostMethod postMethod = new PostMethod(SPTS_WEB_SERVICE_URL);
+        postMethod.setRequestEntity(requestEntity);
+        postMethod.setRequestHeader("SOAPAction", SPTS_ACTION_DELETEEQPTVIMONITORING);
+        HttpClient httpClient = new HttpClient();
+        int result = httpClient.executeMethod(postMethod);
+        if (result == 200) {
+            InputStream inputStream = postMethod.getResponseBodyAsStream();
+            StringBuilder stringBuilder = new StringBuilder();
+            Reader reader = new InputStreamReader(inputStream, "UTF-8");
+            copy(reader, stringBuilder);
+            reader.close();
+            String xmlString = stringBuilder.toString();
+            JSONObject jsonObject = XML.toJSONObject(xmlString);
+            JSONObject soapEnvelope = jsonObject.getJSONObject("soap:Envelope");
+            JSONObject soapBody = soapEnvelope.getJSONObject("soap:Body");
+            JSONObject getAllItemResponse = soapBody.getJSONObject("VIMonitoring_DeleteByPKIDResponse");
+            LOGGER.info("getAllItemResponse: " + getAllItemResponse);
+//            Boolean deleteResult = getAllItemResponse.getBoolean("EquipMonitoring_DeleteByPKIDResponse");
+//            Boolean deleteResult = soapBody.getBoolean("EquipMonitoring_DeleteByPKIDResponse");
+//            if (deleteResult) {
+            sr.setStatus(Boolean.TRUE);
+            sr.setResponseCode(result);
+            sr.setResponseId(0);
+            sr.setErrorCode("");
+            sr.setErrorMessage("");
+            sr.setErrorDetail("");
+//            } else {
+//                sr.setStatus(Boolean.FALSE);
+//                sr.setResponseCode(result);
+//                sr.setResponseId(0);
+//                sr.setErrorCode("200");
+//                sr.setErrorMessage("Update failed!");
+//                sr.setErrorDetail("");
+//            }
+        } else {
+            String errorResponse = postMethod.getResponseBodyAsString();
+            HashMap error = errorResponse(result, errorResponse);
+            sr.setStatus(Boolean.FALSE);
+            sr.setResponseCode(result);
+            sr.setResponseId(0);
+            sr.setErrorCode(error.get("errorCode").toString());
+            sr.setErrorMessage(error.get("errorMessage").toString());
+            sr.setErrorDetail(error.get("errorDetail").toString());
+        }
+        return sr;
+    }
+
+    public static JSONArray getGlobalEqptFamilyNameAll() throws IOException {
+        JSONArray items = new JSONArray();
+        RequestEntity requestEntity = new StringRequestEntity(SPTSRequestXML.getGlobalFamilyNameAll(), "text/xml", "ISO-8859-1");
+        PostMethod postMethod = new PostMethod(SPTS_WEB_SERVICE_URL);
+        postMethod.setRequestEntity(requestEntity);
+        postMethod.setRequestHeader("SOAPAction", SPTS_ACTION_GETGLOBALEQPTFAMILYNAMEALL);
+        HttpClient httpClient = new HttpClient();
+        int result = httpClient.executeMethod(postMethod);
+        if (result == 200) {
+            InputStream inputStream = postMethod.getResponseBodyAsStream();
+            StringBuilder stringBuilder = new StringBuilder();
+            Reader reader = new InputStreamReader(inputStream, "UTF-8");
+            copy(reader, stringBuilder);
+            reader.close();
+            String xmlString = stringBuilder.toString();
+            JSONObject jsonObject = XML.toJSONObject(xmlString);
+            JSONObject soapEnvelope = jsonObject.getJSONObject("soap:Envelope");
+            JSONObject soapBody = soapEnvelope.getJSONObject("soap:Body");
+            JSONObject getAllItemResponse = soapBody.getJSONObject("GetGlobalEquipmentFamilyNameAllResponse");
+            JSONObject getAllItemResult = getAllItemResponse.getJSONObject("GetGlobalEquipmentFamilyNameAllResult");
+            JSONObject resultContent = getAllItemResult.getJSONObject("diffgr:diffgram");
+            JSONObject itemDS = resultContent.getJSONObject("GlobalEquipmentFamilyNameDS");
+            JSONArray jsonArray = itemDS.optJSONArray("GLOBALEQUIPMENTFAMILYNAME");
+            if (jsonArray == null) {
+                JSONObject jo = itemDS.getJSONObject("GLOBALEQUIPMENTFAMILYNAME");
+                JSONArray ja = new JSONArray();
+                ja.put(jo);
+                items = ja;
+            } else {
+                items = jsonArray;
+            }
+        } else {
+            String errorResponse = postMethod.getResponseBodyAsString();
+            errorResponse(result, errorResponse);
+        }
+        return items;
+    }
+
+    public static JSONArray getSptsEqptByParam(JSONObject params) throws IOException {
+        JSONArray items = new JSONArray();
+        RequestEntity requestEntity = new StringRequestEntity(SPTSRequestXML.getSptsEqptByParam(params), "text/xml", "ISO-8859-1");
+        PostMethod postMethod = new PostMethod(SPTS_WEB_SERVICE_URL);
+        postMethod.setRequestEntity(requestEntity);
+        postMethod.setRequestHeader("SOAPAction", GETSPTSEQPTGETBYPARAM);
+        HttpClient httpClient = new HttpClient();
+        int result = httpClient.executeMethod(postMethod);
+        if (result == 200) {
+            InputStream inputStream = postMethod.getResponseBodyAsStream();
+//            System.out.println("postMethod.getResponseBodyAsString(): " + postMethod.getResponseBodyAsString());
+            
+            StringBuilder stringBuilder = new StringBuilder();
+            Reader reader = new InputStreamReader(inputStream, "UTF-8");
+            copy(reader, stringBuilder);
+            reader.close();
+            String xmlString = stringBuilder.toString();
+            JSONObject jsonObject = XML.toJSONObject(xmlString);
+            JSONObject soapEnvelope = jsonObject.getJSONObject("soap:Envelope");
+            JSONObject soapBody = soapEnvelope.getJSONObject("soap:Body");
+            JSONObject getAllItemResponse = soapBody.getJSONObject("SPTSEquipment_GetByParamResponse");
+            try {
+                JSONObject getAllItemResult = getAllItemResponse.getJSONObject("SPTSEquipment_GetByParamResult");
+                JSONObject resultContent = getAllItemResult.getJSONObject("diffgr:diffgram");
+                JSONObject itemDS = resultContent.getJSONObject("EquipmentData");
+                JSONArray jsonArray = itemDS.optJSONArray("SPTSEquipment");
+                if (jsonArray == null) {
+                    JSONObject jo = itemDS.getJSONObject("SPTSEquipment");
+                    JSONArray ja = new JSONArray();
+                    ja.put(jo);
+                    items = ja;
+                } else {
+                    items = jsonArray;
+                }
+            } catch (Exception e) {
+                //Ignore
+            }
+        } else {
+            String errorResponse = postMethod.getResponseBodyAsString();
+            errorResponse(result, errorResponse);
+        }
+        return items;
+    }
+
+    public static JSONArray getEqptByRelTestGroup(JSONObject params) throws IOException {
+        JSONArray items = new JSONArray();
+        RequestEntity requestEntity = new StringRequestEntity(SPTSRequestXML.getEqptByRelTestGroup(params), "text/xml", "ISO-8859-1");
+        PostMethod postMethod = new PostMethod(SPTS_WEB_SERVICE_URL);
+        postMethod.setRequestEntity(requestEntity);
+        postMethod.setRequestHeader("SOAPAction", GETEQPTGETBYRELTESTGROUP);
+        HttpClient httpClient = new HttpClient();
+        int result = httpClient.executeMethod(postMethod);
+        if (result == 200) {
+            InputStream inputStream = postMethod.getResponseBodyAsStream();
+            StringBuilder stringBuilder = new StringBuilder();
+            Reader reader = new InputStreamReader(inputStream, "UTF-8");
+            copy(reader, stringBuilder);
+            reader.close();
+            String xmlString = stringBuilder.toString();
+            JSONObject jsonObject = XML.toJSONObject(xmlString);
+            JSONObject soapEnvelope = jsonObject.getJSONObject("soap:Envelope");
+            JSONObject soapBody = soapEnvelope.getJSONObject("soap:Body");
+            JSONObject getAllItemResponse = soapBody.getJSONObject("Equipment_GetByRelTestGroupResponse");
+            try {
+                JSONObject getAllItemResult = getAllItemResponse.getJSONObject("Equipment_GetByRelTestGroupResult");
+                JSONObject resultContent = getAllItemResult.getJSONObject("diffgr:diffgram");
+                JSONObject itemDS = resultContent.getJSONObject("EquipmentData");
+                JSONArray jsonArray = itemDS.optJSONArray("Equipments");
+                if (jsonArray == null) {
+                    JSONObject jo = itemDS.getJSONObject("Equipments");
+                    JSONArray ja = new JSONArray();
+                    ja.put(jo);
+                    items = ja;
+                } else {
+                    items = jsonArray;
+                }
+            } catch (Exception e) {
+                //Ignore
+            }
+        } else {
+            String errorResponse = postMethod.getResponseBodyAsString();
+            errorResponse(result, errorResponse);
+        }
+        return items;
+    }
+
+    public static JSONArray getEqptSlotByEqptPkid(JSONObject params) throws IOException {
+        JSONArray items = new JSONArray();
+        RequestEntity requestEntity = new StringRequestEntity(SPTSRequestXML.getEqptSlotByEqptPkid(params), "text/xml", "ISO-8859-1");
+        PostMethod postMethod = new PostMethod(SPTS_WEB_SERVICE_URL);
+        postMethod.setRequestEntity(requestEntity);
+        postMethod.setRequestHeader("SOAPAction", GETEQPTSLOTBYEQPTPKID);
+        HttpClient httpClient = new HttpClient();
+        int result = httpClient.executeMethod(postMethod);
+        if (result == 200) {
+            InputStream inputStream = postMethod.getResponseBodyAsStream();
+            StringBuilder stringBuilder = new StringBuilder();
+            Reader reader = new InputStreamReader(inputStream, "UTF-8");
+            copy(reader, stringBuilder);
+            reader.close();
+            String xmlString = stringBuilder.toString();
+            JSONObject jsonObject = XML.toJSONObject(xmlString);
+            JSONObject soapEnvelope = jsonObject.getJSONObject("soap:Envelope");
+            JSONObject soapBody = soapEnvelope.getJSONObject("soap:Body");
+            JSONObject getAllItemResponse = soapBody.getJSONObject("EquipmentSlot_GetByEquipmentPKIDResponse");
+            try {
+                JSONObject getAllItemResult = getAllItemResponse.getJSONObject("EquipmentSlot_GetByEquipmentPKIDResult");
+                JSONObject resultContent = getAllItemResult.getJSONObject("diffgr:diffgram");
+                JSONObject itemDS = resultContent.getJSONObject("EquipmentSlotData");
+                JSONArray jsonArray = itemDS.optJSONArray("EquipmentSlots");
+                if (jsonArray == null) {
+                    JSONObject jo = itemDS.getJSONObject("EquipmentSlots");
+                    JSONArray ja = new JSONArray();
+                    ja.put(jo);
+                    items = ja;
+                } else {
+                    items = jsonArray;
+                }
+            } catch (Exception e) {
+                //Ignore
+            }
+        } else {
+            String errorResponse = postMethod.getResponseBodyAsString();
+            errorResponse(result, errorResponse);
+        }
+        return items;
+    }
+    
+    public static JSONArray getEqptByParam(JSONObject params) throws IOException {
+        JSONArray items = new JSONArray();
+        RequestEntity requestEntity = new StringRequestEntity(SPTSRequestXML.getEqptbyParam(params), "text/xml", "ISO-8859-1");
+        PostMethod postMethod = new PostMethod(SPTS_WEB_SERVICE_URL);
+        postMethod.setRequestEntity(requestEntity);
+        postMethod.setRequestHeader("SOAPAction", GETEQPTBYPARAM);
+        HttpClient httpClient = new HttpClient();
+        int result = httpClient.executeMethod(postMethod);
+        if (result == 200) {
+            InputStream inputStream = postMethod.getResponseBodyAsStream();
+            StringBuilder stringBuilder = new StringBuilder();
+            Reader reader = new InputStreamReader(inputStream, "UTF-8");
+            copy(reader, stringBuilder);
+            reader.close();
+            String xmlString = stringBuilder.toString();
+            JSONObject jsonObject = XML.toJSONObject(xmlString);
+            JSONObject soapEnvelope = jsonObject.getJSONObject("soap:Envelope");
+            JSONObject soapBody = soapEnvelope.getJSONObject("soap:Body");
+            JSONObject getAllItemResponse = soapBody.getJSONObject("Equipment_GetByParamResponse");
+            try {
+                JSONObject getAllItemResult = getAllItemResponse.getJSONObject("Equipment_GetByParamResult");
+                JSONObject resultContent = getAllItemResult.getJSONObject("diffgr:diffgram");
+                JSONObject itemDS = resultContent.getJSONObject("EquipmentData");
+                JSONArray jsonArray = itemDS.optJSONArray("Equipments");
+                if (jsonArray == null) {
+                    JSONObject jo = itemDS.getJSONObject("Equipments");
                     JSONArray ja = new JSONArray();
                     ja.put(jo);
                     items = ja;

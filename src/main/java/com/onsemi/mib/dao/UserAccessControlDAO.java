@@ -30,7 +30,10 @@ public class UserAccessControlDAO {
         QueryResult queryResult = new QueryResult();
         try {
             PreparedStatement ps = conn.prepareStatement(
-                    "INSERT INTO user_access_control (user_id, item_add, item_edit, item_delete, item_activity_config, item_activity_add, item_activity_edit, item_hardware_add, item_hardware_edit, item_hardware_delete, item_movement_add, item_sf_recall) VALUES (?,?,?,?,?,?,?,?,?,?,?,?)", Statement.RETURN_GENERATED_KEYS
+                    "INSERT INTO user_access_control (user_id, item_add, item_edit, item_delete, item_activity_config, item_activity_add, item_activity_edit, "
+                    + "item_hardware_add, item_hardware_edit, item_hardware_delete, item_movement_add, item_sf_recall, eqpt_add, eqpt_edit, eqpt_delete, eqpt_family_add, eqpt_family_delete, eqpt_rel_test_group_add, eqpt_rel__test_group_delete, "
+                    + "eqpt_tech_add, eqpt_tech_delete, eqpt_mon_add, eqpt_mon_delete, eqpt_vi_mon_add, eqpt_vi_mon_delete) "
+                    + "VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)", Statement.RETURN_GENERATED_KEYS
             );
             ps.setString(1, useraccessControl.getUserId());
             ps.setString(2, useraccessControl.getItemAdd());
@@ -44,6 +47,19 @@ public class UserAccessControlDAO {
             ps.setString(10, useraccessControl.getItemHardwareDelete());
             ps.setString(11, useraccessControl.getItemMovementAdd());
             ps.setString(12, useraccessControl.getItemSfRecall());
+            ps.setString(13, useraccessControl.getEqptAdd());
+            ps.setString(14, useraccessControl.getEqptEdit());
+            ps.setString(15, useraccessControl.getEqptDelete());
+            ps.setString(16, useraccessControl.getEqptFamilyAdd());
+            ps.setString(17, useraccessControl.getEqptFamilyDelete());
+            ps.setString(18, useraccessControl.getEqptRelTestGroupAdd());
+            ps.setString(19, useraccessControl.getEqptRelTestGroupDelete());
+            ps.setString(20, useraccessControl.getEqptTechAdd());
+            ps.setString(21, useraccessControl.getEqptTechDelete());
+            ps.setString(22, useraccessControl.getEqptMonAdd());
+            ps.setString(23, useraccessControl.getEqptMonDelete());
+            ps.setString(24, useraccessControl.getEqptViMonAdd());
+            ps.setString(25, useraccessControl.getEqptViMonDelete());
             queryResult.setResult(ps.executeUpdate());
             ResultSet rs = ps.getGeneratedKeys();
             if (rs.next()) {
@@ -106,7 +122,10 @@ public class UserAccessControlDAO {
         QueryResult queryResult = new QueryResult();
         try {
             PreparedStatement ps = conn.prepareStatement(
-                    "UPDATE user_access_control SET user_id = ?, item_add = ?, item_edit = ?, item_delete = ?, item_activity_config = ?, item_activity_add = ?, item_activity_edit = ?, item_hardware_add = ?, item_hardware_edit = ?, item_hardware_delete = ?, item_movement_add = ?, item_sf_recall = ? WHERE user_id = ?"
+                    "UPDATE user_access_control SET user_id = ?, item_add = ?, item_edit = ?, item_delete = ?, item_activity_config = ?, item_activity_add = ?, item_activity_edit = ?, item_hardware_add = ?, "
+                            + "item_hardware_edit = ?, item_hardware_delete = ?, item_movement_add = ?, item_sf_recall = ?, eqpt_add = ?, eqpt_edit = ?, eqpt_delete = ?, eqpt_family_add = ?, eqpt_family_delete = ?"
+                            + ", eqpt_rel_test_group_add = ?, eqpt_rel__test_group_delete = ?, eqpt_tech_add = ?, eqpt_tech_delete = ?, eqpt_mon_add = ?, eqpt_mon_delete = ?, eqpt_vi_mon_add = ?, eqpt_vi_mon_delete = ? "
+                            + "WHERE user_id = ?"
             );
             ps.setString(1, useraccessControl.getUserId());
             ps.setString(2, useraccessControl.getItemAdd());
@@ -120,7 +139,20 @@ public class UserAccessControlDAO {
             ps.setString(10, useraccessControl.getItemHardwareDelete());
             ps.setString(11, useraccessControl.getItemMovementAdd());
             ps.setString(12, useraccessControl.getItemSfRecall());
-            ps.setString(13, useraccessControl.getUserId());
+            ps.setString(13, useraccessControl.getEqptAdd());
+            ps.setString(14, useraccessControl.getEqptEdit());
+            ps.setString(15, useraccessControl.getEqptDelete());
+            ps.setString(16, useraccessControl.getEqptFamilyAdd());
+            ps.setString(17, useraccessControl.getEqptFamilyDelete());
+            ps.setString(18, useraccessControl.getEqptRelTestGroupAdd());
+            ps.setString(19, useraccessControl.getEqptRelTestGroupDelete());
+            ps.setString(20, useraccessControl.getEqptTechAdd());
+            ps.setString(21, useraccessControl.getEqptTechDelete());
+            ps.setString(22, useraccessControl.getEqptMonAdd());
+            ps.setString(23, useraccessControl.getEqptMonDelete());
+            ps.setString(24, useraccessControl.getEqptViMonAdd());
+            ps.setString(25, useraccessControl.getEqptViMonDelete());
+            ps.setString(26, useraccessControl.getUserId());
             queryResult.setResult(ps.executeUpdate());
             ps.close();
         } catch (SQLException e) {

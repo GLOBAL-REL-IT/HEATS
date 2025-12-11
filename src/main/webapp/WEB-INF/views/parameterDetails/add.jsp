@@ -193,10 +193,10 @@
                             <div class="row gx-3">
                                 <!-- Personal Information Section -->
                                 <div class="col-12 mb-3">
-                                    <h6 class="fw-semibold mb-3 border-start border-primary ps-2"
+                                    <h5 class="fw-semibold mb-3 border-start border-primary ps-2"
                                         style="border-left-width: 3px !important;">
                                         <i class="bi bi-list-ul me-2"></i>List of Parameter Details
-                                    </h6>
+                                    </h5>
                                 </div>
                                 <div class="card-body">
                                     <div class="table-responsive">

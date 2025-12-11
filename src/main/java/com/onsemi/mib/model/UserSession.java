@@ -22,6 +22,20 @@ public class UserSession {
     private String itemMovementAdd;
     private String itemSfRecall;
 
+    private String eqptAdd;
+    private String eqptEdit;
+    private String eqptDelete;
+    private String eqptFamilyAdd;
+    private String eqptFamilyDelete;
+    private String eqptRelTestGroupAdd;
+    private String eqptRelTestGroupDelete;
+    private String eqptTechAdd;
+    private String eqptTechDelete;
+    private String eqptMonAdd;
+    private String eqptMonDelete;
+    private String eqptViMonAdd;
+    private String eqptViMonDelete;
+
     public String getItemAdd() {
         return itemAdd;
     }
@@ -165,4 +179,109 @@ public class UserSession {
     public void setProgramAccess(String[] programAccess) {
         this.programAccess = programAccess;
     }
+
+    public String getEqptAdd() {
+        return eqptAdd;
+    }
+
+    public void setEqptAdd(String eqptAdd) {
+        this.eqptAdd = eqptAdd;
+    }
+
+    public String getEqptEdit() {
+        return eqptEdit;
+    }
+
+    public void setEqptEdit(String eqptEdit) {
+        this.eqptEdit = eqptEdit;
+    }
+
+    public String getEqptDelete() {
+        return eqptDelete;
+    }
+
+    public void setEqptDelete(String eqptDelete) {
+        this.eqptDelete = eqptDelete;
+    }
+
+    public String getEqptFamilyAdd() {
+        return eqptFamilyAdd;
+    }
+
+    public void setEqptFamilyAdd(String eqptFamilyAdd) {
+        this.eqptFamilyAdd = eqptFamilyAdd;
+    }
+
+    public String getEqptFamilyDelete() {
+        return eqptFamilyDelete;
+    }
+
+    public void setEqptFamilyDelete(String eqptFamilyDelete) {
+        this.eqptFamilyDelete = eqptFamilyDelete;
+    }
+
+    public String getEqptRelTestGroupAdd() {
+        return eqptRelTestGroupAdd;
+    }
+
+    public void setEqptRelTestGroupAdd(String eqptRelTestGroupAdd) {
+        this.eqptRelTestGroupAdd = eqptRelTestGroupAdd;
+    }
+
+    public String getEqptRelTestGroupDelete() {
+        return eqptRelTestGroupDelete;
+    }
+
+    public void setEqptRelTestGroupDelete(String eqptRelTestGroupDelete) {
+        this.eqptRelTestGroupDelete = eqptRelTestGroupDelete;
+    }
+
+    public String getEqptTechAdd() {
+        return eqptTechAdd;
+    }
+
+    public void setEqptTechAdd(String eqptTechAdd) {
+        this.eqptTechAdd = eqptTechAdd;
+    }
+
+    public String getEqptTechDelete() {
+        return eqptTechDelete;
+    }
+
+    public void setEqptTechDelete(String eqptTechDelete) {
+        this.eqptTechDelete = eqptTechDelete;
+    }
+
+    public String getEqptMonAdd() {
+        return eqptMonAdd;
+    }
+
+    public void setEqptMonAdd(String eqptMonAdd) {
+        this.eqptMonAdd = eqptMonAdd;
+    }
+
+    public String getEqptMonDelete() {
+        return eqptMonDelete;
+    }
+
+    public void setEqptMonDelete(String eqptMonDelete) {
+        this.eqptMonDelete = eqptMonDelete;
+    }
+
+    public String getEqptViMonAdd() {
+        return eqptViMonAdd;
+    }
+
+    public void setEqptViMonAdd(String eqptViMonAdd) {
+        this.eqptViMonAdd = eqptViMonAdd;
+    }
+
+    public String getEqptViMonDelete() {
+        return eqptViMonDelete;
+    }
+
+    public void setEqptViMonDelete(String eqptViMonDelete) {
+        this.eqptViMonDelete = eqptViMonDelete;
+    }
+
 }

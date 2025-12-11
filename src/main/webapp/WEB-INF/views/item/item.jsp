@@ -29,33 +29,16 @@
                 text-align:right;
             }
 
-            .select2-container-active .select2-choice,
-            .select2-container-active .select2-choices {
-                border: 1px solid $input-border-focus !important;
-                -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, .075), 0 0 6px #009d9b !important;
-                box-shadow: inset 0 1px 1px rgba(0, 0, 0, .075), 0 0 6px #009d9b !important;
-                -webkit-box-shadow: inset 0 1px 1px rgba(0,0,0,.075), 0 0 8px rgba(102, 175, 233, .6) !important;
-                box-shadow: inset 0 1px 1px rgba(0,0,0,.075), 0 0 8px rgba(102, 175, 233, .6) !important;
+            .select2-dropdown.select2-dropdown--below{
+                /*width: 148px !important;*/
             }
 
-            .select2-dropdown-open .select2-choice {
-                border-bottom: 0 !important;
-                background-image: none;
-                background-color: #fff;
-                filter: none;
-                -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, .075), 0 0 6px #009d9b !important;
-                box-shadow: inset 0 1px 1px rgba(0, 0, 0, .075), 0 0 6px #009d9b !important;
-            }
-
-            .select2-dropdown-open.select2-drop-above .select2-choice,
-            .select2-dropdown-open.select2-drop-above .select2-choices {
-                border: 1px solid $input-border-focus !important;
-                border-top: 0 !important;
-                background-image: none;
-                background-color: #fff;
-                filter: none;
-                -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, .075), 0 0 6px #009d9b !important;
-                box-shadow: inset 0 1px 1px rgba(0, 0, 0, .075), 0 0 6px #009d9b !important;
+            .select2-container--default .select2-selection--single{
+                border: 1.5px solid #000;
+                border-radius: 0.5rem;
+                box-shadow: 2.5px 3px 0 #000;
+                outline: none;
+                transition: ease 0.25s;
             }
 
             .no-border {
@@ -86,6 +69,23 @@
                 background-color: #f06a0a; /* Light blue */
                 color: #FFFFFF; /* White text for contrast */
             }
+
+
+            .input {
+                /*max-width: 190px;*/
+                /*padding: 0.875rem;*/
+                /*font-size: 1rem;*/
+                border: 1.5px solid #000;
+                border-radius: 0.5rem;
+                box-shadow: 2.5px 3px 0 #000;
+                outline: none;
+                transition: ease 0.25s;
+            }
+
+            .input:focus {
+                box-shadow: 5.5px 7px 0 black;
+            }
+
 
         </style>
     </s:layout-component>
@@ -240,25 +240,19 @@
                                             <c:set var="String" value="${itemTypeTitle}"/>
                                             <c:choose>
                                                 <c:when test="${(fn:contains(String, 'BIB')) || (fn:contains(String, 'DRIVER BOARD'))}">
-                                                    <!--<form class="row gx-3 " role="form" action="${contextPath}/hw/item/update" method="post">-->
                                                     <!-- Row start -->
                                                     <div class="form-group required col-xl-2 col-sm-12 col-12">
                                                         <div class="mb-3">
-                                                            <!--<div class="mb-3 was-validated">-->
                                                             <label for="itemType2" class="form-label">Item Type</label>
-                                                            <div class="input-group">
-                                                                <!--<span class="input-group-text"><i class="bi bi-person"></i></span>-->
+                                                            <div class="input input-group">
                                                                 <input type="text" class="form-control" id="itemType2" name="itemType2" placeholder="" value="" readonly required>
-                                                                <!--<div class="valid-feedback">Looks good!</div>-->
-                                                                <!--<div class="invalid-feedback">Please provide a valid zip.</div>-->
                                                             </div>
                                                         </div>
                                                     </div>
                                                     <div class="col-xl-2 col-sm-12 col-12">
                                                         <div class="mb-3">
                                                             <label for="subType" class="form-label">Sub Type</label>
-                                                            <div class="input-group">
-                                                                <!--<span class="input-group-text"><i class="bi bi-person"></i></span>-->
+                                                            <div class="input input-group">
                                                                 <input type="text" class="form-control" id="subType" name="subType" placeholder="" value="" readonly>
                                                                 <input type="hidden" class="form-control" id="itemPKID" name="itemPKID" placeholder="" value="" readonly>
                                                                 <input type="hidden" class="form-control" id="mibId" name="mibId" placeholder="" value="" readonly>
@@ -268,7 +262,7 @@
                                                     <div class="form-group required col-xl-4 col-sm-12 col-12">
                                                         <div class="mb-3">
                                                             <label for="itemId" class="form-label">Item ID</label>
-                                                            <div class="input-group">
+                                                            <div class="input input-group">
                                                                 <!--<span class="input-group-text"><i class="bi bi-envelope"></i></span>-->
                                                                 <input type="text" class="form-control" id="itemId" name="itemId" placeholder="" value="" readonly required>
                                                             </div>
@@ -277,7 +271,7 @@
                                                     <div class="form-group required col-xl-4 col-sm-12 col-12">
                                                         <div class="mb-3">
                                                             <label for="itemName" class="form-label">Item Name</label>
-                                                            <div class="input-group">
+                                                            <div class="input input-group">
                                                                 <!--<span class="input-group-text"><i class="bi bi-telephone"></i></span>-->
                                                                 <input type="text" class="form-control" id="itemName" name="itemName" placeholder="" value="" readonly required>
                                                             </div>
@@ -286,7 +280,7 @@
                                                     <div class="col-xl-4 col-sm-12 col-12">
                                                         <div class="mb-3">
                                                             <label for="status" class="form-label">Status</label>
-                                                            <div class="input-group">
+                                                            <div class="input input-group">
                                                                 <!--<span class="input-group-text"><i class="bi bi-person"></i></span>-->
                                                                 <input type="text" class="form-control" id="status" name="status" placeholder="" value="" readonly>
                                                             </div>
@@ -295,7 +289,7 @@
                                                     <div class="col-xl-4 col-sm-12 col-12">
                                                         <div class="mb-3">
                                                             <label for="aluHrs" class="form-label">ALU</label>
-                                                            <div class="input-group">
+                                                            <div class="input input-group">
                                                                 <!--<span class="input-group-text"><i class="bi bi-envelope"></i></span>-->
                                                                 <input type="number" step="0.01" class="form-control" id="aluHrs" name="aluHrs" placeholder="" value="" readonly>
                                                             </div>
@@ -304,11 +298,11 @@
                                                     <div class="form-group required col-xl-4 col-sm-12 col-12">
                                                         <div class="mb-3">
                                                             <label for="assemblyId" class="form-label">Assembly ID</label>
-                                                            <div class="input-group">
+                                                            <div class="input input-group">
                                                                 <!--<span class="input-group-text"><i class="bi bi-telephone"></i></span>-->
                                                                 <!--<input type="text" class="form-control" id="assemblyId" name="assemblyId" placeholder="" value="" readonly>-->
                                                                 <select class="js-example-tags" id="assemblyId" name="assemblyId"
-                                                                        title="Select AssemblyId" data-live-search="true">
+                                                                        title="Select AssemblyId" data-live-search="true" style="width: 100%" readonly>
                                                                     <option></option>
                                                                     <c:forEach items="${listAssemblyId}" var="invInner">
                                                                         <option value="${invInner.assemblyId}" ${invInner.selected}>${invInner.assemblyId}</option>
@@ -320,9 +314,16 @@
                                                     <div class="col-xl-4 col-sm-12 col-12">
                                                         <div class="mb-3">
                                                             <label for="model" class="form-label">Spare Part Model</label>
-                                                            <div class="input-group">
+                                                            <div class="input input-group">
                                                                 <!--<span class="input-group-text"><i class="bi bi-telephone"></i></span>-->
-                                                                <input type="text" class="form-control" id="model" name="model" value="" readonly>
+                                                                <!--<input type="text" class="form-control" id="model" name="model" value="" readonly>-->
+                                                                <select class="js-example-tags" id="model" name="model"
+                                                                        title="Select Model" data-live-search="true" style="width: 100%" readonly>
+                                                                    <option></option>
+                                                                    <c:forEach items="${listModel}" var="invInner">
+                                                                        <option value="${invInner.model}" ${invInner.selected}>${invInner.model}</option>
+                                                                    </c:forEach>
+                                                                </select>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -330,16 +331,23 @@
                                                     <div class="col-xl-4 col-sm-12 col-12">
                                                         <div class="mb-3">
                                                             <label for="manufacturer" class="form-label">Spare Part Manufacturer</label>
-                                                            <div class="input-group">
+                                                            <div class="input input-group">
                                                                 <!--<span class="input-group-text"><i class="bi bi-person"></i></span>-->
-                                                                <input type="text" class="form-control" id="manufacturer" name="manufacturer" placeholder="" value="" readonly>
+                                                                <!--<input type="text" class="form-control" id="manufacturer" name="manufacturer" placeholder="" value="" readonly>-->
+                                                                <select class="js-example-tags" id="manufacturer" name="manufacturer"
+                                                                        title="Select Manufacturer" data-live-search="true" style="width: 100%" readonly>
+                                                                    <option></option>
+                                                                    <c:forEach items="${listManufacturer}" var="invInner">
+                                                                        <option value="${invInner.manufacturer}" ${invInner.selected}>${invInner.manufacturer}</option>
+                                                                    </c:forEach>
+                                                                </select>
                                                             </div>
                                                         </div>
                                                     </div>
                                                     <div class="col-xl-4 col-sm-12 col-12">
                                                         <div class="mb-3">
                                                             <label for="unitCost" class="form-label">Unit cost (USD)</label>
-                                                            <div class="input-group">
+                                                            <div class="input input-group">
                                                                 <!--<span class="input-group-text"><i class="bi bi-envelope"></i></span>-->
                                                                 <input type="text" class="form-control" id="unitCost" name="unitCost" placeholder="" value="" readonly>
                                                             </div>
@@ -348,27 +356,48 @@
                                                     <div class="col-xl-4 col-sm-12 col-12">
                                                         <div class="mb-3">
                                                             <label for="equipmentType" class="form-label">Equipment Type</label>
-                                                            <div class="input-group">
+                                                            <div class="input input-group">
                                                                 <!--<span class="input-group-text"><i class="bi bi-person"></i></span>-->
-                                                                <input type="text" class="form-control" id="equipmentType" name="equipmentType" placeholder="" value="" readonly>
+                                                                <!--<input type="text" class="form-control" id="equipmentType" name="equipmentType" placeholder="" value="" readonly>-->
+                                                                <select class="js-example-tags" id="equipmentType" name="equipmentType"
+                                                                        title="Select Eqpt Type" data-live-search="true" style="width: 100%" readonly>
+                                                                    <option></option>
+                                                                    <c:forEach items="${listEqptType}" var="invInner">
+                                                                        <option value="${invInner.equipmentType}" ${invInner.selected}>${invInner.equipmentType}</option>
+                                                                    </c:forEach>
+                                                                </select>
                                                             </div>
                                                         </div>
                                                     </div>
                                                     <div class="col-xl-4 col-sm-12 col-12">
                                                         <div class="mb-3">
                                                             <label for="equipmentModel" class="form-label">Equipment Model</label>
-                                                            <div class="input-group">
+                                                            <div class="input input-group">
                                                                 <!--<span class="input-group-text"><i class="bi bi-envelope"></i></span>-->
-                                                                <input type="text" class="form-control" id="equipmentModel" name="equipmentModel" value="" readonly>
+                                                                <!--<input type="text" class="form-control" id="equipmentModel" name="equipmentModel" value="" readonly>-->
+                                                                <select class="js-example-tags" id="equipmentModel" name="equipmentModel"
+                                                                        title="Select Eqpt Model" data-live-search="true" style="width: 100%" readonly>
+                                                                    <option></option>
+                                                                    <c:forEach items="${listEqptModel}" var="invInner">
+                                                                        <option value="${invInner.equipmentModel}" ${invInner.selected}>${invInner.equipmentModel}</option>
+                                                                    </c:forEach>
+                                                                </select>
                                                             </div>
                                                         </div>
                                                     </div>
                                                     <div class="col-xl-4 col-sm-12 col-12">
                                                         <div class="mb-3">
                                                             <label for="equipmentManufacturer" class="form-label">Eqpt Manufacturer</label>
-                                                            <div class="input-group">
+                                                            <div class="input input-group">
                                                                 <!--<span class="input-group-text"><i class="bi bi-telephone"></i></span>-->
-                                                                <input type="text" class="form-control" id="equipmentManufacturer" name="equipmentManufacturer" value="" readonly>
+                                                                <!--<input type="text" class="form-control" id="equipmentManufacturer" name="equipmentManufacturer" value="" readonly>-->
+                                                                <select class="js-example-tags" id="equipmentManufacturer" name="equipmentManufacturer"
+                                                                        title="Select Eqpt Manufacturer" data-live-search="true" style="width: 100%" readonly>
+                                                                    <option></option>
+                                                                    <c:forEach items="${listEqptManufacturer}" var="invInner">
+                                                                        <option value="${invInner.equipmentManufacturer}" ${invInner.selected}>${invInner.equipmentManufacturer}</option>
+                                                                    </c:forEach>
+                                                                </select>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -376,7 +405,7 @@
                                                     <div class="col-xl-1 col-sm-12 col-12">
                                                         <div class="mb-3">
                                                             <label for="minQty" class="form-label">Min. Qty</label>
-                                                            <div class="input-group">
+                                                            <div class="input input-group">
                                                                 <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
                                                                 <input type="text" class="form-control" id="minQty" name="minQty"
                                                                        placeholder="" value="" readonly>
@@ -386,7 +415,7 @@
                                                     <div class="col-xl-1 col-sm-12 col-12">
                                                         <div class="mb-3">
                                                             <label for="maxQty" class="form-label">Max. Qty</label>
-                                                            <div class="input-group">
+                                                            <div class="input input-group">
                                                                 <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
                                                                 <input type="text" class="form-control" id="maxQty" name="maxQty"
                                                                        placeholder="" value="" readonly>
@@ -396,7 +425,7 @@
                                                     <div class="form-group required col-xl-3 col-sm-12 col-12">
                                                         <div class="mb-3">
                                                             <label for="rack" class="form-label">Rack</label>
-                                                            <div class="input-group">
+                                                            <div class="input input-group">
                                                                 <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
                                                                 <input type="text" class="form-control" id="rack" name="rack"
                                                                        placeholder="" value="" readonly required>
@@ -406,7 +435,7 @@
                                                     <div class="form-group required col-xl-3 col-sm-12 col-12">
                                                         <div class="mb-3">
                                                             <label for="shelf" class="form-label">Shelf</label>
-                                                            <div class="input-group">
+                                                            <div class="input input-group">
                                                                 <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
                                                                 <input type="text" class="form-control" id="shelf" name="shelf"
                                                                        placeholder="" value="" readonly required>
@@ -416,17 +445,23 @@
                                                     <div class="form-group required col-xl-4 col-sm-12 col-12">
                                                         <div class="mb-3">
                                                             <label for="stressType" class="form-label">Stress Type</label>
-                                                            <div class="input-group">
+                                                            <div class="input input-group">
                                                                 <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
-                                                                <input type="text" class="form-control" id="stressType" name="stressType"
-                                                                       placeholder="" value="" readonly>
+                                                                <!--<input type="text" class="form-control" id="stressType" name="stressType" placeholder="" value="" readonly>-->
+                                                                <select class="js-example-tags" id="stressType" name="stressType"
+                                                                        title="Select Stress Type" data-live-search="true" style="width: 100%" readonly>
+                                                                    <option></option>
+                                                                    <c:forEach items="${listStressType}" var="invInner">
+                                                                        <option value="${invInner.stressType}" ${invInner.selected}>${invInner.stressType}</option>
+                                                                    </c:forEach>
+                                                                </select>
                                                             </div>
                                                         </div>
                                                     </div>
                                                     <div class="col-xl-2 col-sm-12 col-12">
                                                         <div class="mb-3">
                                                             <label for="onHandQty" class="form-label">On Hand Qty</label>
-                                                            <div class="input-group">
+                                                            <div class="input input-group">
                                                                 <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
                                                                 <input type="text" class="form-control" id="onHandQty" name="onHandQty"
                                                                        placeholder="" value="" readonly>
@@ -436,7 +471,7 @@
                                                     <div class="col-xl-2 col-sm-12 col-12">
                                                         <div class="mb-3">
                                                             <label for="productionQty" class="form-label">Prod. Qty</label>
-                                                            <div class="input-group">
+                                                            <div class="input input-group">
                                                                 <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
                                                                 <input type="text" class="form-control" id="productionQty" name="productionQty"
                                                                        placeholder="" value="" readonly>
@@ -446,7 +481,7 @@
                                                     <div class="col-xl-2 col-sm-12 col-12">
                                                         <div class="mb-3">
                                                             <label for="productionStagingQty" class="form-label">Prod. Staging Qty</label>
-                                                            <div class="input-group">
+                                                            <div class="input input-group">
                                                                 <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
                                                                 <input type="text" class="form-control" id="productionStagingQty" name="productionStagingQty"
                                                                        placeholder="" value="" readonly>
@@ -456,7 +491,7 @@
                                                     <div class="col-xl-2 col-sm-12 col-12">
                                                         <div class="mb-3">
                                                             <label for="repairQty" class="form-label">Repair Qty</label>
-                                                            <div class="input-group">
+                                                            <div class="input input-group">
                                                                 <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
                                                                 <input type="text" class="form-control" id="repairQty" name="repairQty"
                                                                        placeholder="" value="" readonly>
@@ -466,7 +501,7 @@
                                                     <div class="col-xl-2 col-sm-12 col-12">
                                                         <div class="mb-3">
                                                             <label for="quarantineQty" class="form-label">Quarantine Qty</label>
-                                                            <div class="input-group">
+                                                            <div class="input input-group">
                                                                 <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
                                                                 <input type="text" class="form-control" id="quarantineQty" name="quarantineQty"
                                                                        placeholder="" value="" readonly>
@@ -476,7 +511,7 @@
                                                     <div class="col-xl-2 col-sm-12 col-12">
                                                         <div class="mb-3">
                                                             <label for="externalCleanQty" class="form-label">Ext Clean Qty</label>
-                                                            <div class="input-group">
+                                                            <div class="input input-group">
                                                                 <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
                                                                 <input type="text" class="form-control" id="externalCleanQty" name="externalCleanQty"
                                                                        placeholder="" value="" readonly>
@@ -486,7 +521,7 @@
                                                     <div class="col-xl-2 col-sm-12 col-12">
                                                         <div class="mb-3">
                                                             <label for="externalRecleanQty" class="form-label">Ext Re-clean Qty</label>
-                                                            <div class="input-group">
+                                                            <div class="input input-group">
                                                                 <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
                                                                 <input type="text" class="form-control" id="externalRecleanQty" name="externalRecleanQty"
                                                                        placeholder="" value="" readonly>
@@ -496,7 +531,7 @@
                                                     <div class="col-xl-2 col-sm-12 col-12">
                                                         <div class="mb-3">
                                                             <label for="internalCleanQty" class="form-label">Int. Clean Qty</label>
-                                                            <div class="input-group">
+                                                            <div class="input input-group">
                                                                 <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
                                                                 <input type="text" class="form-control" id="internalCleanQty" name="internalCleanQty"
                                                                        placeholder="" value="" readonly>
@@ -506,7 +541,7 @@
                                                     <div class="col-xl-2 col-sm-12 col-12">
                                                         <div class="mb-3">
                                                             <label for="internalRecleanQty" class="form-label">Int. Re-Clean Qty</label>
-                                                            <div class="input-group">
+                                                            <div class="input input-group">
                                                                 <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
                                                                 <input type="text" class="form-control" id="internalRecleanQty" name="internalRecleanQty"
                                                                        placeholder="" value="" readonly>
@@ -516,7 +551,7 @@
                                                     <div class="col-xl-2 col-sm-12 col-12">
                                                         <div class="mb-3">
                                                             <label for="otherQty" class="form-label">Other Qty</label>
-                                                            <div class="input-group">
+                                                            <div class="input input-group">
                                                                 <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
                                                                 <input type="text" class="form-control" id="otherQty" name="otherQty"
                                                                        placeholder="" value="" readonly>
@@ -526,7 +561,7 @@
                                                     <div class="col-xl-2 col-sm-12 col-12">
                                                         <div class="mb-3">
                                                             <label for="vendorQty" class="form-label">Vendor Qty</label>
-                                                            <div class="input-group">
+                                                            <div class="input input-group">
                                                                 <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
                                                                 <input type="text" class="form-control" id="vendorQty" name="vendorQty"
                                                                        placeholder="" value="" readonly>
@@ -535,7 +570,7 @@
                                                     </div><div class="col-xl-2 col-sm-12 col-12">
                                                         <div class="mb-3">
                                                             <label for="otherOnsemiQty" class="form-label">Other onsemi Qty</label>
-                                                            <div class="input-group">
+                                                            <div class="input input-group">
                                                                 <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
                                                                 <input type="text" class="form-control" id="otherOnsemiQty" name="otherOnsemiQty"
                                                                        placeholder="" value="" readonly>
@@ -545,7 +580,7 @@
                                                     <div class="col-xl-2 col-sm-12 col-12">
                                                         <div class="mb-3">
                                                             <label for="storageFactoryQty" class="form-label">Storage Factory Qty</label>
-                                                            <div class="input-group">
+                                                            <div class="input input-group">
                                                                 <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
                                                                 <input type="text" class="form-control" id="storageFactoryQty" name="storageFactoryQty"
                                                                        placeholder="" value="" readonly>
@@ -555,7 +590,7 @@
                                                     <div class="col-xl-2 col-sm-12 col-12">
                                                         <div class="mb-3">
                                                             <label for="totalQty" class="form-label">Total Qty</label>
-                                                            <div class="input-group">
+                                                            <div class="input input-group">
                                                                 <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
                                                                 <input type="text" class="form-control" id="totalQty" name="totalQty"
                                                                        placeholder="" value="" readonly>
@@ -566,7 +601,7 @@
                                                         <div class="mb-3">
                                                             <label for="isConsumable" class="form-label">Consumable?</label>
                                                             <div class="input-group form-check form-switch">
-                                                                <input class="form-check-input" type="checkbox" role="switch" id="isConsumable" name="isConsumable" disabled>
+                                                                <input class="form-check-input" type="checkbox" id="isConsumable" name="isConsumable" disabled>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -580,7 +615,7 @@
                                                     <div class="col-12">
                                                         <div class="mb-3">
                                                             <label for="remarks" class="form-label">Remarks</label>
-                                                            <div class="input-group">
+                                                            <div class="input input-group">
                                                                 <span class="input-group-text"><i class="bi bi-pencil"></i></span>
                                                                 <textarea class="form-control" id="remarks" name="remarks" placeholder="Enter Message"
                                                                           rows="3" readonly ></textarea>
@@ -602,7 +637,7 @@
                                                     <div class="form-group required col-xl-2 col-sm-12 col-12">
                                                         <div class="mb-3">
                                                             <label for="itemType2" class="form-label">Item Type</label>
-                                                            <div class="input-group">
+                                                            <div class="input input-group">
                                                                 <input type="text" class="form-control" id="itemType2" name="itemType2" placeholder="" value="" readonly required>
                                                             </div>
                                                         </div>
@@ -610,7 +645,7 @@
                                                     <div class="col-xl-2 col-sm-12 col-12">
                                                         <div class="mb-3">
                                                             <label for="subType" class="form-label">Sub Type</label>
-                                                            <div class="input-group">
+                                                            <div class="input input-group">
                                                                 <!--<span class="input-group-text"><i class="bi bi-person"></i></span>-->
                                                                 <input type="text" class="form-control" id="subType" name="subType" placeholder="" value="" readonly>
                                                                 <input type="hidden" class="form-control" id="itemPKID" name="itemPKID" placeholder="" value="" readonly>
@@ -621,7 +656,7 @@
                                                     <div class="form-group required col-xl-4 col-sm-12 col-12">
                                                         <div class="mb-3">
                                                             <label for="itemId" class="form-label">Item ID</label>
-                                                            <div class="input-group">
+                                                            <div class="input input-group">
                                                                 <!--<span class="input-group-text"><i class="bi bi-envelope"></i></span>-->
                                                                 <input type="text" class="form-control" id="itemId" name="itemId" placeholder="" value="" readonly required>
                                                             </div>
@@ -630,7 +665,7 @@
                                                     <div class="form-group required col-xl-4 col-sm-12 col-12">
                                                         <div class="mb-3">
                                                             <label for="itemName" class="form-label">Item Name</label>
-                                                            <div class="input-group">
+                                                            <div class="input input-group">
                                                                 <!--<span class="input-group-text"><i class="bi bi-telephone"></i></span>-->
                                                                 <input type="text" class="form-control" id="itemName" name="itemName" placeholder="" value="" readonly required>
                                                             </div>
@@ -639,7 +674,7 @@
                                                     <div class="col-xl-4 col-sm-12 col-12">
                                                         <div class="mb-3">
                                                             <label for="status" class="form-label">Status</label>
-                                                            <div class="input-group">
+                                                            <div class="input input-group">
                                                                 <!--<span class="input-group-text"><i class="bi bi-person"></i></span>-->
                                                                 <input type="text" class="form-control" id="status" name="status" placeholder="" value="" readonly>
                                                             </div>
@@ -648,7 +683,7 @@
                                                     <div class="visually-hidden col-xl-4 col-sm-12 col-12">
                                                         <div class="mb-3">
                                                             <label for="aluHrs" class="form-label">ALU</label>
-                                                            <div class="input-group">
+                                                            <div class="input input-group">
                                                                 <!--<span class="input-group-text"><i class="bi bi-envelope"></i></span>-->
                                                                 <input type="number" step="0.01" class="form-control" id="aluHrs" name="aluHrs" placeholder="" value="" readonly>
                                                             </div>
@@ -657,18 +692,32 @@
                                                     <div class="visually-hidden col-xl-4 col-sm-12 col-12">
                                                         <div class="mb-3">
                                                             <label for="assemblyId" class="form-label">Assembly ID</label>
-                                                            <div class="input-group">
+                                                            <div class="input input-group">
                                                                 <!--<span class="input-group-text"><i class="bi bi-telephone"></i></span>-->
-                                                                <input type="text" class="form-control" id="assemblyId" name="assemblyId" placeholder="" value="" readonly>
+                                                                <!--<input type="text" class="form-control" id="assemblyId" name="assemblyId" placeholder="" value="" readonly>-->
+                                                                <select class="js-example-tags" id="assemblyId" name="assemblyId"
+                                                                        title="Select AssemblyId" data-live-search="true" style="width: 100%" readonly>
+                                                                    <option></option>
+                                                                    <c:forEach items="${listAssemblyId}" var="invInner">
+                                                                        <option value="${invInner.assemblyId}" ${invInner.selected}>${invInner.assemblyId}</option>
+                                                                    </c:forEach>
+                                                                </select>
                                                             </div>
                                                         </div>
                                                     </div>
                                                     <div class="visually-hidden col-xl-4 col-sm-12 col-12">
                                                         <div class="mb-3">
                                                             <label for="model" class="form-label">Spare Part Model</label>
-                                                            <div class="input-group">
+                                                            <div class="input input-group">
                                                                 <!--<span class="input-group-text"><i class="bi bi-telephone"></i></span>-->
-                                                                <input type="text" class="form-control" id="model" name="model" value="" readonly>
+                                                                <!--<input type="text" class="form-control" id="model" name="model" value="" readonly>-->
+                                                                <select class="js-example-tags" id="model" name="model"
+                                                                        title="Select Model" data-live-search="true" style="width: 100%" readonly>
+                                                                    <option></option>
+                                                                    <c:forEach items="${listModel}" var="invInner">
+                                                                        <option value="${invInner.model}" ${invInner.selected}>${invInner.model}</option>
+                                                                    </c:forEach>
+                                                                </select>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -676,16 +725,23 @@
                                                     <div class="col-xl-4 col-sm-12 col-12">
                                                         <div class="mb-3">
                                                             <label for="manufacturer" class="form-label">Spare Part Manufacturer</label>
-                                                            <div class="input-group">
+                                                            <div class="input input-group">
                                                                 <!--<span class="input-group-text"><i class="bi bi-person"></i></span>-->
-                                                                <input type="text" class="form-control" id="manufacturer" name="manufacturer" placeholder="" value="" readonly>
+                                                                <!--<input type="text" class="form-control" id="manufacturer" name="manufacturer" placeholder="" value="" readonly>-->
+                                                                <select class="js-example-tags" id="manufacturer" name="manufacturer"
+                                                                        title="Select Manufacturer" data-live-search="true" style="width: 100%" readonly>
+                                                                    <option></option>
+                                                                    <c:forEach items="${listManufacturer}" var="invInner">
+                                                                        <option value="${invInner.manufacturer}" ${invInner.selected}>${invInner.manufacturer}</option>
+                                                                    </c:forEach>
+                                                                </select>
                                                             </div>
                                                         </div>
                                                     </div>
                                                     <div class="col-xl-4 col-sm-12 col-12">
                                                         <div class="mb-3">
                                                             <label for="unitCost" class="form-label">Unit cost (USD)</label>
-                                                            <div class="input-group">
+                                                            <div class="input input-group">
                                                                 <!--<span class="input-group-text"><i class="bi bi-envelope"></i></span>-->
                                                                 <input type="text" class="form-control" id="unitCost" name="unitCost" placeholder="" value="" readonly>
                                                             </div>
@@ -694,27 +750,48 @@
                                                     <div class="col-xl-4 col-sm-12 col-12">
                                                         <div class="mb-3">
                                                             <label for="equipmentType" class="form-label">Equipment Type</label>
-                                                            <div class="input-group">
+                                                            <div class="input input-group">
                                                                 <!--<span class="input-group-text"><i class="bi bi-person"></i></span>-->
-                                                                <input type="text" class="form-control" id="equipmentType" name="equipmentType" placeholder="" value="" readonly>
+                                                                <!--<input type="text" class="form-control" id="equipmentType" name="equipmentType" placeholder="" value="" readonly>-->
+                                                                <select class="js-example-tags" id="equipmentType" name="equipmentType"
+                                                                        title="Select Eqpt Type" data-live-search="true" style="width: 100%" readonly>
+                                                                    <option></option>
+                                                                    <c:forEach items="${listEqptType}" var="invInner">
+                                                                        <option value="${invInner.equipmentType}" ${invInner.selected}>${invInner.equipmentType}</option>
+                                                                    </c:forEach>
+                                                                </select>
                                                             </div>
                                                         </div>
                                                     </div>
                                                     <div class="visually-hidden col-xl-4 col-sm-12 col-12">
                                                         <div class="mb-3">
                                                             <label for="equipmentModel" class="form-label">Equipment Model</label>
-                                                            <div class="input-group">
+                                                            <div class="input input-group">
                                                                 <!--<span class="input-group-text"><i class="bi bi-envelope"></i></span>-->
-                                                                <input type="text" class="form-control" id="equipmentModel" name="equipmentModel" value="" readonly>
+                                                                <!--<input type="text" class="form-control" id="equipmentModel" name="equipmentModel" value="" readonly>-->
+                                                                <select class="js-example-tags" id="equipmentModel" name="equipmentModel"
+                                                                        title="Select Eqpt Model" data-live-search="true" style="width: 100%" readonly>
+                                                                    <option></option>
+                                                                    <c:forEach items="${listEqptModel}" var="invInner">
+                                                                        <option value="${invInner.equipmentModel}" ${invInner.selected}>${invInner.equipmentModel}</option>
+                                                                    </c:forEach>
+                                                                </select>
                                                             </div>
                                                         </div>
                                                     </div>
                                                     <div class="visually-hidden col-xl-4 col-sm-12 col-12">
                                                         <div class="mb-3">
                                                             <label for="equipmentManufacturer" class="form-label">Eqpt Manufacturer</label>
-                                                            <div class="input-group">
+                                                            <div class="input input-group">
                                                                 <!--<span class="input-group-text"><i class="bi bi-telephone"></i></span>-->
-                                                                <input type="text" class="form-control" id="equipmentManufacturer" name="equipmentManufacturer" value="" readonly>
+                                                                <!--<input type="text" class="form-control" id="equipmentManufacturer" name="equipmentManufacturer" value="" readonly>-->
+                                                                <select class="js-example-tags" id="equipmentManufacturer" name="equipmentManufacturer"
+                                                                        title="Select Eqpt Manufacturer" data-live-search="true" style="width: 100%" readonly>
+                                                                    <option></option>
+                                                                    <c:forEach items="${listEqptManufacturer}" var="invInner">
+                                                                        <option value="${invInner.equipmentManufacturer}" ${invInner.selected}>${invInner.equipmentManufacturer}</option>
+                                                                    </c:forEach>
+                                                                </select>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -722,7 +799,7 @@
                                                     <div class="col-xl-1 col-sm-12 col-12">
                                                         <div class="mb-3">
                                                             <label for="minQty" class="form-label">Min. Qty</label>
-                                                            <div class="input-group">
+                                                            <div class="input input-group">
                                                                 <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
                                                                 <input type="text" class="form-control" id="minQty" name="minQty"
                                                                        placeholder="" value="" readonly>
@@ -732,7 +809,7 @@
                                                     <div class="col-xl-1 col-sm-12 col-12">
                                                         <div class="mb-3">
                                                             <label for="maxQty" class="form-label">Max. Qty</label>
-                                                            <div class="input-group">
+                                                            <div class="input input-group">
                                                                 <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
                                                                 <input type="text" class="form-control" id="maxQty" name="maxQty"
                                                                        placeholder="" value="" readonly>
@@ -742,7 +819,7 @@
                                                     <div class="form-group required col-xl-3 col-sm-12 col-12">
                                                         <div class="mb-3">
                                                             <label for="rack" class="form-label">Rack</label>
-                                                            <div class="input-group">
+                                                            <div class="input input-group">
                                                                 <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
                                                                 <input type="text" class="form-control" id="rack" name="rack"
                                                                        placeholder="" value="" readonly required>
@@ -752,7 +829,7 @@
                                                     <div class="form-group required col-xl-3 col-sm-12 col-12">
                                                         <div class="mb-3">
                                                             <label for="shelf" class="form-label">Shelf</label>
-                                                            <div class="input-group">
+                                                            <div class="input input-group">
                                                                 <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
                                                                 <input type="text" class="form-control" id="shelf" name="shelf"
                                                                        placeholder="" value="" readonly required>
@@ -762,17 +839,23 @@
                                                     <div class="visually-hidden col-xl-4 col-sm-12 col-12">
                                                         <div class="mb-3">
                                                             <label for="stressType" class="form-label">Stress Type</label>
-                                                            <div class="input-group">
+                                                            <div class="input input-group">
                                                                 <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
-                                                                <input type="text" class="form-control" id="stressType" name="stressType"
-                                                                       placeholder="" value="" readonly>
+                                                                <!--<input type="text" class="form-control" id="stressType" name="stressType" placeholder="" value="" readonly>-->
+                                                                <select class="js-example-tags" id="stressType" name="stressType"
+                                                                        title="Select Stress Type" data-live-search="true" style="width: 100%" readonly>
+                                                                    <option></option>
+                                                                    <c:forEach items="${listStressType}" var="invInner">
+                                                                        <option value="${invInner.stressType}" ${invInner.selected}>${invInner.stressType}</option>
+                                                                    </c:forEach>
+                                                                </select>
                                                             </div>
                                                         </div>
                                                     </div>
                                                     <div class="col-xl-2 col-sm-12 col-12">
                                                         <div class="mb-3">
                                                             <label for="onHandQty" class="form-label">On Hand Qty</label>
-                                                            <div class="input-group">
+                                                            <div class="input input-group">
                                                                 <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
                                                                 <input type="text" class="form-control" id="onHandQty" name="onHandQty"
                                                                        placeholder="" value="" readonly>
@@ -782,7 +865,7 @@
                                                     <div class="col-xl-2 col-sm-12 col-12">
                                                         <div class="mb-3">
                                                             <label for="productionQty" class="form-label">Prod. Qty</label>
-                                                            <div class="input-group">
+                                                            <div class="input input-group">
                                                                 <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
                                                                 <input type="text" class="form-control" id="productionQty" name="productionQty"
                                                                        placeholder="" value="" readonly>
@@ -792,7 +875,7 @@
                                                     <div class="visually-hidden col-xl-2 col-sm-12 col-12">
                                                         <div class="mb-3">
                                                             <label for="productionStagingQty" class="form-label">Prod. Staging Qty</label>
-                                                            <div class="input-group">
+                                                            <div class="input input-group">
                                                                 <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
                                                                 <input type="text" class="form-control" id="productionStagingQty" name="productionStagingQty"
                                                                        placeholder="" value="" readonly>
@@ -802,7 +885,7 @@
                                                     <div class="visually-hidden col-xl-2 col-sm-12 col-12">
                                                         <div class="mb-3">
                                                             <label for="repairQty" class="form-label">Repair Qty</label>
-                                                            <div class="input-group">
+                                                            <div class="input input-group">
                                                                 <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
                                                                 <input type="text" class="form-control" id="repairQty" name="repairQty"
                                                                        placeholder="" value="" readonly>
@@ -812,7 +895,7 @@
                                                     <div class="visually-hidden col-xl-2 col-sm-12 col-12">
                                                         <div class="mb-3">
                                                             <label for="quarantineQty" class="form-label">Quarantine Qty</label>
-                                                            <div class="input-group">
+                                                            <div class="input input-group">
                                                                 <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
                                                                 <input type="text" class="form-control" id="quarantineQty" name="quarantineQty"
                                                                        placeholder="" value="" readonly>
@@ -822,7 +905,7 @@
                                                     <div class="visually-hidden col-xl-2 col-sm-12 col-12">
                                                         <div class="mb-3">
                                                             <label for="externalCleanQty" class="form-label">Ext Clean Qty</label>
-                                                            <div class="input-group">
+                                                            <div class="input input-group">
                                                                 <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
                                                                 <input type="text" class="form-control" id="externalCleanQty" name="externalCleanQty"
                                                                        placeholder="" value="" readonly>
@@ -832,7 +915,7 @@
                                                     <div class="visually-hidden col-xl-2 col-sm-12 col-12">
                                                         <div class="mb-3">
                                                             <label for="externalRecleanQty" class="form-label">Ext Re-clean Qty</label>
-                                                            <div class="input-group">
+                                                            <div class="input input-group">
                                                                 <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
                                                                 <input type="text" class="form-control" id="externalRecleanQty" name="externalRecleanQty"
                                                                        placeholder="" value="" readonly>
@@ -842,7 +925,7 @@
                                                     <div class="visually-hidden col-xl-2 col-sm-12 col-12">
                                                         <div class="mb-3">
                                                             <label for="internalCleanQty" class="form-label">Int. Clean Qty</label>
-                                                            <div class="input-group">
+                                                            <div class="input input-group">
                                                                 <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
                                                                 <input type="text" class="form-control" id="internalCleanQty" name="internalCleanQty"
                                                                        placeholder="" value="" readonly>
@@ -852,7 +935,7 @@
                                                     <div class="visually-hidden col-xl-2 col-sm-12 col-12">
                                                         <div class="mb-3">
                                                             <label for="internalRecleanQty" class="form-label">Int. Re-Clean Qty</label>
-                                                            <div class="input-group">
+                                                            <div class="input input-group">
                                                                 <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
                                                                 <input type="text" class="form-control" id="internalRecleanQty" name="internalRecleanQty"
                                                                        placeholder="" value="" readonly>
@@ -862,7 +945,7 @@
                                                     <div class="col-xl-2 col-sm-12 col-12">
                                                         <div class="mb-3">
                                                             <label for="otherQty" class="form-label">Other Qty</label>
-                                                            <div class="input-group">
+                                                            <div class="input input-group">
                                                                 <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
                                                                 <input type="text" class="form-control" id="otherQty" name="otherQty"
                                                                        placeholder="" value="" readonly>
@@ -872,7 +955,7 @@
                                                     <div class="visually-hidden col-xl-2 col-sm-12 col-12">
                                                         <div class="mb-3">
                                                             <label for="vendorQty" class="form-label">Vendor Qty</label>
-                                                            <div class="input-group">
+                                                            <div class="input input-group">
                                                                 <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
                                                                 <input type="text" class="form-control" id="vendorQty" name="vendorQty"
                                                                        placeholder="" value="" readonly>
@@ -881,7 +964,7 @@
                                                     </div><div class="visually-hidden col-xl-2 col-sm-12 col-12">
                                                         <div class="mb-3">
                                                             <label for="otherOnsemiQty" class="form-label">Other onsemi Qty</label>
-                                                            <div class="input-group">
+                                                            <div class="input input-group">
                                                                 <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
                                                                 <input type="text" class="form-control" id="otherOnsemiQty" name="otherOnsemiQty"
                                                                        placeholder="" value="" readonly>
@@ -891,7 +974,7 @@
                                                     <div class="col-xl-2 col-sm-12 col-12">
                                                         <div class="mb-3">
                                                             <label for="storageFactoryQty" class="form-label">Storage Factory Qty</label>
-                                                            <div class="input-group">
+                                                            <div class="input input-group">
                                                                 <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
                                                                 <input type="text" class="form-control" id="storageFactoryQty" name="storageFactoryQty"
                                                                        placeholder="" value="" readonly>
@@ -901,7 +984,7 @@
                                                     <div class="col-xl-2 col-sm-12 col-12">
                                                         <div class="mb-3">
                                                             <label for="totalQty" class="form-label">Total Qty</label>
-                                                            <div class="input-group">
+                                                            <div class="input input-group">
                                                                 <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
                                                                 <input type="text" class="form-control" id="totalQty" name="totalQty"
                                                                        placeholder="" value="" readonly>
@@ -912,7 +995,7 @@
                                                         <div class="mb-3">
                                                             <label for="isConsumable" class="form-label">Consumable?</label>
                                                             <div class="input-group form-check form-switch">
-                                                                <input class="form-check-input" type="checkbox" role="switch" id="isConsumable" name="isConsumable" disabled>
+                                                                <input class="form-check-input" type="checkbox" id="isConsumable" name="isConsumable" disabled>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -926,7 +1009,7 @@
                                                     <div class="col-12">
                                                         <div class="mb-3">
                                                             <label for="remarks" class="form-label">Remarks</label>
-                                                            <div class="input-group">
+                                                            <div class="input input-group">
                                                                 <span class="input-group-text"><i class="bi bi-pencil"></i></span>
                                                                 <textarea class="form-control" id="remarks" name="remarks" placeholder="Enter Message"
                                                                           rows="3" readonly></textarea>
@@ -948,7 +1031,7 @@
                                                         <div class="mb-3">
                                                             <!--<div class="mb-3 was-validated">-->
                                                             <label for="itemType2" class="form-label">Item Type</label>
-                                                            <div class="input-group">
+                                                            <div class="input input-group">
                                                                 <!--<span class="input-group-text"><i class="bi bi-person"></i></span>-->
                                                                 <input type="text" class="form-control" id="itemType2" name="itemType2" placeholder="" value="" readonly required>
                                                                 <!--<div class="valid-feedback">Looks good!</div>-->
@@ -959,7 +1042,7 @@
                                                     <div class="col-xl-2 col-sm-12 col-12">
                                                         <div class="mb-3">
                                                             <label for="subType" class="form-label">Sub Type</label>
-                                                            <div class="input-group">
+                                                            <div class="input input-group">
                                                                 <!--<span class="input-group-text"><i class="bi bi-person"></i></span>-->
                                                                 <input type="text" class="form-control" id="subType" name="subType" placeholder="" value="" readonly>
                                                                 <input type="hidden" class="form-control" id="itemPKID" name="itemPKID" placeholder="" value="" readonly>
@@ -970,7 +1053,7 @@
                                                     <div class="form-group required col-xl-4 col-sm-12 col-12">
                                                         <div class="mb-3">
                                                             <label for="itemId" class="form-label">Item ID</label>
-                                                            <div class="input-group">
+                                                            <div class="input input-group">
                                                                 <!--<span class="input-group-text"><i class="bi bi-envelope"></i></span>-->
                                                                 <input type="text" class="form-control" id="itemId" name="itemId" placeholder="" value="" readonly required>
                                                             </div>
@@ -979,7 +1062,7 @@
                                                     <div class="form-group required col-xl-4 col-sm-12 col-12">
                                                         <div class="mb-3">
                                                             <label for="itemName" class="form-label">Item Name</label>
-                                                            <div class="input-group">
+                                                            <div class="input input-group">
                                                                 <!--<span class="input-group-text"><i class="bi bi-telephone"></i></span>-->
                                                                 <input type="text" class="form-control" id="itemName" name="itemName" placeholder="" value="" readonly required>
                                                             </div>
@@ -988,7 +1071,7 @@
                                                     <div class="col-xl-4 col-sm-12 col-12">
                                                         <div class="mb-3">
                                                             <label for="status" class="form-label">Status</label>
-                                                            <div class="input-group">
+                                                            <div class="input input-group">
                                                                 <!--<span class="input-group-text"><i class="bi bi-person"></i></span>-->
                                                                 <input type="text" class="form-control" id="status" name="status" placeholder="" value="" readonly>
                                                             </div>
@@ -997,7 +1080,7 @@
                                                     <div class="form-group required col-xl-4 col-sm-12 col-12">
                                                         <div class="mb-3">
                                                             <label for="itemUsage" class="form-label">Item Usage</label>
-                                                            <div class="input-group">
+                                                            <div class="input input-group">
                                                                 <select class="form-control" id="itemUsage" name="itemUsage"
                                                                         title="Select Item Usage" data-live-search="true">
                                                                     <option></option>
@@ -1011,18 +1094,32 @@
                                                     <div class="visually-hidden col-xl-4 col-sm-12 col-12">
                                                         <div class="mb-3">
                                                             <label for="assemblyId" class="form-label">Assembly ID</label>
-                                                            <div class="input-group">
+                                                            <div class="input input-group">
                                                                 <!--<span class="input-group-text"><i class="bi bi-telephone"></i></span>-->
-                                                                <input type="text" class="form-control" id="assemblyId" name="assemblyId" placeholder="" value="" readonly>
+                                                                <!--<input type="text" class="form-control" id="assemblyId" name="assemblyId" placeholder="" value="" readonly>-->
+                                                                <select class="js-example-tags" id="assemblyId" name="assemblyId"
+                                                                        title="Select AssemblyId" data-live-search="true" style="width: 100%" readonly>
+                                                                    <option></option>
+                                                                    <c:forEach items="${listAssemblyId}" var="invInner">
+                                                                        <option value="${invInner.assemblyId}" ${invInner.selected}>${invInner.assemblyId}</option>
+                                                                    </c:forEach>
+                                                                </select>
                                                             </div>
                                                         </div>
                                                     </div>
                                                     <div class="col-xl-4 col-sm-12 col-12">
                                                         <div class="mb-3">
                                                             <label for="model" class="form-label">Spare Part Model</label>
-                                                            <div class="input-group">
+                                                            <div class="input input-group">
                                                                 <!--<span class="input-group-text"><i class="bi bi-telephone"></i></span>-->
-                                                                <input type="text" class="form-control" id="model" name="model" value="" readonly>
+                                                                <!--<input type="text" class="form-control" id="model" name="model" value="" readonly>-->
+                                                                <select class="js-example-tags" id="model" name="model"
+                                                                        title="Select Model" data-live-search="true" style="width: 100%" readonly>
+                                                                    <option></option>
+                                                                    <c:forEach items="${listModel}" var="invInner">
+                                                                        <option value="${invInner.model}" ${invInner.selected}>${invInner.model}</option>
+                                                                    </c:forEach>
+                                                                </select>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -1030,16 +1127,23 @@
                                                     <div class="col-xl-4 col-sm-12 col-12">
                                                         <div class="mb-3">
                                                             <label for="manufacturer" class="form-label">Spare Part Manufacturer</label>
-                                                            <div class="input-group">
+                                                            <div class="input input-group">
                                                                 <!--<span class="input-group-text"><i class="bi bi-person"></i></span>-->
-                                                                <input type="text" class="form-control" id="manufacturer" name="manufacturer" placeholder="" value="" readonly>
+                                                                <!--<input type="text" class="form-control" id="manufacturer" name="manufacturer" placeholder="" value="" readonly>-->
+                                                                <select class="js-example-tags" id="manufacturer" name="manufacturer"
+                                                                        title="Select Manufacturer" data-live-search="true" style="width: 100%" readonly>
+                                                                    <option></option>
+                                                                    <c:forEach items="${listManufacturer}" var="invInner">
+                                                                        <option value="${invInner.manufacturer}" ${invInner.selected}>${invInner.manufacturer}</option>
+                                                                    </c:forEach>
+                                                                </select>
                                                             </div>
                                                         </div>
                                                     </div>
                                                     <div class="col-xl-4 col-sm-12 col-12">
                                                         <div class="mb-3">
                                                             <label for="unitCost" class="form-label">Unit cost (USD)</label>
-                                                            <div class="input-group">
+                                                            <div class="input input-group">
                                                                 <!--<span class="input-group-text"><i class="bi bi-envelope"></i></span>-->
                                                                 <input type="text" class="form-control" id="unitCost" name="unitCost" placeholder="" value="" readonly>
                                                             </div>
@@ -1048,27 +1152,48 @@
                                                     <div class="col-xl-4 col-sm-12 col-12">
                                                         <div class="mb-3">
                                                             <label for="equipmentType" class="form-label">Equipment Type</label>
-                                                            <div class="input-group">
+                                                            <div class="input input-group">
                                                                 <!--<span class="input-group-text"><i class="bi bi-person"></i></span>-->
-                                                                <input type="text" class="form-control" id="equipmentType" name="equipmentType" placeholder="" value="" readonly>
+                                                                <!--<input type="text" class="form-control" id="equipmentType" name="equipmentType" placeholder="" value="" readonly>-->
+                                                                <select class="js-example-tags" id="equipmentType" name="equipmentType"
+                                                                        title="Select Eqpt Type" data-live-search="true" style="width: 100%" readonly>
+                                                                    <option></option>
+                                                                    <c:forEach items="${listEqptType}" var="invInner">
+                                                                        <option value="${invInner.equipmentType}" ${invInner.selected}>${invInner.equipmentType}</option>
+                                                                    </c:forEach>
+                                                                </select>
                                                             </div>
                                                         </div>
                                                     </div>
                                                     <div class="col-xl-4 col-sm-12 col-12">
                                                         <div class="mb-3">
                                                             <label for="equipmentModel" class="form-label">Equipment Model</label>
-                                                            <div class="input-group">
+                                                            <div class="input input-group">
                                                                 <!--<span class="input-group-text"><i class="bi bi-envelope"></i></span>-->
-                                                                <input type="text" class="form-control" id="equipmentModel" name="equipmentModel" value="" readonly>
+                                                                <!--<input type="text" class="form-control" id="equipmentModel" name="equipmentModel" value="" readonly>-->
+                                                                <select class="js-example-tags" id="equipmentModel" name="equipmentModel"
+                                                                        title="Select Eqpt Model" data-live-search="true" style="width: 100%" readonly>
+                                                                    <option></option>
+                                                                    <c:forEach items="${listEqptModel}" var="invInner">
+                                                                        <option value="${invInner.equipmentModel}" ${invInner.selected}>${invInner.equipmentModel}</option>
+                                                                    </c:forEach>
+                                                                </select>
                                                             </div>
                                                         </div>
                                                     </div>
                                                     <div class="col-xl-4 col-sm-12 col-12">
                                                         <div class="mb-3">
                                                             <label for="equipmentManufacturer" class="form-label">Eqpt Manufacturer</label>
-                                                            <div class="input-group">
+                                                            <div class="input input-group">
                                                                 <!--<span class="input-group-text"><i class="bi bi-telephone"></i></span>-->
-                                                                <input type="text" class="form-control" id="equipmentManufacturer" name="equipmentManufacturer" value="" readonly>
+                                                                <!--<input type="text" class="form-control" id="equipmentManufacturer" name="equipmentManufacturer" value="" readonly>-->
+                                                                <select class="js-example-tags" id="equipmentManufacturer" name="equipmentManufacturer"
+                                                                        title="Select Eqpt Manufacturer" data-live-search="true" style="width: 100%" readonly>
+                                                                    <option></option>
+                                                                    <c:forEach items="${listEqptManufacturer}" var="invInner">
+                                                                        <option value="${invInner.equipmentManufacturer}" ${invInner.selected}>${invInner.equipmentManufacturer}</option>
+                                                                    </c:forEach>
+                                                                </select>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -1076,7 +1201,7 @@
                                                     <div class="col-xl-1 col-sm-12 col-12">
                                                         <div class="mb-3">
                                                             <label for="minQty" class="form-label">Min. Qty</label>
-                                                            <div class="input-group">
+                                                            <div class="input input-group">
                                                                 <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
                                                                 <input type="text" class="form-control" id="minQty" name="minQty"
                                                                        placeholder="" value="" readonly>
@@ -1086,7 +1211,7 @@
                                                     <div class="col-xl-1 col-sm-12 col-12">
                                                         <div class="mb-3">
                                                             <label for="maxQty" class="form-label">Max. Qty</label>
-                                                            <div class="input-group">
+                                                            <div class="input input-group">
                                                                 <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
                                                                 <input type="text" class="form-control" id="maxQty" name="maxQty"
                                                                        placeholder="" value="" readonly>
@@ -1096,7 +1221,7 @@
                                                     <div class="form-group required col-xl-3 col-sm-12 col-12">
                                                         <div class="mb-3">
                                                             <label for="rack" class="form-label">Rack</label>
-                                                            <div class="input-group">
+                                                            <div class="input input-group">
                                                                 <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
                                                                 <input type="text" class="form-control" id="rack" name="rack"
                                                                        placeholder="" value="" readonly required>
@@ -1106,7 +1231,7 @@
                                                     <div class="form-group required col-xl-3 col-sm-12 col-12">
                                                         <div class="mb-3">
                                                             <label for="shelf" class="form-label">Shelf</label>
-                                                            <div class="input-group">
+                                                            <div class="input input-group">
                                                                 <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
                                                                 <input type="text" class="form-control" id="shelf" name="shelf"
                                                                        placeholder="" value="" readonly required>
@@ -1116,17 +1241,23 @@
                                                     <div class="visually-hidden col-xl-4 col-sm-12 col-12">
                                                         <div class="mb-3">
                                                             <label for="stressType" class="form-label">Stress Type</label>
-                                                            <div class="input-group">
+                                                            <div class="input input-group">
                                                                 <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
-                                                                <input type="text" class="form-control" id="stressType" name="stressType"
-                                                                       placeholder="" value="" readonly>
+                                                                <!--<input type="text" class="form-control" id="stressType" name="stressType" placeholder="" value="" readonly>-->
+                                                                <select class="js-example-tags" id="stressType" name="stressType"
+                                                                        title="Select Stress Type" data-live-search="true" style="width: 100%" readonly>
+                                                                    <option></option>
+                                                                    <c:forEach items="${listStressType}" var="invInner">
+                                                                        <option value="${invInner.stressType}" ${invInner.selected}>${invInner.stressType}</option>
+                                                                    </c:forEach>
+                                                                </select>
                                                             </div>
                                                         </div>
                                                     </div>
                                                     <div class="col-xl-2 col-sm-12 col-12">
                                                         <div class="mb-3">
                                                             <label for="onHandQty" class="form-label">On Hand Qty</label>
-                                                            <div class="input-group">
+                                                            <div class="input input-group">
                                                                 <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
                                                                 <input type="text" class="form-control" id="onHandQty" name="onHandQty"
                                                                        placeholder="" value="" readonly>
@@ -1136,7 +1267,7 @@
                                                     <div class="col-xl-2 col-sm-12 col-12">
                                                         <div class="mb-3">
                                                             <label for="productionQty" class="form-label">Prod. Qty</label>
-                                                            <div class="input-group">
+                                                            <div class="input input-group">
                                                                 <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
                                                                 <input type="text" class="form-control" id="productionQty" name="productionQty"
                                                                        placeholder="" value="" readonly>
@@ -1146,7 +1277,7 @@
                                                     <div class="visually-hidden col-xl-2 col-sm-12 col-12">
                                                         <div class="mb-3">
                                                             <label for="productionStagingQty" class="form-label">Prod. Staging Qty</label>
-                                                            <div class="input-group">
+                                                            <div class="input input-group">
                                                                 <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
                                                                 <input type="text" class="form-control" id="productionStagingQty" name="productionStagingQty"
                                                                        placeholder="" value="" readonly>
@@ -1156,7 +1287,7 @@
                                                     <div class="col-xl-2 col-sm-12 col-12">
                                                         <div class="mb-3">
                                                             <label for="repairQty" class="form-label">Repair Qty</label>
-                                                            <div class="input-group">
+                                                            <div class="input input-group">
                                                                 <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
                                                                 <input type="text" class="form-control" id="repairQty" name="repairQty"
                                                                        placeholder="" value="" readonly>
@@ -1166,7 +1297,7 @@
                                                     <div class="col-xl-2 col-sm-12 col-12">
                                                         <div class="mb-3">
                                                             <label for="quarantineQty" class="form-label">Quarantine Qty</label>
-                                                            <div class="input-group">
+                                                            <div class="input input-group">
                                                                 <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
                                                                 <input type="text" class="form-control" id="quarantineQty" name="quarantineQty"
                                                                        placeholder="" value="" readonly>
@@ -1176,7 +1307,7 @@
                                                     <div class="visually-hidden col-xl-2 col-sm-12 col-12">
                                                         <div class="mb-3">
                                                             <label for="externalCleanQty" class="form-label">Ext Clean Qty</label>
-                                                            <div class="input-group">
+                                                            <div class="input input-group">
                                                                 <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
                                                                 <input type="text" class="form-control" id="externalCleanQty" name="externalCleanQty"
                                                                        placeholder="" value="" readonly>
@@ -1186,7 +1317,7 @@
                                                     <div class="visually-hidden col-xl-2 col-sm-12 col-12">
                                                         <div class="mb-3">
                                                             <label for="externalRecleanQty" class="form-label">Ext Re-clean Qty</label>
-                                                            <div class="input-group">
+                                                            <div class="input input-group">
                                                                 <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
                                                                 <input type="text" class="form-control" id="externalRecleanQty" name="externalRecleanQty"
                                                                        placeholder="" value="" readonly>
@@ -1196,7 +1327,7 @@
                                                     <div class="visually-hidden col-xl-2 col-sm-12 col-12">
                                                         <div class="mb-3">
                                                             <label for="internalCleanQty" class="form-label">Int. Clean Qty</label>
-                                                            <div class="input-group">
+                                                            <div class="input input-group">
                                                                 <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
                                                                 <input type="text" class="form-control" id="internalCleanQty" name="internalCleanQty"
                                                                        placeholder="" value="" readonly>
@@ -1206,7 +1337,7 @@
                                                     <div class="visually-hidden col-xl-2 col-sm-12 col-12">
                                                         <div class="mb-3">
                                                             <label for="internalRecleanQty" class="form-label">Int. Re-Clean Qty</label>
-                                                            <div class="input-group">
+                                                            <div class="input input-group">
                                                                 <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
                                                                 <input type="text" class="form-control" id="internalRecleanQty" name="internalRecleanQty"
                                                                        placeholder="" value="" readonly>
@@ -1216,7 +1347,7 @@
                                                     <div class="col-xl-2 col-sm-12 col-12">
                                                         <div class="mb-3">
                                                             <label for="otherQty" class="form-label">Other Qty</label>
-                                                            <div class="input-group">
+                                                            <div class="input input-group">
                                                                 <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
                                                                 <input type="text" class="form-control" id="otherQty" name="otherQty"
                                                                        placeholder="" value="" readonly>
@@ -1226,7 +1357,7 @@
                                                     <div class="col-xl-2 col-sm-12 col-12">
                                                         <div class="mb-3">
                                                             <label for="vendorQty" class="form-label">Vendor Qty</label>
-                                                            <div class="input-group">
+                                                            <div class="input input-group">
                                                                 <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
                                                                 <input type="text" class="form-control" id="vendorQty" name="vendorQty"
                                                                        placeholder="" value="" readonly>
@@ -1235,7 +1366,7 @@
                                                     </div><div class="col-xl-2 col-sm-12 col-12">
                                                         <div class="mb-3">
                                                             <label for="otherOnsemiQty" class="form-label">Other onsemi Qty</label>
-                                                            <div class="input-group">
+                                                            <div class="input input-group">
                                                                 <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
                                                                 <input type="text" class="form-control" id="otherOnsemiQty" name="otherOnsemiQty"
                                                                        placeholder="" value="" readonly>
@@ -1245,7 +1376,7 @@
                                                     <div class="col-xl-2 col-sm-12 col-12">
                                                         <div class="mb-3">
                                                             <label for="storageFactoryQty" class="form-label">Storage Factory Qty</label>
-                                                            <div class="input-group">
+                                                            <div class="input input-group">
                                                                 <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
                                                                 <input type="text" class="form-control" id="storageFactoryQty" name="storageFactoryQty"
                                                                        placeholder="" value="" readonly>
@@ -1255,7 +1386,7 @@
                                                     <div class="col-xl-2 col-sm-12 col-12">
                                                         <div class="mb-3">
                                                             <label for="totalQty" class="form-label">Total Qty</label>
-                                                            <div class="input-group">
+                                                            <div class="input input-group">
                                                                 <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
                                                                 <input type="text" class="form-control" id="totalQty" name="totalQty"
                                                                        placeholder="" value="" readonly>
@@ -1266,7 +1397,7 @@
                                                         <div class="mb-3">
                                                             <label for="isConsumable" class="form-label">Consumable?</label>
                                                             <div class="input-group form-check form-switch">
-                                                                <input class="form-check-input" type="checkbox" role="switch" id="isConsumable" name="isConsumable" disabled>
+                                                                <input class="form-check-input" type="checkbox" id="isConsumable" name="isConsumable" disabled>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -1280,7 +1411,7 @@
                                                     <div class="col-12">
                                                         <div class="mb-3">
                                                             <label for="remarks" class="form-label">Remarks</label>
-                                                            <div class="input-group">
+                                                            <div class="input input-group">
                                                                 <span class="input-group-text"><i class="bi bi-pencil"></i></span>
                                                                 <textarea class="form-control" id="remarks" name="remarks" placeholder="Enter Message"
                                                                           rows="3" readonly></textarea>
@@ -1302,7 +1433,7 @@
                                                         <div class="mb-3">
                                                             <!--<div class="mb-3 was-validated">-->
                                                             <label for="itemType2" class="form-label">Item Type</label>
-                                                            <div class="input-group">
+                                                            <div class="input input-group">
                                                                 <!--<span class="input-group-text"><i class="bi bi-person"></i></span>-->
                                                                 <input type="text" class="form-control" id="itemType2" name="itemType2" placeholder="" value="" readonly required>
                                                                 <!--<div class="valid-feedback">Looks good!</div>-->
@@ -1310,10 +1441,10 @@
                                                             </div>
                                                         </div>
                                                     </div>
-                                                    <div class="form-group required col-xl-2 col-sm-12 col-12">
+                                                    <div class="form-group col-xl-2 col-sm-12 col-12">
                                                         <div class="mb-3">
                                                             <label for="subType" class="form-label">Sub Type</label>
-                                                            <div class="input-group">
+                                                            <div class="input input-group">
                                                                 <!--<span class="input-group-text"><i class="bi bi-person"></i></span>-->
                                                                 <input type="text" class="form-control" id="subType" name="subType" placeholder="" value="" readonly>
                                                                 <input type="hidden" class="form-control" id="itemPKID" name="itemPKID" placeholder="" value="" readonly>
@@ -1324,7 +1455,7 @@
                                                     <div class="form-group required col-xl-4 col-sm-12 col-12">
                                                         <div class="mb-3">
                                                             <label for="itemId" class="form-label">Item ID</label>
-                                                            <div class="input-group">
+                                                            <div class="input input-group">
                                                                 <!--<span class="input-group-text"><i class="bi bi-envelope"></i></span>-->
                                                                 <input type="text" class="form-control" id="itemId" name="itemId" placeholder="" value="" readonly required>
                                                             </div>
@@ -1333,7 +1464,7 @@
                                                     <div class="form-group required col-xl-4 col-sm-12 col-12">
                                                         <div class="mb-3">
                                                             <label for="itemName" class="form-label">Item Name</label>
-                                                            <div class="input-group">
+                                                            <div class="input input-group">
                                                                 <!--<span class="input-group-text"><i class="bi bi-telephone"></i></span>-->
                                                                 <input type="text" class="form-control" id="itemName" name="itemName" placeholder="" value="" readonly required>
                                                             </div>
@@ -1342,7 +1473,7 @@
                                                     <div class="col-xl-4 col-sm-12 col-12">
                                                         <div class="mb-3">
                                                             <label for="status" class="form-label">Status</label>
-                                                            <div class="input-group">
+                                                            <div class="input input-group">
                                                                 <!--<span class="input-group-text"><i class="bi bi-person"></i></span>-->
                                                                 <input type="text" class="form-control" id="status" name="status" placeholder="" value="" readonly>
                                                             </div>
@@ -1351,11 +1482,11 @@
                                                     <div class="form-group required col-xl-4 col-sm-12 col-12">
                                                         <div class="mb-3">
                                                             <label for="itemUsage" class="form-label">Item Usage</label>
-                                                            <div class="input-group">
+                                                            <div class="input input-group">
                                                                 <select class="form-control" id="itemUsage" name="itemUsage"
                                                                         title="Select Item Usage" data-live-search="true" required>
                                                                     <option></option>
-                                                                    <c:forEach items="${paramItemUsage}" var="invInner">
+                                                                    <c:forEach items="${paramItemUsageEqpt}" var="invInner">
                                                                         <option value="${invInner.name}" ${invInner.selected}>${invInner.name}</option>
                                                                     </c:forEach>
                                                                 </select>
@@ -1365,18 +1496,32 @@
                                                     <div class="visually-hidden col-xl-4 col-sm-12 col-12">
                                                         <div class="mb-3">
                                                             <label for="assemblyId" class="form-label">Assembly ID</label>
-                                                            <div class="input-group">
+                                                            <div class="input input-group">
                                                                 <!--<span class="input-group-text"><i class="bi bi-telephone"></i></span>-->
-                                                                <input type="text" class="form-control" id="assemblyId" name="assemblyId" placeholder="" value="" readonly>
+                                                                <!--<input type="text" class="form-control" id="assemblyId" name="assemblyId" placeholder="" value="" readonly>-->
+                                                                <select class="js-example-tags" id="assemblyId" name="assemblyId"
+                                                                        title="Select AssemblyId" data-live-search="true" style="width: 100%" readonly>
+                                                                    <option></option>
+                                                                    <c:forEach items="${listAssemblyId}" var="invInner">
+                                                                        <option value="${invInner.assemblyId}" ${invInner.selected}>${invInner.assemblyId}</option>
+                                                                    </c:forEach>
+                                                                </select>
                                                             </div>
                                                         </div>
                                                     </div>
                                                     <div class="col-xl-4 col-sm-12 col-12">
                                                         <div class="mb-3">
                                                             <label for="model" class="form-label">Spare Part Model</label>
-                                                            <div class="input-group">
+                                                            <div class="input input-group">
                                                                 <!--<span class="input-group-text"><i class="bi bi-telephone"></i></span>-->
-                                                                <input type="text" class="form-control" id="model" name="model" value="" readonly>
+                                                                <!--<input type="text" class="form-control" id="model" name="model" value="" readonly>-->
+                                                                <select class="js-example-tags" id="model" name="model"
+                                                                        title="Select Model" data-live-search="true" style="width: 100%" readonly>
+                                                                    <option></option>
+                                                                    <c:forEach items="${listModel}" var="invInner">
+                                                                        <option value="${invInner.model}" ${invInner.selected}>${invInner.model}</option>
+                                                                    </c:forEach>
+                                                                </select>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -1384,16 +1529,23 @@
                                                     <div class="col-xl-4 col-sm-12 col-12">
                                                         <div class="mb-3">
                                                             <label for="manufacturer" class="form-label">Spare Part Manufacturer</label>
-                                                            <div class="input-group">
+                                                            <div class="input input-group">
                                                                 <!--<span class="input-group-text"><i class="bi bi-person"></i></span>-->
-                                                                <input type="text" class="form-control" id="manufacturer" name="manufacturer" placeholder="" value="" readonly>
+                                                                <!--<input type="text" class="form-control" id="manufacturer" name="manufacturer" placeholder="" value="" readonly>-->
+                                                                <select class="js-example-tags" id="manufacturer" name="manufacturer"
+                                                                        title="Select Manufacturer" data-live-search="true" style="width: 100%" readonly>
+                                                                    <option></option>
+                                                                    <c:forEach items="${listManufacturer}" var="invInner">
+                                                                        <option value="${invInner.manufacturer}" ${invInner.selected}>${invInner.manufacturer}</option>
+                                                                    </c:forEach>
+                                                                </select>
                                                             </div>
                                                         </div>
                                                     </div>
                                                     <div class="col-xl-4 col-sm-12 col-12">
                                                         <div class="mb-3">
                                                             <label for="unitCost" class="form-label">Unit cost (USD)</label>
-                                                            <div class="input-group">
+                                                            <div class="input input-group">
                                                                 <!--<span class="input-group-text"><i class="bi bi-envelope"></i></span>-->
                                                                 <input type="text" class="form-control" id="unitCost" name="unitCost" placeholder="" value="" readonly>
                                                             </div>
@@ -1402,27 +1554,48 @@
                                                     <div class="col-xl-4 col-sm-12 col-12">
                                                         <div class="mb-3">
                                                             <label for="equipmentType" class="form-label">Equipment Type</label>
-                                                            <div class="input-group">
+                                                            <div class="input input-group">
                                                                 <!--<span class="input-group-text"><i class="bi bi-person"></i></span>-->
-                                                                <input type="text" class="form-control" id="equipmentType" name="equipmentType" placeholder="" value="" readonly>
+                                                                <!--<input type="text" class="form-control" id="equipmentType" name="equipmentType" placeholder="" value="" readonly>-->
+                                                                <select class="js-example-tags" id="equipmentType" name="equipmentType"
+                                                                        title="Select Eqpt Type" data-live-search="true" style="width: 100%" readonly>
+                                                                    <option></option>
+                                                                    <c:forEach items="${listEqptType}" var="invInner">
+                                                                        <option value="${invInner.equipmentType}" ${invInner.selected}>${invInner.equipmentType}</option>
+                                                                    </c:forEach>
+                                                                </select>
                                                             </div>
                                                         </div>
                                                     </div>
                                                     <div class="col-xl-4 col-sm-12 col-12">
                                                         <div class="mb-3">
                                                             <label for="equipmentModel" class="form-label">Equipment Model</label>
-                                                            <div class="input-group">
+                                                            <div class="input input-group">
                                                                 <!--<span class="input-group-text"><i class="bi bi-envelope"></i></span>-->
-                                                                <input type="text" class="form-control" id="equipmentModel" name="equipmentModel" value="" readonly>
+                                                                <!--<input type="text" class="form-control" id="equipmentModel" name="equipmentModel" value="" readonly>-->
+                                                                <select class="js-example-tags" id="equipmentModel" name="equipmentModel"
+                                                                        title="Select Eqpt Model" data-live-search="true" style="width: 100%" readonly>
+                                                                    <option></option>
+                                                                    <c:forEach items="${listEqptModel}" var="invInner">
+                                                                        <option value="${invInner.equipmentModel}" ${invInner.selected}>${invInner.equipmentModel}</option>
+                                                                    </c:forEach>
+                                                                </select>
                                                             </div>
                                                         </div>
                                                     </div>
                                                     <div class="col-xl-4 col-sm-12 col-12">
                                                         <div class="mb-3">
                                                             <label for="equipmentManufacturer" class="form-label">Eqpt Manufacturer</label>
-                                                            <div class="input-group">
+                                                            <div class="input input-group">
                                                                 <!--<span class="input-group-text"><i class="bi bi-telephone"></i></span>-->
-                                                                <input type="text" class="form-control" id="equipmentManufacturer" name="equipmentManufacturer" value="" readonly>
+                                                                <!--<input type="text" class="form-control" id="equipmentManufacturer" name="equipmentManufacturer" value="" readonly>-->
+                                                                <select class="js-example-tags" id="equipmentManufacturer" name="equipmentManufacturer"
+                                                                        title="Select Eqpt Manufacturer" data-live-search="true" style="width: 100%" readonly>
+                                                                    <option></option>
+                                                                    <c:forEach items="${listEqptManufacturer}" var="invInner">
+                                                                        <option value="${invInner.equipmentManufacturer}" ${invInner.selected}>${invInner.equipmentManufacturer}</option>
+                                                                    </c:forEach>
+                                                                </select>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -1430,7 +1603,7 @@
                                                     <div class="col-xl-1 col-sm-12 col-12">
                                                         <div class="mb-3">
                                                             <label for="minQty" class="form-label">Min. Qty</label>
-                                                            <div class="input-group">
+                                                            <div class="input input-group">
                                                                 <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
                                                                 <input type="text" class="form-control" id="minQty" name="minQty"
                                                                        placeholder="" value="" readonly>
@@ -1440,7 +1613,7 @@
                                                     <div class="col-xl-1 col-sm-12 col-12">
                                                         <div class="mb-3">
                                                             <label for="maxQty" class="form-label">Max. Qty</label>
-                                                            <div class="input-group">
+                                                            <div class="input input-group">
                                                                 <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
                                                                 <input type="text" class="form-control" id="maxQty" name="maxQty"
                                                                        placeholder="" value="" readonly>
@@ -1450,7 +1623,7 @@
                                                     <div class="form-group required col-xl-3 col-sm-12 col-12">
                                                         <div class="mb-3">
                                                             <label for="rack" class="form-label">Rack</label>
-                                                            <div class="input-group">
+                                                            <div class="input input-group">
                                                                 <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
                                                                 <input type="text" class="form-control" id="rack" name="rack"
                                                                        placeholder="" value="" readonly required>
@@ -1460,7 +1633,7 @@
                                                     <div class="form-group required col-xl-3 col-sm-12 col-12">
                                                         <div class="mb-3">
                                                             <label for="shelf" class="form-label">Shelf</label>
-                                                            <div class="input-group">
+                                                            <div class="input input-group">
                                                                 <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
                                                                 <input type="text" class="form-control" id="shelf" name="shelf"
                                                                        placeholder="" value="" readonly required>
@@ -1470,17 +1643,23 @@
                                                     <div class="visually-hidden col-xl-4 col-sm-12 col-12">
                                                         <div class="mb-3">
                                                             <label for="stressType" class="form-label">Stress Type</label>
-                                                            <div class="input-group">
+                                                            <div class="input input-group">
                                                                 <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
-                                                                <input type="text" class="form-control" id="stressType" name="stressType"
-                                                                       placeholder="" value="" readonly>
+                                                                <!--<input type="text" class="form-control" id="stressType" name="stressType" placeholder="" value="" readonly>-->
+                                                                <select class="js-example-tags" id="stressType" name="stressType"
+                                                                        title="Select Stress Type" data-live-search="true" style="width: 100%" readonly>
+                                                                    <option></option>
+                                                                    <c:forEach items="${listStressType}" var="invInner">
+                                                                        <option value="${invInner.stressType}" ${invInner.selected}>${invInner.stressType}</option>
+                                                                    </c:forEach>
+                                                                </select>
                                                             </div>
                                                         </div>
                                                     </div>
                                                     <div class="col-xl-2 col-sm-12 col-12">
                                                         <div class="mb-3">
                                                             <label for="onHandQty" class="form-label">On Hand Qty</label>
-                                                            <div class="input-group">
+                                                            <div class="input input-group">
                                                                 <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
                                                                 <input type="text" class="form-control" id="onHandQty" name="onHandQty"
                                                                        placeholder="" value="" readonly>
@@ -1490,7 +1669,7 @@
                                                     <div class="visually-hidden col-xl-2 col-sm-12 col-12">
                                                         <div class="mb-3">
                                                             <label for="productionQty" class="form-label">Prod. Qty</label>
-                                                            <div class="input-group">
+                                                            <div class="input input-group">
                                                                 <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
                                                                 <input type="text" class="form-control" id="productionQty" name="productionQty"
                                                                        placeholder="" value="" readonly>
@@ -1500,7 +1679,7 @@
                                                     <div class="visually-hidden col-xl-2 col-sm-12 col-12">
                                                         <div class="mb-3">
                                                             <label for="productionStagingQty" class="form-label">Prod. Staging Qty</label>
-                                                            <div class="input-group">
+                                                            <div class="input input-group">
                                                                 <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
                                                                 <input type="text" class="form-control" id="productionStagingQty" name="productionStagingQty"
                                                                        placeholder="" value="" readonly>
@@ -1510,7 +1689,7 @@
                                                     <div class="col-xl-2 col-sm-12 col-12">
                                                         <div class="mb-3">
                                                             <label for="repairQty" class="form-label">Repair Qty</label>
-                                                            <div class="input-group">
+                                                            <div class="input input-group">
                                                                 <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
                                                                 <input type="text" class="form-control" id="repairQty" name="repairQty"
                                                                        placeholder="" value="" readonly>
@@ -1520,7 +1699,7 @@
                                                     <div class="visually-hidden col-xl-2 col-sm-12 col-12">
                                                         <div class="mb-3">
                                                             <label for="quarantineQty" class="form-label">Quarantine Qty</label>
-                                                            <div class="input-group">
+                                                            <div class="input input-group">
                                                                 <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
                                                                 <input type="text" class="form-control" id="quarantineQty" name="quarantineQty"
                                                                        placeholder="" value="" readonly>
@@ -1530,7 +1709,7 @@
                                                     <div class="visually-hidden col-xl-2 col-sm-12 col-12">
                                                         <div class="mb-3">
                                                             <label for="externalCleanQty" class="form-label">Ext Clean Qty</label>
-                                                            <div class="input-group">
+                                                            <div class="input input-group">
                                                                 <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
                                                                 <input type="text" class="form-control" id="externalCleanQty" name="externalCleanQty"
                                                                        placeholder="" value="" readonly>
@@ -1540,7 +1719,7 @@
                                                     <div class="visually-hidden col-xl-2 col-sm-12 col-12">
                                                         <div class="mb-3">
                                                             <label for="externalRecleanQty" class="form-label">Ext Re-clean Qty</label>
-                                                            <div class="input-group">
+                                                            <div class="input input-group">
                                                                 <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
                                                                 <input type="text" class="form-control" id="externalRecleanQty" name="externalRecleanQty"
                                                                        placeholder="" value="" readonly>
@@ -1550,7 +1729,7 @@
                                                     <div class="visually-hidden col-xl-2 col-sm-12 col-12">
                                                         <div class="mb-3">
                                                             <label for="internalCleanQty" class="form-label">Int. Clean Qty</label>
-                                                            <div class="input-group">
+                                                            <div class="input input-group">
                                                                 <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
                                                                 <input type="text" class="form-control" id="internalCleanQty" name="internalCleanQty"
                                                                        placeholder="" value="" readonly>
@@ -1560,7 +1739,7 @@
                                                     <div class="visually-hidden col-xl-2 col-sm-12 col-12">
                                                         <div class="mb-3">
                                                             <label for="internalRecleanQty" class="form-label">Int. Re-Clean Qty</label>
-                                                            <div class="input-group">
+                                                            <div class="input input-group">
                                                                 <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
                                                                 <input type="text" class="form-control" id="internalRecleanQty" name="internalRecleanQty"
                                                                        placeholder="" value="" readonly>
@@ -1570,7 +1749,7 @@
                                                     <div class="col-xl-2 col-sm-12 col-12">
                                                         <div class="mb-3">
                                                             <label for="otherQty" class="form-label">Other Qty</label>
-                                                            <div class="input-group">
+                                                            <div class="input input-group">
                                                                 <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
                                                                 <input type="text" class="form-control" id="otherQty" name="otherQty"
                                                                        placeholder="" value="" readonly>
@@ -1580,7 +1759,7 @@
                                                     <div class="col-xl-2 col-sm-12 col-12">
                                                         <div class="mb-3">
                                                             <label for="vendorQty" class="form-label">Vendor Qty</label>
-                                                            <div class="input-group">
+                                                            <div class="input input-group">
                                                                 <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
                                                                 <input type="text" class="form-control" id="vendorQty" name="vendorQty"
                                                                        placeholder="" value="" readonly>
@@ -1589,7 +1768,7 @@
                                                     </div><div class="col-xl-2 col-sm-12 col-12">
                                                         <div class="mb-3">
                                                             <label for="otherOnsemiQty" class="form-label">Other onsemi Qty</label>
-                                                            <div class="input-group">
+                                                            <div class="input input-group">
                                                                 <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
                                                                 <input type="text" class="form-control" id="otherOnsemiQty" name="otherOnsemiQty"
                                                                        placeholder="" value="" readonly>
@@ -1599,7 +1778,7 @@
                                                     <div class="col-xl-2 col-sm-12 col-12">
                                                         <div class="mb-3">
                                                             <label for="storageFactoryQty" class="form-label">Storage Factory Qty</label>
-                                                            <div class="input-group">
+                                                            <div class="input input-group">
                                                                 <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
                                                                 <input type="text" class="form-control" id="storageFactoryQty" name="storageFactoryQty"
                                                                        placeholder="" value="" readonly>
@@ -1609,7 +1788,7 @@
                                                     <div class="col-xl-2 col-sm-12 col-12">
                                                         <div class="mb-3">
                                                             <label for="totalQty" class="form-label">Total Qty</label>
-                                                            <div class="input-group">
+                                                            <div class="input input-group">
                                                                 <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
                                                                 <input type="text" class="form-control" id="totalQty" name="totalQty"
                                                                        placeholder="" value="" readonly>
@@ -1620,7 +1799,7 @@
                                                         <div class="mb-3">
                                                             <label for="isConsumable" class="form-label">Consumable?</label>
                                                             <div class="input-group form-check form-switch">
-                                                                <input class="form-check-input" type="checkbox" role="switch" id="isConsumable" name="isConsumable" disabled>
+                                                                <input class="form-check-input" type="checkbox" id="isConsumable" name="isConsumable" disabled>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -1634,7 +1813,7 @@
                                                     <div class="col-12">
                                                         <div class="mb-3">
                                                             <label for="remarks" class="form-label">Remarks</label>
-                                                            <div class="input-group">
+                                                            <div class="input input-group">
                                                                 <span class="input-group-text"><i class="bi bi-pencil"></i></span>
                                                                 <textarea class="form-control" id="remarks" name="remarks" placeholder="Enter Message"
                                                                           rows="3" readonly></textarea>
@@ -1656,7 +1835,7 @@
                                                         <div class="mb-3">
                                                             <!--<div class="mb-3 was-validated">-->
                                                             <label for="itemType2" class="form-label">Item Type</label>
-                                                            <div class="input-group">
+                                                            <div class="input input-group">
                                                                 <!--<span class="input-group-text"><i class="bi bi-person"></i></span>-->
                                                                 <input type="text" class="form-control" id="itemType2" name="itemType2" placeholder="" value="" readonly required>
                                                                 <!--<div class="valid-feedback">Looks good!</div>-->
@@ -1667,7 +1846,7 @@
                                                     <div class="col-xl-2 col-sm-12 col-12">
                                                         <div class="mb-3">
                                                             <label for="subType" class="form-label">Sub Type</label>
-                                                            <div class="input-group">
+                                                            <div class="input input-group">
                                                                 <!--<span class="input-group-text"><i class="bi bi-person"></i></span>-->
                                                                 <input type="text" class="form-control" id="subType" name="subType" placeholder="" value="" readonly>
                                                                 <input type="hidden" class="form-control" id="itemPKID" name="itemPKID" placeholder="" value="" readonly>
@@ -1678,7 +1857,7 @@
                                                     <div class="form-group required col-xl-4 col-sm-12 col-12">
                                                         <div class="mb-3">
                                                             <label for="itemId" class="form-label">Item ID</label>
-                                                            <div class="input-group">
+                                                            <div class="input input-group">
                                                                 <!--<span class="input-group-text"><i class="bi bi-envelope"></i></span>-->
                                                                 <input type="text" class="form-control" id="itemId" name="itemId" placeholder="" value="" readonly required>
                                                             </div>
@@ -1687,7 +1866,7 @@
                                                     <div class="form-group required col-xl-4 col-sm-12 col-12">
                                                         <div class="mb-3">
                                                             <label for="itemName" class="form-label">Item Name</label>
-                                                            <div class="input-group">
+                                                            <div class="input input-group">
                                                                 <!--<span class="input-group-text"><i class="bi bi-telephone"></i></span>-->
                                                                 <input type="text" class="form-control" id="itemName" name="itemName" placeholder="" value="" readonly required>
                                                             </div>
@@ -1696,7 +1875,7 @@
                                                     <div class="col-xl-4 col-sm-12 col-12">
                                                         <div class="mb-3">
                                                             <label for="status" class="form-label">Status</label>
-                                                            <div class="input-group">
+                                                            <div class="input input-group">
                                                                 <!--<span class="input-group-text"><i class="bi bi-person"></i></span>-->
                                                                 <input type="text" class="form-control" id="status" name="status" placeholder="" value="" readonly>
                                                             </div>
@@ -1705,7 +1884,7 @@
                                                     <div class="visually-hidden col-xl-4 col-sm-12 col-12">
                                                         <div class="mb-3">
                                                             <label for="aluHrs" class="form-label">ALU</label>
-                                                            <div class="input-group">
+                                                            <div class="input input-group">
                                                                 <!--<span class="input-group-text"><i class="bi bi-envelope"></i></span>-->
                                                                 <input type="number" step="0.01" class="form-control" id="aluHrs" name="aluHrs" placeholder="" value="" readonly>
                                                             </div>
@@ -1714,18 +1893,32 @@
                                                     <div class="visually-hidden form-group required col-xl-4 col-sm-12 col-12">
                                                         <div class="mb-3">
                                                             <label for="assemblyId" class="form-label">Assembly ID</label>
-                                                            <div class="input-group">
+                                                            <div class="input input-group">
                                                                 <!--<span class="input-group-text"><i class="bi bi-telephone"></i></span>-->
-                                                                <input type="text" class="form-control" id="assemblyId" name="assemblyId" placeholder="" value="" readonly>
+                                                                <!--<input type="text" class="form-control" id="assemblyId" name="assemblyId" placeholder="" value="" readonly>-->
+                                                                <select class="js-example-tags" id="assemblyId" name="assemblyId"
+                                                                        title="Select AssemblyId" data-live-search="true" style="width: 100%" readonly>
+                                                                    <option></option>
+                                                                    <c:forEach items="${listAssemblyId}" var="invInner">
+                                                                        <option value="${invInner.assemblyId}" ${invInner.selected}>${invInner.assemblyId}</option>
+                                                                    </c:forEach>
+                                                                </select>
                                                             </div>
                                                         </div>
                                                     </div>
                                                     <div class="col-xl-4 col-sm-12 col-12">
                                                         <div class="mb-3">
                                                             <label for="model" class="form-label">Spare Part Model</label>
-                                                            <div class="input-group">
+                                                            <div class="input input-group">
                                                                 <!--<span class="input-group-text"><i class="bi bi-telephone"></i></span>-->
-                                                                <input type="text" class="form-control" id="model" name="model" value="" readonly>
+                                                                <!--<input type="text" class="form-control" id="model" name="model" value="" readonly>-->
+                                                                <select class="js-example-tags" id="model" name="model"
+                                                                        title="Select Model" data-live-search="true" style="width: 100%" readonly>
+                                                                    <option></option>
+                                                                    <c:forEach items="${listModel}" var="invInner">
+                                                                        <option value="${invInner.model}" ${invInner.selected}>${invInner.model}</option>
+                                                                    </c:forEach>
+                                                                </select>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -1733,16 +1926,23 @@
                                                     <div class="col-xl-4 col-sm-12 col-12">
                                                         <div class="mb-3">
                                                             <label for="manufacturer" class="form-label">Spare Part Manufacturer</label>
-                                                            <div class="input-group">
+                                                            <div class="input input-group">
                                                                 <!--<span class="input-group-text"><i class="bi bi-person"></i></span>-->
-                                                                <input type="text" class="form-control" id="manufacturer" name="manufacturer" placeholder="" value="" readonly>
+                                                                <!--<input type="text" class="form-control" id="manufacturer" name="manufacturer" placeholder="" value="" readonly>-->
+                                                                <select class="js-example-tags" id="manufacturer" name="manufacturer"
+                                                                        title="Select Manufacturer" data-live-search="true" style="width: 100%" readonly>
+                                                                    <option></option>
+                                                                    <c:forEach items="${listManufacturer}" var="invInner">
+                                                                        <option value="${invInner.manufacturer}" ${invInner.selected}>${invInner.manufacturer}</option>
+                                                                    </c:forEach>
+                                                                </select>
                                                             </div>
                                                         </div>
                                                     </div>
                                                     <div class="col-xl-4 col-sm-12 col-12">
                                                         <div class="mb-3">
                                                             <label for="unitCost" class="form-label">Unit cost (USD)</label>
-                                                            <div class="input-group">
+                                                            <div class="input input-group">
                                                                 <!--<span class="input-group-text"><i class="bi bi-envelope"></i></span>-->
                                                                 <input type="text" class="form-control" id="unitCost" name="unitCost" placeholder="" value="" readonly>
                                                             </div>
@@ -1751,27 +1951,48 @@
                                                     <div class="col-xl-4 col-sm-12 col-12">
                                                         <div class="mb-3">
                                                             <label for="equipmentType" class="form-label">Equipment Type</label>
-                                                            <div class="input-group">
+                                                            <div class="input input-group">
                                                                 <!--<span class="input-group-text"><i class="bi bi-person"></i></span>-->
-                                                                <input type="text" class="form-control" id="equipmentType" name="equipmentType" placeholder="" value="" readonly>
+                                                                <!--<input type="text" class="form-control" id="equipmentType" name="equipmentType" placeholder="" value="" readonly>-->
+                                                                <select class="js-example-tags" id="equipmentType" name="equipmentType"
+                                                                        title="Select Eqpt Type" data-live-search="true" style="width: 100%" readonly>
+                                                                    <option></option>
+                                                                    <c:forEach items="${listEqptType}" var="invInner">
+                                                                        <option value="${invInner.equipmentType}" ${invInner.selected}>${invInner.equipmentType}</option>
+                                                                    </c:forEach>
+                                                                </select>
                                                             </div>
                                                         </div>
                                                     </div>
                                                     <div class="col-xl-4 col-sm-12 col-12">
                                                         <div class="mb-3">
                                                             <label for="equipmentModel" class="form-label">Equipment Model</label>
-                                                            <div class="input-group">
+                                                            <div class="input input-group">
                                                                 <!--<span class="input-group-text"><i class="bi bi-envelope"></i></span>-->
-                                                                <input type="text" class="form-control" id="equipmentModel" name="equipmentModel" value="" readonly>
+                                                                <!--<input type="text" class="form-control" id="equipmentModel" name="equipmentModel" value="" readonly>-->
+                                                                <select class="js-example-tags" id="equipmentModel" name="equipmentModel"
+                                                                        title="Select Eqpt Model" data-live-search="true" style="width: 100%" readonly>
+                                                                    <option></option>
+                                                                    <c:forEach items="${listEqptModel}" var="invInner">
+                                                                        <option value="${invInner.equipmentModel}" ${invInner.selected}>${invInner.equipmentModel}</option>
+                                                                    </c:forEach>
+                                                                </select>
                                                             </div>
                                                         </div>
                                                     </div>
                                                     <div class="col-xl-4 col-sm-12 col-12">
                                                         <div class="mb-3">
                                                             <label for="equipmentManufacturer" class="form-label">Eqpt Manufacturer</label>
-                                                            <div class="input-group">
+                                                            <div class="input input-group">
                                                                 <!--<span class="input-group-text"><i class="bi bi-telephone"></i></span>-->
-                                                                <input type="text" class="form-control" id="equipmentManufacturer" name="equipmentManufacturer" value="" readonly>
+                                                                <!--<input type="text" class="form-control" id="equipmentManufacturer" name="equipmentManufacturer" value="" readonly>-->
+                                                                <select class="js-example-tags" id="equipmentManufacturer" name="equipmentManufacturer"
+                                                                        title="Select Eqpt Manufacturer" data-live-search="true" style="width: 100%" readonly>
+                                                                    <option></option>
+                                                                    <c:forEach items="${listEqptManufacturer}" var="invInner">
+                                                                        <option value="${invInner.equipmentManufacturer}" ${invInner.selected}>${invInner.equipmentManufacturer}</option>
+                                                                    </c:forEach>
+                                                                </select>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -1779,7 +2000,7 @@
                                                     <div class="col-xl-1 col-sm-12 col-12">
                                                         <div class="mb-3">
                                                             <label for="minQty" class="form-label">Min. Qty</label>
-                                                            <div class="input-group">
+                                                            <div class="input input-group">
                                                                 <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
                                                                 <input type="text" class="form-control" id="minQty" name="minQty"
                                                                        placeholder="" value="" readonly>
@@ -1789,7 +2010,7 @@
                                                     <div class="col-xl-1 col-sm-12 col-12">
                                                         <div class="mb-3">
                                                             <label for="maxQty" class="form-label">Max. Qty</label>
-                                                            <div class="input-group">
+                                                            <div class="input input-group">
                                                                 <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
                                                                 <input type="text" class="form-control" id="maxQty" name="maxQty"
                                                                        placeholder="" value="" readonly>
@@ -1799,7 +2020,7 @@
                                                     <div class="form-group required col-xl-3 col-sm-12 col-12">
                                                         <div class="mb-3">
                                                             <label for="rack" class="form-label">Rack</label>
-                                                            <div class="input-group">
+                                                            <div class="input input-group">
                                                                 <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
                                                                 <input type="text" class="form-control" id="rack" name="rack"
                                                                        placeholder="" value="" readonly required>
@@ -1809,7 +2030,7 @@
                                                     <div class="form-group required col-xl-3 col-sm-12 col-12">
                                                         <div class="mb-3">
                                                             <label for="shelf" class="form-label">Shelf</label>
-                                                            <div class="input-group">
+                                                            <div class="input input-group">
                                                                 <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
                                                                 <input type="text" class="form-control" id="shelf" name="shelf"
                                                                        placeholder="" value="" readonly required>
@@ -1819,17 +2040,23 @@
                                                     <div class="visually-hidden col-xl-4 col-sm-12 col-12">
                                                         <div class="mb-3">
                                                             <label for="stressType" class="form-label">Stress Type</label>
-                                                            <div class="input-group">
+                                                            <div class="input input-group">
                                                                 <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
-                                                                <input type="text" class="form-control" id="stressType" name="stressType"
-                                                                       placeholder="" value="" readonly>
+                                                                <!--<input type="text" class="form-control" id="stressType" name="stressType" placeholder="" value="" readonly>-->
+                                                                <select class="js-example-tags" id="stressType" name="stressType"
+                                                                        title="Select Stress Type" data-live-search="true" style="width: 100%" readonly>
+                                                                    <option></option>
+                                                                    <c:forEach items="${listStressType}" var="invInner">
+                                                                        <option value="${invInner.stressType}" ${invInner.selected}>${invInner.stressType}</option>
+                                                                    </c:forEach>
+                                                                </select>
                                                             </div>
                                                         </div>
                                                     </div>
                                                     <div class="col-xl-2 col-sm-12 col-12">
                                                         <div class="mb-3">
                                                             <label for="onHandQty" class="form-label">On Hand Qty</label>
-                                                            <div class="input-group">
+                                                            <div class="input input-group">
                                                                 <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
                                                                 <input type="text" class="form-control" id="onHandQty" name="onHandQty"
                                                                        placeholder="" value="" readonly>
@@ -1839,7 +2066,7 @@
                                                     <div class="col-xl-2 col-sm-12 col-12">
                                                         <div class="mb-3">
                                                             <label for="productionQty" class="form-label">Prod. Qty</label>
-                                                            <div class="input-group">
+                                                            <div class="input input-group">
                                                                 <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
                                                                 <input type="text" class="form-control" id="productionQty" name="productionQty"
                                                                        placeholder="" value="" readonly>
@@ -1849,7 +2076,7 @@
                                                     <div class="visually-hidden col-xl-2 col-sm-12 col-12">
                                                         <div class="mb-3">
                                                             <label for="productionStagingQty" class="form-label">Prod. Staging Qty</label>
-                                                            <div class="input-group">
+                                                            <div class="input input-group">
                                                                 <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
                                                                 <input type="text" class="form-control" id="productionStagingQty" name="productionStagingQty"
                                                                        placeholder="" value="" readonly>
@@ -1859,7 +2086,7 @@
                                                     <div class="visually-hidden col-xl-2 col-sm-12 col-12">
                                                         <div class="mb-3">
                                                             <label for="repairQty" class="form-label">Repair Qty</label>
-                                                            <div class="input-group">
+                                                            <div class="input input-group">
                                                                 <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
                                                                 <input type="text" class="form-control" id="repairQty" name="repairQty"
                                                                        placeholder="" value="" readonly>
@@ -1869,7 +2096,7 @@
                                                     <div class="visually-hidden col-xl-2 col-sm-12 col-12">
                                                         <div class="mb-3">
                                                             <label for="quarantineQty" class="form-label">Quarantine Qty</label>
-                                                            <div class="input-group">
+                                                            <div class="input input-group">
                                                                 <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
                                                                 <input type="text" class="form-control" id="quarantineQty" name="quarantineQty"
                                                                        placeholder="" value="" readonly>
@@ -1879,7 +2106,7 @@
                                                     <div class="visually-hidden col-xl-2 col-sm-12 col-12">
                                                         <div class="mb-3">
                                                             <label for="externalCleanQty" class="form-label">Ext Clean Qty</label>
-                                                            <div class="input-group">
+                                                            <div class="input input-group">
                                                                 <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
                                                                 <input type="text" class="form-control" id="externalCleanQty" name="externalCleanQty"
                                                                        placeholder="" value="" readonly>
@@ -1889,7 +2116,7 @@
                                                     <div class="visually-hidden col-xl-2 col-sm-12 col-12">
                                                         <div class="mb-3">
                                                             <label for="externalRecleanQty" class="form-label">Ext Re-clean Qty</label>
-                                                            <div class="input-group">
+                                                            <div class="input input-group">
                                                                 <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
                                                                 <input type="text" class="form-control" id="externalRecleanQty" name="externalRecleanQty"
                                                                        placeholder="" value="" readonly>
@@ -1899,7 +2126,7 @@
                                                     <div class="visually-hidden col-xl-2 col-sm-12 col-12">
                                                         <div class="mb-3">
                                                             <label for="internalCleanQty" class="form-label">Int. Clean Qty</label>
-                                                            <div class="input-group">
+                                                            <div class="input input-group">
                                                                 <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
                                                                 <input type="text" class="form-control" id="internalCleanQty" name="internalCleanQty"
                                                                        placeholder="" value="" readonly>
@@ -1909,7 +2136,7 @@
                                                     <div class="visually-hidden col-xl-2 col-sm-12 col-12">
                                                         <div class="mb-3">
                                                             <label for="internalRecleanQty" class="form-label">Int. Re-Clean Qty</label>
-                                                            <div class="input-group">
+                                                            <div class="input input-group">
                                                                 <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
                                                                 <input type="text" class="form-control" id="internalRecleanQty" name="internalRecleanQty"
                                                                        placeholder="" value="" readonly>
@@ -1919,7 +2146,7 @@
                                                     <div class="col-xl-2 col-sm-12 col-12">
                                                         <div class="mb-3">
                                                             <label for="otherQty" class="form-label">Other Qty</label>
-                                                            <div class="input-group">
+                                                            <div class="input input-group">
                                                                 <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
                                                                 <input type="text" class="form-control" id="otherQty" name="otherQty"
                                                                        placeholder="" value="" readonly>
@@ -1929,7 +2156,7 @@
                                                     <div class="visually-hidden col-xl-2 col-sm-12 col-12">
                                                         <div class="mb-3">
                                                             <label for="vendorQty" class="form-label">Vendor Qty</label>
-                                                            <div class="input-group">
+                                                            <div class="input input-group">
                                                                 <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
                                                                 <input type="text" class="form-control" id="vendorQty" name="vendorQty"
                                                                        placeholder="" value="" readonly>
@@ -1938,7 +2165,7 @@
                                                     </div><div class="visually-hidden col-xl-2 col-sm-12 col-12">
                                                         <div class="mb-3">
                                                             <label for="otherOnsemiQty" class="form-label">Other onsemi Qty</label>
-                                                            <div class="input-group">
+                                                            <div class="input input-group">
                                                                 <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
                                                                 <input type="text" class="form-control" id="otherOnsemiQty" name="otherOnsemiQty"
                                                                        placeholder="" value="" readonly>
@@ -1948,7 +2175,7 @@
                                                     <div class="col-xl-2 col-sm-12 col-12">
                                                         <div class="mb-3">
                                                             <label for="storageFactoryQty" class="form-label">Storage Factory Qty</label>
-                                                            <div class="input-group">
+                                                            <div class="input input-group">
                                                                 <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
                                                                 <input type="text" class="form-control" id="storageFactoryQty" name="storageFactoryQty"
                                                                        placeholder="" value="" readonly>
@@ -1958,7 +2185,7 @@
                                                     <div class="col-xl-2 col-sm-12 col-12">
                                                         <div class="mb-3">
                                                             <label for="totalQty" class="form-label">Total Qty</label>
-                                                            <div class="input-group">
+                                                            <div class="input input-group">
                                                                 <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
                                                                 <input type="text" class="form-control" id="totalQty" name="totalQty"
                                                                        placeholder="" value="" readonly>
@@ -1969,7 +2196,7 @@
                                                         <div class="mb-3">
                                                             <label for="isConsumable" class="form-label">Consumable?</label>
                                                             <div class="input-group form-check form-switch">
-                                                                <input class="form-check-input" type="checkbox" role="switch" id="isConsumable" name="isConsumable" disabled>
+                                                                <input class="form-check-input" type="checkbox" id="isConsumable" name="isConsumable" disabled>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -1983,7 +2210,7 @@
                                                     <div class="col-12">
                                                         <div class="mb-3">
                                                             <label for="remarks" class="form-label">Remarks</label>
-                                                            <div class="input-group">
+                                                            <div class="input input-group">
                                                                 <span class="input-group-text"><i class="bi bi-pencil"></i></span>
                                                                 <textarea class="form-control" id="remarks" name="remarks" placeholder="Enter Message"
                                                                           rows="3" readonly></textarea>
@@ -2005,7 +2232,7 @@
                                                         <div class="mb-3">
                                                             <!--<div class="mb-3 was-validated">-->
                                                             <label for="itemType2" class="form-label">Item Type</label>
-                                                            <div class="input-group">
+                                                            <div class="input input-group">
                                                                 <!--<span class="input-group-text"><i class="bi bi-person"></i></span>-->
                                                                 <input type="text" class="form-control" id="itemType2" name="itemType2" placeholder="" value="" readonly required>
                                                                 <!--<div class="valid-feedback">Looks good!</div>-->
@@ -2016,7 +2243,7 @@
                                                     <div class="col-xl-2 col-sm-12 col-12">
                                                         <div class="mb-3">
                                                             <label for="subType" class="form-label">Sub Type</label>
-                                                            <div class="input-group">
+                                                            <div class="input input-group">
                                                                 <!--<span class="input-group-text"><i class="bi bi-person"></i></span>-->
                                                                 <input type="text" class="form-control" id="subType" name="subType" placeholder="" value="" readonly>
                                                                 <input type="hidden" class="form-control" id="itemPKID" name="itemPKID" placeholder="" value="" readonly>
@@ -2027,7 +2254,7 @@
                                                     <div class="form-group required col-xl-4 col-sm-12 col-12">
                                                         <div class="mb-3">
                                                             <label for="itemId" class="form-label">Item ID</label>
-                                                            <div class="input-group">
+                                                            <div class="input input-group">
                                                                 <!--<span class="input-group-text"><i class="bi bi-envelope"></i></span>-->
                                                                 <input type="text" class="form-control" id="itemId" name="itemId" placeholder="" value="" readonly required>
                                                             </div>
@@ -2036,7 +2263,7 @@
                                                     <div class="form-group required col-xl-4 col-sm-12 col-12">
                                                         <div class="mb-3">
                                                             <label for="itemName" class="form-label">Item Name</label>
-                                                            <div class="input-group">
+                                                            <div class="input input-group">
                                                                 <!--<span class="input-group-text"><i class="bi bi-telephone"></i></span>-->
                                                                 <input type="text" class="form-control" id="itemName" name="itemName" placeholder="" value="" readonly required>
                                                             </div>
@@ -2045,7 +2272,7 @@
                                                     <div class="col-xl-4 col-sm-12 col-12">
                                                         <div class="mb-3">
                                                             <label for="status" class="form-label">Status</label>
-                                                            <div class="input-group">
+                                                            <div class="input input-group">
                                                                 <!--<span class="input-group-text"><i class="bi bi-person"></i></span>-->
                                                                 <input type="text" class="form-control" id="status" name="status" placeholder="" value="" readonly>
                                                             </div>
@@ -2054,7 +2281,7 @@
                                                     <div class="visually-hidden col-xl-4 col-sm-12 col-12">
                                                         <div class="mb-3">
                                                             <label for="aluHrs" class="form-label">ALU</label>
-                                                            <div class="input-group">
+                                                            <div class="input input-group">
                                                                 <!--<span class="input-group-text"><i class="bi bi-envelope"></i></span>-->
                                                                 <input type="number" step="0.01" class="form-control" id="aluHrs" name="aluHrs" placeholder="" value="" readonly>
                                                             </div>
@@ -2063,18 +2290,32 @@
                                                     <div class="visually-hidden col-xl-4 col-sm-12 col-12">
                                                         <div class="mb-3">
                                                             <label for="assemblyId" class="form-label">Assembly ID</label>
-                                                            <div class="input-group">
+                                                            <div class="input input-group">
                                                                 <!--<span class="input-group-text"><i class="bi bi-telephone"></i></span>-->
-                                                                <input type="text" class="form-control" id="assemblyId" name="assemblyId" placeholder="" value="" readonly>
+                                                                <!--<input type="text" class="form-control" id="assemblyId" name="assemblyId" placeholder="" value="" readonly>-->
+                                                                <select class="js-example-tags" id="assemblyId" name="assemblyId"
+                                                                        title="Select AssemblyId" data-live-search="true" style="width: 100%" readonly>
+                                                                    <option></option>
+                                                                    <c:forEach items="${listAssemblyId}" var="invInner">
+                                                                        <option value="${invInner.assemblyId}" ${invInner.selected}>${invInner.assemblyId}</option>
+                                                                    </c:forEach>
+                                                                </select>
                                                             </div>
                                                         </div>
                                                     </div>
                                                     <div class="visually-hidden col-xl-4 col-sm-12 col-12">
                                                         <div class="mb-3">
                                                             <label for="model" class="form-label">Spare Part Model</label>
-                                                            <div class="input-group">
+                                                            <div class="input input-group">
                                                                 <!--<span class="input-group-text"><i class="bi bi-telephone"></i></span>-->
-                                                                <input type="text" class="form-control" id="model" name="model" value="" readonly>
+                                                                <!--<input type="text" class="form-control" id="model" name="model" value="" readonly>-->
+                                                                <select class="js-example-tags" id="model" name="model"
+                                                                        title="Select Model" data-live-search="true" style="width: 100%" readonly>
+                                                                    <option></option>
+                                                                    <c:forEach items="${listModel}" var="invInner">
+                                                                        <option value="${invInner.model}" ${invInner.selected}>${invInner.model}</option>
+                                                                    </c:forEach>
+                                                                </select>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -2082,16 +2323,23 @@
                                                     <div class="visually-hidden col-xl-4 col-sm-12 col-12">
                                                         <div class="mb-3">
                                                             <label for="manufacturer" class="form-label">Spare Part Manufacturer</label>
-                                                            <div class="input-group">
+                                                            <div class="input input-group">
                                                                 <!--<span class="input-group-text"><i class="bi bi-person"></i></span>-->
-                                                                <input type="text" class="form-control" id="manufacturer" name="manufacturer" placeholder="" value="" readonly>
+                                                                <!--<input type="text" class="form-control" id="manufacturer" name="manufacturer" placeholder="" value="" readonly>-->
+                                                                <select class="js-example-tags" id="manufacturer" name="manufacturer"
+                                                                        title="Select Manufacturer" data-live-search="true" style="width: 100%" readonly>
+                                                                    <option></option>
+                                                                    <c:forEach items="${listManufacturer}" var="invInner">
+                                                                        <option value="${invInner.manufacturer}" ${invInner.selected}>${invInner.manufacturer}</option>
+                                                                    </c:forEach>
+                                                                </select>
                                                             </div>
                                                         </div>
                                                     </div>
                                                     <div class="col-xl-4 col-sm-12 col-12">
                                                         <div class="mb-3">
                                                             <label for="unitCost" class="form-label">Unit cost (USD)</label>
-                                                            <div class="input-group">
+                                                            <div class="input input-group">
                                                                 <!--<span class="input-group-text"><i class="bi bi-envelope"></i></span>-->
                                                                 <input type="text" class="form-control" id="unitCost" name="unitCost" placeholder="" value="" readonly>
                                                             </div>
@@ -2100,27 +2348,48 @@
                                                     <div class="visually-hidden col-xl-4 col-sm-12 col-12">
                                                         <div class="mb-3">
                                                             <label for="equipmentType" class="form-label">Equipment Type</label>
-                                                            <div class="input-group">
+                                                            <div class="input input-group">
                                                                 <!--<span class="input-group-text"><i class="bi bi-person"></i></span>-->
-                                                                <input type="text" class="form-control" id="equipmentType" name="equipmentType" placeholder="" value="" readonly>
+                                                                <!--<input type="text" class="form-control" id="equipmentType" name="equipmentType" placeholder="" value="" readonly>-->
+                                                                <select class="js-example-tags" id="equipmentType" name="equipmentType"
+                                                                        title="Select Eqpt Type" data-live-search="true" style="width: 100%" readonly>
+                                                                    <option></option>
+                                                                    <c:forEach items="${listEqptType}" var="invInner">
+                                                                        <option value="${invInner.equipmentType}" ${invInner.selected}>${invInner.equipmentType}</option>
+                                                                    </c:forEach>
+                                                                </select>
                                                             </div>
                                                         </div>
                                                     </div>
                                                     <div class="visually-hidden col-xl-4 col-sm-12 col-12">
                                                         <div class="mb-3">
                                                             <label for="equipmentModel" class="form-label">Equipment Model</label>
-                                                            <div class="input-group">
+                                                            <div class="input input-group">
                                                                 <!--<span class="input-group-text"><i class="bi bi-envelope"></i></span>-->
-                                                                <input type="text" class="form-control" id="equipmentModel" name="equipmentModel" value="" readonly>
+                                                                <!--<input type="text" class="form-control" id="equipmentModel" name="equipmentModel" value="" readonly>-->
+                                                                <select class="js-example-tags" id="equipmentModel" name="equipmentModel"
+                                                                        title="Select Eqpt Model" data-live-search="true" style="width: 100%" readonly>
+                                                                    <option></option>
+                                                                    <c:forEach items="${listEqptModel}" var="invInner">
+                                                                        <option value="${invInner.equipmentModel}" ${invInner.selected}>${invInner.equipmentModel}</option>
+                                                                    </c:forEach>
+                                                                </select>
                                                             </div>
                                                         </div>
                                                     </div>
                                                     <div class="visually-hidden col-xl-4 col-sm-12 col-12">
                                                         <div class="mb-3">
                                                             <label for="equipmentManufacturer" class="form-label">Eqpt Manufacturer</label>
-                                                            <div class="input-group">
+                                                            <div class="input input-group">
                                                                 <!--<span class="input-group-text"><i class="bi bi-telephone"></i></span>-->
-                                                                <input type="text" class="form-control" id="equipmentManufacturer" name="equipmentManufacturer" value="" readonly>
+                                                                <!--<input type="text" class="form-control" id="equipmentManufacturer" name="equipmentManufacturer" value="" readonly>-->
+                                                                <select class="js-example-tags" id="equipmentManufacturer" name="equipmentManufacturer"
+                                                                        title="Select Eqpt Manufacturer" data-live-search="true" style="width: 100%" readonly>
+                                                                    <option></option>
+                                                                    <c:forEach items="${listEqptManufacturer}" var="invInner">
+                                                                        <option value="${invInner.equipmentManufacturer}" ${invInner.selected}>${invInner.equipmentManufacturer}</option>
+                                                                    </c:forEach>
+                                                                </select>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -2128,7 +2397,7 @@
                                                     <div class="col-xl-1 col-sm-12 col-12">
                                                         <div class="mb-3">
                                                             <label for="minQty" class="form-label">Min. Qty</label>
-                                                            <div class="input-group">
+                                                            <div class="input input-group">
                                                                 <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
                                                                 <input type="text" class="form-control" id="minQty" name="minQty"
                                                                        placeholder="" value="" readonly>
@@ -2138,7 +2407,7 @@
                                                     <div class="col-xl-1 col-sm-12 col-12">
                                                         <div class="mb-3">
                                                             <label for="maxQty" class="form-label">Max. Qty</label>
-                                                            <div class="input-group">
+                                                            <div class="input input-group">
                                                                 <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
                                                                 <input type="text" class="form-control" id="maxQty" name="maxQty"
                                                                        placeholder="" value="" readonly>
@@ -2148,7 +2417,7 @@
                                                     <div class="form-group required col-xl-3 col-sm-12 col-12">
                                                         <div class="mb-3">
                                                             <label for="rack" class="form-label">Rack</label>
-                                                            <div class="input-group">
+                                                            <div class="input input-group">
                                                                 <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
                                                                 <input type="text" class="form-control" id="rack" name="rack"
                                                                        placeholder="" value="" readonly required>
@@ -2158,7 +2427,7 @@
                                                     <div class="form-group required col-xl-3 col-sm-12 col-12">
                                                         <div class="mb-3">
                                                             <label for="shelf" class="form-label">Shelf</label>
-                                                            <div class="input-group">
+                                                            <div class="input input-group">
                                                                 <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
                                                                 <input type="text" class="form-control" id="shelf" name="shelf"
                                                                        placeholder="" value="" readonly required>
@@ -2168,17 +2437,23 @@
                                                     <div class="visually-hidden col-xl-4 col-sm-12 col-12">
                                                         <div class="mb-3">
                                                             <label for="stressType" class="form-label">Stress Type</label>
-                                                            <div class="input-group">
+                                                            <div class="input input-group">
                                                                 <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
-                                                                <input type="text" class="form-control" id="stressType" name="stressType"
-                                                                       placeholder="" value="" readonly>
+                                                                <!--<input type="text" class="form-control" id="stressType" name="stressType" placeholder="" value="" readonly>-->
+                                                                <select class="js-example-tags" id="stressType" name="stressType"
+                                                                        title="Select Stress Type" data-live-search="true" style="width: 100%" readonly>
+                                                                    <option></option>
+                                                                    <c:forEach items="${listStressType}" var="invInner">
+                                                                        <option value="${invInner.stressType}" ${invInner.selected}>${invInner.stressType}</option>
+                                                                    </c:forEach>
+                                                                </select>
                                                             </div>
                                                         </div>
                                                     </div>
                                                     <div class="col-xl-2 col-sm-12 col-12">
                                                         <div class="mb-3">
                                                             <label for="onHandQty" class="form-label">On Hand Qty</label>
-                                                            <div class="input-group">
+                                                            <div class="input input-group">
                                                                 <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
                                                                 <input type="text" class="form-control" id="onHandQty" name="onHandQty"
                                                                        placeholder="" value="" readonly>
@@ -2188,7 +2463,7 @@
                                                     <div class="col-xl-2 col-sm-12 col-12">
                                                         <div class="mb-3">
                                                             <label for="productionQty" class="form-label">Prod. Qty</label>
-                                                            <div class="input-group">
+                                                            <div class="input input-group">
                                                                 <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
                                                                 <input type="text" class="form-control" id="productionQty" name="productionQty"
                                                                        placeholder="" value="" readonly>
@@ -2198,7 +2473,7 @@
                                                     <div class="visually-hidden col-xl-2 col-sm-12 col-12">
                                                         <div class="mb-3">
                                                             <label for="productionStagingQty" class="form-label">Prod. Staging Qty</label>
-                                                            <div class="input-group">
+                                                            <div class="input input-group">
                                                                 <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
                                                                 <input type="text" class="form-control" id="productionStagingQty" name="productionStagingQty"
                                                                        placeholder="" value="" readonly>
@@ -2208,7 +2483,7 @@
                                                     <div class="visually-hidden col-xl-2 col-sm-12 col-12">
                                                         <div class="mb-3">
                                                             <label for="repairQty" class="form-label">Repair Qty</label>
-                                                            <div class="input-group">
+                                                            <div class="input input-group">
                                                                 <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
                                                                 <input type="text" class="form-control" id="repairQty" name="repairQty"
                                                                        placeholder="" value="" readonly>
@@ -2218,7 +2493,7 @@
                                                     <div class="visually-hidden col-xl-2 col-sm-12 col-12">
                                                         <div class="mb-3">
                                                             <label for="quarantineQty" class="form-label">Quarantine Qty</label>
-                                                            <div class="input-group">
+                                                            <div class="input input-group">
                                                                 <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
                                                                 <input type="text" class="form-control" id="quarantineQty" name="quarantineQty"
                                                                        placeholder="" value="" readonly>
@@ -2228,7 +2503,7 @@
                                                     <div class="visually-hidden col-xl-2 col-sm-12 col-12">
                                                         <div class="mb-3">
                                                             <label for="externalCleanQty" class="form-label">Ext Clean Qty</label>
-                                                            <div class="input-group">
+                                                            <div class="input input-group">
                                                                 <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
                                                                 <input type="text" class="form-control" id="externalCleanQty" name="externalCleanQty"
                                                                        placeholder="" value="" readonly>
@@ -2238,7 +2513,7 @@
                                                     <div class="visually-hidden col-xl-2 col-sm-12 col-12">
                                                         <div class="mb-3">
                                                             <label for="externalRecleanQty" class="form-label">Ext Re-clean Qty</label>
-                                                            <div class="input-group">
+                                                            <div class="input input-group">
                                                                 <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
                                                                 <input type="text" class="form-control" id="externalRecleanQty" name="externalRecleanQty"
                                                                        placeholder="" value="" readonly>
@@ -2248,7 +2523,7 @@
                                                     <div class="visually-hidden col-xl-2 col-sm-12 col-12">
                                                         <div class="mb-3">
                                                             <label for="internalCleanQty" class="form-label">Int. Clean Qty</label>
-                                                            <div class="input-group">
+                                                            <div class="input input-group">
                                                                 <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
                                                                 <input type="text" class="form-control" id="internalCleanQty" name="internalCleanQty"
                                                                        placeholder="" value="" readonly>
@@ -2258,7 +2533,7 @@
                                                     <div class="visually-hidden col-xl-2 col-sm-12 col-12">
                                                         <div class="mb-3">
                                                             <label for="internalRecleanQty" class="form-label">Int. Re-Clean Qty</label>
-                                                            <div class="input-group">
+                                                            <div class="input input-group">
                                                                 <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
                                                                 <input type="text" class="form-control" id="internalRecleanQty" name="internalRecleanQty"
                                                                        placeholder="" value="" readonly>
@@ -2268,7 +2543,7 @@
                                                     <div class="col-xl-2 col-sm-12 col-12">
                                                         <div class="mb-3">
                                                             <label for="otherQty" class="form-label">Other Qty</label>
-                                                            <div class="input-group">
+                                                            <div class="input input-group">
                                                                 <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
                                                                 <input type="text" class="form-control" id="otherQty" name="otherQty"
                                                                        placeholder="" value="" readonly>
@@ -2278,7 +2553,7 @@
                                                     <div class="visually-hidden col-xl-2 col-sm-12 col-12">
                                                         <div class="mb-3">
                                                             <label for="vendorQty" class="form-label">Vendor Qty</label>
-                                                            <div class="input-group">
+                                                            <div class="input input-group">
                                                                 <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
                                                                 <input type="text" class="form-control" id="vendorQty" name="vendorQty"
                                                                        placeholder="" value="" readonly>
@@ -2287,7 +2562,7 @@
                                                     </div><div class="col-xl-2 col-sm-12 col-12">
                                                         <div class="mb-3">
                                                             <label for="otherOnsemiQty" class="form-label">Other onsemi Qty</label>
-                                                            <div class="input-group">
+                                                            <div class="input input-group">
                                                                 <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
                                                                 <input type="text" class="form-control" id="otherOnsemiQty" name="otherOnsemiQty"
                                                                        placeholder="" value="" readonly>
@@ -2297,7 +2572,7 @@
                                                     <div class="col-xl-2 col-sm-12 col-12">
                                                         <div class="mb-3">
                                                             <label for="storageFactoryQty" class="form-label">Storage Factory Qty</label>
-                                                            <div class="input-group">
+                                                            <div class="input input-group">
                                                                 <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
                                                                 <input type="text" class="form-control" id="storageFactoryQty" name="storageFactoryQty"
                                                                        placeholder="" value="" readonly>
@@ -2307,7 +2582,7 @@
                                                     <div class="col-xl-2 col-sm-12 col-12">
                                                         <div class="mb-3">
                                                             <label for="totalQty" class="form-label">Total Qty</label>
-                                                            <div class="input-group">
+                                                            <div class="input input-group">
                                                                 <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
                                                                 <input type="text" class="form-control" id="totalQty" name="totalQty"
                                                                        placeholder="" value="" readonly>
@@ -2318,7 +2593,7 @@
                                                         <div class="mb-3">
                                                             <label for="isConsumable" class="form-label">Consumable?</label>
                                                             <div class="input-group form-check form-switch">
-                                                                <input class="form-check-input" type="checkbox" role="switch" id="isConsumable" name="isConsumable" disabled>
+                                                                <input class="form-check-input" type="checkbox" id="isConsumable" name="isConsumable" disabled>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -2332,7 +2607,7 @@
                                                     <div class="col-12">
                                                         <div class="mb-3">
                                                             <label for="remarks" class="form-label">Remarks</label>
-                                                            <div class="input-group">
+                                                            <div class="input input-group">
                                                                 <span class="input-group-text"><i class="bi bi-pencil"></i></span>
                                                                 <textarea class="form-control" id="remarks" name="remarks" placeholder="Enter Message"
                                                                           rows="3" readonly></textarea>
@@ -2354,7 +2629,7 @@
                                                         <div class="mb-3">
                                                             <!--<div class="mb-3 was-validated">-->
                                                             <label for="itemType2" class="form-label">Item Type</label>
-                                                            <div class="input-group">
+                                                            <div class="input input-group">
                                                                 <!--<span class="input-group-text"><i class="bi bi-person"></i></span>-->
                                                                 <input type="text" class="form-control" id="itemType2" name="itemType2" placeholder="" value="" readonly required>
                                                                 <!--<div class="valid-feedback">Looks good!</div>-->
@@ -2365,7 +2640,7 @@
                                                     <div class="col-xl-2 col-sm-12 col-12">
                                                         <div class="mb-3">
                                                             <label for="subType" class="form-label">Sub Type</label>
-                                                            <div class="input-group">
+                                                            <div class="input input-group">
                                                                 <!--<span class="input-group-text"><i class="bi bi-person"></i></span>-->
                                                                 <input type="text" class="form-control" id="subType" name="subType" placeholder="" value="" readonly>
                                                                 <input type="hidden" class="form-control" id="itemPKID" name="itemPKID" placeholder="" value="" readonly>
@@ -2376,7 +2651,7 @@
                                                     <div class="form-group required col-xl-4 col-sm-12 col-12">
                                                         <div class="mb-3">
                                                             <label for="itemId" class="form-label">Item ID</label>
-                                                            <div class="input-group">
+                                                            <div class="input input-group">
                                                                 <!--<span class="input-group-text"><i class="bi bi-envelope"></i></span>-->
                                                                 <input type="text" class="form-control" id="itemId" name="itemId" placeholder="" value="" readonly required>
                                                             </div>
@@ -2385,7 +2660,7 @@
                                                     <div class="form-group required col-xl-4 col-sm-12 col-12">
                                                         <div class="mb-3">
                                                             <label for="itemName" class="form-label">Item Name</label>
-                                                            <div class="input-group">
+                                                            <div class="input input-group">
                                                                 <!--<span class="input-group-text"><i class="bi bi-telephone"></i></span>-->
                                                                 <input type="text" class="form-control" id="itemName" name="itemName" placeholder="" value="" readonly required>
                                                             </div>
@@ -2394,7 +2669,7 @@
                                                     <div class="col-xl-4 col-sm-12 col-12">
                                                         <div class="mb-3">
                                                             <label for="status" class="form-label">Status</label>
-                                                            <div class="input-group">
+                                                            <div class="input input-group">
                                                                 <!--<span class="input-group-text"><i class="bi bi-person"></i></span>-->
                                                                 <input type="text" class="form-control" id="status" name="status" placeholder="" value="" readonly>
                                                             </div>
@@ -2403,7 +2678,7 @@
                                                     <div class="visually-hidden col-xl-4 col-sm-12 col-12">
                                                         <div class="mb-3">
                                                             <label for="aluHrs" class="form-label">ALU</label>
-                                                            <div class="input-group">
+                                                            <div class="input input-group">
                                                                 <!--<span class="input-group-text"><i class="bi bi-envelope"></i></span>-->
                                                                 <input type="number" step="0.01" class="form-control" id="aluHrs" name="aluHrs" placeholder="" value="" readonly>
                                                             </div>
@@ -2412,18 +2687,32 @@
                                                     <div class="visually-hidden form-group required col-xl-4 col-sm-12 col-12">
                                                         <div class="mb-3">
                                                             <label for="assemblyId" class="form-label">Assembly ID</label>
-                                                            <div class="input-group">
+                                                            <div class="input input-group">
                                                                 <!--<span class="input-group-text"><i class="bi bi-telephone"></i></span>-->
-                                                                <input type="text" class="form-control" id="assemblyId" name="assemblyId" placeholder="" value="" readonly>
+                                                                <!--<input type="text" class="form-control" id="assemblyId" name="assemblyId" placeholder="" value="" readonly>-->
+                                                                <select class="js-example-tags" id="assemblyId" name="assemblyId"
+                                                                        title="Select AssemblyId" data-live-search="true" style="width: 100%" readonly>
+                                                                    <option></option>
+                                                                    <c:forEach items="${listAssemblyId}" var="invInner">
+                                                                        <option value="${invInner.assemblyId}" ${invInner.selected}>${invInner.assemblyId}</option>
+                                                                    </c:forEach>
+                                                                </select>
                                                             </div>
                                                         </div>
                                                     </div>
                                                     <div class="visually-hidden col-xl-4 col-sm-12 col-12">
                                                         <div class="mb-3">
                                                             <label for="model" class="form-label">Spare Part Model</label>
-                                                            <div class="input-group">
+                                                            <div class="input input-group">
                                                                 <!--<span class="input-group-text"><i class="bi bi-telephone"></i></span>-->
-                                                                <input type="text" class="form-control" id="model" name="model" value="" readonly>
+                                                                <!--<input type="text" class="form-control" id="model" name="model" value="" readonly>-->
+                                                                <select class="js-example-tags" id="model" name="model"
+                                                                        title="Select Model" data-live-search="true" style="width: 100%" readonly>
+                                                                    <option></option>
+                                                                    <c:forEach items="${listModel}" var="invInner">
+                                                                        <option value="${invInner.model}" ${invInner.selected}>${invInner.model}</option>
+                                                                    </c:forEach>
+                                                                </select>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -2431,16 +2720,23 @@
                                                     <div class="col-xl-4 col-sm-12 col-12">
                                                         <div class="mb-3">
                                                             <label for="manufacturer" class="form-label">Spare Part Manufacturer</label>
-                                                            <div class="input-group">
+                                                            <div class="input input-group">
                                                                 <!--<span class="input-group-text"><i class="bi bi-person"></i></span>-->
-                                                                <input type="text" class="form-control" id="manufacturer" name="manufacturer" placeholder="" value="" readonly>
+                                                                <!--<input type="text" class="form-control" id="manufacturer" name="manufacturer" placeholder="" value="" readonly>-->
+                                                                <select class="js-example-tags" id="manufacturer" name="manufacturer"
+                                                                        title="Select Manufacturer" data-live-search="true" style="width: 100%" readonly>
+                                                                    <option></option>
+                                                                    <c:forEach items="${listManufacturer}" var="invInner">
+                                                                        <option value="${invInner.manufacturer}" ${invInner.selected}>${invInner.manufacturer}</option>
+                                                                    </c:forEach>
+                                                                </select>
                                                             </div>
                                                         </div>
                                                     </div>
                                                     <div class="col-xl-4 col-sm-12 col-12">
                                                         <div class="mb-3">
                                                             <label for="unitCost" class="form-label">Unit cost (USD)</label>
-                                                            <div class="input-group">
+                                                            <div class="input input-group">
                                                                 <!--<span class="input-group-text"><i class="bi bi-envelope"></i></span>-->
                                                                 <input type="text" class="form-control" id="unitCost" name="unitCost" placeholder="" value="" readonly>
                                                             </div>
@@ -2449,27 +2745,48 @@
                                                     <div class="visually-hidden col-xl-4 col-sm-12 col-12">
                                                         <div class="mb-3">
                                                             <label for="equipmentType" class="form-label">Equipment Type</label>
-                                                            <div class="input-group">
+                                                            <div class="input input-group">
                                                                 <!--<span class="input-group-text"><i class="bi bi-person"></i></span>-->
-                                                                <input type="text" class="form-control" id="equipmentType" name="equipmentType" placeholder="" value="" readonly>
+                                                                <!--<input type="text" class="form-control" id="equipmentType" name="equipmentType" placeholder="" value="" readonly>-->
+                                                                <select class="js-example-tags" id="equipmentType" name="equipmentType"
+                                                                        title="Select Eqpt Type" data-live-search="true" style="width: 100%" readonly>
+                                                                    <option></option>
+                                                                    <c:forEach items="${listEqptType}" var="invInner">
+                                                                        <option value="${invInner.equipmentType}" ${invInner.selected}>${invInner.equipmentType}</option>
+                                                                    </c:forEach>
+                                                                </select>
                                                             </div>
                                                         </div>
                                                     </div>
                                                     <div class="visually-hidden col-xl-4 col-sm-12 col-12">
                                                         <div class="mb-3">
                                                             <label for="equipmentModel" class="form-label">Equipment Model</label>
-                                                            <div class="input-group">
+                                                            <div class="input input-group">
                                                                 <!--<span class="input-group-text"><i class="bi bi-envelope"></i></span>-->
-                                                                <input type="text" class="form-control" id="equipmentModel" name="equipmentModel" value="" readonly>
+                                                                <!--<input type="text" class="form-control" id="equipmentModel" name="equipmentModel" value="" readonly>-->
+                                                                <select class="js-example-tags" id="equipmentModel" name="equipmentModel"
+                                                                        title="Select Eqpt Model" data-live-search="true" style="width: 100%" readonly>
+                                                                    <option></option>
+                                                                    <c:forEach items="${listEqptModel}" var="invInner">
+                                                                        <option value="${invInner.equipmentModel}" ${invInner.selected}>${invInner.equipmentModel}</option>
+                                                                    </c:forEach>
+                                                                </select>
                                                             </div>
                                                         </div>
                                                     </div>
                                                     <div class="visually-hidden col-xl-4 col-sm-12 col-12">
                                                         <div class="mb-3">
                                                             <label for="equipmentManufacturer" class="form-label">Eqpt Manufacturer</label>
-                                                            <div class="input-group">
+                                                            <div class="input input-group">
                                                                 <!--<span class="input-group-text"><i class="bi bi-telephone"></i></span>-->
-                                                                <input type="text" class="form-control" id="equipmentManufacturer" name="equipmentManufacturer" value="" readonly>
+                                                                <!--<input type="text" class="form-control" id="equipmentManufacturer" name="equipmentManufacturer" value="" readonly>-->
+                                                                <select class="js-example-tags" id="equipmentManufacturer" name="equipmentManufacturer"
+                                                                        title="Select Eqpt Manufacturer" data-live-search="true" style="width: 100%" readonly>
+                                                                    <option></option>
+                                                                    <c:forEach items="${listEqptManufacturer}" var="invInner">
+                                                                        <option value="${invInner.equipmentManufacturer}" ${invInner.selected}>${invInner.equipmentManufacturer}</option>
+                                                                    </c:forEach>
+                                                                </select>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -2477,7 +2794,7 @@
                                                     <div class="col-xl-1 col-sm-12 col-12">
                                                         <div class="mb-3">
                                                             <label for="minQty" class="form-label">Min. Qty</label>
-                                                            <div class="input-group">
+                                                            <div class="input input-group">
                                                                 <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
                                                                 <input type="text" class="form-control" id="minQty" name="minQty"
                                                                        placeholder="" value="" readonly>
@@ -2487,7 +2804,7 @@
                                                     <div class="col-xl-1 col-sm-12 col-12">
                                                         <div class="mb-3">
                                                             <label for="maxQty" class="form-label">Max. Qty</label>
-                                                            <div class="input-group">
+                                                            <div class="input input-group">
                                                                 <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
                                                                 <input type="text" class="form-control" id="maxQty" name="maxQty"
                                                                        placeholder="" value="" readonly>
@@ -2497,7 +2814,7 @@
                                                     <div class="form-group required col-xl-3 col-sm-12 col-12">
                                                         <div class="mb-3">
                                                             <label for="rack" class="form-label">Rack</label>
-                                                            <div class="input-group">
+                                                            <div class="input input-group">
                                                                 <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
                                                                 <input type="text" class="form-control" id="rack" name="rack"
                                                                        placeholder="" value="" readonly required>
@@ -2507,7 +2824,7 @@
                                                     <div class="form-group required col-xl-3 col-sm-12 col-12">
                                                         <div class="mb-3">
                                                             <label for="shelf" class="form-label">Shelf</label>
-                                                            <div class="input-group">
+                                                            <div class="input input-group">
                                                                 <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
                                                                 <input type="text" class="form-control" id="shelf" name="shelf"
                                                                        placeholder="" value="" readonly required>
@@ -2517,17 +2834,23 @@
                                                     <div class="visually-hidden col-xl-4 col-sm-12 col-12">
                                                         <div class="mb-3">
                                                             <label for="stressType" class="form-label">Stress Type</label>
-                                                            <div class="input-group">
+                                                            <div class="input input-group">
                                                                 <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
-                                                                <input type="text" class="form-control" id="stressType" name="stressType"
-                                                                       placeholder="" value="" readonly>
+                                                                <!--<input type="text" class="form-control" id="stressType" name="stressType" placeholder="" value="" readonly>-->
+                                                                <select class="js-example-tags" id="stressType" name="stressType"
+                                                                        title="Select Stress Type" data-live-search="true" style="width: 100%" readonly>
+                                                                    <option></option>
+                                                                    <c:forEach items="${listStressType}" var="invInner">
+                                                                        <option value="${invInner.stressType}" ${invInner.selected}>${invInner.stressType}</option>
+                                                                    </c:forEach>
+                                                                </select>
                                                             </div>
                                                         </div>
                                                     </div>
                                                     <div class="col-xl-2 col-sm-12 col-12">
                                                         <div class="mb-3">
                                                             <label for="onHandQty" class="form-label">On Hand Qty</label>
-                                                            <div class="input-group">
+                                                            <div class="input input-group">
                                                                 <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
                                                                 <input type="text" class="form-control" id="onHandQty" name="onHandQty"
                                                                        placeholder="" value="" readonly>
@@ -2537,7 +2860,7 @@
                                                     <div class="visually-hidden col-xl-2 col-sm-12 col-12">
                                                         <div class="mb-3">
                                                             <label for="productionQty" class="form-label">Prod. Qty</label>
-                                                            <div class="input-group">
+                                                            <div class="input input-group">
                                                                 <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
                                                                 <input type="text" class="form-control" id="productionQty" name="productionQty"
                                                                        placeholder="" value="" readonly>
@@ -2547,7 +2870,7 @@
                                                     <div class="visually-hidden col-xl-2 col-sm-12 col-12">
                                                         <div class="mb-3">
                                                             <label for="productionStagingQty" class="form-label">Prod. Staging Qty</label>
-                                                            <div class="input-group">
+                                                            <div class="input input-group">
                                                                 <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
                                                                 <input type="text" class="form-control" id="productionStagingQty" name="productionStagingQty"
                                                                        placeholder="" value="" readonly>
@@ -2557,7 +2880,7 @@
                                                     <div class="visually-hidden col-xl-2 col-sm-12 col-12">
                                                         <div class="mb-3">
                                                             <label for="repairQty" class="form-label">Repair Qty</label>
-                                                            <div class="input-group">
+                                                            <div class="input input-group">
                                                                 <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
                                                                 <input type="text" class="form-control" id="repairQty" name="repairQty"
                                                                        placeholder="" value="" readonly>
@@ -2567,7 +2890,7 @@
                                                     <div class="visually-hidden col-xl-2 col-sm-12 col-12">
                                                         <div class="mb-3">
                                                             <label for="quarantineQty" class="form-label">Quarantine Qty</label>
-                                                            <div class="input-group">
+                                                            <div class="input input-group">
                                                                 <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
                                                                 <input type="text" class="form-control" id="quarantineQty" name="quarantineQty"
                                                                        placeholder="" value="" readonly>
@@ -2577,7 +2900,7 @@
                                                     <div class="visually-hidden col-xl-2 col-sm-12 col-12">
                                                         <div class="mb-3">
                                                             <label for="externalCleanQty" class="form-label">Ext Clean Qty</label>
-                                                            <div class="input-group">
+                                                            <div class="input input-group">
                                                                 <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
                                                                 <input type="text" class="form-control" id="externalCleanQty" name="externalCleanQty"
                                                                        placeholder="" value="" readonly>
@@ -2587,7 +2910,7 @@
                                                     <div class="visually-hidden col-xl-2 col-sm-12 col-12">
                                                         <div class="mb-3">
                                                             <label for="externalRecleanQty" class="form-label">Ext Re-clean Qty</label>
-                                                            <div class="input-group">
+                                                            <div class="input input-group">
                                                                 <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
                                                                 <input type="text" class="form-control" id="externalRecleanQty" name="externalRecleanQty"
                                                                        placeholder="" value="" readonly>
@@ -2597,7 +2920,7 @@
                                                     <div class="visually-hidden col-xl-2 col-sm-12 col-12">
                                                         <div class="mb-3">
                                                             <label for="internalCleanQty" class="form-label">Int. Clean Qty</label>
-                                                            <div class="input-group">
+                                                            <div class="input input-group">
                                                                 <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
                                                                 <input type="text" class="form-control" id="internalCleanQty" name="internalCleanQty"
                                                                        placeholder="" value="" readonly>
@@ -2607,7 +2930,7 @@
                                                     <div class="visually-hidden col-xl-2 col-sm-12 col-12">
                                                         <div class="mb-3">
                                                             <label for="internalRecleanQty" class="form-label">Int. Re-Clean Qty</label>
-                                                            <div class="input-group">
+                                                            <div class="input input-group">
                                                                 <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
                                                                 <input type="text" class="form-control" id="internalRecleanQty" name="internalRecleanQty"
                                                                        placeholder="" value="" readonly>
@@ -2617,7 +2940,7 @@
                                                     <div class="col-xl-2 col-sm-12 col-12">
                                                         <div class="mb-3">
                                                             <label for="otherQty" class="form-label">Other Qty</label>
-                                                            <div class="input-group">
+                                                            <div class="input input-group">
                                                                 <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
                                                                 <input type="text" class="form-control" id="otherQty" name="otherQty"
                                                                        placeholder="" value="" readonly>
@@ -2627,7 +2950,7 @@
                                                     <div class="visually-hidden col-xl-2 col-sm-12 col-12">
                                                         <div class="mb-3">
                                                             <label for="vendorQty" class="form-label">Vendor Qty</label>
-                                                            <div class="input-group">
+                                                            <div class="input input-group">
                                                                 <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
                                                                 <input type="text" class="form-control" id="vendorQty" name="vendorQty"
                                                                        placeholder="" value="" readonly>
@@ -2636,7 +2959,7 @@
                                                     </div><div class="visually-hidden col-xl-2 col-sm-12 col-12">
                                                         <div class="mb-3">
                                                             <label for="otherOnsemiQty" class="form-label">Other onsemi Qty</label>
-                                                            <div class="input-group">
+                                                            <div class="input input-group">
                                                                 <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
                                                                 <input type="text" class="form-control" id="otherOnsemiQty" name="otherOnsemiQty"
                                                                        placeholder="" value="" readonly>
@@ -2646,7 +2969,7 @@
                                                     <div class="col-xl-2 col-sm-12 col-12">
                                                         <div class="mb-3">
                                                             <label for="storageFactoryQty" class="form-label">Storage Factory Qty</label>
-                                                            <div class="input-group">
+                                                            <div class="input input-group">
                                                                 <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
                                                                 <input type="text" class="form-control" id="storageFactoryQty" name="storageFactoryQty"
                                                                        placeholder="" value="" readonly>
@@ -2656,7 +2979,7 @@
                                                     <div class="col-xl-2 col-sm-12 col-12">
                                                         <div class="mb-3">
                                                             <label for="totalQty" class="form-label">Total Qty</label>
-                                                            <div class="input-group">
+                                                            <div class="input input-group">
                                                                 <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
                                                                 <input type="text" class="form-control" id="totalQty" name="totalQty"
                                                                        placeholder="" value="" readonly>
@@ -2667,7 +2990,7 @@
                                                         <div class="mb-3">
                                                             <label for="isConsumable" class="form-label">Consumable?</label>
                                                             <div class="input-group form-check form-switch">
-                                                                <input class="form-check-input" type="checkbox" role="switch" id="isConsumable" name="isConsumable" disabled>
+                                                                <input class="form-check-input" type="checkbox" id="isConsumable" name="isConsumable" disabled>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -2681,7 +3004,7 @@
                                                     <div class="col-12">
                                                         <div class="mb-3">
                                                             <label for="remarks" class="form-label">Remarks</label>
-                                                            <div class="input-group">
+                                                            <div class="input input-group">
                                                                 <span class="input-group-text"><i class="bi bi-pencil"></i></span>
                                                                 <textarea class="form-control" id="remarks" name="remarks" placeholder="Enter Message"
                                                                           rows="3" readonly></textarea>
@@ -2703,7 +3026,7 @@
                                                         <div class="mb-3">
                                                             <!--<div class="mb-3 was-validated">-->
                                                             <label for="itemType2" class="form-label">Item Type</label>
-                                                            <div class="input-group">
+                                                            <div class="input input-group">
                                                                 <!--<span class="input-group-text"><i class="bi bi-person"></i></span>-->
                                                                 <input type="text" class="form-control" id="itemType2" name="itemType2" placeholder="" value="" readonly required>
                                                                 <!--<div class="valid-feedback">Looks good!</div>-->
@@ -2714,7 +3037,7 @@
                                                     <div class="col-xl-2 col-sm-12 col-12">
                                                         <div class="mb-3">
                                                             <label for="subType" class="form-label">Sub Type</label>
-                                                            <div class="input-group">
+                                                            <div class="input input-group">
                                                                 <!--<span class="input-group-text"><i class="bi bi-person"></i></span>-->
                                                                 <input type="text" class="form-control" id="subType" name="subType" placeholder="" value="" readonly>
                                                                 <input type="hidden" class="form-control" id="itemPKID" name="itemPKID" placeholder="" value="" readonly>
@@ -2725,7 +3048,7 @@
                                                     <div class="form-group required col-xl-4 col-sm-12 col-12">
                                                         <div class="mb-3">
                                                             <label for="itemId" class="form-label">Item ID</label>
-                                                            <div class="input-group">
+                                                            <div class="input input-group">
                                                                 <!--<span class="input-group-text"><i class="bi bi-envelope"></i></span>-->
                                                                 <input type="text" class="form-control" id="itemId" name="itemId" placeholder="" value="" readonly required>
                                                             </div>
@@ -2734,7 +3057,7 @@
                                                     <div class="form-group required col-xl-4 col-sm-12 col-12">
                                                         <div class="mb-3">
                                                             <label for="itemName" class="form-label">Item Name</label>
-                                                            <div class="input-group">
+                                                            <div class="input input-group">
                                                                 <!--<span class="input-group-text"><i class="bi bi-telephone"></i></span>-->
                                                                 <input type="text" class="form-control" id="itemName" name="itemName" placeholder="" value="" readonly required>
                                                             </div>
@@ -2743,7 +3066,7 @@
                                                     <div class="col-xl-4 col-sm-12 col-12">
                                                         <div class="mb-3">
                                                             <label for="status" class="form-label">Status</label>
-                                                            <div class="input-group">
+                                                            <div class="input input-group">
                                                                 <!--<span class="input-group-text"><i class="bi bi-person"></i></span>-->
                                                                 <input type="text" class="form-control" id="status" name="status" placeholder="" value="" readonly>
                                                             </div>
@@ -2752,7 +3075,7 @@
                                                     <div class="visually-hidden col-xl-4 col-sm-12 col-12">
                                                         <div class="mb-3">
                                                             <label for="aluHrs" class="form-label">ALU</label>
-                                                            <div class="input-group">
+                                                            <div class="input input-group">
                                                                 <!--<span class="input-group-text"><i class="bi bi-envelope"></i></span>-->
                                                                 <input type="number" step="0.01" class="form-control" id="aluHrs" name="aluHrs" placeholder="" value="" readonly>
                                                             </div>
@@ -2761,18 +3084,32 @@
                                                     <div class="visually-hidden form-group required col-xl-4 col-sm-12 col-12">
                                                         <div class="mb-3">
                                                             <label for="assemblyId" class="form-label">Assembly ID</label>
-                                                            <div class="input-group">
+                                                            <div class="input input-group">
                                                                 <!--<span class="input-group-text"><i class="bi bi-telephone"></i></span>-->
-                                                                <input type="text" class="form-control" id="assemblyId" name="assemblyId" placeholder="" value="" readonly>
+                                                                <!--<input type="text" class="form-control" id="assemblyId" name="assemblyId" placeholder="" value="" readonly>-->
+                                                                <select class="js-example-tags" id="assemblyId" name="assemblyId"
+                                                                        title="Select AssemblyId" data-live-search="true" style="width: 100%" readonly>
+                                                                    <option></option>
+                                                                    <c:forEach items="${listAssemblyId}" var="invInner">
+                                                                        <option value="${invInner.assemblyId}" ${invInner.selected}>${invInner.assemblyId}</option>
+                                                                    </c:forEach>
+                                                                </select>
                                                             </div>
                                                         </div>
                                                     </div>
                                                     <div class="visually-hidden col-xl-4 col-sm-12 col-12">
                                                         <div class="mb-3">
                                                             <label for="model" class="form-label">Spare Part Model</label>
-                                                            <div class="input-group">
+                                                            <div class="input input-group">
                                                                 <!--<span class="input-group-text"><i class="bi bi-telephone"></i></span>-->
-                                                                <input type="text" class="form-control" id="model" name="model" value="" readonly>
+                                                                <!--<input type="text" class="form-control" id="model" name="model" value="" readonly>-->
+                                                                <select class="js-example-tags" id="model" name="model"
+                                                                        title="Select Model" data-live-search="true" style="width: 100%" readonly>
+                                                                    <option></option>
+                                                                    <c:forEach items="${listModel}" var="invInner">
+                                                                        <option value="${invInner.model}" ${invInner.selected}>${invInner.model}</option>
+                                                                    </c:forEach>
+                                                                </select>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -2780,16 +3117,23 @@
                                                     <div class="col-xl-4 col-sm-12 col-12">
                                                         <div class="mb-3">
                                                             <label for="manufacturer" class="form-label">Spare Part Manufacturer</label>
-                                                            <div class="input-group">
+                                                            <div class="input input-group">
                                                                 <!--<span class="input-group-text"><i class="bi bi-person"></i></span>-->
-                                                                <input type="text" class="form-control" id="manufacturer" name="manufacturer" placeholder="" value="" readonly>
+                                                                <!--<input type="text" class="form-control" id="manufacturer" name="manufacturer" placeholder="" value="" readonly>-->
+                                                                <select class="js-example-tags" id="manufacturer" name="manufacturer"
+                                                                        title="Select Manufacturer" data-live-search="true" style="width: 100%" readonly>
+                                                                    <option></option>
+                                                                    <c:forEach items="${listManufacturer}" var="invInner">
+                                                                        <option value="${invInner.manufacturer}" ${invInner.selected}>${invInner.manufacturer}</option>
+                                                                    </c:forEach>
+                                                                </select>
                                                             </div>
                                                         </div>
                                                     </div>
                                                     <div class="col-xl-4 col-sm-12 col-12">
                                                         <div class="mb-3">
                                                             <label for="unitCost" class="form-label">Unit cost (USD)</label>
-                                                            <div class="input-group">
+                                                            <div class="input input-group">
                                                                 <!--<span class="input-group-text"><i class="bi bi-envelope"></i></span>-->
                                                                 <input type="text" class="form-control" id="unitCost" name="unitCost" placeholder="" value="" readonly>
                                                             </div>
@@ -2798,27 +3142,48 @@
                                                     <div class="visually-hidden col-xl-4 col-sm-12 col-12">
                                                         <div class="mb-3">
                                                             <label for="equipmentType" class="form-label">Equipment Type</label>
-                                                            <div class="input-group">
+                                                            <div class="input input-group">
                                                                 <!--<span class="input-group-text"><i class="bi bi-person"></i></span>-->
-                                                                <input type="text" class="form-control" id="equipmentType" name="equipmentType" placeholder="" value="" readonly>
+                                                                <!--<input type="text" class="form-control" id="equipmentType" name="equipmentType" placeholder="" value="" readonly>-->
+                                                                <select class="js-example-tags" id="equipmentType" name="equipmentType"
+                                                                        title="Select Eqpt Type" data-live-search="true" style="width: 100%" readonly>
+                                                                    <option></option>
+                                                                    <c:forEach items="${listEqptType}" var="invInner">
+                                                                        <option value="${invInner.equipmentType}" ${invInner.selected}>${invInner.equipmentType}</option>
+                                                                    </c:forEach>
+                                                                </select>
                                                             </div>
                                                         </div>
                                                     </div>
                                                     <div class="visually-hidden col-xl-4 col-sm-12 col-12">
                                                         <div class="mb-3">
                                                             <label for="equipmentModel" class="form-label">Equipment Model</label>
-                                                            <div class="input-group">
+                                                            <div class="input input-group">
                                                                 <!--<span class="input-group-text"><i class="bi bi-envelope"></i></span>-->
-                                                                <input type="text" class="form-control" id="equipmentModel" name="equipmentModel" value="" readonly>
+                                                                <!--<input type="text" class="form-control" id="equipmentModel" name="equipmentModel" value="" readonly>-->
+                                                                <select class="js-example-tags" id="equipmentModel" name="equipmentModel"
+                                                                        title="Select Eqpt Model" data-live-search="true" style="width: 100%" readonly>
+                                                                    <option></option>
+                                                                    <c:forEach items="${listEqptModel}" var="invInner">
+                                                                        <option value="${invInner.equipmentModel}" ${invInner.selected}>${invInner.equipmentModel}</option>
+                                                                    </c:forEach>
+                                                                </select>
                                                             </div>
                                                         </div>
                                                     </div>
                                                     <div class="visually-hidden col-xl-4 col-sm-12 col-12">
                                                         <div class="mb-3">
                                                             <label for="equipmentManufacturer" class="form-label">Eqpt Manufacturer</label>
-                                                            <div class="input-group">
+                                                            <div class="input input-group">
                                                                 <!--<span class="input-group-text"><i class="bi bi-telephone"></i></span>-->
-                                                                <input type="text" class="form-control" id="equipmentManufacturer" name="equipmentManufacturer" value="" readonly>
+                                                                <!--<input type="text" class="form-control" id="equipmentManufacturer" name="equipmentManufacturer" value="" readonly>-->
+                                                                <select class="js-example-tags" id="equipmentManufacturer" name="equipmentManufacturer"
+                                                                        title="Select Eqpt Manufacturer" data-live-search="true" style="width: 100%" readonly>
+                                                                    <option></option>
+                                                                    <c:forEach items="${listEqptManufacturer}" var="invInner">
+                                                                        <option value="${invInner.equipmentManufacturer}" ${invInner.selected}>${invInner.equipmentManufacturer}</option>
+                                                                    </c:forEach>
+                                                                </select>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -2826,7 +3191,7 @@
                                                     <div class="col-xl-1 col-sm-12 col-12">
                                                         <div class="mb-3">
                                                             <label for="minQty" class="form-label">Min. Qty</label>
-                                                            <div class="input-group">
+                                                            <div class="input input-group">
                                                                 <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
                                                                 <input type="text" class="form-control" id="minQty" name="minQty"
                                                                        placeholder="" value="" readonly>
@@ -2836,7 +3201,7 @@
                                                     <div class="col-xl-1 col-sm-12 col-12">
                                                         <div class="mb-3">
                                                             <label for="maxQty" class="form-label">Max. Qty</label>
-                                                            <div class="input-group">
+                                                            <div class="input input-group">
                                                                 <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
                                                                 <input type="text" class="form-control" id="maxQty" name="maxQty"
                                                                        placeholder="" value="" readonly>
@@ -2846,7 +3211,7 @@
                                                     <div class="form-group required col-xl-3 col-sm-12 col-12">
                                                         <div class="mb-3">
                                                             <label for="rack" class="form-label">Rack</label>
-                                                            <div class="input-group">
+                                                            <div class="input input-group">
                                                                 <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
                                                                 <input type="text" class="form-control" id="rack" name="rack"
                                                                        placeholder="" value="" readonly required>
@@ -2856,7 +3221,7 @@
                                                     <div class="form-group required col-xl-3 col-sm-12 col-12">
                                                         <div class="mb-3">
                                                             <label for="shelf" class="form-label">Shelf</label>
-                                                            <div class="input-group">
+                                                            <div class="input input-group">
                                                                 <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
                                                                 <input type="text" class="form-control" id="shelf" name="shelf"
                                                                        placeholder="" value="" readonly required>
@@ -2866,17 +3231,23 @@
                                                     <div class="visually-hidden form-group required col-xl-4 col-sm-12 col-12">
                                                         <div class="mb-3">
                                                             <label for="stressType" class="form-label">Stress Type</label>
-                                                            <div class="input-group">
+                                                            <div class="input input-group">
                                                                 <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
-                                                                <input type="text" class="form-control" id="stressType" name="stressType"
-                                                                       placeholder="" value="" readonly>
+                                                                <!--<input type="text" class="form-control" id="stressType" name="stressType" placeholder="" value="" readonly>-->
+                                                                <select class="js-example-tags" id="stressType" name="stressType"
+                                                                        title="Select Stress Type" data-live-search="true" style="width: 100%" readonly>
+                                                                    <option></option>
+                                                                    <c:forEach items="${listStressType}" var="invInner">
+                                                                        <option value="${invInner.stressType}" ${invInner.selected}>${invInner.stressType}</option>
+                                                                    </c:forEach>
+                                                                </select>
                                                             </div>
                                                         </div>
                                                     </div>
                                                     <div class="col-xl-2 col-sm-12 col-12">
                                                         <div class="mb-3">
                                                             <label for="onHandQty" class="form-label">On Hand Qty</label>
-                                                            <div class="input-group">
+                                                            <div class="input input-group">
                                                                 <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
                                                                 <input type="text" class="form-control" id="onHandQty" name="onHandQty"
                                                                        placeholder="" value="" readonly>
@@ -2886,7 +3257,7 @@
                                                     <div class="visually-hidden col-xl-2 col-sm-12 col-12">
                                                         <div class="mb-3">
                                                             <label for="productionQty" class="form-label">Prod. Qty</label>
-                                                            <div class="input-group">
+                                                            <div class="input input-group">
                                                                 <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
                                                                 <input type="text" class="form-control" id="productionQty" name="productionQty"
                                                                        placeholder="" value="" readonly>
@@ -2896,7 +3267,7 @@
                                                     <div class="visually-hidden col-xl-2 col-sm-12 col-12">
                                                         <div class="mb-3">
                                                             <label for="productionStagingQty" class="form-label">Prod. Staging Qty</label>
-                                                            <div class="input-group">
+                                                            <div class="input input-group">
                                                                 <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
                                                                 <input type="text" class="form-control" id="productionStagingQty" name="productionStagingQty"
                                                                        placeholder="" value="" readonly>
@@ -2906,7 +3277,7 @@
                                                     <div class="col-xl-2 col-sm-12 col-12">
                                                         <div class="mb-3">
                                                             <label for="repairQty" class="form-label">Repair Qty</label>
-                                                            <div class="input-group">
+                                                            <div class="input input-group">
                                                                 <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
                                                                 <input type="text" class="form-control" id="repairQty" name="repairQty"
                                                                        placeholder="" value="" readonly>
@@ -2916,7 +3287,7 @@
                                                     <div class="visually-hidden col-xl-2 col-sm-12 col-12">
                                                         <div class="mb-3">
                                                             <label for="quarantineQty" class="form-label">Quarantine Qty</label>
-                                                            <div class="input-group">
+                                                            <div class="input input-group">
                                                                 <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
                                                                 <input type="text" class="form-control" id="quarantineQty" name="quarantineQty"
                                                                        placeholder="" value="" readonly>
@@ -2926,7 +3297,7 @@
                                                     <div class="visually-hidden col-xl-2 col-sm-12 col-12">
                                                         <div class="mb-3">
                                                             <label for="externalCleanQty" class="form-label">Ext Clean Qty</label>
-                                                            <div class="input-group">
+                                                            <div class="input input-group">
                                                                 <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
                                                                 <input type="text" class="form-control" id="externalCleanQty" name="externalCleanQty"
                                                                        placeholder="" value="" readonly>
@@ -2936,7 +3307,7 @@
                                                     <div class="visually-hidden col-xl-2 col-sm-12 col-12">
                                                         <div class="mb-3">
                                                             <label for="externalRecleanQty" class="form-label">Ext Re-clean Qty</label>
-                                                            <div class="input-group">
+                                                            <div class="input input-group">
                                                                 <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
                                                                 <input type="text" class="form-control" id="externalRecleanQty" name="externalRecleanQty"
                                                                        placeholder="" value="" readonly>
@@ -2946,7 +3317,7 @@
                                                     <div class="visually-hidden col-xl-2 col-sm-12 col-12">
                                                         <div class="mb-3">
                                                             <label for="internalCleanQty" class="form-label">Int. Clean Qty</label>
-                                                            <div class="input-group">
+                                                            <div class="input input-group">
                                                                 <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
                                                                 <input type="text" class="form-control" id="internalCleanQty" name="internalCleanQty"
                                                                        placeholder="" value="" readonly>
@@ -2956,7 +3327,7 @@
                                                     <div class="visually-hidden col-xl-2 col-sm-12 col-12">
                                                         <div class="mb-3">
                                                             <label for="internalRecleanQty" class="form-label">Int. Re-Clean Qty</label>
-                                                            <div class="input-group">
+                                                            <div class="input input-group">
                                                                 <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
                                                                 <input type="text" class="form-control" id="internalRecleanQty" name="internalRecleanQty"
                                                                        placeholder="" value="" readonly>
@@ -2966,7 +3337,7 @@
                                                     <div class="col-xl-2 col-sm-12 col-12">
                                                         <div class="mb-3">
                                                             <label for="otherQty" class="form-label">Other Qty</label>
-                                                            <div class="input-group">
+                                                            <div class="input input-group">
                                                                 <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
                                                                 <input type="text" class="form-control" id="otherQty" name="otherQty"
                                                                        placeholder="" value="" readonly>
@@ -2976,7 +3347,7 @@
                                                     <div class="visually-hidden col-xl-2 col-sm-12 col-12">
                                                         <div class="mb-3">
                                                             <label for="vendorQty" class="form-label">Vendor Qty</label>
-                                                            <div class="input-group">
+                                                            <div class="input input-group">
                                                                 <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
                                                                 <input type="text" class="form-control" id="vendorQty" name="vendorQty"
                                                                        placeholder="" value="" readonly>
@@ -2985,7 +3356,7 @@
                                                     </div><div class="visually-hidden col-xl-2 col-sm-12 col-12">
                                                         <div class="mb-3">
                                                             <label for="otherOnsemiQty" class="form-label">Other onsemi Qty</label>
-                                                            <div class="input-group">
+                                                            <div class="input input-group">
                                                                 <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
                                                                 <input type="text" class="form-control" id="otherOnsemiQty" name="otherOnsemiQty"
                                                                        placeholder="" value="" readonly>
@@ -2995,7 +3366,7 @@
                                                     <div class="col-xl-2 col-sm-12 col-12">
                                                         <div class="mb-3">
                                                             <label for="storageFactoryQty" class="form-label">Storage Factory Qty</label>
-                                                            <div class="input-group">
+                                                            <div class="input input-group">
                                                                 <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
                                                                 <input type="text" class="form-control" id="storageFactoryQty" name="storageFactoryQty"
                                                                        placeholder="" value="" readonly>
@@ -3005,7 +3376,7 @@
                                                     <div class="col-xl-2 col-sm-12 col-12">
                                                         <div class="mb-3">
                                                             <label for="totalQty" class="form-label">Total Qty</label>
-                                                            <div class="input-group">
+                                                            <div class="input input-group">
                                                                 <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
                                                                 <input type="text" class="form-control" id="totalQty" name="totalQty"
                                                                        placeholder="" value="" readonly>
@@ -3016,7 +3387,7 @@
                                                         <div class="mb-3">
                                                             <label for="isConsumable" class="form-label">Consumable?</label>
                                                             <div class="input-group form-check form-switch">
-                                                                <input class="form-check-input" type="checkbox" role="switch" id="isConsumable" name="isConsumable" disabled>
+                                                                <input class="form-check-input" type="checkbox" id="isConsumable" name="isConsumable" disabled>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -3030,7 +3401,7 @@
                                                     <div class="col-12">
                                                         <div class="mb-3">
                                                             <label for="remarks" class="form-label">Remarks</label>
-                                                            <div class="input-group">
+                                                            <div class="input input-group">
                                                                 <span class="input-group-text"><i class="bi bi-pencil"></i></span>
                                                                 <textarea class="form-control" id="remarks" name="remarks" placeholder="Enter Message"
                                                                           rows="3" readonly></textarea>
@@ -3055,9 +3426,9 @@
                                                         <div class="mb-3">
                                                             <!--<div class="mb-3 was-validated">-->
                                                             <label for="itemType2" class="form-label">Item Type</label>
-                                                            <div class="input-group">
+                                                            <div class="input input-group">
                                                                 <!--<span class="input-group-text"><i class="bi bi-person"></i></span>-->
-                                                                <input type="text" class="form-control" id="itemType2" name="itemType2" placeholder="" value="" readonly required >
+                                                                <input type="text" class="input form-control" id="itemType2" name="itemType2" placeholder="" value="" readonly required >
                                                                 <!--<div class="valid-feedback">Looks good!</div>-->
                                                                 <!--<div class="invalid-feedback">Please provide a valid zip.</div>-->
                                                             </div>
@@ -3066,9 +3437,9 @@
                                                     <div class="col-xl-2 col-sm-12 col-12">
                                                         <div class="mb-3">
                                                             <label for="subType" class="form-label">Sub Type</label>
-                                                            <div class="input-group">
+                                                            <div class="input input-group">
                                                                 <!--<span class="input-group-text"><i class="bi bi-person"></i></span>-->
-                                                                <input type="text" class="form-control" id="subType" name="subType" placeholder="" value="" readonly>
+                                                                <input type="text" class="input form-control" id="subType" name="subType" placeholder="" value="" readonly>
                                                                 <input type="hidden" class="form-control" id="itemPKID" name="itemPKID" placeholder="" value="" readonly>
                                                                 <input type="hidden" class="form-control" id="mibId" name="mibId" placeholder="" value="" readonly>
                                                             </div>
@@ -3077,54 +3448,68 @@
                                                     <div class="form-group required col-xl-4 col-sm-12 col-12">
                                                         <div class="mb-3">
                                                             <label for="itemId" class="form-label">Item ID</label>
-                                                            <div class="input-group">
+                                                            <div class="input input-group">
                                                                 <!--<span class="input-group-text"><i class="bi bi-envelope"></i></span>-->
-                                                                <input type="text" class="form-control" id="itemId" name="itemId" placeholder="" value="" readonly required>
+                                                                <input type="text" class="input form-control" id="itemId" name="itemId" placeholder="" value="" readonly required>
                                                             </div>
                                                         </div>
                                                     </div>
                                                     <div class="form-group required col-xl-4 col-sm-12 col-12">
                                                         <div class="mb-3">
                                                             <label for="itemName" class="form-label">Item Name</label>
-                                                            <div class="input-group">
+                                                            <div class="input input-group">
                                                                 <!--<span class="input-group-text"><i class="bi bi-telephone"></i></span>-->
-                                                                <input type="text" class="form-control" id="itemName" name="itemName" placeholder="" value="" readonly required>
+                                                                <input type="text" class="input form-control" id="itemName" name="itemName" placeholder="" value="" readonly required>
                                                             </div>
                                                         </div>
                                                     </div>
                                                     <div class="col-xl-4 col-sm-12 col-12">
                                                         <div class="mb-3">
                                                             <label for="status" class="form-label">Status</label>
-                                                            <div class="input-group">
+                                                            <div class="input input-group">
                                                                 <!--<span class="input-group-text"><i class="bi bi-person"></i></span>-->
-                                                                <input type="text" class="form-control" id="status" name="status" placeholder="" value="" readonly>
+                                                                <input type="text" class="input form-control" id="status" name="status" placeholder="" value="" readonly>
                                                             </div>
                                                         </div>
                                                     </div>
                                                     <div class="col-xl-4 col-sm-12 col-12">
                                                         <div class="mb-3">
                                                             <label for="aluHrs" class="form-label">ALU</label>
-                                                            <div class="input-group">
+                                                            <div class="input input-group">
                                                                 <!--<span class="input-group-text"><i class="bi bi-envelope"></i></span>-->
-                                                                <input type="number" step="0.01" class="form-control" id="aluHrs" name="aluHrs" placeholder="" value="" readonly>
+                                                                <input type="number" step="0.01" class="input form-control" id="aluHrs" name="aluHrs" placeholder="" value="" readonly>
                                                             </div>
                                                         </div>
                                                     </div>
                                                     <div class="col-xl-4 col-sm-12 col-12">
                                                         <div class="mb-3">
                                                             <label for="assemblyId" class="form-label">Assembly ID</label>
-                                                            <div class="input-group">
+                                                            <div class="input input-group">
                                                                 <!--<span class="input-group-text"><i class="bi bi-telephone"></i></span>-->
-                                                                <input type="text" class="form-control" id="assemblyId" name="assemblyId" placeholder="" value="" readonly>
+                                                                <!--<input type="text" class="form-control" id="assemblyId" name="assemblyId" placeholder="" value="" readonly>-->
+                                                                <select class="input js-example-tags" id="assemblyId" name="assemblyId"
+                                                                        title="Select AssemblyId" data-live-search="true" style="width: 100%" readonly>
+                                                                    <option></option>
+                                                                    <c:forEach items="${listAssemblyId}" var="invInner">
+                                                                        <option value="${invInner.assemblyId}" ${invInner.selected}>${invInner.assemblyId}</option>
+                                                                    </c:forEach>
+                                                                </select>
                                                             </div>
                                                         </div>
                                                     </div>
                                                     <div class="col-xl-4 col-sm-12 col-12">
                                                         <div class="mb-3">
                                                             <label for="model" class="form-label">Spare Part Model</label>
-                                                            <div class="input-group">
+                                                            <div class="input input-group">
                                                                 <!--<span class="input-group-text"><i class="bi bi-telephone"></i></span>-->
-                                                                <input type="text" class="form-control" id="model" name="model" value="" readonly>
+                                                                <!--<input type="text" class="form-control" id="model" name="model" value="" readonly>-->
+                                                                <select class="input js-example-tags" id="model" name="model"
+                                                                        title="Select Model" data-live-search="true" style="width: 100%" readonly>
+                                                                    <option></option>
+                                                                    <c:forEach items="${listModel}" var="invInner">
+                                                                        <option value="${invInner.model}" ${invInner.selected}>${invInner.model}</option>
+                                                                    </c:forEach>
+                                                                </select>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -3132,45 +3517,73 @@
                                                     <div class="col-xl-4 col-sm-12 col-12">
                                                         <div class="mb-3">
                                                             <label for="manufacturer" class="form-label">Spare Part Manufacturer</label>
-                                                            <div class="input-group">
+                                                            <div class="input input-group">
                                                                 <!--<span class="input-group-text"><i class="bi bi-person"></i></span>-->
-                                                                <input type="text" class="form-control" id="manufacturer" name="manufacturer" placeholder="" value="" readonly>
+                                                                <!--<input type="text" class="form-control" id="manufacturer" name="manufacturer" placeholder="" value="" readonly>-->
+                                                                <select class="input js-example-tags" id="manufacturer" name="manufacturer"
+                                                                        title="Select Manufacturer" data-live-search="true" style="width: 100%" readonly>
+                                                                    <option></option>
+                                                                    <c:forEach items="${listManufacturer}" var="invInner">
+                                                                        <option value="${invInner.manufacturer}" ${invInner.selected}>${invInner.manufacturer}</option>
+                                                                    </c:forEach>
+                                                                </select>
                                                             </div>
                                                         </div>
                                                     </div>
                                                     <div class="col-xl-4 col-sm-12 col-12">
                                                         <div class="mb-3">
                                                             <label for="unitCost" class="form-label">Unit cost (USD)</label>
-                                                            <div class="input-group">
+                                                            <div class="input input-group">
                                                                 <!--<span class="input-group-text"><i class="bi bi-envelope"></i></span>-->
-                                                                <input type="text" class="form-control" id="unitCost" name="unitCost" placeholder="" value="" readonly>
+                                                                <input type="text" class="input form-control" id="unitCost" name="unitCost" placeholder="" value="" readonly>
                                                             </div>
                                                         </div>
                                                     </div>
                                                     <div class="col-xl-4 col-sm-12 col-12">
                                                         <div class="mb-3">
                                                             <label for="equipmentType" class="form-label">Equipment Type</label>
-                                                            <div class="input-group">
+                                                            <div class="input input-group">
                                                                 <!--<span class="input-group-text"><i class="bi bi-person"></i></span>-->
-                                                                <input type="text" class="form-control" id="equipmentType" name="equipmentType" placeholder="" value="" readonly>
+                                                                <!--<input type="text" class="form-control" id="equipmentType" name="equipmentType" placeholder="" value="" readonly>-->
+                                                                <select class="input js-example-tags" id="equipmentType" name="equipmentType"
+                                                                        title="Select Eqpt Type" data-live-search="true" style="width: 100%" readonly>
+                                                                    <option></option>
+                                                                    <c:forEach items="${listEqptType}" var="invInner">
+                                                                        <option value="${invInner.equipmentType}" ${invInner.selected}>${invInner.equipmentType}</option>
+                                                                    </c:forEach>
+                                                                </select>
                                                             </div>
                                                         </div>
                                                     </div>
                                                     <div class="col-xl-4 col-sm-12 col-12">
                                                         <div class="mb-3">
                                                             <label for="equipmentModel" class="form-label">Equipment Model</label>
-                                                            <div class="input-group">
+                                                            <div class="input input-group">
                                                                 <!--<span class="input-group-text"><i class="bi bi-envelope"></i></span>-->
-                                                                <input type="text" class="form-control" id="equipmentModel" name="equipmentModel" value="" readonly>
+                                                                <!--<input type="text" class="form-control" id="equipmentModel" name="equipmentModel" value="" readonly>-->
+                                                                <select class="input js-example-tags" id="equipmentModel" name="equipmentModel"
+                                                                        title="Select Eqpt Model" data-live-search="true" style="width: 100%" readonly>
+                                                                    <option></option>
+                                                                    <c:forEach items="${listEqptModel}" var="invInner">
+                                                                        <option value="${invInner.equipmentModel}" ${invInner.selected}>${invInner.equipmentModel}</option>
+                                                                    </c:forEach>
+                                                                </select>
                                                             </div>
                                                         </div>
                                                     </div>
                                                     <div class="col-xl-4 col-sm-12 col-12">
                                                         <div class="mb-3">
                                                             <label for="equipmentManufacturer" class="form-label">Eqpt Manufacturer</label>
-                                                            <div class="input-group">
+                                                            <div class="input input-group">
                                                                 <!--<span class="input-group-text"><i class="bi bi-telephone"></i></span>-->
-                                                                <input type="text" class="form-control" id="equipmentManufacturer" name="equipmentManufacturer" value="" readonly>
+                                                                <!--<input type="text" class="form-control" id="equipmentManufacturer" name="equipmentManufacturer" value="" readonly>-->
+                                                                <select class="input js-example-tags" id="equipmentManufacturer" name="equipmentManufacturer"
+                                                                        title="Select Eqpt Manufacturer" data-live-search="true" style="width: 100%" readonly>
+                                                                    <option></option>
+                                                                    <c:forEach items="${listEqptManufacturer}" var="invInner">
+                                                                        <option value="${invInner.equipmentManufacturer}" ${invInner.selected}>${invInner.equipmentManufacturer}</option>
+                                                                    </c:forEach>
+                                                                </select>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -3178,9 +3591,9 @@
                                                     <div class="col-xl-1 col-sm-12 col-12">
                                                         <div class="mb-3">
                                                             <label for="minQty" class="form-label">Min. Qty</label>
-                                                            <div class="input-group">
+                                                            <div class="input input-group">
                                                                 <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
-                                                                <input type="text" class="form-control" id="minQty" name="minQty"
+                                                                <input type="text" class="input form-control" id="minQty" name="minQty"
                                                                        placeholder="" value="" readonly>
                                                             </div>
                                                         </div>
@@ -3188,9 +3601,9 @@
                                                     <div class="col-xl-1 col-sm-12 col-12">
                                                         <div class="mb-3">
                                                             <label for="maxQty" class="form-label">Max. Qty</label>
-                                                            <div class="input-group">
+                                                            <div class="input input-group">
                                                                 <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
-                                                                <input type="text" class="form-control" id="maxQty" name="maxQty"
+                                                                <input type="text" class="input form-control" id="maxQty" name="maxQty"
                                                                        placeholder="" value="" readonly>
                                                             </div>
                                                         </div>
@@ -3198,9 +3611,9 @@
                                                     <div class="form-group required col-xl-3 col-sm-12 col-12">
                                                         <div class="mb-3">
                                                             <label for="rack" class="form-label">Rack</label>
-                                                            <div class="input-group">
+                                                            <div class="input input-group">
                                                                 <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
-                                                                <input type="text" class="form-control" id="rack" name="rack"
+                                                                <input type="text" class="input form-control" id="rack" name="rack"
                                                                        placeholder="" value="" readonly required>
                                                             </div>
                                                         </div>
@@ -3208,9 +3621,9 @@
                                                     <div class="form-group required col-xl-3 col-sm-12 col-12">
                                                         <div class="mb-3">
                                                             <label for="shelf" class="form-label">Shelf</label>
-                                                            <div class="input-group">
+                                                            <div class="input input-group">
                                                                 <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
-                                                                <input type="text" class="form-control" id="shelf" name="shelf"
+                                                                <input type="text" class="input form-control" id="shelf" name="shelf"
                                                                        placeholder="" value="" readonly required>
                                                             </div>
                                                         </div>
@@ -3218,19 +3631,25 @@
                                                     <div class="form-group required col-xl-4 col-sm-12 col-12">
                                                         <div class="mb-3">
                                                             <label for="stressType" class="form-label">Stress Type</label>
-                                                            <div class="input-group">
+                                                            <div class="input input-group">
                                                                 <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
-                                                                <input type="text" class="form-control" id="stressType" name="stressType"
-                                                                       placeholder="" value="" readonly>
+                                                                <!--<input type="text" class="form-control" id="stressType" name="stressType" placeholder="" value="" readonly>-->
+                                                                <select class="input js-example-tags" id="stressType" name="stressType"
+                                                                        title="Select Stress Type" data-live-search="true" style="width: 100%" readonly>
+                                                                    <option></option>
+                                                                    <c:forEach items="${listStressType}" var="invInner">
+                                                                        <option value="${invInner.stressType}" ${invInner.selected}>${invInner.stressType}</option>
+                                                                    </c:forEach>
+                                                                </select>
                                                             </div>
                                                         </div>
                                                     </div>
                                                     <div class="col-xl-2 col-sm-12 col-12">
                                                         <div class="mb-3">
                                                             <label for="onHandQty" class="form-label">On Hand Qty</label>
-                                                            <div class="input-group">
+                                                            <div class="input input-group">
                                                                 <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
-                                                                <input type="text" class="form-control" id="onHandQty" name="onHandQty"
+                                                                <input type="text" class="input form-control" id="onHandQty" name="onHandQty"
                                                                        placeholder="" value="" readonly>
                                                             </div>
                                                         </div>
@@ -3238,9 +3657,9 @@
                                                     <div class="col-xl-2 col-sm-12 col-12">
                                                         <div class="mb-3">
                                                             <label for="productionQty" class="form-label">Prod. Qty</label>
-                                                            <div class="input-group">
+                                                            <div class="input input-group">
                                                                 <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
-                                                                <input type="text" class="form-control" id="productionQty" name="productionQty"
+                                                                <input type="text" class="input form-control" id="productionQty" name="productionQty"
                                                                        placeholder="" value="" readonly>
                                                             </div>
                                                         </div>
@@ -3248,9 +3667,9 @@
                                                     <div class="col-xl-2 col-sm-12 col-12">
                                                         <div class="mb-3">
                                                             <label for="productionStagingQty" class="form-label">Prod. Staging Qty</label>
-                                                            <div class="input-group">
+                                                            <div class="input input-group">
                                                                 <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
-                                                                <input type="text" class="form-control" id="productionStagingQty" name="productionStagingQty"
+                                                                <input type="text" class="input form-control" id="productionStagingQty" name="productionStagingQty"
                                                                        placeholder="" value="" readonly>
                                                             </div>
                                                         </div>
@@ -3258,9 +3677,9 @@
                                                     <div class="col-xl-2 col-sm-12 col-12">
                                                         <div class="mb-3">
                                                             <label for="repairQty" class="form-label">Repair Qty</label>
-                                                            <div class="input-group">
+                                                            <div class="input input-group">
                                                                 <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
-                                                                <input type="text" class="form-control" id="repairQty" name="repairQty"
+                                                                <input type="text" class="input form-control" id="repairQty" name="repairQty"
                                                                        placeholder="" value="" readonly>
                                                             </div>
                                                         </div>
@@ -3268,9 +3687,9 @@
                                                     <div class="col-xl-2 col-sm-12 col-12">
                                                         <div class="mb-3">
                                                             <label for="quarantineQty" class="form-label">Quarantine Qty</label>
-                                                            <div class="input-group">
+                                                            <div class="input input-group">
                                                                 <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
-                                                                <input type="text" class="form-control" id="quarantineQty" name="quarantineQty"
+                                                                <input type="text" class="input form-control" id="quarantineQty" name="quarantineQty"
                                                                        placeholder="" value="" readonly>
                                                             </div>
                                                         </div>
@@ -3278,9 +3697,9 @@
                                                     <div class="col-xl-2 col-sm-12 col-12">
                                                         <div class="mb-3">
                                                             <label for="externalCleanQty" class="form-label">Ext Clean Qty</label>
-                                                            <div class="input-group">
+                                                            <div class="input input-group">
                                                                 <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
-                                                                <input type="text" class="form-control" id="externalCleanQty" name="externalCleanQty"
+                                                                <input type="text" class="input form-control" id="externalCleanQty" name="externalCleanQty"
                                                                        placeholder="" value="" readonly>
                                                             </div>
                                                         </div>
@@ -3288,9 +3707,9 @@
                                                     <div class="col-xl-2 col-sm-12 col-12">
                                                         <div class="mb-3">
                                                             <label for="externalRecleanQty" class="form-label">Ext Re-clean Qty</label>
-                                                            <div class="input-group">
+                                                            <div class="input input-group">
                                                                 <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
-                                                                <input type="text" class="form-control" id="externalRecleanQty" name="externalRecleanQty"
+                                                                <input type="text" class="input form-control" id="externalRecleanQty" name="externalRecleanQty"
                                                                        placeholder="" value="" readonly>
                                                             </div>
                                                         </div>
@@ -3298,9 +3717,9 @@
                                                     <div class="col-xl-2 col-sm-12 col-12">
                                                         <div class="mb-3">
                                                             <label for="internalCleanQty" class="form-label">Int. Clean Qty</label>
-                                                            <div class="input-group">
+                                                            <div class="input input-group">
                                                                 <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
-                                                                <input type="text" class="form-control" id="internalCleanQty" name="internalCleanQty"
+                                                                <input type="text" class="input form-control" id="internalCleanQty" name="internalCleanQty"
                                                                        placeholder="" value="" readonly>
                                                             </div>
                                                         </div>
@@ -3308,9 +3727,9 @@
                                                     <div class="col-xl-2 col-sm-12 col-12">
                                                         <div class="mb-3">
                                                             <label for="internalRecleanQty" class="form-label">Int. Re-Clean Qty</label>
-                                                            <div class="input-group">
+                                                            <div class="input input-group">
                                                                 <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
-                                                                <input type="text" class="form-control" id="internalRecleanQty" name="internalRecleanQty"
+                                                                <input type="text" class="input form-control" id="internalRecleanQty" name="internalRecleanQty"
                                                                        placeholder="" value="" readonly>
                                                             </div>
                                                         </div>
@@ -3318,9 +3737,9 @@
                                                     <div class="col-xl-2 col-sm-12 col-12">
                                                         <div class="mb-3">
                                                             <label for="otherQty" class="form-label">Other Qty</label>
-                                                            <div class="input-group">
+                                                            <div class="input input-group">
                                                                 <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
-                                                                <input type="text" class="form-control" id="otherQty" name="otherQty"
+                                                                <input type="text" class="input form-control" id="otherQty" name="otherQty"
                                                                        placeholder="" value="" readonly>
                                                             </div>
                                                         </div>
@@ -3328,18 +3747,18 @@
                                                     <div class="col-xl-2 col-sm-12 col-12">
                                                         <div class="mb-3">
                                                             <label for="vendorQty" class="form-label">Vendor Qty</label>
-                                                            <div class="input-group">
+                                                            <div class="input input-group">
                                                                 <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
-                                                                <input type="text" class="form-control" id="vendorQty" name="vendorQty"
+                                                                <input type="text" class="input form-control" id="vendorQty" name="vendorQty"
                                                                        placeholder="" value="" readonly>
                                                             </div>
                                                         </div>
                                                     </div><div class="col-xl-2 col-sm-12 col-12">
                                                         <div class="mb-3">
                                                             <label for="otherOnsemiQty" class="form-label">Other onsemi Qty</label>
-                                                            <div class="input-group">
+                                                            <div class="input input-group">
                                                                 <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
-                                                                <input type="text" class="form-control" id="otherOnsemiQty" name="otherOnsemiQty"
+                                                                <input type="text" class="input form-control" id="otherOnsemiQty" name="otherOnsemiQty"
                                                                        placeholder="" value="" readonly>
                                                             </div>
                                                         </div>
@@ -3347,9 +3766,9 @@
                                                     <div class="col-xl-2 col-sm-12 col-12">
                                                         <div class="mb-3">
                                                             <label for="storageFactoryQty" class="form-label">Storage Factory Qty</label>
-                                                            <div class="input-group">
+                                                            <div class="input input-group">
                                                                 <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
-                                                                <input type="text" class="form-control" id="storageFactoryQty" name="storageFactoryQty"
+                                                                <input type="text" class="input form-control" id="storageFactoryQty" name="storageFactoryQty"
                                                                        placeholder="" value="" readonly>
                                                             </div>
                                                         </div>
@@ -3357,9 +3776,9 @@
                                                     <div class="col-xl-2 col-sm-12 col-12">
                                                         <div class="mb-3">
                                                             <label for="totalQty" class="form-label">Total Qty</label>
-                                                            <div class="input-group">
+                                                            <div class="input input-group">
                                                                 <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
-                                                                <input type="text" class="form-control" id="totalQty" name="totalQty"
+                                                                <input type="text" class="input form-control" id="totalQty" name="totalQty"
                                                                        placeholder="" value="" readonly>
                                                             </div>
                                                         </div>
@@ -3368,7 +3787,7 @@
                                                         <div class="mb-3">
                                                             <label for="isConsumable" class="form-label">Consumable?</label>
                                                             <div class="input-group form-check form-switch">
-                                                                <input class="form-check-input" type="checkbox" role="switch" id="isConsumable" name="isConsumable" disabled>
+                                                                <input class="input form-check-input" type="checkbox" id="isConsumable" name="isConsumable" disabled>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -3382,9 +3801,9 @@
                                                     <div class="col-12">
                                                         <div class="mb-3">
                                                             <label for="remarks" class="form-label">Remarks</label>
-                                                            <div class="input-group">
-                                                                <span class="input-group-text"><i class="bi bi-pencil"></i></span>
-                                                                <textarea class="form-control" id="remarks" name="remarks" placeholder="Enter Message"
+                                                            <div class="input input-group">
+                                                                <span class="input input-group-text"><i class="bi bi-pencil"></i></span>
+                                                                <textarea class="input form-control" id="remarks" name="remarks" placeholder="Enter Message"
                                                                           rows="3" readonly></textarea>
                                                             </div>
                                                         </div>
@@ -3407,16 +3826,16 @@
                                         <div class="d-flex justify-content-end gap-2">
                                             <!--<button type="button" class="btn btn-light">Cancel</button>-->
                                             <c:if test="${userItemEdit == 'Yes'}"><button type="submit" class="btn btn-primary">Update</button></c:if>
-                                        </div>
-                                        <!-- Form actions end -->
-                                        </form>
-                                    </div> 
-                                    <!--end div for 1st tab-->
-                                    <div class="tab-pane fade" id="twoAAA" role="tabpanel">
-                                        <!-- Row start -->
-                                        <div class="row gx-4">
-                                            <div class="mb-3 container-fluid justify-content-start">
-                                                <!--<button class="btn btn-outline-success me-2" type="button">Pending Registration (BIB/ Bib Card)</button>-->
+                                            </div>
+                                            <!-- Form actions end -->
+                                            </form>
+                                        </div> 
+                                        <!--end div for 1st tab-->
+                                        <div class="tab-pane fade" id="twoAAA" role="tabpanel">
+                                            <!-- Row start -->
+                                            <div class="row gx-4">
+                                                <div class="mb-3 container-fluid justify-content-start">
+                                                    <!--<button class="btn btn-outline-success me-2" type="button">Pending Registration (BIB/ Bib Card)</button>-->
                                                 <c:if test="${userItemHwAdd == 'Yes'}"><a href="" class="btn btn-outline-success me-2" role="button">
                                                         <i class='bi bi-plus-circle'></i>&nbsp;&nbsp;New Hardware ID</a></c:if>
                                                 </div>
@@ -3584,8 +4003,8 @@
                                                     $(document).ready(function () {
                                                         $('.js-example-basic-single').select2();
                                                         $(".js-example-tags").select2({
-                    tags: true
-                });
+                                                            tags: true
+                                                        });
 //                                                        $('input[readonly]').removeAttr('readonly');
 
                                                         if ($('#userItemEdit').val() === "Yes") {
@@ -3609,7 +4028,7 @@
                                                             $("#pmWw2").prop("readonly", false);
                                                             $("#expirationDate").prop("readonly", false);
                                                             $("#isCritical").prop("readonly", false);
-                                                            $("#isConsumable").prop("readonly", false);
+//                                                            $("#isConsumable").prop("readonly", false);
                                                             $("#downtimeValue").prop("readonly", false);
                                                             $("#downtimeUnit").prop("readonly", false);
                                                             $("#implementationCost").prop("readonly", false);
@@ -3621,20 +4040,20 @@
                                                             $("#equipmentType").prop("readonly", false);
                                                             $("#equipmentModel").prop("readonly", false);
                                                             $("#equipmentManufacturer").prop("readonly", false);
-                                                            $("#onHandQty").prop("readonly", false);
-                                                            $("#productionQty").prop("readonly", false);
-                                                            $("#productionStagingQty").prop("readonly", false);
-                                                            $("#repairQty").prop("readonly", false);
-                                                            $("#quarantineQty").prop("readonly", false);
-                                                            $("#otherQty").prop("readonly", false);
-                                                            $("#vendorQty").prop("readonly", false);
-                                                            $("#otherOnsemiQty").prop("readonly", false);
-                                                            $("#externalCleanQty").prop("readonly", false);
-                                                            $("#externalRecleanQty").prop("readonly", false);
-                                                            $("#internalCleanQty").prop("readonly", false);
-                                                            $("#internalRecleanQty").prop("readonly", false);
-                                                            $("#storageFactoryQty").prop("readonly", false);
-//                                                                $("#totalQty".prop("readonly", false);
+//                                                            $("#onHandQty").prop("readonly", false);
+//                                                            $("#productionQty").prop("readonly", false);
+//                                                            $("#productionStagingQty").prop("readonly", false);
+//                                                            $("#repairQty").prop("readonly", false);
+//                                                            $("#quarantineQty").prop("readonly", false);
+//                                                            $("#otherQty").prop("readonly", false);
+//                                                            $("#vendorQty").prop("readonly", false);
+//                                                            $("#otherOnsemiQty").prop("readonly", false);
+//                                                            $("#externalCleanQty").prop("readonly", false);
+//                                                            $("#externalRecleanQty").prop("readonly", false);
+//                                                            $("#internalCleanQty").prop("readonly", false);
+//                                                            $("#internalRecleanQty").prop("readonly", false);
+//                                                            $("#storageFactoryQty").prop("readonly", false);
+                                                            $("#stressType").prop("readonly", false);
                                                             $("#remarks").prop("readonly", false);
                                                             $("#isConsumable").prop("disabled", false);
                                                         }
@@ -3642,14 +4061,20 @@
 
                                                     function scrapModal() {
                                                         var itemPKID = $("#itemPKID").val();
+                                                        var mibId = $("#mibId").val();
                                                         var itemId = $("#itemId").val();
-                                                        var itemType = $("#itemType").val();
-//                                                            var deleteId = $(e).attr("modaldeleteid");
-//                                                            var deleteInfo = $("#modal_delete_info_" + deleteId).html();
-                                                        var deleteUrl = "${contextPath}/admin/user/delete2222/" + deleteId;
-                                                        var deleteMsg = "Are you want to scrap ";
-                                                        $("#delete_modal .modal-body").html(deleteMsg);
-                                                        $("#modal_delete_button").attr("href", deleteUrl);
+//                                                        var deleteUrl = "${contextPath}/hw/delete/" + deleteId;
+                                                        if (itemPKID) {
+                                                            var deleteUrl = "${contextPath}/hw/item/delete/" + itemPKID + "/" + mibId;
+                                                            var deleteMsg = "Are you sure want to scrap "+itemId+"?";
+                                                            $("#delete_modal .modal-body").html(deleteMsg);
+                                                            $("#modal_delete_button").attr("href", deleteUrl);
+                                                        } else {
+                                                            var deleteUrl = "";
+                                                            var deleteMsg = "No Item Selected.";
+                                                          $("#delete_modal .modal-body").html(deleteMsg);
+                                                            $("#modal_delete_button").attr("href", deleteUrl);
+                                                        }
                                                     }
 
                                                     function goToPage() {
@@ -3705,7 +4130,8 @@
                                                                 $("#itemName").val(data.itemName);
                                                                 $("#aluHrs").val(data.aluHrs);
 
-                                                                $("#assemblyId").val(data.assemblyId);
+//                                                                $("#assemblyId").val(data.assemblyId);
+                                                                $('#assemblyId').val(data.assemblyId).trigger('change');
                                                                 $("#rack").val(data.rack);
                                                                 $("#shelf").val(data.shelf);
                                                                 $("#unitCost").val(data.unitCost);
@@ -3717,18 +4143,18 @@
                                                                 $("#pmWw2").val(data.PmWw2);
                                                                 $("#expirationDate").val(data.expirationDate);
                                                                 $("#isCritical").val(data.isCritical);
-                                                                $("#isConsumable").val(data.isConsumeable);
+//                                                                $("#isConsumable").val(data.isConsumeable);
                                                                 $("#downtimeValue").val(data.downtimeValue);
                                                                 $("#downtimeUnit").val(data.downtimeUnit);
                                                                 $("#implementationCost").val(data.implementationCost);
                                                                 $("#manpowerValue").val(data.manpowerValue);
                                                                 $("#manpowerUnit").val(data.manpowerUnit);
                                                                 $("#complexity").val(data.complexity);
-                                                                $("#model").val(data.model);
-                                                                $("#manufacturer").val(data.manufacturer);
-                                                                $("#equipmentType").val(data.equipmentType);
-                                                                $("#equipmentModel").val(data.equipmentModel);
-                                                                $("#equipmentManufacturer").val(data.equipmentManufacturer);
+                                                                $("#model").val(data.model).trigger('change');
+                                                                $("#manufacturer").val(data.manufacturer).trigger('change');
+                                                                $("#equipmentType").val(data.equipmentType).trigger('change');
+                                                                $("#equipmentModel").val(data.equipmentModel).trigger('change');
+                                                                $("#equipmentManufacturer").val(data.equipmentManufacturer).trigger('change');
                                                                 $("#onHandQty").val(data.onHandQty);
                                                                 $("#productionQty").val(data.productionQty);
                                                                 $("#productionStagingQty").val(data.productionStagingQty);
@@ -3745,21 +4171,22 @@
                                                                 $("#totalQty").val(data.totalQty);
                                                                 $("#remarks").val(data.remarks);
                                                                 $("#itemUsage").val(data.itemUsage);
-                                                                
-                                                                     const data001 = data.assemblyId;
-                                                            const myDropdown = document.getElementById("assemblyId");
-                                                            alert(myDropdown.value);
-                                                            const selectedValue = myDropdown.value;
-                                                            
-                                                            for (let i = 0; i < myDropdown.options.length; i++) {
-                                                                if (myDropdown.options[i].value === data001) {
-                                                                    myDropdown.options[i].selected = true;
-                                                                    break; // Exit the loop once the option is found and selected
-                                                                } else {
-//                                                                 
-                                                                }
-                                                            }
-                                                                
+                                                                $("#stressType").val(data.stressType).trigger('change');
+
+//                                                                     const data001 = data.assemblyId;
+//                                                            const myDropdown = document.getElementById("assemblyId");
+//                                                            alert(myDropdown.value);
+//                                                            const selectedValue = myDropdown.value;
+//                                                            
+//                                                            for (let i = 0; i < myDropdown.options.length; i++) {
+//                                                                if (myDropdown.options[i].value === data001) {
+//                                                                    myDropdown.options[i].selected = true;
+//                                                                    break; // Exit the loop once the option is found and selected
+//                                                                } else {
+////                                                                 
+//                                                                }
+//                                                            }
+
                                                                 if (data.isConsumable === "true") {
                                                                     $("#isConsumable").attr('checked', true);
                                                                 } else {

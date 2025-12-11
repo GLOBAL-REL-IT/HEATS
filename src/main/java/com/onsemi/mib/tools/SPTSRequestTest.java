@@ -7,6 +7,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import org.json.JSONArray;
 import org.json.JSONObject;
+import static org.json.JSONObject.NULL;
 
 public class SPTSRequestTest {
 
@@ -516,21 +517,23 @@ public class SPTSRequestTest {
 //            System.out.println(getEqptBookedFOLFilesByPkid.getJSONObject(i));
 //        }
 //        System.out.println("COUNT Eqpt Booked FOL Files By Pkid..." + getEqptBookedFOLFilesByPkid.length());
-
-
-        
-                System.out.println("GET BOOKED EQUIPMENT...");
+        System.out.println("GET BOOKED EQUIPMENT...");
         JSONObject params0 = new JSONObject();
 //        String equipmentID = "H3T 1";
-        params0.put("pkID", "9");
-//        params0.put("eventNameCode", "HTOL");
-//        JSONArray getBookedEquipment2 = SPTSWebService.getSFItemByParam(params0);
-        JSONArray getBookedEquipment2 = SPTSWebService.getSubTypeAll();
-        for (int i = 0; i < getBookedEquipment2.length(); i++) {
-            System.out.println(getBookedEquipment2.getJSONObject(i));
+        JSONObject param = new JSONObject();
+//        param.put("equipmentID", "");
+//        param.put("familyName", "");
+//        param.put("relTestGroupName", "HAST");
+//        param.put("active", "0");
+        param.put("sitePKID", "1");
+        param.put("siteName", "Seremban");
+        param.put("equipmentID", "HAS 11A");
+        JSONArray getItemByParam = SPTSWebService.getSptsEqptByParam(param);
+        for (int i = 0; i < getItemByParam.length(); i++) {
+            System.out.println(getItemByParam.getJSONObject(i));
         }
-        System.out.println("COUNT BOOKED EQUIPMENT..." + getBookedEquipment2.length());
-        
+        System.out.println("COUNT BOOKED EQUIPMENT..." + getItemByParam.length());
+
 //        int itempkid = getItemByParam.getJSONObject(0).getInt("PKID");
 //        LOGGER.info("itempkid............." + itempkid);
 //        System.out.println("itempkid............." + itempkid);
