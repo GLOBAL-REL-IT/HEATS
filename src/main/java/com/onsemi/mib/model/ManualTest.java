@@ -14,12 +14,16 @@ public class ManualTest {
    private String id2; 
    private String id3;
    private String mibItemId;
+   private String configId;
    private String qty;
    private String dut;
    private String component;
    private String qtyNo;
    private String dutNo;
+   private String componentType;
    private String componentName;
+   private String componentValue;
+   private String componentReading;
    private String lowerLimit;
    private String upperLimit;
    private String percentage;
@@ -70,6 +74,14 @@ public class ManualTest {
         this.mibItemId = mibItemId;
     }
 
+    public String getConfigId() {
+        return configId;
+    }
+
+    public void setConfigId(String configId) {
+        this.configId = configId;
+    }
+
     public String getQty() {
         return qty;
     }
@@ -110,12 +122,36 @@ public class ManualTest {
         this.dutNo = dutNo;
     }
 
+    public String getComponentType() {
+        return componentType;
+    }
+
+    public void setComponentType(String componentType) {
+        this.componentType = componentType;
+    }
+
     public String getComponentName() {
         return componentName;
     }
 
     public void setComponentName(String componentName) {
         this.componentName = componentName;
+    }
+
+    public String getComponentValue() {
+        return componentValue;
+    }
+
+    public void setComponentValue(String componentValue) {
+        this.componentValue = componentValue;
+    }
+
+    public String getComponentReading() {
+        return componentReading;
+    }
+
+    public void setComponentReading(String componentReading) {
+        this.componentReading = componentReading;
     }
 
     public String getLowerLimit() {

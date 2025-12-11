@@ -10,6 +10,7 @@
         <link rel="stylesheet" href="${contextPath}/resources/statflow/vendor/bs-select/bs-select.css">
         <!-- Date Range CSS -->
         <link rel="stylesheet" href="${contextPath}/resources/statflow/vendor/daterange/daterange.css">
+        <link rel="stylesheet" href="${contextPath}/resources/css/item_check_edit.css">
     </s:layout-component>
     <s:layout-component name="page_css_inline">
         <style>
@@ -166,9 +167,9 @@
                                     </div>
                                 </div>
                                 <div class="row mb-4">
-                                    <label class="col-sm-2 col-md-1 col-form-label fw-semibold" for="assemblyId">Activity</label>
+                                    <label class="col-sm-2 col-md-1 col-form-label fw-semibold" for="activity">Activity</label>
                                     <div class="col-xl-2 col-sm-12 col-12">
-                                        <div class="row g-1">
+                                        <div class="row g-6">
                                             <label for="viCheck" class="form-label">Visual Inspection</label>
                                             <div class="input-group form-check form-switch">
                                                 <input class="form-check-input" type="checkbox" role="switch" id="viCheck" name="viCheck" <c:if test="${item.vi == 'Yes'}">checked</c:if> >
@@ -195,12 +196,73 @@
                                                 </div>
                                             </div>
                                         </div>
-                                    </div>
-                                    <!-- Form actions start -->
-                                    <div class="col-md-12">
-                                        <!--<div class="justify-content-end">-->
-                                        <!--<button type="button" class="btn btn-light">Cancel</button>-->
-                                        <button type="submit" id="submit" id="submit" class="btn btn-primary float-end" <c:if test="${userItemActEdit ne 'Yes'}">disabled</c:if> >Save</button>
+
+                                    <c:if test="${item.manualTest == 'Yes'}">
+                                        <div class="col-xl-6 col-sm-12 col-12">
+                                            <div class="static-fields">
+                                                <div>
+                                                    <label for="inputQuantity">Quantity :</label>
+                                                    <input type="number" id="inputQuantity" name="inputQuantity" required min="1" value="${qty}">
+                                                </div>
+                                                <div>
+                                                    <label for="inputDUT">DUT #:</label>
+                                                    <input type="number" id="inputDUT" name="inputDUT" required min="1" value="${dut}">
+                                                </div>
+                                                <div>
+                                                    <label for="componentField">Components:</label>
+                                                    <button type="button" class="add-row-btn" onclick="addRow()">Add Component</button>
+                                                </div>
+                                            </div>
+
+                                            <table id="dataTable">
+                                                <thead>
+                                                    <tr>
+                                                        <th>Component Type</th>
+                                                        <th>Component Name</th>
+                                                        <th class="header-value">Value</th>
+                                                        <th class="header-percent">Percentage</th>
+                                                        <th>Lower Limit</th>
+                                                        <th>Upper Limit</th>
+                                                        <th>Action</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody id="tableBody">
+                                                    <c:forEach items="${listData}" var="manualList" varStatus="manualLoop">
+                                                        <tr>
+                                                            <td><c:out value="${manualList.componentType}"/></td>
+                                                            <td><c:out value="${manualList.componentName}"/></td>
+                                                            <c:choose>
+                                                                <%-- Condition 3: Fuse -> Combined value/percentage/limits into one cell, text changes to CLOSED/OPEN --%>
+                                                                <c:when test="${manualList.componentType == 'Fuse'}">
+                                                                    <td style="text-align: center;" colspan="4">OPEN / CLOSED</td>
+                                                                </c:when>
+                                                                <%-- Condition 4: Zener or Diode -> View value, combined percentage/limits, text update to OPEN/CLOSED --%>
+                                                                <c:when test="${manualList.componentType == 'Zener' || manualList.componentType == 'Diode'}">
+                                                                    <td><c:out value="${manualList.componentValue}"/></td>
+                                                                    <td style="text-align: center;" colspan="3">OPEN / CLOSED</td>
+                                                                </c:when>
+                                                                <%-- Optional: Default case if the component type doesn't match any specific rule --%>
+                                                                <c:otherwise>
+                                                                    <td><c:out value="${manualList.componentValue}"/></td>
+                                                                    <td><c:out value="${manualList.percentage}"/></td>
+                                                                    <td><c:out value="${manualList.lowerLimit}"/></td>
+                                                                    <td><c:out value="${manualList.upperLimit}"/></td>
+                                                                </c:otherwise>
+                                                            </c:choose>
+                                                            <td><button class="delete-btn" onclick="deleteRow(this)">Delete</button></td>
+                                                        </tr>
+                                                    </c:forEach>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </c:if>
+                                </div>
+
+                                <!-- Form actions start -->
+                                <div class="col-md-12">
+                                    <!--<div class="justify-content-end">-->
+                                    <!--<button type="button" class="btn btn-light">Cancel</button>-->
+                                    <button type="submit" id="submit" id="submit" class="btn btn-primary float-end" <c:if test="${userItemActEdit ne 'Yes'}">disabled</c:if> >Save</button>
                                         <!--</div>-->
                                         <!--<div class="justify-content-start">-->
                                         <!--<button type="button" class="btn btn-light">Cancel</button>-->
@@ -262,13 +324,184 @@
 
         var userItemActEdit = document.getElementById("userItemActEdit");
         if (userItemActEdit.value !== "Yes") {
-//                                                            alert();
             var allInputs = document.getElementsByTagName("input");
             for (var i = 0; i < allInputs.length; i++) {
                 allInputs[i].disabled = true;
             }
         }
+        
+        document.addEventListener('DOMContentLoaded', (event) => {
+            
+        });
+        
+        function addRow() {
+            const quantity = document.getElementById("inputQuantity").value || 1;
+            const dut = document.getElementById("inputDUT").value || 1;
 
+            if (!quantity || !dut) {
+                alert("Please enter valid Quantity and DUT values.");
+                return;
+            }
+
+            const tableBody = document.getElementById("tableBody");
+            const newRow = tableBody.insertRow(-1);
+            // newRow does not get an ID assigned here.
+
+            const typeCell = newRow.insertCell(0);
+            const nameCell = newRow.insertCell(1);
+            const valueCell = newRow.insertCell(2);
+            const percentageCell = newRow.insertCell(3);
+            const lowerLimitCell = newRow.insertCell(4);
+            const upperLimitCell = newRow.insertCell(5);
+            const actionCell = newRow.insertCell(6);
+
+            // --- Create Input Elements ---
+            const typeSelect = document.createElement("select");
+            typeSelect.innerHTML = `
+                <option value="Capacitor">Capacitor</option>
+                <option value="Resistor">Resistor</option>
+                <option value="Zener">Zener</option>
+                <option value="Fuse">Fuse</option>
+                <option value="Diode">Diode</option>
+            `;
+            typeCell.appendChild(typeSelect);
+
+            const nameInput = document.createElement("input");
+            nameInput.type = "text";
+            nameInput.placeholder = "Name";
+            nameInput.style.width = '80px';
+            nameInput.requied = true;
+            nameCell.appendChild(nameInput);
+
+            const valueInput = document.createElement("input");
+            valueInput.type = "number";
+            valueInput.step = "any";
+            valueInput.placeholder = "Value";
+            valueInput.style.width = '70px';
+            valueInput.required = true;
+            valueCell.appendChild(valueInput);
+
+            const percentageInput = document.createElement("input");
+            percentageInput.type = "number";
+            percentageInput.step = "any";
+            percentageInput.placeholder = "%";
+            percentageInput.style.width = '50px';
+            percentageCell.appendChild(percentageInput);
+
+            const lowerLimitDisplay = document.createElement("span");
+            lowerLimitDisplay.innerText = "N/A";
+            lowerLimitCell.appendChild(lowerLimitDisplay);
+
+            const upperLimitDisplay = document.createElement("span");
+            upperLimitDisplay.innerText = "N/A";
+            upperLimitCell.appendChild(upperLimitDisplay);
+
+            const deleteButton = document.createElement("button");
+            deleteButton.innerText = "Delete";
+            deleteButton.className = "delete-btn";
+
+            // The delete handler uses DOM traversal (closest('tr'))
+            deleteButton.onclick = function () {
+                this.closest('tr').remove();
+            };
+            actionCell.appendChild(deleteButton);
+
+            // --- Calculation and Type Handling Logic ---
+
+            // These functions use closures to access the variables defined above them
+            const calculateLimits = () => {
+                if (typeSelect.value === "Capacitor" || typeSelect.value === "Resistor") {
+                    const val = parseFloat(valueInput.value);
+                    const pcnt = parseFloat(percentageInput.value);
+
+                    if (!isNaN(val) && !isNaN(pcnt)) {
+                        const toleranceAmount = (val * pcnt) / 100;
+                        lowerLimitDisplay.innerText = (val - toleranceAmount).toFixed(3);
+                        upperLimitDisplay.innerText = (val + toleranceAmount).toFixed(3);
+                    } else {
+                        lowerLimitDisplay.innerText = "N/A";
+                        upperLimitDisplay.innerText = "N/A";
+                    }
+                }
+            };
+
+            const updateRowState = () => {
+                const type = typeSelect.value;
+
+                // Reset state
+                newRow.querySelectorAll('.status-text').forEach(el => el.remove());
+                valueCell.style.display = '';
+                valueCell.colSpan = 1;
+                percentageCell.style.display = '';
+                percentageCell.colSpan = 1;
+                lowerLimitCell.style.display = '';
+                upperLimitCell.style.display = '';
+                valueInput.style.display = '';
+                percentageInput.style.display = '';
+                lowerLimitDisplay.style.display = '';
+                upperLimitDisplay.style.display = '';
+
+                if (type === "Fuse") {
+                    // FUSE LOGIC: Combine Component Value, %, Lower, Upper
+                    valueInput.style.display = 'none';
+                    percentageInput.style.display = 'none';
+                    percentageCell.style.display = 'none';
+                    lowerLimitCell.style.display = 'none';
+                    upperLimitCell.style.display = 'none';
+                    valueCell.colSpan = 4;
+
+                    const statusSpan = document.createElement('span');
+                    statusSpan.className = 'status-text';
+                    statusSpan.innerText = "OPEN / CLOSED";
+                    valueCell.appendChild(statusSpan);
+
+                } else if (type === "Diode" || type === "Zener") {
+                    // Diode/Zener Logic
+                    percentageInput.value = 0;
+                    percentageInput.style.display = 'none';
+                    percentageCell.colSpan = 3;
+                    lowerLimitCell.style.display = 'none';
+                    upperLimitCell.style.display = 'none';
+
+                    const statusSpan = document.createElement('span');
+                    statusSpan.className = 'status-text';
+                    statusSpan.innerText = "OPEN / CLOSED";
+                    percentageCell.appendChild(statusSpan);
+
+                } else {
+                    // Standard components
+                    calculateLimits();
+                }
+            };
+
+            // Attach event listeners using the local function references
+            valueInput.addEventListener('input', calculateLimits);
+            percentageInput.addEventListener('input', calculateLimits);
+            typeSelect.addEventListener('change', updateRowState);
+
+            // Set initial state
+            updateRowState();
+        }
+        
+        function deleteRow(buttonElement) {
+            // 1. Get the parent cell (<td>)
+            let tableCell = buttonElement.parentNode;
+            // 2. Get the parent row (<tr>)
+            let tableRow = tableCell.parentNode;
+            // 3. Get the parent body (<tbody>) to remove the row from
+            let tableBody = tableRow.parentNode;
+
+            // 4. Remove the row element from the table body
+            tableBody.removeChild(tableRow);
+
+            // Optional: Add confirmation dialogue
+//             if (confirm("Are you sure you want to delete this row?")) {
+//                 tableBody.removeChild(tableRow);
+//             } else {
+//                 
+//             }
+        }
+        
 //        $(document).ready(function () {
 
             //            $('#onHandQty').change(function () {

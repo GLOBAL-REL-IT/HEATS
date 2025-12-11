@@ -1,0 +1,191 @@
+/*
+Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+Click nbfs://nbhost/SystemFileSystem/Templates/Other/CascadeStyleSheet.css to edit this template
+*/
+/* 
+    Created on : Dec 8, 2025, 2:58:32 PM
+    Author     : zbqb9x
+*/
+
+/* --- Global Resets & Typography --- */
+* {
+    box-sizing: border-box; /* Ensures padding/border are included in element's total width/height */
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; /* Modern, clean font stack */
+    background-color: #f4f7f6; /* Light gray background for a clean look */
+    color: #333;
+    line-height: 1.6;
+    padding: 20px;
+}
+
+h2 {
+    color: #0056b3; /* A professional blue for headings */
+    border-bottom: 2px solid #0056b3;
+    padding-bottom: 10px;
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+/* --- Main Container Styling --- */
+.container {
+    max-width: 1000px;
+    margin: 20px auto; /* Centers the container on the page */
+    background-color: #fff; /* White background for the form area */
+    padding: 30px;
+    border-radius: 8px; /* Softened corners */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Subtle shadow for depth */
+}
+
+/* --- Static Fields Layout (using Flexbox for layout) --- */
+.static-fields {
+    display: flex;
+    flex-wrap: wrap; /* Allows items to wrap on smaller screens */
+    justify-content: space-between;
+    gap: 20px; /* Space between the input groups */
+    margin-bottom: 30px;
+}
+
+.static-fields > div {
+    flex: 1; /* Distributes available space evenly */
+    min-width: 200px; /* Ensures fields don't get too narrow */
+}
+
+label {
+    display: block; /* Puts the label above the input */
+    margin-bottom: 5px;
+    font-weight: bold;
+    color: #555;
+}
+
+input[type="number"], input[type="text"], select, button {
+    /*width: 100%;*/
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 16px;
+    transition: border-color 0.3s;
+}
+
+input:focus, button:focus {
+    border-color: #007bff; /* Highlight on focus */
+    outline: none;
+}
+
+/* --- Buttons --- */
+button {
+    cursor: pointer;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    padding: 10px 15px;
+    border-radius: 4px;
+    transition: background-color 0.2s;
+}
+
+.add-row-btn {
+    background-color: #28a745; /* Green for "Add" action */
+    margin-top: 5px; /* Aligns with input field height */
+}
+
+.add-row-btn:hover {
+    background-color: #218838;
+}
+
+.save-all-btn {
+    background-color: #0056b3;
+    width: auto; /* Revert width for this specific button */
+    padding: 12px 30px;
+    font-size: 18px;
+}
+
+.save-all-btn:hover {
+    background-color: #004494;
+}
+
+.form-actions {
+    text-align: right;
+    margin-top: 30px;
+}
+
+/* --- Table Styling --- */
+table#dataTable {
+    width: 100%;
+    border-collapse: collapse; /* Removes space between borders */
+    margin-top: 20px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+table#dataTable th, table#dataTable td {
+    padding: 12px 15px;
+    text-align: left;
+    border-bottom: 1px solid #ddd;
+}
+
+table#dataTable thead th {
+    /*background-color: #0056b3;*/
+    background-color: #D2D7EB;
+    /*color: white;*/
+    color: darkslategray;
+    font-weight: 600;
+    text-transform: uppercase;
+}
+
+table#dataTable tbody tr:nth-child(even) {
+    background-color: #f9f9f9; /* Zebra striping for readability */
+}
+
+table#dataTable tbody tr:hover {
+    background-color: #f1f1f1;
+}
+
+/* Style for inputs inside the table for consistency */
+table#dataTable input {
+    width: 100%;
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+/* Remove button styling inside the table for clarity of the action button */
+table#dataTable button {
+    /*background-color: #dc3545;  Red for delete/remove */
+    background-color: #FFE5B4;
+    color: darkslategray;
+    padding: 8px 12px;
+    width: auto;
+}
+
+table#dataTable button:hover {
+    /*background-color: #c82333;*/
+    /*background-color: #ffdc9b ;*/
+    background-color: #ffca68;
+}
+
+/* --- Responsive Adjustments --- */
+@media (max-width: 768px) {
+    body {
+        padding: 10px;
+    }
+
+    .container {
+        padding: 15px;
+        margin: 10px auto;
+    }
+
+    .static-fields > div {
+        min-width: 100%; /* Stacks inputs vertically on mobile */
+    }
+
+    /* Make table scrollable on small screens */
+    .table-wrapper {
+        overflow-x: auto;
+    }
+
+    table#dataTable, .header-percent, .header-value {
+        font-size: 14px;
+    }
+}

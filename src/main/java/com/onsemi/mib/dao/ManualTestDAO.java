@@ -112,6 +112,7 @@ public class ManualTestDAO {
         QueryResult queryResult = new QueryResult();
         String sql = "";
         ManualTest test = null;
+        LOGGER.info("MASUK DALAM MANUAL TEST LEVEL 2");
         try {
             PreparedStatement ps = conn.prepareStatement(
                     "INSERT INTO item_manual_test_l2 (mib_item_id, l1_id, dut_no, created_by, created_date, flag) VALUES (?, ?, ?, ?, NOW(), ?)", Statement.RETURN_GENERATED_KEYS
@@ -143,25 +144,37 @@ public class ManualTestDAO {
         return queryResult;
     }
     
-    public QueryResult insertManual03(String itemId, String qtyId, String dutId, String cpntName, String cpntValue, String lower, String upper, String percentage, String status, String user, String flag) {
+    public QueryResult insertManual03(String itemId, String qtyId, String dutId, String ctype, String cpntName, String cpntValue, String lower, String upper, String percentage, String status, String user, String flag) {
         QueryResult queryResult = new QueryResult();
         String sql = "";
         ManualTest test = null;
+        LOGGER.info("--------------------------------------------");
+        LOGGER.info("MASUK KE DALAM INSERT MANUAL LEVEL 3");
+        LOGGER.info("item id ::: "+itemId);
+        LOGGER.info("qtyId id ::: "+qtyId);
+        LOGGER.info("dutId id ::: "+dutId);
+        LOGGER.info("ctype id ::: "+ctype);
+        LOGGER.info("cpntName id ::: "+cpntName);
+        LOGGER.info("cpntValue id ::: "+cpntValue);
+        LOGGER.info("lower id ::: "+lower);
+        LOGGER.info("upper id ::: "+upper);
+        LOGGER.info("percentage id ::: "+percentage);
         try {
             PreparedStatement ps = conn.prepareStatement(
-                    "INSERT INTO item_manual_test_l3 (mib_item_id, l1_id, l2_id, component_name, component_value, lower_limit, upper_limit, percentage, status, created_by, created_date, flag) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, NOW(), ?)", Statement.RETURN_GENERATED_KEYS
+                    "INSERT INTO item_manual_test_l3 (mib_item_id, l1_id, l2_id, component_type, component_name, component_value, lower_limit, upper_limit, percentage, status, created_by, created_date, flag) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, NOW(), ?)", Statement.RETURN_GENERATED_KEYS
             );
             ps.setString(1, itemId);
             ps.setString(2, qtyId);
             ps.setString(3, dutId);
-            ps.setString(4, cpntName);
-            ps.setString(5, cpntValue);
-            ps.setString(6, lower);
-            ps.setString(7, upper);
-            ps.setString(8, percentage);
-            ps.setString(9, status);
-            ps.setString(10, user);
-            ps.setString(11, flag);
+            ps.setString(4, ctype);
+            ps.setString(5, cpntName);
+            ps.setString(6, cpntValue);
+            ps.setString(7, lower);
+            ps.setString(8, upper);
+            ps.setString(9, percentage);
+            ps.setString(10, status);
+            ps.setString(11, user);
+            ps.setString(12, flag);
             queryResult.setResult(ps.executeUpdate());
             ResultSet rs = ps.getGeneratedKeys();
             if (rs.next()) {
@@ -204,6 +217,151 @@ public class ManualTestDAO {
 //                itemactivityConfig.setCreatedDate(rs.getString("created_date"));
 //                itemactivityConfig.setStatus(rs.getString("status"));
 //                itemactivityConfig.setFlag(rs.getString("flag"));
+                manualList.add(manualtest);
+            }
+            rs.close();
+            ps.close();
+        } catch (SQLException e) {
+            LOGGER.error(e.getMessage());
+        } finally {
+            if (conn != null) {
+                try {
+                    conn.close();
+                } catch (SQLException e) {
+                    LOGGER.error(e.getMessage());
+                }
+            }
+        }
+        return manualList;
+    }
+    
+    public ManualTest getComponentConfig(String configId) {
+        String sql = "SELECT * FROM item_manual_test WHERE config_id = '" + configId + "'";
+        ManualTest manual = null;
+        try {
+            PreparedStatement ps = conn.prepareStatement(sql);
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                manual = new ManualTest();
+                manual.setId(rs.getString("id"));
+                manual.setMibItemId(rs.getString("mib_item_id"));
+                manual.setConfigId(rs.getString("config_id"));
+                manual.setQty(rs.getString("qty"));
+                manual.setDut(rs.getString("dut"));
+            }
+            rs.close();
+            ps.close();
+        } catch (SQLException e) {
+            LOGGER.error(e.getMessage());
+        } finally {
+            if (conn != null) {
+                try {
+                    conn.close();
+                } catch (SQLException e) {
+                    LOGGER.error(e.getMessage());
+                }
+            }
+        }
+        return manual;
+    }
+    
+    public QueryResult updateConfigId(String configId, String manualId) {
+        QueryResult queryResult = new QueryResult();
+        try {
+            PreparedStatement ps = conn.prepareStatement(
+                    "UPDATE item_manual_test SET config_id = ? WHERE id = ?"
+            );
+//            ps.setString(1, itemactivityConfig.getMibItemId());
+            ps.setString(1, configId);
+            ps.setString(2, manualId);
+            queryResult.setResult(ps.executeUpdate());
+            ps.close();
+        } catch (SQLException e) {
+            queryResult.setErrorMessage(e.getMessage());
+            LOGGER.error(e.getMessage());
+        } finally {
+            if (conn != null) {
+                try {
+                    conn.close();
+                } catch (SQLException e) {
+                    LOGGER.error(e.getMessage());
+                }
+            }
+        }
+        return queryResult;
+    }
+    
+    public Integer getQuantity(String mibItemId) {
+        Integer count = null;
+        try {
+            PreparedStatement ps = conn.prepareStatement(
+                    "SELECT COUNT(*) AS count FROM item_activity_config con WHERE con.mib_item_id = '" + mibItemId + "'"
+            );
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                count = rs.getInt("count");
+            }
+            rs.close();
+
+            ps.close();
+        } catch (SQLException e) {
+            LOGGER.error(e.getMessage());
+        } finally {
+            if (conn != null) {
+                try {
+                    conn.close();
+                } catch (SQLException e) {
+                    LOGGER.error(e.getMessage());
+                }
+            }
+        }
+        return count;
+    }
+    
+    public Integer getDut(String mibItemId) {
+        Integer count = null;
+        try {
+            PreparedStatement ps = conn.prepareStatement(
+                    "SELECT COUNT(*) AS count FROM item_activity_config con WHERE con.mib_item_id = '" + mibItemId + "'"
+            );
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                count = rs.getInt("count");
+            }
+            rs.close();
+
+            ps.close();
+        } catch (SQLException e) {
+            LOGGER.error(e.getMessage());
+        } finally {
+            if (conn != null) {
+                try {
+                    conn.close();
+                } catch (SQLException e) {
+                    LOGGER.error(e.getMessage());
+                }
+            }
+        }
+        return count;
+    }
+    
+    public List<ManualTest> getAllComponentConfig(String mibItemId) {
+        String sql = "SELECT * FROM item_manual_test_l3 WHERE mib_item_id = '"+mibItemId+"' GROUP BY component_name ";
+        LOGGER.info("SQL KITA KENA DEKAT SINI >>>> "+sql);
+        List<ManualTest> manualList = new ArrayList<ManualTest>();
+        try {
+            PreparedStatement ps = conn.prepareStatement(sql);
+            ManualTest manualtest;
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                manualtest = new ManualTest();
+                manualtest.setMibItemId(rs.getString("mib_item_id"));
+                manualtest.setComponentType(rs.getString("component_type"));
+                manualtest.setComponentName(rs.getString("component_name"));
+                manualtest.setComponentValue(rs.getString("component_value"));
+                manualtest.setPercentage(rs.getString("percentage"));
+                manualtest.setLowerLimit(rs.getString("lower_limit"));
+                manualtest.setUpperLimit(rs.getString("upper_limit"));
                 manualList.add(manualtest);
             }
             rs.close();

@@ -26,6 +26,7 @@ import com.onsemi.mib.model.ItemRecall;
 import com.onsemi.mib.model.ItemStorageFactory;
 import com.onsemi.mib.model.ItemTransaction;
 import com.onsemi.mib.model.ItemVisualInspection;
+import com.onsemi.mib.model.ManualTest;
 import com.onsemi.mib.model.ParameterDetails;
 import com.onsemi.mib.model.Request;
 import com.onsemi.mib.model.UserSession;
@@ -2551,7 +2552,6 @@ public class ItemController {
 //        if (aluHrs != null || !"".equals(aluHrs)) {
         addItem.put("aluHrs", aluHrs);
 //        }
-        LOGGER.info("isConsumable: " + isConsumable);
         if ("on".equals(isConsumable)) {
             addItem.put("isConsumeable", "1");
         } else {
@@ -3449,34 +3449,38 @@ public class ItemController {
         String status = "";
         String user = userSession.getLoginId();
         String flag = "1";
+        String configId = "0";
 
         if ("on".equals(manualTestCheck)) {
             itemA.setManualTest("Yes");
             QueryResult q0 = test.insertManualTest(mibItemId, qtyField, dutField, manComp, user, flag);
-            for (int c1 = 1; c1 <= saizQty; c1++) {
-                String qtyId = "0";
-                test = new ManualTestDAO();
-                QueryResult q1 = test.insertManual01(mibItemId, String.valueOf(c1), user, flag);
-                if (!"0".equals(q1.getGeneratedKey())) {
-                    qtyId = q1.getGeneratedKey();
-                } else {
-
-                }
-                for (int c2 = 1; c2 <= saizDut; c2++) {
-                    String dutId = "0";
+            if (!"0".equals(q0.getGeneratedKey())) {
+                configId = q0.getGeneratedKey();
+                for (int c1 = 1; c1 <= saizQty; c1++) {
+                    String qtyId = "0";
                     test = new ManualTestDAO();
-                    QueryResult q2 = test.insertManual02(mibItemId, qtyId, String.valueOf(c2), user, flag);
-                    if (!"0".equals(q2.getGeneratedKey())) {
-                        dutId = q2.getGeneratedKey();
+                    QueryResult q1 = test.insertManual01(mibItemId, String.valueOf(c1), user, flag);
+                    if (!"0".equals(q1.getGeneratedKey())) {
+                        qtyId = q1.getGeneratedKey();
                     } else {
 
                     }
-                    int saiz = nameRows.size();
-                    for (int i = 0; i < saiz; i++) {
+                    for (int c2 = 1; c2 <= saizDut; c2++) {
+                        String dutId = "0";
                         test = new ManualTestDAO();
-                        QueryResult q3 = test.insertManual03(mibItemId, qtyId, dutId, nameRows.get(i), num1Rows.get(i), num3Rows.get(i), num4Rows.get(i), num2Rows.get(i), status, user, flag);
-                        if (!"0".equals(q3.getGeneratedKey())) {
+                        QueryResult q2 = test.insertManual02(mibItemId, qtyId, String.valueOf(c2), user, flag);
+                        if (!"0".equals(q2.getGeneratedKey())) {
+                            dutId = q2.getGeneratedKey();
+                        } else {
 
+                        }
+                        int saiz = nameRows.size();
+                        for (int i = 0; i < saiz; i++) {
+                            test = new ManualTestDAO();
+                            QueryResult q3 = test.insertManual03(mibItemId, qtyId, dutId, type.get(i), nameRows.get(i), num1Rows.get(i), num3Rows.get(i), num4Rows.get(i), num2Rows.get(i), status, user, flag);
+                            if (!"0".equals(q3.getGeneratedKey())) {
+
+                            }
                         }
                     }
                 }
@@ -3508,7 +3512,7 @@ public class ItemController {
         if (!"0".equals(itemQ.getGeneratedKey())) {
 
             ItemDAO itemD2 = new ItemDAO();
-            Item item2 = itemD2.getHardwareDetail(dutField);
+            Item item2 = itemD2.getHardwareDetail(mibItemId);
 
             //update status on Item table
             Item item = new Item();
@@ -3519,6 +3523,11 @@ public class ItemController {
 
             ItemDAO itemDA = new ItemDAO();
             QueryResult iQ = itemDA.updateItemStatusAndFlag(item);
+
+            if ("on".equals(manualTestCheck)) {
+                ManualTestDAO mt = new ManualTestDAO();
+                mt.updateConfigId(itemQ.getGeneratedKey(), configId);
+            }
 
             redirectAttrs.addFlashAttribute("success", "Activity Configuration Succesfully Added.");
             return "redirect:/hw/item/pending/";
@@ -3542,9 +3551,50 @@ public class ItemController {
         model.addAttribute("item", item);
 
         model.addAttribute("userItemActEdit", userSession.getItemActivityEdit());
+        ManualTestDAO itemA = new ManualTestDAO();
+        ManualTestDAO itemB = new ManualTestDAO();
+        ManualTest itemA1 = itemA.getComponentConfig(id);
+        LOGGER.info("config id dia apa...." + id);
+        String qty = itemA1.getQty();
+        String dut = itemA1.getDut();
+        String mibItemId = itemA1.getMibItemId();
+        List<ManualTest> itemB1 = itemB.getAllComponentConfig(mibItemId);
+
+        model.addAttribute("qty", qty);
+        model.addAttribute("dut", dut);
+        model.addAttribute("listData", itemB1);
 
 //        return "admin/bib_config_edit";
         return "item/item_check_edit";
+    }
+
+    @RequestMapping(value = "/item/updateActivity", method = {RequestMethod.GET, RequestMethod.POST})
+    public String updateActivityConfig(
+            Model model,
+            Locale locale,
+            RedirectAttributes redirectAttrs,
+            @ModelAttribute UserSession userSession,
+            @RequestParam(required = false) String mibItemId,
+            @RequestParam(required = false) String viCheck,
+            @RequestParam(required = false) String bibTestCheck,
+            @RequestParam(required = false) String manualTestCheck,
+            @RequestParam(required = false) String leakageTestCheck,
+            @RequestParam(required = false) String psLeakageTestCheck,
+            @RequestParam(required = false) String winchesterChamberLeakageTest,
+            @RequestParam(required = false) String qtyField,
+            @RequestParam(required = false) String dutField,
+            @RequestParam(required = false) String manComp,
+            @RequestParam(required = false, value = "component_name[]") List<String> nameRows,
+            @RequestParam(required = false, value = "component_type[]") List<String> type,
+            @RequestParam(required = false, value = "actual_value[]") List<String> num1Rows,
+            @RequestParam(required = false, value = "percentage[]") List<String> num2Rows,
+            @RequestParam(required = false, value = "lower[]") List<String> num3Rows,
+            @RequestParam(required = false, value = "upper[]") List<String> num4Rows
+    ) {
+
+        LOGGER.info("SINI KITA MASUK UNTUK YANG FUNCTION PALING BARU");
+        redirectAttrs.addFlashAttribute("error", "Failed to save Activity Configuration. Pls Contact System Admin");
+        return "redirect:/hw/item/add2/" + mibItemId;
     }
 
     @RequestMapping(value = "/equipment", method = RequestMethod.GET)
