@@ -121,7 +121,8 @@ label {
 }
 
 button {
-    padding: 4px 12px;
+    /*padding: 4px 12px;*/
+    padding: 10px 15px;
     border: none;
     border-radius: 4px;
     cursor: pointer;
