@@ -90,7 +90,6 @@ public class ManualTestDAO {
             ResultSet rs = ps.getGeneratedKeys();
             if (rs.next()) {
                 queryResult.setGeneratedKey(Integer.toString(rs.getInt(1)));
-                LOGGER.info("MANUAL 01 >>> " + rs.getInt(1));
             }
             rs.close();
             ps.close();
@@ -112,7 +111,6 @@ public class ManualTestDAO {
         QueryResult queryResult = new QueryResult();
         String sql = "";
         ManualTest test = null;
-        LOGGER.info("MASUK DALAM MANUAL TEST LEVEL 2");
         try {
             PreparedStatement ps = conn.prepareStatement(
                     "INSERT INTO item_manual_test_l2 (mib_item_id, l1_id, dut_no, created_by, created_date, flag) VALUES (?, ?, ?, ?, NOW(), ?)", Statement.RETURN_GENERATED_KEYS
@@ -126,7 +124,6 @@ public class ManualTestDAO {
             ResultSet rs = ps.getGeneratedKeys();
             if (rs.next()) {
                 queryResult.setGeneratedKey(Integer.toString(rs.getInt(1)));
-                LOGGER.info("MANUAL 02 >>> " + rs.getInt(1));
             }
             rs.close();
             ps.close();
@@ -148,17 +145,6 @@ public class ManualTestDAO {
         QueryResult queryResult = new QueryResult();
         String sql = "";
         ManualTest test = null;
-        LOGGER.info("--------------------------------------------");
-        LOGGER.info("MASUK KE DALAM INSERT MANUAL LEVEL 3");
-        LOGGER.info("item id ::: "+itemId);
-        LOGGER.info("qtyId id ::: "+qtyId);
-        LOGGER.info("dutId id ::: "+dutId);
-        LOGGER.info("ctype id ::: "+ctype);
-        LOGGER.info("cpntName id ::: "+cpntName);
-        LOGGER.info("cpntValue id ::: "+cpntValue);
-        LOGGER.info("lower id ::: "+lower);
-        LOGGER.info("upper id ::: "+upper);
-        LOGGER.info("percentage id ::: "+percentage);
         try {
             PreparedStatement ps = conn.prepareStatement(
                     "INSERT INTO item_manual_test_l3 (mib_item_id, l1_id, l2_id, component_type, component_name, component_value, lower_limit, upper_limit, percentage, status, created_by, created_date, flag) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, NOW(), ?)", Statement.RETURN_GENERATED_KEYS
@@ -179,7 +165,6 @@ public class ManualTestDAO {
             ResultSet rs = ps.getGeneratedKeys();
             if (rs.next()) {
                 queryResult.setGeneratedKey(Integer.toString(rs.getInt(1)));
-                LOGGER.info("MANUAL 03 >>> " + rs.getInt(1));
             }
             rs.close();
             ps.close();
