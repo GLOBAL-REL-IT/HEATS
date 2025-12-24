@@ -191,6 +191,39 @@ public class EquipmentViMonitoringDAO {
         return equipmentviMonitoringList;
     }
 
+    public List<EquipmentViMonitoring> getEquipmentViMonitoringList(String eqptViMonPkid) {
+        String sql = "SELECT *, DATE_FORMAT(created_date,'%d %M %Y %h:%i %p') AS createdDate, IF(spts_pkid=\"" + eqptViMonPkid + "\",\"selected=''\",\"\") AS selected FROM equipment_vi_monitoring ORDER BY id ASC";
+        List<EquipmentViMonitoring> equipmentviMonitoringList = new ArrayList<EquipmentViMonitoring>();
+        try {
+            PreparedStatement ps = conn.prepareStatement(sql);
+            EquipmentViMonitoring equipmentviMonitoring;
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                equipmentviMonitoring = new EquipmentViMonitoring();
+                equipmentviMonitoring.setId(rs.getString("id"));
+                equipmentviMonitoring.setSptsPkid(rs.getString("spts_pkid"));
+                equipmentviMonitoring.setName(rs.getString("name"));
+                equipmentviMonitoring.setCreatedBy(rs.getString("created_by"));
+                equipmentviMonitoring.setCreatedDate(rs.getString("createdDate"));
+                equipmentviMonitoring.setSelected(rs.getString("selected"));
+                equipmentviMonitoringList.add(equipmentviMonitoring);
+            }
+            rs.close();
+            ps.close();
+        } catch (SQLException e) {
+            LOGGER.error(e.getMessage());
+        } finally {
+            if (conn != null) {
+                try {
+                    conn.close();
+                } catch (SQLException e) {
+                    LOGGER.error(e.getMessage());
+                }
+            }
+        }
+        return equipmentviMonitoringList;
+    }
+
     public Integer getCountPkid(String pkid) {
         Integer count = null;
         try {

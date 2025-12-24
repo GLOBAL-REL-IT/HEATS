@@ -565,9 +565,9 @@ public class SPTSRequestXML {
         String xmlString = "<?xml version=\"1.0\" encoding=\"utf-8\"?>"
                 + "<soap:Envelope xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\" xmlns:soap=\"http://schemas.xmlsoap.org/soap/envelope/\">"
                 + "<soap:Body>"
-                + "<EquipMonitoring_Insert xmlns=\"http://tempuri.org/\">"
+                + "<EquipMonitoring_Insert2 xmlns=\"http://tempuri.org/\">"
                 + paramsXmlString
-                + "</EquipMonitoring_Insert>"
+                + "</EquipMonitoring_Insert2>"
                 + "</soap:Body>"
                 + "</soap:Envelope>";
         return xmlString;
@@ -637,9 +637,9 @@ public class SPTSRequestXML {
         String xmlString = "<?xml version=\"1.0\" encoding=\"utf-8\"?>"
                 + "<soap:Envelope xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\" xmlns:soap=\"http://schemas.xmlsoap.org/soap/envelope/\">"
                 + "<soap:Body>"
-                + "<EquipTech_Insert xmlns=\"http://tempuri.org/\">"
+                + "<EquipTech_Insert2 xmlns=\"http://tempuri.org/\">"
                 + paramsXmlString
-                + "</EquipTech_Insert>"
+                + "</EquipTech_Insert2>"
                 + "</soap:Body>"
                 + "</soap:Envelope>";
         return xmlString;
@@ -709,9 +709,9 @@ public class SPTSRequestXML {
         String xmlString = "<?xml version=\"1.0\" encoding=\"utf-8\"?>"
                 + "<soap:Envelope xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\" xmlns:soap=\"http://schemas.xmlsoap.org/soap/envelope/\">"
                 + "<soap:Body>"
-                + "<VIMonitoring_Insert xmlns=\"http://tempuri.org/\">"
+                + "<VIMonitoring_Insert2 xmlns=\"http://tempuri.org/\">"
                 + paramsXmlString
-                + "</VIMonitoring_Insert>"
+                + "</VIMonitoring_Insert2>"
                 + "</soap:Body>"
                 + "</soap:Envelope>";
         return xmlString;
@@ -734,18 +734,8 @@ public class SPTSRequestXML {
                 + "</soap:Envelope>";
         return xmlString;
     }
-    
-    public static String getGlobalFamilyNameAll() throws IOException {
-        String xmlString = "<?xml version=\"1.0\" encoding=\"utf-8\"?>"
-                + "<soap:Envelope xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\" xmlns:soap=\"http://schemas.xmlsoap.org/soap/envelope/\">"
-                + "<soap:Body>"
-                + "<GetGlobalEquipmentFamilyNameAll xmlns=\"http://tempuri.org/\" />"
-                + "</soap:Body>"
-                + "</soap:Envelope>";
-        return xmlString;
-    }
-    
-     public static String getSptsEqptByParam(JSONObject params) throws IOException {
+
+    public static String getSptsEqptByParam(JSONObject params) throws IOException {
         String paramsXmlString = "";
         for (Iterator iterator = params.keySet().iterator(); iterator.hasNext();) {
             String key = (String) iterator.next();
@@ -762,8 +752,26 @@ public class SPTSRequestXML {
                 + "</soap:Envelope>";
         return xmlString;
     }
-     
-     public static String getEqptByRelTestGroup(JSONObject params) throws IOException {
+
+    public static String getSptsEqptByParamMib(JSONObject params) throws IOException {
+        String paramsXmlString = "";
+        for (Iterator iterator = params.keySet().iterator(); iterator.hasNext();) {
+            String key = (String) iterator.next();
+            String value = params.get(key).toString();
+            paramsXmlString += "<" + key + ">" + value + "</" + key + ">";
+        }
+        String xmlString = "<?xml version=\"1.0\" encoding=\"utf-8\"?>"
+                + "<soap:Envelope xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\" xmlns:soap=\"http://schemas.xmlsoap.org/soap/envelope/\">"
+                + "<soap:Body>"
+                + "<SPTSEquipment_GetByParam_MIB xmlns=\"http://tempuri.org/\">"
+                + paramsXmlString
+                + "</SPTSEquipment_GetByParam_MIB>"
+                + "</soap:Body>"
+                + "</soap:Envelope>";
+        return xmlString;
+    }
+
+    public static String getEqptByRelTestGroup(JSONObject params) throws IOException {
         String paramsXmlString = "";
         for (Iterator iterator = params.keySet().iterator(); iterator.hasNext();) {
             String key = (String) iterator.next();
@@ -780,8 +788,8 @@ public class SPTSRequestXML {
                 + "</soap:Envelope>";
         return xmlString;
     }
-     
-     public static String getEqptSlotByEqptPkid(JSONObject params) throws IOException {
+
+    public static String getEqptSlotByEqptPkid(JSONObject params) throws IOException {
         String paramsXmlString = "";
         for (Iterator iterator = params.keySet().iterator(); iterator.hasNext();) {
             String key = (String) iterator.next();
@@ -798,8 +806,8 @@ public class SPTSRequestXML {
                 + "</soap:Envelope>";
         return xmlString;
     }
-     
-     public static String getEqptbyParam(JSONObject params) throws IOException {
+
+    public static String getEqptbyParam(JSONObject params) throws IOException {
         String paramsXmlString = "";
         for (Iterator iterator = params.keySet().iterator(); iterator.hasNext();) {
             String key = (String) iterator.next();
@@ -812,6 +820,332 @@ public class SPTSRequestXML {
                 + "<Equipment_GetByParam xmlns=\"http://tempuri.org/\">"
                 + paramsXmlString
                 + "</Equipment_GetByParam>"
+                + "</soap:Body>"
+                + "</soap:Envelope>";
+        return xmlString;
+    }
+
+    public static String insertEqptslot(JSONObject params) throws IOException {
+        String paramsXmlString = "";
+        for (Iterator iterator = params.keySet().iterator(); iterator.hasNext();) {
+            String key = (String) iterator.next();
+            String value = params.get(key).toString();
+            paramsXmlString += "<" + key + ">" + value + "</" + key + ">";
+        }
+        String xmlString = "<?xml version=\"1.0\" encoding=\"utf-8\"?>"
+                + "<soap:Envelope xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\" xmlns:soap=\"http://schemas.xmlsoap.org/soap/envelope/\">"
+                + "<soap:Body>"
+                + "<EquipmentSlot_Add xmlns=\"http://tempuri.org/\">"
+                + paramsXmlString
+                + "</EquipmentSlot_Add>"
+                + "</soap:Body>"
+                + "</soap:Envelope>";
+        return xmlString;
+    }
+
+    public static String deleteEqptSlot(JSONObject params) throws IOException {
+        String paramsXmlString = "";
+        for (Iterator iterator = params.keySet().iterator(); iterator.hasNext();) {
+            String key = (String) iterator.next();
+            String value = params.get(key).toString();
+            paramsXmlString += "<" + key + ">" + value + "</" + key + ">";
+        }
+        String xmlString = "<?xml version=\"1.0\" encoding=\"utf-8\"?>"
+                + "<soap:Envelope xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\" xmlns:soap=\"http://schemas.xmlsoap.org/soap/envelope/\">"
+                + "<soap:Body>"
+                + "<EquipmentSlot_Delete xmlns=\"http://tempuri.org/\">"
+                + paramsXmlString
+                + "</EquipmentSlot_Delete>"
+                + "</soap:Body>"
+                + "</soap:Envelope>";
+        return xmlString;
+    }
+
+    public static String insertEqptTray(JSONObject params) throws IOException {
+        String paramsXmlString = "";
+        for (Iterator iterator = params.keySet().iterator(); iterator.hasNext();) {
+            String key = (String) iterator.next();
+            String value = params.get(key).toString();
+            paramsXmlString += "<" + key + ">" + value + "</" + key + ">";
+        }
+        String xmlString = "<?xml version=\"1.0\" encoding=\"utf-8\"?>"
+                + "<soap:Envelope xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\" xmlns:soap=\"http://schemas.xmlsoap.org/soap/envelope/\">"
+                + "<soap:Body>"
+                + "<EquipmentTray_Add xmlns=\"http://tempuri.org/\">"
+                + paramsXmlString
+                + "</EquipmentTray_Add>"
+                + "</soap:Body>"
+                + "</soap:Envelope>";
+        return xmlString;
+    }
+
+    public static String updateEqptTray(JSONObject params) throws IOException {
+        String paramsXmlString = "";
+        for (Iterator iterator = params.keySet().iterator(); iterator.hasNext();) {
+            String key = (String) iterator.next();
+            String value = params.get(key).toString();
+            paramsXmlString += "<" + key + ">" + value + "</" + key + ">";
+        }
+        String xmlString = "<?xml version=\"1.0\" encoding=\"utf-8\"?>"
+                + "<soap:Envelope xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\" xmlns:soap=\"http://schemas.xmlsoap.org/soap/envelope/\">"
+                + "<soap:Body>"
+                + "<EquipmentTray_Update xmlns=\"http://tempuri.org/\">"
+                + paramsXmlString
+                + "</EquipmentTray_Update>"
+                + "</soap:Body>"
+                + "</soap:Envelope>";
+        return xmlString;
+    }
+
+    public static String deleteEqptTray(JSONObject params) throws IOException {
+        String paramsXmlString = "";
+        for (Iterator iterator = params.keySet().iterator(); iterator.hasNext();) {
+            String key = (String) iterator.next();
+            String value = params.get(key).toString();
+            paramsXmlString += "<" + key + ">" + value + "</" + key + ">";
+        }
+        String xmlString = "<?xml version=\"1.0\" encoding=\"utf-8\"?>"
+                + "<soap:Envelope xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\" xmlns:soap=\"http://schemas.xmlsoap.org/soap/envelope/\">"
+                + "<soap:Body>"
+                + "<EquipmentTray_Delete xmlns=\"http://tempuri.org/\">"
+                + paramsXmlString
+                + "</EquipmentTray_Delete>"
+                + "</soap:Body>"
+                + "</soap:Envelope>";
+        return xmlString;
+    }
+
+    public static String getEqptTrayByEqptPkid(JSONObject params) throws IOException {
+        String paramsXmlString = "";
+        for (Iterator iterator = params.keySet().iterator(); iterator.hasNext();) {
+            String key = (String) iterator.next();
+            String value = params.get(key).toString();
+            paramsXmlString += "<" + key + ">" + value + "</" + key + ">";
+        }
+        String xmlString = "<?xml version=\"1.0\" encoding=\"utf-8\"?>"
+                + "<soap:Envelope xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\" xmlns:soap=\"http://schemas.xmlsoap.org/soap/envelope/\">"
+                + "<soap:Body>"
+                + "<EquipmentTray_GetByEquipmentPKID xmlns=\"http://tempuri.org/\">"
+                + paramsXmlString
+                + "</EquipmentTray_GetByEquipmentPKID>"
+                + "</soap:Body>"
+                + "</soap:Envelope>";
+        return xmlString;
+    }
+
+    public static String insertEqpt(JSONObject params) throws IOException {
+        String paramsXmlString = "";
+        for (Iterator iterator = params.keySet().iterator(); iterator.hasNext();) {
+            String key = (String) iterator.next();
+            String value = params.get(key).toString();
+            paramsXmlString += "<" + key + ">" + value + "</" + key + ">";
+        }
+        String xmlString = "<?xml version=\"1.0\" encoding=\"utf-8\"?>"
+                + "<soap:Envelope xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\" xmlns:soap=\"http://schemas.xmlsoap.org/soap/envelope/\">"
+                + "<soap:Body>"
+                + "<Equipment_Add xmlns=\"http://tempuri.org/\">"
+                + paramsXmlString
+                + "</Equipment_Add>"
+                + "</soap:Body>"
+                + "</soap:Envelope>";
+        return xmlString;
+    }
+
+    public static String updateEqpt(JSONObject params) throws IOException {
+        String paramsXmlString = "";
+        for (Iterator iterator = params.keySet().iterator(); iterator.hasNext();) {
+            String key = (String) iterator.next();
+            String value = params.get(key).toString();
+            paramsXmlString += "<" + key + ">" + value + "</" + key + ">";
+        }
+        String xmlString = "<?xml version=\"1.0\" encoding=\"utf-8\"?>"
+                + "<soap:Envelope xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\" xmlns:soap=\"http://schemas.xmlsoap.org/soap/envelope/\">"
+                + "<soap:Body>"
+                + "<Equipment_Update xmlns=\"http://tempuri.org/\">"
+                + paramsXmlString
+                + "</Equipment_Update>"
+                + "</soap:Body>"
+                + "</soap:Envelope>";
+        return xmlString;
+    }
+
+    public static String deleteEqpt(JSONObject params) throws IOException {
+        String paramsXmlString = "";
+        for (Iterator iterator = params.keySet().iterator(); iterator.hasNext();) {
+            String key = (String) iterator.next();
+            String value = params.get(key).toString();
+            paramsXmlString += "<" + key + ">" + value + "</" + key + ">";
+        }
+        String xmlString = "<?xml version=\"1.0\" encoding=\"utf-8\"?>"
+                + "<soap:Envelope xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\" xmlns:soap=\"http://schemas.xmlsoap.org/soap/envelope/\">"
+                + "<soap:Body>"
+                + "<Equipment_Delete xmlns=\"http://tempuri.org/\">"
+                + paramsXmlString
+                + "</Equipment_Delete>"
+                + "</soap:Body>"
+                + "</soap:Envelope>";
+        return xmlString;
+    }
+
+    public static String getEqptByEqptId(JSONObject params) throws IOException {
+        String paramsXmlString = "";
+        for (Iterator iterator = params.keySet().iterator(); iterator.hasNext();) {
+            String key = (String) iterator.next();
+            String value = params.get(key).toString();
+            paramsXmlString += "<" + key + ">" + value + "</" + key + ">";
+        }
+        String xmlString = "<?xml version=\"1.0\" encoding=\"utf-8\"?>"
+                + "<soap:Envelope xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\" xmlns:soap=\"http://schemas.xmlsoap.org/soap/envelope/\">"
+                + "<soap:Body>"
+                + "<Equipment_GetByEquipmentID xmlns=\"http://tempuri.org/\">"
+                + paramsXmlString
+                + "</Equipment_GetByEquipmentID>"
+                + "</soap:Body>"
+                + "</soap:Envelope>";
+        return xmlString;
+    }
+    
+    public static String getEqptByPkid(JSONObject params) throws IOException {
+        String paramsXmlString = "";
+        for (Iterator iterator = params.keySet().iterator(); iterator.hasNext();) {
+            String key = (String) iterator.next();
+            String value = params.get(key).toString();
+            paramsXmlString += "<" + key + ">" + value + "</" + key + ">";
+        }
+        String xmlString = "<?xml version=\"1.0\" encoding=\"utf-8\"?>"
+                + "<soap:Envelope xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\" xmlns:soap=\"http://schemas.xmlsoap.org/soap/envelope/\">"
+                + "<soap:Body>"
+                + "<Equipment_GetByPKID xmlns=\"http://tempuri.org/\">"
+                + paramsXmlString
+                + "</Equipment_GetByPKID>"
+                + "</soap:Body>"
+                + "</soap:Envelope>";
+        return xmlString;
+    }
+    
+    public static String insertGlobalRelTestGroup(JSONObject params) throws IOException {
+        String paramsXmlString = "";
+        for (Iterator iterator = params.keySet().iterator(); iterator.hasNext();) {
+            String key = (String) iterator.next();
+            String value = params.get(key).toString();
+            paramsXmlString += "<" + key + ">" + value + "</" + key + ">";
+        }
+        String xmlString = "<?xml version=\"1.0\" encoding=\"utf-8\"?>"
+                + "<soap:Envelope xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\" xmlns:soap=\"http://schemas.xmlsoap.org/soap/envelope/\">"
+                + "<soap:Body>"
+                + "<InsertGlobalRelTestGroup xmlns=\"http://tempuri.org/\">"
+                + paramsXmlString
+                + "</InsertGlobalRelTestGroup>"
+                + "</soap:Body>"
+                + "</soap:Envelope>";
+        return xmlString;
+    }
+
+    public static String deleteGlobalRelTestGroup(JSONObject params) throws IOException {
+        String paramsXmlString = "";
+        for (Iterator iterator = params.keySet().iterator(); iterator.hasNext();) {
+            String key = (String) iterator.next();
+            String value = params.get(key).toString();
+            paramsXmlString += "<" + key + ">" + value + "</" + key + ">";
+        }
+        String xmlString = "<?xml version=\"1.0\" encoding=\"utf-8\"?>"
+                + "<soap:Envelope xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\" xmlns:soap=\"http://schemas.xmlsoap.org/soap/envelope/\">"
+                + "<soap:Body>"
+                + "<DeleteGlobalRelTestGroup xmlns=\"http://tempuri.org/\">"
+                + paramsXmlString
+                + "</DeleteGlobalRelTestGroup>"
+                + "</soap:Body>"
+                + "</soap:Envelope>";
+        return xmlString;
+    }
+
+    public static String getGlobalRelTestGroupAll() throws IOException {
+        String xmlString = "<?xml version=\"1.0\" encoding=\"utf-8\"?>"
+                + "<soap:Envelope xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\" xmlns:soap=\"http://schemas.xmlsoap.org/soap/envelope/\">"
+                + "<soap:Body>"
+                + "<GetGlobalRelTestGroupAll xmlns=\"http://tempuri.org/\" />"
+                + "</soap:Body>"
+                + "</soap:Envelope>";
+        return xmlString;
+    }
+    
+    public static String getGlobalRelTestGroupByParam(JSONObject params) throws IOException {
+        String paramsXmlString = "";
+        for (Iterator iterator = params.keySet().iterator(); iterator.hasNext();) {
+            String key = (String) iterator.next();
+            String value = params.get(key).toString();
+            paramsXmlString += "<" + key + ">" + value + "</" + key + ">";
+        }
+        String xmlString = "<?xml version=\"1.0\" encoding=\"utf-8\"?>"
+                + "<soap:Envelope xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\" xmlns:soap=\"http://schemas.xmlsoap.org/soap/envelope/\">"
+                + "<soap:Body>"
+                + "<GetGlobalRelTestGroupDetailsByParam xmlns=\"http://tempuri.org/\">"
+                + paramsXmlString
+                + "</GetGlobalRelTestGroupDetailsByParam>"
+                + "</soap:Body>"
+                + "</soap:Envelope>";
+        return xmlString;
+    }
+    
+    public static String insertGlobalFamilyName(JSONObject params) throws IOException {
+        String paramsXmlString = "";
+        for (Iterator iterator = params.keySet().iterator(); iterator.hasNext();) {
+            String key = (String) iterator.next();
+            String value = params.get(key).toString();
+            paramsXmlString += "<" + key + ">" + value + "</" + key + ">";
+        }
+        String xmlString = "<?xml version=\"1.0\" encoding=\"utf-8\"?>"
+                + "<soap:Envelope xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\" xmlns:soap=\"http://schemas.xmlsoap.org/soap/envelope/\">"
+                + "<soap:Body>"
+                + "<InsertGlobalEquipmentFamilyName xmlns=\"http://tempuri.org/\">"
+                + paramsXmlString
+                + "</InsertGlobalEquipmentFamilyName>"
+                + "</soap:Body>"
+                + "</soap:Envelope>";
+        return xmlString;
+    }
+
+    public static String deleteGlobalFamilyName(JSONObject params) throws IOException {
+        String paramsXmlString = "";
+        for (Iterator iterator = params.keySet().iterator(); iterator.hasNext();) {
+            String key = (String) iterator.next();
+            String value = params.get(key).toString();
+            paramsXmlString += "<" + key + ">" + value + "</" + key + ">";
+        }
+        String xmlString = "<?xml version=\"1.0\" encoding=\"utf-8\"?>"
+                + "<soap:Envelope xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\" xmlns:soap=\"http://schemas.xmlsoap.org/soap/envelope/\">"
+                + "<soap:Body>"
+                + "<DeleteGlobalEquipmentFamilyName xmlns=\"http://tempuri.org/\">"
+                + paramsXmlString
+                + "</DeleteGlobalEquipmentFamilyName>"
+                + "</soap:Body>"
+                + "</soap:Envelope>";
+        return xmlString;
+    }
+
+    public static String getGlobalFamilyNameAll() throws IOException {
+        String xmlString = "<?xml version=\"1.0\" encoding=\"utf-8\"?>"
+                + "<soap:Envelope xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\" xmlns:soap=\"http://schemas.xmlsoap.org/soap/envelope/\">"
+                + "<soap:Body>"
+                + "<GetGlobalEquipmentFamilyNameAll xmlns=\"http://tempuri.org/\" />"
+                + "</soap:Body>"
+                + "</soap:Envelope>";
+        return xmlString;
+    }
+    
+    public static String getGlobalFamilyNameByParam(JSONObject params) throws IOException {
+        String paramsXmlString = "";
+        for (Iterator iterator = params.keySet().iterator(); iterator.hasNext();) {
+            String key = (String) iterator.next();
+            String value = params.get(key).toString();
+            paramsXmlString += "<" + key + ">" + value + "</" + key + ">";
+        }
+        String xmlString = "<?xml version=\"1.0\" encoding=\"utf-8\"?>"
+                + "<soap:Envelope xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\" xmlns:soap=\"http://schemas.xmlsoap.org/soap/envelope/\">"
+                + "<soap:Body>"
+                + "<GetGlobalEquipmentFamilyNameDetailsByParam xmlns=\"http://tempuri.org/\">"
+                + paramsXmlString
+                + "</GetGlobalEquipmentFamilyNameDetailsByParam>"
                 + "</soap:Body>"
                 + "</soap:Envelope>";
         return xmlString;

@@ -107,7 +107,7 @@
             <!-- Row start -->
             <div class="row gx-4">
 
-                <div class="col-sm-10 col-10">
+                <div class="col-sm-12 col-12">
 
                     <!-- Card start -->
                     <div class="card mb-4">

@@ -8,6 +8,35 @@ public class EquipmentRelTestGroup {
     private String createdBy;
     private String createdDate;
 
+    private String selected;
+    
+    private String sptsGuid;
+    private String inGlobalOrNot;
+
+    public String getSptsGuid() {
+        return sptsGuid;
+    }
+
+    public void setSptsGuid(String sptsGuid) {
+        this.sptsGuid = sptsGuid;
+    }
+
+    public String getInGlobalOrNot() {
+        return inGlobalOrNot;
+    }
+
+    public void setInGlobalOrNot(String inGlobalOrNot) {
+        this.inGlobalOrNot = inGlobalOrNot;
+    }
+
+    public String getSelected() {
+        return selected;
+    }
+
+    public void setSelected(String selected) {
+        this.selected = selected;
+    }
+
     public String getCreatedBy() {
         return createdBy;
     }

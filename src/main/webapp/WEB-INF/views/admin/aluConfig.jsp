@@ -104,7 +104,7 @@
                                             <i class='bi bi-hourglass'></i>&nbsp;&nbsp;Pending VM/Functional Test</a>
                                     </div>
                                 </nav>-->
-                <div class="col-sm-8 col-12">
+                <div class="col-sm-12 col-12">
                     <!-- Card start -->
                     <div class="card mb-4">
                         <div class="card-header">
@@ -145,19 +145,17 @@
 
             <!-- Row start -->
             <div class="row gx-4">
-
-                <div class="col-sm-8 col-12">
-
+                <div class="col-sm-12 col-12">
                     <!-- Card start -->
                     <div class="card mb-4">
                         <div class="card-header">
                             <!--<h5 class="card-title">Item Type With ALU Calculation</h5>-->
                             <div class="col-12 mb-3">
-                                    <h5 class="fw-semibold mb-3 border-start border-primary ps-2"
-                                        style="border-left-width: 3px !important;">
-                                        <i class="bi bi-list-ul me-2"></i>Item Type With ALU Calculation
-                                    </h5>
-                                </div>
+                                <h5 class="fw-semibold mb-3 border-start border-primary ps-2"
+                                    style="border-left-width: 3px !important;">
+                                    <i class="bi bi-list-ul me-2"></i>Item Type With ALU Calculation
+                                </h5>
+                            </div>
                         </div>
                         <div class="card-body">
 

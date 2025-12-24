@@ -33,220 +33,220 @@
             <link rel="stylesheet" href="${contextPath}/resources/vendor/select2-4.0.13/css/select2.min.css">
 
             <!-- this page specific styles -->
-            <s:layout-component name="page_css">
-            </s:layout-component>
+        <s:layout-component name="page_css">
+        </s:layout-component>
 
-            <style>
-                label.error, select.error {
-                    color: #DD504C;
-                }
-                input.error, select.error, textarea.error {
-                    border-color: #DD504C;
-                }
-                input.error::-webkit-input-placeholder, select.error::-webkit-input-placeholder, textarea.error::-webkit-input-placeholder {
-                    color: #DD504C;
-                }
-                input.error:-moz-placeholder, select.error:-moz-placeholder, textarea.error:-moz-placeholder {
-                    /* FF 4-18 */
-                    color: #DD504C;
-                }
-                input.error::-moz-placeholder, select.error::-moz-placeholder, textarea.error::-moz-placeholder {
-                    /* FF 19+ */
-                    color: #DD504C;
-                }
-                input.error:-ms-input-placeholder, select.error:-ms-input-placeholder, textarea.error:-ms-input-placeholder {
-                    /* IE 10+ */
-                    color: #DD504C;
-                }
-                input.error:focus, select.error:focus, textarea.error:focus {
-                    border-color: #DD504C;
-                    box-shadow: 0 0 5px rgba(221, 80, 76, 1);
-                }
-                /*                //select2 error
-                                //div.select2-container.error {
-                                    //border-color: #DD504C;
-                                //}*/
-                .modal-dialog {
-                    position: absolute;
-                    top: 30% !important;
-                    left: 20% !important;
-                    right: 20% !important;
-                    bottom: 35% !important;
-                }
+        <style>
+            label.error, select.error {
+                color: #DD504C;
+            }
+            input.error, select.error, textarea.error {
+                border-color: #DD504C;
+            }
+            input.error::-webkit-input-placeholder, select.error::-webkit-input-placeholder, textarea.error::-webkit-input-placeholder {
+                color: #DD504C;
+            }
+            input.error:-moz-placeholder, select.error:-moz-placeholder, textarea.error:-moz-placeholder {
+                /* FF 4-18 */
+                color: #DD504C;
+            }
+            input.error::-moz-placeholder, select.error::-moz-placeholder, textarea.error::-moz-placeholder {
+                /* FF 19+ */
+                color: #DD504C;
+            }
+            input.error:-ms-input-placeholder, select.error:-ms-input-placeholder, textarea.error:-ms-input-placeholder {
+                /* IE 10+ */
+                color: #DD504C;
+            }
+            input.error:focus, select.error:focus, textarea.error:focus {
+                border-color: #DD504C;
+                box-shadow: 0 0 5px rgba(221, 80, 76, 1);
+            }
+            /*                //select2 error
+                            //div.select2-container.error {
+                                //border-color: #DD504C;
+                            //}*/
+            .modal-dialog {
+                position: absolute;
+                top: 30% !important;
+                left: 20% !important;
+                right: 20% !important;
+                bottom: 35% !important;
+            }
 
-                .modal-lg {
-                    top: 10% !important;
-                }
-                .modal-small {
-                    top: 10% !important;
-                }
+            .modal-lg {
+                top: 10% !important;
+            }
+            .modal-small {
+                top: 10% !important;
+            }
 
-                .newNavigate {
-                    /*background-color: #F9F3EF;*/
-                    /*background-color: #F2F2F2;*/
-                    /*background-color: #EEEEEE;*/
-                    /*background-color: #FFFDF6;*/
-                    /*background-color: #F6F0F0;*/
-                    /*background-color: #FBF8EF;*/
-                    /*background-color: #FFF7F3;*/
-                    /*background-color: #f0f4fa;*/
-                    /*background-color: #17313E;*/
-                    /*background-color: #93DA97;*/
-                    /*background: linear-gradient(180deg,rgba(222, 113, 18, 1) 39%, rgba(252, 176, 69, 1) 100%);*/
-                    background-color: #1e3547;
-                    /*color: white;*/
-                }
-                .menu-text {
-                    /*background: #17313E;*/
-                    color: white;
-                }
-                .sidebar-menu ul li a i {
-                    color: white;
-                    border-width: 3px;
-                    border-style: ridge;
-                    /*border-width: 2px;*/
-                    /*background-color: #415E72;*/
-                    /*width:70px;*/
-                    /*height:50px;*/
-                    box-shadow: inset 0 3px 6px rgba(0,0,0,0.16), 0 4px 6px rgba(0,0,0,0.45);
-                    /*border-radius: 15px;*/
-                }
-                .sidebar-menu ul li.active a {
-                    /*background: #507dff;*/
-                    color: #ffffff;
-                    /*border-color: #507dff;*/
-                    background-color: #415E72;
-                    /*box-shadow: 0 4px 10px rgba(80, 125, 255, 0.25);*/
-                }
-                .sidebar-menu ul li a:hover {
-                    color: #507dff;
-                    background-color: #415E72;
-                }
-                .sidebar-menu .sidebar-dropdown .sidebar-submenu ul li a {
-                    color: white
-                }
-                .sidebar-menu .sidebar-dropdown.active > a {
-                    background-color: #415E72;
-                }
-                .sidebar-menu .sidebar-dropdown .sidebar-submenu ul li a:hover {
-                    color: #ff8666;
-                    background: white;
-                    background-color: #415E72;
-                }
-                .sidebar-menu ul li.active a.current-page {
-                    position: relative;
-                    color: #ff8666;
-                    background-color: #415E72;
-                    font-weight: 600;
-                }
-                .sidebar-menu .sidebar-dropdown.active .sidebar-submenu ul li a {
-                    position: relative;
-                    background-color: #1e3547;
-                    font-weight: 600;
-                }
+            .newNavigate {
+                /*background-color: #F9F3EF;*/
+                /*background-color: #F2F2F2;*/
+                /*background-color: #EEEEEE;*/
+                /*background-color: #FFFDF6;*/
+                /*background-color: #F6F0F0;*/
+                /*background-color: #FBF8EF;*/
+                /*background-color: #FFF7F3;*/
+                /*background-color: #f0f4fa;*/
+                /*background-color: #17313E;*/
+                /*background-color: #93DA97;*/
+                /*background: linear-gradient(180deg,rgba(222, 113, 18, 1) 39%, rgba(252, 176, 69, 1) 100%);*/
+                background-color: #1e3547;
+                /*color: white;*/
+            }
+            .menu-text {
+                /*background: #17313E;*/
+                color: white;
+            }
+            .sidebar-menu ul li a i {
+                color: white;
+                border-width: 3px;
+                border-style: ridge;
+                /*border-width: 2px;*/
+                /*background-color: #415E72;*/
+                /*width:70px;*/
+                /*height:50px;*/
+                box-shadow: inset 0 3px 6px rgba(0,0,0,0.16), 0 4px 6px rgba(0,0,0,0.45);
+                /*border-radius: 15px;*/
+            }
+            .sidebar-menu ul li.active a {
+                /*background: #507dff;*/
+                color: #ffffff;
+                /*border-color: #507dff;*/
+                background-color: #415E72;
+                /*box-shadow: 0 4px 10px rgba(80, 125, 255, 0.25);*/
+            }
+            .sidebar-menu ul li a:hover {
+                color: #507dff;
+                background-color: #415E72;
+            }
+            .sidebar-menu .sidebar-dropdown .sidebar-submenu ul li a {
+                color: white
+            }
+            .sidebar-menu .sidebar-dropdown.active > a {
+                background-color: #415E72;
+            }
+            .sidebar-menu .sidebar-dropdown .sidebar-submenu ul li a:hover {
+                color: #ff8666;
+                background: white;
+                background-color: #415E72;
+            }
+            .sidebar-menu ul li.active a.current-page {
+                position: relative;
+                color: #ff8666;
+                background-color: #415E72;
+                font-weight: 600;
+            }
+            .sidebar-menu .sidebar-dropdown.active .sidebar-submenu ul li a {
+                position: relative;
+                background-color: #1e3547;
+                font-weight: 600;
+            }
 
-                .sidebar-menu ul li.active-page-link a i {
-                    color: #ffffff;
-                    background-color: #f06a0a;
-                    border-color: #f06a0a;
-                    box-shadow: 0 5px 10px rgba(80, 125, 255, 0.3);
-                }
-                .sidebar-menu ul li.active a i {
-                    background: #f06a0a;
-                    color: #ffffff;
-                    border-color: #f06a0a;
-                    box-shadow: 0 4px 10px rgba(80, 125, 255, 0.25);
-                }
-                .sidebar-menu ul li.active a.current-page {
-                    position: relative;
-                    color: #f06a0a;
-                    background-color: #f06a0a;
-                    font-weight: 600;
-                }
-                .sidebar-menu ul li a:hover i {
-                    transform: translateY(-2px);
-                    box-shadow: 0 4px 8px rgba(80, 125, 255, 0.2);
-                    border-color: #f06a0a;
-                    color: #f06a0a;
-                }
-                .sidebar-menu ul li.active a:hover i {
-                    transform: translateY(-2px);
-                    box-shadow: 0 4px 8px rgba(80, 125, 255, 0.2);
-                    border-color: #ffffff;
-                    color: #ffffff;
-                }
-                .img2 {
-                    width: 50px; /* Sets a fixed width */
-                    height: 50px; /* Sets a fixed height */
-                }
+            .sidebar-menu ul li.active-page-link a i {
+                color: #ffffff;
+                background-color: #f06a0a;
+                border-color: #f06a0a;
+                box-shadow: 0 5px 10px rgba(80, 125, 255, 0.3);
+            }
+            .sidebar-menu ul li.active a i {
+                background: #f06a0a;
+                color: #ffffff;
+                border-color: #f06a0a;
+                box-shadow: 0 4px 10px rgba(80, 125, 255, 0.25);
+            }
+            .sidebar-menu ul li.active a.current-page {
+                position: relative;
+                color: #f06a0a;
+                background-color: #f06a0a;
+                font-weight: 600;
+            }
+            .sidebar-menu ul li a:hover i {
+                transform: translateY(-2px);
+                box-shadow: 0 4px 8px rgba(80, 125, 255, 0.2);
+                border-color: #f06a0a;
+                color: #f06a0a;
+            }
+            .sidebar-menu ul li.active a:hover i {
+                transform: translateY(-2px);
+                box-shadow: 0 4px 8px rgba(80, 125, 255, 0.2);
+                border-color: #ffffff;
+                color: #ffffff;
+            }
+            .img2 {
+                width: 50px; /* Sets a fixed width */
+                height: 50px; /* Sets a fixed height */
+            }
 
-                .img3 {
-                    width: 55px; /* Sets a fixed width */
-                    height: 18px; /* Sets a fixed height */
-                }
+            .img3 {
+                width: 55px; /* Sets a fixed width */
+                height: 18px; /* Sets a fixed height */
+            }
 
-                .app-footer {
-                    position: fixed;
-                    bottom: 0;
-                    right: 0;
-                    font-size: 0.7rem;
-                    margin: 0;
-                    padding: 15px 20px 0 20px;
-                    display: flex;
-                    justify-content: flex-end;
-                }
+            .app-footer {
+                position: fixed;
+                bottom: 0;
+                right: 0;
+                font-size: 0.7rem;
+                margin: 0;
+                padding: 15px 20px 0 20px;
+                display: flex;
+                justify-content: flex-end;
+            }
 
-                .sidebar-menu {
-                    padding: 15px 0;
-                    height: 100%;
-                }
+            .sidebar-menu {
+                padding: 15px 0;
+                height: 100%;
+            }
 
-                .text3d {
-                    position: relative;
-                    text-align: center;
-                    /*color: #f06a0a;*/
-                    font-size: 1.2em;
-                    transition: 0.5s;
-                    font-family: Arial, Helvetica, sans-serif;
-                    text-shadow: 0 1px 0 #ccc, 0 2px 0 #ccc,
-                        0 3px 0 #ccc, 0 4px 0 #ccc,
-                        0 5px 0 #ccc, 0 6px 0 #ccc,
-                        0 7px 0 #ccc, 0 8px 0 #ccc,
-                        0 9px 0 #ccc, 0 10px 0 #ccc,
-                        0 11px 0 #ccc, 0 12px 0 #ccc,
-                        0 20px 30px rgba(0, 0, 0, 0.5);
-                }
+            .text3d {
+                position: relative;
+                text-align: center;
+                /*color: #f06a0a;*/
+                font-size: 1.2em;
+                transition: 0.5s;
+                font-family: Arial, Helvetica, sans-serif;
+                text-shadow: 0 1px 0 #ccc, 0 2px 0 #ccc,
+                    0 3px 0 #ccc, 0 4px 0 #ccc,
+                    0 5px 0 #ccc, 0 6px 0 #ccc,
+                    0 7px 0 #ccc, 0 8px 0 #ccc,
+                    0 9px 0 #ccc, 0 10px 0 #ccc,
+                    0 11px 0 #ccc, 0 12px 0 #ccc,
+                    0 20px 30px rgba(0, 0, 0, 0.5);
+            }
 
-                /*/*        .text3d:hover {
-                            text-shadow: 0 1px 0 #ccc, 0 2px 0 #ccc,
-                                0 3px 0 #ccc, 0 4px 0 #ccc,
-                                0 5px 0 #ccc, 0 6px 0 #ccc,
-                                0 7px 0 #ccc, 0 8px 0 #ccc,
-                                0 9px 0 #ccc, 0 10px 0 #ccc,
-                                0 11px 0 #ccc, 0 12px 0 #ccc,
-                                0 20px 30px rgba(0, 0, 0, 0.5);
-                        }*/
+            /*/*        .text3d:hover {
+                        text-shadow: 0 1px 0 #ccc, 0 2px 0 #ccc,
+                            0 3px 0 #ccc, 0 4px 0 #ccc,
+                            0 5px 0 #ccc, 0 6px 0 #ccc,
+                            0 7px 0 #ccc, 0 8px 0 #ccc,
+                            0 9px 0 #ccc, 0 10px 0 #ccc,
+                            0 11px 0 #ccc, 0 12px 0 #ccc,
+                            0 20px 30px rgba(0, 0, 0, 0.5);
+                    }*/
 
 
-            </style>
+        </style>
 
-            <s:layout-component name="page_css_inline">
-            </s:layout-component>
+        <s:layout-component name="page_css_inline">
+        </s:layout-component>
 
-            <!-- Favicon -->
-            <link type="image/x-icon" href="${contextPath}/resources/vendor/login/img/heat.png" rel="shortcut icon"/>
+        <!-- Favicon -->
+        <link type="image/x-icon" href="${contextPath}/resources/vendor/login/img/heat.png" rel="shortcut icon"/>
 
-            <!-- google font libraries -->
-            <!--<link href='http://fonts.googleapis.com/css?family=Open+Sans:400,600,700,300|Titillium+Web:200,300,400' rel='stylesheet' type='text/css'>-->
-            <!--<link href='${contextPath}/resources/css/google-font-2.css' rel='stylesheet' type='text/css'>-->
+        <!-- google font libraries -->
+        <!--<link href='http://fonts.googleapis.com/css?family=Open+Sans:400,600,700,300|Titillium+Web:200,300,400' rel='stylesheet' type='text/css'>-->
+        <!--<link href='${contextPath}/resources/css/google-font-2.css' rel='stylesheet' type='text/css'>-->
 
-            <!--[if lt IE 9]>
-                    <script src="${contextPath}/resources/private/js/html5shiv.js"></script>
-                    <script src="${contextPath}/resources/private/js/respond.min.js"></script>
-            <![endif]-->
-            <!--[if lt IE 8]>
-                    <link href="${contextPath}/resources/private/css/libs/font-awesome-ie7.css" type="text/css" rel="stylesheet" />
-            <![endif]-->
+        <!--[if lt IE 9]>
+                <script src="${contextPath}/resources/private/js/html5shiv.js"></script>
+                <script src="${contextPath}/resources/private/js/respond.min.js"></script>
+        <![endif]-->
+        <!--[if lt IE 8]>
+                <link href="${contextPath}/resources/private/css/libs/font-awesome-ie7.css" type="text/css" rel="stylesheet" />
+        <![endif]-->
         </head>
         <body>
 
@@ -315,7 +315,7 @@
                         <div class="d-flex align-items-center gap-3 ms-auto">
 
                             <!-- Leads start -->
-                            <span class="d-none d-md-block" style="font-weight:bold">Welcome ${sessionScope.userSession.fullname}</span>
+                            <span class="d-none d-md-block" style="font-weight:bold">Welcome ${sessionScope.userSession.fullname}&nbsp;&nbsp; <div class="d-flex align-items-center" style="font-size: 0.7rem;color: blue;" id="digital-clock"></div></span>
                             <span class="d-lg-none d-md-block" style="font-weight:bold">Welcome ${sessionScope.userSession.firstName}</span>
                             <a href="${contextPath}/logout" class="leads rounded-3 d-xxl-flex d-none">
                                 <i class='bi bi-box-arrow-right' style='color:#ffffff' ></i>&nbsp;&nbsp;Logout
@@ -466,51 +466,69 @@
                                 ************ Vendor Js Files *************
                         ************* -->
 
-            <s:layout-component name="page_js">
-            </s:layout-component>
+        <s:layout-component name="page_js">
+        </s:layout-component>
 
-            <!-- Overlay Scroll JS -->
-            <script src="${contextPath}/resources/statflow/vendor/overlay-scroll/jquery.overlayScrollbars.min.js"></script>
-            <script src="${contextPath}/resources/statflow/vendor/overlay-scroll/custom-scrollbar.js"></script>
+        <!-- Overlay Scroll JS -->
+        <script src="${contextPath}/resources/statflow/vendor/overlay-scroll/jquery.overlayScrollbars.min.js"></script>
+        <script src="${contextPath}/resources/statflow/vendor/overlay-scroll/custom-scrollbar.js"></script>
 
-            <!-- Main Js Required -->
-            <script src="${contextPath}/resources/statflow/js/main.js"></script>
+        <!-- Main Js Required -->
+        <script src="${contextPath}/resources/statflow/js/main.js"></script>
 
-            <!--latest-->
-            <!--<script src="${contextPath}/resources/private/js/css3-mediaqueries.js"></script>--> 
-            <!-- Swal -->
-            <script src="${contextPath}/resources/private/js/sweetalert.min.js"></script>
-            <!-- theme scripts -->
-            <script src="${contextPath}/resources/private/js/scripts.js"></script>
-            <!-- blockUI -->
-            <script src="${contextPath}/resources/private/js/jquery.blockUI.js"></script>
+        <!--latest-->
+        <!--<script src="${contextPath}/resources/private/js/css3-mediaqueries.js"></script>--> 
+        <!-- Swal -->
+        <script src="${contextPath}/resources/private/js/sweetalert.min.js"></script>
+        <!-- theme scripts -->
+        <script src="${contextPath}/resources/private/js/scripts.js"></script>
+        <!-- blockUI -->
+        <script src="${contextPath}/resources/private/js/jquery.blockUI.js"></script>
 
 
-            <script>
-                $(document).ready(function () {
-                    $("button[type=back]").click(function () {
-                        history.go(-1);
-                    });
+        <script>
+            function updateDateTime() {
+                // 1. Get the current date and time
+                const now = new Date();
+
+                // 2. Format the date and time (using toLocaleString for a human-readable format)
+                const formattedDateTime = now.toLocaleString();
+                // You can also use methods like toLocaleTimeString() or custom formatting
+
+                // 3. Update the HTML element
+                document.getElementById("digital-clock").textContent = formattedDateTime;
+            }
+
+// 4. Call the function immediately to display the time on page load
+            updateDateTime();
+
+// 5. Update the time every second (1000 milliseconds)
+            setInterval(updateDateTime, 1000);
+
+            $(document).ready(function () {
+                $("button[type=back]").click(function () {
+                    history.go(-1);
                 });
+            });
 
-                function AlertInfo() {
-                    //                    alert("Developed on 2018 by Nur Amanina Ahmad Sandara Lela Putera, System Analyst from Reliability Lab, ON Semiconductor.");
-                    alert("Developed on 2025 by Mohd Farhan, Programmer from Reliability Lab, ON Semiconductor.");
-                    //                    var answer = confirm ("Developed on 2018 by Nur Amanina Ahmad Sandara Lela Putera, System Analyst from Reliability Lab, ON Semiconductor.");
-                    //                    if (answer)
-                    //                        window.location="http://www.onsemi.com";
-                }
-                function AlertContact() {
-                    alert("Any issues regarding to the system, please contact;\nOffice : 06-6823088 ext. 2732 OR ext. 2731\nH/P : 013-2839488 OR ABB. 54655");
-                    //                    var answer = confirm ("Developed on 2018 by Nur Amanina Ahmad Sandara Lela Putera, System Analyst from Reliability Lab, ON Semiconductor.");
-                    //                    if (answer)
-                    //                        window.location="http://www.onsemi.com";
-                }
-            </script>
+            function AlertInfo() {
+                //                    alert("Developed on 2018 by Nur Amanina Ahmad Sandara Lela Putera, System Analyst from Reliability Lab, ON Semiconductor.");
+                alert("Developed on 2025 by Mohd Farhan, Programmer from Reliability Lab, ON Semiconductor.");
+                //                    var answer = confirm ("Developed on 2018 by Nur Amanina Ahmad Sandara Lela Putera, System Analyst from Reliability Lab, ON Semiconductor.");
+                //                    if (answer)
+                //                        window.location="http://www.onsemi.com";
+            }
+            function AlertContact() {
+                alert("Any issues regarding to the system, please contact;\nOffice : 06-6823088 ext. 2732 OR ext. 2731\nH/P : 013-2839488 OR ABB. 54655");
+                //                    var answer = confirm ("Developed on 2018 by Nur Amanina Ahmad Sandara Lela Putera, System Analyst from Reliability Lab, ON Semiconductor.");
+                //                    if (answer)
+                //                        window.location="http://www.onsemi.com";
+            }
+        </script>
 
-            <!-- this page specific inline scripts -->
-            <s:layout-component name="page_js_inline">
-            </s:layout-component>
+        <!-- this page specific inline scripts -->
+        <s:layout-component name="page_js_inline">
+        </s:layout-component>
 
         </body>
     </html>

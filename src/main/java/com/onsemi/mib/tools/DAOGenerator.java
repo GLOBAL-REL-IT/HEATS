@@ -16,7 +16,7 @@ import org.apache.commons.lang3.StringUtils;
 public class DAOGenerator {
 
     public static void main(String[] args) {
-        String table = "equipment_vi_monitoring";
+        String table = "equipment_global_family";
         String sql = "SELECT * FROM " + table + " LIMIT 1";
         try {
             Class.forName("com.mysql.cj.jdbc.Driver");

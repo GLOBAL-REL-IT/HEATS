@@ -2,38 +2,43 @@ package com.onsemi.mib.controller;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import java.io.UnsupportedEncodingException;
-import java.net.URLEncoder;
 import java.util.List;
 import java.util.Locale;
 import javax.servlet.http.HttpServletRequest;
 import com.onsemi.mib.dao.EquipmentDAO;
 import com.onsemi.mib.dao.EquipmentFamilyDAO;
+import com.onsemi.mib.dao.EquipmentGlobalFamilyDAO;
+import com.onsemi.mib.dao.EquipmentGlobalRelTestGroupDAO;
 import com.onsemi.mib.dao.EquipmentMonitoringDAO;
 import com.onsemi.mib.dao.EquipmentRelTestGroupDAO;
 import com.onsemi.mib.dao.EquipmentTechDAO;
 import com.onsemi.mib.dao.EquipmentViMonitoringDAO;
 import com.onsemi.mib.dao.ItemDAO;
-import com.onsemi.mib.dao.ItemStorageFactoryDAO;
-import com.onsemi.mib.dao.ItemTransactionDAO;
+import com.onsemi.mib.dao.ParameterDetailsDAO;
 import com.onsemi.mib.model.Equipment;
 import com.onsemi.mib.model.EquipmentFamily;
+import com.onsemi.mib.model.EquipmentGlobalFamily;
+import com.onsemi.mib.model.EquipmentGlobalRelTestGroup;
 import com.onsemi.mib.model.EquipmentMonitoring;
 import com.onsemi.mib.model.EquipmentRelTestGroup;
 import com.onsemi.mib.model.EquipmentSlot;
 import com.onsemi.mib.model.EquipmentTech;
 import com.onsemi.mib.model.EquipmentViMonitoring;
 import com.onsemi.mib.model.Item;
-import com.onsemi.mib.model.ItemStorageFactory;
-import com.onsemi.mib.model.ItemTransaction;
+import com.onsemi.mib.model.ParameterDetails;
 import com.onsemi.mib.model.UserSession;
+import com.onsemi.mib.tools.EmailSender;
 import com.onsemi.mib.tools.QueryResult;
 import com.onsemi.mib.tools.SPTSResponse;
 import com.onsemi.mib.tools.SPTSWebService;
 import com.onsemi.mib.tools.SystemUtil;
 import java.io.IOException;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import javax.servlet.ServletContext;
+import org.apache.commons.lang3.StringEscapeUtils;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.slf4j.Logger;
@@ -49,7 +54,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.SessionAttributes;
-import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 @Controller
@@ -80,16 +84,6 @@ public class EquipmentController {
         model.addAttribute("userEqptAdd", userSession.getEqptAdd());
         model.addAttribute("userEqptEdit", userSession.getEqptEdit());
         model.addAttribute("userEqptDelete", userSession.getEqptDelete());
-        model.addAttribute("userEqptFamilyAdd", userSession.getEqptFamilyAdd());
-        model.addAttribute("userEqptFamilyDelete", userSession.getEqptFamilyDelete());
-        model.addAttribute("userEqptRelTestGroupAdd", userSession.getEqptRelTestGroupAdd());
-        model.addAttribute("userEqptRelTestGroupDelete", userSession.getEqptRelTestGroupDelete());
-        model.addAttribute("userEqptTechAdd", userSession.getEqptTechAdd());
-        model.addAttribute("userEqptTechDelete", userSession.getEqptTechDelete());
-        model.addAttribute("userEqptMonAdd", userSession.getEqptMonAdd());
-        model.addAttribute("userEqptMonDelete", userSession.getEqptMonDelete());
-        model.addAttribute("userEqptViMonAdd", userSession.getEqptViMonAdd());
-        model.addAttribute("userEqptViMonDelete", userSession.getEqptViMonDelete());
 
         JSONObject param = new JSONObject();
         param.put("param", "");
@@ -119,6 +113,34 @@ public class EquipmentController {
             relTestGroupTitle = " (" + relTestGroup + ")";
         }
         model.addAttribute("relTestGroupTitle", relTestGroupTitle);
+
+        EquipmentDAO eqptD = new EquipmentDAO();
+        List<Equipment> eqptManufacturerList = eqptD.getEqptManufacturer("");
+        model.addAttribute("eqptManufacturerList", eqptManufacturerList);
+
+        eqptD = new EquipmentDAO();
+        List<Equipment> eqptModelList = eqptD.getEqptModel("");
+        model.addAttribute("eqptModelList", eqptModelList);
+
+        EquipmentFamilyDAO eqptFD = new EquipmentFamilyDAO();
+        List<EquipmentFamily> eqptFamilyList = eqptFD.getEquipmentFamilyList("");
+        model.addAttribute("eqptFamilyList", eqptFamilyList);
+
+        EquipmentRelTestGroupDAO eqptRD = new EquipmentRelTestGroupDAO();
+        List<EquipmentRelTestGroup> eqptRelTestGroupList = eqptRD.getEquipmentRelTestGroupList("");
+        model.addAttribute("eqptRelTestGroupList", eqptRelTestGroupList);
+
+        EquipmentTechDAO eqptTD = new EquipmentTechDAO();
+        List<EquipmentTech> eqptTechList = eqptTD.getEquipmentTechList("");
+        model.addAttribute("eqptTechList", eqptTechList);
+
+        EquipmentMonitoringDAO eqptMD = new EquipmentMonitoringDAO();
+        List<EquipmentMonitoring> eqptMonList = eqptMD.getEquipmentMonitoringList("");
+        model.addAttribute("eqptMonList", eqptMonList);
+
+        EquipmentViMonitoringDAO eqptVD = new EquipmentViMonitoringDAO();
+        List<EquipmentViMonitoring> eqptViMonList = eqptVD.getEquipmentViMonitoringList("");
+        model.addAttribute("eqptViMonList", eqptViMonList);
 
         return "equipment/equipment";
     }
@@ -230,8 +252,7 @@ public class EquipmentController {
             }
 
             //slot table
-            EquipmentSlot eqptSlot = new EquipmentSlot();
-
+//            EquipmentSlot eqptSlot = new EquipmentSlot(); //hold
             //check need to insert or update
             EquipmentDAO eqptD = new EquipmentDAO();
             int countPkid = eqptD.getCountPkid(pkid);
@@ -257,272 +278,144 @@ public class EquipmentController {
 
     @RequestMapping(value = "/detail", method = {RequestMethod.GET, RequestMethod.POST})
     @ResponseBody
-    public Item getHardwareDetail(
+    public Equipment getEqptDetail(
             @ModelAttribute UserSession userSession,
             Model model,
             HttpServletRequest request,
             @RequestParam(required = false) String pkID
     ) throws IOException {
 
-        //check if any info from SPTS need to update to MIB DB
-        //update SPTS data per item type into MIB DB
-        JSONObject params = new JSONObject();
-        params.put("pkID", pkID);
-        JSONArray getItemByParam = SPTSWebService.getItemByParam(params);
-
-        int count = 0;
-        int countAdd = 0;
-
-        //insert into database
+        //get data from spts first, then update local DB
+        JSONObject param = new JSONObject();
+        param.put("sitePKID", "1");
+        param.put("siteName", "Seremban");
+        param.put("equipmentPKID", pkID);
+        param.put("equipmentID", "");
+        param.put("familyName", "");
+        param.put("relTestGroupName", "");
+        param.put("active", "1");
+        JSONArray getItemByParam = SPTSWebService.getSptsEqptByParamMib(param);
         for (int i = 0; i < getItemByParam.length(); i++) {
-
-            ItemDAO hwD = new ItemDAO();
-            int countPkid = hwD.getCountPkid(Integer.toString(getItemByParam.getJSONObject(i).getInt("PKID")));
-            if (countPkid == 1) {
-
-                Item hw = new Item();
-//                if (getItemByParam.getJSONObject(i).has("PKID")) {
-                hw.setSptsPkid(Integer.toString(getItemByParam.getJSONObject(i).getInt("PKID")));
-//                }
-                hw.setItemType(getItemByParam.getJSONObject(i).getString("ItemType"));
-                hw.setItemId(getItemByParam.getJSONObject(i).getString("ItemID"));
-                hw.setItemName(getItemByParam.getJSONObject(i).getString("ItemName"));
-                if (getItemByParam.getJSONObject(i).has("SubType")) {
-                    hw.setSubType(getItemByParam.getJSONObject(i).getString("SubType"));
-                }
-                if (getItemByParam.getJSONObject(i).has("ALUHrs")) {
-                    hw.setAluHrs(Double.toString(getItemByParam.getJSONObject(i).getDouble("ALUHrs")));
-                }
-                if (getItemByParam.getJSONObject(i).has("AssemblyID")) {
-                    Object assembly = getItemByParam.getJSONObject(i).get("AssemblyID");
-                    if (assembly instanceof String) {
-                        hw.setAssemblyId(getItemByParam.getJSONObject(i).getString("AssemblyID"));
-                    } else {
-                        hw.setAssemblyId(Integer.toString(getItemByParam.getJSONObject(i).getInt("AssemblyID")));
-                    }
-                }
-                if (getItemByParam.getJSONObject(i).has("Complexity")) {
-                    hw.setComplexity(getItemByParam.getJSONObject(i).getString("Complexity"));
-                }
-                if (getItemByParam.getJSONObject(i).has("EquipmentManufacturer")) {
-                    Object assembly = getItemByParam.getJSONObject(i).get("EquipmentManufacturer");
-                    if (assembly instanceof String) {
-                        hw.setEquipmentManufacturer(getItemByParam.getJSONObject(i).getString("EquipmentManufacturer"));
-                    } else {
-                        hw.setEquipmentManufacturer(Integer.toString(getItemByParam.getJSONObject(i).getInt("EquipmentManufacturer")));
-                    }
-                }
-                if (getItemByParam.getJSONObject(i).has("EquipmentModel")) {
-                    Object eqptModel = getItemByParam.getJSONObject(i).get("EquipmentModel");
-                    if (eqptModel instanceof String) {
-                        hw.setEquipmentModel(getItemByParam.getJSONObject(i).getString("EquipmentModel"));
-                    } else {
-                        hw.setEquipmentModel(Integer.toString(getItemByParam.getJSONObject(i).getInt("EquipmentModel")));
-                    }
-                }
-                if (getItemByParam.getJSONObject(i).has("EquipmentType")) {
-                    hw.setEquipmentType(getItemByParam.getJSONObject(i).getString("EquipmentType"));
-                }
-                if (getItemByParam.getJSONObject(i).has("ExpirationDate")) {
-                    String date1 = getItemByParam.getJSONObject(i).getString("ExpirationDate").substring(0, 10);
-                    hw.setExpirationDate(date1);
-                }
-                if (getItemByParam.getJSONObject(i).has("ExternalRecleaningQty")) {
-                    hw.setExternalRecleanQty(Integer.toString(getItemByParam.getJSONObject(i).getInt("ExternalRecleaningQty")));
-                }
-                if (getItemByParam.getJSONObject(i).has("ExternalCleaningQty")) {
-                    hw.setExternalCleanQty(Integer.toString(getItemByParam.getJSONObject(i).getInt("ExternalCleaningQty")));
-                }
-                if (getItemByParam.getJSONObject(i).has("InternalCleaningQty")) {
-                    hw.setInternalCleanQty(Integer.toString(getItemByParam.getJSONObject(i).getInt("InternalCleaningQty")));
-                }
-                if (getItemByParam.getJSONObject(i).has("InternalRecleaningQty")) {
-                    hw.setInternalRecleanQty(Integer.toString(getItemByParam.getJSONObject(i).getInt("InternalRecleaningQty")));
-                }
-                if (getItemByParam.getJSONObject(i).has("IsConsumeable")) {
-                    hw.setIsConsumable(Boolean.toString(getItemByParam.getJSONObject(i).getBoolean("IsConsumeable")));
-                }
-                if (getItemByParam.getJSONObject(i).has("IsCritical")) {
-                    hw.setIsCritical(Boolean.toString(getItemByParam.getJSONObject(i).getBoolean("IsCritical")));
-                }
-                if (getItemByParam.getJSONObject(i).has("Manufacturer")) {
-                    Object assembly = getItemByParam.getJSONObject(i).get("Manufacturer");
-                    if (assembly instanceof String) {
-                        hw.setManufacturer(getItemByParam.getJSONObject(i).getString("Manufacturer"));
-                    } else {
-                        hw.setManufacturer(Integer.toString(getItemByParam.getJSONObject(i).getInt("Manufacturer")));
-                    }
-                }
-                if (getItemByParam.getJSONObject(i).has("MaxQty")) {
-                    hw.setMaxQty(Integer.toString(getItemByParam.getJSONObject(i).getInt("MaxQty")));
-                }
-                if (getItemByParam.getJSONObject(i).has("MinQty")) {
-                    hw.setMinQty(Integer.toString(getItemByParam.getJSONObject(i).getInt("MinQty")));
-                }
-                if (getItemByParam.getJSONObject(i).has("Model")) {
-
-                    Object modelSpts = getItemByParam.getJSONObject(i).get("Model");
-                    if (modelSpts instanceof String) {
-                        hw.setModel(getItemByParam.getJSONObject(i).getString("Model"));
-                    } else {
-                        hw.setModel(Integer.toString(getItemByParam.getJSONObject(i).getInt("Model")));
-                    }
-                }
-                if (getItemByParam.getJSONObject(i).has("OnHandQty")) {
-                    hw.setOnHandQty(Integer.toString(getItemByParam.getJSONObject(i).getInt("OnHandQty")));
-                }
-                if (getItemByParam.getJSONObject(i).has("OtherONQty")) {
-                    hw.setOtherOnsemiQty(Integer.toString(getItemByParam.getJSONObject(i).getInt("OtherONQty")));
-                }
-                if (getItemByParam.getJSONObject(i).has("OtherQty")) {
-                    hw.setOtherQty(Integer.toString(getItemByParam.getJSONObject(i).getInt("OtherQty")));
-                }
-                if (getItemByParam.getJSONObject(i).has("PMWW1")) {
-                    Object assembly = getItemByParam.getJSONObject(i).get("PMWW1");
-                    if (assembly instanceof String) {
-                        hw.setPmWw1(getItemByParam.getJSONObject(i).getString("PMWW1"));
-                    } else {
-                        hw.setPmWw1(Integer.toString(getItemByParam.getJSONObject(i).getInt("PMWW1")));
-                    }
-                }
-                if (getItemByParam.getJSONObject(i).has("PMWW2")) {
-                    Object assembly = getItemByParam.getJSONObject(i).get("PMWW2");
-                    if (assembly instanceof String) {
-                        hw.setPmWw2(getItemByParam.getJSONObject(i).getString("PMWW2"));
-                    } else {
-                        hw.setPmWw2(Integer.toString(getItemByParam.getJSONObject(i).getInt("PMWW2")));
-                    }
-                }
-                if (getItemByParam.getJSONObject(i).has("ProductionQty")) {
-                    hw.setProductionQty(Integer.toString(getItemByParam.getJSONObject(i).getInt("ProductionQty")));
-                }
-                if (getItemByParam.getJSONObject(i).has("ProductionStagingQty")) {
-                    hw.setProductionStagingQty(Integer.toString(getItemByParam.getJSONObject(i).getInt("ProductionStagingQty")));
-                }
-                if (getItemByParam.getJSONObject(i).has("QuarantineQty")) {
-                    hw.setQuarantineQty(Integer.toString(getItemByParam.getJSONObject(i).getInt("QuarantineQty")));
-                }
-                if (getItemByParam.getJSONObject(i).has("Rack")) {
-
-                    Object rack = getItemByParam.getJSONObject(i).get("Rack");
-                    if (rack instanceof String) {
-                        hw.setRack(getItemByParam.getJSONObject(i).getString("Rack"));
-                    } else {
-                        hw.setRack(Integer.toString(getItemByParam.getJSONObject(i).getInt("Rack")));
-                    }
-                }
-                if (getItemByParam.getJSONObject(i).has("Remarks")) {
-                    Object assembly = getItemByParam.getJSONObject(i).get("Remarks");
-                    if (assembly instanceof String) {
-                        hw.setRemarks(getItemByParam.getJSONObject(i).getString("Remarks"));
-                    } else {
-                        hw.setRemarks(Integer.toString(getItemByParam.getJSONObject(i).getInt("Remarks")));
-                    }
-                }
-                if (getItemByParam.getJSONObject(i).has("RepairQty")) {
-                    hw.setRepairQty(Integer.toString(getItemByParam.getJSONObject(i).getInt("RepairQty")));
-                }
-                if (getItemByParam.getJSONObject(i).has("Shelf")) {
-
-                    Object shelfStr = getItemByParam.getJSONObject(i).get("Shelf");
-                    if (shelfStr instanceof String) {
-                        hw.setShelf(getItemByParam.getJSONObject(i).getString("Shelf"));
-                    } else {
-                        hw.setShelf(Integer.toString(getItemByParam.getJSONObject(i).getInt("Shelf")));
-                    }
-                }
-                if (getItemByParam.getJSONObject(i).has("StatusName")) {
-                    Object assembly = getItemByParam.getJSONObject(i).get("StatusName");
-                    if (assembly instanceof String) {
-                        hw.setStatus(getItemByParam.getJSONObject(i).getString("StatusName"));
-                        if ("Scrapped".equals(getItemByParam.getJSONObject(i).getString("StatusName"))) {
-                            hw.setFlag("99");
-                        } else {
-                            hw.setFlag("1");
-                        }
-                    } else {
-                        hw.setStatus(Integer.toString(getItemByParam.getJSONObject(i).getInt("StatusName")));
-                        if ("Scrapped".equals(Integer.toString(getItemByParam.getJSONObject(i).getInt("StatusName")))) {
-                            hw.setFlag("99");
-                        } else {
-                            hw.setFlag("1");
-                        }
-                    }
-                }
-                if (getItemByParam.getJSONObject(i).has("StorageFactoryQty")) {
-                    Object storage = getItemByParam.getJSONObject(i).get("StorageFactoryQty");
-                    if (storage instanceof String) {
-                        hw.setStorageFactoryQty(getItemByParam.getJSONObject(i).getString("StorageFactoryQty"));
-                    } else {
-                        hw.setStorageFactoryQty(Integer.toString(getItemByParam.getJSONObject(i).getInt("StorageFactoryQty")));
-                    }
-                }
-                if (getItemByParam.getJSONObject(i).has("StressType")) {
-                    Object assembly = getItemByParam.getJSONObject(i).get("StressType");
-                    if (assembly instanceof String) {
-                        hw.setStressType(getItemByParam.getJSONObject(i).getString("StressType"));
-                    } else {
-                        hw.setStressType(Integer.toString(getItemByParam.getJSONObject(i).getInt("StressType")));
-                    }
-                }
-                if (getItemByParam.getJSONObject(i).has("TotalCost")) {
-                    hw.setTotalCost(Double.toString(getItemByParam.getJSONObject(i).getDouble("TotalCost")));
-                }
-                if (getItemByParam.getJSONObject(i).has("TotalQty")) {
-                    hw.setTotalQty(Integer.toString(getItemByParam.getJSONObject(i).getInt("TotalQty")));
-                }
-                if (getItemByParam.getJSONObject(i).has("UnitCost")) {
-                    hw.setUnitCost(Double.toString(getItemByParam.getJSONObject(i).getDouble("UnitCost")));
-                }
-                if (getItemByParam.getJSONObject(i).has("VendorQty")) {
-                    hw.setVendorQty(Integer.toString(getItemByParam.getJSONObject(i).getInt("VendorQty")));
-                }
-                if (getItemByParam.getJSONObject(i).has("DowntimeUnit")) {
-                    Object assembly = getItemByParam.getJSONObject(i).get("DowntimeUnit");
-                    if (assembly instanceof String) {
-                        hw.setDowntimeUnit(getItemByParam.getJSONObject(i).getString("DowntimeUnit"));
-                    } else {
-                        hw.setDowntimeUnit(Integer.toString(getItemByParam.getJSONObject(i).getInt("DowntimeUnit")));
-                    }
-                }
-                if (getItemByParam.getJSONObject(i).has("DowntimeValue")) {
-                    hw.setDowntimeValue(Double.toString(getItemByParam.getJSONObject(i).getDouble("DowntimeValue")));
-                }
-                if (getItemByParam.getJSONObject(i).has("ImplementationCost")) {
-                    hw.setImplementationCost(Double.toString(getItemByParam.getJSONObject(i).getDouble("ImplementationCost")));
-                }
-                if (getItemByParam.getJSONObject(i).has("ManpowerUnit")) {
-                    Object assembly = getItemByParam.getJSONObject(i).get("ManpowerUnit");
-                    if (assembly instanceof String) {
-                        hw.setManpowerUnit(getItemByParam.getJSONObject(i).getString("ManpowerUnit"));
-                    } else {
-                        hw.setManpowerUnit(Integer.toString(getItemByParam.getJSONObject(i).getInt("ManpowerUnit")));
-                    }
-                }
-                if (getItemByParam.getJSONObject(i).has("ManpowerValue")) {
-                    hw.setManpowerValue(Double.toString(getItemByParam.getJSONObject(i).getDouble("ManpowerValue")));
-                }
-
-                hwD = new ItemDAO();
-                QueryResult q = hwD.updateHardwareDetailFromSpts(hw);
-                countAdd += q.getResult();
+//            System.out.println(getItemByParam.getJSONObject(i));
+            Equipment eqpt = new Equipment();
+            eqpt.setSptsPkid(pkID);
+            eqpt.setEquipmentId(getItemByParam.getJSONObject(i).getString("equipment_id"));
+            eqpt.setCurrentStatus(Integer.toString(getItemByParam.getJSONObject(i).getInt("current_status")));
+            eqpt.setEquipmentType(Integer.toString(getItemByParam.getJSONObject(i).getInt("equipment_type")));
+            eqpt.setCbmsType(Integer.toString(getItemByParam.getJSONObject(i).getInt("cbms_type")));
+            eqpt.setCreatedBy("Update from SPTS");
+            eqpt.setFlag(Integer.toString(getItemByParam.getJSONObject(i).getInt("current_status")));
+            if (getItemByParam.getJSONObject(i).has("family_pkid")) {
+                eqpt.setFamilyPkid(Integer.toString(getItemByParam.getJSONObject(i).getInt("family_pkid")));
             }
-            count += 1;
+            if (getItemByParam.getJSONObject(i).has("rel_test_group_pkid")) {
+                eqpt.setRelTestGroupPkid(Integer.toString(getItemByParam.getJSONObject(i).getInt("rel_test_group_pkid")));
+            }
+            if (getItemByParam.getJSONObject(i).has("equipment_manufacturer")) {
+                eqpt.setEquipmentManufacturer(getItemByParam.getJSONObject(i).getString("equipment_manufacturer"));
+            }
+            if (getItemByParam.getJSONObject(i).has("equipment_model")) {
+                eqpt.setEquipmentModel(getItemByParam.getJSONObject(i).getString("equipment_model"));
+            }
+            if (getItemByParam.getJSONObject(i).has("remarks")) {
+                eqpt.setRemarks(getItemByParam.getJSONObject(i).getString("remarks"));
+            }
+            if (getItemByParam.getJSONObject(i).has("EquipTechPKID")) {
+                eqpt.setEquipTechPkid(Integer.toString(getItemByParam.getJSONObject(i).getInt("EquipTechPKID")));
+            }
+            if (getItemByParam.getJSONObject(i).has("EquipCapability")) {
+                Object assembly = getItemByParam.getJSONObject(i).get("EquipCapability");
+                if (assembly instanceof String) {
+                    eqpt.setEquipCapability(getItemByParam.getJSONObject(i).getString("EquipCapability"));
+                } else {
+                    eqpt.setEquipCapability(Integer.toString(getItemByParam.getJSONObject(i).getInt("EquipCapability")));
+                }
+            }
+            if (getItemByParam.getJSONObject(i).has("EquipMonitoringPKID")) {
+                eqpt.setEquipMonitoringPkid(Integer.toString(getItemByParam.getJSONObject(i).getInt("EquipTechPKID")));
+            }
+            if (getItemByParam.getJSONObject(i).has("VIMonitoringPKID")) {
+                eqpt.setViMonitoringPkid(Integer.toString(getItemByParam.getJSONObject(i).getInt("VIMonitoringPKID")));
+            }
+            //slot and rack
+            if (getItemByParam.getJSONObject(i).has("slot_qty")) {
+                eqpt.setSlot(Integer.toString(getItemByParam.getJSONObject(i).getInt("slot_qty")));
+            } else {
+                eqpt.setSlot("0");
+            }
+            if (getItemByParam.getJSONObject(i).has("rack_total")) {
+                eqpt.setRackTotal(Integer.toString(getItemByParam.getJSONObject(i).getInt("rack_total")));
+            } else {
+                eqpt.setRackTotal("0");
+            }
+            if (getItemByParam.getJSONObject(i).has("zone_per_rack")) {
+                eqpt.setZonePerRack(Integer.toString(getItemByParam.getJSONObject(i).getInt("zone_per_rack"))); //tray_per_basket_zone_capacity in SPTS DB
+            } else {
+                eqpt.setZonePerRack("0");
+            }
+            if (getItemByParam.getJSONObject(i).has("tray_qty_per_rack")) {
+                eqpt.setTrayQtyPerRack(Integer.toString(getItemByParam.getJSONObject(i).getInt("tray_qty_per_rack"))); //tray_zone_capacity
+            } else {
+                eqpt.setTrayQtyPerRack("0");
+            }
+            if (getItemByParam.getJSONObject(i).has("crocodile_qty_per_rack")) {
+                eqpt.setBasketQtyPerRack(Integer.toString(getItemByParam.getJSONObject(i).getInt("crocodile_qty_per_rack"))); //basket_zone_capacity
+            } else {
+                eqpt.setBasketQtyPerRack("0");
+            }
+            if (getItemByParam.getJSONObject(i).has("tray_qty_per_zone")) {
+                eqpt.setTrayQtyPerZone(Integer.toString(getItemByParam.getJSONObject(i).getInt("tray_qty_per_zone"))); //tray_per_zone_capacity
+            } else {
+                eqpt.setTrayQtyPerZone("0");
+            }
+            if (getItemByParam.getJSONObject(i).has("crocodile_qty_per_zone")) {
+                eqpt.setBasketQtyPerZone(Integer.toString(getItemByParam.getJSONObject(i).getInt("crocodile_qty_per_zone"))); //basket_per_zone_capacity
+            } else {
+                eqpt.setBasketQtyPerZone("0");
+            }
+
+            EquipmentDAO eqptD = new EquipmentDAO();
+            QueryResult q = eqptD.updateEquipmentBySptsPkid(eqpt);
         }
 
-        LOGGER.info("Total data: " + count);
-        LOGGER.info("Total insert: " + countAdd);
+        EquipmentDAO eqptD = new EquipmentDAO();
+        Equipment eqpt = eqptD.getEquipmentBySptsPkid(pkID);
 
-        //set to model
-        ItemDAO hwD = new ItemDAO();
-        Item hw = hwD.getHardwareDetailByPkid(pkID);
-
-        return hw;
+        return eqpt;
     }
 
     @RequestMapping(value = "/add", method = RequestMethod.GET)
     public String add(Model model) {
-        return "equipment/add";
+
+        EquipmentDAO eqptD = new EquipmentDAO();
+        List<Equipment> eqptManufacturerList = eqptD.getEqptManufacturer("");
+        model.addAttribute("eqptManufacturerList", eqptManufacturerList);
+
+        eqptD = new EquipmentDAO();
+        List<Equipment> eqptModelList = eqptD.getEqptModel("");
+        model.addAttribute("eqptModelList", eqptModelList);
+
+        EquipmentFamilyDAO eqptFD = new EquipmentFamilyDAO();
+        List<EquipmentFamily> eqptFamilyList = eqptFD.getEquipmentFamilyList("");
+        model.addAttribute("eqptFamilyList", eqptFamilyList);
+
+        EquipmentRelTestGroupDAO eqptRD = new EquipmentRelTestGroupDAO();
+        List<EquipmentRelTestGroup> eqptRelTestGroupList = eqptRD.getEquipmentRelTestGroupList("");
+        model.addAttribute("eqptRelTestGroupList", eqptRelTestGroupList);
+
+        EquipmentTechDAO eqptTD = new EquipmentTechDAO();
+        List<EquipmentTech> eqptTechList = eqptTD.getEquipmentTechList("");
+        model.addAttribute("eqptTechList", eqptTechList);
+
+        EquipmentMonitoringDAO eqptMD = new EquipmentMonitoringDAO();
+        List<EquipmentMonitoring> eqptMonList = eqptMD.getEquipmentMonitoringList("");
+        model.addAttribute("eqptMonList", eqptMonList);
+
+        EquipmentViMonitoringDAO eqptVD = new EquipmentViMonitoringDAO();
+        List<EquipmentViMonitoring> eqptViMonList = eqptVD.getEquipmentViMonitoringList("");
+        model.addAttribute("eqptViMonList", eqptViMonList);
+
+        return "equipment/equipment_add";
     }
 
     @RequestMapping(value = "/save", method = RequestMethod.POST)
@@ -532,53 +425,142 @@ public class EquipmentController {
             RedirectAttributes redirectAttrs,
             @ModelAttribute UserSession userSession,
             @RequestParam(required = false) String sptsPkid,
-            @RequestParam(required = false) String equipmentId,
-            @RequestParam(required = false) String familyPkid,
-            @RequestParam(required = false) String relTestGroupPkid,
-            @RequestParam(required = false) String currentStatus,
-            @RequestParam(required = false) String equipmentType,
-            @RequestParam(required = false) String equipmentManufacturer,
-            @RequestParam(required = false) String equipmentModel,
+            @RequestParam(required = false) String eqptId,
+            @RequestParam(required = false) String familyName,
+            @RequestParam(required = false) String relTestGroupName,
+            @RequestParam(required = false) String eqptStatus,
+            @RequestParam(required = false) String eqptType,
+            @RequestParam(required = false) String eqptManufacturer,
+            @RequestParam(required = false) String eqptModel,
             @RequestParam(required = false) String cbmsType,
             @RequestParam(required = false) String remarks,
-            @RequestParam(required = false) String equipTechPkid,
-            @RequestParam(required = false) String equipCapability,
-            @RequestParam(required = false) String equipMonitoringPkid,
-            @RequestParam(required = false) String viMonitoringPkid,
-            @RequestParam(required = false) String createdBy,
-            @RequestParam(required = false) String createdDate,
+            @RequestParam(required = false) String eqptTech,
+            @RequestParam(required = false) String eqptCapability,
+            @RequestParam(required = false) String eqptMon,
+            @RequestParam(required = false) String eqptViMon,
+            @RequestParam(required = false) String slotQty,
+            @RequestParam(required = false) String rackQty,
+            @RequestParam(required = false) String zonePerRack,
+            @RequestParam(required = false) String trayQtyPerRack,
+            @RequestParam(required = false) String basketQtyPerRack,
+            @RequestParam(required = false) String trayQtyPerZone,
+            @RequestParam(required = false) String basketQtyPerZone,
             @RequestParam(required = false) String flag
-    ) {
+    ) throws IOException {
+
         Equipment equipment = new Equipment();
-        equipment.setSptsPkid(sptsPkid);
-        equipment.setEquipmentId(equipmentId);
-        equipment.setFamilyPkid(familyPkid);
-        equipment.setRelTestGroupPkid(relTestGroupPkid);
-        equipment.setCurrentStatus(currentStatus);
-        equipment.setEquipmentType(equipmentType);
-        equipment.setEquipmentManufacturer(equipmentManufacturer);
-        equipment.setEquipmentModel(equipmentModel);
+//        equipment.setSptsPkid("0");
+        equipment.setEquipmentId(eqptId);
+        equipment.setFamilyPkid(familyName);
+        equipment.setRelTestGroupPkid(relTestGroupName);
+        equipment.setCurrentStatus(eqptStatus);
+        equipment.setEquipmentType(eqptType);
+        equipment.setEquipmentManufacturer(eqptManufacturer);
+        equipment.setEquipmentModel(eqptModel);
         equipment.setCbmsType(cbmsType);
         equipment.setRemarks(remarks);
-        equipment.setEquipTechPkid(equipTechPkid);
-        equipment.setEquipCapability(equipCapability);
-        equipment.setEquipMonitoringPkid(equipMonitoringPkid);
-        equipment.setViMonitoringPkid(viMonitoringPkid);
-        equipment.setCreatedBy(createdBy);
-        equipment.setCreatedDate(createdDate);
-        equipment.setFlag(flag);
-        EquipmentDAO equipmentDAO = new EquipmentDAO();
-        QueryResult queryResult = equipmentDAO.insertEquipment(equipment);
-        args = new String[1];
-        args[0] = sptsPkid + " - " + equipmentId;
-        if (queryResult.getGeneratedKey().equals("0")) {
-            model.addAttribute("error", messageSource.getMessage("general.label.save.error", args, locale));
+        equipment.setEquipTechPkid(eqptTech);
+        equipment.setEquipCapability(eqptCapability);
+        equipment.setEquipMonitoringPkid(eqptMon);
+        equipment.setViMonitoringPkid(eqptViMon);
+        equipment.setSlot(slotQty);
+        equipment.setRackTotal(rackQty);
+        equipment.setZonePerRack(zonePerRack);
+        equipment.setTrayQtyPerRack(trayQtyPerRack);
+        equipment.setBasketQtyPerRack(basketQtyPerRack);
+        equipment.setTrayQtyPerZone(trayQtyPerZone);
+        equipment.setBasketQtyPerZone(basketQtyPerZone);
+        equipment.setCreatedBy(userSession.getFullname());
+        equipment.setFlag("0");
+
+        //save to SPTS first
+        JSONObject params = new JSONObject();
+        params.put("equipmentID", eqptId);
+        params.put("familyPKID", familyName);
+        params.put("relTestGroupPKID", relTestGroupName);
+        params.put("currentStatus", eqptStatus);
+        params.put("equipmentType", eqptType);
+        params.put("manufacturer", eqptManufacturer);
+        params.put("modal", eqptModel);
+        params.put("cbmsType", cbmsType);
+        params.put("remarks", remarks);
+        params.put("equipTechPKID", eqptTech);
+        params.put("equipCapability", eqptCapability);
+        params.put("equipMonitoringPKID", eqptMon);
+        params.put("vIMonitoringPKID", eqptViMon);
+        SPTSResponse sr = SPTSWebService.insertEqpt(params);
+
+        if (sr.getStatus()) { //then update SPTS slot/tray table
+            LOGGER.info("eqpt PKID from respondId: " + sr.getResponseId());
+            //get spts pkid first
+            JSONObject param1 = new JSONObject();
+            param1.put("equipmentID", eqptId);
+            JSONArray getItemByParam = SPTSWebService.getEqptByEqptId(param1);
+            String epqtPkid = "";
+            for (int i = 0; i < getItemByParam.length(); i++) {
+                epqtPkid = Integer.toString(getItemByParam.getJSONObject(i).getInt("pkid"));
+                LOGGER.info("eqpt PKID from geteqptByEqptId: " + epqtPkid);
+            }
+            SPTSResponse sptsSlotTrayAdd = new SPTSResponse();
+            if ("1".equals(eqptType)) { //Life - slot table
+
+                for (int j = 0; j < Integer.parseInt(slotQty); j++) {
+                    JSONObject paramSlot = new JSONObject();
+                    paramSlot.put("equipmentPKID", epqtPkid);
+                    sptsSlotTrayAdd = SPTSWebService.insertEqptSlot(paramSlot);
+                }
+
+            } else { //environment - tray table
+                JSONObject paramTray = new JSONObject();
+                paramTray.put("equipmentPKID", epqtPkid);
+                paramTray.put("rack_total", rackQty);
+                paramTray.put("trayPerBasketZoneCapacity", zonePerRack);
+                paramTray.put("trayZoneCapacity", trayQtyPerRack);
+                paramTray.put("basketZoneCapacity", basketQtyPerRack);
+                paramTray.put("trayPerZoneCapaicty", trayQtyPerZone);
+                paramTray.put("basketPerZoneCapacity", basketQtyPerZone);
+                sptsSlotTrayAdd = SPTSWebService.insertEqptTray(paramTray);
+            }
+
+            if (sptsSlotTrayAdd.getStatus()) {
+                //save to local DB
+                equipment.setSptsPkid(epqtPkid);
+                EquipmentDAO equipmentDAO = new EquipmentDAO();
+                QueryResult queryResult = equipmentDAO.insertEquipment(equipment);
+                args = new String[1];
+                args[0] = sptsPkid + " - " + eqptId;
+                if (queryResult.getGeneratedKey().equals("0")) {
+                    //delete eqpt ID because failed to insert to local DB
+                    JSONObject param = new JSONObject();
+                    param.put("equipmentID", eqptId);
+                    SPTSResponse deleteEqpt = SPTSWebService.deleteEqpt(param);
+                    LOGGER.info("Result delete eqpt id due to failed to insert into local DB: " + deleteEqpt.getStatus());
+
+                    model.addAttribute("error", "Fail to add Eqpt ID: " + eqptId + ". Pls contact system admin");
+                    model.addAttribute("equipment", equipment);
+                    return "equipment/add";
+                } else {
+                    redirectAttrs.addFlashAttribute("success", "Successfully add equipment ID: " + eqptId);
+                    return "redirect:/equipment";
+                }
+            } else {
+                //delete eqpt ID because failed to insert slot/tray
+                JSONObject param = new JSONObject();
+                param.put("equipmentID", eqptId);
+                SPTSResponse deleteEqpt = SPTSWebService.deleteEqpt(param);
+                LOGGER.info("Result delete eqpt id due to failed to insert tray/slot: " + deleteEqpt.getStatus());
+
+                model.addAttribute("error", "Fail to add Eqpt slot/tray. Pls contact system admin");
+                model.addAttribute("equipment", equipment);
+                return "equipment/add";
+            }
+
+        } else {
+            model.addAttribute("error", "Fail to add Eqpt ID: " + eqptId + ". Pls contact system admin");
             model.addAttribute("equipment", equipment);
             return "equipment/add";
-        } else {
-            redirectAttrs.addFlashAttribute("success", messageSource.getMessage("general.label.save.success", args, locale));
-            return "redirect:/equipment/edit/" + queryResult.getGeneratedKey();
         }
+
     }
 
     @RequestMapping(value = "/edit/{equipmentId}", method = RequestMethod.GET)
@@ -598,79 +580,229 @@ public class EquipmentController {
             Locale locale,
             RedirectAttributes redirectAttrs,
             @ModelAttribute UserSession userSession,
-            @RequestParam(required = false) String id,
-            @RequestParam(required = false) String sptsPkid,
-            @RequestParam(required = false) String equipmentId,
-            @RequestParam(required = false) String familyPkid,
-            @RequestParam(required = false) String relTestGroupPkid,
-            @RequestParam(required = false) String currentStatus,
-            @RequestParam(required = false) String equipmentType,
-            @RequestParam(required = false) String equipmentManufacturer,
-            @RequestParam(required = false) String equipmentModel,
+            @RequestParam(required = false) String mibId,
+            @RequestParam(required = false) String itemPKID,
+            @RequestParam(required = false) String eqptId,
+            @RequestParam(required = false) String familyName,
+            @RequestParam(required = false) String relTestGroupName,
+            @RequestParam(required = false) String eqptStatus,
+            @RequestParam(required = false) String eqptType,
+            @RequestParam(required = false) String eqptManufacturer,
+            @RequestParam(required = false) String eqptModel,
             @RequestParam(required = false) String cbmsType,
             @RequestParam(required = false) String remarks,
-            @RequestParam(required = false) String equipTechPkid,
-            @RequestParam(required = false) String equipCapability,
-            @RequestParam(required = false) String equipMonitoringPkid,
-            @RequestParam(required = false) String viMonitoringPkid,
-            @RequestParam(required = false) String createdBy,
-            @RequestParam(required = false) String createdDate,
+            @RequestParam(required = false) String eqptTech,
+            @RequestParam(required = false) String eqptCapability,
+            @RequestParam(required = false) String eqptMon,
+            @RequestParam(required = false) String eqptViMon,
+            @RequestParam(required = false) String slotQty,
+            @RequestParam(required = false) String rackQty,
+            @RequestParam(required = false) String zonePerRack,
+            @RequestParam(required = false) String trayQtyPerRack,
+            @RequestParam(required = false) String basketQtyPerRack,
+            @RequestParam(required = false) String trayQtyPerZone,
+            @RequestParam(required = false) String basketQtyPerZone,
             @RequestParam(required = false) String flag
-    ) {
-        Equipment equipment = new Equipment();
-        equipment.setId(id);
-        equipment.setSptsPkid(sptsPkid);
-        equipment.setEquipmentId(equipmentId);
-        equipment.setFamilyPkid(familyPkid);
-        equipment.setRelTestGroupPkid(relTestGroupPkid);
-        equipment.setCurrentStatus(currentStatus);
-        equipment.setEquipmentType(equipmentType);
-        equipment.setEquipmentManufacturer(equipmentManufacturer);
-        equipment.setEquipmentModel(equipmentModel);
-        equipment.setCbmsType(cbmsType);
-        equipment.setRemarks(remarks);
-        equipment.setEquipTechPkid(equipTechPkid);
-        equipment.setEquipCapability(equipCapability);
-        equipment.setEquipMonitoringPkid(equipMonitoringPkid);
-        equipment.setViMonitoringPkid(viMonitoringPkid);
-        equipment.setCreatedBy(createdBy);
-        equipment.setCreatedDate(createdDate);
-        equipment.setFlag(flag);
-        EquipmentDAO equipmentDAO = new EquipmentDAO();
-        QueryResult queryResult = equipmentDAO.updateEquipment(equipment);
-        args = new String[1];
-        args[0] = sptsPkid + " - " + equipmentId;
-        if (queryResult.getResult() == 1) {
-            redirectAttrs.addFlashAttribute("success", messageSource.getMessage("general.label.update.success", args, locale));
-        } else {
-            redirectAttrs.addFlashAttribute("error", messageSource.getMessage("general.label.update.error", args, locale));
+    ) throws IOException {
+
+        //get version first
+        String versionss = "";
+        JSONObject paramV = new JSONObject();
+        paramV.put("pkid", itemPKID);
+//        LOGGER.info("itemPKID: " + itemPKID);
+        JSONArray getItemByParamV = SPTSWebService.getEqptByPkid(paramV);
+        for (int i = 0; i < getItemByParamV.length(); i++) {
+//            LOGGER.info("masuk+++++++++++++++++++++++: ");
+//            System.out.println(getItemByParam.getJSONObject(i));
+            versionss = getItemByParamV.getJSONObject(i).getString("version");
+//            LOGGER.info("versionss: " + getItemByParamV.getJSONObject(i).getString("version"));
         }
-        return "redirect:/equipment/edit/" + id;
+
+        //update spts
+        JSONObject params = new JSONObject();
+        params.put("pkID", itemPKID);
+        params.put("version", versionss);
+        params.put("equipmentID", eqptId);
+        params.put("familyPKID", familyName);
+        params.put("relTestGroupPKID", relTestGroupName);
+        params.put("currentStatus", eqptStatus);
+        params.put("equipmentType", eqptType);
+        params.put("manufacturer", eqptManufacturer);
+        params.put("modal", eqptModel);
+        params.put("cbmsType", cbmsType);
+        params.put("remarks", remarks);
+        params.put("equipTechPKID", eqptTech);
+        params.put("equipCapability", eqptCapability);
+        params.put("equipMonitoringPKID", eqptMon);
+        params.put("vIMonitoringPKID", eqptViMon);
+        SPTSResponse sr = SPTSWebService.updateEqpt(params);
+        if (sr.getStatus()) {
+            //update slot/tray table
+            SPTSResponse sptsSlotTrayAdd = new SPTSResponse();
+            if ("1".equals(eqptType)) { //Life - slot table
+
+                //get current slot qty
+                JSONObject param = new JSONObject();
+                param.put("equipmentPKID", itemPKID);
+                JSONArray getItemByParam = SPTSWebService.getEqptSlotByEqptPkid(param);
+                int currentSlotQty = getItemByParam.length();
+
+                if (currentSlotQty < Integer.parseInt(slotQty)) { //add new slotID
+                    for (int j = 0; j < (Integer.parseInt(slotQty) - currentSlotQty); j++) {
+                        JSONObject paramSlot = new JSONObject();
+                        paramSlot.put("equipmentPKID", itemPKID);
+                        sptsSlotTrayAdd = SPTSWebService.insertEqptSlot(paramSlot);
+                    }
+                } else if (currentSlotQty > Integer.parseInt(slotQty)) { //delete slotID
+                    int slotId = currentSlotQty;
+                    for (int j = 0; j < (currentSlotQty - Integer.parseInt(slotQty)); j++) {
+                        JSONObject paramSlot = new JSONObject();
+                        paramSlot.put("equipmentPKID", itemPKID);
+                        paramSlot.put("slotID", slotId);
+                        sptsSlotTrayAdd = SPTSWebService.deleteEqptSlot(paramSlot);
+                        slotId -= (j + 1);
+                    }
+                } else { //same slot qty
+                    sptsSlotTrayAdd.setStatus(Boolean.TRUE);
+                }
+            } else { //environment - tray table
+
+                String version = "";
+                String trayPkid = "";
+                JSONObject param = new JSONObject();
+                param.put("equipmentPKID", itemPKID);
+                JSONArray getItemByParam = SPTSWebService.getEqptTrayByEqptPkid(param);
+                for (int i = 0; i < getItemByParamV.length(); i++) {
+                    version = getItemByParam.getJSONObject(i).getString("version");
+                    trayPkid = Integer.toString(getItemByParam.getJSONObject(i).getInt("pkid"));
+                }
+//                LOGGER.info("versionTray: " + version);
+//                LOGGER.info("pkidTray: " + trayPkid);
+
+                JSONObject paramTray = new JSONObject();
+                paramTray.put("pkID", trayPkid);
+                paramTray.put("version", version);
+                paramTray.put("equipmentPKID", itemPKID);
+                paramTray.put("rack_total", rackQty);
+                paramTray.put("trayPerBasketZoneCapacity", zonePerRack);
+                paramTray.put("trayZoneCapacity", trayQtyPerRack);
+                paramTray.put("basketZoneCapacity", basketQtyPerRack);
+                paramTray.put("trayPerZoneCapaicty", trayQtyPerZone);
+                paramTray.put("basketPerZoneCapacity", basketQtyPerZone);
+                sptsSlotTrayAdd = SPTSWebService.updateEqptTray(paramTray);
+            }
+//            LOGGER.info("sptsSlotTrayAdd.getStatus(): " + sptsSlotTrayAdd.getStatus());
+            if (sptsSlotTrayAdd.getStatus()) {
+                //save to local DB
+                Equipment equipment = new Equipment();
+                equipment.setId(mibId);
+                equipment.setSptsPkid(itemPKID);
+                equipment.setEquipmentId(eqptId);
+                equipment.setFamilyPkid(familyName);
+                equipment.setRelTestGroupPkid(relTestGroupName);
+                equipment.setCurrentStatus(eqptStatus);
+                equipment.setEquipmentType(eqptType);
+                equipment.setEquipmentManufacturer(eqptManufacturer);
+                equipment.setEquipmentModel(eqptModel);
+                equipment.setCbmsType(cbmsType);
+                equipment.setRemarks(remarks);
+                equipment.setEquipTechPkid(eqptTech);
+                equipment.setEquipCapability(eqptCapability);
+                equipment.setEquipMonitoringPkid(eqptMon);
+                equipment.setViMonitoringPkid(eqptViMon);
+                equipment.setSlot(slotQty);
+                equipment.setRackTotal(rackQty);
+                equipment.setZonePerRack(zonePerRack);
+                equipment.setTrayQtyPerRack(trayQtyPerRack);
+                equipment.setBasketQtyPerRack(basketQtyPerRack);
+                equipment.setTrayQtyPerZone(trayQtyPerZone);
+                equipment.setBasketQtyPerZone(basketQtyPerZone);
+                equipment.setFlag("0");
+                EquipmentDAO equipmentDAO = new EquipmentDAO();
+                QueryResult queryResult = equipmentDAO.updateEquipment(equipment);
+                if (queryResult.getResult() == 1) {
+                    redirectAttrs.addFlashAttribute("success", "Successfully update equipment ID: " + eqptId);
+                } else {
+                    LOGGER.info("Failed to update local DB");
+                    redirectAttrs.addFlashAttribute("error", "Fail to update equipment ID: " + eqptId + ". Pls contact system admin");
+                }
+                return "redirect:/equipment";
+            } else {
+                LOGGER.info("Failed to update slot/tray table");
+                return "redirect:/equipment";
+            }
+        } else {
+            LOGGER.info("Failed to update eqpt ID ");
+
+            redirectAttrs.addFlashAttribute("error", "Fail to update equipment ID: " + eqptId + ". Pls contact system admin");
+            return "redirect:/equipment";
+        }
+
     }
 
-    @RequestMapping(value = "/delete/{equipmentId}", method = RequestMethod.GET)
+    @RequestMapping(value = "/delete/{pkid}/{mbid}", method = RequestMethod.GET)
     public String delete(
             Model model,
             Locale locale,
             RedirectAttributes redirectAttrs,
-            @PathVariable("equipmentId") String equipmentId
-    ) {
-        EquipmentDAO equipmentDAO = new EquipmentDAO();
-        Equipment equipment = equipmentDAO.getEquipment(equipmentId);
-        equipmentDAO = new EquipmentDAO();
-        QueryResult queryResult = equipmentDAO.deleteEquipment(equipmentId);
-        args = new String[1];
-        args[0] = equipment.getSptsPkid() + " - " + equipment.getEquipmentId();
-        if (queryResult.getResult() == 1) {
-            redirectAttrs.addFlashAttribute("success", messageSource.getMessage("general.label.delete.success", args, locale));
-        } else {
-            redirectAttrs.addFlashAttribute("error", messageSource.getMessage("general.label.delete.error", args, locale));
+            @PathVariable("pkid") String pkid,
+            @PathVariable("mbid") String mbid
+    ) throws IOException {
+
+        //get eqptId from spts first
+        String eqptId = "";
+        JSONObject params = new JSONObject();
+        params.put("pkid", pkid);
+        JSONArray getItemByParam = SPTSWebService.getEqptByPkid(params);
+        for (int i = 0; i < getItemByParam.length(); i++) {
+            eqptId = getItemByParam.getJSONObject(i).getString("equipment_id");
         }
-        return "redirect:/equipment";
+//        LOGGER.info("eqptId: " + eqptId);
+        //delete to SPTS first then to local DB
+        JSONObject param = new JSONObject();
+        param.put("equipmentID", eqptId);
+        SPTSResponse deleteEqpt = SPTSWebService.deleteEqpt(param);
+        if (deleteEqpt.getStatus()) {
+            redirectAttrs.addFlashAttribute("success", "Item deleted!");
+//            LOGGER.info("+++++++++SPTS Updated+++++++++++");
+            //update SPTS PKID into MIB DB
+
+            EquipmentDAO equipmentDAO = new EquipmentDAO();
+            Equipment equipment = equipmentDAO.getEquipment(mbid);
+            equipmentDAO = new EquipmentDAO();
+            QueryResult queryResult = equipmentDAO.deleteEquipment(mbid);
+
+            if (queryResult.getResult() > 0) {
+                redirectAttrs.addFlashAttribute("success", "Succesfully Scrap Eqpt ID: " + eqptId);
+                return "redirect:/equipment";
+            } else {
+                redirectAttrs.addFlashAttribute("error", "Failed to Scrap Item ID: " + eqptId + ". Pls contact system admin.");
+                return "redirect:/equipment";
+            }
+
+        } else {
+            LinkedHashMap<String, String> item2;
+            ObjectMapper mapper = new ObjectMapper();
+            item2 = mapper.readValue(param.toString(), new TypeReference<LinkedHashMap<String, String>>() {
+            });
+            String errorMessage;
+            if (deleteEqpt.getErrorDetail().equals("")) {
+                errorMessage = deleteEqpt.getErrorCode() + " - " + deleteEqpt.getErrorMessage();
+            } else {
+                errorMessage = deleteEqpt.getErrorCode() + " - " + deleteEqpt.getErrorDetail();
+            }
+            redirectAttrs.addFlashAttribute("item2", item2);
+            redirectAttrs.addFlashAttribute("error", errorMessage);
+            return "redirect:/equipment";
+        }
     }
 
     @RequestMapping(value = "/family/add", method = RequestMethod.GET)
-    public String familyAdd(Model model) throws IOException {
+    public String familyAdd(Model model, @ModelAttribute UserSession userSession) throws IOException {
+
+        model.addAttribute("userEqptFamilyAdd", userSession.getEqptFamilyAdd());
+        model.addAttribute("userEqptFamilyDelete", userSession.getEqptFamilyDelete());
+        model.addAttribute("userEqptFamilyAddGlobal", userSession.getEqptFamilyAddGlobal());
 
         //retrieve from SPTS first
         JSONObject params = new JSONObject();
@@ -696,15 +828,51 @@ public class EquipmentController {
             }
         }
 
+        //insert/update global table
+        JSONArray getGlobalEqpFamily = SPTSWebService.getGlobalFamilyNameAll();
+        for (int i = 0; i < getGlobalEqpFamily.length(); i++) {
+
+            EquipmentGlobalFamily globalRelTest = new EquipmentGlobalFamily();
+            globalRelTest.setSptsGuid(getGlobalEqpFamily.getJSONObject(i).getString("GUID"));
+            globalRelTest.setCreatedDate(getGlobalEqpFamily.getJSONObject(i).getString("CreateDatetime").substring(0, 10) + " " + getGlobalEqpFamily.getJSONObject(i).getString("CreateDatetime").substring(11, 19));
+//            String familyNameWithEscapeJs = StringEscapeUtils.escapeEcmaScript(getGlobalRelTestGroup.getJSONObject(i).getString("EquipmentFamilyName"));
+//            globalRelTest.setFamilyName(familyNameWithEscapeJs);
+            globalRelTest.setFamilyName(getGlobalEqpFamily.getJSONObject(i).getString("EquipmentFamilyName"));
+            if (getGlobalEqpFamily.getJSONObject(i).has("GEFNAuthorizationGUID")) {
+                globalRelTest.setGefnAuthorizationGuid(getGlobalEqpFamily.getJSONObject(i).getString("GEFNAuthorizationGUID"));
+            }
+            if (getGlobalEqpFamily.getJSONObject(i).has("LastModifiedDatetime")) {
+                globalRelTest.setModifiedDate(getGlobalEqpFamily.getJSONObject(i).getString("LastModifiedDatetime").substring(0, 10) + " " + getGlobalEqpFamily.getJSONObject(i).getString("LastModifiedDatetime").substring(11, 19));
+            }
+            if (getGlobalEqpFamily.getJSONObject(i).has("LastModifiedUserName")) {
+                globalRelTest.setModifiedBy(getGlobalEqpFamily.getJSONObject(i).getString("LastModifiedUserName"));
+            }
+            if (getGlobalEqpFamily.getJSONObject(i).has("LastModifiedSitePKID")) {
+                globalRelTest.setModifiedSiteId(Integer.toString(getGlobalEqpFamily.getJSONObject(i).getInt("LastModifiedSitePKID")));
+            }
+
+            EquipmentGlobalFamilyDAO globalD = new EquipmentGlobalFamilyDAO();
+            int countGlobalFamily = globalD.getCountGlobalFamilyNameByGuid(getGlobalEqpFamily.getJSONObject(i).getString("GUID"));
+            if (countGlobalFamily == 0) {
+//                LOGGER.info("+++++++++++insert global family name++++++++");
+                globalD = new EquipmentGlobalFamilyDAO();
+                QueryResult qGlobalRel = globalD.insertEquipmentGlobalFamily(globalRelTest);
+            } else if (countGlobalFamily == 1) {
+//                LOGGER.info("+++++++update global family name+++++++++");
+                globalD = new EquipmentGlobalFamilyDAO();
+                QueryResult qGlobalRel = globalD.updateEquipmentGlobalFamilyByGuid(globalRelTest);
+            }
+        }
+
         EquipmentFamilyDAO eqptFamilyD = new EquipmentFamilyDAO();
-        List<EquipmentFamily> eqptFamily = eqptFamilyD.getEquipmentFamilyList();
+        List<EquipmentFamily> eqptFamily = eqptFamilyD.getEquipmentFamilyListleftJoinWithGlobal();
         model.addAttribute("eqptFamily", eqptFamily);
 
         return "equipment/eqptFamily";
     }
 
     @RequestMapping(value = "/family/save", method = RequestMethod.POST)
-    public String save(
+    public String familySave(
             Model model,
             Locale locale,
             RedirectAttributes redirectAttrs,
@@ -721,6 +889,16 @@ public class EquipmentController {
             params.put("familyName", familyName);
             SPTSResponse sr = SPTSWebService.insertEqptFamily(params);
             if (sr.getStatus()) { //insert into local DB
+
+                //insert into global list in global table
+                JSONObject paramGlobal = new JSONObject();
+                paramGlobal.put("equipmentFamilyName", familyName);
+                SPTSResponse insertGlobalFamilyName = SPTSWebService.insertGlobalFamilyName(paramGlobal);
+                if (insertGlobalFamilyName.getStatus()) {
+                    LOGGER.info("save to global family table");
+                } else {
+                    LOGGER.info("fail save to global family table");
+                }
 
                 //get spts pkid first
                 JSONObject param1 = new JSONObject();
@@ -741,6 +919,42 @@ public class EquipmentController {
                     redirectAttrs.addFlashAttribute("error", messageSource.getMessage("general.label.save.error", args, locale));
                     return "redirect:/equipment/family/add";
                 } else {
+
+                    //send email to global-rel-it to manual sync global table via SPTS 
+                    List<String> emails = new ArrayList<String>();
+                    emails.add("global-rel-it@onsemi.com"); // add email requestor to the list
+
+                    String[] myArray = new String[emails.size()];
+                    String[] emailTo = emails.toArray(myArray);
+                    //get current date and time
+                    LocalDateTime instance = LocalDateTime.now();
+                    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm");
+                    String formattedString = formatter.format(instance); //15-02-2022 12:43
+
+                    //send INFORMATION email
+                    LOGGER.info("######################### START EMAIL TO PIC ########################### ");
+                    EmailSender emailSender = new EmailSender();
+                    emailSender.htmlEmailTable(
+                            servletContext,
+                            "", //user name requestor
+                            //                    to, //to
+                            emailTo,
+                            "New Global Equipment Family", //subject
+                            "<br />"
+                            + "Pls be informed that new global eqpt family was added thru HEATS."
+                            + "<br /> "
+                            + "<br /> "
+                            + "Family Name: " + familyName
+                            + "<br /> "
+                            + "Added By: " + userSession.getFullname()
+                            + "<br /> "
+                            + "Registration Date: " + formattedString
+                            + "<br /> "
+                            + "<br /> "
+                            + "Please manually sync global eqpt family thru SPTS application. Otherwise, SPTS global table will not be updated."
+                            + "<br /> "
+                            + "<br />Thank you." //msg
+                    );
                     redirectAttrs.addFlashAttribute("success", "Successfully registered " + familyName);
                     return "redirect:/equipment/family/add";
                 }
@@ -771,19 +985,95 @@ public class EquipmentController {
     public String familyDelete(
             Model model,
             Locale locale,
+            @ModelAttribute UserSession userSession,
             RedirectAttributes redirectAttrs,
             @PathVariable("equipmentfamilyId") String equipmentfamilyId
     ) throws IOException {
         EquipmentFamilyDAO equipmentfamilyDAO = new EquipmentFamilyDAO();
         EquipmentFamily equipmentfamily = equipmentfamilyDAO.getEquipmentFamily(equipmentfamilyId);
-        //delete from SPTS first
+
+        //delete spts local table
         JSONObject params = new JSONObject();
         params.put("familyName", equipmentfamily.getFamilyName());
         SPTSResponse sr = SPTSWebService.deleteEqptFamily(params);
-        if (sr.getStatus()) { //delete from local DB
+        if (sr.getStatus()) {
+
+            //get version and guid first table
+            String version = "";
+            JSONObject paramV = new JSONObject();
+            paramV.put("equipmentFamilyName", equipmentfamily.getFamilyName());
+            JSONArray getItemByParamV = SPTSWebService.getGlobalFamilyNameByParam(paramV);
+            for (int i = 0; i < getItemByParamV.length(); i++) {
+                version = getItemByParamV.getJSONObject(i).getString("Version");
+                LOGGER.info("version: " + version);
+            }
+
+            String sptsGuid = "";
+
+            String familyNameWithEscapeJs = StringEscapeUtils.escapeEcmaScript(equipmentfamily.getFamilyName());
+            EquipmentGlobalFamilyDAO epqtD = new EquipmentGlobalFamilyDAO();
+            int countFamilyName = epqtD.getCountGlobalFamilyName(familyNameWithEscapeJs);
+            if (countFamilyName == 1) {
+                epqtD = new EquipmentGlobalFamilyDAO();
+                EquipmentGlobalFamily epqtG = epqtD.getEquipmentGlobalFamilyByFamilyName(familyNameWithEscapeJs);
+                sptsGuid = epqtG.getSptsGuid();
+            } else {
+                sptsGuid = "0";
+            }
+            LOGGER.info("epqtG.getSptsGuid(): " + sptsGuid);
+
+            //delete spts global table
+            JSONObject paramDelete = new JSONObject();
+//            paramDelete.put("guID", epqtG.getSptsGuid());
+            paramDelete.put("guID", sptsGuid);
+            paramDelete.put("version", version);
+            SPTSResponse sr1 = SPTSWebService.deleteGlobalFamilyName(paramDelete);
+
+            //delete heats global table 
+            epqtD = new EquipmentGlobalFamilyDAO();
+            QueryResult delete = epqtD.deleteEquipmentGlobalFamilyByGuid(sptsGuid);
+
+            //delete local table
             equipmentfamilyDAO = new EquipmentFamilyDAO();
             QueryResult queryResult = equipmentfamilyDAO.deleteEquipmentFamily(equipmentfamilyId);
             if (queryResult.getResult() == 1) {
+
+                //send email to global-rel-it to manual sync global table via SPTS 
+                List<String> emails = new ArrayList<String>();
+                emails.add("global-rel-it@onsemi.com"); // add email requestor to the list
+
+                String[] myArray = new String[emails.size()];
+                String[] emailTo = emails.toArray(myArray);
+                //get current date and time
+                LocalDateTime instance = LocalDateTime.now();
+                DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm");
+                String formattedString = formatter.format(instance); //15-02-2022 12:43
+
+                //send INFORMATION email
+                LOGGER.info("######################### START EMAIL TO PIC ########################### ");
+                EmailSender emailSender = new EmailSender();
+                emailSender.htmlEmailTable(
+                        servletContext,
+                        "", //user name requestor
+                        //                    to, //to
+                        emailTo,
+                        "Deletion of Global Equipment Family", //subject
+                        "<br />"
+                        + "Pls be informed that new global eqpt family was deleted thru HEATS."
+                        + "<br /> "
+                        + "<br /> "
+                        + "Family Name: " + equipmentfamily.getFamilyName()
+                        + "<br /> "
+                        + "Deleted By: " + userSession.getFullname()
+                        + "<br /> "
+                        + "Deletion Date: " + formattedString
+                        + "<br /> "
+                        + "<br /> "
+                        + "Please manually sync global eqpt family thru SPTS application. Otherwise, SPTS global table will not be updated."
+                        + "<br /> "
+                        + "<br />Thank you." //msg
+                );
+
                 redirectAttrs.addFlashAttribute("success", equipmentfamily.getFamilyName() + " successfully deleted");
             } else {
                 redirectAttrs.addFlashAttribute("error", "Failed to delete " + equipmentfamily.getFamilyName() + ". Pls contact system admin.");
@@ -807,8 +1097,95 @@ public class EquipmentController {
         }
     }
 
+    @RequestMapping(value = "/family/insertGlobal/{equipmentfamilyId}", method = RequestMethod.GET)
+    public String familyInsertGlobal(
+            Model model,
+            Locale locale,
+            @ModelAttribute UserSession userSession,
+            RedirectAttributes redirectAttrs,
+            @PathVariable("equipmentfamilyId") String equipmentfamilyId
+    ) throws IOException {
+        EquipmentFamilyDAO equipmentfamilyDAO = new EquipmentFamilyDAO();
+        EquipmentFamily equipmentfamily = equipmentfamilyDAO.getEquipmentFamily(equipmentfamilyId);
+
+        JSONObject paramF = new JSONObject();
+        paramF.put("equipmentFamilyName", equipmentfamily.getFamilyName());
+        JSONArray getItemByParamF = SPTSWebService.getGlobalFamilyNameByParam(paramF);
+
+        if (getItemByParamF.length() == 0) {
+
+            //insert into global list in global table
+            JSONObject paramGlobal = new JSONObject();
+            paramGlobal.put("equipmentFamilyName", equipmentfamily.getFamilyName());
+            SPTSResponse insertGlobalFamilyName = SPTSWebService.insertGlobalFamilyName(paramGlobal);
+            if (insertGlobalFamilyName.getStatus()) {
+                LOGGER.info("save to global family table");
+
+                //insert into heats global table
+                JSONObject paramV = new JSONObject();
+                paramV.put("equipmentFamilyName", equipmentfamily.getFamilyName());
+                JSONArray getItemByParamV = SPTSWebService.getGlobalFamilyNameByParam(paramV);
+                for (int i = 0; i < getItemByParamV.length(); i++) {
+                    EquipmentGlobalFamily globalFamily = new EquipmentGlobalFamily();
+                    globalFamily.setSptsGuid(getItemByParamV.getJSONObject(i).getString("GUID"));
+                    globalFamily.setCreatedDate(getItemByParamV.getJSONObject(i).getString("CreateDatetime").substring(0, 10) + " " + getItemByParamV.getJSONObject(i).getString("CreateDatetime").substring(11, 19));
+                    globalFamily.setFamilyName(getItemByParamV.getJSONObject(i).getString("EquipmentFamilyName"));
+                    if (getItemByParamV.getJSONObject(i).has("GEFNAuthorizationGUID")) {
+                        globalFamily.setGefnAuthorizationGuid(getItemByParamV.getJSONObject(i).getString("GEFNAuthorizationGUID"));
+                    }
+                    if (getItemByParamV.getJSONObject(i).has("LastModifiedDatetime")) {
+                        globalFamily.setModifiedDate(getItemByParamV.getJSONObject(i).getString("LastModifiedDatetime").substring(0, 10) + " " + getItemByParamV.getJSONObject(i).getString("LastModifiedDatetime").substring(11, 19));
+                    }
+                    if (getItemByParamV.getJSONObject(i).has("LastModifiedUserName")) {
+                        globalFamily.setModifiedBy(getItemByParamV.getJSONObject(i).getString("LastModifiedUserName"));
+                    }
+                    if (getItemByParamV.getJSONObject(i).has("LastModifiedSitePKID")) {
+                        globalFamily.setModifiedSiteId(Integer.toString(getItemByParamV.getJSONObject(i).getInt("LastModifiedSitePKID")));
+                    }
+                    EquipmentGlobalFamilyDAO globalD = new EquipmentGlobalFamilyDAO();
+                    int countGlobalFamily = globalD.getCountGlobalFamilyNameByGuid(getItemByParamV.getJSONObject(i).getString("GUID"));
+                    if (countGlobalFamily == 0) {
+                        LOGGER.info("+++++++++++insert global family name++++++++");
+                        globalD = new EquipmentGlobalFamilyDAO();
+                        QueryResult qGlobalRel = globalD.insertEquipmentGlobalFamily(globalFamily);
+                    } else if (countGlobalFamily == 1) {
+                        LOGGER.info("+++++++update global family name+++++++++");
+                        globalD = new EquipmentGlobalFamilyDAO();
+                        QueryResult qGlobalRel = globalD.updateEquipmentGlobalFamilyByGuid(globalFamily);
+                    }
+                }
+                redirectAttrs.addFlashAttribute("success", equipmentfamily.getFamilyName() + " successfully added into Global List");
+                return "redirect:/equipment/family/add";
+            } else {
+                LOGGER.info("fail save to global family table");
+                LinkedHashMap<String, String> item2;
+                ObjectMapper mapper = new ObjectMapper();
+                item2 = mapper.readValue(paramGlobal.toString(), new TypeReference<LinkedHashMap<String, String>>() {
+                });
+                String errorMessage;
+                if (insertGlobalFamilyName.getErrorDetail().equals("")) {
+                    errorMessage = insertGlobalFamilyName.getErrorCode() + " - " + insertGlobalFamilyName.getErrorMessage();
+                } else {
+                    errorMessage = insertGlobalFamilyName.getErrorCode() + " - " + insertGlobalFamilyName.getErrorDetail();
+                }
+                redirectAttrs.addFlashAttribute("item2", item2);
+                redirectAttrs.addFlashAttribute("error", errorMessage);
+                return "redirect:/equipment/family/add";
+            }
+
+        } else {
+            redirectAttrs.addFlashAttribute("error", equipmentfamily.getFamilyName() + " already exist in the Global List. Pls contact system admin.");
+            return "redirect:/equipment/family/add";
+        }
+
+    }
+
     @RequestMapping(value = "/relTestGroup/add", method = RequestMethod.GET)
-    public String relTestGroupAdd(Model model) throws IOException {
+    public String relTestGroupAdd(Model model, @ModelAttribute UserSession userSession) throws IOException {
+
+        model.addAttribute("userEqptRelTestGroupAdd", userSession.getEqptRelTestGroupAdd());
+        model.addAttribute("userEqptRelTestGroupDelete", userSession.getEqptRelTestGroupDelete());
+        model.addAttribute("userEqptRelTestGroupAddGlobal", userSession.getEqptRelTestGroupAddGlobal());
 
         //retrieve from SPTS first
         JSONObject params = new JSONObject();
@@ -834,8 +1211,42 @@ public class EquipmentController {
             }
         }
 
+        //insert/update global table
+        JSONArray getGlobalRelTestGroup = SPTSWebService.getGlobalRelTestGroupAll();
+        for (int i = 0; i < getGlobalRelTestGroup.length(); i++) {
+
+            EquipmentGlobalRelTestGroup globalRelTest = new EquipmentGlobalRelTestGroup();
+            globalRelTest.setSptsGuid(getGlobalRelTestGroup.getJSONObject(i).getString("GUID"));
+            globalRelTest.setCreatedDate(getGlobalRelTestGroup.getJSONObject(i).getString("CreateDatetime").substring(0, 10) + " " + getGlobalRelTestGroup.getJSONObject(i).getString("CreateDatetime").substring(11, 19));
+            globalRelTest.setRelTestGroupName(getGlobalRelTestGroup.getJSONObject(i).getString("RelTestGroupName"));
+            if (getGlobalRelTestGroup.getJSONObject(i).has("GRTGAuthorizationGUID")) {
+                globalRelTest.setGrtgAuthorizationGuid(getGlobalRelTestGroup.getJSONObject(i).getString("GRTGAuthorizationGUID"));
+            }
+            if (getGlobalRelTestGroup.getJSONObject(i).has("LastModifiedDatetime")) {
+                globalRelTest.setModifiedDate(getGlobalRelTestGroup.getJSONObject(i).getString("LastModifiedDatetime").substring(0, 10) + " " + getGlobalRelTestGroup.getJSONObject(i).getString("LastModifiedDatetime").substring(11, 19));
+            }
+            if (getGlobalRelTestGroup.getJSONObject(i).has("LastModifiedUserName")) {
+                globalRelTest.setModifiedBy(getGlobalRelTestGroup.getJSONObject(i).getString("LastModifiedUserName"));
+            }
+            if (getGlobalRelTestGroup.getJSONObject(i).has("LastModifiedSitePKID")) {
+                globalRelTest.setModifiedSiteId(Integer.toString(getGlobalRelTestGroup.getJSONObject(i).getInt("LastModifiedSitePKID")));
+            }
+
+            EquipmentGlobalRelTestGroupDAO globalD = new EquipmentGlobalRelTestGroupDAO();
+            int countGlobalRelTest = globalD.getCountGlobalRelTestGroupByGuid(getGlobalRelTestGroup.getJSONObject(i).getString("GUID"));
+            if (countGlobalRelTest == 0) {
+//                LOGGER.info("+++++++++++insert global rel test group++++++++");
+                globalD = new EquipmentGlobalRelTestGroupDAO();
+                QueryResult qGlobalRel = globalD.insertEquipmentGlobalRelTestGroup(globalRelTest);
+            } else if (countGlobalRelTest == 1) {
+//                LOGGER.info("+++++++update global rel test group+++++++++");
+                globalD = new EquipmentGlobalRelTestGroupDAO();
+                QueryResult qGlobalRel = globalD.updateEquipmentGlobalRelTestGroupByGuid(globalRelTest);
+            }
+        }
+
         EquipmentRelTestGroupDAO eqptRelTestGroupD = new EquipmentRelTestGroupDAO();
-        List<EquipmentRelTestGroup> eqptRelTestGroup = eqptRelTestGroupD.getEquipmentRelTestGroupList();
+        List<EquipmentRelTestGroup> eqptRelTestGroup = eqptRelTestGroupD.getEquipmentRelTestGroupListLeftJoinGlobalTable();
         model.addAttribute("eqptRelTestGroup", eqptRelTestGroup);
 
         return "equipment/eqptRelTestGroup";
@@ -858,7 +1269,17 @@ public class EquipmentController {
             JSONObject params = new JSONObject();
             params.put("relTestGroupName", relTestGroup);
             SPTSResponse sr = SPTSWebService.insertEqptRelTestGroup(params);
-            if (sr.getStatus()) { //insert into local DB
+            if (sr.getStatus()) {
+
+                //insert into global list in global table
+                JSONObject paramGlobal = new JSONObject();
+                paramGlobal.put("relTestGroupName", relTestGroup);
+                SPTSResponse insertGlobalRelTestGroup = SPTSWebService.insertGlobalRelTestGroup(paramGlobal);
+                if (insertGlobalRelTestGroup.getStatus()) {
+                    LOGGER.info("save to global rel test group table");
+                } else {
+                    LOGGER.info("fail save to global rel test group table");
+                }
 
                 //get spts pkid first
                 JSONObject param1 = new JSONObject();
@@ -868,6 +1289,7 @@ public class EquipmentController {
                 for (int i = 0; i < getItemByParam.length(); i++) {
                     pkid = Integer.toString(getItemByParam.getJSONObject(i).getInt("pkid"));
                 }
+                //insert into local DB
                 EquipmentRelTestGroup equipmentfamily = new EquipmentRelTestGroup();
                 equipmentfamily.setSptsPkid(pkid);
                 equipmentfamily.setRelTestGroupName(relTestGroup);
@@ -879,6 +1301,43 @@ public class EquipmentController {
                     redirectAttrs.addFlashAttribute("error", "Failed to register " + relTestGroup + ". Pls contact system admin.");
                     return "redirect:/equipment/relTestGroup/add";
                 } else {
+
+                    //send email to global-rel-it to manual sync global table via SPTS 
+                    List<String> emails = new ArrayList<String>();
+                    emails.add("global-rel-it@onsemi.com"); // add email requestor to the list
+
+                    String[] myArray = new String[emails.size()];
+                    String[] emailTo = emails.toArray(myArray);
+                    //get current date and time
+                    LocalDateTime instance = LocalDateTime.now();
+                    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm");
+                    String formattedString = formatter.format(instance); //15-02-2022 12:43
+
+                    //send INFORMATION email
+                    LOGGER.info("######################### START EMAIL TO PIC ########################### ");
+                    EmailSender emailSender = new EmailSender();
+                    emailSender.htmlEmailTable(
+                            servletContext,
+                            "", //user name requestor
+                            //                    to, //to
+                            emailTo,
+                            "New Global Rel Test Group", //subject
+                            "<br />"
+                            + "Pls be informed that new global rel test group was added thru HEATS."
+                            + "<br /> "
+                            + "<br /> "
+                            + "Rel Test Group: " + relTestGroup
+                            + "<br /> "
+                            + "Added By: " + userSession.getFullname()
+                            + "<br /> "
+                            + "Registration Date: " + formattedString
+                            + "<br /> "
+                            + "<br /> "
+                            + "Please manually sync global eqpt rel test group thru SPTS application. Otherwise, SPTS global table will not be updated."
+                            + "<br /> "
+                            + "<br />Thank you." //msg
+                    );
+
                     redirectAttrs.addFlashAttribute("success", "Successfully registered " + relTestGroup);
                     return "redirect:/equipment/relTestGroup/add";
                 }
@@ -910,21 +1369,97 @@ public class EquipmentController {
             Model model,
             Locale locale,
             RedirectAttributes redirectAttrs,
+            @ModelAttribute UserSession userSession,
             @PathVariable("eqptRelTestGroupId") String eqptRelTestGroupId
     ) throws IOException {
         EquipmentRelTestGroupDAO eqptRelTestGroupD = new EquipmentRelTestGroupDAO();
-        EquipmentRelTestGroup equipmentfamily = eqptRelTestGroupD.getEquipmentRelTestGroup(eqptRelTestGroupId);
+        EquipmentRelTestGroup relTestGroup = eqptRelTestGroupD.getEquipmentRelTestGroup(eqptRelTestGroupId);
         //delete from SPTS first
         JSONObject params = new JSONObject();
-        params.put("relTestGroupName", equipmentfamily.getRelTestGroupName());
+        params.put("relTestGroupName", relTestGroup.getRelTestGroupName());
         SPTSResponse sr = SPTSWebService.deleteEqptRelTestGroup(params);
-        if (sr.getStatus()) { //delete from local DB
+        if (sr.getStatus()) {
+
+            //get version and guid first table
+            String version = "";
+            JSONObject paramV = new JSONObject();
+            paramV.put("relTestGroupName", relTestGroup.getRelTestGroupName());
+            JSONArray getItemByParamV = SPTSWebService.getGlobalRelTestGroupByParam(paramV);
+            for (int i = 0; i < getItemByParamV.length(); i++) {
+                version = getItemByParamV.getJSONObject(i).getString("Version");
+                LOGGER.info("version: " + version);
+            }
+
+            String sptsGuid = "";
+
+            String relTestGroupNameWithEscapeJs = StringEscapeUtils.escapeEcmaScript(relTestGroup.getRelTestGroupName());
+            EquipmentGlobalRelTestGroupDAO epqtD = new EquipmentGlobalRelTestGroupDAO();
+            int countRelTestGroup = epqtD.getCountGlobalRelTestGroup(relTestGroupNameWithEscapeJs);
+            if (countRelTestGroup == 1) {
+                epqtD = new EquipmentGlobalRelTestGroupDAO();
+                EquipmentGlobalRelTestGroup epqtG = epqtD.getEquipmentGlobalRelTestGroupByRelTestGroupName(relTestGroupNameWithEscapeJs);
+                sptsGuid = epqtG.getSptsGuid();
+            } else {
+                sptsGuid = "0";
+            }
+
+            LOGGER.info("epqtG.getSptsGuid(): " + sptsGuid);
+            //delete spts global table
+            JSONObject paramDelete = new JSONObject();
+//            paramDelete.put("guID", epqtG.getSptsGuid());
+            paramDelete.put("guID", sptsGuid);
+            paramDelete.put("version", version);
+            SPTSResponse sr1 = SPTSWebService.deleteGlobalRelTestGroup(paramDelete);
+
+            //delete heats global table 
+            epqtD = new EquipmentGlobalRelTestGroupDAO();
+            QueryResult delete = epqtD.deleteEquipmentGlobalRelTestGroupByGuid(sptsGuid);
+//            QueryResult delete = epqtD.deleteEquipmentGlobalRelTestGroupByGuid(epqtG.getSptsGuid());
+
+            //delete from local DB
             eqptRelTestGroupD = new EquipmentRelTestGroupDAO();
             QueryResult queryResult = eqptRelTestGroupD.deleteEquipmentRelTestGroup(eqptRelTestGroupId);
             if (queryResult.getResult() == 1) {
-                redirectAttrs.addFlashAttribute("success", equipmentfamily.getRelTestGroupName() + " successfully deleted");
+
+                //send email to global-rel-it to manual sync global table via SPTS 
+                List<String> emails = new ArrayList<String>();
+                emails.add("global-rel-it@onsemi.com"); // add email requestor to the list
+
+                String[] myArray = new String[emails.size()];
+                String[] emailTo = emails.toArray(myArray);
+                //get current date and time
+                LocalDateTime instance = LocalDateTime.now();
+                DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm");
+                String formattedString = formatter.format(instance); //15-02-2022 12:43
+
+                //send INFORMATION email
+                LOGGER.info("######################### START EMAIL TO PIC ########################### ");
+                EmailSender emailSender = new EmailSender();
+                emailSender.htmlEmailTable(
+                        servletContext,
+                        "", //user name requestor
+                        //                    to, //to
+                        emailTo,
+                        "Deletion of Global Equipment Rel Test Group", //subject
+                        "<br />"
+                        + "Pls be informed that new global eqpt rel test group was deleted thru HEATS."
+                        + "<br /> "
+                        + "<br /> "
+                        + "Rel Test Group: " + relTestGroup.getRelTestGroupName()
+                        + "<br /> "
+                        + "Deleted By: " + userSession.getFullname()
+                        + "<br /> "
+                        + "Deletion Date: " + formattedString
+                        + "<br /> "
+                        + "<br /> "
+                        + "Please manually sync global eqpt rel test group thru SPTS application. Otherwise, SPTS global table will not be updated."
+                        + "<br /> "
+                        + "<br />Thank you." //msg
+                );
+
+                redirectAttrs.addFlashAttribute("success", relTestGroup.getRelTestGroupName() + " successfully deleted");
             } else {
-                redirectAttrs.addFlashAttribute("error", "Failed to delete " + equipmentfamily.getRelTestGroupName() + ". Pls contact system admin.");
+                redirectAttrs.addFlashAttribute("error", "Failed to delete " + relTestGroup.getRelTestGroupName() + ". Pls contact system admin.");
             }
             return "redirect:/equipment/relTestGroup/add";
         } else {
@@ -945,8 +1480,94 @@ public class EquipmentController {
         }
     }
 
+    @RequestMapping(value = "/relTestGroup/insertGlobal/{eqptRelTestGroupId}", method = RequestMethod.GET)
+    public String relTestGroupInsertGlobal(
+            Model model,
+            Locale locale,
+            @ModelAttribute UserSession userSession,
+            RedirectAttributes redirectAttrs,
+            @PathVariable("eqptRelTestGroupId") String eqptRelTestGroupId
+    ) throws IOException {
+        EquipmentRelTestGroupDAO eqptRelTestGroupD = new EquipmentRelTestGroupDAO();
+        EquipmentRelTestGroup relTestGroup = eqptRelTestGroupD.getEquipmentRelTestGroup(eqptRelTestGroupId);
+
+        JSONObject paramF = new JSONObject();
+        paramF.put("relTestGroupName", relTestGroup.getRelTestGroupName());
+        JSONArray getItemByParamF = SPTSWebService.getGlobalRelTestGroupByParam(paramF);
+
+        if (getItemByParamF.length() == 0) {
+
+            //insert into global list in global table
+            JSONObject paramGlobal = new JSONObject();
+            paramGlobal.put("relTestGroupName", relTestGroup.getRelTestGroupName());
+            SPTSResponse insertGlobalRelTestGroup = SPTSWebService.insertGlobalRelTestGroup(paramGlobal);
+            if (insertGlobalRelTestGroup.getStatus()) {
+                LOGGER.info("save to global family table");
+
+                //insert into heats global table
+                JSONObject paramV = new JSONObject();
+                paramV.put("relTestGroupName", relTestGroup.getRelTestGroupName());
+                JSONArray getItemByParamV = SPTSWebService.getGlobalRelTestGroupByParam(paramV);
+                for (int i = 0; i < getItemByParamV.length(); i++) {
+                    EquipmentGlobalRelTestGroup globalRelTest = new EquipmentGlobalRelTestGroup();
+                    globalRelTest.setSptsGuid(getItemByParamV.getJSONObject(i).getString("GUID"));
+                    globalRelTest.setCreatedDate(getItemByParamV.getJSONObject(i).getString("CreateDatetime").substring(0, 10) + " " + getItemByParamV.getJSONObject(i).getString("CreateDatetime").substring(11, 19));
+                    globalRelTest.setRelTestGroupName(getItemByParamV.getJSONObject(i).getString("RelTestGroupName"));
+                    if (getItemByParamV.getJSONObject(i).has("GRTGAuthorizationGUID")) {
+                        globalRelTest.setGrtgAuthorizationGuid(getItemByParamV.getJSONObject(i).getString("GRTGAuthorizationGUID"));
+                    }
+                    if (getItemByParamV.getJSONObject(i).has("LastModifiedDatetime")) {
+                        globalRelTest.setModifiedDate(getItemByParamV.getJSONObject(i).getString("LastModifiedDatetime").substring(0, 10) + " " + getItemByParamV.getJSONObject(i).getString("LastModifiedDatetime").substring(11, 19));
+                    }
+                    if (getItemByParamV.getJSONObject(i).has("LastModifiedUserName")) {
+                        globalRelTest.setModifiedBy(getItemByParamV.getJSONObject(i).getString("LastModifiedUserName"));
+                    }
+                    if (getItemByParamV.getJSONObject(i).has("LastModifiedSitePKID")) {
+                        globalRelTest.setModifiedSiteId(Integer.toString(getItemByParamV.getJSONObject(i).getInt("LastModifiedSitePKID")));
+                    }
+
+                    EquipmentGlobalRelTestGroupDAO globalD = new EquipmentGlobalRelTestGroupDAO();
+                    int countGlobalRelTest = globalD.getCountGlobalRelTestGroupByGuid(getItemByParamV.getJSONObject(i).getString("GUID"));
+                    if (countGlobalRelTest == 0) {
+                        LOGGER.info("+++++++++++insert global rel test group++++++++");
+                        globalD = new EquipmentGlobalRelTestGroupDAO();
+                        QueryResult qGlobalRel = globalD.insertEquipmentGlobalRelTestGroup(globalRelTest);
+                    } else if (countGlobalRelTest == 1) {
+                        LOGGER.info("+++++++update global rel test group+++++++++");
+                        globalD = new EquipmentGlobalRelTestGroupDAO();
+                        QueryResult qGlobalRel = globalD.updateEquipmentGlobalRelTestGroupByGuid(globalRelTest);
+                    }
+                }
+                redirectAttrs.addFlashAttribute("success", relTestGroup.getRelTestGroupName() + " successfully added into Global List");
+                return "redirect:/equipment/relTestGroup/add";
+            } else {
+                LOGGER.info("fail save to global rel test group table");
+                LinkedHashMap<String, String> item2;
+                ObjectMapper mapper = new ObjectMapper();
+                item2 = mapper.readValue(paramGlobal.toString(), new TypeReference<LinkedHashMap<String, String>>() {
+                });
+                String errorMessage;
+                if (insertGlobalRelTestGroup.getErrorDetail().equals("")) {
+                    errorMessage = insertGlobalRelTestGroup.getErrorCode() + " - " + insertGlobalRelTestGroup.getErrorMessage();
+                } else {
+                    errorMessage = insertGlobalRelTestGroup.getErrorCode() + " - " + insertGlobalRelTestGroup.getErrorDetail();
+                }
+                redirectAttrs.addFlashAttribute("item2", item2);
+                redirectAttrs.addFlashAttribute("error", errorMessage);
+                return "redirect:/equipment/relTestGroup/add";
+            }
+
+        } else {
+            redirectAttrs.addFlashAttribute("error", relTestGroup.getRelTestGroupName() + " already exist in the Global List. Pls contact system admin.");
+            return "redirect:/equipment/relTestGroup/add";
+        }
+    }
+
     @RequestMapping(value = "/monitoring/add", method = RequestMethod.GET)
-    public String monitoringAdd(Model model) throws IOException {
+    public String monitoringAdd(Model model, @ModelAttribute UserSession userSession) throws IOException {
+
+        model.addAttribute("userEqptMonAdd", userSession.getEqptMonAdd());
+        model.addAttribute("userEqptMonDelete", userSession.getEqptMonDelete());
 
         //retrieve from SPTS first
         JSONObject params = new JSONObject();
@@ -993,59 +1614,43 @@ public class EquipmentController {
         int count = eqptRelTestGroupD.getCountMonitoringName(monitoring);
         if (count == 0) {
 
-            EquipmentMonitoring equipmentfamily = new EquipmentMonitoring();
-            equipmentfamily.setSptsPkid("0");
-            equipmentfamily.setName(monitoring);
-            equipmentfamily.setCreatedBy(userSession.getFullname());
-            EquipmentMonitoringDAO equipmentfamilyDAO = new EquipmentMonitoringDAO();
-            QueryResult queryResult = equipmentfamilyDAO.insertEquipmentMonitoring(equipmentfamily);
+            //insert into SPTS first
+            JSONObject params = new JSONObject();
+            params.put("name", monitoring);
+            SPTSResponse sr = SPTSWebService.insertEqptMonitoring(params);
+            LOGGER.info("sr.getResponseId: " + sr.getResponseId());
+            if (sr.getResponseId() > 0) { //insert into local DB
 
-            if (queryResult.getGeneratedKey().equals("0")) {
-                redirectAttrs.addFlashAttribute("error", "Failed to register " + monitoring + ". Pls contact system admin.");
-                return "redirect:/equipment/monitoring/add";
+                EquipmentMonitoring equipmentfamily = new EquipmentMonitoring();
+                equipmentfamily.setSptsPkid(sr.getResponseId().toString());
+                equipmentfamily.setName(monitoring);
+                equipmentfamily.setCreatedBy(userSession.getFullname());
+                EquipmentMonitoringDAO equipmentfamilyDAO = new EquipmentMonitoringDAO();
+                QueryResult queryResult = equipmentfamilyDAO.insertEquipmentMonitoring(equipmentfamily);
+
+                if (queryResult.getGeneratedKey().equals("0")) {
+                    redirectAttrs.addFlashAttribute("error", "Failed to register " + monitoring + ". Pls contact system admin.");
+                    return "redirect:/equipment/monitoring/add";
+                } else {
+                    redirectAttrs.addFlashAttribute("success", "Successfully registered " + monitoring);
+                    return "redirect:/equipment/monitoring/add";
+                }
             } else {
-                redirectAttrs.addFlashAttribute("success", "Successfully registered " + monitoring);
+                LinkedHashMap<String, String> item2;
+                ObjectMapper mapper = new ObjectMapper();
+                item2 = mapper.readValue(params.toString(), new TypeReference<LinkedHashMap<String, String>>() {
+                });
+                String errorMessage;
+                if (sr.getErrorDetail().equals("")) {
+                    errorMessage = sr.getErrorCode() + " - " + sr.getErrorMessage();
+                } else {
+                    errorMessage = sr.getErrorCode() + " - " + sr.getErrorDetail();
+                }
+                model.addAttribute("error", errorMessage);
+                model.addAttribute("item2", item2);
+                redirectAttrs.addFlashAttribute("error", errorMessage);
                 return "redirect:/equipment/monitoring/add";
             }
-
-            //hold until JF Lim provide primitive parameter
-            //insert into SPTS first
-//            JSONObject params = new JSONObject();
-//            params.put("Name", monitoring);
-//            SPTSResponse sr = SPTSWebService.insertEqptMonitoring(params);
-//            LOGGER.info("sr.getResponseId: " + sr.getResponseId());
-//            if (sr.getResponseId() > 0) { //insert into local DB
-//
-//                EquipmentMonitoring equipmentfamily = new EquipmentMonitoring();
-//                equipmentfamily.setSptsPkid(sr.getResponseId().toString());
-//                equipmentfamily.setName(monitoring);
-//                equipmentfamily.setCreatedBy(userSession.getFullname());
-//                EquipmentMonitoringDAO equipmentfamilyDAO = new EquipmentMonitoringDAO();
-//                QueryResult queryResult = equipmentfamilyDAO.insertEquipmentMonitoring(equipmentfamily);
-//
-//                if (queryResult.getGeneratedKey().equals("0")) {
-//                    redirectAttrs.addFlashAttribute("error", "Failed to register " + monitoring + ". Pls contact system admin.");
-//                    return "redirect:/equipment/monitoring/add";
-//                } else {
-//                    redirectAttrs.addFlashAttribute("success", "Successfully registered " + monitoring);
-//                    return "redirect:/equipment/monitoring/add";
-//                }
-//            } else {
-//                LinkedHashMap<String, String> item2;
-//                ObjectMapper mapper = new ObjectMapper();
-//                item2 = mapper.readValue(params.toString(), new TypeReference<LinkedHashMap<String, String>>() {
-//                });
-//                String errorMessage;
-//                if (sr.getErrorDetail().equals("")) {
-//                    errorMessage = sr.getErrorCode() + " - " + sr.getErrorMessage();
-//                } else {
-//                    errorMessage = sr.getErrorCode() + " - " + sr.getErrorDetail();
-//                }
-//                model.addAttribute("error", errorMessage);
-//                model.addAttribute("item2", item2);
-//                redirectAttrs.addFlashAttribute("error", errorMessage);
-//                return "redirect:/equipment/monitoring/add";
-//            }
         } else {
             redirectAttrs.addFlashAttribute("error", "Duplicate Monitoring Name. Pls register with different name");
             return "redirect:/equipment/monitoring/add";
@@ -1063,57 +1668,57 @@ public class EquipmentController {
         EquipmentMonitoringDAO eqptRelTestGroupD = new EquipmentMonitoringDAO();
         EquipmentMonitoring equipmentfamily = eqptRelTestGroupD.getEquipmentMonitoring(monitoringId);
 
-        eqptRelTestGroupD = new EquipmentMonitoringDAO();
-        QueryResult queryResult = eqptRelTestGroupD.deleteEquipmentMonitoring(monitoringId);
-        if (queryResult.getResult() == 1) {
-            redirectAttrs.addFlashAttribute("success", equipmentfamily.getName() + " successfully deleted");
-        } else {
-            redirectAttrs.addFlashAttribute("error", "Failed to delete " + equipmentfamily.getName() + ". Pls contact system admin.");
-        }
-        return "redirect:/equipment/monitoring/add";
-
-        //hold until JF Lim provide primitive parameter for insert function
-        //retrieve from SPTS first
-//        JSONObject param = new JSONObject();
-//        param.put("pkid", equipmentfamily.getSptsPkid());
-//        JSONArray getItemByParam = SPTSWebService.getEqptMonitoringByPkid(param);
-//        String version = "";
-//        for (int i = 0; i < getItemByParam.length(); i++) {
-//            version = getItemByParam.getJSONObject(i).getString("Version");
-//        }
-//        JSONObject params = new JSONObject();
-//        params.put("pkid", equipmentfamily.getSptsPkid());
-//        params.put("version", version);
-//        SPTSResponse sr = SPTSWebService.deleteEqptMonitoring(params);
-//        if (sr.getStatus()) { //delete from local DB
-//            eqptRelTestGroupD = new EquipmentMonitoringDAO();
-//            QueryResult queryResult = eqptRelTestGroupD.deleteEquipmentMonitoring(monitoringId);
-//            if (queryResult.getResult() == 1) {
-//                redirectAttrs.addFlashAttribute("success", equipmentfamily.getName() + " successfully deleted");
-//            } else {
-//                redirectAttrs.addFlashAttribute("error", "Failed to delete " + equipmentfamily.getName() + ". Pls contact system admin.");
-//            }
-//            return "redirect:/equipment/monitoring/add";
+//        eqptRelTestGroupD = new EquipmentMonitoringDAO();
+//        QueryResult queryResult = eqptRelTestGroupD.deleteEquipmentMonitoring(monitoringId);
+//        if (queryResult.getResult() == 1) {
+//            redirectAttrs.addFlashAttribute("success", equipmentfamily.getName() + " successfully deleted");
 //        } else {
-//            LinkedHashMap<String, String> item2;
-//            ObjectMapper mapper = new ObjectMapper();
-//            item2 = mapper.readValue(params.toString(), new TypeReference<LinkedHashMap<String, String>>() {
-//            });
-//            String errorMessage;
-//            if (sr.getErrorDetail().equals("")) {
-//                errorMessage = sr.getErrorCode() + " - " + sr.getErrorMessage();
-//            } else {
-//                errorMessage = sr.getErrorCode() + " - " + sr.getErrorDetail();
-//            }
-//            model.addAttribute("error", errorMessage);
-//            model.addAttribute("item2", item2);
-//            redirectAttrs.addFlashAttribute("error", errorMessage);
-//            return "redirect:/equipment/monitoring/add";
+//            redirectAttrs.addFlashAttribute("error", "Failed to delete " + equipmentfamily.getName() + ". Pls contact system admin.");
 //        }
+//        return "redirect:/equipment/monitoring/add";
+        JSONObject param = new JSONObject();
+        param.put("pkid", equipmentfamily.getSptsPkid());
+        JSONArray getItemByParam = SPTSWebService.getEqptMonitoringByPkid(param);
+        String version = "";
+        for (int i = 0; i < getItemByParam.length(); i++) {
+            version = getItemByParam.getJSONObject(i).getString("Version");
+        }
+        JSONObject params = new JSONObject();
+        params.put("pkid", equipmentfamily.getSptsPkid());
+        params.put("version", version);
+        SPTSResponse sr = SPTSWebService.deleteEqptMonitoring(params);
+        if (sr.getStatus()) { //delete from local DB
+            eqptRelTestGroupD = new EquipmentMonitoringDAO();
+            QueryResult queryResult = eqptRelTestGroupD.deleteEquipmentMonitoring(monitoringId);
+            if (queryResult.getResult() == 1) {
+                redirectAttrs.addFlashAttribute("success", equipmentfamily.getName() + " successfully deleted");
+            } else {
+                redirectAttrs.addFlashAttribute("error", "Failed to delete " + equipmentfamily.getName() + ". Pls contact system admin.");
+            }
+            return "redirect:/equipment/monitoring/add";
+        } else {
+            LinkedHashMap<String, String> item2;
+            ObjectMapper mapper = new ObjectMapper();
+            item2 = mapper.readValue(params.toString(), new TypeReference<LinkedHashMap<String, String>>() {
+            });
+            String errorMessage;
+            if (sr.getErrorDetail().equals("")) {
+                errorMessage = sr.getErrorCode() + " - " + sr.getErrorMessage();
+            } else {
+                errorMessage = sr.getErrorCode() + " - " + sr.getErrorDetail();
+            }
+            model.addAttribute("error", errorMessage);
+            model.addAttribute("item2", item2);
+            redirectAttrs.addFlashAttribute("error", errorMessage);
+            return "redirect:/equipment/monitoring/add";
+        }
     }
 
     @RequestMapping(value = "/tech/add", method = RequestMethod.GET)
-    public String techAdd(Model model) throws IOException {
+    public String techAdd(Model model, @ModelAttribute UserSession userSession) throws IOException {
+
+        model.addAttribute("userEqptTechAdd", userSession.getEqptTechAdd());
+        model.addAttribute("userEqptTechDelete", userSession.getEqptTechDelete());
 
         //retrieve from SPTS first
         JSONObject params = new JSONObject();
@@ -1160,59 +1765,43 @@ public class EquipmentController {
         int count = eqptRelTestGroupD.getCountTechName(tech);
         if (count == 0) {
 
-            EquipmentTech equipmentfamily = new EquipmentTech();
-            equipmentfamily.setSptsPkid("0");
-            equipmentfamily.setName(tech);
-            equipmentfamily.setCreatedBy(userSession.getFullname());
-            EquipmentTechDAO equipmentfamilyDAO = new EquipmentTechDAO();
-            QueryResult queryResult = equipmentfamilyDAO.insertEquipmentTech(equipmentfamily);
+            //insert into SPTS first
+            JSONObject params = new JSONObject();
+            params.put("name", tech);
+            SPTSResponse sr = SPTSWebService.insertEqptTech(params);
+//            LOGGER.info("sr.getResponseId: " + sr.getResponseId());
+            if (sr.getResponseId() > 0) { //insert into local DB
 
-            if (queryResult.getGeneratedKey().equals("0")) {
-                redirectAttrs.addFlashAttribute("error", "Failed to register " + tech + ". Pls contact system admin.");
-                return "redirect:/equipment/tech/add";
+                EquipmentTech equipmentfamily = new EquipmentTech();
+                equipmentfamily.setSptsPkid(sr.getResponseId().toString());
+                equipmentfamily.setName(tech);
+                equipmentfamily.setCreatedBy(userSession.getFullname());
+                EquipmentTechDAO equipmentfamilyDAO = new EquipmentTechDAO();
+                QueryResult queryResult = equipmentfamilyDAO.insertEquipmentTech(equipmentfamily);
+
+                if (queryResult.getGeneratedKey().equals("0")) {
+                    redirectAttrs.addFlashAttribute("error", "Failed to register " + tech + ". Pls contact system admin.");
+                    return "redirect:/equipment/tech/add";
+                } else {
+                    redirectAttrs.addFlashAttribute("success", "Successfully registered " + tech);
+                    return "redirect:/equipment/tech/add";
+                }
             } else {
-                redirectAttrs.addFlashAttribute("success", "Successfully registered " + tech);
+                LinkedHashMap<String, String> item2;
+                ObjectMapper mapper = new ObjectMapper();
+                item2 = mapper.readValue(params.toString(), new TypeReference<LinkedHashMap<String, String>>() {
+                });
+                String errorMessage;
+                if (sr.getErrorDetail().equals("")) {
+                    errorMessage = sr.getErrorCode() + " - " + sr.getErrorMessage();
+                } else {
+                    errorMessage = sr.getErrorCode() + " - " + sr.getErrorDetail();
+                }
+                model.addAttribute("error", errorMessage);
+                model.addAttribute("item2", item2);
+                redirectAttrs.addFlashAttribute("error", errorMessage);
                 return "redirect:/equipment/tech/add";
             }
-
-            //hold until JF Lim provide primitive parameter
-            //insert into SPTS first
-//            JSONObject params = new JSONObject();
-//            params.put("Name", tech);
-//            SPTSResponse sr = SPTSWebService.insertEqptTech(params);
-//            LOGGER.info("sr.getResponseId: " + sr.getResponseId());
-//            if (sr.getResponseId() > 0) { //insert into local DB
-//
-//                EquipmentTech equipmentfamily = new EquipmentTech();
-//                equipmentfamily.setSptsPkid(sr.getResponseId().toString());
-//                equipmentfamily.setName(monitoring);
-//                equipmentfamily.setCreatedBy(userSession.getFullname());
-//                EquipmentTechDAO equipmentfamilyDAO = new EquipmentTechDAO();
-//                QueryResult queryResult = equipmentfamilyDAO.insertEquipmentTech(equipmentfamily);
-//
-//                if (queryResult.getGeneratedKey().equals("0")) {
-//                    redirectAttrs.addFlashAttribute("error", "Failed to register " + monitoring + ". Pls contact system admin.");
-//                    return "redirect:/equipment/tech/add";
-//                } else {
-//                    redirectAttrs.addFlashAttribute("success", "Successfully registered " + monitoring);
-//                    return "redirect:/equipment/tech/add";
-//                }
-//            } else {
-//                LinkedHashMap<String, String> item2;
-//                ObjectMapper mapper = new ObjectMapper();
-//                item2 = mapper.readValue(params.toString(), new TypeReference<LinkedHashMap<String, String>>() {
-//                });
-//                String errorMessage;
-//                if (sr.getErrorDetail().equals("")) {
-//                    errorMessage = sr.getErrorCode() + " - " + sr.getErrorMessage();
-//                } else {
-//                    errorMessage = sr.getErrorCode() + " - " + sr.getErrorDetail();
-//                }
-//                model.addAttribute("error", errorMessage);
-//                model.addAttribute("item2", item2);
-//                redirectAttrs.addFlashAttribute("error", errorMessage);
-//                return "redirect:/equipment/tech/add";
-//            }
         } else {
             redirectAttrs.addFlashAttribute("error", "Duplicate Tech Name. Pls register with different name");
             return "redirect:/equipment/tech/add";
@@ -1230,57 +1819,57 @@ public class EquipmentController {
         EquipmentTechDAO eqptRelTestGroupD = new EquipmentTechDAO();
         EquipmentTech equipmentfamily = eqptRelTestGroupD.getEquipmentTech(techId);
 
-        eqptRelTestGroupD = new EquipmentTechDAO();
-        QueryResult queryResult = eqptRelTestGroupD.deleteEquipmentTech(techId);
-        if (queryResult.getResult() == 1) {
-            redirectAttrs.addFlashAttribute("success", equipmentfamily.getName() + " successfully deleted");
-        } else {
-            redirectAttrs.addFlashAttribute("error", "Failed to delete " + equipmentfamily.getName() + ". Pls contact system admin.");
-        }
-        return "redirect:/equipment/tech/add";
-
-        //hold until JF Lim provide primitive parameter for insert function
-        //retrieve from SPTS first
-//        JSONObject param = new JSONObject();
-//        param.put("pkid", equipmentfamily.getSptsPkid());
-//        JSONArray getItemByParam = SPTSWebService.getEqptTechByPkid(param);
-//        String version = "";
-//        for (int i = 0; i < getItemByParam.length(); i++) {
-//            version = getItemByParam.getJSONObject(i).getString("Version");
-//        }
-//        JSONObject params = new JSONObject();
-//        params.put("pkid", equipmentfamily.getSptsPkid());
-//        params.put("version", version);
-//        SPTSResponse sr = SPTSWebService.deleteEqptTech(params);
-//        if (sr.getStatus()) { //delete from local DB
-//            eqptRelTestGroupD = new EquipmentTechDAO();
-//            QueryResult queryResult = eqptRelTestGroupD.deleteEquipmentTech(techId);
-//            if (queryResult.getResult() == 1) {
-//                redirectAttrs.addFlashAttribute("success", equipmentfamily.getName() + " successfully deleted");
-//            } else {
-//                redirectAttrs.addFlashAttribute("error", "Failed to delete " + equipmentfamily.getName() + ". Pls contact system admin.");
-//            }
-//            return "redirect:/equipment/tech/add";
+//        eqptRelTestGroupD = new EquipmentTechDAO();
+//        QueryResult queryResult = eqptRelTestGroupD.deleteEquipmentTech(techId);
+//        if (queryResult.getResult() == 1) {
+//            redirectAttrs.addFlashAttribute("success", equipmentfamily.getName() + " successfully deleted");
 //        } else {
-//            LinkedHashMap<String, String> item2;
-//            ObjectMapper mapper = new ObjectMapper();
-//            item2 = mapper.readValue(params.toString(), new TypeReference<LinkedHashMap<String, String>>() {
-//            });
-//            String errorMessage;
-//            if (sr.getErrorDetail().equals("")) {
-//                errorMessage = sr.getErrorCode() + " - " + sr.getErrorMessage();
-//            } else {
-//                errorMessage = sr.getErrorCode() + " - " + sr.getErrorDetail();
-//            }
-//            model.addAttribute("error", errorMessage);
-//            model.addAttribute("item2", item2);
-//            redirectAttrs.addFlashAttribute("error", errorMessage);
-//            return "redirect:/equipment/tech/add";
+//            redirectAttrs.addFlashAttribute("error", "Failed to delete " + equipmentfamily.getName() + ". Pls contact system admin.");
 //        }
+//        return "redirect:/equipment/tech/add";
+        JSONObject param = new JSONObject();
+        param.put("pkid", equipmentfamily.getSptsPkid());
+        JSONArray getItemByParam = SPTSWebService.getEqptTechByPkid(param);
+        String version = "";
+        for (int i = 0; i < getItemByParam.length(); i++) {
+            version = getItemByParam.getJSONObject(i).getString("Version");
+        }
+        JSONObject params = new JSONObject();
+        params.put("pkid", equipmentfamily.getSptsPkid());
+        params.put("version", version);
+        SPTSResponse sr = SPTSWebService.deleteEqptTech(params);
+        if (sr.getStatus()) { //delete from local DB
+            eqptRelTestGroupD = new EquipmentTechDAO();
+            QueryResult queryResult = eqptRelTestGroupD.deleteEquipmentTech(techId);
+            if (queryResult.getResult() == 1) {
+                redirectAttrs.addFlashAttribute("success", equipmentfamily.getName() + " successfully deleted");
+            } else {
+                redirectAttrs.addFlashAttribute("error", "Failed to delete " + equipmentfamily.getName() + ". Pls contact system admin.");
+            }
+            return "redirect:/equipment/tech/add";
+        } else {
+            LinkedHashMap<String, String> item2;
+            ObjectMapper mapper = new ObjectMapper();
+            item2 = mapper.readValue(params.toString(), new TypeReference<LinkedHashMap<String, String>>() {
+            });
+            String errorMessage;
+            if (sr.getErrorDetail().equals("")) {
+                errorMessage = sr.getErrorCode() + " - " + sr.getErrorMessage();
+            } else {
+                errorMessage = sr.getErrorCode() + " - " + sr.getErrorDetail();
+            }
+            model.addAttribute("error", errorMessage);
+            model.addAttribute("item2", item2);
+            redirectAttrs.addFlashAttribute("error", errorMessage);
+            return "redirect:/equipment/tech/add";
+        }
     }
 
     @RequestMapping(value = "/viMonitoring/add", method = RequestMethod.GET)
-    public String viMonitoringAdd(Model model) throws IOException {
+    public String viMonitoringAdd(Model model, @ModelAttribute UserSession userSession) throws IOException {
+
+        model.addAttribute("userEqptViMonAdd", userSession.getEqptViMonAdd());
+        model.addAttribute("userEqptViMonDelete", userSession.getEqptViMonDelete());
 
         //retrieve from SPTS first
         JSONObject params = new JSONObject();
@@ -1327,59 +1916,43 @@ public class EquipmentController {
         int count = eqptRelTestGroupD.getCountViMonitoringName(viMonitoring);
         if (count == 0) {
 
-            EquipmentViMonitoring equipmentfamily = new EquipmentViMonitoring();
-            equipmentfamily.setSptsPkid("0");
-            equipmentfamily.setName(viMonitoring);
-            equipmentfamily.setCreatedBy(userSession.getFullname());
-            EquipmentViMonitoringDAO equipmentfamilyDAO = new EquipmentViMonitoringDAO();
-            QueryResult queryResult = equipmentfamilyDAO.insertEquipmentViMonitoring(equipmentfamily);
+            //insert into SPTS first
+            JSONObject params = new JSONObject();
+            params.put("name", viMonitoring);
+            SPTSResponse sr = SPTSWebService.insertEqptViMonitoring(params);
+//            LOGGER.info("sr.getResponseId: " + sr.getResponseId());
+            if (sr.getResponseId() > 0) { //insert into local DB
 
-            if (queryResult.getGeneratedKey().equals("0")) {
-                redirectAttrs.addFlashAttribute("error", "Failed to register " + viMonitoring + ". Pls contact system admin.");
-                return "redirect:/equipment/viMonitoring/add";
+                EquipmentViMonitoring equipmentfamily = new EquipmentViMonitoring();
+                equipmentfamily.setSptsPkid(sr.getResponseId().toString());
+                equipmentfamily.setName(viMonitoring);
+                equipmentfamily.setCreatedBy(userSession.getFullname());
+                EquipmentViMonitoringDAO equipmentfamilyDAO = new EquipmentViMonitoringDAO();
+                QueryResult queryResult = equipmentfamilyDAO.insertEquipmentViMonitoring(equipmentfamily);
+
+                if (queryResult.getGeneratedKey().equals("0")) {
+                    redirectAttrs.addFlashAttribute("error", "Failed to register " + viMonitoring + ". Pls contact system admin.");
+                    return "redirect:/equipment/viMonitoring/add";
+                } else {
+                    redirectAttrs.addFlashAttribute("success", "Successfully registered " + viMonitoring);
+                    return "redirect:/equipment/viMonitoring/add";
+                }
             } else {
-                redirectAttrs.addFlashAttribute("success", "Successfully registered " + viMonitoring);
+                LinkedHashMap<String, String> item2;
+                ObjectMapper mapper = new ObjectMapper();
+                item2 = mapper.readValue(params.toString(), new TypeReference<LinkedHashMap<String, String>>() {
+                });
+                String errorMessage;
+                if (sr.getErrorDetail().equals("")) {
+                    errorMessage = sr.getErrorCode() + " - " + sr.getErrorMessage();
+                } else {
+                    errorMessage = sr.getErrorCode() + " - " + sr.getErrorDetail();
+                }
+                model.addAttribute("error", errorMessage);
+                model.addAttribute("item2", item2);
+                redirectAttrs.addFlashAttribute("error", errorMessage);
                 return "redirect:/equipment/viMonitoring/add";
             }
-
-            //hold until JF Lim provide primitive parameter
-            //insert into SPTS first
-//            JSONObject params = new JSONObject();
-//            params.put("Name", viMonitoring);
-//            SPTSResponse sr = SPTSWebService.insertEqptViMonitoring(params);
-//            LOGGER.info("sr.getResponseId: " + sr.getResponseId());
-//            if (sr.getResponseId() > 0) { //insert into local DB
-//
-//                EquipmentViMonitoring equipmentfamily = new EquipmentViMonitoring();
-//                equipmentfamily.setSptsPkid(sr.getResponseId().toString());
-//                equipmentfamily.setName(monitoring);
-//                equipmentfamily.setCreatedBy(userSession.getFullname());
-//                EquipmentViMonitoringDAO equipmentfamilyDAO = new EquipmentViMonitoringDAO();
-//            QueryResult queryResult = equipmentfamilyDAO.insertEquipmentViMonitoring(equipmentfamily);
-//
-//                if (queryResult.getGeneratedKey().equals("0")) {
-//                    redirectAttrs.addFlashAttribute("error", "Failed to register " + viMonitoring + ". Pls contact system admin.");
-//                    return "redirect:/equipment/viMonitoring/add";
-//                } else {
-//                    redirectAttrs.addFlashAttribute("success", "Successfully registered " + viMonitoring);
-//                    return "redirect:/equipment/viMonitoring/add";
-//                }
-//            } else {
-//                LinkedHashMap<String, String> item2;
-//                ObjectMapper mapper = new ObjectMapper();
-//                item2 = mapper.readValue(params.toString(), new TypeReference<LinkedHashMap<String, String>>() {
-//                });
-//                String errorMessage;
-//                if (sr.getErrorDetail().equals("")) {
-//                    errorMessage = sr.getErrorCode() + " - " + sr.getErrorMessage();
-//                } else {
-//                    errorMessage = sr.getErrorCode() + " - " + sr.getErrorDetail();
-//                }
-//                model.addAttribute("error", errorMessage);
-//                model.addAttribute("item2", item2);
-//                redirectAttrs.addFlashAttribute("error", errorMessage);
-//                return "redirect:/equipment/viMonitoring/add";
-//            }
         } else {
             redirectAttrs.addFlashAttribute("error", "Duplicate VI Monitoring Name. Pls register with different name");
             return "redirect:/equipment/viMonitoring/add";
@@ -1443,5 +2016,218 @@ public class EquipmentController {
             redirectAttrs.addFlashAttribute("error", errorMessage);
             return "redirect:/equipment/viMonitoring/add";
         }
+    }
+
+    @RequestMapping(value = "/query", method = {RequestMethod.GET, RequestMethod.POST})
+    public String query(
+            Model model,
+            Locale locale,
+            RedirectAttributes redirectAttrs,
+            @ModelAttribute UserSession userSession,
+            @RequestParam(required = false) String eqptId,
+            @RequestParam(required = false) String relTestGroup,
+            @RequestParam(required = false) String familyName,
+            @RequestParam(required = false) String eqptType,
+            @RequestParam(required = false) String eqptManufacturer,
+            @RequestParam(required = false) String eqptModel,
+            @RequestParam(required = false) String eqptTech,
+            @RequestParam(required = false) String eqptMon,
+            @RequestParam(required = false) String eqptViMon,
+            @RequestParam(required = false) String eqptStatus,
+            @RequestParam(required = false) String cbmsType) throws IOException {
+
+        String query = "";
+        int count = 0;
+
+        EquipmentDAO eqptD = new EquipmentDAO();
+        List<Equipment> eqptIdList = eqptD.getEqptId("");
+        model.addAttribute("eqptIdList", eqptIdList);
+
+        eqptD = new EquipmentDAO();
+        List<Equipment> eqptManufacturerList = eqptD.getEqptManufacturer("");
+        model.addAttribute("eqptManufacturerList", eqptManufacturerList);
+
+        eqptD = new EquipmentDAO();
+        List<Equipment> eqptModelList = eqptD.getEqptModel("");
+        model.addAttribute("eqptModelList", eqptModelList);
+
+        EquipmentFamilyDAO eqptFD = new EquipmentFamilyDAO();
+        List<EquipmentFamily> eqptFamilyList = eqptFD.getEquipmentFamilyList("");
+        model.addAttribute("eqptFamilyList", eqptFamilyList);
+
+        EquipmentRelTestGroupDAO eqptRD = new EquipmentRelTestGroupDAO();
+        List<EquipmentRelTestGroup> eqptRelTestGroupList = eqptRD.getEquipmentRelTestGroupList("");
+        model.addAttribute("eqptRelTestGroupList", eqptRelTestGroupList);
+
+        EquipmentTechDAO eqptTD = new EquipmentTechDAO();
+        List<EquipmentTech> eqptTechList = eqptTD.getEquipmentTechList("");
+        model.addAttribute("eqptTechList", eqptTechList);
+
+        EquipmentMonitoringDAO eqptMD = new EquipmentMonitoringDAO();
+        List<EquipmentMonitoring> eqptMonList = eqptMD.getEquipmentMonitoringList("");
+        model.addAttribute("eqptMonList", eqptMonList);
+
+        EquipmentViMonitoringDAO eqptVD = new EquipmentViMonitoringDAO();
+        List<EquipmentViMonitoring> eqptViMonList = eqptVD.getEquipmentViMonitoringList("");
+        model.addAttribute("eqptViMonList", eqptViMonList);
+
+        if (eqptId != null) {
+            if (!eqptId.equals("")) {
+                count++;
+                if ("All".equals(eqptId)) {
+                    if (count == 1) {
+                        query = query + " WHERE equipment_id LIKE \'%%' ";
+                    } else if (count > 1) {
+                        query = query + " AND equipment_id LIKE \'%%' ";
+                    }
+                } else {
+                    if (count == 1) {
+                        query = query + " WHERE equipment_id = '" + eqptId + "\' ";
+                    } else if (count > 1) {
+                        query = query + " AND equipment_id = ''" + eqptId + "\' ";
+                    }
+                }
+
+            }
+        }
+
+        if (relTestGroup != null) {
+            if (!relTestGroup.equals("")) {
+                count++;
+                if (count == 1) {
+                    query = query + " WHERE rel_test_group_pkid = '" + relTestGroup + "\' ";
+                } else if (count > 1) {
+                    query = query + " AND rel_test_group_pkid = '" + relTestGroup + "\' ";
+                }
+            }
+        }
+
+        if (familyName != null) {
+            if (!familyName.equals("")) {
+                count++;
+                if (count == 1) {
+                    query = query + " WHERE family_pkid = '" + familyName + "\' ";
+                } else if (count > 1) {
+                    query = query + " AND family_pkid = '" + familyName + "\' ";
+                }
+            }
+        }
+
+        if (eqptType != null) {
+            if (!eqptType.equals("")) {
+                count++;
+                if (count == 1) {
+                    query = query + " WHERE equipment_type = '" + eqptType + "\' ";
+                } else if (count > 1) {
+                    query = query + " AND equipment_type = '" + eqptType + "\' ";
+                }
+            }
+        }
+
+        if (eqptManufacturer != null) {
+            if (!eqptManufacturer.equals("")) {
+                count++;
+                if (count == 1) {
+                    query = query + " WHERE equipment_manufacturer = '" + eqptManufacturer + "\' ";
+                } else if (count > 1) {
+                    query = query + " AND equipment_manufacturer = '" + eqptManufacturer + "\' ";
+                }
+            }
+        }
+
+        if (eqptModel != null) {
+            if (!eqptModel.equals("")) {
+                count++;
+                if (count == 1) {
+                    query = query + " WHERE equipment_model = '" + eqptModel + "\' ";
+                } else if (count > 1) {
+                    query = query + " AND equipment_model = '" + eqptModel + "\' ";
+                }
+            }
+        }
+
+        if (eqptTech != null) {
+            if (!eqptTech.equals("")) {
+                count++;
+                if (count == 1) {
+                    query = query + " WHERE equip_tech_pkid = '" + eqptTech + "\' ";
+                } else if (count > 1) {
+                    query = query + " AND equip_tech_pkid = '" + eqptTech + "\' ";
+                }
+            }
+        }
+
+        if (eqptMon != null) {
+            if (!eqptMon.equals("")) {
+                count++;
+                if (count == 1) {
+                    query = query + " WHERE equip_monitoring_pkid = '" + eqptMon + "\' ";
+                } else if (count > 1) {
+                    query = query + " AND equip_monitoring_pkid = '" + eqptMon + "\' ";
+                }
+            }
+        }
+
+        if (eqptViMon != null) {
+            if (!eqptViMon.equals("")) {
+                count++;
+                if (count == 1) {
+                    query = query + " WHERE vi_monitoring_pkid = '" + eqptViMon + "\' ";
+                } else if (count > 1) {
+                    query = query + " AND vi_monitoring_pkid = '" + eqptViMon + "\' ";
+                }
+            }
+        }
+
+        if (eqptStatus != null) {
+            if (!eqptStatus.equals("")) {
+                count++;
+                if (count == 1) {
+                    query = query + " WHERE current_status = '" + eqptStatus + "\' ";
+                } else if (count > 1) {
+                    query = query + " AND current_status = '" + eqptStatus + "\' ";
+                }
+            }
+        }
+
+        if (cbmsType != null) {
+            if (!cbmsType.equals("")) {
+                count++;
+                if (count == 1) {
+                    query = query + " WHERE cbms_type = '" + cbmsType + "\' ";
+                } else if (count > 1) {
+                    query = query + " AND cbms_type = '" + cbmsType + "\' ";
+                }
+            }
+        }
+
+        String finalQuery = "";
+
+        if (count != 0) {
+            finalQuery = "SELECT eq.*, fa.family_name AS familyName, rt.rel_test_group_name AS relTestGroup, te.name AS eqptTech, mo.name AS eqptMon, vi.name AS eqptViMon, "
+                    + "IF(eq.current_status = '1', 'Active','Inactive') AS statusName, "
+                    + "IF(eq.equipment_type = '1', 'Life','Environment') AS eqptType, "
+                    + "IF(eq.cbms_type = '1', 'Yes','No') AS cbmsType "
+                    + "FROM equipment eq "
+                    + "LEFT JOIN equipment_family fa ON eq.family_pkid = fa.spts_pkid "
+                    + "LEFT JOIN equipment_rel_test_group rt ON eq.rel_test_group_pkid = rt.spts_pkid "
+                    + "LEFT JOIN equipment_tech te ON eq.equip_tech_pkid = te.spts_pkid "
+                    + "LEFT JOIN equipment_monitoring mo ON eq.equip_monitoring_pkid = mo.spts_pkid "
+                    + "LEFT JOIN equipment_vi_monitoring vi ON eq.vi_monitoring_pkid = vi.spts_pkid "
+                    + query
+                    + " ORDER BY eq.equipment_id";
+
+        } else {
+            finalQuery = "SELECT * FROM equipment WHERE flag = '1000'";
+        }
+
+        System.out.println("finalQuery: " + finalQuery);
+
+        eqptD = new EquipmentDAO();
+        List<Equipment> resultQuery = eqptD.getEquipmentforQuery(finalQuery);
+
+        model.addAttribute("resultQuery", resultQuery);
+
+        return "equipment/query";
     }
 }

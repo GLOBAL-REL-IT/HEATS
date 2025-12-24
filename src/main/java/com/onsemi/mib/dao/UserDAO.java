@@ -489,6 +489,8 @@ public class UserDAO {
                 userAccess.setEqptMonDelete(rs.getString("uac.eqpt_mon_delete"));
                 userAccess.setEqptViMonAdd(rs.getString("uac.eqpt_vi_mon_add"));
                 userAccess.setEqptViMonDelete(rs.getString("uac.eqpt_vi_mon_delete"));
+                userAccess.setEqptFamilyAddGlobal(rs.getString("uac.eqpt_family_add_global"));
+                userAccess.setEqptRelTestGroupAddGlobal(rs.getString("uac.eqpt_rel_test_group_add_global"));
             }
             rs.close();
             ps.close();

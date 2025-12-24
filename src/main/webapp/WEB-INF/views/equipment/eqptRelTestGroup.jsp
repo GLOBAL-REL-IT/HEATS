@@ -116,7 +116,7 @@
                             <i class='bi bi-arrow-bar-left'></i>&nbsp;&nbsp;Back</a>
                     </div>
                 </nav>
-                <div class="col-sm-8 col-12">
+                <div class="col-sm-12 col-12">
                     <!-- Card start -->
                     <div class="card mb-4">
                         <div class="card-header">
@@ -131,12 +131,24 @@
                                     <div class="col-sm-6 col-md-6">
                                         <div class="row g-2">
                                             <div class="col-sm-12">
-                                                <input type="text" class="form-control" id="relTestGroup" name="relTestGroup" placeholder="" value="" required>
+                                                <c:if test="${userEqptRelTestGroupAdd == 'Yes'}">
+                                                    <input type="text" class="form-control" id="relTestGroup" name="relTestGroup" placeholder="" value="" required>
+                                                </c:if>
+                                                <c:if test="${userEqptRelTestGroupAdd != 'Yes'}">
+                                                    <input type="text" class="form-control" id="relTestGroup" name="relTestGroup" placeholder="" value="" disabled>
+                                                </c:if>
+
                                             </div>
                                         </div>
                                     </div>
                                     <div class="col-auto">
-                                        <button type="submit" class="btn btn-primary">Add</button>
+                                        <c:if test="${userEqptRelTestGroupAdd == 'Yes'}">
+                                            <button type="submit" class="btn btn-primary">Add</button>
+                                        </c:if>
+                                        <c:if test="${userEqptRelTestGroupAdd != 'Yes'}">
+                                            <button type="submit" class="btn btn-primary disabled">Add</button>
+                                        </c:if>
+
                                     </div>
                                 </div>
                             </form>
@@ -152,7 +164,7 @@
             <!-- Row start -->
             <div class="row gx-4">
 
-                <div class="col-sm-8 col-12">
+                <div class="col-sm-12 col-12">
 
                     <!-- Card start -->
                     <div class="card mb-4">
@@ -177,24 +189,46 @@
                                                     <th><span>Eqpt Rel Test Group</span></th>
                                                     <th><span>Registered By</span></th>
                                                     <th><span>Registered Date</span></th>
+                                                    <th><span>Global List</span></th>
                                                     <th class="col-1"><span>Manage</span></th>
                                                 </tr>
                                             </thead>
                                             <tbody>
-                                            <c:forEach items="${eqptRelTestGroup}" var="parameterMaster" varStatus="parameterMasterLoop">
-                                                <tr>
-                                                    <td><c:out value="${parameterMasterLoop.index+1}"/></td>
-                                                <td id="modal_delete_info_${parameterMaster.id}"><c:out value="${parameterMaster.relTestGroupName}"/></td>
-                                                <td><c:out value="${parameterMaster.createdBy}"/></td>
-                                                <td><c:out value="${parameterMaster.createdDate}"/></td>
-                                                <td align="center">
-                                                    <a modaldeleteid="${parameterMaster.id}" title="Delete" data-bs-toggle="modal" data-bs-target="#delete_modal" class="table-link danger group_delete" onclick="modalDelete(this);">
-                                                        <i class="bi bi-trash h3" style="color:red"></i>
-                                                        <!--</span>-->
-                                                    </a>
-                                                </td>
-                                                </tr>
-                                            </c:forEach>
+                                                <c:forEach items="${eqptRelTestGroup}" var="parameterMaster" varStatus="parameterMasterLoop">
+                                                    <tr>
+                                                        <td><c:out value="${parameterMasterLoop.index+1}"/></td>
+                                                        <td id="modal_delete_info_${parameterMaster.id}"><c:out value="${parameterMaster.relTestGroupName}"/></td>
+                                                        <td><c:out value="${parameterMaster.createdBy}"/></td>
+                                                        <td><c:out value="${parameterMaster.createdDate}"/></td>
+                                                        <td><c:out value="${parameterMaster.inGlobalOrNot}"/></td>
+                                                        <td align="center">
+                                                            <c:if test="${parameterMaster.inGlobalOrNot == 'No'}">
+                                                                <c:if test="${userEqptRelTestGroupAddGlobal == 'Yes'}">
+                                                                    <a modaldeleteid="${parameterMaster.id}" familyName="${parameterMaster.relTestGroupName}" title="Add to Global" data-bs-toggle="modal" data-bs-target="#confirmation_modal" class="table-link danger group_delete" onclick="modalAddGlobal(this);">
+                                                                    <i class="bi bi-globe h3" style="color:green"></i>
+                                                                </a>
+                                                                </c:if>
+                                                            </c:if>
+                                                            <c:if test="${parameterMaster.inGlobalOrNot == 'Yes'}">
+                                                                <c:if test="${userEqptRelTestGroupAddGlobal == 'Yes'}">
+                                                                    <a modaldeleteid="${parameterMaster.id}" title="Add to Global" class="table-link danger group_delete disabled">
+                                                                    <i class="bi bi-globe h3" style="color:gray"></i>
+                                                                </a>
+                                                                </c:if>
+                                                            </c:if>
+                                                            <c:if test="${userEqptRelTestGroupDelete == 'Yes'}">
+                                                                <a modaldeleteid="${parameterMaster.id}" title="Delete" data-bs-toggle="modal" data-bs-target="#delete_modal" class="table-link danger group_delete" onclick="modalDelete(this);">
+                                                                    <i class="bi bi-trash h3" style="color:red"></i>
+                                                                </a>
+                                                            </c:if>
+                                                            <c:if test="${userEqptRelTestGroupDelete != 'Yes'}">
+                                                                <a modaldeleteid="${parameterMaster.id}" title="Delete" class="table-link danger group_delete disabled">
+                                                                    <i class="bi bi-trash h3" style="color:gray"></i>
+                                                                </a>
+                                                            </c:if>
+                                                        </td>
+                                                    </tr>
+                                                </c:forEach>
                                             </tbody>
                                         </table>
                                     </div>
@@ -216,79 +250,101 @@
             <img class="img3" src="${contextPath}/resources/onsemi logo.webp" alt="onsemi">
             <span>© HEATs 2025</span>
         </div>
-        </div>
-    </s:layout-component>
-    <s:layout-component name="page_js">
-        <script src="${contextPath}/resources/vendor/DataTables/customitem/jquery-3.7.1.min.js"></script>
-        <script src="${contextPath}/resources/vendor/DataTables/customitem/bootstrap.bundle.min.js"></script>
-        <script src="${contextPath}/resources/vendor/DataTables/customitem/dataTables.js"></script>
+    </div>
+</s:layout-component>
+<s:layout-component name="page_js">
+    <script src="${contextPath}/resources/vendor/DataTables/customitem/jquery-3.7.1.min.js"></script>
+    <script src="${contextPath}/resources/vendor/DataTables/customitem/bootstrap.bundle.min.js"></script>
+    <script src="${contextPath}/resources/vendor/DataTables/customitem/dataTables.js"></script>
 
-        <!-- Data Tables -->
-        <script src="${contextPath}/resources/statflow/vendor/datatables/dataTables.min.js"></script>
-        <script src="${contextPath}/resources/statflow/vendor/datatables/dataTables.bootstrap.min.js"></script>
+    <!-- Data Tables -->
+    <script src="${contextPath}/resources/statflow/vendor/datatables/dataTables.min.js"></script>
+    <script src="${contextPath}/resources/statflow/vendor/datatables/dataTables.bootstrap.min.js"></script>
 
-        <!-- Custom Data tables -->
-        <script src="${contextPath}/resources/statflow/vendor/datatables/custom/custom-datatables.js"></script>
+    <!-- Custom Data tables -->
+    <script src="${contextPath}/resources/statflow/vendor/datatables/custom/custom-datatables.js"></script>
 
-        <!-- DataTable Buttons -->
-        <script src="${contextPath}/resources/statflow/vendor/datatables/buttons/dataTables.buttons.min.js"></script>
-        <script src="${contextPath}/resources/statflow/vendor/datatables/buttons/jszip.min.js"></script>
-        <script src="${contextPath}/resources/statflow/vendor/datatables/buttons/dataTables.buttons.min.js"></script>
-        <script src="${contextPath}/resources/statflow/vendor/datatables/buttons/pdfmake.min.js"></script>
-        <script src="${contextPath}/resources/statflow/vendor/datatables/buttons/vfs_fonts.js"></script>
-        <script src="${contextPath}/resources/statflow/vendor/datatables/buttons/buttons.html5.min.js"></script>
-        <script src="${contextPath}/resources/statflow/vendor/datatables/buttons/buttons.print.min.js"></script>
-        <script src="${contextPath}/resources/statflow/vendor/datatables/buttons/buttons.colVis.min.js"></script>
+    <!-- DataTable Buttons -->
+    <script src="${contextPath}/resources/statflow/vendor/datatables/buttons/dataTables.buttons.min.js"></script>
+    <script src="${contextPath}/resources/statflow/vendor/datatables/buttons/jszip.min.js"></script>
+    <script src="${contextPath}/resources/statflow/vendor/datatables/buttons/dataTables.buttons.min.js"></script>
+    <script src="${contextPath}/resources/statflow/vendor/datatables/buttons/pdfmake.min.js"></script>
+    <script src="${contextPath}/resources/statflow/vendor/datatables/buttons/vfs_fonts.js"></script>
+    <script src="${contextPath}/resources/statflow/vendor/datatables/buttons/buttons.html5.min.js"></script>
+    <script src="${contextPath}/resources/statflow/vendor/datatables/buttons/buttons.print.min.js"></script>
+    <script src="${contextPath}/resources/statflow/vendor/datatables/buttons/buttons.colVis.min.js"></script>
 
-        <!-- Bootstrap Select JS -->
-        <script src="${contextPath}/resources/statflow/vendor/bs-select/bs-select.min.js"></script>
-        <script src="${contextPath}/resources/statflow/vendor/bs-select/bs-select-custom.js"></script>
-    </s:layout-component>
-    <s:layout-component name="page_js_inline">
-        <script>
+    <!-- Bootstrap Select JS -->
+    <script src="${contextPath}/resources/statflow/vendor/bs-select/bs-select.min.js"></script>
+    <script src="${contextPath}/resources/statflow/vendor/bs-select/bs-select-custom.js"></script>
+</s:layout-component>
+<s:layout-component name="page_js_inline">
+    <script>
 
-                                                        // Fetch all the forms we want to apply custom Bootstrap validation styles to
-                                                        const forms = document.querySelectorAll('.needs-validation');
+                                                                    // Fetch all the forms we want to apply custom Bootstrap validation styles to
+                                                                    const forms = document.querySelectorAll('.needs-validation');
 
-                                                        // Loop over them and prevent submission
-                                                        Array.prototype.slice.call(forms).forEach((form) => {
-                                                            form.addEventListener('submit', (event) => {
-                                                                if (!form.checkValidity()) {
-                                                                    event.preventDefault();
-                                                                    event.stopPropagation();
-                                                                }
-                                                                form.classList.add('was-validated');
-                                                            }, false);
-                                                        });
+                                                                    // Loop over them and prevent submission
+                                                                    Array.prototype.slice.call(forms).forEach((form) => {
+                                                                        form.addEventListener('submit', (event) => {
+                                                                            if (!form.checkValidity()) {
+                                                                                event.preventDefault();
+                                                                                event.stopPropagation();
+                                                                            }
+                                                                            form.classList.add('was-validated');
+                                                                        }, false);
+                                                                    });
 
-                                                        $(document).ready(function () {
-                                                            $('.js-example-basic-single').select2();
-                                                        });
+                                                                    $(document).ready(function () {
+                                                                        $('.js-example-basic-single').select2();
+                                                                    });
 
-                                                        $(function () {
-                                                            $("#customButtons1").DataTable({
-                                                                lengthMenu: [
-                                                                    [10, 25, 50],
-                                                                    [10, 25, 50, "All"],
-                                                                ],
-                                                                language: {
-                                                                    lengthMenu: "Display _MENU_ Records Per Page",
-                                                                    info: "Showing Page _PAGE_ of _PAGES_",
-                                                                },
-                                                                dom: "Blfrtip",
-                                                                buttons: ["copy", "csv", "pdf", "print"],
-                                                            });
-                                                        });
+                                                                    $(function () {
+                                                                        $("#customButtons1").DataTable({
+                                                                            lengthMenu: [
+                                                                                [10, 25, 50],
+                                                                                [10, 25, 50, "All"],
+                                                                            ],
+                                                                            language: {
+                                                                                lengthMenu: "Display _MENU_ Records Per Page",
+                                                                                info: "Showing Page _PAGE_ of _PAGES_",
+                                                                            },
+                                                                            dom: "Blfrtip",
+                                                                            buttons: ["copy", "csv", "pdf", "print"],
+                                                                            "rowCallback": function (row, data, index) {
+                                                                                // 'data' is an array of values for the current row
+                                                                                // Assuming the status is in the second column (index 1)
+                                                                                var statusValue = data[4];
+
+                                                                                if (statusValue === 'No') {
+                                                                                    $(row).find('td:eq(4)').css('color', 'red');
+                                                                                    $(row).find('td:eq(4)').css('font-weight', 'bold');
+                                                                                } else if (statusValue === 'Yes') {
+                                                                                    $(row).find('td:eq(4)').css('color', 'green');
+                                                                                    $(row).find('td:eq(4)').css('font-weight', 'bold');
+                                                                                }
+                                                                            }
+                                                                        });
+                                                                    });
 
 
-                                                        function modalDelete(e) {
-                                                            var deleteId = $(e).attr("modaldeleteid");
-                                                            var deleteInfo = $("#modal_delete_info_" + deleteId).html();
-                                                            var deleteUrl = "${contextPath}/equipment/relTestGroup/delete/" + deleteId;
-                                                            var deleteMsg = "<f:message key='general.label.delete.confirmation'><f:param value='" + deleteInfo + "'/></f:message>";
-                                                            $("#delete_modal .modal-body").html(deleteMsg);
-                                                            $("#modal_delete_button").attr("href", deleteUrl);
-                                                        }
-        </script>
-    </s:layout-component>
+                                                                    function modalDelete(e) {
+                                                                        var deleteId = $(e).attr("modaldeleteid");
+                                                                        var deleteInfo = $("#modal_delete_info_" + deleteId).html();
+                                                                        var deleteUrl = "${contextPath}/equipment/relTestGroup/delete/" + deleteId;
+                                                                        var deleteMsg = "<f:message key='general.label.delete.confirmation'><f:param value='" + deleteInfo + "'/></f:message>";
+                                                                        $("#delete_modal .modal-body").html(deleteMsg);
+                                                                        $("#modal_delete_button").attr("href", deleteUrl);
+                                                                    }
+
+                                                                    function modalAddGlobal(e) {
+                                                                        var familyId = $(e).attr("modaldeleteid");
+                                                                        var familyName = $(e).attr("familyName");
+                                                                        var deleteUrl = "${contextPath}/equipment/relTestGroup/insertGlobal/" + familyId;
+                                                                        var deleteMsg = "Are you sure want to add " + familyName + " into Global List?";
+                                                                        $("#confirmation_modal .modal-body").html(deleteMsg);
+                                                                        $("#modal_button").attr("href", deleteUrl);
+                                                                    }
+    </script>
+</s:layout-component>
 </s:layout-render>

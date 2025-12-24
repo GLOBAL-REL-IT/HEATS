@@ -190,6 +190,75 @@ public class EquipmentFamilyDAO {
         }
         return equipmentfamilyList;
     }
+    
+    public List<EquipmentFamily> getEquipmentFamilyListleftJoinWithGlobal() {
+        String sql = "SELECT ef.*, gf.spts_guid, IF(ef.family_name = gf.family_name, 'Yes','No') AS globalOrNot, DATE_FORMAT(ef.created_date,'%d %M %Y %h:%i %p') AS createdDate "
+                + "FROM equipment_family ef LEFT JOIN equipment_global_family gf ON ef.family_name = gf.family_name "
+                + "ORDER BY ef.family_name ASC";
+        List<EquipmentFamily> equipmentfamilyList = new ArrayList<EquipmentFamily>();
+        try {
+            PreparedStatement ps = conn.prepareStatement(sql);
+            EquipmentFamily equipmentfamily;
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                equipmentfamily = new EquipmentFamily();
+                equipmentfamily.setId(rs.getString("id"));
+                equipmentfamily.setSptsPkid(rs.getString("spts_pkid"));
+                equipmentfamily.setFamilyName(rs.getString("family_name"));
+                equipmentfamily.setCreatedBy(rs.getString("created_by"));
+                equipmentfamily.setCreatedDate(rs.getString("createdDate"));
+                equipmentfamily.setSptsGuid(rs.getString("gf.spts_guid"));
+                equipmentfamily.setInGlobalOrNot(rs.getString("globalOrNot"));
+                equipmentfamilyList.add(equipmentfamily);
+            }
+            rs.close();
+            ps.close();
+        } catch (SQLException e) {
+            LOGGER.error(e.getMessage());
+        } finally {
+            if (conn != null) {
+                try {
+                    conn.close();
+                } catch (SQLException e) {
+                    LOGGER.error(e.getMessage());
+                }
+            }
+        }
+        return equipmentfamilyList;
+    }
+
+    public List<EquipmentFamily> getEquipmentFamilyList(String eqptFamily) {
+        String sql = "SELECT *,DATE_FORMAT(created_date,'%d %M %Y %h:%i %p') AS createdDate, IF(family_name=\"" + eqptFamily + "\",\"selected=''\",\"\") AS selected FROM equipment_family ORDER BY family_name ASC";
+        List<EquipmentFamily> equipmentfamilyList = new ArrayList<EquipmentFamily>();
+        try {
+            PreparedStatement ps = conn.prepareStatement(sql);
+            EquipmentFamily equipmentfamily;
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                equipmentfamily = new EquipmentFamily();
+                equipmentfamily.setId(rs.getString("id"));
+                equipmentfamily.setSptsPkid(rs.getString("spts_pkid"));
+                equipmentfamily.setFamilyName(rs.getString("family_name"));
+                equipmentfamily.setCreatedBy(rs.getString("created_by"));
+                equipmentfamily.setCreatedDate(rs.getString("createdDate"));
+                equipmentfamily.setSelected(rs.getString("selected"));
+                equipmentfamilyList.add(equipmentfamily);
+            }
+            rs.close();
+            ps.close();
+        } catch (SQLException e) {
+            LOGGER.error(e.getMessage());
+        } finally {
+            if (conn != null) {
+                try {
+                    conn.close();
+                } catch (SQLException e) {
+                    LOGGER.error(e.getMessage());
+                }
+            }
+        }
+        return equipmentfamilyList;
+    }
 
     public Integer getCountPkid(String pkid) {
         Integer count = null;

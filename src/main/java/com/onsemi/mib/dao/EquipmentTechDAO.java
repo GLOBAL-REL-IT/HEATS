@@ -191,6 +191,39 @@ public class EquipmentTechDAO {
         return equipmenttechList;
     }
 
+    public List<EquipmentTech> getEquipmentTechList(String eqptTechPkid) {
+        String sql = "SELECT *,DATE_FORMAT(created_date,'%d %M %Y %h:%i %p') AS createdDate, IF(spts_pkid=\"" + eqptTechPkid + "\",\"selected=''\",\"\") AS selected FROM equipment_tech ORDER BY id ASC";
+        List<EquipmentTech> equipmenttechList = new ArrayList<EquipmentTech>();
+        try {
+            PreparedStatement ps = conn.prepareStatement(sql);
+            EquipmentTech equipmenttech;
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                equipmenttech = new EquipmentTech();
+                equipmenttech.setId(rs.getString("id"));
+                equipmenttech.setSptsPkid(rs.getString("spts_pkid"));
+                equipmenttech.setName(rs.getString("name"));
+                equipmenttech.setCreatedBy(rs.getString("created_by"));
+                equipmenttech.setCreatedDate(rs.getString("createdDate"));
+                equipmenttech.setSelected(rs.getString("selected"));
+                equipmenttechList.add(equipmenttech);
+            }
+            rs.close();
+            ps.close();
+        } catch (SQLException e) {
+            LOGGER.error(e.getMessage());
+        } finally {
+            if (conn != null) {
+                try {
+                    conn.close();
+                } catch (SQLException e) {
+                    LOGGER.error(e.getMessage());
+                }
+            }
+        }
+        return equipmenttechList;
+    }
+
     public Integer getCountPkid(String pkid) {
         Integer count = null;
         try {
