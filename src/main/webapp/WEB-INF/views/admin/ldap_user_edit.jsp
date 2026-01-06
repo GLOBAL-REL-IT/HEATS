@@ -159,7 +159,7 @@
                                     </div>
                                 </div>
                                 <div class="row mb-4">
-                                    <label class="col-sm-2 col-md-1 col-form-label fw-semibold" for="subType">Email</label>
+                                    <label class="col-sm-2 col-md-1 col-form-label fw-semibold" for="subType">Active</label>
                                     <div class="col-sm-9 col-md-10">
                                         <div class="row g-2">
                                             <div class="col-sm-6">
@@ -275,12 +275,20 @@
                                         <label class="form-check-label" for="inlineCheckbox1">Delete Eqpt Family</label>
                                     </div>
                                     <div class="form-check form-check-inline">
+                                        <input class="form-check-input" type="checkbox" id="eqptFamilyAddGlobal" name="eqptFamilyAddGlobal" value="Yes" <c:if test="${user.eqptFamilyAddGlobal == 'Yes'}">checked</c:if>>
+                                        <label class="form-check-label" for="inlineCheckbox1">Add Eqpt Family into Global List</label>
+                                    </div>
+                                    <div class="form-check form-check-inline">
                                         <input class="form-check-input" type="checkbox" id="eqptRelTestGroupAdd" name="eqptRelTestGroupAdd" value="Yes" <c:if test="${user.eqptRelTestGroupAdd == 'Yes'}">checked</c:if>>
                                         <label class="form-check-label" for="inlineCheckbox1">Add Eqpt Rel Test Group</label>
                                     </div>
                                     <div class="form-check form-check-inline">
                                         <input class="form-check-input" type="checkbox" id="eqptRelTestGroupDelete" name="eqptRelTestGroupDelete" value="Yes" <c:if test="${user.eqptRelTestGroupDelete == 'Yes'}">checked</c:if>>
                                         <label class="form-check-label" for="inlineCheckbox1">Delete Eqpt Rel Test Group</label>
+                                    </div>
+                                    <div class="form-check form-check-inline">
+                                        <input class="form-check-input" type="checkbox" id="eqptRelTestGroupAddGlobal" name="eqptRelTestGroupAddGlobal" value="Yes" <c:if test="${user.eqptRelTestGroupAddGlobal == 'Yes'}">checked</c:if>>
+                                        <label class="form-check-label" for="inlineCheckbox1">Add Eqpt Rel Test Group into Global List</label>
                                     </div>
                                     <div class="form-check form-check-inline">
                                         <input class="form-check-input" type="checkbox" id="eqptTechAdd" name="eqptTechAdd" value="Yes" <c:if test="${user.eqptTechAdd == 'Yes'}">checked</c:if>>
@@ -298,7 +306,7 @@
                                         <input class="form-check-input" type="checkbox" id="eqptMonDelete" name="eqptMonDelete" value="Yes" <c:if test="${user.eqptMonDelete == 'Yes'}">checked</c:if>>
                                         <label class="form-check-label" for="inlineCheckbox1">Delete Eqpt Monitoring</label>
                                     </div>
-                                        <div class="form-check form-check-inline">
+                                    <div class="form-check form-check-inline">
                                         <input class="form-check-input" type="checkbox" id="eqptViMonAdd" name="eqptViMonAdd" value="Yes" <c:if test="${user.eqptViMonAdd == 'Yes'}">checked</c:if>>
                                         <label class="form-check-label" for="inlineCheckbox1">Add Eqpt VI Monitoring</label>
                                     </div>

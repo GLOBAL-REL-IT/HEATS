@@ -60,6 +60,34 @@ public class LDAPUser {
     private String eqptMonDelete;
     private String eqptViMonAdd;
     private String eqptViMonDelete;
+    private String eqptFamilyAddGlobal;
+    private String eqptRelTestGroupAddGlobal;
+
+    private String requestAccess;
+
+    public String getEqptFamilyAddGlobal() {
+        return eqptFamilyAddGlobal;
+    }
+
+    public void setEqptFamilyAddGlobal(String eqptFamilyAddGlobal) {
+        this.eqptFamilyAddGlobal = eqptFamilyAddGlobal;
+    }
+
+    public String getEqptRelTestGroupAddGlobal() {
+        return eqptRelTestGroupAddGlobal;
+    }
+
+    public void setEqptRelTestGroupAddGlobal(String eqptRelTestGroupAddGlobal) {
+        this.eqptRelTestGroupAddGlobal = eqptRelTestGroupAddGlobal;
+    }
+
+    public String getRequestAccess() {
+        return requestAccess;
+    }
+
+    public void setRequestAccess(String requestAccess) {
+        this.requestAccess = requestAccess;
+    }
 
     public String getItemAdd() {
         return itemAdd;

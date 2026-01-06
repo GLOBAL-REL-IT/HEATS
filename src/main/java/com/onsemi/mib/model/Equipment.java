@@ -36,6 +36,16 @@ public class Equipment {
     private String trayQtyPerZone;
     private String basketQtyPerZone;
 
+    private String selected;
+
+    public String getSelected() {
+        return selected;
+    }
+
+    public void setSelected(String selected) {
+        this.selected = selected;
+    }
+
     public String getId() {
         return id;
     }

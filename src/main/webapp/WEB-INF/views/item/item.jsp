@@ -3863,9 +3863,6 @@
                                             <!-- Row start -->
                                             <div class="row gx-4">
                                                 <div class="mb-3 container-fluid justify-content-start">
-                                                    <!--<button class="btn btn-outline-success me-2" type="button">Pending Registration (BIB/ Bib Card)</button>-->
-                                                    <!--<a href="${contextPath}/hw/item/transaction/" class="btn btn-outline-success me-2" role="button">-->
-                                                <!--<a href="" onclick="myJavaScriptFunction()" class="btn btn-outline-success me-2" role="button">-->
                                                 <c:if test="${userItemMovement == 'Yes'}"><button onclick="goToPage();" class="btn btn-outline-success me-2">
                                                         <i class='bi bi-plus-circle'></i>&nbsp;&nbsp;New Movement</button></c:if>
                                                 </div>
@@ -3895,7 +3892,6 @@
                                             <!-- Row start -->
                                             <div class="row gx-4">
                                                 <div class="mb-3 container-fluid justify-content-start">
-                                                    <!--<button class="btn btn-outline-success me-2" type="button">Pending Registration (BIB/ Bib Card)</button>-->
                                                     <a href="https://mysed-rel-app03:8443/CDARS/wh/whShipping" target="_blank" class="btn btn-outline-success me-2" role="button">
                                                         <i class='bi bi-arrow-up-right-circle'></i>&nbsp;&nbsp;Request Through HIMS</a>
                                                     <a href="${contextPath}/hw/item/ListRetrieveSF" class="btn btn-outline-success me-2" role="button">

@@ -84,6 +84,7 @@ public class Interceptor implements HandlerInterceptor {
             user.setEmail("N/A");
             user.setGroupId("0");
             user.setFirstName(ldapUser.getFirstname());
+            user.setRequestAccess("No");
             //new for UAC
             user.setItemAdd("No");
             user.setItemEdit("No");
@@ -110,6 +111,8 @@ public class Interceptor implements HandlerInterceptor {
             user.setEqptMonDelete("No");
             user.setEqptViMonAdd("No");
             user.setEqptViMonDelete("No");
+            user.setEqptFamilyAddGlobal("No");
+            user.setEqptRelTestGroupAddGlobal("No");
 
             //Set User Session
             userSession.setId(user.getId());
@@ -118,6 +121,7 @@ public class Interceptor implements HandlerInterceptor {
             userSession.setEmail(user.getEmail());
             userSession.setGroup(user.getGroupId());
             userSession.setFirstName(user.getFirstName());
+            userSession.setRequestAccess(user.getRequestAccess());
             //new for UAC
             userSession.setItemAdd(user.getItemAdd());
             userSession.setItemEdit(user.getItemEdit());
@@ -144,6 +148,8 @@ public class Interceptor implements HandlerInterceptor {
             userSession.setEqptMonDelete(user.getEqptMonDelete());
             userSession.setEqptViMonAdd(user.getEqptViMonAdd());
             userSession.setEqptViMonDelete(user.getEqptViMonDelete());
+            userSession.setEqptFamilyAddGlobal(user.getEqptFamilyAddGlobal());
+            userSession.setEqptRelTestGroupAddGlobal(user.getEqptRelTestGroupAddGlobal());
 
         } else {
             //Set Registered User (Remain Using User Model)
@@ -153,6 +159,7 @@ public class Interceptor implements HandlerInterceptor {
             user.setEmail(ldapUser.getEmail());
             user.setGroupId(ldapUser.getGroupId());
             user.setFirstName(ldapUser.getFirstname());
+            user.setRequestAccess(ldapUser.getRequestAccess());
             //new for UAC
             user.setItemAdd(ldapUser.getItemAdd());
             user.setItemEdit(ldapUser.getItemEdit());
@@ -178,7 +185,9 @@ public class Interceptor implements HandlerInterceptor {
             user.setEqptMonDelete(ldapUser.getEqptMonDelete());
             user.setEqptViMonAdd(ldapUser.getEqptViMonAdd());
             user.setEqptViMonDelete(ldapUser.getEqptViMonDelete());
-            
+            user.setEqptFamilyAddGlobal(ldapUser.getEqptFamilyAddGlobal());
+            user.setEqptRelTestGroupAddGlobal(ldapUser.getEqptRelTestGroupAddGlobal());
+
             //Set User Session
             userSession.setId(user.getId());
             userSession.setLoginId(user.getLoginId());
@@ -186,6 +195,7 @@ public class Interceptor implements HandlerInterceptor {
             userSession.setEmail(user.getEmail());
             userSession.setGroup(user.getGroupId());
             userSession.setFirstName(user.getFirstName());
+            userSession.setRequestAccess(user.getRequestAccess());
             //new for UAC
             userSession.setItemAdd(user.getItemAdd());
             userSession.setItemEdit(user.getItemEdit());
@@ -211,6 +221,8 @@ public class Interceptor implements HandlerInterceptor {
             userSession.setEqptMonDelete(user.getEqptMonDelete());
             userSession.setEqptViMonAdd(user.getEqptViMonAdd());
             userSession.setEqptViMonDelete(user.getEqptViMonDelete());
+            userSession.setEqptFamilyAddGlobal(user.getEqptFamilyAddGlobal());
+            userSession.setEqptRelTestGroupAddGlobal(user.getEqptRelTestGroupAddGlobal());
 
         }
 

@@ -29,6 +29,24 @@ public class UserAccessControl {
     private String eqptMonDelete;
     private String eqptViMonAdd;
     private String eqptViMonDelete;
+    private String eqptFamilyAddGlobal;
+    private String eqptRelTestGroupAddGlobal;
+
+    public String getEqptFamilyAddGlobal() {
+        return eqptFamilyAddGlobal;
+    }
+
+    public void setEqptFamilyAddGlobal(String eqptFamilyAddGlobal) {
+        this.eqptFamilyAddGlobal = eqptFamilyAddGlobal;
+    }
+
+    public String getEqptRelTestGroupAddGlobal() {
+        return eqptRelTestGroupAddGlobal;
+    }
+
+    public void setEqptRelTestGroupAddGlobal(String eqptRelTestGroupAddGlobal) {
+        this.eqptRelTestGroupAddGlobal = eqptRelTestGroupAddGlobal;
+    }
 
     public String getId() {
         return id;

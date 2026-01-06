@@ -518,21 +518,24 @@ public class SPTSRequestTest {
 //        }
 //        System.out.println("COUNT Eqpt Booked FOL Files By Pkid..." + getEqptBookedFOLFilesByPkid.length());
         System.out.println("GET BOOKED EQUIPMENT...");
-        JSONObject params0 = new JSONObject();
+//        JSONObject params0 = new JSONObject();
 //        String equipmentID = "H3T 1";
         JSONObject param = new JSONObject();
+//        param.put("sitePKID", "1");
+//        param.put("siteName", "Seremban");
+//        param.put("pkid", "3348");
 //        param.put("equipmentID", "");
 //        param.put("familyName", "");
-//        param.put("relTestGroupName", "HAST");
-//        param.put("active", "0");
-        param.put("sitePKID", "1");
-        param.put("siteName", "Seremban");
-        param.put("equipmentID", "HAS 11A");
-        JSONArray getItemByParam = SPTSWebService.getSptsEqptByParam(param);
-        for (int i = 0; i < getItemByParam.length(); i++) {
-            System.out.println(getItemByParam.getJSONObject(i));
+//        param.put("relTestGroupName", "");
+//        param.put("active", "1");
+//        JSONArray getItemByParam = SPTSWebService.getEqptByPkid(param);
+        JSONObject paramV = new JSONObject();
+        paramV.put("equipmentFamilyName", "(Blue M) Banana");
+        JSONArray getItemByParamV = SPTSWebService.getGlobalFamilyNameByParam(paramV);
+        for (int i = 0; i < getItemByParamV.length(); i++) {
+            System.out.println(getItemByParamV.getJSONObject(i));
         }
-        System.out.println("COUNT BOOKED EQUIPMENT..." + getItemByParam.length());
+        System.out.println("COUNT BOOKED EQUIPMENT..." + getItemByParamV.length());
 
 //        int itempkid = getItemByParam.getJSONObject(0).getInt("PKID");
 //        LOGGER.info("itempkid............." + itempkid);

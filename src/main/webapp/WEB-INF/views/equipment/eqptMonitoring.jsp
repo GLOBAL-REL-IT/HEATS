@@ -116,7 +116,7 @@
                             <i class='bi bi-arrow-bar-left'></i>&nbsp;&nbsp;Back</a>
                     </div>
                 </nav>
-                <div class="col-sm-8 col-12">
+                <div class="col-sm-12 col-12">
                     <!-- Card start -->
                     <div class="card mb-4">
                         <div class="card-header">
@@ -131,12 +131,23 @@
                                     <div class="col-sm-6 col-md-6">
                                         <div class="row g-2">
                                             <div class="col-sm-12">
-                                                <input type="text" class="form-control" id="monitoring" name="monitoring" placeholder="Name" value="" required>
+                                                <c:if test="${userEqptMonAdd == 'Yes'}">
+                                                    <input type="text" class="form-control" id="monitoring" name="monitoring" placeholder="Name" value="" required>
+                                                </c:if>
+                                                <c:if test="${userEqptMonAdd != 'Yes'}">
+                                                    <input type="text" class="form-control" id="monitoring" name="monitoring" placeholder="Name" value="" disabled>
+                                                </c:if>
                                             </div>
                                         </div>
                                     </div>
                                     <div class="col-auto">
-                                        <button type="submit" class="btn btn-primary">Add</button>
+                                        <c:if test="${userEqptMonAdd == 'Yes'}">
+                                            <button type="submit" class="btn btn-primary">Add</button>
+                                        </c:if>
+                                        <c:if test="${userEqptMonAdd != 'Yes'}">
+                                            <button type="submit" class="btn btn-primary disabled">Add</button>
+                                        </c:if>
+                                        
                                     </div>
                                 </div>
                             </form>
@@ -152,7 +163,7 @@
             <!-- Row start -->
             <div class="row gx-4">
 
-                <div class="col-sm-8 col-12">
+                <div class="col-sm-12 col-12">
 
                     <!-- Card start -->
                     <div class="card mb-4">
@@ -188,10 +199,16 @@
                                                         <td><c:out value="${parameterMaster.createdBy}"/></td>
                                                         <td><c:out value="${parameterMaster.createdDate}"/></td>
                                                         <td align="center">
-                                                            <a modaldeleteid="${parameterMaster.id}" title="Delete" data-bs-toggle="modal" data-bs-target="#delete_modal" class="table-link danger group_delete" onclick="modalDelete(this);">
+                                                            <c:if test="${userEqptMonAdd == 'Yes'}">
+                                                                  <a modaldeleteid="${parameterMaster.id}" title="Delete" data-bs-toggle="modal" data-bs-target="#delete_modal" class="table-link danger group_delete" onclick="modalDelete(this);">
                                                                 <i class="bi bi-trash h3" style="color:red"></i>
-                                                                <!--</span>-->
-                                                            </a>
+                                                                 </a>
+                                                            </c:if>
+                                                            <c:if test="${userEqptMonAdd != 'Yes'}">
+                                                                  <a modaldeleteid="${parameterMaster.id}" title="Delete" class="table-link danger group_delete disabled">
+                                                                <i class="bi bi-trash h3" style="color:gray"></i>
+                                                                 </a>
+                                                            </c:if>
                                                         </td>
                                                     </tr>
                                                 </c:forEach>

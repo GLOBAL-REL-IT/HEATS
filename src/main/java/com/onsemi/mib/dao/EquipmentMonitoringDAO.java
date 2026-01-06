@@ -191,6 +191,39 @@ public class EquipmentMonitoringDAO {
         return equipmentmonitoringList;
     }
 
+    public List<EquipmentMonitoring> getEquipmentMonitoringList(String eqptMonPkid) {
+        String sql = "SELECT *,DATE_FORMAT(created_date,'%d %M %Y %h:%i %p') AS createdDate, IF(spts_pkid=\"" + eqptMonPkid + "\",\"selected=''\",\"\") AS selected FROM equipment_monitoring ORDER BY id ASC";
+        List<EquipmentMonitoring> equipmentmonitoringList = new ArrayList<EquipmentMonitoring>();
+        try {
+            PreparedStatement ps = conn.prepareStatement(sql);
+            EquipmentMonitoring equipmentmonitoring;
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                equipmentmonitoring = new EquipmentMonitoring();
+                equipmentmonitoring.setId(rs.getString("id"));
+                equipmentmonitoring.setSptsPkid(rs.getString("spts_pkid"));
+                equipmentmonitoring.setName(rs.getString("name"));
+                equipmentmonitoring.setCreatedBy(rs.getString("created_by"));
+                equipmentmonitoring.setCreatedDate(rs.getString("createdDate"));
+                equipmentmonitoring.setSelected(rs.getString("selected"));
+                equipmentmonitoringList.add(equipmentmonitoring);
+            }
+            rs.close();
+            ps.close();
+        } catch (SQLException e) {
+            LOGGER.error(e.getMessage());
+        } finally {
+            if (conn != null) {
+                try {
+                    conn.close();
+                } catch (SQLException e) {
+                    LOGGER.error(e.getMessage());
+                }
+            }
+        }
+        return equipmentmonitoringList;
+    }
+
     public Integer getCountPkid(String pkid) {
         Integer count = null;
         try {

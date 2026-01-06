@@ -1,9 +1,11 @@
 package com.onsemi.mib.controller;
 
+import com.onsemi.mib.dao.HostnameDAO;
 import com.onsemi.mib.dao.ItemDAO;
 import com.onsemi.mib.dao.LDAPUserDAO;
 import com.onsemi.mib.dao.RetrieveDAO;
 import com.onsemi.mib.dao.SRInventoryMgtDAO;
+import com.onsemi.mib.model.Hostname;
 import com.onsemi.mib.model.InventoryMgt;
 import com.onsemi.mib.model.Item;
 import com.onsemi.mib.model.LDAPUser;
@@ -12,8 +14,11 @@ import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import com.onsemi.mib.model.UserSession;
+import com.onsemi.mib.tools.EmailSender;
 import com.onsemi.mib.tools.QueryResult;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.Hashtable;
@@ -34,6 +39,7 @@ import org.springframework.context.annotation.PropertySource;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -224,12 +230,16 @@ public class HomeController {
                     ldap.setEmail(ldapUserList.get(i).getEmail());
                     ldap.setTitle(ldapUserList.get(i).getTitle());
                     ldap.setGroupId("3");
+                    ldap.setRequestAccess("No");
                     LDAPUserDAO ldapUserDAO = new LDAPUserDAO();
                     QueryResult queryResult = ldapUserDAO.insert(ldap);
 //                    System.out.println("++queryResult : " + queryResult.getGeneratedKey());
                     return "redirect:/";
                 }
 
+            } else if ("3".equals(groupId)) { //return different page if group - fresh user
+//                model.addAttribute("groupId", groupId);
+                return "home/index1";
             }
 
             //Anything for Dashboard
@@ -237,6 +247,67 @@ public class HomeController {
         } else {
             return "home/index";
         }
+    }
+
+    @RequestMapping(value = "/sentAccessRequest/{loginId}", method = {RequestMethod.GET, RequestMethod.POST})
+    public String sentAccessRequest(Model model,
+            HttpServletRequest request,
+            @PathVariable("loginId") String loginId) {
+
+        LDAPUserDAO ldapUserDAO = new LDAPUserDAO();
+        LDAPUser ldapUser = ldapUserDAO.getByLoginId(loginId);
+        
+        //update user table
+        LDAPUser lu = new LDAPUser();
+        lu.setRequestAccess("Yes");
+        lu.setLoginId(loginId);
+        ldapUserDAO = new LDAPUserDAO();
+        QueryResult q = ldapUserDAO.updateRequestAccessByLoginId(lu);
+
+        //send email to global-rel-it to manual sync global table via SPTS 
+        List<String> emails = new ArrayList<String>();
+        emails.add("global-rel-it@onsemi.com"); // add email requestor to the list
+
+        String[] myArray = new String[emails.size()];
+        String[] emailTo = emails.toArray(myArray);
+        //get current date and time
+        LocalDateTime instance = LocalDateTime.now();
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm");
+        String formattedString = formatter.format(instance); //15-02-2022 12:43
+
+        //gethostname
+        HostnameDAO hostnameD = new HostnameDAO();
+        Hostname h = hostnameD.getHostnameFlagZero();
+        String hostname = h.getHostname();
+
+        //send INFORMATION email
+        LOGGER.info("######################### START EMAIL TO PIC ########################### ");
+        EmailSender emailSender = new EmailSender();
+        emailSender.htmlEmailTable(
+                servletContext,
+                "", //user name requestor
+                //                    to, //to
+                emailTo,
+                "New User Request", //subject
+                "<br />"
+                + "Pls be informed that new user access has been requested thru HEATS."
+                + "<br /> "
+                + "<br /> "
+                + "Login ID: " + loginId
+                + "<br /> "
+                + "Full Name: " + ldapUser.getFirstname() + " " + ldapUser.getLastname()
+                + "<br /> "
+                + "Title: " + ldapUser.getTitle()
+                + "<br /> "
+                + "Request Date: " + formattedString
+                + "<br /> "
+                + "<br /> "
+                + "Please click <a href=\"http://" + hostname + "/HEATS/admin/user/edit/" + ldapUser.getId() + " \">HERE</a> to update user account."
+                + "<br /> "
+                + "<br />Thank you." //msg
+        );
+
+        return "redirect:/";
     }
 
     @RequestMapping(value = "/srReady", method = {RequestMethod.GET, RequestMethod.POST})

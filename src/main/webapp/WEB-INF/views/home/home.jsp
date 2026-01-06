@@ -686,6 +686,9 @@
                     <div class="card mb-4">
                         <div class="card-header">
                             <h5 class="card-title">Hardware Readiness Report 2024/2025</h5>
+                            <!--<h6>*Cycle Time Calculation : number of HW release to production divide by number of RMS_Event (Status In Process)</h6>-->
+                            <p style="font-size: 12px; color: blue;">
+                                *Cycle Time : Days taken to release hardware to production from the first day the RMS_Event with 'In Process' status comes in.</p>
                         </div>
                         <div class="card-body">
                             <div id="chartsample"></div>
@@ -753,6 +756,8 @@
     </s:layout-component>
     <s:layout-component name="page_js_inline">
         <script>
+
+            
 
             //RMS Return from Loading
             $(function () {
@@ -1013,6 +1018,7 @@
                 chart: {
                     height: 350,
                     type: 'line',
+                    background: '#FCFCEB',
                     stacked: false
                 },
                 dataLabels: {
@@ -1115,17 +1121,17 @@
                         },
                         axisBorder: {
                             show: true,
-                            color: '#FEB019'
+                            color: '#C48204'
                         },
                         labels: {
                             style: {
-                                colors: '#FEB019'
+                                colors: '#C48204'
                             }
                         },
                         title: {
                             text: "Cycle Time (Readiness Day)",
                             style: {
-                                color: '#FEB019'
+                                color: '#C48204'
                             }
                         }
                     }

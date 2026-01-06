@@ -7,6 +7,35 @@ public class EquipmentFamily {
     private String familyName;
     private String createdBy;
     private String createdDate;
+    
+    private String sptsGuid;
+    private String inGlobalOrNot;
+
+    public String getSptsGuid() {
+        return sptsGuid;
+    }
+
+    public void setSptsGuid(String sptsGuid) {
+        this.sptsGuid = sptsGuid;
+    }
+
+    public String getInGlobalOrNot() {
+        return inGlobalOrNot;
+    }
+
+    public void setInGlobalOrNot(String inGlobalOrNot) {
+        this.inGlobalOrNot = inGlobalOrNot;
+    }
+    
+    private String selected;
+
+    public String getSelected() {
+        return selected;
+    }
+
+    public void setSelected(String selected) {
+        this.selected = selected;
+    }
 
     public String getCreatedBy() {
         return createdBy;

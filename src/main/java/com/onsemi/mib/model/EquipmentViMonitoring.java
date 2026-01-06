@@ -8,6 +8,16 @@ public class EquipmentViMonitoring {
     private String createdBy;
     private String createdDate;
 
+    private String selected;
+
+    public String getSelected() {
+        return selected;
+    }
+
+    public void setSelected(String selected) {
+        this.selected = selected;
+    }
+
     public String getCreatedBy() {
         return createdBy;
     }

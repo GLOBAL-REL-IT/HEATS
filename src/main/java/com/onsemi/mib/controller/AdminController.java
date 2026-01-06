@@ -608,7 +608,9 @@ public class AdminController {
             @RequestParam(required = false) String eqptMonAdd,
             @RequestParam(required = false) String eqptMonDelete,
             @RequestParam(required = false) String eqptViMonAdd,
-            @RequestParam(required = false) String eqptViMonDelete
+            @RequestParam(required = false) String eqptViMonDelete,
+            @RequestParam(required = false) String eqptFamilyAddGlobal,
+            @RequestParam(required = false) String eqptRelTestGroupAddGlobal
     ) {
         UserAccessControl uac = new UserAccessControl();
         uac.setUserId(userId);
@@ -636,6 +638,8 @@ public class AdminController {
         uac.setEqptMonDelete(eqptMonDelete);
         uac.setEqptViMonAdd(eqptViMonAdd);
         uac.setEqptViMonDelete(eqptViMonDelete);
+        uac.setEqptFamilyAddGlobal(eqptFamilyAddGlobal);
+        uac.setEqptRelTestGroupAddGlobal(eqptRelTestGroupAddGlobal);
 
         UserAccessControlDAO uacD = new UserAccessControlDAO();
         int count = uacD.getCountByUserId(userId);

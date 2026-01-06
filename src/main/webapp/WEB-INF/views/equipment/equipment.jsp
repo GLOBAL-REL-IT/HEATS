@@ -113,7 +113,7 @@
                         <a href="${contextPath}/equipment/viMonitoring/add" class="btn btn-outline-success me-2" role="button">
                             <i class='bi bi-list-task'></i>&nbsp;&nbsp;Eqpt VI Monitoring</a>
 
-                        <a href="${contextPath}/hw/item/query" class="btn btn-outline-success me-2" role="button">
+                        <a href="${contextPath}/equipment/query" class="btn btn-outline-success me-2" role="button">
                             <i class='bi bi-search'></i>&nbsp;&nbsp;Query</a>
 
                     </div>
@@ -141,6 +141,7 @@
                                                     </c:forEach>
                                                 </select>
                                                 <input type="hidden" class="form-control" id="userEqptEdit" name="userEqptEdit" placeholder="" value="${userEqptEdit}" readonly>
+                                                <input type="hidden" class="form-control" id="relTestGroupTitle" name="relTestGroupTitle" placeholder="" value="${relTestGroupTitle}" readonly>
                                             </div>
                                         </div>
                                     </div>
@@ -195,20 +196,20 @@
                                                 </tr>
                                             </thead>
                                             <tbody>
-                                                <c:forEach items="${eqptList}" var="request" varStatus="requestLoop">
-                                                    <tr>
-                                                        <td><c:out value="${request.relTestGroup}"/></td>
-                                                        <td><c:out value="${request.familyName}"/></td>
-                                                        <td><c:out value="${request.equipmentId}"/></td>
-                                                        <td><c:out value="${request.eqptTypeName}"/></td>
-                                                        <td><c:out value="${request.statusName}"/></td>
-                                                        <td>
-                                                            <a modaldeleteid="${request.sptsPkid}" class="btn btn-sm me-1" title="Detail" data-toggle="Detail" onclick="modalDelete(this);">
-                                                                <!--Detail-->
-                                                                <i class="bi bi-box-arrow-in-right h3"></i></a>
-                                                        </td>
-                                                    </tr>
-                                                </c:forEach>
+                                            <c:forEach items="${eqptList}" var="request" varStatus="requestLoop">
+                                                <tr>
+                                                    <td><c:out value="${request.relTestGroup}"/></td>
+                                                <td><c:out value="${request.familyName}"/></td>
+                                                <td><c:out value="${request.equipmentId}"/></td>
+                                                <td><c:out value="${request.eqptTypeName}"/></td>
+                                                <td><c:out value="${request.statusName}"/></td>
+                                                <td>
+                                                    <a modaldeleteid="${request.sptsPkid}" class="btn btn-sm me-1" title="Detail" data-toggle="Detail" onclick="modalDelete(this);">
+                                                        <!--Detail-->
+                                                        <i class="bi bi-box-arrow-in-right h3"></i></a>
+                                                </td>
+                                                </tr>
+                                            </c:forEach>
                                             </tbody>
                                         </table>
                                     </div>
@@ -233,77 +234,91 @@
                                     <div class="tab-pane fade show active" id="oneAAA" role="tabpanel">
                                         <form class="row gx-3 needs-validation" role="form" action="${contextPath}/equipment/update" method="post" novalidate>
                                             <c:if test="${not empty relTestGroupTitle}"><div class="mb-3 container-fluid justify-content-start">
+                                                    <c:if test="${userEqptEdit == 'Yes'}"><a id="editButton" onclick="editDetail();" role="button" title="Edit" class="btn btn-outline-warning me-2">
+                                                            <i class="bi bi-pencil" style="color:blue"></i>&nbsp;&nbsp;Edit</a></c:if>
+                                                    <c:if test="${userEqptEdit == 'Yes'}"><a id="cancelEditButton" onclick="cancelEditDetail();" role="button" title="Cancel Edit" class="btn btn-outline-warning me-2" hidden>
+                                                            <i class="bi bi-pencil" style="color:blue"></i>&nbsp;&nbsp;Cancel Edit</a></c:if>
                                                     <c:if test="${userEqptDelete == 'Yes'}"><a onclick="scrapModal();" role="button" title="Scrap" data-bs-toggle="modal" data-bs-target="#delete_modal" class="btn btn-outline-danger me-2">
                                                             <i class="bi bi-trash3" style="color:red"></i>&nbsp;&nbsp;Scrap</a></c:if>
                                                 </div></c:if>
-                                                <!-- Row start -->
-                                                <div class="form-group required col-xl-2 col-sm-12 col-12">
-                                                    <div class="mb-3">
-                                                        <!--<div class="mb-3 was-validated">-->
-                                                        <label for="eqptId" class="form-label">Equipment ID</label>
-                                                        <div class="input input-group">
-                                                            <!--<span class="input-group-text"><i class="bi bi-person"></i></span>-->
-                                                            <input type="text" class="input form-control" id="eqptId" name="eqptId" placeholder="" value="" readonly required >
-                                                            <!--<div class="valid-feedback">Looks good!</div>-->
-                                                            <!--<div class="invalid-feedback">Please provide a valid zip.</div>-->
-                                                        </div>
+                                            <!-- Row start -->
+                                            <div class="form-group required col-xl-4 col-sm-12 col-12">
+                                                <div class="mb-3">
+                                                    <!--<div class="mb-3 was-validated">-->
+                                                    <label for="eqptId" class="form-label">Equipment ID</label>
+                                                    <div class="input input-group">
+                                                        <!--<span class="input-group-text"><i class="bi bi-person"></i></span>-->
+                                                        <input type="text" class="input form-control" id="eqptId" name="eqptId" placeholder="" value="" readonly required >
+                                                        <input type="hidden" class="form-control" id="itemPKID" name="itemPKID" placeholder="" value="" readonly>
+                                                        <input type="hidden" class="form-control" id="mibId" name="mibId" placeholder="" value="" readonly>
+                                                        <!--<div class="valid-feedback">Looks good!</div>-->
+                                                        <!--<div class="invalid-feedback">Please provide a valid zip.</div>-->
                                                     </div>
                                                 </div>
-                                                <div class="form-group required col-xl-2 col-sm-12 col-12">
-                                                    <div class="mb-3">
-                                                        <label for="familyName" class="form-label">Family Name</label>
-                                                        <div class="input input-group">
-                                                            <!--<span class="input-group-text"><i class="bi bi-person"></i></span>-->
-                                                            <input type="text" class="input form-control" id="familyName" name="familyName" placeholder="" value="" readonly required>
-                                                            <input type="hidden" class="form-control" id="itemPKID" name="itemPKID" placeholder="" value="" readonly>
-                                                            <input type="hidden" class="form-control" id="mibId" name="mibId" placeholder="" value="" readonly>
-                                                        </div>
+                                            </div>
+                                            <div class="form-group required col-xl-4 col-sm-12 col-12">
+                                                <div class="mb-3">
+                                                    <label for="familyName" class="form-label">Family Name</label>
+                                                    <div class="input input-group">
+                                                        <select class="input js-example-tags" id="familyName" name="familyName"
+                                                                title="Select Eqpt Manufacturer" data-live-search="true" style="width: 100%" disabled required>
+                                                            <option></option>
+                                                            <c:forEach items="${eqptFamilyList}" var="invInner">
+                                                                <option value="${invInner.sptsPkid}" ${invInner.selected}>${invInner.familyName}</option>
+                                                            </c:forEach>
+                                                        </select>
                                                     </div>
                                                 </div>
-                                                <div class="form-group required col-xl-4 col-sm-12 col-12">
-                                                    <div class="mb-3">
-                                                        <label for="relTestGroup" class="form-label">Rel Test Group</label>
-                                                        <div class="input input-group">
-                                                            <!--<span class="input-group-text"><i class="bi bi-envelope"></i></span>-->
-                                                            <input type="text" class="input form-control" id="relTestGroup" name="relTestGroup" placeholder="" value="" readonly required>
-                                                        </div>
+                                            </div>
+                                            <div class="form-group required col-xl-4 col-sm-12 col-12">
+                                                <div class="mb-3">
+                                                    <label for="relTestGroupName" class="form-label">Rel Test Group</label>
+                                                    <div class="input input-group">
+                                                        <select class="input js-example-tags" id="relTestGroupName" name="relTestGroupName"
+                                                                title="Select Eqpt Manufacturer" data-live-search="true" style="width: 100%" disabled required>
+                                                            <option></option>
+                                                            <c:forEach items="${eqptRelTestGroupList}" var="invInner">
+                                                                <option value="${invInner.sptsPkid}" ${invInner.selected}>${invInner.relTestGroupName}</option>
+                                                            </c:forEach>
+                                                        </select>
                                                     </div>
                                                 </div>
-                                                <div class="form-group required col-xl-4 col-sm-12 col-12">
-                                                    <div class="mb-3">
-                                                        <label for="eqptType" class="form-label">Equipment Type</label>
-                                                        <div class="input input-group">
-                                                            <select class="input js-example-tags" id="eqptType" name="eqptType"
-                                                                    title="Select Eqpt Type" data-live-search="true" style="width: 100%" readonly>
-                                                                <option></option>
-                                                                <option value="1">Life</option>
-                                                                <option value="2">Environment</option>
-                                                            </select>
-                                                        </div>
+                                            </div>
+                                            <div class="form-group required col-xl-4 col-sm-12 col-12">
+                                                <div class="mb-3">
+                                                    <label for="eqptType" class="form-label">Equipment Type</label>
+                                                    <div class="input input-group">
+                                                        <select class="input js-example-tags" id="eqptType" name="eqptType"
+                                                                title="Select Eqpt Type" data-live-search="true" style="width: 100%" disabled onchange="toggleLinkVisibility()">
+                                                            <option></option>
+                                                            <option value="1">Life</option>
+                                                            <option value="2">Environment</option>
+                                                        </select>
                                                     </div>
                                                 </div>
-                                                <div class="form-group required col-xl-4 col-sm-12 col-12">
-                                                    <div class="mb-3">
-                                                        <label for="eqptStatus" class="form-label">Equipment Status</label>
-                                                        <div class="input input-group">
-                                                            <select class="input js-example-tags" id="eqptStatus" name="eqptStatus"
-                                                                    title="Select Eqpt Status" data-live-search="true" style="width: 100%" readonly>
-                                                                <option></option>
-                                                                <option value="1">Active</option>
-                                                                <option value="0">Inactive</option>
-                                                            </select>
-                                                        </div>
+                                            </div>
+                                            <div class="form-group required col-xl-4 col-sm-12 col-12">
+                                                <div class="mb-3">
+                                                    <label for="eqptStatus" class="form-label">Equipment Status</label>
+                                                    <div class="input input-group">
+                                                        <select class="input js-example-tags" id="eqptStatus" name="eqptStatus"
+                                                                title="Select Eqpt Status" data-live-search="true" style="width: 100%" disabled>
+                                                            <option></option>
+                                                            <option value="1">Active</option>
+                                                            <option value="0">Inactive</option>
+                                                        </select>
                                                     </div>
                                                 </div>
-                                                <div class="col-xl-4 col-sm-12 col-12">
-                                                    <div class="mb-3">
-                                                        <label for="eqptManufacturer" class="form-label">Equipment Manufacturer</label>
-                                                        <div class="input input-group">
-                                                            <select class="input js-example-tags" id="eqptManufacturer" name="eqptManufacturer"
-                                                                    title="Select Eqpt Manufacturer" data-live-search="true" style="width: 100%" readonly>
-                                                                <option></option>
-                                                            <c:forEach items="${eqptManufacturer}" var="invInner">
-                                                                <option value="${invInner.eqptManufacturer}" ${invInner.selected}>${invInner.eqptManufacturer}</option>
+                                            </div>
+                                            <div class="col-xl-4 col-sm-12 col-12">
+                                                <div class="mb-3">
+                                                    <label for="eqptManufacturer" class="form-label">Equipment Manufacturer</label>
+                                                    <div class="input input-group">
+                                                        <select class="input js-example-tags" id="eqptManufacturer" name="eqptManufacturer"
+                                                                title="Select Eqpt Manufacturer" data-live-search="true" style="width: 100%" disabled>
+                                                            <option></option>
+                                                            <c:forEach items="${eqptManufacturerList}" var="invInner">
+                                                                <option value="${invInner.equipmentManufacturer}" ${invInner.selected}>${invInner.equipmentManufacturer}</option>
                                                             </c:forEach>
                                                         </select>
                                                     </div>
@@ -314,10 +329,10 @@
                                                     <label for="eqptModel" class="form-label">Equipment Model</label>
                                                     <div class="input input-group">
                                                         <select class="input js-example-tags" id="eqptModel" name="eqptModel"
-                                                                title="Select Eqpt Model" data-live-search="true" style="width: 100%" readonly>
+                                                                title="Select Eqpt Model" data-live-search="true" style="width: 100%" disabled>
                                                             <option></option>
-                                                            <c:forEach items="${listeqptModel}" var="invInner">
-                                                                <option value="${invInner.eqptModel}" ${invInner.selected}>${invInner.eqptModel}</option>
+                                                            <c:forEach items="${eqptModelList}" var="invInner">
+                                                                <option value="${invInner.equipmentModel}" ${invInner.selected}>${invInner.equipmentModel}</option>
                                                             </c:forEach>
                                                         </select>
                                                     </div>
@@ -328,10 +343,10 @@
                                                     <label for="eqptTech" class="form-label">Equipment Tech</label>
                                                     <div class="input input-group">
                                                         <select class="input js-example-tags" id="eqptTech" name="eqptTech"
-                                                                title="Select Eqpt Tech" data-live-search="true" style="width: 100%" readonly>
+                                                                title="Select Eqpt Tech" data-live-search="true" style="width: 100%" disabled>
                                                             <option></option>
-                                                            <c:forEach items="${listEqptTech}" var="invInner">
-                                                                <option value="${invInner.sptsPkid}" ${invInner.selected}>${invInner.eqptTech}</option>
+                                                            <c:forEach items="${eqptTechList}" var="invInner">
+                                                                <option value="${invInner.sptsPkid}" ${invInner.selected}>${invInner.name}</option>
                                                             </c:forEach>
                                                         </select>
                                                     </div>
@@ -341,13 +356,11 @@
                                                 <div class="mb-3">
                                                     <label for="eqptMon" class="form-label">Equipment Monitoring</label>
                                                     <div class="input input-group">
-                                                        <!--<span class="input-group-text"><i class="bi bi-person"></i></span>-->
-                                                        <!--<input type="text" class="form-control" id="manufacturer" name="manufacturer" placeholder="" value="" readonly>-->
                                                         <select class="input js-example-tags" id="eqptMon" name="eqptMon"
-                                                                title="Select Eqpt Monitoring" data-live-search="true" style="width: 100%" readonly>
+                                                                title="Select Eqpt Monitoring" data-live-search="true" style="width: 100%" disabled>
                                                             <option></option>
-                                                            <c:forEach items="${listEqptMon}" var="invInner">
-                                                                <option value="${invInner.sptsPkid}" ${invInner.selected}>${invInner.eqptMon}</option>
+                                                            <c:forEach items="${eqptMonList}" var="invInner">
+                                                                <option value="${invInner.sptsPkid}" ${invInner.selected}>${invInner.name}</option>
                                                             </c:forEach>
                                                         </select>
                                                     </div>
@@ -357,13 +370,11 @@
                                                 <div class="mb-3">
                                                     <label for="eqptViMon" class="form-label">Equipment VI Monitoring</label>
                                                     <div class="input input-group">
-                                                        <!--<span class="input-group-text"><i class="bi bi-person"></i></span>-->
-                                                        <!--<input type="text" class="form-control" id="manufacturer" name="manufacturer" placeholder="" value="" readonly>-->
                                                         <select class="input js-example-tags" id="eqptViMon" name="eqptViMon"
-                                                                title="Select Eqpt VI Monitoring" data-live-search="true" style="width: 100%" readonly>
+                                                                title="Select Eqpt VI Monitoring" data-live-search="true" style="width: 100%" disabled>
                                                             <option></option>
-                                                            <c:forEach items="${listEqptViMon}" var="invInner">
-                                                                <option value="${invInner.sptsPkid}" ${invInner.selected}>${invInner.eqptViMon}</option>
+                                                            <c:forEach items="${eqptViMonList}" var="invInner">
+                                                                <option value="${invInner.sptsPkid}" ${invInner.selected}>${invInner.name}</option>
                                                             </c:forEach>
                                                         </select>
                                                     </div>
@@ -378,60 +389,73 @@
                                                     </div>
                                                 </div>
                                             </div>
-                                            <div class="col-xl-2 col-sm-12 col-12">
+                                            <div class="col-xl-2 col-sm-12 col-12" id="slotQtyDiv">
                                                 <div class="mb-3">
                                                     <label for="slotQty" class="form-label">Slot Qty</label>
                                                     <div class="input input-group">
                                                         <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
-                                                        <input type="number" class="input form-control" id="slotQty" name="slotQty" placeholder="" value="" readonly>
+                                                        <input type="number" class="input form-control" id="slotQty" name="slotQty" placeholder="" value="" readonly min="0">
                                                     </div>
                                                 </div>
                                             </div>
-                                            <div class="col-xl-2 col-sm-12 col-12">
+                                            <div class="col-xl-2 col-sm-12 col-12" id="rackQtyDiv">
                                                 <div class="mb-3">
                                                     <label for="rackQty" class="form-label">Rack Total</label>
                                                     <div class="input input-group">
-                                                        <input type="number" class="input form-control" id="rackQty" name="rackQty" placeholder="" value="" readonly>
+                                                        <input type="number" class="input form-control" id="rackQty" name="rackQty" placeholder="" value="" readonly min="0">
                                                     </div>
                                                 </div>
                                             </div>
-                                            <div class="col-xl-2 col-sm-12 col-12">
+                                            <div class="col-xl-2 col-sm-12 col-12" id="zonePerRackDiv">
                                                 <div class="mb-3">
                                                     <label for="zonePerRack" class="form-label">Zone per Rack</label>
                                                     <div class="input input-group">
-                                                        <input type="number" class="input form-control" id="zonePerRack" name="zonePerRack" placeholder="" value="" readonly>
+                                                        <input type="number" class="input form-control" id="zonePerRack" name="zonePerRack" placeholder="" value="" readonly min="0">
                                                     </div>
                                                 </div>
                                             </div>
-                                            <div class="col-xl-2 col-sm-12 col-12">
+                                            <div class="col-xl-2 col-sm-12 col-12" id="trayQtyPerRackDiv">
                                                 <div class="mb-3">
                                                     <label for="trayQtyPerRack" class="form-label">Tray Qty per Rack</label>
                                                     <div class="input input-group">
-                                                        <input type="number" class="input form-control" id="trayQtyPerRack" name="trayQtyPerRack" placeholder="" value="" readonly>
+                                                        <input type="number" class="input form-control" id="trayQtyPerRack" name="trayQtyPerRack" placeholder="" value="" readonly min="0">
                                                     </div>
                                                 </div>
                                             </div>
-                                            <div class="col-xl-2 col-sm-12 col-12">
+                                            <div class="col-xl-2 col-sm-12 col-12" id="basketQtyPerRackDiv">
                                                 <div class="mb-3">
                                                     <label for="basketQtyPerRack" class="form-label">Crocodile Qty per Rack</label>
                                                     <div class="input input-group">
-                                                        <input type="number" class="input form-control" id="basketQtyPerRack" name="basketQtyPerRack" placeholder="" value="" readonly>
+                                                        <input type="number" class="input form-control" id="basketQtyPerRack" name="basketQtyPerRack" placeholder="" value="" readonly min="0">
                                                     </div>
                                                 </div>
                                             </div>
-                                            <div class="col-xl-2 col-sm-12 col-12">
+                                            <div class="col-xl-2 col-sm-12 col-12" id="trayQtyPerZoneDiv">
                                                 <div class="mb-3">
                                                     <label for="trayQtyPerZone" class="form-label">Tray Qty per Zone</label>
                                                     <div class="input input-group">
-                                                        <input type="number" class="input form-control" id="trayQtyPerZone" name="trayQtyPerZone" placeholder="" value="" readonly>
+                                                        <input type="number" class="input form-control" id="trayQtyPerZone" name="trayQtyPerZone" placeholder="" value="" readonly min="0">
                                                     </div>
                                                 </div>
                                             </div>
-                                            <div class="col-xl-2 col-sm-12 col-12">
+                                            <div class="col-xl-2 col-sm-12 col-12" id="basketQtyPerZoneDiv">
                                                 <div class="mb-3">
                                                     <label for="basketQtyPerZone" class="form-label">Crocodile Qty per Zone</label>
                                                     <div class="input input-group">
-                                                        <input type="number" class="input form-control" id="basketQtyPerZone" name="basketQtyPerZone" placeholder="" value="" readonly>
+                                                        <input type="number" class="input form-control" id="basketQtyPerZone" name="basketQtyPerZone" placeholder="" value="" readonly min="0">
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="form-group required col-xl-3 col-sm-12 col-12">
+                                                <div class="mb-3">
+                                                    <label for="eqptType" class="form-label">CBMS Equipment</label>
+                                                    <div class="input input-group">
+                                                        <select class="input js-example-tags" id="cbmsType" name="cbmsType"
+                                                                title="Select Eqpt Type" data-live-search="true" style="width: 100%" disabled>
+                                                            <option></option>
+                                                            <option value="1">Yes</option>
+                                                            <option value="0">No</option>
+                                                        </select>
                                                     </div>
                                                 </div>
                                             </div>
@@ -448,240 +472,324 @@
                                                     <div class="input input-group">
                                                         <span class="input input-group-text"><i class="bi bi-pencil"></i></span>
                                                         <textarea class="input form-control" id="remarks" name="remarks" placeholder="Enter Message"
-                                                                  rows="3" readonly></textarea>
+                                                                  rows="3" disabled></textarea>
                                                     </div>
                                                 </div>
                                             </div>
 
                                             <div class="d-flex justify-content-end gap-2">
-                                                <c:if test="${userEqptEdit == 'Yes'}"><button type="submit" class="btn btn-primary">Update</button></c:if>
-                                                </div>
-                                                <!-- Form actions end -->
-                                            </form>
-                                        </div> 
-                                        <!--end div for 1st tab-->
-                                    </div>
-                                    <!--end div for tab content-->
+                                                <c:if test="${userEqptEdit == 'Yes'}"><button id="updateButton" type="submit" class="btn btn-primary" disabled>Update</button></c:if>
+                                            </div>
+                                            <!-- Form actions end -->
+                                        </form>
+                                    </div> 
+                                    <!--end div for 1st tab-->
                                 </div>
-                                <!--end div for tab container-->
+                                <!--end div for tab content-->
                             </div>
+                            <!--end div for tab container-->
                         </div>
                     </div>
                 </div>
-                <!-- Row end -->
-
             </div>
-            <!-- Content wrapper end -->
+            <!-- Row end -->
 
-            <!-- App Footer start -->
-            <div class="app-footer">
-                <img class="img3" src="${contextPath}/resources/onsemi logo.webp" alt="onsemi">
+        </div>
+        <!-- Content wrapper end -->
+
+        <!-- App Footer start -->
+        <div class="app-footer">
+            <img class="img3" src="${contextPath}/resources/onsemi logo.webp" alt="onsemi">
             <span>© HEATs 2025</span>
         </div>
-    </div>
-</s:layout-component>
-<s:layout-component name="page_js">
-    <script src="${contextPath}/resources/vendor/DataTables/customitem/jquery-3.7.1.min.js"></script>
-    <script src="${contextPath}/resources/vendor/DataTables/customitem/bootstrap.bundle.min.js"></script>
-    <script src="${contextPath}/resources/vendor/DataTables/customitem/dataTables.js"></script>
+        </div>
+    </s:layout-component>
+    <s:layout-component name="page_js">
+        <script src="${contextPath}/resources/vendor/DataTables/customitem/jquery-3.7.1.min.js"></script>
+        <script src="${contextPath}/resources/vendor/DataTables/customitem/bootstrap.bundle.min.js"></script>
+        <script src="${contextPath}/resources/vendor/DataTables/customitem/dataTables.js"></script>
 
-    <!-- Data Tables -->
-    <script src="${contextPath}/resources/statflow/vendor/datatables/dataTables.min.js"></script>
-    <script src="${contextPath}/resources/statflow/vendor/datatables/dataTables.bootstrap.min.js"></script>
+        <!-- Data Tables -->
+        <script src="${contextPath}/resources/statflow/vendor/datatables/dataTables.min.js"></script>
+        <script src="${contextPath}/resources/statflow/vendor/datatables/dataTables.bootstrap.min.js"></script>
 
-    <!-- Custom Data tables -->
-    <script src="${contextPath}/resources/statflow/vendor/datatables/custom/custom-datatables.js"></script>
+        <!-- Custom Data tables -->
+        <script src="${contextPath}/resources/statflow/vendor/datatables/custom/custom-datatables.js"></script>
 
-    <!-- DataTable Buttons -->
-    <script src="${contextPath}/resources/statflow/vendor/datatables/buttons/dataTables.buttons.min.js"></script>
-    <script src="${contextPath}/resources/statflow/vendor/datatables/buttons/jszip.min.js"></script>
-    <script src="${contextPath}/resources/statflow/vendor/datatables/buttons/dataTables.buttons.min.js"></script>
-    <script src="${contextPath}/resources/statflow/vendor/datatables/buttons/pdfmake.min.js"></script>
-    <script src="${contextPath}/resources/statflow/vendor/datatables/buttons/vfs_fonts.js"></script>
-    <script src="${contextPath}/resources/statflow/vendor/datatables/buttons/buttons.html5.min.js"></script>
-    <script src="${contextPath}/resources/statflow/vendor/datatables/buttons/buttons.print.min.js"></script>
-    <script src="${contextPath}/resources/statflow/vendor/datatables/buttons/buttons.colVis.min.js"></script>
+        <!-- DataTable Buttons -->
+        <script src="${contextPath}/resources/statflow/vendor/datatables/buttons/dataTables.buttons.min.js"></script>
+        <script src="${contextPath}/resources/statflow/vendor/datatables/buttons/jszip.min.js"></script>
+        <script src="${contextPath}/resources/statflow/vendor/datatables/buttons/dataTables.buttons.min.js"></script>
+        <script src="${contextPath}/resources/statflow/vendor/datatables/buttons/pdfmake.min.js"></script>
+        <script src="${contextPath}/resources/statflow/vendor/datatables/buttons/vfs_fonts.js"></script>
+        <script src="${contextPath}/resources/statflow/vendor/datatables/buttons/buttons.html5.min.js"></script>
+        <script src="${contextPath}/resources/statflow/vendor/datatables/buttons/buttons.print.min.js"></script>
+        <script src="${contextPath}/resources/statflow/vendor/datatables/buttons/buttons.colVis.min.js"></script>
 
-    <!-- Bootstrap Select JS -->
-    <script src="${contextPath}/resources/statflow/vendor/bs-select/bs-select.min.js"></script>
-    <script src="${contextPath}/resources/statflow/vendor/bs-select/bs-select-custom.js"></script>
-</s:layout-component>
-<s:layout-component name="page_js_inline">
-    <script>
+        <!-- Bootstrap Select JS -->
+        <script src="${contextPath}/resources/statflow/vendor/bs-select/bs-select.min.js"></script>
+        <script src="${contextPath}/resources/statflow/vendor/bs-select/bs-select-custom.js"></script>
+    </s:layout-component>
+    <s:layout-component name="page_js_inline">
+        <script>
 
-                                                        // Fetch all the forms we want to apply custom Bootstrap validation styles to
-                                                        const forms = document.querySelectorAll('.needs-validation');
+                                                                    // Fetch all the forms we want to apply custom Bootstrap validation styles to
+                                                                    const forms = document.querySelectorAll('.needs-validation');
 
-                                                        // Loop over them and prevent submission
-                                                        Array.prototype.slice.call(forms).forEach((form) => {
-                                                            form.addEventListener('submit', (event) => {
-                                                                if (!form.checkValidity()) {
-                                                                    event.preventDefault();
-                                                                    event.stopPropagation();
-                                                                }
-                                                                form.classList.add('was-validated');
-                                                            }, false);
-                                                        });
+                                                                    // Loop over them and prevent submission
+                                                                    Array.prototype.slice.call(forms).forEach((form) => {
+                                                                        form.addEventListener('submit', (event) => {
+                                                                            if (!form.checkValidity()) {
+                                                                                event.preventDefault();
+                                                                                event.stopPropagation();
+                                                                            }
+                                                                            form.classList.add('was-validated');
+                                                                        }, false);
+                                                                    });
 
-                                                        $(document).ready(function () {
-                                                            $('.js-example-basic-single').select2();
-                                                            $(".js-example-tags").select2({
-                                                                tags: true
-                                                            });
-                                                            //                                                        $('input[readonly]').removeAttr('readonly');
+                                                                    $(document).ready(function () {
+                                                                        $('.js-example-basic-single').select2();
+                                                                        $(".js-example-tags").select2({
+                                                                            tags: true
+                                                                        });
+                                                                    });
 
-                                                            if ($('#userEqptEdit').val() === "Yes") {
-                                                                $("#itemType2").prop("readonly", false);
-                                                                $("#subType").prop("readonly", false);
-                                                                $("#itemPKID").prop("readonly", false);
-                                                                $("#itemId").prop("readonly", false);
-                                                                $("#mibId").prop("readonly", false);
-                                                                $("#itemName").prop("readonly", false);
-                                                                $("#aluHrs").prop("readonly", false);
-
-                                                                $("#assemblyId").prop("readonly", false);
-                                                                $("#rack").prop("readonly", false);
-                                                                $("#shelf").prop("readonly", false);
-                                                                $("#unitCost").prop("readonly", false);
-                                                                $("#totalCost").prop("readonly", false);
-                                                                //                                                        $("#status").prop("readonly", false);
-                                                                $("#minQty").prop("readonly", false);
-                                                                $("#maxQty").prop("readonly", false);
-                                                                $("#pmWw1").prop("readonly", false);
-                                                                $("#pmWw2").prop("readonly", false);
-                                                                $("#expirationDate").prop("readonly", false);
-                                                                $("#isCritical").prop("readonly", false);
-                                                                //                                                            $("#isConsumable").prop("readonly", false);
-                                                                $("#downtimeValue").prop("readonly", false);
-                                                                $("#downtimeUnit").prop("readonly", false);
-                                                                $("#implementationCost").prop("readonly", false);
-                                                                $("#manpowerValue").prop("readonly", false);
-                                                                $("#manpowerUnit").prop("readonly", false);
-                                                                $("#complexity").prop("readonly", false);
-                                                                $("#model").prop("readonly", false);
-                                                                $("#manufacturer").prop("readonly", false);
-                                                                $("#equipmentType").prop("readonly", false);
-                                                                $("#equipmentModel").prop("readonly", false);
-                                                                $("#equipmentManufacturer").prop("readonly", false);
-                                                                $("#onHandQty").prop("readonly", false);
-                                                                $("#productionQty").prop("readonly", false);
-                                                                $("#productionStagingQty").prop("readonly", false);
-                                                                $("#repairQty").prop("readonly", false);
-                                                                $("#quarantineQty").prop("readonly", false);
-                                                                $("#otherQty").prop("readonly", false);
-                                                                $("#vendorQty").prop("readonly", false);
-                                                                $("#otherOnsemiQty").prop("readonly", false);
-                                                                $("#externalCleanQty").prop("readonly", false);
-                                                                $("#externalRecleanQty").prop("readonly", false);
-                                                                $("#internalCleanQty").prop("readonly", false);
-                                                                $("#internalRecleanQty").prop("readonly", false);
-                                                                $("#storageFactoryQty").prop("readonly", false);
-                                                                $("#stressType").prop("readonly", false);
-                                                                $("#remarks").prop("readonly", false);
-                                                                $("#isConsumable").prop("disabled", false);
-                                                            }
-                                                        });
-
-                                                        function scrapModal() {
-                                                            var itemPKID = $("#itemPKID").val();
-                                                            var itemId = $("#itemId").val();
-                                                            var itemType = $("#itemType").val();
-                                                            var deleteUrl = "${contextPath}/admin/user/delete2222/" + deleteId;
-                                                            var deleteMsg = "Are you want to scrap ";
-                                                            $("#delete_modal .modal-body").html(deleteMsg);
-                                                            $("#modal_delete_button").attr("href", deleteUrl);
-                                                        }
-
-
-                                                        $(function () {
-                                                            $("#scrollVertical2").DataTable({
-                                                                scrollY: "680px",
-                                                                scrollCollapse: false,
-                                                                paging: false,
-                                                                bInfo: false,
-                                                                dom: 'Bfrtip',
-                                                                buttons: ["copy", "csv", "print"],
-                                                                columnDefs: [{
-                                                                        targets: [0, 1, 3, 4], visible: false
-                                                                    }]
-                                                            });
-                                                        });
-
-                                                        function modalDelete(e) {
-                                                            var pkId = $(e).attr("modaldeleteid");
-                                                            $.ajax({
-                                                                url: '${contextPath}/equipment/detail', // Replace with your controller URL
-                                                                type: 'GET',
-                                                                data: {pkID: pkId},
-                                                                dataType: 'json',
-                                                                success: function (data) {
-
-                                                                    // Populate form fields with received data
-                                                                    $("#itemType2").val(data.itemType);
-                                                                    $("#subType").val(data.subType);
-                                                                    $("#itemPKID").val(data.sptsPkid);
-                                                                    $("#itemId").val(data.itemId);
-                                                                    $("#mibId").val(data.id);
-                                                                    $("#itemName").val(data.itemName);
-                                                                    $("#aluHrs").val(data.aluHrs);
-
-                                                                    //                                                                $("#assemblyId").val(data.assemblyId);
-                                                                    $('#assemblyId').val(data.assemblyId).trigger('change');
-                                                                    $("#rack").val(data.rack);
-                                                                    $("#shelf").val(data.shelf);
-                                                                    $("#unitCost").val(data.unitCost);
-                                                                    $("#totalCost").val(data.totalCost);
-                                                                    $("#status").val(data.status);
-                                                                    $("#minQty").val(data.minQty);
-                                                                    $("#maxQty").val(data.maxQty);
-                                                                    $("#pmWw1").val(data.PmWw1);
-                                                                    $("#pmWw2").val(data.PmWw2);
-                                                                    $("#expirationDate").val(data.expirationDate);
-                                                                    $("#isCritical").val(data.isCritical);
-                                                                    //                                                                $("#isConsumable").val(data.isConsumeable);
-                                                                    $("#downtimeValue").val(data.downtimeValue);
-                                                                    $("#downtimeUnit").val(data.downtimeUnit);
-                                                                    $("#implementationCost").val(data.implementationCost);
-                                                                    $("#manpowerValue").val(data.manpowerValue);
-                                                                    $("#manpowerUnit").val(data.manpowerUnit);
-                                                                    $("#complexity").val(data.complexity);
-                                                                    $("#model").val(data.model).trigger('change');
-                                                                    $("#manufacturer").val(data.manufacturer).trigger('change');
-                                                                    $("#equipmentType").val(data.equipmentType).trigger('change');
-                                                                    $("#equipmentModel").val(data.equipmentModel).trigger('change');
-                                                                    $("#equipmentManufacturer").val(data.equipmentManufacturer).trigger('change');
-                                                                    $("#onHandQty").val(data.onHandQty);
-                                                                    $("#productionQty").val(data.productionQty);
-                                                                    $("#productionStagingQty").val(data.productionStagingQty);
-                                                                    $("#repairQty").val(data.repairQty);
-                                                                    $("#quarantineQty").val(data.quarantineQty);
-                                                                    $("#otherQty").val(data.otherQty);
-                                                                    $("#vendorQty").val(data.vendorQty);
-                                                                    $("#otherOnsemiQty").val(data.OtherONQty);
-                                                                    $("#externalCleanQty").val(data.externalCleanQty);
-                                                                    $("#externalRecleanQty").val(data.externalRecleanQty);
-                                                                    $("#internalCleanQty").val(data.internalCleanQty);
-                                                                    $("#internalRecleanQty").val(data.internalRecleanQty);
-                                                                    $("#storageFactoryQty").val(data.storageFactoryQty);
-                                                                    $("#totalQty").val(data.totalQty);
-                                                                    $("#remarks").val(data.remarks);
-                                                                    $("#itemUsage").val(data.itemUsage);
-                                                                    $("#stressType").val(data.stressType).trigger('change');
-
-                                                                    if (data.isConsumable === "true") {
-                                                                        $("#isConsumable").attr('checked', true);
-                                                                    } else {
-                                                                        $("#isConsumable").attr('checked', false);
+                                                                    function editDetail() {
+                                                                        $("#eqptId").prop("readonly", false);
+                                                                        $("#familyName").prop("disabled", false);
+                                                                        $("#relTestGroupName").prop("disabled", false);
+                                                                        $("#eqptType").prop("disabled", false);
+                                                                        $("#eqptStatus").prop("disabled", false);
+                                                                        $("#eqptManufacturer").prop("disabled", false);
+                                                                        $("#eqptModel").prop("disabled", false);
+                                                                        $("#eqptTech").prop("disabled", false);
+                                                                        $("#eqptMon").prop("disabled", false);
+                                                                        $("#eqptViMon").prop("disabled", false);
+                                                                        $("#eqptCapability").prop("readonly", false);
+                                                                        $("#slotQty").prop("readonly", false);
+                                                                        $("#rackQty").prop("readonly", false);
+                                                                        $("#zonePerRack").prop("readonly", false);
+                                                                        $("#trayQtyPerRack").prop("readonly", false);
+                                                                        $("#basketQtyPerRack").prop("readonly", false);
+                                                                        $("#trayQtyPerZone").prop("readonly", false);
+                                                                        $("#basketQtyPerZone").prop("readonly", false);
+                                                                        $("#cbmsType").prop("disabled", false);
+                                                                        $("#remarks").prop("disabled", false);
+                                                                        $("#updateButton").prop("disabled", false);
+                                                                        $("#cancelEditButton").prop("hidden", false);
+                                                                        $("#editButton").prop("disabled", true);
+                                                                        $("#editButton").prop("hidden", true);
                                                                     }
 
-                                                                },
-                                                                error: function (jqXHR, textStatus, errorThrown) {
-                                                                    console.error("Error loading data: " + textStatus, errorThrown);
-                                                                }
-                                                            });
-                                                            document.querySelector('#tab-oneAAA').click();
-                                                        }
+                                                                    function cancelEditDetail() {
+                                                                        $("#eqptId").prop("readonly", true);
+                                                                        $("#familyName").prop("disabled", true);
+                                                                        $("#relTestGroupName").prop("disabled", true);
+                                                                        $("#eqptType").prop("disabled", true);
+                                                                        $("#eqptStatus").prop("disabled", true);
+                                                                        $("#eqptManufacturer").prop("disabled", true);
+                                                                        $("#eqptModel").prop("disabled", true);
+                                                                        $("#eqptTech").prop("disabled", true);
+                                                                        $("#eqptMon").prop("disabled", true);
+                                                                        $("#eqptViMon").prop("disabled", true);
+                                                                        $("#eqptCapability").prop("readonly", true);
+                                                                        $("#slotQty").prop("readonly", true);
+                                                                        $("#rackQty").prop("readonly", true);
+                                                                        $("#zonePerRack").prop("readonly", true);
+                                                                        $("#trayQtyPerRack").prop("readonly", true);
+                                                                        $("#basketQtyPerRack").prop("readonly", true);
+                                                                        $("#trayQtyPerZone").prop("readonly", true);
+                                                                        $("#basketQtyPerZone").prop("readonly", true);
+                                                                        $("#cbmsType").prop("disabled", true);
+                                                                        $("#remarks").prop("disabled", true);
+                                                                        $("#updateButton").prop("disabled", true);
+                                                                        $("#editButton").prop("disabled", false);
+                                                                        $("#editButton").prop("hidden", false);
+                                                                        $("#cancelEditButton").prop("hidden", true);
+                                                                    }
 
-    </script>
-</s:layout-component>
+                                                                    function scrapModal() {
+                                                                        var itemPKID = $("#itemPKID").val();
+                                                                        var mibId = $("#mibId").val();
+                                                                        var itemId = $("#eqptId").val();
+                                                                        //                                                        var deleteUrl = "${contextPath}/hw/delete/" + deleteId;
+                                                                        if (itemPKID) {
+                                                                            var deleteUrl = "${contextPath}/equipment/delete/" + itemPKID + "/" + mibId;
+                                                                            var deleteMsg = "Are you sure want to scrap " + itemId + "?";
+                                                                            $("#delete_modal .modal-body").html(deleteMsg);
+                                                                            $("#modal_delete_button").attr("href", deleteUrl);
+                                                                        } else {
+                                                                            var deleteUrl = "";
+                                                                            var deleteMsg = "No Eqpt Selected.";
+                                                                            $("#delete_modal .modal-body").html(deleteMsg);
+                                                                            $("#modal_delete_button").attr("href", deleteUrl);
+                                                                        }
+                                                                    }
+
+
+                                                                    $(function () {
+                                                                        $("#scrollVertical2").DataTable({
+                                                                            scrollY: "680px",
+                                                                            scrollCollapse: false,
+                                                                            paging: false,
+                                                                            bInfo: false,
+                                                                            dom: 'Bfrtip',
+                                                                            buttons: ["copy", "csv", "print"],
+                                                                            columnDefs: [{
+                                                                                    targets: [0, 1, 3, 4], visible: false
+                                                                                }]
+                                                                        });
+                                                                    });
+
+                                                                    function modalDelete(e) {
+                                                                        var pkId = $(e).attr("modaldeleteid");
+                                                                        $.ajax({
+                                                                            url: '${contextPath}/equipment/detail', // Replace with your controller URL
+                                                                            type: 'GET',
+                                                                            data: {pkID: pkId},
+                                                                            dataType: 'json',
+                                                                            success: function (data) {
+
+                                                                                // Populate form fields with received data
+                                                                                $("#itemPKID").val(data.sptsPkid);
+                                                                                $("#mibId").val(data.id);
+                                                                                $("#eqptId").val(data.equipmentId);
+                                                                                $("#familyName").val(data.familyPkid).trigger('change');
+                                                                                $("#relTestGroupName").val(data.relTestGroupPkid).trigger('change');
+                                                                                $("#eqptType").val(data.equipmentType).trigger('change');
+                                                                                $("#eqptStatus").val(data.currentStatus).trigger('change');
+                                                                                $("#eqptManufacturer").val(data.equipmentManufacturer).trigger('change');
+                                                                                $("#eqptModel").val(data.equipmentModel).trigger('change');
+                                                                                $('#eqptTech').val(data.equipTechPkid).trigger('change');
+                                                                                $("#eqptMon").val(data.equipMonitoringPkid).trigger('change');
+                                                                                $("#eqptViMon").val(data.viMonitoringPkid).trigger('change');
+                                                                                $("#eqptCapability").val(data.equipCapability);
+                                                                                $("#slotQty").val(data.slot);
+                                                                                $("#rackQty").val(data.rackTotal);
+                                                                                $("#zonePerRack").val(data.zonePerRack);
+                                                                                $("#trayQtyPerRack").val(data.trayQtyPerRack);
+                                                                                $("#basketQtyPerRack").val(data.basketQtyPerRack);
+                                                                                $("#trayQtyPerZone").val(data.trayQtyPerZone);
+                                                                                $("#basketQtyPerZone").val(data.basketQtyPerZone);
+                                                                                $("#cbmsType").val(data.cbmsType).trigger('change');
+                                                                                $("#remarks").val(data.remarks);
+                                                                                
+                                                                                const zonePerRack = document.getElementById('zonePerRack');
+                                                                        const trayQtyPerRack = document.getElementById('trayQtyPerRack');
+                                                                        const basketQtyPerRack = document.getElementById('basketQtyPerRack');
+                                                                        const trayQtyPerZone = document.getElementById('trayQtyPerZone');
+                                                                        const basketQtyPerZone = document.getElementById('basketQtyPerZone');
+
+                                                                        if (zonePerRack.value === 0) {
+                                                                            trayQtyPerRack.disabled = false;
+                                                                            basketQtyPerRack.disabled = false;
+                                                                            trayQtyPerZone.disabled = true;
+                                                                            basketQtyPerZone.disabled = true;
+                                                                        } else if (zonePerRack.value > 0) {
+                                                                            trayQtyPerRack.disabled = true;
+                                                                            basketQtyPerRack.disabled = true;
+                                                                            trayQtyPerZone.disabled = false;
+                                                                            basketQtyPerZone.disabled = false;
+                                                                        } else {
+                                                                            trayQtyPerRack.disabled = false;
+                                                                            basketQtyPerRack.disabled = false;
+                                                                            trayQtyPerZone.disabled = true;
+                                                                            basketQtyPerZone.disabled = true;
+                                                                        }
+
+                                                                            },
+                                                                            error: function (jqXHR, textStatus, errorThrown) {
+                                                                                console.error("Error loading data: " + textStatus, errorThrown);
+                                                                            }
+                                                                        });
+                                                                        document.querySelector('#tab-oneAAA').click();
+
+                                                                        
+                                                                    }
+
+                                                                    function toggleLinkVisibility() {
+                                                                        var select = document.getElementById('eqptType');
+                                                                        var slotQtyDiv = document.getElementById('slotQtyDiv');
+                                                                        var rackQtyDiv = document.getElementById('rackQtyDiv');
+                                                                        var zonePerRackDiv = document.getElementById('zonePerRackDiv');
+                                                                        var trayQtyPerRackDiv = document.getElementById('trayQtyPerRackDiv');
+                                                                        var basketQtyPerRackDiv = document.getElementById('basketQtyPerRackDiv');
+                                                                        var trayQtyPerZoneDiv = document.getElementById('trayQtyPerZoneDiv');
+                                                                        var basketQtyPerZoneDiv = document.getElementById('basketQtyPerZoneDiv');
+                                                                        var slotQty = document.getElementById('slotQty');
+                                                                        var rackQty = document.getElementById('rackQty');
+                                                                        var zonePerRack = document.getElementById('zonePerRack');
+                                                                        var trayQtyPerRack = document.getElementById('trayQtyPerRack');
+                                                                        var basketQtyPerRack = document.getElementById('basketQtyPerRack');
+                                                                        var trayQtyPerZone = document.getElementById('trayQtyPerZone');
+                                                                        var basketQtyPerZone = document.getElementById('basketQtyPerZone');
+
+                                                                        if (select.value === "1") {
+                                                                            slotQtyDiv.hidden = false; // Show 
+                                                                            rackQtyDiv.hidden = true;
+                                                                            zonePerRackDiv.hidden = true;
+                                                                            trayQtyPerRackDiv.hidden = true;
+                                                                            basketQtyPerRackDiv.hidden = true;
+                                                                            trayQtyPerZoneDiv.hidden = true;
+                                                                            basketQtyPerZoneDiv.hidden = true;
+
+
+                                                                        } else if (select.value === "2") {
+                                                                            slotQtyDiv.hidden = true; // Hide
+                                                                            rackQtyDiv.hidden = false;
+                                                                            zonePerRackDiv.hidden = false;
+                                                                            trayQtyPerRackDiv.hidden = false;
+                                                                            basketQtyPerRackDiv.hidden = false;
+                                                                            trayQtyPerZoneDiv.hidden = false;
+                                                                            basketQtyPerZoneDiv.hidden = false;
+
+                                                                        } else {
+                                                                            slotQtyDiv.hidden = true; // Hide
+                                                                            rackQtyDiv.hidden = true;
+                                                                            zonePerRackDiv.hidden = true;
+                                                                            trayQtyPerRackDiv.hidden = true;
+                                                                            basketQtyPerRackDiv.hidden = true;
+                                                                            trayQtyPerZoneDiv.hidden = true;
+                                                                            basketQtyPerZoneDiv.hidden = true;
+
+                                                                        }
+                                                                    }
+
+                                                                    const zonePerRack = document.getElementById('zonePerRack');
+                                                                    const trayQtyPerRack = document.getElementById('trayQtyPerRack');
+                                                                    const basketQtyPerRack = document.getElementById('basketQtyPerRack');
+                                                                    const trayQtyPerZone = document.getElementById('trayQtyPerZone');
+                                                                    const basketQtyPerZone = document.getElementById('basketQtyPerZone');
+
+                                                                    // Add an event listener for the 'input' event
+                                                                    zonePerRack.addEventListener('input', function () {
+                                                                        if (zonePerRack.value == 0) {
+                                                                            trayQtyPerRack.disabled = false;
+                                                                            basketQtyPerRack.disabled = false;
+                                                                            trayQtyPerZone.disabled = true;
+                                                                            basketQtyPerZone.disabled = true;
+                                                                            
+                                                                            trayQtyPerZone.value = 0;
+                                                                            basketQtyPerZone.value = 0;
+                                                                            
+                                                                        } else if (zonePerRack.value > 0) {
+                                                                            trayQtyPerRack.disabled = true;
+                                                                            basketQtyPerRack.disabled = true;
+                                                                            trayQtyPerZone.disabled = false;
+                                                                            basketQtyPerZone.disabled = false;
+                                                                            
+                                                                            trayQtyPerRack.value = 0;
+                                                                            basketQtyPerRack.value = 0;
+                                                                            
+                                                                        } else {
+                                                                            trayQtyPerRack.disabled = false;
+                                                                            basketQtyPerRack.disabled = false;
+                                                                            trayQtyPerZone.disabled = true;
+                                                                            basketQtyPerZone.disabled = true;
+                                                                        }
+                                                                    });
+
+
+        </script>
+    </s:layout-component>
 </s:layout-render>

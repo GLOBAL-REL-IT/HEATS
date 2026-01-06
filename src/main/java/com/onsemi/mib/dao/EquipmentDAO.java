@@ -83,7 +83,11 @@ public class EquipmentDAO {
         QueryResult queryResult = new QueryResult();
         try {
             PreparedStatement ps = conn.prepareStatement(
-                    "UPDATE equipment SET spts_pkid = ?, equipment_id = ?, family_pkid = ?, rel_test_group_pkid = ?, current_status = ?, equipment_type = ?, equipment_manufacturer = ?, equipment_model = ?, cbms_type = ?, remarks = ?, equip_tech_pkid = ?, equip_capability = ?, equip_monitoring_pkid = ?, vi_monitoring_pkid = ?, created_by = ?, created_date = ?, flag = ? WHERE id = ?"
+                    "UPDATE equipment SET spts_pkid = ?, equipment_id = ?, family_pkid = ?, rel_test_group_pkid = ?, "
+                    + "current_status = ?, equipment_type = ?, equipment_manufacturer = ?, equipment_model = ?, "
+                    + "cbms_type = ?, remarks = ?, equip_tech_pkid = ?, equip_capability = ?, equip_monitoring_pkid = ?, "
+                    + "vi_monitoring_pkid = ?, flag = ?, slot_qty = ?, rack_qty = ?, zone_per_rack = ?, tray_qty_per_rack = ?, "
+                    + "basket_qty_per_rack = ?, tray_qty_per_zone = ?, basket_qty_per_zone = ? WHERE id = ?"
             );
             ps.setString(1, equipment.getSptsPkid());
             ps.setString(2, equipment.getEquipmentId());
@@ -99,10 +103,15 @@ public class EquipmentDAO {
             ps.setString(12, equipment.getEquipCapability());
             ps.setString(13, equipment.getEquipMonitoringPkid());
             ps.setString(14, equipment.getViMonitoringPkid());
-            ps.setString(15, equipment.getCreatedBy());
-            ps.setString(16, equipment.getCreatedDate());
-            ps.setString(17, equipment.getFlag());
-            ps.setString(18, equipment.getId());
+            ps.setString(15, equipment.getFlag());
+            ps.setString(16, equipment.getSlot());
+            ps.setString(17, equipment.getRackTotal());
+            ps.setString(18, equipment.getZonePerRack());
+            ps.setString(19, equipment.getTrayQtyPerRack());
+            ps.setString(20, equipment.getBasketQtyPerRack());
+            ps.setString(21, equipment.getTrayQtyPerZone());
+            ps.setString(22, equipment.getBasketQtyPerZone());
+            ps.setString(23, equipment.getId());
             queryResult.setResult(ps.executeUpdate());
             ps.close();
         } catch (SQLException e) {
@@ -236,6 +245,65 @@ public class EquipmentDAO {
         return equipment;
     }
 
+    public Equipment getEquipmentBySptsPkid(String pkid) {
+        String sql = "SELECT eq.*, fa.family_name, rel.rel_test_group_name, "
+                + "IF(eq.current_status = '1', 'Active','Inactive') AS statusName, IF(eq.equipment_type = '1', 'Life','Environment') AS eqptType "
+                + "FROM equipment eq "
+                + "LEFT JOIN equipment_family fa ON fa.spts_pkid = eq.family_pkid "
+                + "LEFT JOIN equipment_rel_test_group rel ON rel.spts_pkid = eq.rel_test_group_pkid "
+                + "WHERE eq.spts_pkid = '" + pkid + "'";
+        Equipment equipment = null;
+        try {
+            PreparedStatement ps = conn.prepareStatement(sql);
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                equipment = new Equipment();
+                equipment.setId(rs.getString("id"));
+                equipment.setSptsPkid(rs.getString("spts_pkid"));
+                equipment.setEquipmentId(rs.getString("equipment_id"));
+                equipment.setFamilyPkid(rs.getString("family_pkid"));
+                equipment.setRelTestGroupPkid(rs.getString("rel_test_group_pkid"));
+                equipment.setCurrentStatus(rs.getString("current_status"));
+                equipment.setEquipmentType(rs.getString("equipment_type"));
+                equipment.setEquipmentManufacturer(rs.getString("equipment_manufacturer"));
+                equipment.setEquipmentModel(rs.getString("equipment_model"));
+                equipment.setCbmsType(rs.getString("cbms_type"));
+                equipment.setRemarks(rs.getString("remarks"));
+                equipment.setEquipTechPkid(rs.getString("equip_tech_pkid"));
+                equipment.setEquipCapability(rs.getString("equip_capability"));
+                equipment.setEquipMonitoringPkid(rs.getString("equip_monitoring_pkid"));
+                equipment.setViMonitoringPkid(rs.getString("vi_monitoring_pkid"));
+                equipment.setCreatedBy(rs.getString("created_by"));
+                equipment.setCreatedDate(rs.getString("created_date"));
+                equipment.setFlag(rs.getString("flag"));
+                equipment.setFamilyName(rs.getString("fa.family_name"));
+                equipment.setRelTestGroup(rs.getString("rel.rel_test_group_name"));
+                equipment.setStatusName(rs.getString("statusName"));
+                equipment.setEqptTypeName(rs.getString("eqptType"));
+                equipment.setSlot(rs.getString("slot_qty"));
+                equipment.setRackTotal(rs.getString("rack_qty"));
+                equipment.setZonePerRack(rs.getString("zone_per_rack"));
+                equipment.setTrayQtyPerRack(rs.getString("tray_qty_per_rack"));
+                equipment.setBasketQtyPerRack(rs.getString("basket_qty_per_rack"));
+                equipment.setTrayQtyPerZone(rs.getString("tray_qty_per_zone"));
+                equipment.setBasketQtyPerZone(rs.getString("basket_qty_per_zone"));
+            }
+            rs.close();
+            ps.close();
+        } catch (SQLException e) {
+            LOGGER.error(e.getMessage());
+        } finally {
+            if (conn != null) {
+                try {
+                    conn.close();
+                } catch (SQLException e) {
+                    LOGGER.error(e.getMessage());
+                }
+            }
+        }
+        return equipment;
+    }
+
     public List<Equipment> getEquipmentList() {
         String sql = "SELECT * FROM equipment ORDER BY id ASC";
         List<Equipment> equipmentList = new ArrayList<Equipment>();
@@ -335,6 +403,99 @@ public class EquipmentDAO {
         return equipmentList;
     }
 
+    public List<Equipment> getEqptId(String eqptId) {
+        String sql = "SELECT DISTINCT(eq.equipment_id) AS eqptId, IF(eq.equipment_id=\"" + eqptId + "\",\"selected=''\",\"\") AS selected "
+                + "FROM equipment eq WHERE eq.equipment_id <> '' "
+                + "ORDER BY eq.equipment_id";
+        List<Equipment> equipmentList = new ArrayList<Equipment>();
+        try {
+            PreparedStatement ps = conn.prepareStatement(sql);
+            Equipment equipment;
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                equipment = new Equipment();
+                equipment.setEquipmentId(rs.getString("eqptId"));
+                equipment.setSelected(rs.getString("selected"));
+                equipmentList.add(equipment);
+            }
+            rs.close();
+            ps.close();
+        } catch (SQLException e) {
+            LOGGER.error(e.getMessage());
+        } finally {
+            if (conn != null) {
+                try {
+                    conn.close();
+                } catch (SQLException e) {
+                    LOGGER.error(e.getMessage());
+                }
+            }
+        }
+        return equipmentList;
+    }
+
+    public List<Equipment> getEqptManufacturer(String eqptManufacturer) {
+        String sql = "SELECT DISTINCT(eq.equipment_manufacturer) AS eqptManufacturer, IF(eq.equipment_manufacturer=\"" + eqptManufacturer + "\",\"selected=''\",\"\") AS selected "
+                + "FROM equipment eq WHERE eq.equipment_manufacturer <> '' "
+                + "ORDER BY eq.equipment_manufacturer";
+        List<Equipment> equipmentList = new ArrayList<Equipment>();
+        try {
+            PreparedStatement ps = conn.prepareStatement(sql);
+            Equipment equipment;
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                equipment = new Equipment();
+                equipment.setEquipmentManufacturer(rs.getString("eqptManufacturer"));
+                equipment.setSelected(rs.getString("selected"));
+                equipmentList.add(equipment);
+            }
+            rs.close();
+            ps.close();
+        } catch (SQLException e) {
+            LOGGER.error(e.getMessage());
+        } finally {
+            if (conn != null) {
+                try {
+                    conn.close();
+                } catch (SQLException e) {
+                    LOGGER.error(e.getMessage());
+                }
+            }
+        }
+        return equipmentList;
+    }
+
+    public List<Equipment> getEqptModel(String eqptModel) {
+        String sql = "SELECT DISTINCT(eq.equipment_model) AS eqptModel, IF(eq.equipment_model=\"" + eqptModel + "\",\"selected=''\",\"\") AS selected "
+                + "FROM equipment eq WHERE eq.equipment_model <> '' "
+                + "ORDER BY eq.equipment_model";
+        List<Equipment> equipmentList = new ArrayList<Equipment>();
+        try {
+            PreparedStatement ps = conn.prepareStatement(sql);
+            Equipment equipment;
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                equipment = new Equipment();
+                equipment.setEquipmentModel(rs.getString("eqptModel"));
+                equipment.setSelected(rs.getString("selected"));
+                equipmentList.add(equipment);
+            }
+            rs.close();
+            ps.close();
+        } catch (SQLException e) {
+            LOGGER.error(e.getMessage());
+        } finally {
+            if (conn != null) {
+                try {
+                    conn.close();
+                } catch (SQLException e) {
+                    LOGGER.error(e.getMessage());
+                }
+            }
+        }
+        return equipmentList;
+    }
+
     public Integer getCountPkid(String pkid) {
         Integer count = null;
         try {
@@ -360,5 +521,64 @@ public class EquipmentDAO {
             }
         }
         return count;
+    }
+
+    public List<Equipment> getEquipmentforQuery(String query) {
+        String sql = query;
+        List<Equipment> equipmentList = new ArrayList<Equipment>();
+        try {
+            PreparedStatement ps = conn.prepareStatement(sql);
+            Equipment equipment;
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                equipment = new Equipment();
+                equipment.setId(rs.getString("eq.id"));
+                equipment.setSptsPkid(rs.getString("eq.spts_pkid"));
+                equipment.setEquipmentId(rs.getString("eq.equipment_id"));
+                equipment.setFamilyPkid(rs.getString("eq.family_pkid"));
+                equipment.setRelTestGroupPkid(rs.getString("eq.rel_test_group_pkid"));
+                equipment.setCurrentStatus(rs.getString("eq.current_status"));
+                equipment.setEquipmentType(rs.getString("eq.equipment_type"));
+                equipment.setEquipmentManufacturer(rs.getString("eq.equipment_manufacturer"));
+                equipment.setEquipmentModel(rs.getString("eq.equipment_model"));
+                equipment.setRemarks(rs.getString("eq.remarks"));
+                equipment.setEquipTechPkid(rs.getString("eq.equip_tech_pkid"));
+                equipment.setEquipCapability(rs.getString("eq.equip_capability"));
+                equipment.setEquipMonitoringPkid(rs.getString("eq.equip_monitoring_pkid"));
+                equipment.setViMonitoringPkid(rs.getString("eq.vi_monitoring_pkid"));
+                equipment.setCreatedBy(rs.getString("eq.created_by"));
+                equipment.setCreatedDate(rs.getString("eq.created_date"));
+                equipment.setFlag(rs.getString("eq.flag"));
+                equipment.setFamilyName(rs.getString("familyName"));
+                equipment.setRelTestGroup(rs.getString("relTestGroup"));
+                equipment.setStatusName(rs.getString("statusName"));
+                equipment.setEqptTypeName(rs.getString("eqptType"));
+                equipment.setEqptTech(rs.getString("eqptTech"));
+                equipment.setEqptMon(rs.getString("eqptMon"));
+                equipment.setEqptViMon(rs.getString("eqptViMon"));
+                equipment.setCbmsType(rs.getString("cbmsType"));
+                equipment.setSlot(rs.getString("eq.slot_qty"));
+                equipment.setRackTotal(rs.getString("eq.rack_qty"));
+                equipment.setZonePerRack(rs.getString("eq.zone_per_rack"));
+                equipment.setTrayQtyPerRack(rs.getString("eq.tray_qty_per_rack"));
+                equipment.setBasketQtyPerRack(rs.getString("eq.basket_qty_per_rack"));
+                equipment.setTrayQtyPerZone(rs.getString("eq.tray_qty_per_zone"));
+                equipment.setBasketQtyPerZone(rs.getString("eq.basket_qty_per_zone"));
+                equipmentList.add(equipment);
+            }
+            rs.close();
+            ps.close();
+        } catch (SQLException e) {
+            LOGGER.error(e.getMessage());
+        } finally {
+            if (conn != null) {
+                try {
+                    conn.close();
+                } catch (SQLException e) {
+                    LOGGER.error(e.getMessage());
+                }
+            }
+        }
+        return equipmentList;
     }
 }

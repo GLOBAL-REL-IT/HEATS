@@ -159,8 +159,36 @@ public class EquipmentRelTestGroupDAO {
         return equipmentrelTestGroup;
     }
 
+    public EquipmentRelTestGroup getEquipmentRelTestGroupByRelTestGroupName(String relTestGroup) {
+        String sql = "SELECT * FROM equipment_rel_test_group WHERE rel_test_group_name = '" + relTestGroup + "'";
+        EquipmentRelTestGroup equipmentrelTestGroup = null;
+        try {
+            PreparedStatement ps = conn.prepareStatement(sql);
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                equipmentrelTestGroup = new EquipmentRelTestGroup();
+                equipmentrelTestGroup.setId(rs.getString("id"));
+                equipmentrelTestGroup.setSptsPkid(rs.getString("spts_pkid"));
+                equipmentrelTestGroup.setRelTestGroupName(rs.getString("rel_test_group_name"));
+            }
+            rs.close();
+            ps.close();
+        } catch (SQLException e) {
+            LOGGER.error(e.getMessage());
+        } finally {
+            if (conn != null) {
+                try {
+                    conn.close();
+                } catch (SQLException e) {
+                    LOGGER.error(e.getMessage());
+                }
+            }
+        }
+        return equipmentrelTestGroup;
+    }
+
     public List<EquipmentRelTestGroup> getEquipmentRelTestGroupList() {
-        String sql = "SELECT *,DATE_FORMAT(created_date,'%d %M %Y %h:%i %p') AS createdDate FROM equipment_rel_test_group ORDER BY id ASC";
+        String sql = "SELECT *,DATE_FORMAT(created_date,'%d %M %Y %h:%i %p') AS createdDate FROM equipment_rel_test_group ORDER BY rel_test_group_name ASC";
         List<EquipmentRelTestGroup> equipmentrelTestGroupList = new ArrayList<EquipmentRelTestGroup>();
         try {
             PreparedStatement ps = conn.prepareStatement(sql);
@@ -173,6 +201,75 @@ public class EquipmentRelTestGroupDAO {
                 equipmentrelTestGroup.setRelTestGroupName(rs.getString("rel_test_group_name"));
                 equipmentrelTestGroup.setCreatedBy(rs.getString("created_by"));
                 equipmentrelTestGroup.setCreatedDate(rs.getString("createdDate"));
+                equipmentrelTestGroupList.add(equipmentrelTestGroup);
+            }
+            rs.close();
+            ps.close();
+        } catch (SQLException e) {
+            LOGGER.error(e.getMessage());
+        } finally {
+            if (conn != null) {
+                try {
+                    conn.close();
+                } catch (SQLException e) {
+                    LOGGER.error(e.getMessage());
+                }
+            }
+        }
+        return equipmentrelTestGroupList;
+    }
+
+    public List<EquipmentRelTestGroup> getEquipmentRelTestGroupListLeftJoinGlobalTable() {
+        String sql = "SELECT ef.*, gf.spts_guid, IF(ef.rel_test_group_name = gf.rel_test_group_name, 'Yes','No') AS globalOrNot, DATE_FORMAT(ef.created_date,'%d %M %Y %h:%i %p') AS createdDate "
+                + "FROM equipment_rel_test_group ef LEFT JOIN equipment_global_rel_test_group gf ON ef.rel_test_group_name = gf.rel_test_group_name "
+                + "ORDER BY ef.rel_test_group_name";
+        List<EquipmentRelTestGroup> equipmentrelTestGroupList = new ArrayList<EquipmentRelTestGroup>();
+        try {
+            PreparedStatement ps = conn.prepareStatement(sql);
+            EquipmentRelTestGroup equipmentrelTestGroup;
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                equipmentrelTestGroup = new EquipmentRelTestGroup();
+                equipmentrelTestGroup.setId(rs.getString("id"));
+                equipmentrelTestGroup.setSptsPkid(rs.getString("spts_pkid"));
+                equipmentrelTestGroup.setRelTestGroupName(rs.getString("rel_test_group_name"));
+                equipmentrelTestGroup.setCreatedBy(rs.getString("created_by"));
+                equipmentrelTestGroup.setCreatedDate(rs.getString("createdDate"));
+                equipmentrelTestGroup.setSptsGuid(rs.getString("gf.spts_guid"));
+                equipmentrelTestGroup.setInGlobalOrNot(rs.getString("globalOrNot"));
+                equipmentrelTestGroupList.add(equipmentrelTestGroup);
+            }
+            rs.close();
+            ps.close();
+        } catch (SQLException e) {
+            LOGGER.error(e.getMessage());
+        } finally {
+            if (conn != null) {
+                try {
+                    conn.close();
+                } catch (SQLException e) {
+                    LOGGER.error(e.getMessage());
+                }
+            }
+        }
+        return equipmentrelTestGroupList;
+    }
+
+    public List<EquipmentRelTestGroup> getEquipmentRelTestGroupList(String relTestGroup) {
+        String sql = "SELECT *,DATE_FORMAT(created_date,'%d %M %Y %h:%i %p') AS createdDate, IF(rel_test_group_name=\"" + relTestGroup + "\",\"selected=''\",\"\") AS selected FROM equipment_rel_test_group ORDER BY rel_test_group_name ASC";
+        List<EquipmentRelTestGroup> equipmentrelTestGroupList = new ArrayList<EquipmentRelTestGroup>();
+        try {
+            PreparedStatement ps = conn.prepareStatement(sql);
+            EquipmentRelTestGroup equipmentrelTestGroup;
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                equipmentrelTestGroup = new EquipmentRelTestGroup();
+                equipmentrelTestGroup.setId(rs.getString("id"));
+                equipmentrelTestGroup.setSptsPkid(rs.getString("spts_pkid"));
+                equipmentrelTestGroup.setRelTestGroupName(rs.getString("rel_test_group_name"));
+                equipmentrelTestGroup.setCreatedBy(rs.getString("created_by"));
+                equipmentrelTestGroup.setCreatedDate(rs.getString("createdDate"));
+                equipmentrelTestGroup.setSelected(rs.getString("selected"));
                 equipmentrelTestGroupList.add(equipmentrelTestGroup);
             }
             rs.close();

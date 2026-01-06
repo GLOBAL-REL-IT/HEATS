@@ -29,7 +29,7 @@ public class LDAPUserDAO {
     public QueryResult insert(LDAPUser user) {
         QueryResult queryResult = new QueryResult();
         queryResult.setResult(0);
-        String sql = "INSERT INTO user_ldap (login_id, oncid, firstname, lastname, email, title, group_id, is_active, created_by, created_time) VALUES (?,?,?,?,?,?,?,'1',?,NOW())";
+        String sql = "INSERT INTO user_ldap (login_id, oncid, firstname, lastname, email, title, group_id, is_active, created_by, created_time, request_access) VALUES (?,?,?,?,?,?,?,'1',?,NOW(),?)";
         QueryRunner queryRunner = new QueryRunner(dataSource);
 //        LOGGER.info("masuk sqlllllllllllllllll");
         try {
@@ -45,7 +45,8 @@ public class LDAPUserDAO {
                     user.getEmail(),
                     user.getTitle(),
                     user.getGroupId(),
-                    user.getCreatedBy()
+                    user.getCreatedBy(),
+                    user.getRequestAccess()
             );
             queryResult.setResult(result.intValue());
             queryResult.setGeneratedKey(result.toString());
@@ -73,6 +74,25 @@ public class LDAPUserDAO {
                     user.getIsActive(),
                     user.getModifiedBy(),
                     user.getId()
+            );
+            queryResult.setResult(result);
+        } catch (SQLException ex) {
+            queryResult.setErrorMessage(ex.getMessage());
+            LOGGER.error(ex.getMessage());
+        }
+        return queryResult;
+    }
+
+    public QueryResult updateRequestAccessByLoginId(LDAPUser user) {
+        QueryResult queryResult = new QueryResult();
+        queryResult.setResult(0);
+        String sql = "UPDATE user_ldap SET request_access = ? WHERE login_id = ?";
+        QueryRunner queryRunner = new QueryRunner(dataSource);
+        try {
+            Integer result = queryRunner.update(
+                    sql,
+                    user.getRequestAccess(),
+                    user.getLoginId()
             );
             queryResult.setResult(result);
         } catch (SQLException ex) {
@@ -244,6 +264,7 @@ public class LDAPUserDAO {
                         user.setGroupId(rs.getString("group_id"));
                         user.setGroupCode(rs.getString("group_code"));
                         user.setGroupName(rs.getString("group_name"));
+                        user.setRequestAccess(rs.getString("request_access"));
                         //auth
                         user.setSrEmailRetrieve(rs.getString("sr_email_retrieve"));
                         user.setScrap(rs.getString("sr_scrap"));
@@ -271,6 +292,8 @@ public class LDAPUserDAO {
                         user.setEqptMonDelete(rs.getString("uac.eqpt_mon_delete"));
                         user.setEqptViMonAdd(rs.getString("uac.eqpt_vi_mon_add"));
                         user.setEqptViMonDelete(rs.getString("uac.eqpt_vi_mon_delete"));
+                        user.setEqptFamilyAddGlobal(rs.getString("uac.eqpt_family_add_global"));
+                        user.setEqptRelTestGroupAddGlobal(rs.getString("uac.eqpt_rel_test_group_add_global"));
                     }
                     return user;
                 }
