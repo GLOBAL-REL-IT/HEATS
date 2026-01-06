@@ -86,7 +86,49 @@
                 background-color: #f06a0a; /* Light blue */
                 color: #FFFFFF; /* White text for contrast */
             }
-
+            .hidden {
+                display: none !important;
+            }
+            input.complete-input {
+                display: block;
+                width: 95%; /* Adjust width for the merged cell span */
+                padding: 4px;
+                font-weight: bold;
+                text-align: center;
+                background-color: #e0e0e0;
+                border: 1px solid #ccc;
+            }
+            td.standard-input {
+                border: 1px solid #ccc;
+            }
+/*            input.standard-input {
+                display: block;
+                width: 95%;  Adjust width for the merged cell span 
+                padding: 4px;
+                font-weight: bold;
+                text-align: center;
+                background-color: #e0e0e0;
+                border: 1px solid #ccc;
+            }*/
+            .delete-btn {
+                background-color: #FFE5B4;
+            }
+            .status-text {
+                border: 2px solid black;
+                border: 1px solid #ccc !important;
+                /*padding: 0.01em 16px;*/
+                padding: 12px 16px;
+                border-radius: 16px;
+                display: flex;
+                justify-content: center;
+            }
+            .status2-text {
+                border: 2px solid black;
+                border: 1px solid #ccc !important;
+                padding: 12px 16px;
+                border-radius: 16px;
+                text-align:center !important;
+            }
         </style>
     </s:layout-component>
     <s:layout-component name="page_container">
@@ -103,7 +145,7 @@
                         </div>
                         <div class="card-body">
                             <!-- Row start -->
-                            <form class="row g-3 align-items-center" role="form" action="${contextPath}/admin/bibActivity/update" method="post">
+                            <form class="row g-3 align-items-center" role="form" action="${contextPath}/hw/item/updateActivity" method="post">
                                 <div class="row mb-4">
                                     <label class="col-sm-2 col-md-1 col-form-label fw-semibold" for="fName">Item Type</label>
                                     <div class="col-sm-9 col-md-10">
@@ -180,7 +222,7 @@
                                                 </div>
                                                 <label for="manualTestCheck" class="form-label">Manual Test</label>
                                                 <div class="input-group form-check form-switch">
-                                                    <input class="form-check-input" type="checkbox" role="switch" id="manualTestCheck" name="manualTestCheck" <c:if test="${item.manualTest == 'Yes'}">checked</c:if> >
+                                                    <input class="form-check-input" type="checkbox" role="switch" id="manualTestCheck" name="manualTestCheck" onchange="toggleVisibility()" <c:if test="${item.manualTest == 'Yes'}">checked</c:if> >
                                                 </div>
                                                 <label for="leakageTestCheck" class="form-label">Leakage Test</label>
                                                 <div class="input-group form-check form-switch">
@@ -198,7 +240,7 @@
                                         </div>
 
                                     <c:if test="${item.manualTest == 'Yes'}">
-                                        <div class="col-xl-6 col-sm-12 col-12">
+                                        <div class="col-xl-6 col-sm-12 col-12" id="manual_page_control">
                                             <div class="static-fields">
                                                 <div>
                                                     <label for="inputQuantity">Quantity :</label>
@@ -229,24 +271,24 @@
                                                 <tbody id="tableBody">
                                                     <c:forEach items="${listData}" var="manualList" varStatus="manualLoop">
                                                         <tr>
-                                                            <td><c:out value="${manualList.componentType}"/></td>
-                                                            <td><c:out value="${manualList.componentName}"/></td>
+                                                            <td class="standard-input" name="component_type[]"><c:out value="${manualList.componentType}"/></td>
+                                                            <td class="standard-input" name="component_name[]"><c:out value="${manualList.componentName}"/></td>
                                                             <c:choose>
-                                                                <%-- Condition 3: Fuse -> Combined value/percentage/limits into one cell, text changes to CLOSED/OPEN --%>
+                                                                <%-- Condition 3: Fuse -> Combined value/percentage/limits into one cell, text changes to SHORT/OPEN --%>
                                                                 <c:when test="${manualList.componentType == 'Fuse'}">
-                                                                    <td style="text-align: center;" colspan="4">OPEN / CLOSED</td>
+                                                                    <td class="status2-text" style="text-align: right;" colspan="4">OPEN / SHORT</td>
                                                                 </c:when>
-                                                                <%-- Condition 4: Zener or Diode -> View value, combined percentage/limits, text update to OPEN/CLOSED --%>
+                                                                <%-- Condition 4: Zener or Diode -> View value, combined percentage/limits, text update to OPEN/SHORT --%>
                                                                 <c:when test="${manualList.componentType == 'Zener' || manualList.componentType == 'Diode'}">
-                                                                    <td><c:out value="${manualList.componentValue}"/></td>
-                                                                    <td style="text-align: center;" colspan="3">OPEN / CLOSED</td>
+                                                                    <td name="actual_value[]"><c:out value="${manualList.componentValue}"/></td>
+                                                                    <td class="status2-text" style="text-align: right;" colspan="3">OPEN / SHORT</td>
                                                                 </c:when>
                                                                 <%-- Optional: Default case if the component type doesn't match any specific rule --%>
                                                                 <c:otherwise>
-                                                                    <td><c:out value="${manualList.componentValue}"/></td>
-                                                                    <td><c:out value="${manualList.percentage}"/></td>
-                                                                    <td><c:out value="${manualList.lowerLimit}"/></td>
-                                                                    <td><c:out value="${manualList.upperLimit}"/></td>
+                                                                    <td class="standard-input" name="actual_value[]"><c:out value="${manualList.componentValue}"/></td>
+                                                                    <td class="standard-input" name="percentage[]"><c:out value="${manualList.percentage}"/></td>
+                                                                    <td class="standard-input" name="lower[]"><c:out value="${manualList.lowerLimit}"/></td>
+                                                                    <td class="standard-input" name="upper[]"><c:out value="${manualList.upperLimit}"/></td>
                                                                 </c:otherwise>
                                                             </c:choose>
                                                             <td><button class="delete-btn" onclick="deleteRow(this)">Delete</button></td>
@@ -338,6 +380,152 @@
             const quantity = document.getElementById("inputQuantity").value || 1;
             const dut = document.getElementById("inputDUT").value || 1;
 
+            const tableBody = document.getElementById("tableBody");
+            const newRow = tableBody.insertRow(-1);
+
+            const typeCell = newRow.insertCell(0);
+            const nameCell = newRow.insertCell(1);
+            const valueCell = newRow.insertCell(2);
+            const percentageCell = newRow.insertCell(3);
+            const lowerLimitCell = newRow.insertCell(4);
+            const upperLimitCell = newRow.insertCell(5);
+            const actionCell = newRow.insertCell(6);
+
+            // --- Component Type Select ---
+            const typeSelect = document.createElement("select");
+            typeSelect.name = 'component_type[]';
+            typeSelect.innerHTML = `
+                <option value="Capacitor">Capacitor</option>
+                <option value="Resistor">Resistor</option>
+                <option value="Zener">Zener</option>
+                <option value="Fuse">Fuse</option>
+                <option value="Diode">Diode</option>
+            `;
+            typeSelect.name = 'component_type[]';
+            typeCell.appendChild(typeSelect);
+
+            // --- Name Input ---
+            const nameInput = document.createElement("input");
+            nameInput.type = "text";
+            nameInput.name = 'component_name[]';
+            nameInput.placeholder = "Name";
+            nameInput.className = 'standard-input';
+            nameInput.style.width = '90px';
+            nameInput.required = true;
+            nameCell.appendChild(nameInput);
+
+            // --- Value Input ---
+            const valueInput = document.createElement("input");
+            valueInput.type = "number";
+            valueInput.name = 'actual_value[]';
+            valueInput.step = "any";
+            valueInput.placeholder = "Value";
+            valueInput.className = 'standard-input';
+            valueInput.style.width = '70px';
+            valueInput.required = true;
+            valueCell.appendChild(valueInput);
+
+            // --- Percentage Input ---
+            const percentageInput = document.createElement("input");
+            percentageInput.type = "number";
+            percentageInput.name = 'percentage[]';
+            percentageInput.step = "any";
+            percentageInput.placeholder = "%";
+            percentageInput.className = 'standard-input';
+            percentageInput.style.width = '70px';
+            percentageCell.appendChild(percentageInput);
+
+            // --- Lower Limit (Input for Java compatibility) ---
+            const lowerLimitInput = document.createElement("input");
+            lowerLimitInput.type = "text";
+            lowerLimitInput.name = "lower[]";
+            lowerLimitInput.readOnly = true; // Prevents manual editing
+            lowerLimitInput.className = "standard-input";
+            lowerLimitInput.style.width = "70px";
+            lowerLimitInput.value = "N/A";
+            lowerLimitCell.appendChild(lowerLimitInput);
+
+            // --- Upper Limit (Input for Java compatibility) ---
+            const upperLimitInput = document.createElement("input");
+            upperLimitInput.type = "text";
+            upperLimitInput.name = "upper[]";
+            upperLimitInput.readOnly = true;
+            upperLimitInput.className = "standard-input";
+            upperLimitInput.style.width = "70px";
+            upperLimitInput.value = "N/A";
+            upperLimitCell.appendChild(upperLimitInput);
+
+            const deleteButton = document.createElement("button");
+            deleteButton.innerText = "Delete";
+            deleteButton.className = "delete-btn";
+            deleteButton.onclick = function () { this.closest('tr').remove(); };
+            actionCell.appendChild(deleteButton);
+
+            // --- Calculation Logic ---
+            const calculateLimits = () => {
+                const type = typeSelect.value;
+                if (type === "Capacitor" || type === "Resistor") {
+                    const val = parseFloat(valueInput.value);
+                    const pcnt = parseFloat(percentageInput.value);
+
+                    if (!isNaN(val) && !isNaN(pcnt)) {
+                        const tolerance = (val * pcnt) / 100;
+                        lowerLimitInput.value = (val - tolerance).toFixed(3);
+                        upperLimitInput.value = (val + tolerance).toFixed(3);
+                    } else {
+                        lowerLimitInput.value = "N/A";
+                        upperLimitInput.value = "N/A";
+                    }
+                }
+            };
+
+            const updateRowState = () => {
+                const type = typeSelect.value;
+                newRow.querySelectorAll('.status-text').forEach(el => el.remove());
+
+                // Reset visibility
+                [valueCell, percentageCell, lowerLimitCell, upperLimitCell].forEach(c => c.style.display = '');
+                valueCell.colSpan = 1; percentageCell.colSpan = 1;
+                valueInput.style.display = ''; percentageInput.style.display = '';
+                lowerLimitInput.style.display = ''; upperLimitInput.style.display = '';
+
+                if (type === "Fuse") {
+                    valueInput.style.display = 'none';
+                    percentageCell.style.display = 'none';
+                    lowerLimitCell.style.display = 'none';
+                    upperLimitCell.style.display = 'none';
+                    valueCell.colSpan = 4;
+                    const span = document.createElement('span');
+                    span.className = 'status-text';
+                    span.innerText = "OPEN / SHORT";
+                    valueCell.appendChild(span);
+                } else if (type === "Diode" || type === "Zener") {
+                    percentageInput.value = 0;
+                    percentageInput.style.display = 'none';
+                    percentageCell.colSpan = 3;
+                    lowerLimitCell.style.display = 'none';
+                    upperLimitCell.style.display = 'none';
+                    const span = document.createElement('span');
+                    span.className = 'status-text';
+                    span.innerText = "OPEN / SHORT";
+                    percentageCell.appendChild(span);
+                } else {
+                    calculateLimits();
+                }
+            };
+
+            // --- Key Event Listeners for Live Updates ---
+            valueInput.addEventListener('input', calculateLimits);      // Updates as user types
+            percentageInput.addEventListener('input', calculateLimits); // Updates as user types
+            typeSelect.addEventListener('change', updateRowState);      // Updates on dropdown change
+
+            updateRowState();
+        }
+        
+        function addRow22() {
+            const quantity = document.getElementById("inputQuantity").value || 1;
+            const dut = document.getElementById("inputDUT").value || 1;
+
             if (!quantity || !dut) {
                 alert("Please enter valid Quantity and DUT values.");
                 return;
@@ -364,12 +552,15 @@
                 <option value="Fuse">Fuse</option>
                 <option value="Diode">Diode</option>
             `;
+            typeSelect.name = 'component_type[]';
             typeCell.appendChild(typeSelect);
-
+            
             const nameInput = document.createElement("input");
             nameInput.type = "text";
             nameInput.placeholder = "Name";
-            nameInput.style.width = '80px';
+            nameInput.style.width = '90px';
+            nameInput.name = 'component_name[]';
+            nameInput.className = 'standard-input';
             nameInput.requied = true;
             nameCell.appendChild(nameInput);
 
@@ -378,23 +569,38 @@
             valueInput.step = "any";
             valueInput.placeholder = "Value";
             valueInput.style.width = '70px';
+            valueInput.name = 'actual_value[]';
+            valueInput.className = 'standard-input';
             valueInput.required = true;
             valueCell.appendChild(valueInput);
-
+            
             const percentageInput = document.createElement("input");
             percentageInput.type = "number";
             percentageInput.step = "any";
             percentageInput.placeholder = "%";
-            percentageInput.style.width = '50px';
+            percentageInput.style.width = '70px';
+            percentageInput.name = 'percentage[]';
+            percentageInput.className = 'standard-input';
             percentageCell.appendChild(percentageInput);
 
-            const lowerLimitDisplay = document.createElement("span");
-            lowerLimitDisplay.innerText = "N/A";
-            lowerLimitCell.appendChild(lowerLimitDisplay);
+            const lowerLimitInput = document.createElement("input");
+            lowerLimitInput.type = "text";
+            lowerLimitInput.name = "lower[]"; // This name is sent to Java
+            lowerLimitInput.readOnly = true;   // Prevents manual typing
+            lowerLimitInput.className = "standard-input";
+            lowerLimitInput.style.width = "70px";
+            lowerLimitInput.value = "N/A";
+            lowerLimitCell.appendChild(lowerLimitInput);
 
-            const upperLimitDisplay = document.createElement("span");
-            upperLimitDisplay.innerText = "N/A";
-            upperLimitCell.appendChild(upperLimitDisplay);
+            // --- Upper Limit Cell ---
+            const upperLimitInput = document.createElement("input");
+            upperLimitInput.type = "text";
+            upperLimitInput.name = "upper[]"; // This name is sent to Java
+            upperLimitInput.readOnly = true;   // Prevents manual typing
+            upperLimitInput.className = "standard-input";
+            upperLimitInput.style.width = "70px";
+            upperLimitInput.value = "N/A";
+            upperLimitCell.appendChild(upperLimitInput);
 
             const deleteButton = document.createElement("button");
             deleteButton.innerText = "Delete";
@@ -406,9 +612,6 @@
             };
             actionCell.appendChild(deleteButton);
 
-            // --- Calculation and Type Handling Logic ---
-
-            // These functions use closures to access the variables defined above them
             const calculateLimits = () => {
                 if (typeSelect.value === "Capacitor" || typeSelect.value === "Resistor") {
                     const val = parseFloat(valueInput.value);
@@ -416,11 +619,11 @@
 
                     if (!isNaN(val) && !isNaN(pcnt)) {
                         const toleranceAmount = (val * pcnt) / 100;
-                        lowerLimitDisplay.innerText = (val - toleranceAmount).toFixed(3);
-                        upperLimitDisplay.innerText = (val + toleranceAmount).toFixed(3);
+                        lowerLimitInput.innerText = (val - toleranceAmount).toFixed(3);
+                        upperLimitInput.innerText = (val + toleranceAmount).toFixed(3);
                     } else {
-                        lowerLimitDisplay.innerText = "N/A";
-                        upperLimitDisplay.innerText = "N/A";
+                        lowerLimitInput.innerText = "N/A";
+                        upperLimitInput.innerText = "N/A";
                     }
                 }
             };
@@ -438,11 +641,13 @@
                 upperLimitCell.style.display = '';
                 valueInput.style.display = '';
                 percentageInput.style.display = '';
-                lowerLimitDisplay.style.display = '';
-                upperLimitDisplay.style.display = '';
+                lowerLimitInput.style.display = '';
+                upperLimitInput.style.display = '';
 
                 if (type === "Fuse") {
+                    console.log("SINI MASUK DAN PILIH FUSE");
                     // FUSE LOGIC: Combine Component Value, %, Lower, Upper
+                    valueInput.removeAttribute('required');
                     valueInput.style.display = 'none';
                     percentageInput.style.display = 'none';
                     percentageCell.style.display = 'none';
@@ -452,11 +657,12 @@
 
                     const statusSpan = document.createElement('span');
                     statusSpan.className = 'status-text';
-                    statusSpan.innerText = "OPEN / CLOSED";
+                    statusSpan.innerText = "OPEN / SHORT";
                     valueCell.appendChild(statusSpan);
 
                 } else if (type === "Diode" || type === "Zener") {
                     // Diode/Zener Logic
+                    console.log("SINI PILIH ZENER / DIODE");
                     percentageInput.value = 0;
                     percentageInput.style.display = 'none';
                     percentageCell.colSpan = 3;
@@ -465,7 +671,7 @@
 
                     const statusSpan = document.createElement('span');
                     statusSpan.className = 'status-text';
-                    statusSpan.innerText = "OPEN / CLOSED";
+                    statusSpan.innerText = "OPEN / SHORT";
                     percentageCell.appendChild(statusSpan);
 
                 } else {
@@ -474,12 +680,10 @@
                 }
             };
 
-            // Attach event listeners using the local function references
             valueInput.addEventListener('input', calculateLimits);
             percentageInput.addEventListener('input', calculateLimits);
             typeSelect.addEventListener('change', updateRowState);
 
-            // Set initial state
             updateRowState();
         }
         
@@ -500,6 +704,17 @@
 //             } else {
 //                 
 //             }
+        }
+        
+        function toggleVisibility() {
+            var checkbox = document.getElementById("manualTestCheck");
+            var inputContainer = document.getElementById("manual_page_control");
+
+            if (checkbox.checked) {
+                inputContainer.classList.remove("hidden");
+            } else {
+                inputContainer.classList.add("hidden");
+            }
         }
         
 //        $(document).ready(function () {

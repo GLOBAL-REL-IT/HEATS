@@ -104,6 +104,14 @@
             .delete-btn {
                 background-color: #FFE5B4;
             }
+            input {
+                width: 95%;
+                padding: 10px;
+                border: 1px solid #ccc;
+                border-radius: 4px;
+                font-size: 16px;
+                transition: border-color 0.3s;
+            }
         </style>
     </s:layout-component>
     <s:layout-component name="page_container">
@@ -192,15 +200,15 @@
                                             <div class="static-fields">
                                                 <div>
                                                     <label class="col-2" for="qtyField">Quantity :</label>
-                                                    <input class="col-1" type="number" id="qtyField" name="qtyField" min="1" required>
+                                                    <input class="col-2" type="number" id="qtyField" name="qtyField" min="1" required>
                                                 </div>
                                                 <div>
                                                     <label class="col-2" for="dutField">DUT #:</label>
-                                                    <input class="col-1" type="number" id="dutField" name="dutField" min="1" required>
+                                                    <input class="col-2" type="number" id="dutField" name="dutField" min="1" required>
                                                 </div>
                                                 <div>
                                                     <label class="col-2" for="manComp">Components :</label>
-                                                    <input class="col-1" type="number" id="manComp" name="manComp" min="1" required>
+                                                    <input class="col-2" type="number" id="manComp" name="manComp" min="1" required>
                                                     <button type="button" onclick="createRows()">Create Components</button>
                                                 </div>
                                             </div>
@@ -329,7 +337,7 @@
 
                 const completeInput = document.createElement('input');
                 completeInput.type = 'text';
-                completeInput.value = 'SHORT / OPEN'; // Set the display value
+                completeInput.value = 'OPEN / SHORT'; // Set the display value
                 completeInput.id = 'complete_input_' + w;
                 completeInput.name = 'actual_value_hide[]';
                 completeInput.className = 'complete-input hidden';
@@ -350,7 +358,7 @@
                 
                 const completeInput2 = document.createElement('input');
                 completeInput2.type = 'text';
-                completeInput2.value = 'SHORT / OPEN'; // Set the display value
+                completeInput2.value = 'OPEN / SHORT'; // Set the display value
                 completeInput2.id = 'complete_input2_' + w;
                 completeInput2.name = 'actual_value_hide[]';
                 completeInput2.className = 'complete-input hidden';

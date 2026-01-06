@@ -135,6 +135,7 @@ public class ItemActivityConfigDAO {
                 itemactivityConfig.setManualTest(rs.getString("manual_test"));
                 itemactivityConfig.setLeakageTest(rs.getString("leakage_test"));
                 itemactivityConfig.setPsLeakageTest(rs.getString("ps_leakage_test"));
+                itemactivityConfig.setWinchesterChamberLeakageTest(rs.getString("winchester_chamber_leakage_test"));
                 itemactivityConfig.setCreatedBy(rs.getString("created_by"));
                 itemactivityConfig.setCreatedDate(rs.getString("created_date"));
                 itemactivityConfig.setStatus(rs.getString("status"));
