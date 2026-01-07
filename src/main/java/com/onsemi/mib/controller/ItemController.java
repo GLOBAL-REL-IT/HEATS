@@ -447,8 +447,6 @@ public class ItemController {
                 }
                 count += 1;
             }
-            LOGGER.info("Total data: " + count);
-            LOGGER.info("Total insert: " + countAdd);
 
             ItemDAO hwD = new ItemDAO();
             List<Item> itemList = hwD.getHardwareDetailListByItemType(itemType);
@@ -756,9 +754,6 @@ public class ItemController {
             count += 1;
         }
 
-        LOGGER.info("Total data: " + count);
-        LOGGER.info("Total insert: " + countAdd);
-
         //set to model
         ItemDAO hwD = new ItemDAO();
         Item hw = hwD.getHardwareDetailByPkid(pkID);
@@ -855,8 +850,6 @@ public class ItemController {
             @RequestParam(required = false) String itemPKID
     ) throws IOException {
 
-        LOGGER.info("itemPKID: " + itemPKID);
-
         HardwareDAO hwD = new HardwareDAO();
         List<Hardware> hw = hwD.getHardwareListByItemId(itemPKID);
 
@@ -872,7 +865,6 @@ public class ItemController {
             @RequestParam(required = false) String itemPKID
     ) throws IOException {
 
-        LOGGER.info("itemPKID: " + itemPKID);
         String data = "";
         data = "<thead>"
                 + "                                                        <tr>"
@@ -1623,12 +1615,9 @@ public class ItemController {
                     countAdd += q.getResult();
                 }
             }
-            LOGGER.info("Total data: " + count);
-            LOGGER.info("Total insert: " + countAdd);
         }
 
         return "item/item";
-//        return "hardware/hardware_json";
     }
 
     @RequestMapping(value = "/json/getitembyparamitemtype", method = RequestMethod.GET)
@@ -1640,7 +1629,6 @@ public class ItemController {
             @RequestParam(required = false) String itemType
     ) throws IOException {
 
-        LOGGER.info("itemType: " + itemType);
         JSONObject params = new JSONObject();
         params.put("itemType", itemType);
         JSONArray getItemByParam = SPTSWebService.getItemByParam(params);
@@ -1653,7 +1641,6 @@ public class ItemController {
             hw.setItemId(getItemByParam.getJSONObject(i).getString("ItemID"));
             hw.setItemName(getItemByParam.getJSONObject(i).getString("ItemName"));
             int PKID = getItemByParam.getJSONObject(i).getInt("PKID");
-            LOGGER.info("PKID: " + PKID);
             hw.setSptsPkid(Integer.toString(PKID));
             hardwareDetailList.add(hw);
         }
@@ -1670,7 +1657,6 @@ public class ItemController {
             @RequestParam(required = false) String pkID
     ) throws IOException {
 
-        LOGGER.info("pkID: " + pkID);
         JSONObject params = new JSONObject();
         params.put("pkID", pkID);
         JSONArray getItemByParam = SPTSWebService.getItemByParam(params);
@@ -2065,15 +2051,12 @@ public class ItemController {
                 QueryResult q = hwD.insertHardwareDetail(hw);
                 countAdd += q.getResult();
             }
-            LOGGER.info("Total data: " + count);
-            LOGGER.info("Total insert: " + countAdd);
         }
 
         model.addAttribute("count", count);
         model.addAttribute("countAdd", countAdd);
 
         return "item/hardwareSPTSUpdate";
-//        return "hardware/hardware_json";
     }
 
     @RequestMapping(value = "/item/add", method = {RequestMethod.GET, RequestMethod.POST})
@@ -2117,7 +2100,6 @@ public class ItemController {
         model.addAttribute("paramItemUsageEqpt", paramItemUsageEqpt);
 
         model.addAttribute("itemType", itemType);
-//        LOGGER.info("itemType: " + itemType);
 
         ItemDAO itemD = new ItemDAO();
         List<Item> listAssemblyId = itemD.getItemAssemblyId("");
@@ -2899,7 +2881,6 @@ public class ItemController {
                 model.addAttribute("leakbutton",buttonDisabled);
                 model.addAttribute("psbutton",buttonDisabled);
                 model.addAttribute("winbutton",buttonDisabled);
-                LOGGER.info("MASUK BIB");
             } else if (item.getStatus().contains("Manual")) {
                 model.addAttribute("manshow",teActiveTab);
                 model.addAttribute("bibbutton",buttonDisabled);
@@ -2907,7 +2888,6 @@ public class ItemController {
                 model.addAttribute("leakbutton",buttonDisabled);
                 model.addAttribute("psbutton",buttonDisabled);
                 model.addAttribute("winbutton",buttonDisabled);
-                LOGGER.info("MASUK MANUAL ");
             } else if (item.getStatus().contains("Leakage")) {
                 model.addAttribute("leakshow",teActiveTab);
                 model.addAttribute("bibbutton",buttonDisabled);
@@ -2915,7 +2895,6 @@ public class ItemController {
 //                model.addAttribute("leakbutton",buttonDisabled);
                 model.addAttribute("psbutton",buttonDisabled);
                 model.addAttribute("winbutton",buttonDisabled);
-                LOGGER.info("MASUK LEAKAGE");
             } else if (item.getStatus().contains("Power")) {
                 model.addAttribute("psshow",teActiveTab);
                 model.addAttribute("bibbutton",buttonDisabled);
@@ -2923,7 +2902,6 @@ public class ItemController {
                 model.addAttribute("leakbutton",buttonDisabled);
 //                model.addAttribute("psbutton",buttonDisabled);
                 model.addAttribute("winbutton",buttonDisabled);
-                LOGGER.info("MASUK POWER");
             } else if (item.getStatus().contains("Winchester")) {
                 model.addAttribute("winshow",teActiveTab);
                 model.addAttribute("bibbutton",buttonDisabled);
@@ -2931,7 +2909,6 @@ public class ItemController {
                 model.addAttribute("leakbutton",buttonDisabled);
                 model.addAttribute("psbutton",buttonDisabled);
 //                model.addAttribute("winbutton",buttonDisabled);
-                LOGGER.info("MASUK WINCHGESTER");
             }
         } else {
             String teActive = "";
@@ -2939,9 +2916,6 @@ public class ItemController {
             model.addAttribute("teActive", teActive);
             model.addAttribute("teActiveTab", teActiveTab);
         }
-        
-        String hehe = getCurrentStatus(mibItemId);
-        LOGGER.info("STATUS SEKARANG >>> "+hehe);
         
         ItemFunctionalTestDAO itemdao2 = new ItemFunctionalTestDAO();
         ItemFunctionalTest itemdata2 = itemdao2.getItemActivityByItemId(mibItemId);
@@ -2989,8 +2963,6 @@ public class ItemController {
         model.addAttribute("psCheck", psCheck);
         model.addAttribute("winCheck", winCheck);
         
-//        getLatestStatus(mibItemId);
-
         return "item/item_add2";
     }
     
@@ -3004,8 +2976,6 @@ public class ItemController {
         String statusWin = "";
         ItemActivityConfig iac = new ItemActivityConfig();
         ItemActivityConfigDAO iacdao = new ItemActivityConfigDAO();
-        
-        LOGGER.info("item id  >>>> "+itemId);
         
         iac = iacdao.getItemActivityByItemId(itemId);
         if (iac != null) {
@@ -3024,6 +2994,8 @@ public class ItemController {
         LOGGER.info("POWER SUPPLY >>> "+statusPs);
         LOGGER.info("WINCHESTER >>> "+statusWin);
         
+        // APA BENDA KITA KENA BUAT DEKAT SINI UNTUK DOUBLE CHECK ON THE LATEST CODE SO NO REPEATED STATUS
+        
         return status;
     }
     
@@ -3038,8 +3010,6 @@ public class ItemController {
         ItemActivityConfig iac = new ItemActivityConfig();
         ItemActivityConfigDAO iacdao = new ItemActivityConfigDAO();
         
-        LOGGER.info("item id  >>>> "+itemId);
-        
         iac = iacdao.getItemActivityByItemId(itemId);
         if (iac != null) {
             statusVi = iac.getVi();
@@ -3050,6 +3020,7 @@ public class ItemController {
             statusWin = iac.getWinchesterChamberLeakageTest();
         }
         
+        // HANYA UNTUK FIRST TIME SELEPAS DIA COMPLETE KAN VISUAL INSPECTION
         if (statusBib.equals("Yes")) {
             status = "Pending Functional Test - BIB Test";
         } else if (statusMan.equals("Yes")) {
@@ -3440,6 +3411,7 @@ public class ItemController {
             QueryResult q2 = iD.updateItemStatus(item);
 
             if ("Fail".equals(finalStatus)) {
+                
                 redirectAttrs.addFlashAttribute("error", "Visual Inspection Fail. Pls go to Maverick Module for Corrective Action.");
                 return "redirect:/hw/item/add2/" + mibItemId;
             } else {
@@ -3490,8 +3462,6 @@ public class ItemController {
         String pathPs = "";
         String pathWin = "";
         
-        LOGGER.info("ITEM ID DEKAT SINI >>>> "+mibItemId);
-        
         switch (jenis) {
             case "bibTest":
                 LOGGER.info("KITA MASUK DEKAT BIB TEST");
@@ -3536,12 +3506,11 @@ public class ItemController {
 //                Path pathBibConnector = Paths.get(UPLOADED_FOLDER + q.getGeneratedKey() + "_winConnector_" + bibUpload.getOriginalFilename());
                 Path pathConnector = Paths.get(FOLDER_TEST + "_bibTest_" + bibUpload.getOriginalFilename()); // THIS ONE TESTING ONLY, USE CORRECT GENERATED KEY
                 if (bibUpload.getOriginalFilename() == null || bibUpload.getOriginalFilename().equalsIgnoreCase("")) {
-                    LOGGER.info("KITA SKIP UPLOAD DEKAT SINI");
+                    
                 } else {
                     Files.write(pathConnector, bytesConnector);
                     pathBib = pathConnector.toString();
                 }
-                LOGGER.info("pathWinConnector : " + pathConnector);
                 
                 // UPDATE TABLE ITEM_FUNCTIONAL_TEST START
                 ItemFunctionalTestDAO itemdao = new ItemFunctionalTestDAO();
@@ -3592,12 +3561,11 @@ public class ItemController {
 //                Path pathBibConnector = Paths.get(UPLOADED_FOLDER + q.getGeneratedKey() + "_winConnector_" + bibUpload.getOriginalFilename());
                 Path pathConnector = Paths.get(FOLDER_TEST + "_leakTest_" + leakUpload.getOriginalFilename()); // THIS ONE TESTING ONLY, USE CORRECT GENERATED KEY
                 if (leakUpload.getOriginalFilename() == null || leakUpload.getOriginalFilename().equalsIgnoreCase("")) {
-                    LOGGER.info("KITA SKIP UPLOAD DEKAT LEAK");
+                    
                 } else {
                     Files.write(pathConnector, bytesConnector);
                     pathLeak = pathConnector.toString();
                 }
-                LOGGER.info("pathWinConnector : " + pathConnector);
                 // UPDATE TABLE ITEM_FUNCTIONAL_TEST START
                 ItemFunctionalTestDAO itemdao = new ItemFunctionalTestDAO();
                 item.setMibItemId(mibItemId);
@@ -3644,12 +3612,11 @@ public class ItemController {
 //                Path pathBibConnector = Paths.get(UPLOADED_FOLDER + q.getGeneratedKey() + "_winConnector_" + bibUpload.getOriginalFilename());
                 Path pathConnector = Paths.get(FOLDER_TEST + "_psTest_" + psUpload.getOriginalFilename()); // THIS ONE TESTING ONLY, USE CORRECT GENERATED KEY
                 if (psUpload.getOriginalFilename() == null || psUpload.getOriginalFilename().equalsIgnoreCase("")) {
-                    LOGGER.info("KITA SKIP UPLOAD DEKAT POWER SUPPLY");
+
                 } else {
                     Files.write(pathConnector, bytesConnector);
                     pathPs = pathConnector.toString();
                 }
-                LOGGER.info("pathWinConnector : " + pathConnector);
                 // UPDATE TABLE ITEM_FUNCTIONAL_TEST START
                 ItemFunctionalTestDAO itemdao = new ItemFunctionalTestDAO();
                 item.setMibItemId(mibItemId);
@@ -3694,12 +3661,11 @@ public class ItemController {
 //                Path pathBibConnector = Paths.get(UPLOADED_FOLDER + q.getGeneratedKey() + "_winConnector_" + bibUpload.getOriginalFilename());
                 Path pathConnector = Paths.get(FOLDER_TEST + "_winTest_" + winUpload.getOriginalFilename()); // THIS ONE TESTING ONLY, USE CORRECT GENERATED KEY
                 if (winUpload.getOriginalFilename() == null || winUpload.getOriginalFilename().equalsIgnoreCase("")) {
-                    LOGGER.info("KITA SKIP UPLOAD DEKAT WINCHESTER");
+                   
                 } else {
                     Files.write(pathConnector, bytesConnector);
                     pathWin = pathConnector.toString();
                 }
-                LOGGER.info("pathWinConnector : " + pathConnector);
                 // UPDATE TABLE ITEM_FUNCTIONAL_TEST START
                 ItemFunctionalTestDAO itemdao = new ItemFunctionalTestDAO();
                 item.setMibItemId(mibItemId);
@@ -3733,18 +3699,15 @@ public class ItemController {
 //            itemVm.setWinConnectorRejectUpload(pathBib);
         }
         
-        LOGGER.info("JENIS TEST >>>> "+jenis);
         return "redirect:/hw/item/add2/" + mibItemId;
     }
     
     public void checkInsertFunctionalTest(String itemId, String username) {
-        LOGGER.info("ITEM ID >>> "+itemId);
         ItemFunctionalTestDAO itemdao = new ItemFunctionalTestDAO();
         ItemFunctionalTest item = itemdao.getItemActivityByItemId(itemId);
         if (item != null) {
-            LOGGER.info("DA ADA DATA, UPDATE JE LA");
+            
         } else {
-            LOGGER.info("SINI TAK CREATE DATA LAGI, BOLE CREATE BARY");
             itemdao = new ItemFunctionalTestDAO();
             ItemFunctionalTest itembaru = new ItemFunctionalTest();
             itembaru.setMibItemId(itemId);
@@ -3858,6 +3821,62 @@ public class ItemController {
         inputStream.close();
         outStream.close();
 
+    }
+    
+    @RequestMapping(value = "/item/ft/{type}/{itemid}", method = RequestMethod.GET)
+    public void downloadAttachmentTest(HttpServletRequest request,
+            @PathVariable("type") String type,
+            @PathVariable("itemid") String itemid,
+            HttpServletResponse response) throws IOException {
+
+        ItemFunctionalTestDAO itemdao = new ItemFunctionalTestDAO();
+        ItemFunctionalTest itemf = itemdao.getItemActivityByItemId(itemid);
+
+        String attachment = "";
+        switch (type) {
+            case "bibtest":
+                attachment = itemf.getBibUpload();
+                break;
+            case "leaktest":
+                attachment = itemf.getLeakUpload();
+                break;
+            case "pstest":
+                attachment = itemf.getPsUpload();
+                break;
+            case "wintest":
+                attachment = itemf.getWinUpload();
+                break;
+            default:
+                attachment = "";
+                break;
+        }
+
+        String fullPath = attachment;
+        File downloadFile = new File(fullPath);
+        FileInputStream inputStream = new FileInputStream(downloadFile);
+
+        String mimeType = servletContext.getMimeType(fullPath);
+        if (mimeType == null) {
+            mimeType = "application/octet-stream";
+        }
+        String headerKey = "Content-Disposition";
+        String headerValue = String.format("attachment; filename=\"%s\"", downloadFile.getName());
+        
+        response.setContentType(mimeType);
+        response.setContentLength((int) downloadFile.length());
+        response.setHeader(headerKey, headerValue);
+
+        OutputStream outStream = response.getOutputStream();
+
+        byte[] buffer = new byte[BUFFER_SIZE];
+        int bytesRead = -1;
+
+        while ((bytesRead = inputStream.read(buffer)) != -1) {
+            outStream.write(buffer, 0, bytesRead);
+        }
+
+        inputStream.close();
+        outStream.close();
     }
 
     @RequestMapping(value = "/item/addActivity/{id}", method = RequestMethod.GET)

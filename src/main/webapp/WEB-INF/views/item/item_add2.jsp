@@ -3688,6 +3688,16 @@
                                                                                         </div>
                                                                                     </div>
                                                                                 </div>
+                                                                                        
+                                                                                <c:if test="${not empty dataTest.bibUpload}">
+                                                                                    <div class="row gx-4">
+                                                                                        <div class="col-xl-2 col-sm-12 col-12">
+                                                                                            <div class="mb-2">
+                                                                                                <a class="form-label" href="${contextPath}/hw/item/ft/bibtest/${item.id}" id="bibTestAttach" name="bibTestAttach"> Download Attachment</a>
+                                                                                            </div>
+                                                                                        </div>
+                                                                                    </div>
+                                                                                </c:if>
 
                                                                                 <div class="col-md-12">
                                                                                     <button type="submit" id="submit" class="btn btn-primary float-end ${bibbutton}">Save</button>
@@ -3775,13 +3785,15 @@
                                                                                     </div>
                                                                                 </div>
                                                                                         
-                                                                                <div class="row gx-4">
-                                                                                    <div class="col-xl-2 col-sm-12 col-12">
-                                                                                        <div class="mb-2">
-                                                                                            <a class="form-label" href="${contextPath}/hw/item/vm/downloadAttach/${itemVm.id}/pcb" id="pcbAttach" name="pcbAttach"> Download Attachment</a>
+                                                                                <c:if test="${not empty dataTest.leakUpload}">
+                                                                                    <div class="row gx-4">
+                                                                                        <div class="col-xl-2 col-sm-12 col-12">
+                                                                                            <div class="mb-2">
+                                                                                                <a class="form-label" href="${contextPath}/hw/item/ft/leaktest/${item.id}" id="leakTestAttach" name="leakTestAttach"> Download Attachment</a>
+                                                                                            </div>
                                                                                         </div>
                                                                                     </div>
-                                                                                </div>
+                                                                                </c:if>
 
                                                                                 <div class="col-md-12">
                                                                                     <button type="submit" id="submit" class="btn btn-primary float-end ${leakbutton}">Save</button>
@@ -3836,13 +3848,15 @@
                                                                                     </div>
                                                                                 </div>
                                                                                         
-                                                                                <div class="row gx-4">
-                                                                                    <div class="col-xl-2 col-sm-12 col-12">
-                                                                                        <div class="mb-2">
-                                                                                            <a class="form-label" href="${contextPath}/hw/item/vm/downloadAttach/${itemVm.id}/pcb" id="pcbAttach" name="pcbAttach"> Download Attachment</a>
+                                                                                <c:if test="${not empty dataTest.psUpload}">
+                                                                                    <div class="row gx-4">
+                                                                                        <div class="col-xl-2 col-sm-12 col-12">
+                                                                                            <div class="mb-2">
+                                                                                                <a class="form-label" href="${contextPath}/hw/item/ft/pstest/${item.id}" id="psTestAttach" name="psTestAttach"> Download Attachment</a>
+                                                                                            </div>
                                                                                         </div>
                                                                                     </div>
-                                                                                </div>
+                                                                                </c:if>
 
                                                                                 <div class="col-md-12">
                                                                                     <button type="submit" id="submit" class="btn btn-primary float-end ${psbutton}">Save</button>
@@ -3897,6 +3911,16 @@
                                                                                         </div>
                                                                                     </div>
                                                                                 </div>
+                                                                                        
+                                                                                <c:if test="${not empty dataTest.winUpload}">
+                                                                                    <div class="row gx-4">
+                                                                                        <div class="col-xl-2 col-sm-12 col-12">
+                                                                                            <div class="mb-2">
+                                                                                                <a class="form-label" href="${contextPath}/hw/item/ft/wintest/${item.id}" id="winTestAttach" name="winTestAttach"> Download Attachment</a>
+                                                                                            </div>
+                                                                                        </div>
+                                                                                    </div>
+                                                                                </c:if>
 
                                                                                 <div class="col-md-12">
                                                                                     <button type="submit" id="submit" class="btn btn-primary float-end ${winbutton}">Save</button>
