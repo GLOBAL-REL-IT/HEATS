@@ -3,9 +3,11 @@ package com.onsemi.mib.controller;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.base.Strings;
+import com.onsemi.mib.dao.EmailVmFailDAO;
 import com.onsemi.mib.dao.HardwareDAO;
 import com.onsemi.mib.dao.ItemDAO;
 import com.onsemi.mib.dao.HimsRequestDAO;
+import com.onsemi.mib.dao.HostnameDAO;
 import com.onsemi.mib.dao.ItemActivityConfigDAO;
 import com.onsemi.mib.dao.ItemAluConfigDAO;
 import com.onsemi.mib.dao.ItemFunctionalTestDAO;
@@ -19,9 +21,11 @@ import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import javax.servlet.http.HttpServletRequest;
 import com.onsemi.mib.dao.RequestDAO;
+import com.onsemi.mib.model.EmailVmFail;
 import com.onsemi.mib.model.Hardware;
 import com.onsemi.mib.model.Item;
 import com.onsemi.mib.model.HimsInventory;
+import com.onsemi.mib.model.Hostname;
 import com.onsemi.mib.model.ItemActivityConfig;
 import com.onsemi.mib.model.ItemFunctionalTest;
 import com.onsemi.mib.model.ItemRecall;
@@ -33,6 +37,7 @@ import com.onsemi.mib.model.ParameterDetails;
 import com.onsemi.mib.model.Request;
 import com.onsemi.mib.model.UserSession;
 import com.onsemi.mib.model.WhRetrieval;
+import com.onsemi.mib.tools.EmailSender;
 import com.onsemi.mib.tools.HimsRetrieve;
 import com.onsemi.mib.tools.QueryResult;
 import com.onsemi.mib.tools.SPTSResponse;
@@ -46,6 +51,8 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.sql.SQLException;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -2873,41 +2880,41 @@ public class ItemController {
             String buttonDisabled = "disabled";
             model.addAttribute("teActive", teActive);
             model.addAttribute("teActiveTab", teActiveTab);
-            
+
             if (item.getStatus().contains("BIB")) {
-                model.addAttribute("bibshow",teActiveTab);
+                model.addAttribute("bibshow", teActiveTab);
 //                model.addAttribute("bibbutton",buttonDisabled);
-                model.addAttribute("manbutton",buttonDisabled);
-                model.addAttribute("leakbutton",buttonDisabled);
-                model.addAttribute("psbutton",buttonDisabled);
-                model.addAttribute("winbutton",buttonDisabled);
+                model.addAttribute("manbutton", buttonDisabled);
+                model.addAttribute("leakbutton", buttonDisabled);
+                model.addAttribute("psbutton", buttonDisabled);
+                model.addAttribute("winbutton", buttonDisabled);
             } else if (item.getStatus().contains("Manual")) {
-                model.addAttribute("manshow",teActiveTab);
-                model.addAttribute("bibbutton",buttonDisabled);
+                model.addAttribute("manshow", teActiveTab);
+                model.addAttribute("bibbutton", buttonDisabled);
 //                model.addAttribute("manbutton",buttonDisabled);
-                model.addAttribute("leakbutton",buttonDisabled);
-                model.addAttribute("psbutton",buttonDisabled);
-                model.addAttribute("winbutton",buttonDisabled);
+                model.addAttribute("leakbutton", buttonDisabled);
+                model.addAttribute("psbutton", buttonDisabled);
+                model.addAttribute("winbutton", buttonDisabled);
             } else if (item.getStatus().contains("Leakage")) {
-                model.addAttribute("leakshow",teActiveTab);
-                model.addAttribute("bibbutton",buttonDisabled);
-                model.addAttribute("manbutton",buttonDisabled);
+                model.addAttribute("leakshow", teActiveTab);
+                model.addAttribute("bibbutton", buttonDisabled);
+                model.addAttribute("manbutton", buttonDisabled);
 //                model.addAttribute("leakbutton",buttonDisabled);
-                model.addAttribute("psbutton",buttonDisabled);
-                model.addAttribute("winbutton",buttonDisabled);
+                model.addAttribute("psbutton", buttonDisabled);
+                model.addAttribute("winbutton", buttonDisabled);
             } else if (item.getStatus().contains("Power")) {
-                model.addAttribute("psshow",teActiveTab);
-                model.addAttribute("bibbutton",buttonDisabled);
-                model.addAttribute("manbutton",buttonDisabled);
-                model.addAttribute("leakbutton",buttonDisabled);
+                model.addAttribute("psshow", teActiveTab);
+                model.addAttribute("bibbutton", buttonDisabled);
+                model.addAttribute("manbutton", buttonDisabled);
+                model.addAttribute("leakbutton", buttonDisabled);
 //                model.addAttribute("psbutton",buttonDisabled);
-                model.addAttribute("winbutton",buttonDisabled);
+                model.addAttribute("winbutton", buttonDisabled);
             } else if (item.getStatus().contains("Winchester")) {
-                model.addAttribute("winshow",teActiveTab);
-                model.addAttribute("bibbutton",buttonDisabled);
-                model.addAttribute("manbutton",buttonDisabled);
-                model.addAttribute("leakbutton",buttonDisabled);
-                model.addAttribute("psbutton",buttonDisabled);
+                model.addAttribute("winshow", teActiveTab);
+                model.addAttribute("bibbutton", buttonDisabled);
+                model.addAttribute("manbutton", buttonDisabled);
+                model.addAttribute("leakbutton", buttonDisabled);
+                model.addAttribute("psbutton", buttonDisabled);
 //                model.addAttribute("winbutton",buttonDisabled);
             }
         } else {
@@ -2916,10 +2923,10 @@ public class ItemController {
             model.addAttribute("teActive", teActive);
             model.addAttribute("teActiveTab", teActiveTab);
         }
-        
+
         ItemFunctionalTestDAO itemdao2 = new ItemFunctionalTestDAO();
         ItemFunctionalTest itemdata2 = itemdao2.getItemActivityByItemId(mibItemId);
-        
+
         if (itemdata2 != null) {
             model.addAttribute("dataTest", itemdata2);
 
@@ -2962,11 +2969,11 @@ public class ItemController {
         model.addAttribute("leakCheck", leakCheck);
         model.addAttribute("psCheck", psCheck);
         model.addAttribute("winCheck", winCheck);
-        
+
         return "item/item_add2";
     }
-    
-    public String getLatestStatus (String itemId) {
+
+    public String getLatestStatus(String itemId) {
         String status = "";
         String statusVi = "";
         String statusBib = "";
@@ -2976,7 +2983,7 @@ public class ItemController {
         String statusWin = "";
         ItemActivityConfig iac = new ItemActivityConfig();
         ItemActivityConfigDAO iacdao = new ItemActivityConfigDAO();
-        
+
         iac = iacdao.getItemActivityByItemId(itemId);
         if (iac != null) {
             statusVi = iac.getVi();
@@ -2986,19 +2993,18 @@ public class ItemController {
             statusPs = iac.getPsLeakageTest();
             statusWin = iac.getWinchesterChamberLeakageTest();
         }
-        
+
         LOGGER.info("KITA NK STATUS STATUS MASING2");
-        LOGGER.info("BIB >>> "+statusBib);
-        LOGGER.info("MANUAL >>> "+statusMan);
-        LOGGER.info("LEAKAGE >>> "+statusLeak);
-        LOGGER.info("POWER SUPPLY >>> "+statusPs);
-        LOGGER.info("WINCHESTER >>> "+statusWin);
-        
+        LOGGER.info("BIB >>> " + statusBib);
+        LOGGER.info("MANUAL >>> " + statusMan);
+        LOGGER.info("LEAKAGE >>> " + statusLeak);
+        LOGGER.info("POWER SUPPLY >>> " + statusPs);
+        LOGGER.info("WINCHESTER >>> " + statusWin);
+
         // APA BENDA KITA KENA BUAT DEKAT SINI UNTUK DOUBLE CHECK ON THE LATEST CODE SO NO REPEATED STATUS
-        
         return status;
     }
-    
+
     public String getCurrentStatus(String itemId) {
         String status = "No setup found";
         String statusVi = "";
@@ -3009,7 +3015,7 @@ public class ItemController {
         String statusWin = "";
         ItemActivityConfig iac = new ItemActivityConfig();
         ItemActivityConfigDAO iacdao = new ItemActivityConfigDAO();
-        
+
         iac = iacdao.getItemActivityByItemId(itemId);
         if (iac != null) {
             statusVi = iac.getVi();
@@ -3019,7 +3025,7 @@ public class ItemController {
             statusPs = iac.getPsLeakageTest();
             statusWin = iac.getWinchesterChamberLeakageTest();
         }
-        
+
         // HANYA UNTUK FIRST TIME SELEPAS DIA COMPLETE KAN VISUAL INSPECTION
         if (statusBib.equals("Yes")) {
             status = "Pending Functional Test - BIB Test";
@@ -3032,7 +3038,7 @@ public class ItemController {
         } else if (statusWin.equals("Yes")) {
             status = "Pending Functional Test - Winchester Chamber Test";
         }
-        
+
         return status;
     }
 
@@ -3108,6 +3114,7 @@ public class ItemController {
         String stringPathElectComponent = "";
         String stringPathSolderJoint = "";
         String stringPathWinConnector = "";
+        String emailBodyFail = "";
 
         ItemVisualInspection itemVm = new ItemVisualInspection();
 
@@ -3157,61 +3164,73 @@ public class ItemController {
             itemVm.setPcbRejectQty("0");
         } else {
             itemVm.setPcbRejectQty(pcbRejectQty);
+            emailBodyFail = "PCB Fail : " + pcbReject + "<br /> ";
         }
         if ("Pass".equals(handle) || "NA".equals(handle)) {
             itemVm.setHandleRejectQty("0");
         } else {
             itemVm.setHandleRejectQty(handleRejectQty);
+            emailBodyFail += "Handle Fail : " + handleReject + "<br /> ";
         }
         if ("Pass".equals(metalFrame) || "NA".equals(metalFrame)) {
             itemVm.setMetalFrameRejectQty("0");
         } else {
             itemVm.setMetalFrameRejectQty(metalFrameRejectQty);
+            emailBodyFail += "MetalFrame Fail : " + metalFrameReject + "<br /> ";
         }
         if ("Pass".equals(hardwareFasterners) || "NA".equals(hardwareFasterners)) {
             itemVm.setHardwareFasternersRejectQty("0");
         } else {
             itemVm.setHardwareFasternersRejectQty(hardwareFasternersRejectQty);
+            emailBodyFail += "Hardware Fasterner Fail : " + hardwareFasternersReject + "<br /> ";
         }
         if ("Pass".equals(clipHolder) || "NA".equals(clipHolder)) {
             itemVm.setClipHolderRejectQty("0");
         } else {
             itemVm.setClipHolderRejectQty(clipHolderRejectQty);
+            emailBodyFail += "Clip Holder Fail : " + clipHolderReject + "<br /> ";
         }
         if ("Pass".equals(pcbEdgeFinger) || "NA".equals(pcbEdgeFinger)) {
             itemVm.setPcbEdgeFingerRejectQty("0");
         } else {
             itemVm.setPcbEdgeFingerRejectQty(pcbEdgeFingerRejectQty);
+            emailBodyFail += "PCB Edge Finger Fail : " + pcbEdgeFingerReject + "<br /> ";
         }
         if ("Pass".equals(connector) || "NA".equals(connector)) {
             itemVm.setConnectorRejectQty("0");
         } else {
             itemVm.setConnectorRejectQty(connectorRejectQty);
+            emailBodyFail += "Connector Fail : " + connectorReject + "<br /> ";
         }
         if ("Pass".equals(dutSockets) || "NA".equals(dutSockets)) {
             itemVm.setDutSocketsRejectQty("0");
         } else {
             itemVm.setDutSocketsRejectQty(dutSocketsRejectQty);
+            emailBodyFail += "DUT Socket Fail : " + dutSocketsReject + "<br /> ";
         }
         if ("Pass".equals(edgeMbBanana) || "NA".equals(edgeMbBanana)) {
             itemVm.setEdgeMbBananaRejectQty("0");
         } else {
             itemVm.setEdgeMbBananaRejectQty(edgeMbBananaRejectQty);
+            emailBodyFail += "Edge MB Banana Fail : " + edgeMbBananaReject + "<br /> ";
         }
         if ("Pass".equals(electComponent) || "NA".equals(electComponent)) {
             itemVm.setElectComponentRejectQty("0");
         } else {
             itemVm.setElectComponentRejectQty(electComponentRejectQty);
+            emailBodyFail += "Elect Component Fail : " + electComponentReject + "<br /> ";
         }
         if ("Pass".equals(solderJoint) || "NA".equals(solderJoint)) {
             itemVm.setSolderJointRejectQty("0");
         } else {
             itemVm.setSolderJointRejectQty(solderJointRejectQty);
+            emailBodyFail += "Solder Joint Fail : " + solderJointReject + "<br /> ";
         }
         if ("Pass".equals(winConnector) || "NA".equals(winConnector)) {
             itemVm.setWinConnectorRejectQty("0");
         } else {
             itemVm.setWinConnectorRejectQty(winConnectorRejectQty);
+            emailBodyFail += "Win Connector Fail : " + winConnectorReject + "<br /> ";
         }
 
         if ("Fail".equals(pcb) || "Fail".equals(handle) || "Fail".equals(metalFrame) || "Fail".equals(hardwareFasterners) || "Fail".equals(clipHolder) || "Fail".equals(pcbEdgeFinger) || "Fail".equals(connector)
@@ -3411,7 +3430,59 @@ public class ItemController {
             QueryResult q2 = iD.updateItemStatus(item);
 
             if ("Fail".equals(finalStatus)) {
-                
+
+                //send email to recepient
+//                List<String> emails = new ArrayList<String>();
+//                emails.add("global-rel-it@onsemi.com"); // add email requestor to the list
+//
+//                String[] myArray = new String[emails.size()];
+//                String[] emailTo = emails.toArray(myArray);
+                EmailVmFailDAO userDao = new EmailVmFailDAO();
+                List<EmailVmFail> userRecipientsList = userDao.getEmailVmFailList();
+
+                String[] to = new String[userRecipientsList.size()];
+                for (int i = 0; i < userRecipientsList.size(); i++) {
+                    to[i] = userRecipientsList.get(i).getEmail();
+                }
+
+                //get current date and time
+                LocalDateTime instance = LocalDateTime.now();
+                DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm");
+                String formattedString = formatter.format(instance); //15-02-2022 12:43
+
+                //gethostname
+                HostnameDAO hostnameD = new HostnameDAO();
+                Hostname h = hostnameD.getHostnameFlagZero();
+                String hostname = h.getHostname();
+
+                ItemDAO itemD = new ItemDAO();
+                Item item2 = itemD.getHardwareDetail(mibItemId);
+
+                //send INFORMATION email
+                LOGGER.info("######################### START EMAIL TO PIC ########################### ");
+                EmailSender emailSender = new EmailSender();
+                emailSender.htmlEmailTable(
+                        servletContext,
+                        "", //user name requestor
+                        to, //to
+                        //                        emailTo,
+                        "Item Registration - Failed Visual Inspection", //subject
+                        "<br />"
+                        + "Please be informed that the item below failed the visual inspection."
+                        + "<br /> "
+                        + "<br /> "
+                        + "Item ID: " + item2.getItemId()
+                        + "<br /> "
+                        + "Inspection Date: " + formattedString
+                        + "<br /> "
+                        + "<br /> "
+                        + "Detail: <br />" + emailBodyFail
+                        + "<br /> "
+                        + "Please click <a href=\"http://" + hostname + "/HEATS/hw/item/add2/" + mibItemId + " \">HERE</a> for more detail."
+                        + "<br /> "
+                        + "<br />Thank you." //msg
+                );
+
                 redirectAttrs.addFlashAttribute("error", "Visual Inspection Fail. Pls go to Maverick Module for Corrective Action.");
                 return "redirect:/hw/item/add2/" + mibItemId;
             } else {
@@ -3424,7 +3495,7 @@ public class ItemController {
             return "redirect:/hw/item/add2/" + mibItemId;
         }
     }
-    
+
     @RequestMapping(value = "/item/save/{jenis}", method = {RequestMethod.GET, RequestMethod.POST})
     public String itemFunctionalTestSave(
             Model model,
@@ -3444,52 +3515,51 @@ public class ItemController {
             @RequestParam(required = false) MultipartFile winUpload,
             HttpServletResponse response
     ) throws IOException {
-        
+
         // jenis2
         // ------------------------ // 
         // /bibTest
         // /leakTest
         // /psTest
         // /winTest
-        
         String username = userSession.getFullname();
         String newStatus = "";
         String latestResult = "";
         checkInsertFunctionalTest(mibItemId, username);
-        
+
         String pathBib = "";
         String pathLeak = "";
         String pathPs = "";
         String pathWin = "";
-        
+
         switch (jenis) {
             case "bibTest":
                 LOGGER.info("KITA MASUK DEKAT BIB TEST");
-                LOGGER.info("quantity dia >>>> "+totalQty);
-                LOGGER.info("result kita >>>> "+bibResult);
+                LOGGER.info("quantity dia >>>> " + totalQty);
+                LOGGER.info("result kita >>>> " + bibResult);
                 break;
             case "leakTest":
                 LOGGER.info("KITA MASUK UNTUK LEAKEAGE TEST");
-                LOGGER.info("quantity dia >>>> "+totalQty);
-                LOGGER.info("result kita >>>> "+leakResult);
+                LOGGER.info("quantity dia >>>> " + totalQty);
+                LOGGER.info("result kita >>>> " + leakResult);
                 break;
             case "psTest":
                 LOGGER.info("KITA DAPAT BUAT POWER SUPPLY TEST");
-                LOGGER.info("quantity dia >>>> "+totalQty);
-                LOGGER.info("result kita >>>> "+psResult);
+                LOGGER.info("quantity dia >>>> " + totalQty);
+                LOGGER.info("result kita >>>> " + psResult);
                 break;
             case "winTest":
                 LOGGER.info("KITA BUAT WINCHESTER TEST");
-                LOGGER.info("quantity dia >>>> "+totalQty);
-                LOGGER.info("result kita >>>> "+winResult);
+                LOGGER.info("quantity dia >>>> " + totalQty);
+                LOGGER.info("result kita >>>> " + winResult);
                 break;
             default:
                 LOGGER.info("KITA BREAK BY DEFAULT");
                 break;
         }
-        
+
         ItemFunctionalTest item = new ItemFunctionalTest();
-        
+
         ItemActivityConfigDAO itemdao2 = new ItemActivityConfigDAO();
         ItemActivityConfig itemdata = itemdao2.getItemActivityByItemId(mibItemId);
         // SINI TAK CHECK DATA NULL - ASSYUME SEBELUM NI DA CHECK AND *MESTI* ADA DATA
@@ -3498,7 +3568,7 @@ public class ItemController {
         String checkLeak = itemdata.getLeakageTest();
         String checkPs = itemdata.getPsLeakageTest();;
         String checkWin = itemdata.getWinchesterChamberLeakageTest();
-        
+
         if (bibUpload != null) {
             try {
                 // Get the file and save it somewhere
@@ -3506,12 +3576,12 @@ public class ItemController {
 //                Path pathBibConnector = Paths.get(UPLOADED_FOLDER + q.getGeneratedKey() + "_winConnector_" + bibUpload.getOriginalFilename());
                 Path pathConnector = Paths.get(FOLDER_TEST + "_bibTest_" + bibUpload.getOriginalFilename()); // THIS ONE TESTING ONLY, USE CORRECT GENERATED KEY
                 if (bibUpload.getOriginalFilename() == null || bibUpload.getOriginalFilename().equalsIgnoreCase("")) {
-                    
+
                 } else {
                     Files.write(pathConnector, bytesConnector);
                     pathBib = pathConnector.toString();
                 }
-                
+
                 // UPDATE TABLE ITEM_FUNCTIONAL_TEST START
                 ItemFunctionalTestDAO itemdao = new ItemFunctionalTestDAO();
                 item.setMibItemId(mibItemId);
@@ -3561,7 +3631,7 @@ public class ItemController {
 //                Path pathBibConnector = Paths.get(UPLOADED_FOLDER + q.getGeneratedKey() + "_winConnector_" + bibUpload.getOriginalFilename());
                 Path pathConnector = Paths.get(FOLDER_TEST + "_leakTest_" + leakUpload.getOriginalFilename()); // THIS ONE TESTING ONLY, USE CORRECT GENERATED KEY
                 if (leakUpload.getOriginalFilename() == null || leakUpload.getOriginalFilename().equalsIgnoreCase("")) {
-                    
+
                 } else {
                     Files.write(pathConnector, bytesConnector);
                     pathLeak = pathConnector.toString();
@@ -3661,7 +3731,7 @@ public class ItemController {
 //                Path pathBibConnector = Paths.get(UPLOADED_FOLDER + q.getGeneratedKey() + "_winConnector_" + bibUpload.getOriginalFilename());
                 Path pathConnector = Paths.get(FOLDER_TEST + "_winTest_" + winUpload.getOriginalFilename()); // THIS ONE TESTING ONLY, USE CORRECT GENERATED KEY
                 if (winUpload.getOriginalFilename() == null || winUpload.getOriginalFilename().equalsIgnoreCase("")) {
-                   
+
                 } else {
                     Files.write(pathConnector, bytesConnector);
                     pathWin = pathConnector.toString();
@@ -3698,15 +3768,15 @@ public class ItemController {
             }
 //            itemVm.setWinConnectorRejectUpload(pathBib);
         }
-        
+
         return "redirect:/hw/item/add2/" + mibItemId;
     }
-    
+
     public void checkInsertFunctionalTest(String itemId, String username) {
         ItemFunctionalTestDAO itemdao = new ItemFunctionalTestDAO();
         ItemFunctionalTest item = itemdao.getItemActivityByItemId(itemId);
         if (item != null) {
-            
+
         } else {
             itemdao = new ItemFunctionalTestDAO();
             ItemFunctionalTest itembaru = new ItemFunctionalTest();
@@ -3822,7 +3892,7 @@ public class ItemController {
         outStream.close();
 
     }
-    
+
     @RequestMapping(value = "/item/ft/{type}/{itemid}", method = RequestMethod.GET)
     public void downloadAttachmentTest(HttpServletRequest request,
             @PathVariable("type") String type,
@@ -3861,7 +3931,7 @@ public class ItemController {
         }
         String headerKey = "Content-Disposition";
         String headerValue = String.format("attachment; filename=\"%s\"", downloadFile.getName());
-        
+
         response.setContentType(mimeType);
         response.setContentLength((int) downloadFile.length());
         response.setHeader(headerKey, headerValue);
@@ -3946,7 +4016,7 @@ public class ItemController {
             ManualTestDAO test = new ManualTestDAO();
             int saizQty = Integer.parseInt(qtyField);
             int saizDut = Integer.parseInt(dutField);
-            
+
             if (nameRows != null) {
                 itemA.setManualTest("Yes");
                 QueryResult q0 = test.insertManualTest(mibItemId, qtyField, dutField, manComp, user, flag);
@@ -4013,7 +4083,7 @@ public class ItemController {
 
             ItemDAO itemD2 = new ItemDAO();
             Item item2 = itemD2.getHardwareDetail(mibItemId);
-            
+
             // CHECKING DI BAWAH BUAT SEBAB EVEN DA CREATE THE ACTIVITY, STATUS TAK UPDATE
             String newStatus = "RESET";
             if (item2.getStatus().equalsIgnoreCase("Pending Activity Selection")) {
@@ -4053,7 +4123,7 @@ public class ItemController {
             RedirectAttributes redirectAttrs,
             @ModelAttribute UserSession userSession,
             @PathVariable("id") String id) {
-        
+
         String qty = "";
         String dut = "";
         String mibItemId = "";
@@ -4063,11 +4133,11 @@ public class ItemController {
 
         model.addAttribute("item", item);
         model.addAttribute("userItemActEdit", userSession.getItemActivityEdit());
-        
+
         ManualTestDAO itemA = new ManualTestDAO();
         ManualTestDAO itemB = new ManualTestDAO();
         ManualTest itemA1 = itemA.getComponentConfig(id);
-        
+
         if (itemA1 == null) {
             redirectAttrs.addFlashAttribute("error", "Manual Test Configuration is missing. Please contact admin for further assistance.");
             return "redirect:/hw/item/pending";
@@ -4116,16 +4186,16 @@ public class ItemController {
             @RequestParam(required = false, value = "lower[]") List<String> num3Rows,
             @RequestParam(required = false, value = "upper[]") List<String> num4Rows
     ) {
-        
+
         LOGGER.info("NEED TO ADD THE UPDATE FUNCTION HERE : MAKE SURE READ ALL CURRENT VALUE AND NEW ONE");
         int saiz = nameRows.size();
-        for (int i=0; i<saiz; i++) {
+        for (int i = 0; i < saiz; i++) {
             if (num3Rows != null && i >= 0 && i < num3Rows.size()) {
                 Object value = num3Rows.get(i);
                 if (value == null) {
                     // Handle null element case
                 } else {
-                    
+
                 }
             } else {
                 LOGGER.warn("List is null or index is out of bounds");
