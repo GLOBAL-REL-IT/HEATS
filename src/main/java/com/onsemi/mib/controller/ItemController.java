@@ -3937,48 +3937,53 @@ public class ItemController {
             itemA.setBibTest("No");
         }
 
-        ManualTestDAO test = new ManualTestDAO();
-        int saizQty = Integer.parseInt(qtyField);
-        int saizDut = Integer.parseInt(dutField);
-
         String status = "";
         String user = userSession.getLoginId();
         String flag = "1";
         String configId = "0";
 
         if ("on".equals(manualTestCheck)) {
-            itemA.setManualTest("Yes");
-            QueryResult q0 = test.insertManualTest(mibItemId, qtyField, dutField, manComp, user, flag);
-            if (!"0".equals(q0.getGeneratedKey())) {
-                configId = q0.getGeneratedKey();
-                for (int c1 = 1; c1 <= saizQty; c1++) {
-                    String qtyId = "0";
-                    test = new ManualTestDAO();
-                    QueryResult q1 = test.insertManual01(mibItemId, String.valueOf(c1), user, flag);
-                    if (!"0".equals(q1.getGeneratedKey())) {
-                        qtyId = q1.getGeneratedKey();
-                    } else {
-
-                    }
-                    for (int c2 = 1; c2 <= saizDut; c2++) {
-                        String dutId = "0";
+            ManualTestDAO test = new ManualTestDAO();
+            int saizQty = Integer.parseInt(qtyField);
+            int saizDut = Integer.parseInt(dutField);
+            
+            if (nameRows != null) {
+                itemA.setManualTest("Yes");
+                QueryResult q0 = test.insertManualTest(mibItemId, qtyField, dutField, manComp, user, flag);
+                if (!"0".equals(q0.getGeneratedKey())) {
+                    configId = q0.getGeneratedKey();
+                    for (int c1 = 1; c1 <= saizQty; c1++) {
+                        String qtyId = "0";
                         test = new ManualTestDAO();
-                        QueryResult q2 = test.insertManual02(mibItemId, qtyId, String.valueOf(c2), user, flag);
-                        if (!"0".equals(q2.getGeneratedKey())) {
-                            dutId = q2.getGeneratedKey();
+                        QueryResult q1 = test.insertManual01(mibItemId, String.valueOf(c1), user, flag);
+                        if (!"0".equals(q1.getGeneratedKey())) {
+                            qtyId = q1.getGeneratedKey();
                         } else {
 
                         }
-                        int saiz = nameRows.size();
-                        for (int i = 0; i < saiz; i++) {
+                        for (int c2 = 1; c2 <= saizDut; c2++) {
+                            String dutId = "0";
                             test = new ManualTestDAO();
-                            QueryResult q3 = test.insertManual03(mibItemId, qtyId, dutId, type.get(i), nameRows.get(i), num1Rows.get(i), num3Rows.get(i), num4Rows.get(i), num2Rows.get(i), status, user, flag);
-                            if (!"0".equals(q3.getGeneratedKey())) {
+                            QueryResult q2 = test.insertManual02(mibItemId, qtyId, String.valueOf(c2), user, flag);
+                            if (!"0".equals(q2.getGeneratedKey())) {
+                                dutId = q2.getGeneratedKey();
+                            } else {
 
+                            }
+                            int saiz = nameRows.size();
+                            for (int i = 0; i < saiz; i++) {
+                                test = new ManualTestDAO();
+                                QueryResult q3 = test.insertManual03(mibItemId, qtyId, dutId, type.get(i), nameRows.get(i), num1Rows.get(i), num3Rows.get(i), num4Rows.get(i), num2Rows.get(i), status, user, flag);
+                                if (!"0".equals(q3.getGeneratedKey())) {
+
+                                }
                             }
                         }
                     }
                 }
+            } else {
+                redirectAttrs.addFlashAttribute("error", "Failed to save Activity Configuration. Please create proper number of component.");
+                return "redirect:/hw/item/addActivity/" + mibItemId;
             }
         } else {
             itemA.setManualTest("No");

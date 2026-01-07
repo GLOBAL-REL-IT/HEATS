@@ -190,7 +190,7 @@
                                                 <div class="input-group form-check form-switch">
                                                     <input class="form-check-input" type="checkbox" role="switch" id="${xtvt.remarks}" name="${xtvt.remarks}" 
                                                            <c:if test="${xtvt.remarks eq 'viCheck'}"> checked onclick="return false;"</c:if>
-                                                           <c:if test="${xtvt.remarks eq 'manualTestCheck'}"> onchange="toggleVisibility()""</c:if>>
+                                                           <c:if test="${xtvt.remarks eq 'manualTestCheck'}"> onchange="toggleVisibility()"" onclick="toggleRequired();"</c:if>>
                                                     </div>
                                             </c:forEach>
                                         </div>
@@ -200,15 +200,15 @@
                                             <div class="static-fields">
                                                 <div>
                                                     <label class="col-2" for="qtyField">Quantity :</label>
-                                                    <input class="col-2" type="number" id="qtyField" name="qtyField" min="1" required>
+                                                    <input class="col-2" type="number" id="qtyField" name="qtyField" min="1" >
                                                 </div>
                                                 <div>
                                                     <label class="col-2" for="dutField">DUT #:</label>
-                                                    <input class="col-2" type="number" id="dutField" name="dutField" min="1" required>
+                                                    <input class="col-2" type="number" id="dutField" name="dutField" min="1" >
                                                 </div>
                                                 <div>
                                                     <label class="col-2" for="manComp">Components :</label>
-                                                    <input class="col-2" type="number" id="manComp" name="manComp" min="1" required>
+                                                    <input class="col-2" type="number" id="manComp" name="manComp" min="1">
                                                     <button type="button" onclick="createRows()">Create Components</button>
                                                 </div>
                                             </div>
@@ -282,7 +282,6 @@
 
         var userItemActAdd = document.getElementById("userItemActAdd");
         if (userItemActAdd.value !== "Yes") {
-//                                                            alert();
             var allInputs = document.getElementsByTagName("input");
             for (var i = 0; i < allInputs.length; i++) {
                 allInputs[i].disabled = true;
@@ -355,7 +354,7 @@
                 inputPercent.className = 'standard-input';
                 inputPercent.required = true; // Added required attribute
                 percentCell.appendChild(inputPercent);
-                
+
                 const completeInput2 = document.createElement('input');
                 completeInput2.type = 'text';
                 completeInput2.value = 'OPEN / SHORT'; // Set the display value
@@ -392,7 +391,7 @@
                 inputPercent.addEventListener('input', () => calculate(w));
 
                 handleDropdownChange(w);
-                
+
                 const deleteCell = newRow.insertCell(7);
                 const deleteButton = document.createElement("button");
                 deleteButton.innerText = "Delete";
@@ -462,7 +461,7 @@
                 percentInput.classList.add('hidden');
                 lowerInput.classList.add('hidden');
                 upperInput.classList.add('hidden');
-                
+
                 percentCell.classList.add('hidden');
                 lowerCell.classList.add('hidden');
                 upperCell.classList.add('hidden');
@@ -480,12 +479,12 @@
                 upperInput.value = 1;
                 valueInput.removeAttribute('required');
                 percentInput.removeAttribute('required');
-                
+
                 valueInput.classList.remove('hidden');
                 percentInput.classList.add('hidden');
                 lowerInput.classList.add('hidden');
                 upperInput.classList.add('hidden');
-                
+
                 valueCell.classList.remove('hidden');
                 percentCell.classList.remove('hidden');
                 lowerCell.classList.add('hidden');
@@ -541,12 +540,29 @@
                 inputContainer.classList.add("hidden");
             }
         }
+        
+        function toggleRequired() {
+            var cek = document.getElementById("manualTestCheck");
+            var aa01 = document.getElementById("qtyField");
+            var aa02 = document.getElementById("dutField");
+            var aa03 = document.getElementById("manComp");
+            
+            if (cek.checked) {
+                aa01.setAttribute("required", "required");
+                aa02.setAttribute("required", "required");
+                aa03.setAttribute("required", "required");
+            } else {
+                aa01.removeAttribute("required");
+                aa02.removeAttribute("required");
+                aa03.removeAttribute("required");
+            }
+        }
 
         document.addEventListener('DOMContentLoaded', (event) => {
             createRows(); // Create initial rows on page load
             toggleVisibility();
         });
-        
+
         function removeRow(buttonElement) {
             const rowToRemove = buttonElement.closest('tr');
             rowToRemove.parentNode.removeChild(rowToRemove);
