@@ -4050,6 +4050,7 @@ public class ItemController {
     @RequestMapping(value = "/item/editActivity/{id}", method = {RequestMethod.GET, RequestMethod.POST})
     public String editActivity(
             Model model,
+            RedirectAttributes redirectAttrs,
             @ModelAttribute UserSession userSession,
             @PathVariable("id") String id) {
         
@@ -4059,8 +4060,8 @@ public class ItemController {
 
         ItemActivityConfigDAO itemD = new ItemActivityConfigDAO();
         ItemActivityConfig item = itemD.getItemActivityConfigWithItemDetail(id);
-        model.addAttribute("item", item);
 
+        model.addAttribute("item", item);
         model.addAttribute("userItemActEdit", userSession.getItemActivityEdit());
         
         ManualTestDAO itemA = new ManualTestDAO();
@@ -4068,13 +4069,22 @@ public class ItemController {
         ManualTest itemA1 = itemA.getComponentConfig(id);
         
         if (itemA1 == null) {
-            
+            redirectAttrs.addFlashAttribute("error", "Manual Test Configuration is missing. Please contact admin for further assistance.");
+            return "redirect:/hw/item/pending";
         } else {
             qty = itemA1.getQty();
             dut = itemA1.getDut();
             mibItemId = itemA1.getMibItemId();
-            List<ManualTest> itemB1 = itemB.getAllComponentConfig(mibItemId);
-            model.addAttribute("listData", itemB1);
+            ItemDAO itemdao = new ItemDAO();
+            Item dataitem = itemdao.getHardwareDetail(mibItemId);
+            String status = dataitem.getStatus();
+            if (status.contains("Pending Visual Inspection")) {
+                List<ManualTest> itemB1 = itemB.getAllComponentConfig(mibItemId);
+                model.addAttribute("listData", itemB1);
+            } else {
+                redirectAttrs.addFlashAttribute("error", "Functional Test already on-going.");
+                return "redirect:/hw/item/pending";
+            }
         }
         model.addAttribute("qty", qty);
         model.addAttribute("dut", dut);
