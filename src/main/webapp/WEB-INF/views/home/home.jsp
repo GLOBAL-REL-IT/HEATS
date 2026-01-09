@@ -74,7 +74,7 @@
                             <div class="d-flex align-items-center">
                                 <div>
                                     <h6 class="text-muted mb-1 fw-light">RMS Pending for Loading</h6>
-                                    <h3 class="fw-bold mb-1">20</h3>
+                                    <h3 class="fw-bold mb-1">0</h3>
                                     <!--                                    <span class="badge bg-success-subtle text-success rounded-pill px-2 py-1">
                                                                             <i class="bi bi-arrow-up-right"></i> 12%
                                                                         </span>-->
@@ -90,7 +90,7 @@
                             <div class="d-flex align-items-center">
                                 <div>
                                     <h6 class="text-muted mb-1 fw-light">RMS Return from Loading</h6>
-                                    <h3 class="fw-bold mb-1">7</h3>
+                                    <h3 class="fw-bold mb-1">0</h3>
                                     <!--                                    <span class="badge bg-warning-subtle text-warning rounded-pill px-2 py-1">
                                                                             <i class="bi bi-arrow-down-right"></i> 5%
                                                                         </span>-->

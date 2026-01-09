@@ -4139,8 +4139,8 @@ public class ItemController {
         ManualTest itemA1 = itemA.getComponentConfig(id);
 
         if (itemA1 == null) {
-            redirectAttrs.addFlashAttribute("error", "Manual Test Configuration is missing. Please contact admin for further assistance.");
-            return "redirect:/hw/item/pending";
+//            redirectAttrs.addFlashAttribute("error", "Manual Test Configuration is missing. Please contact admin for further assistance.");
+//            return "redirect:/hw/item/pending";
         } else {
             qty = itemA1.getQty();
             dut = itemA1.getDut();

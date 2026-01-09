@@ -487,16 +487,34 @@
 
 
         <script>
+
+
             function updateDateTime() {
                 // 1. Get the current date and time
                 const now = new Date();
 
+                const options = {
+                    day: '2-digit',
+                    month: 'short', // 'short' gives 'Jan', 'Feb', etc.
+                    year: 'numeric',
+                    hour: '2-digit', // Add this for the hour
+                    minute: '2-digit', // Add this for the minute
+                    second: '2-digit', // Add this for the second
+                    hour12: false
+                };
+
+// 'en-GB' locale often formats as dd/mm/yyyy by default,
+// but we explicitly define options to ensure dd-MMM-yyyy format structure (minus the dashes).
+// We manually join the parts with dashes to match the exact requested format.
+                const formattedDateTime = new Intl.DateTimeFormat('en-GB', options).format(now);
+                const finalFormattedDate = formattedDateTime.replace(/ /g, ' ');
+
                 // 2. Format the date and time (using toLocaleString for a human-readable format)
-                const formattedDateTime = now.toLocaleString();
+//                const formattedDateTime = now.toLocaleString();
                 // You can also use methods like toLocaleTimeString() or custom formatting
 
                 // 3. Update the HTML element
-                document.getElementById("digital-clock").textContent = formattedDateTime;
+                document.getElementById("digital-clock").textContent = finalFormattedDate;
             }
 
 // 4. Call the function immediately to display the time on page load
