@@ -4131,6 +4131,17 @@ public class ItemController {
         ItemActivityConfigDAO itemD = new ItemActivityConfigDAO();
         ItemActivityConfig item = itemD.getItemActivityConfigWithItemDetail(id);
 
+        LOGGER.info("SATU >>>>> "+item.getBibTest());
+        LOGGER.info(" DUA >>>>> "+item.getManualTest());
+        LOGGER.info("TIGA >>>>> "+item.getLeakageTest());
+        LOGGER.info("MPAT >>>>> "+item.getPsLeakageTest());
+        LOGGER.info("LIMA >>>>> "+item.getWinchesterChamberLeakageTest());
+        mibItemId = item.getMibItemId();
+        
+        ItemDAO itemdao = new ItemDAO();
+        Item dataitem = itemdao.getHardwareDetail(mibItemId);
+        String status = dataitem.getStatus();
+        
         model.addAttribute("item", item);
         model.addAttribute("userItemActEdit", userSession.getItemActivityEdit());
 
@@ -4139,16 +4150,17 @@ public class ItemController {
         ManualTest itemA1 = itemA.getComponentConfig(id);
 
         if (itemA1 == null) {
+            if (status.contains("Pending Visual Inspection")) {
+                
+            } else {
+                
+            }
 //            redirectAttrs.addFlashAttribute("error", "Manual Test Configuration is missing. Please contact admin for further assistance.");
 //            return "redirect:/hw/item/pending";
         } else {
-            qty = itemA1.getQty();
-            dut = itemA1.getDut();
-            mibItemId = itemA1.getMibItemId();
-            ItemDAO itemdao = new ItemDAO();
-            Item dataitem = itemdao.getHardwareDetail(mibItemId);
-            String status = dataitem.getStatus();
             if (status.contains("Pending Visual Inspection")) {
+                qty = itemA1.getQty();
+                dut = itemA1.getDut();
                 List<ManualTest> itemB1 = itemB.getAllComponentConfig(mibItemId);
                 model.addAttribute("listData", itemB1);
             } else {

@@ -423,6 +423,12 @@
             valueInput.className = 'standard-input';
             valueInput.style.width = '70px';
             valueInput.required = true;
+            valueInput.step = '0.01';
+            valueInput.addEventListener('blur', function() {
+                if (this.value) {
+                    this.value = parseFloat(this.value).toFixed(2);
+                }
+            });
             valueCell.appendChild(valueInput);
 
             // --- Percentage Input ---
@@ -433,6 +439,12 @@
             percentageInput.placeholder = "%";
             percentageInput.className = 'standard-input';
             percentageInput.style.width = '70px';
+            percentageInput.step = '0.01';
+            percentageInput.addEventListener('blur', function() {
+                if (this.value) {
+                    this.value = parseFloat(this.value).toFixed(2);
+                }
+            });
             percentageCell.appendChild(percentageInput);
 
             // --- Lower Limit (Input for Java compatibility) ---
@@ -443,6 +455,11 @@
             lowerLimitInput.className = "standard-input";
             lowerLimitInput.style.width = "70px";
             lowerLimitInput.value = "N/A";
+            lowerLimitInput.addEventListener('blur', function() {
+                if (this.value) {
+                    this.value = parseFloat(this.value).toFixed(2);
+                }
+            });
             lowerLimitCell.appendChild(lowerLimitInput);
 
             // --- Upper Limit (Input for Java compatibility) ---
@@ -453,10 +470,19 @@
             upperLimitInput.className = "standard-input";
             upperLimitInput.style.width = "70px";
             upperLimitInput.value = "N/A";
+            upperLimitInput.addEventListener('blur', function() {
+                if (this.value) {
+                    this.value = parseFloat(this.value).toFixed(2);
+                }
+            });
             upperLimitCell.appendChild(upperLimitInput);
 
             const deleteButton = document.createElement("button");
-            deleteButton.innerText = "Delete";
+            const trashIcon = document.createElement("i");
+            trashIcon.className = "bi bi-trash h3"; // Bootstrap classes
+            trashIcon.style.color = "gray";         // Your custom color
+            deleteButton.innerText = "";
+            deleteButton.appendChild(trashIcon);
             deleteButton.className = "delete-btn";
             deleteButton.onclick = function () { this.closest('tr').remove(); };
             actionCell.appendChild(deleteButton);
@@ -470,8 +496,8 @@
 
                     if (!isNaN(val) && !isNaN(pcnt)) {
                         const tolerance = (val * pcnt) / 100;
-                        lowerLimitInput.value = (val - tolerance).toFixed(3);
-                        upperLimitInput.value = (val + tolerance).toFixed(3);
+                        lowerLimitInput.value = (val - tolerance).toFixed(2);
+                        upperLimitInput.value = (val + tolerance).toFixed(2);
                     } else {
                         lowerLimitInput.value = "N/A";
                         upperLimitInput.value = "N/A";
@@ -522,188 +548,11 @@
             updateRowState();
         }
         
-        function addRow22() {
-            const quantity = document.getElementById("inputQuantity").value || 1;
-            const dut = document.getElementById("inputDUT").value || 1;
-
-            if (!quantity || !dut) {
-                alert("Please enter valid Quantity and DUT values.");
-                return;
-            }
-
-            const tableBody = document.getElementById("tableBody");
-            const newRow = tableBody.insertRow(-1);
-            // newRow does not get an ID assigned here.
-
-            const typeCell = newRow.insertCell(0);
-            const nameCell = newRow.insertCell(1);
-            const valueCell = newRow.insertCell(2);
-            const percentageCell = newRow.insertCell(3);
-            const lowerLimitCell = newRow.insertCell(4);
-            const upperLimitCell = newRow.insertCell(5);
-            const actionCell = newRow.insertCell(6);
-
-            // --- Create Input Elements ---
-            const typeSelect = document.createElement("select");
-            typeSelect.innerHTML = `
-                <option value="Capacitor">Capacitor</option>
-                <option value="Resistor">Resistor</option>
-                <option value="Zener">Zener</option>
-                <option value="Fuse">Fuse</option>
-                <option value="Diode">Diode</option>
-            `;
-            typeSelect.name = 'component_type[]';
-            typeCell.appendChild(typeSelect);
-            
-            const nameInput = document.createElement("input");
-            nameInput.type = "text";
-            nameInput.placeholder = "Name";
-            nameInput.style.width = '90px';
-            nameInput.name = 'component_name[]';
-            nameInput.className = 'standard-input';
-            nameInput.requied = true;
-            nameCell.appendChild(nameInput);
-
-            const valueInput = document.createElement("input");
-            valueInput.type = "number";
-            valueInput.step = "any";
-            valueInput.placeholder = "Value";
-            valueInput.style.width = '70px';
-            valueInput.name = 'actual_value[]';
-            valueInput.className = 'standard-input';
-            valueInput.required = true;
-            valueCell.appendChild(valueInput);
-            
-            const percentageInput = document.createElement("input");
-            percentageInput.type = "number";
-            percentageInput.step = "any";
-            percentageInput.placeholder = "%";
-            percentageInput.style.width = '70px';
-            percentageInput.name = 'percentage[]';
-            percentageInput.className = 'standard-input';
-            percentageCell.appendChild(percentageInput);
-
-            const lowerLimitInput = document.createElement("input");
-            lowerLimitInput.type = "text";
-            lowerLimitInput.name = "lower[]"; // This name is sent to Java
-            lowerLimitInput.readOnly = true;   // Prevents manual typing
-            lowerLimitInput.className = "standard-input";
-            lowerLimitInput.style.width = "70px";
-            lowerLimitInput.value = "N/A";
-            lowerLimitCell.appendChild(lowerLimitInput);
-
-            // --- Upper Limit Cell ---
-            const upperLimitInput = document.createElement("input");
-            upperLimitInput.type = "text";
-            upperLimitInput.name = "upper[]"; // This name is sent to Java
-            upperLimitInput.readOnly = true;   // Prevents manual typing
-            upperLimitInput.className = "standard-input";
-            upperLimitInput.style.width = "70px";
-            upperLimitInput.value = "N/A";
-            upperLimitCell.appendChild(upperLimitInput);
-
-            const deleteButton = document.createElement("button");
-            deleteButton.innerText = "Delete";
-            deleteButton.className = "delete-btn";
-
-            // The delete handler uses DOM traversal (closest('tr'))
-            deleteButton.onclick = function () {
-                this.closest('tr').remove();
-            };
-            actionCell.appendChild(deleteButton);
-
-            const calculateLimits = () => {
-                if (typeSelect.value === "Capacitor" || typeSelect.value === "Resistor") {
-                    const val = parseFloat(valueInput.value);
-                    const pcnt = parseFloat(percentageInput.value);
-
-                    if (!isNaN(val) && !isNaN(pcnt)) {
-                        const toleranceAmount = (val * pcnt) / 100;
-                        lowerLimitInput.innerText = (val - toleranceAmount).toFixed(3);
-                        upperLimitInput.innerText = (val + toleranceAmount).toFixed(3);
-                    } else {
-                        lowerLimitInput.innerText = "N/A";
-                        upperLimitInput.innerText = "N/A";
-                    }
-                }
-            };
-
-            const updateRowState = () => {
-                const type = typeSelect.value;
-
-                // Reset state
-                newRow.querySelectorAll('.status-text').forEach(el => el.remove());
-                valueCell.style.display = '';
-                valueCell.colSpan = 1;
-                percentageCell.style.display = '';
-                percentageCell.colSpan = 1;
-                lowerLimitCell.style.display = '';
-                upperLimitCell.style.display = '';
-                valueInput.style.display = '';
-                percentageInput.style.display = '';
-                lowerLimitInput.style.display = '';
-                upperLimitInput.style.display = '';
-
-                if (type === "Fuse") {
-                    console.log("SINI MASUK DAN PILIH FUSE");
-                    // FUSE LOGIC: Combine Component Value, %, Lower, Upper
-                    valueInput.removeAttribute('required');
-                    valueInput.style.display = 'none';
-                    percentageInput.style.display = 'none';
-                    percentageCell.style.display = 'none';
-                    lowerLimitCell.style.display = 'none';
-                    upperLimitCell.style.display = 'none';
-                    valueCell.colSpan = 4;
-
-                    const statusSpan = document.createElement('span');
-                    statusSpan.className = 'status-text';
-                    statusSpan.innerText = "OPEN / SHORT";
-                    valueCell.appendChild(statusSpan);
-
-                } else if (type === "Diode" || type === "Zener") {
-                    // Diode/Zener Logic
-                    console.log("SINI PILIH ZENER / DIODE");
-                    percentageInput.value = 0;
-                    percentageInput.style.display = 'none';
-                    percentageCell.colSpan = 3;
-                    lowerLimitCell.style.display = 'none';
-                    upperLimitCell.style.display = 'none';
-
-                    const statusSpan = document.createElement('span');
-                    statusSpan.className = 'status-text';
-                    statusSpan.innerText = "OPEN / SHORT";
-                    percentageCell.appendChild(statusSpan);
-
-                } else {
-                    // Standard components
-                    calculateLimits();
-                }
-            };
-
-            valueInput.addEventListener('input', calculateLimits);
-            percentageInput.addEventListener('input', calculateLimits);
-            typeSelect.addEventListener('change', updateRowState);
-
-            updateRowState();
-        }
-        
         function deleteRow(buttonElement) {
-            // 1. Get the parent cell (<td>)
             let tableCell = buttonElement.parentNode;
-            // 2. Get the parent row (<tr>)
             let tableRow = tableCell.parentNode;
-            // 3. Get the parent body (<tbody>) to remove the row from
             let tableBody = tableRow.parentNode;
-
-            // 4. Remove the row element from the table body
             tableBody.removeChild(tableRow);
-
-            // Optional: Add confirmation dialogue
-//             if (confirm("Are you sure you want to delete this row?")) {
-//                 tableBody.removeChild(tableRow);
-//             } else {
-//                 
-//             }
         }
         
         function toggleVisibility() {
@@ -718,19 +567,7 @@
         }
         
 //        $(document).ready(function () {
-
-            //            $('#onHandQty').change(function () {
-            ////                    $('#totalQty').val(parseInt($('#onHandQty').val()) + parseInt($('#productionQty').val()) + parseInt($('#productionStagingQty').val()) + parseInt($('#repairQty').val()));
-            //                $('#totalQty').val(parseInt($('#onHandQty').val()));
-            //            });
-//                var element = $('#itemTypeRead');
-//                if (!element.val()) {
-//                    //                        alert();
-//                    $("#submit").attr("disabled", true);
-//                } else {
-//                    $("#submit").removeAttr('disabled');
-//                }
-
+            
 //        });
     </script>
 </s:layout-component>

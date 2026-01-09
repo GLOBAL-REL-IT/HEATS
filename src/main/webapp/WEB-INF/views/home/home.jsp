@@ -790,10 +790,11 @@
             var options = {
                 series: [42, 47, 52, 58, 65],
                 chart: {
-                    width: 370,
+//                    width: 370,
                     height: 370,
                     type: 'polarArea',
                     fontFamily: 'Poppins, sans-serif',
+                    background: '#FCFCEB',
                     toolbar: {
                         show: false
                     },

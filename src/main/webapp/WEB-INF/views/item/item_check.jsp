@@ -208,7 +208,7 @@
                                                 </div>
                                                 <div>
                                                     <label class="col-2" for="manComp">Components :</label>
-                                                    <input class="col-2" type="number" id="manComp" name="manComp" min="1">
+                                                    <input class="col-2" type="number" id="manComp" name="manComp" min="1" >
                                                     <button type="button" onclick="createRows()">Create Components</button>
                                                 </div>
                                             </div>
@@ -330,8 +330,14 @@
                 inputValue.value = 0;
                 inputValue.id = 'value_input_' + w;
                 inputValue.name = 'actual_value[]';
+                inputValue.step = '0.01';
                 inputValue.className = 'standard-input';
                 inputValue.required = true; // Added required attribute
+                inputValue.addEventListener('blur', function() {
+                    if (this.value) {
+                        this.value = parseFloat(this.value).toFixed(2);
+                    }
+                });
                 valueCell.appendChild(inputValue);
 
                 const completeInput = document.createElement('input');
@@ -351,8 +357,14 @@
                 inputPercent.value = 0;
                 inputPercent.id = 'percent_input_' + w;
                 inputPercent.name = 'percentage[]';
+                inputPercent.step = '0.01';
                 inputPercent.className = 'standard-input';
                 inputPercent.required = true; // Added required attribute
+                inputPercent.addEventListener('blur', function() {
+                    if (this.value) {
+                        this.value = parseFloat(this.value).toFixed(2);
+                    }
+                });
                 percentCell.appendChild(inputPercent);
 
                 const completeInput2 = document.createElement('input');
