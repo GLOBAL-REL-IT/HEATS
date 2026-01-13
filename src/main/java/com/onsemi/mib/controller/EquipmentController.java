@@ -9,23 +9,20 @@ import com.onsemi.mib.dao.EquipmentDAO;
 import com.onsemi.mib.dao.EquipmentFamilyDAO;
 import com.onsemi.mib.dao.EquipmentGlobalFamilyDAO;
 import com.onsemi.mib.dao.EquipmentGlobalRelTestGroupDAO;
+import com.onsemi.mib.dao.EquipmentLogDAO;
 import com.onsemi.mib.dao.EquipmentMonitoringDAO;
 import com.onsemi.mib.dao.EquipmentRelTestGroupDAO;
 import com.onsemi.mib.dao.EquipmentTechDAO;
 import com.onsemi.mib.dao.EquipmentViMonitoringDAO;
-import com.onsemi.mib.dao.ItemDAO;
-import com.onsemi.mib.dao.ParameterDetailsDAO;
 import com.onsemi.mib.model.Equipment;
 import com.onsemi.mib.model.EquipmentFamily;
 import com.onsemi.mib.model.EquipmentGlobalFamily;
 import com.onsemi.mib.model.EquipmentGlobalRelTestGroup;
+import com.onsemi.mib.model.EquipmentLog;
 import com.onsemi.mib.model.EquipmentMonitoring;
 import com.onsemi.mib.model.EquipmentRelTestGroup;
-import com.onsemi.mib.model.EquipmentSlot;
 import com.onsemi.mib.model.EquipmentTech;
 import com.onsemi.mib.model.EquipmentViMonitoring;
-import com.onsemi.mib.model.Item;
-import com.onsemi.mib.model.ParameterDetails;
 import com.onsemi.mib.model.UserSession;
 import com.onsemi.mib.tools.EmailSender;
 import com.onsemi.mib.tools.QueryResult;
@@ -261,10 +258,30 @@ public class EquipmentController {
                 eqptD = new EquipmentDAO();
                 QueryResult q = eqptD.insertEquipment(eqpt);
                 countAdd += q.getResult();
+
+                //update log
+                EquipmentLog log = new EquipmentLog();
+                log.setEquipmentId(q.getGeneratedKey());
+                log.setDetail("Added From SPTS");
+                log.setCreatedBy(userSession.getFullname());
+                EquipmentLogDAO logD = new EquipmentLogDAO();
+                QueryResult logQ = logD.insertEquipmentLog(log);
+
             } else if (countPkid == 1) { //update
                 eqptD = new EquipmentDAO();
                 QueryResult q = eqptD.updateEquipmentBySptsPkid(eqpt);
                 countUpdate += q.getResult();
+
+                eqptD = new EquipmentDAO();
+                Equipment eqpt1 = eqptD.getEquipmentBySptsPkid(pkid);
+
+                //update log
+                EquipmentLog log = new EquipmentLog();
+                log.setEquipmentId(eqpt1.getId());
+                log.setDetail("Data Updated From SPTS");
+                log.setCreatedBy(userSession.getFullname());
+                EquipmentLogDAO logD = new EquipmentLogDAO();
+                QueryResult logQ = logD.insertEquipmentLog(log);
             }
             count += 1;
         }
@@ -540,6 +557,15 @@ public class EquipmentController {
                     model.addAttribute("equipment", equipment);
                     return "equipment/add";
                 } else {
+
+                    //update log
+                    EquipmentLog log = new EquipmentLog();
+                    log.setEquipmentId(queryResult.getGeneratedKey());
+                    log.setDetail("New Record Added");
+                    log.setCreatedBy(userSession.getFullname());
+                    EquipmentLogDAO logD = new EquipmentLogDAO();
+                    QueryResult logQ = logD.insertEquipmentLog(log);
+
                     redirectAttrs.addFlashAttribute("success", "Successfully add equipment ID: " + eqptId);
                     return "redirect:/equipment";
                 }
@@ -721,6 +747,15 @@ public class EquipmentController {
                 EquipmentDAO equipmentDAO = new EquipmentDAO();
                 QueryResult queryResult = equipmentDAO.updateEquipment(equipment);
                 if (queryResult.getResult() == 1) {
+
+                    //update log
+                    EquipmentLog log = new EquipmentLog();
+                    log.setEquipmentId(mibId);
+                    log.setDetail("Data Updated");
+                    log.setCreatedBy(userSession.getFullname());
+                    EquipmentLogDAO logD = new EquipmentLogDAO();
+                    QueryResult logQ = logD.insertEquipmentLog(log);
+
                     redirectAttrs.addFlashAttribute("success", "Successfully update equipment ID: " + eqptId);
                 } else {
                     LOGGER.info("Failed to update local DB");
@@ -743,6 +778,7 @@ public class EquipmentController {
     @RequestMapping(value = "/delete/{pkid}/{mbid}", method = RequestMethod.GET)
     public String delete(
             Model model,
+            @ModelAttribute UserSession userSession,
             Locale locale,
             RedirectAttributes redirectAttrs,
             @PathVariable("pkid") String pkid,
@@ -773,6 +809,15 @@ public class EquipmentController {
             QueryResult queryResult = equipmentDAO.deleteEquipment(mbid);
 
             if (queryResult.getResult() > 0) {
+
+                //update log
+                EquipmentLog log = new EquipmentLog();
+                log.setEquipmentId(mbid);
+                log.setDetail("Equipment Deleted");
+                log.setCreatedBy(userSession.getFullname());
+                EquipmentLogDAO logD = new EquipmentLogDAO();
+                QueryResult logQ = logD.insertEquipmentLog(log);
+
                 redirectAttrs.addFlashAttribute("success", "Succesfully Scrap Eqpt ID: " + eqptId);
                 return "redirect:/equipment";
             } else {

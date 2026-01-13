@@ -703,8 +703,10 @@
 
                 if (productionQty.value === "0" || productionQty.value === null || typeof productionQty.value === 'undefined' || productionQty.value === '') {
                     transactionProd.disabled = true;
+                    transactionReturnProdToStaging.disabled = true;
                 } else {
                     transactionProd.disabled = false;
+                    transactionReturnProdToStaging.disabled = false;
                 }
 
                 if (productionStagingQty.value === "0" || productionStagingQty.value === null || typeof productionStagingQty.value === 'undefined' || productionStagingQty.value === '') {

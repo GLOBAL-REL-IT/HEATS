@@ -1,5 +1,4 @@
 <%@page contentType="text/html;charset=UTF-8" %>
-<%@include file="/WEB-INF/base/taglibs.jsp" %>
 <s:layout-render name="/WEB-INF/base/base.jsp">
     <s:layout-component name="page_title">
         <f:message key="general.label.home"/>
@@ -66,74 +65,65 @@
         <!-- Content wrapper start -->
         <div class="content-wrapper">
 
-            <!-- Row start -->
-            <div class="row gx-4">
-                <div class="col-xl-3 col-sm-6 col-12">
-                    <div class="card mb-4 border-0 shadow-sm hover-shadow-md transition-300">
-                        <div class="card-body p-3">
-                            <div class="d-flex align-items-center">
-                                <div>
-                                    <h6 class="text-muted mb-1 fw-light">RMS Pending for Loading</h6>
-                                    <h3 class="fw-bold mb-1">0</h3>
-                                    <!--                                    <span class="badge bg-success-subtle text-success rounded-pill px-2 py-1">
-                                                                            <i class="bi bi-arrow-up-right"></i> 12%
-                                                                        </span>-->
-                                </div>
-                                <div id="taskStats1" class="ms-auto"></div>
-                            </div>
+            <div class="col-12">
+                <!-- Card start -->
+                <div class="card mb-4">
+                    <div class="card-header">
+                        <h5 class="card-title">New Hardware - Pending Vm/Functional Test <span class="h6" style="color:red">(${countItemPending})</span></h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table id="scrollVerticalNewHw" class="table pending custom-table">
+                                <thead>
+                                    <tr>
+                                        <th><span>No</span></th>
+                                        <th><span>Item Type</span></th>
+                                        <th><span>Sub Type</span></th>
+                                        <th><span>Item ID</span></th>
+                                        <th><span>Item Name</span></th>
+                                        <th><span>Assembly ID</span></th>
+                                        <th><span>Registered By</span></th>
+                                        <th><span>Registered Date</span></th>
+                                        <th><span>Status</span></th>
+                                        <th class="col-1"><span>Manage</span></th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                <c:forEach items="${item}" var="parameterMaster" varStatus="parameterMasterLoop">
+                                    <tr>
+                                        <td><c:out value="${parameterMasterLoop.index+1}"/></td>
+                                    <td><c:out value="${parameterMaster.itemType}"/></td>
+                                    <td id="modal_delete_info_countItemPending}"><c:out value="${parameterMaster.subType}"/></td>
+                                    <td><c:out value="${parameterMaster.itemId}"/></td>
+                                    <td><c:out value="${parameterMaster.itemName}"/></td>
+                                    <td><c:out value="${parameterMaster.assemblyId}"/></td>
+                                    <td><c:out value="${parameterMaster.createdBy}"/></td>
+                                    <td><c:out value="${parameterMaster.createdDate}"/></td>
+                                    <td><c:out value="${parameterMaster.status}"/></td>
+                                    <td align="center">
+                                    <c:set var="String" value="${parameterMaster.status}"/>
+                                    <c:choose>
+                                        <c:when test="${(fn:contains(String, 'Activity Selection'))}">
+                                            <a href="${contextPath}/hw/item/addActivity/${parameterMaster.id}" class="table-link" title="Edit">
+                                                <i class="bi bi-box-arrow-in-right h3"></i>
+                                            </a>
+                                        </c:when>
+                                        <c:otherwise>
+                                            <a href="${contextPath}/hw/item/add2/${parameterMaster.id}" class="table-link" title="Edit">
+                                                <i class="bi bi-box-arrow-in-right h3"></i>
+                                            </a>
+                                        </c:otherwise>
+                                    </c:choose>
+                                    </td>
+                                    </tr>
+                                </c:forEach>
+                                </tbody>
+                            </table>
                         </div>
                     </div>
                 </div>
-                <div class="col-xl-3 col-sm-6 col-12">
-                    <div class="card mb-4 border-0 shadow-sm hover-shadow-md transition-300">
-                        <div class="card-body p-3">
-                            <div class="d-flex align-items-center">
-                                <div>
-                                    <h6 class="text-muted mb-1 fw-light">RMS Return from Loading</h6>
-                                    <h3 class="fw-bold mb-1">0</h3>
-                                    <!--                                    <span class="badge bg-warning-subtle text-warning rounded-pill px-2 py-1">
-                                                                            <i class="bi bi-arrow-down-right"></i> 5%
-                                                                        </span>-->
-                                </div>
-                                <div id="taskStats2" class="ms-auto"></div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-xl-3 col-sm-6 col-12">
-                    <div class="card mb-4 border-0 shadow-sm hover-shadow-md transition-300">
-                        <div class="card-body p-3">
-                            <div class="d-flex align-items-center">
-                                <div>
-                                    <h6 class="text-muted mb-1 fw-light">Maverick</h6>
-                                    <h3 class="fw-bold mb-1">4</h3>
-                                    <!--                                    <span class="badge bg-primary-subtle text-primary rounded-pill px-2 py-1">
-                                                                            <i class="bi bi-arrow-up-right"></i> 8%
-                                                                        </span>-->
-                                </div>
-                                <div id="taskStats3" class="ms-auto"></div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-xl-3 col-sm-6 col-12">
-                    <div class="card mb-4 border-0 shadow-sm hover-shadow-md transition-300">
-                        <div class="card-body p-3">
-                            <div class="d-flex align-items-center">
-                                <div>
-                                    <h6 class="text-muted mb-1 fw-light">New HW Fabrication</h6>
-                                    <h3 class="fw-bold mb-1">3</h3>
-                                    <!--                                    <span class="badge bg-info-subtle text-info rounded-pill px-2 py-1">
-                                                                            <i class="bi bi-arrow-up-right"></i> 15%
-                                                                        </span>-->
-                                </div>
-                                <div id="taskStats4" class="ms-auto"></div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+                <!-- Card end -->
             </div>
-            <!-- Row end -->
 
             <!-- Row start -->
             <div class="row gx-4">
@@ -141,11 +131,11 @@
                     <!-- Card start -->
                     <div class="card mb-4">
                         <div class="card-header">
-                            <h5 class="card-title">RMS <span style="color:#50589C">Pending for</span> Loading (CBMS)</h5>
+                            <h5 class="card-title">RMS <span style="color:#D97D55">Pending for</span> Loading (CBMS) <span class="h6" style="color:red">(0)</span></h5>
                         </div>
                         <div class="card-body">
                             <div class="table-responsive">
-                                <table id="scrollVertical" class="table pending custom-table">
+                                <table id="scrollVerticalFromLoading" class="table pending custom-table">
                                     <thead>
                                         <tr>
                                             <th>RMS No</th>
@@ -161,229 +151,6 @@
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        <tr>
-                                            <td><a class="font-link-rms" href=""> S106696</a></td>
-                                            <td>25-Sep-25</td>
-                                            <td>NVTFWS027N10MCLTAG</td>
-                                            <td>S08FL</td>
-                                            <td>HTGB</td>
-                                            <td>30-Sep-25</td>
-                                            <td>IN PROCESS</td>
-                                            <td>NOT START</td>
-                                            <td>5</td>
-                                            <!--                                            <td>
-                                                                                            <a class="btn btn-primary btn-sm me-1" href="#"><i class="bi bi-pencil"></i></a>
-                                                                                        </td>-->
-                                        </tr>
-                                        <tr>
-                                            <td><a class="font-link-rms" href="">S106696</a></td>
-                                            <td>25-Sep-25</td>
-                                            <td>NVTFWS027N10MCLTAG</td>
-                                            <td>S08FL</td>
-                                            <td>HTRB</td>
-                                            <td>30-Sep-25</td>
-                                            <td>IN PROCESS</td>
-                                            <td>NOT START</td>
-                                            <td>5</td>
-                                        </tr>
-                                        <tr>
-                                            <td><a class="font-link-rms" href="">S106696</a></td>
-                                            <td>25-Sep-25</td>
-                                            <td>NVTFWS027N10MCLTAG</td>
-                                            <td>S08FL</td>
-                                            <td>IOL</td>
-                                            <td>12-Oct-25</td>
-                                            <td>IN PROCESS</td>
-                                            <td>NOT START</td>
-                                            <td>17</td>
-                                        </tr>
-                                        <tr>
-                                            <td><a class="font-link-rms" href="">S107174</a></td>
-                                            <td>27-Sep-25</td>
-                                            <td>SNXH150B120H3Q2F2PG</td>
-                                            <td>PIM40 93*47 (PRESS FIT)</td>
-                                            <td>H3TRB</td>
-                                            <td>01-Oct-25</td>
-                                            <td>IN PROCESS</td>
-                                            <td>NOT START</td>
-                                            <td>4</td>
-                                        </tr>
-                                        <tr>
-                                            <td><a class="font-link-rms" href="">S106511</a></td>
-                                            <td>28-Sep-25</td>
-                                            <td>ENGNVMFS1D8N10XT1G-TST</td>
-                                            <td>SO8FL - CLIP DFN 6 5*6*1MM PBFR</td>
-                                            <td>HTRB</td>
-                                            <td>01-Oct-25</td>
-                                            <td>IN PROCESS</td>
-                                            <td>NOT START</td>
-                                            <td>3</td>
-                                        </tr>
-                                        <tr>
-                                            <td><a class="font-link-rms" href="">S106992</a></td>
-                                            <td>28-Sep-25</td>
-                                            <td>NCV2561SQT1G</td>
-                                            <td>SC-88 6 EPO SNGL PB FREE</td>
-                                            <td>HAST</td>
-                                            <td>19-Oct-25</td>
-                                            <td>IN PROCESS</td>
-                                            <td>NOT START</td>
-                                            <td>21</td>
-                                        </tr>
-                                        <tr>
-                                            <td><a class="font-link-rms" href="">S106992</a></td>
-                                            <td>28-Sep-25</td>
-                                            <td>NCV2561SQT1G</td>
-                                            <td>SC-88 6 EPO SNGL PB FREE</td>
-                                            <td>HTOL</td>
-                                            <td>05-Oct-25</td>
-                                            <td>IN PROCESS</td>
-                                            <td>NOT START</td>
-                                            <td>7</td>
-                                        </tr>
-                                        <tr>
-                                            <td><a class="font-link-rms" href="">S104684</a></td>
-                                            <td>29-Sep-25</td>
-                                            <td>NVTFWS005N08XLTAG</td>
-                                            <td>WDFN8 3.3*3.3*0.65</td>
-                                            <td>HAST</td>
-                                            <td>14-Oct-25</td>
-                                            <td>IN PROCESS</td>
-                                            <td>NOT START</td>
-                                            <td>15</td>
-                                        </tr>
-                                        <tr>
-                                            <td><a class="font-link-rms" href="">S104684</a></td>
-                                            <td>29-Sep-25</td>
-                                            <td>NVTFWS005N08XLTAG</td>
-                                            <td>WDFN8 3.3*3.3*0.65</td>
-                                            <td>HTGB</td>
-                                            <td>05-Oct-25</td>
-                                            <td>IN PROCESS</td>
-                                            <td>NOT START</td>
-                                            <td>6</td>
-                                        </tr>
-                                        <tr>
-                                            <td><a class="font-link-rms" href="">S104684</a></td>
-                                            <td>29-Sep-25</td>
-                                            <td>NVTFWS005N08XLTAG</td>
-                                            <td>WDFN8 3.3*3.3*0.65</td>
-                                            <td>HTGBx</td>
-                                            <td>03-Oct-25</td>
-                                            <td>IN PROCESS</td>
-                                            <td>NOT START</td>
-                                            <td>4</td>
-                                        </tr>
-                                        <tr>
-                                            <td><a class="font-link-rms" href="">S104684</a></td>
-                                            <td>29-Oct-25</td>
-                                            <td>NVTFWS005N08XLTAG</td>
-                                            <td>WDFN8 3.3*3.3*0.65</td>
-                                            <td>HTRB</td>
-                                            <td>02-Oct-25</td>
-                                            <td>IN PROCESS</td>
-                                            <td>NOT START</td>
-                                            <td>3</td>
-                                        </tr>
-                                        <tr>
-                                            <td><a class="font-link-rms" href="">S104684</a></td>
-                                            <td>29-Oct-25</td>
-                                            <td>NVTFWS005N08XLTAG</td>
-                                            <td>WDFN8 3.3*3.3*0.65</td>
-                                            <td>IOL</td>
-                                            <td>15-Oct-25</td>
-                                            <td>IN PROCESS</td>
-                                            <td>NOT START</td>
-                                            <td>16</td>
-                                        </tr>
-                                        <tr>
-                                            <td><a class="font-link-rms" href="">S105952</a></td>
-                                            <td>30-Sep-25</td>
-                                            <td>PCNVSR19S120M3ECPE-08</td>
-                                            <td>* NOT APPLICABLE *</td>
-                                            <td>HTRB</td>
-                                            <td>02-Oct-25</td>
-                                            <td>IN PROCESS</td>
-                                            <td>NOT START</td>
-                                            <td>2</td>
-                                        </tr>
-                                        <tr>
-                                            <td><a class="font-link-rms" href="">S105952</a></td>
-                                            <td>30-Sep-25</td>
-                                            <td>PCNVSR19S120M3ECPE-08</td>
-                                            <td>* NOT APPLICABLE *</td>
-                                            <td>HTRBx</td>
-                                            <td>02-Oct-25</td>
-                                            <td>IN PROCESS</td>
-                                            <td>NOT START</td>
-                                            <td>2</td>
-                                        </tr>
-                                        <tr>
-                                            <td><a class="font-link-rms" href="">S106877</a></td>
-                                            <td>30-Sep-25</td>
-                                            <td>SURS8340T3G-GA01</td>
-                                            <td>SMC</td>
-                                            <td>h3TRB</td>
-                                            <td>17-Oct-25</td>
-                                            <td>IN PROCESS</td>
-                                            <td>NOT START</td>
-                                            <td>17</td>
-                                        </tr>
-                                        <tr>
-                                            <td><a class="font-link-rms" href="">S106877</a></td>
-                                            <td>30-Sep-25</td>
-                                            <td>SURS8340T3G-GA01</td>
-                                            <td>SMC</td>
-                                            <td>IOL</td>
-                                            <td>17-Oct-25</td>
-                                            <td>IN PROCESS</td>
-                                            <td>NOT START</td>
-                                            <td>17</td>
-                                        </tr>
-                                        <tr>
-                                            <td><a class="font-link-rms" href="">S104795</a></td>
-                                            <td>01-Oct-25</td>
-                                            <td>NVTFWS005N08XLTAG</td>
-                                            <td>WDFN8 3.3*3.3*0.65</td>
-                                            <td>HAST</td>
-                                            <td>26-Sep-25</td>
-                                            <td>IN PROCESS</td>
-                                            <td>NOT START</td>
-                                            <td>-5</td>
-                                        </tr>
-                                        <tr>
-                                            <td><a class="font-link-rms" href="">S104795</a></td>
-                                            <td>01-Oct-25</td>
-                                            <td>NVTFWS005N08XLTAG</td>
-                                            <td>WDFN8 3.3*3.3*0.65</td>
-                                            <td>HTGB</td>
-                                            <td>26-Sep-25</td>
-                                            <td>IN PROCESS</td>
-                                            <td>NOT START</td>
-                                            <td>-5</td>
-                                        </tr>
-                                        <tr>
-                                            <td><a class="font-link-rms" href="">S104795</a></td>
-                                            <td>01-Oct-25</td>
-                                            <td>NVTFWS005N08XLTAG</td>
-                                            <td>WDFN8 3.3*3.3*0.65</td>
-                                            <td>HTGBx</td>
-                                            <td>26-Sep-25</td>
-                                            <td>IN PROCESS</td>
-                                            <td>NOT START</td>
-                                            <td>-5</td>
-                                        </tr>
-                                        <tr>
-                                            <td><a class="font-link-rms" href="">S104795</a></td>
-                                            <td>01-Oct-25</td>
-                                            <td>NVTFWS005N08XLTAG</td>
-                                            <td>WDFN8 3.3*3.3*0.65</td>
-                                            <td>HTGBy</td>
-                                            <td>26-Sep-25</td>
-                                            <td>IN PROCESS</td>
-                                            <td>NOT START</td>
-                                            <td>-5</td>
-                                        </tr>
                                     </tbody>
                                 </table>
                             </div>
@@ -395,11 +162,11 @@
                     <!-- Card start -->
                     <div class="card mb-4">
                         <div class="card-header">
-                            <h5 class="card-title">RMS <span style="color:#D97D55">Return from</span> Loading (LRT)</h5>
+                            <h5 class="card-title">RMS <span style="color:#D97D55">Return from</span> Loading (LRT) <span class="h6" style="color:red">(0)</span></h5>
                         </div>
                         <div class="card-body">
                             <div class="table-responsive">
-                                <table id="scrollVertical2" class="table pending custom-table">
+                                <table id="scrollVerticalAfterLoading" class="table pending custom-table">
                                     <thead>
                                         <tr>
                                             <th>RMS No</th>
@@ -412,72 +179,6 @@
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        <tr>
-                                            <td><a class="font-link-rms" href=""> S106696</a></td>
-                                            <td>01-Sep-25</td>
-                                            <td>30-Sep-25</td>
-                                            <td>NVTFWS027N10MCLTAG</td>
-                                            <td>S08FL</td>
-                                            <td>HTGB</td>
-                                            <td>IN PROCESS</td>
-                                            <!--                                            <td>
-                                                                                            <a class="btn btn-primary btn-sm me-1" href="#"><i class="bi bi-pencil"></i></a>
-                                                                                        </td>-->
-                                        </tr>
-                                        <tr>
-                                            <td><a class="font-link-rms" href=""> S106696</a></td>
-                                            <td>01-Sep-25</td>
-                                            <td>30-Sep-25</td>
-                                            <td>NVTFWS027N10MCLTAG</td>
-                                            <td>S08FL</td>
-                                            <td>HTGB</td>
-                                            <td>IN PROCESS</td>
-                                        </tr>
-                                        <tr>
-                                            <td><a class="font-link-rms" href=""> S106696</a></td>
-                                            <td>01-Sep-25</td>
-                                            <td>30-Sep-25</td>
-                                            <td>NVTFWS027N10MCLTAG</td>
-                                            <td>S08FL</td>
-                                            <td>HTGB</td>
-                                            <td>IN PROCESS</td>
-                                        </tr>
-                                        <tr>
-                                            <td><a class="font-link-rms" href=""> S106696</a></td>
-                                            <td>01-Sep-25</td>
-                                            <td>30-Sep-25</td>
-                                            <td>NVTFWS027N10MCLTAG</td>
-                                            <td>S08FL</td>
-                                            <td>HTGB</td>
-                                            <td>IN PROCESS</td>
-                                        </tr>
-                                        <tr>
-                                            <td><a class="font-link-rms" href=""> S106696</a></td>
-                                            <td>01-Sep-25</td>
-                                            <td>30-Sep-25</td>
-                                            <td>NVTFWS027N10MCLTAG</td>
-                                            <td>S08FL</td>
-                                            <td>HTGB</td>
-                                            <td>IN PROCESS</td>
-                                        </tr>
-                                        <tr>
-                                            <td><a class="font-link-rms" href=""> S106696</a></td>
-                                            <td>01-Sep-25</td>
-                                            <td>30-Sep-25</td>
-                                            <td>NVTFWS027N10MCLTAG</td>
-                                            <td>S08FL</td>
-                                            <td>HTGB</td>
-                                            <td>IN PROCESS</td>
-                                        </tr>
-                                        <tr>
-                                            <td><a class="font-link-rms" href=""> S106696</a></td>
-                                            <td>01-Sep-25</td>
-                                            <td>30-Sep-25</td>
-                                            <td>NVTFWS027N10MCLTAG</td>
-                                            <td>S08FL</td>
-                                            <td>HTGB</td>
-                                            <td>IN PROCESS</td>
-                                        </tr>
                                     </tbody>
                                 </table>
                             </div>
@@ -485,72 +186,13 @@
                     </div>
                     <!-- Card end -->
                 </div>
-                <div class="col-12">
-                    <!-- Card start -->
-                    <div class="card mb-4">
-                        <div class="card-header">
-                            <h5 class="card-title">New Hardware - Pending Vm/Functional Test</h5>
-                        </div>
-                        <div class="card-body">
-                            <div class="table-responsive">
-                                <table id="scrollVertical2" class="table pending custom-table">
-                                    <thead>
-                                        <tr>
-                                            <th><span>No</span></th>
-                                            <th><span>Item Type</span></th>
-                                            <th><span>Sub Type</span></th>
-                                            <th><span>Item ID</span></th>
-                                            <th><span>Item Name</span></th>
-                                            <th><span>Assembly ID</span></th>
-                                            <th><span>Registered By</span></th>
-                                            <th><span>Registered Date</span></th>
-                                            <th><span>Status</span></th>
-                                            <th class="col-1"><span>Manage</span></th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <c:forEach items="${item}" var="parameterMaster" varStatus="parameterMasterLoop">
-                                            <tr>
-                                                <td><c:out value="${parameterMasterLoop.index+1}"/></td>
-                                                <td><c:out value="${parameterMaster.itemType}"/></td>
-                                                <td id="modal_delete_info_${parameterMaster.id}"><c:out value="${parameterMaster.subType}"/></td>
-                                                <td><c:out value="${parameterMaster.itemId}"/></td>
-                                                <td><c:out value="${parameterMaster.itemName}"/></td>
-                                                <td><c:out value="${parameterMaster.assemblyId}"/></td>
-                                                <td><c:out value="${parameterMaster.createdBy}"/></td>
-                                                <td><c:out value="${parameterMaster.createdDate}"/></td>
-                                                <td><c:out value="${parameterMaster.status}"/></td>
-                                                <td align="center">
-                                                    <c:set var="String" value="${parameterMaster.status}"/>
-                                                    <c:choose>
-                                                        <c:when test="${(fn:contains(String, 'Activity Selection'))}">
-                                                            <a href="${contextPath}/hw/item/addActivity/${parameterMaster.id}" class="table-link" title="Edit">
-                                                                <i class="bi bi-box-arrow-in-right h3"></i>
-                                                            </a>
-                                                        </c:when>
-                                                        <c:otherwise>
-                                                            <a href="${contextPath}/hw/item/add2/${parameterMaster.id}" class="table-link" title="Edit">
-                                                                <i class="bi bi-box-arrow-in-right h3"></i>
-                                                            </a>
-                                                        </c:otherwise>
-                                                    </c:choose>
 
-                                                </td>
-                                            </tr>
-                                        </c:forEach>
-                                    </tbody>
-                                </table>
-                            </div>
-                        </div>
-                    </div>
-                    <!-- Card end -->
-                </div>
                 <div class="col-sm-12 col-md-6">
                     <!-- Card start -->
                     <div class="card mb-4">
                         <div class="card-header">
                             <!--<h5 class="card-title" style="color:#5ec3f1">MPE</h5>-->
-                            <h5 class="card-title">Maverick</h5>
+                            <h5 class="card-title">Maverick <span class="h6" style="color:red">(0)</span></h5>
                         </div>
                         <div class="card-body">
                             <div class="table-responsive">
@@ -565,34 +207,6 @@
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        <tr>
-                                            <td>Motherboard</td>
-                                            <td><a class="font-link-rms" href=""> AVI111-01</a></td>
-                                            <td>VM After Loading</td>
-                                            <td>30-Sep-25</td>
-                                            <td>Pending Disposition</td>
-                                        </tr>
-                                        <tr>
-                                            <td>Motherboard</td>
-                                            <td><a class="font-link-rms" href=""> AVI111-01</a></td>
-                                            <td>VM After Loading</td>
-                                            <td>30-Sep-25</td>
-                                            <td>Pending Disposition</td>
-                                        </tr>
-                                        <tr>
-                                            <td>Motherboard</td>
-                                            <td><a class="font-link-rms" href=""> AVI111-01</a></td>
-                                            <td>VM After Loading</td>
-                                            <td>30-Sep-25</td>
-                                            <td>Pending Disposition</td>
-                                        </tr>
-                                        <tr>
-                                            <td>Motherboard</td>
-                                            <td><a class="font-link-rms" href=""> AVI111-01</a></td>
-                                            <td>VM After Loading</td>
-                                            <td>30-Sep-25</td>
-                                            <td>Pending Disposition</td>
-                                        </tr>
                                     </tbody>
                                 </table>
                             </div>
@@ -604,7 +218,7 @@
                     <!-- Card start -->
                     <div class="card mb-4">
                         <div class="card-header">
-                            <h5 class="card-title">New HW Fabrication</h5>
+                            <h5 class="card-title">New HW Fabrication <span class="h6" style="color:red">(0)</span></h5>
                             <!--<h5 class="card-title" style="color:#59AC77">New HW Fabrication</h5>-->
                         </div>
                         <div class="card-body">
@@ -622,34 +236,6 @@
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        <tr>
-                                            <td><a class="font-link-rms" href=""> Motherboard</a></td>
-                                            <td>NVTFWS027N10MCLTAG</td>
-                                            <td>S08FL</td>
-                                            <td>HTGB</td>
-                                            <td>Atiqah</td>
-                                            <td>01-09-2025</td>
-                                            <td>Pending PR</td>
-                                        </tr>
-                                        <tr>
-                                            <td><a class="font-link-rms" href=""> Motherboard</a></td>
-                                            <td>NVTFWS027N10MCLTAG</td>
-                                            <td>S08FL</td>
-                                            <td>IOL</td>
-                                            <td>Hakim</td>
-                                            <td>01-09-2025</td>
-                                            <td>Pending PO</td>
-                                        </tr>
-                                        <tr>
-                                            <td><a class="font-link-rms" href=""> Motherboard</a></td>
-                                            <td>NVTFWS027N10MCLTAG</td>
-                                            <td>S08FL</td>
-                                            <td>HTGB</td>
-                                            <td>Atiqah</td>
-                                            <td>01-09-2025</td>
-                                            <td>Fabrication in Process</td>
-                                        </tr>
-
                                     </tbody>
                                 </table>
                             </div>
@@ -660,7 +246,9 @@
                 <div class="col-xxl-6 col-sm-12 col-12">
                     <div class="card mb-4">
                         <div class="card-header">
-                            <h5 class="card-title">Maverick 2025</h5>
+                            <h5 class="card-title">Maverick ${yearLabel}</h5>
+                            <p style="font-size: 12px; color: blue;">
+                                *Cumulative hardware issues across multiple modules</p>
                         </div>
                         <div class="card-body">
 
@@ -668,15 +256,6 @@
                                 <div class="overflow-hidden">
                                     <div id="demography2" class="auto-align-graph"></div>
                                 </div>
-
-                                <!--                                <div class="bg-light rounded-5 p-3 mt-3">
-                                                                    <div class="d-flex align-items-center">
-                                                                        <div class="icon-box sm bg-primary rounded-5 me-2">
-                                                                            <i class="bi bi-percent"></i>
-                                                                        </div>
-                                                                        <p class="m-0">Conversion rate is 20% higher than last week.</p>
-                                                                    </div>
-                                                                </div>-->
                             </div>
 
                         </div>
@@ -685,7 +264,7 @@
                 <div class="col-xxl-6 col-sm-12 col-12">
                     <div class="card mb-4">
                         <div class="card-header">
-                            <h5 class="card-title">Hardware Readiness Report 2024/2025</h5>
+                            <h5 class="card-title">Hardware Readiness Report ${yearLabel}</h5>
                             <!--<h6>*Cycle Time Calculation : number of HW release to production divide by number of RMS_Event (Status In Process)</h6>-->
                             <p style="font-size: 12px; color: blue;">
                                 *Cycle Time : Days taken to release hardware to production from the first day the RMS_Event with 'In Process' status comes in.</p>
@@ -757,12 +336,29 @@
     <s:layout-component name="page_js_inline">
         <script>
 
-            
 
             //RMS Return from Loading
             $(function () {
-                $("#scrollVertical2").DataTable({
-                    scrollY: "207px",
+                $("#scrollVerticalFromLoading").DataTable({
+                    scrollY: "200px",
+                    scrollCollapse: false,
+                    paging: false,
+                    bInfo: false,
+                });
+            });
+
+            $(function () {
+                $("#scrollVerticalAfterLoading").DataTable({
+                    scrollY: "200px",
+                    scrollCollapse: false,
+                    paging: false,
+                    bInfo: false,
+                });
+            });
+
+            $(function () {
+                $("#scrollVerticalNewHw").DataTable({
+                    scrollY: "200px",
                     scrollCollapse: false,
                     paging: false,
                     bInfo: false,
@@ -788,7 +384,7 @@
             });
 
             var options = {
-                series: [42, 47, 52, 58, 65],
+                series: [0, 0, 0, 0, 0],
                 chart: {
 //                    width: 370,
                     height: 370,
@@ -869,131 +465,14 @@
                         }
                     }]
             };
+//            chart.updateOptions({
+//                series: [1],
+//                labels: [],
+//                colors: ['#f0f0f0'],
+//            });
 
             var chart = new ApexCharts(document.querySelector("#demography2"), options);
             chart.render();
-
-//            var optionsss = {
-//                chart: {
-//                    height: 355,
-//                    type: 'bar',
-//                    toolbar: {
-//                        show: false,
-//                    },
-//                },
-//                plotOptions: {
-//                    bar: {
-//                        horizontal: true,
-//                        dataLabels: {
-//                            position: 'top',
-//                        },
-//                    }
-//                },
-//                dataLabels: {
-//                    enabled: true,
-//                    offsetX: -6,
-//                    style: {
-//                        fontSize: '12px',
-//                        colors: ['#fff']
-//                    }
-//                },
-//                stroke: {
-//                    show: true,
-//                    width: 0,
-//                },
-//                series: [{
-//                        name: 'WIP Incoming Request',
-//                        data: [44, 55, 41, 64, 22, 11, 43, 50, 66, 12, 33, 45]
-//                    }, {
-//                        name: 'WIP Completed',
-//                        data: [53, 32, 33, 44, 32, 32, 12, 5, 34, 12, 47, 6]
-//                    }],
-//                xaxis: {
-//                    categories: ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"],
-//                },
-//                grid: {
-//                    borderColor: '#ffe4a7',
-//                    strokeDashArray: 5,
-//                    xaxis: {
-//                        lines: {
-//                            show: true
-//                        }
-//                    },
-//                    yaxis: {
-//                        lines: {
-//                            show: false,
-//                        }
-//                    },
-//                    padding: {
-//                        top: 0,
-//                        right: 0,
-//                        bottom: 0,
-//                        left: 0
-//                    },
-//                },
-//                colors: ['#615FFF', '#05DF72'],
-//            }
-//            var chartss = new ApexCharts(
-//                    document.querySelector("#basic-bar-graph-grouped2"),
-//                    optionsss
-//                    );
-//            chartss.render();
-
-//                    var options1 = {
-//                        series: [{
-//                                name: 'Completed',
-//                                data: [1, 2, 3, 2, 3]
-//                            }],
-//                        chart: {
-//                            type: 'line',
-//                            width: 130,
-//                            height: 75,
-//                            sparkline: {
-//                                enabled: true
-//                            },
-//                        },
-//                        colors: ['#507dff'],
-//                        stroke: {
-//                            curve: 'smooth',
-//                            width: 7,
-//                        },
-//                        fill: {
-//                            type: 'gradient',
-//                            gradient: {
-//                                shade: 'light',
-//                                type: 'vertical',
-//                                shadeIntensity: 0.5,
-//                                gradientToColors: ['#8e9fff'],
-//                                inverseColors: false,
-//                                opacityFrom: 0.8,
-//                                opacityTo: 0.2,
-//                            }
-//                        },
-//                        tooltip: {
-//                            fixed: {
-//                                enabled: false
-//                            },
-//                            x: {
-//                                show: false
-//                            },
-//                            marker: {
-//                                show: false
-//                            }
-//                        },
-//                        xaxis: {
-//                            type: 'day',
-//                            categories: ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"],
-//                        },
-//                        tooltip: {
-//                            y: {
-//                                formatter: function (val) {
-//                                    return val
-//                                }
-//                            }
-//                        },
-//                    };
-//                    var chart1 = new ApexCharts(document.querySelector("#taskStats1"), options1);
-//                    chart1.render();
 
             const averageValue = 3;
             const averageData = new Array(12).fill(averageValue);
@@ -1002,11 +481,11 @@
                     {
                         name: 'HW In',
                         type: 'column',
-                        data: [10, 12, 15, 15, 15, 18, 18, 16, 13, 14, 12, 12]
+                        data: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
                     }, {
                         name: 'HW Released',
                         type: 'column',
-                        data: [10, 10, 7, 10, 16, 19, 15, 15, 17, 15, 11, 12]
+                        data: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
                     }, {
                         name: 'Cycle Time Goal',
                         type: 'line',
@@ -1014,7 +493,7 @@
                     }, {
                         name: 'Average Cycle Time',
                         type: 'line',
-                        data: [4.1, 3, 3.2, 2.5, 4.4, 4.5, 5.0, 5.8, 5.5, 5.4, 3.5, 4.5]
+                        data: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
                     }],
                 chart: {
                     height: 350,
@@ -1034,7 +513,8 @@
                     offsetX: 110
                 },
                 xaxis: {
-                    categories: ['Dec 24', 'Jan 25', 'Feb 25', 'Mar 25', 'Apr 25', 'May 25', 'Jun 25', 'Jul 25', 'Aug 25', 'Sep 25', 'Oct 25', 'Nov 25']
+//                    categories: ['Dec 24', 'Jan 25', 'Feb 25', 'Mar 25', 'Apr 25', 'May 25', 'Jun 25', 'Jul 25', 'Aug 25', 'Sep 25', 'Oct 25', 'Nov 25']
+                    categories: ${monthNameList}
                 },
                 yaxis: [
 

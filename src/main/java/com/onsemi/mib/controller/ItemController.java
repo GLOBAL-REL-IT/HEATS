@@ -11,6 +11,7 @@ import com.onsemi.mib.dao.HostnameDAO;
 import com.onsemi.mib.dao.ItemActivityConfigDAO;
 import com.onsemi.mib.dao.ItemAluConfigDAO;
 import com.onsemi.mib.dao.ItemFunctionalTestDAO;
+import com.onsemi.mib.dao.ItemLogDAO;
 import com.onsemi.mib.dao.ItemRecallDAO;
 import com.onsemi.mib.dao.ItemStorageFactoryDAO;
 import com.onsemi.mib.dao.ItemTransactionDAO;
@@ -28,6 +29,7 @@ import com.onsemi.mib.model.HimsInventory;
 import com.onsemi.mib.model.Hostname;
 import com.onsemi.mib.model.ItemActivityConfig;
 import com.onsemi.mib.model.ItemFunctionalTest;
+import com.onsemi.mib.model.ItemLog;
 import com.onsemi.mib.model.ItemRecall;
 import com.onsemi.mib.model.ItemStorageFactory;
 import com.onsemi.mib.model.ItemTransaction;
@@ -447,10 +449,28 @@ public class ItemController {
                     hwD = new ItemDAO();
                     QueryResult q = hwD.insertHardwareDetail(hw);
                     countAdd += q.getResult();
+
+                    //update log
+                    ItemLog log = new ItemLog();
+                    log.setItemId(q.getGeneratedKey());
+                    log.setDetail("Added From SPTS");
+                    log.setCreatedBy(userSession.getFullname());
+                    ItemLogDAO logD = new ItemLogDAO();
+                    QueryResult logQ = logD.insertItemLog(log);
                 } else if (countPkid == 1) {
                     hwD = new ItemDAO();
                     QueryResult q = hwD.updateHardwareDetailFromSpts(hw);
                     countAdd += q.getResult();
+
+                    hwD = new ItemDAO();
+                    Item items = hwD.getHardwareDetailByPkid(Integer.toString(getItemByParam.getJSONObject(i).getInt("PKID")));
+                    //update log
+                    ItemLog log = new ItemLog();
+                    log.setItemId(items.getId());
+                    log.setDetail("Updated From SPTS");
+                    log.setCreatedBy(userSession.getFullname());
+                    ItemLogDAO logD = new ItemLogDAO();
+                    QueryResult logQ = logD.insertItemLog(log);
                 }
                 count += 1;
             }
@@ -2288,6 +2308,15 @@ public class ItemController {
             QueryResult i = itemD.insertHardwareDetail(item);
 
             if (i.getResult() == 1) {
+
+                //update log
+                ItemLog log = new ItemLog();
+                log.setItemId(i.getGeneratedKey());
+                log.setDetail("New Record Added");
+                log.setCreatedBy(userSession.getFullname());
+                ItemLogDAO logD = new ItemLogDAO();
+                QueryResult logQ = logD.insertItemLog(log);
+
                 redirectAttrs.addFlashAttribute("success", "Succesfully registered Item ID: " + itemId);
                 if ("BIB".equals(itemTypeRead) || "BIB Card".equals(itemTypeRead)) {
                     return "redirect:/hw/item/addActivity/" + i.getGeneratedKey();
@@ -2342,6 +2371,15 @@ public class ItemController {
                     SPTSResponse sr = SPTSWebService.insertItem(addItem);
 
                     if (sr.getStatus()) {
+
+                        //update log
+                        log = new ItemLog();
+                        log.setItemId(i.getGeneratedKey());
+                        log.setDetail("Successfully Added into SPTS");
+                        log.setCreatedBy(userSession.getFullname());
+                        logD = new ItemLogDAO();
+                        QueryResult logQ2 = logD.insertItemLog(log);
+
                         redirectAttrs.addFlashAttribute("success", "Item added!");
                         //update SPTS PKID into MIB DB
                         item = new Item();
@@ -2623,6 +2661,15 @@ public class ItemController {
                 QueryResult i = itemD.updateHardwareDetail(item);
 
                 if (i.getResult() == 1) {
+
+                    //update log
+                    ItemLog log = new ItemLog();
+                    log.setItemId(mibId);
+                    log.setDetail("Data Updated");
+                    log.setCreatedBy(userSession.getFullname());
+                    ItemLogDAO logD = new ItemLogDAO();
+                    QueryResult logQ = logD.insertItemLog(log);
+
                     redirectAttrs.addFlashAttribute("success", "Succesfully update Item ID: " + itemId);
                     return "redirect:/hw";
                 } else {
@@ -2691,6 +2738,15 @@ public class ItemController {
             QueryResult i = itemD.updateItemStatusAndFlag(item);
 
             if (i.getResult() == 1) {
+
+                //update log
+                ItemLog log = new ItemLog();
+                log.setItemId(mibId);
+                log.setDetail("Item Scrapped");
+                log.setCreatedBy(userSession.getFullname());
+                ItemLogDAO logD = new ItemLogDAO();
+                QueryResult logQ = logD.insertItemLog(log);
+
                 redirectAttrs.addFlashAttribute("success", "Succesfully Scrap Item ID: " + itemID);
                 return "redirect:/hw";
             } else {
@@ -3429,6 +3485,14 @@ public class ItemController {
             ItemDAO iD = new ItemDAO();
             QueryResult q2 = iD.updateItemStatus(item);
 
+            //update log
+            ItemLog log = new ItemLog();
+            log.setItemId(mibItemId);
+            log.setDetail("VM Data Added");
+            log.setCreatedBy(userSession.getFullname());
+            ItemLogDAO logD = new ItemLogDAO();
+            QueryResult logQ = logD.insertItemLog(log);
+
             if ("Fail".equals(finalStatus)) {
 
                 //send email to recepient
@@ -4131,17 +4195,17 @@ public class ItemController {
         ItemActivityConfigDAO itemD = new ItemActivityConfigDAO();
         ItemActivityConfig item = itemD.getItemActivityConfigWithItemDetail(id);
 
-        LOGGER.info("SATU >>>>> "+item.getBibTest());
-        LOGGER.info(" DUA >>>>> "+item.getManualTest());
-        LOGGER.info("TIGA >>>>> "+item.getLeakageTest());
-        LOGGER.info("MPAT >>>>> "+item.getPsLeakageTest());
-        LOGGER.info("LIMA >>>>> "+item.getWinchesterChamberLeakageTest());
+        LOGGER.info("SATU >>>>> " + item.getBibTest());
+        LOGGER.info(" DUA >>>>> " + item.getManualTest());
+        LOGGER.info("TIGA >>>>> " + item.getLeakageTest());
+        LOGGER.info("MPAT >>>>> " + item.getPsLeakageTest());
+        LOGGER.info("LIMA >>>>> " + item.getWinchesterChamberLeakageTest());
         mibItemId = item.getMibItemId();
-        
+
         ItemDAO itemdao = new ItemDAO();
         Item dataitem = itemdao.getHardwareDetail(mibItemId);
         String status = dataitem.getStatus();
-        
+
         model.addAttribute("item", item);
         model.addAttribute("userItemActEdit", userSession.getItemActivityEdit());
 
@@ -4151,9 +4215,9 @@ public class ItemController {
 
         if (itemA1 == null) {
             if (status.contains("Pending Visual Inspection")) {
-                
+
             } else {
-                
+
             }
 //            redirectAttrs.addFlashAttribute("error", "Manual Test Configuration is missing. Please contact admin for further assistance.");
 //            return "redirect:/hw/item/pending";

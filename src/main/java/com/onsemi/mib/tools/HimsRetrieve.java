@@ -1,9 +1,11 @@
 package com.onsemi.mib.tools;
 
 import com.onsemi.mib.dao.HimsRequestDAO;
+import com.onsemi.mib.dao.ItemRecallCsvFileDAO;
 import com.onsemi.mib.dao.ItemRecallDAO;
 import com.onsemi.mib.model.EmailConfig;
 import com.onsemi.mib.model.ItemRecall;
+import com.onsemi.mib.model.ItemRecallCsvFile;
 import com.onsemi.mib.model.UserSession;
 import com.onsemi.mib.model.WhInventory;
 import com.onsemi.mib.model.WhRequest;
@@ -576,7 +578,14 @@ public class HimsRetrieve {
             if (!"fg79cj".equals(username)) {
                 username = "imperial";
             }
-            File file = new File("C:\\HIMS_CSV\\RL\\cdars_retrieve.csv");
+            ItemRecallCsvFileDAO itemRecallCsvFileDAO = new ItemRecallCsvFileDAO();
+            ItemRecallCsvFile itemRecallCsvFile = itemRecallCsvFileDAO.getItemRecallCsvFileForActiveLocation();
+            String fileLocation = itemRecallCsvFile.getFile();
+            String emailCsv = itemRecallCsvFile.getEmailCsv();
+            String emailNotification = itemRecallCsvFile.getEmailNotification();
+
+            File file = new File(fileLocation);
+//            File file = new File("C:\\HIMS_CSV\\RL\\cdars_retrieve.csv");
 //            File file = new File("\\\\mysed-rel-app03\\d$\\HIMS\\RL\\cdars_retrieve.csv");
 
             if (file.exists()) {
@@ -584,7 +593,8 @@ public class HimsRetrieve {
                 LOGGER.info("tiada header");
                 FileWriter fileWriter = null;
                 try {
-                    fileWriter = new FileWriter("C:\\HIMS_CSV\\RL\\cdars_retrieve.csv", true); //testing
+                    fileWriter = new FileWriter(fileLocation, true); //testing
+//                    fileWriter = new FileWriter("C:\\HIMS_CSV\\RL\\cdars_retrieve.csv", true); //testing
 //                    fileWriter = new FileWriter("\\\\mysed-rel-app03\\d$\\HIMS\\RL\\cdars_retrieve.csv", true); //production
                     //New Line after the header
                     fileWriter.append(LINE_SEPARATOR);
@@ -673,7 +683,8 @@ public class HimsRetrieve {
             } else {
                 FileWriter fileWriter = null;
                 try {
-                    fileWriter = new FileWriter("C:\\HIMS_CSV\\RL\\cdars_retrieve.csv"); //testing
+                    fileWriter = new FileWriter(fileLocation); //testing
+//                    fileWriter = new FileWriter("C:\\HIMS_CSV\\RL\\cdars_retrieve.csv"); //testing
 //                    fileWriter = new FileWriter("\\\\mysed-rel-app03\\d$\\HIMS\\RL\\cdars_retrieve.csv"); //production
                     LOGGER.info("no file yet");
                     //Adding the header
@@ -771,8 +782,9 @@ public class HimsRetrieve {
             EmailSender emailSender = new EmailSender();
             com.onsemi.mib.model.User user = new com.onsemi.mib.model.User();
             user.setFullname(userSession.getFullname());
+            String[] to = {emailCsv};
 //            String[] to = {"hmsrelon@gmail.com"}; //production
-            String[] to = {"fg79cj@onsemi.com"}; //testing
+//            String[] to = {"fg79cj@onsemi.com"}; //testing
             emailSender.htmlEmailWithAttachment(
                     servletContext,
                     //                    user name
@@ -780,7 +792,8 @@ public class HimsRetrieve {
                     //                    to
                     to,
                     // attachment file
-                    new File("C:\\HIMS_CSV\\RL\\cdars_retrieve.csv"),
+                    new File(fileLocation),
+                    //                    new File("C:\\HIMS_CSV\\RL\\cdars_retrieve.csv"),
                     //                    new File("\\\\mysed-rel-app03\\d$\\HIMS\\RL\\cdars_retrieve.csv"),
                     //                    subject
                     "New Hardware Request from HIMS",
@@ -791,9 +804,10 @@ public class HimsRetrieve {
             EmailSender emailSenderSbnFactory = new EmailSender();
             com.onsemi.mib.model.User user2 = new com.onsemi.mib.model.User();
             user2.setFullname("All");
+            String[] to2 = {emailNotification};
 //                String[] to2 = {"sbnfactory@gmail.com", "fg79cj@onsemi.com"};
 //            String[] to2 = {"sbnfactory@gmail.com"}; //production
-            String[] to2 = {"fg79cj@onsemi.com"}; //testing
+//            String[] to2 = {"fg79cj@onsemi.com"}; //testing
             emailSenderSbnFactory.htmlEmailManyTo(
                     servletContext,
                     //                    user name

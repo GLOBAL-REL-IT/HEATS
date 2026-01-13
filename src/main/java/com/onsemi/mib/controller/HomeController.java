@@ -18,8 +18,10 @@ import com.onsemi.mib.tools.EmailSender;
 import com.onsemi.mib.tools.QueryResult;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.Month;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Enumeration;
 import java.util.Hashtable;
 import java.util.List;
@@ -71,6 +73,43 @@ public class HomeController {
 
         HttpSession currentSession = request.getSession();
         UserSession userSession = (UserSession) currentSession.getAttribute("userSession");
+
+        LocalDateTime instance = LocalDateTime.now();
+        Integer month = Integer.valueOf(instance.toString().substring(5, 7));
+//        Integer month = 12;
+        Integer year = Integer.valueOf(instance.toString().substring(0, 4));
+//        Integer year = 2027;
+        List<String> monthNameList = new ArrayList<String>();
+
+        String yearLabel = "";
+        if (month < 12) {
+            yearLabel = (year - 1) + "/" + (year);
+        } else if (month == 12) {
+            yearLabel = year.toString();
+        }
+
+        for (int x = 1; x <= 12; x++) {
+            if (month < 1) {
+//                year = year - 1;
+                year -= 1;
+                month = 12;
+            }
+            Month monthN = Month.of(month);
+            String monthNameFull = monthN.name();
+            String monthName = monthNameFull.substring(0, 3);
+            String year1 = year.toString().substring(2, 4);
+            String fullMonthYear = "'" + monthName + " " + year1 + "'";
+            monthNameList.add(fullMonthYear);
+            month -= 1;
+        }
+        Collections.reverse(monthNameList);
+//        LOGGER.info("monthNameList " + monthNameList);
+        model.addAttribute("monthNameList", monthNameList);
+        model.addAttribute("yearLabel", yearLabel);
+
+        ItemDAO itemDao = new ItemDAO();
+        int countItemPending = itemDao.getCountItemWithFlagZero();
+        model.addAttribute("countItemPending", countItemPending);
 
 //        String fullDebit = "";
 //        String fullCredit = "";
@@ -256,7 +295,7 @@ public class HomeController {
 
         LDAPUserDAO ldapUserDAO = new LDAPUserDAO();
         LDAPUser ldapUser = ldapUserDAO.getByLoginId(loginId);
-        
+
         //update user table
         LDAPUser lu = new LDAPUser();
         lu.setRequestAccess("Yes");
