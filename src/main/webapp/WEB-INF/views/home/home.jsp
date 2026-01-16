@@ -1,4 +1,5 @@
 <%@page contentType="text/html;charset=UTF-8" %>
+<%@include file="/WEB-INF/base/taglibs.jsp" %>
 <s:layout-render name="/WEB-INF/base/base.jsp">
     <s:layout-component name="page_title">
         <f:message key="general.label.home"/>
@@ -187,26 +188,40 @@
                     <!-- Card end -->
                 </div>
 
-                <div class="col-sm-12 col-md-6">
+                <!--<div class="col-sm-12 col-md-6">-->
+                     <div class="col-12">
                     <!-- Card start -->
                     <div class="card mb-4">
                         <div class="card-header">
                             <!--<h5 class="card-title" style="color:#5ec3f1">MPE</h5>-->
-                            <h5 class="card-title">Maverick <span class="h6" style="color:red">(0)</span></h5>
+                            <h5 class="card-title">Maverick <span class="h6" style="color:red">(${countMaverick})</span></h5>
                         </div>
                         <div class="card-body">
                             <div class="table-responsive">
-                                <table id="scrollVertical3" class="table pending custom-table">
+                                <table id="customButtons1" class="table pending custom-table">
                                     <thead>
                                         <tr>
-                                            <th>Hardware Type</th>
-                                            <th>Hardware ID</th>
-                                            <th>MPE Category</th>
-                                            <th>MPE Date</th>
+                                            <th>No</th>
+                                            <th>HW Type</th>
+                                            <th>HW ID</th>
+                                            <th>Module</th>
+                                            <th>Sub Module</th>
+                                            <th>Date</th>
                                             <th>Status</th>
                                         </tr>
                                     </thead>
                                     <tbody>
+                                        <c:forEach items="${maverickList}" var="parameterMaster" varStatus="parameterMasterLoop">
+                                    <tr>
+                                        <td><c:out value="${parameterMasterLoop.index+1}"/></td>
+                                    <td><c:out value="${parameterMaster.itemType}"/></td>
+                                    <td id="modal_delete_info_countItemPending}"><c:out value="${parameterMaster.itemId}"/></td>
+                                    <td><c:out value="${parameterMaster.module}"/></td>
+                                    <td><c:out value="${parameterMaster.submodule}"/></td>
+                                    <td><c:out value="${parameterMaster.createdDate}"/></td>
+                                    <td><c:out value="${parameterMaster.status}"/></td>
+                                    </tr>
+                                </c:forEach>
                                     </tbody>
                                 </table>
                             </div>
@@ -214,7 +229,8 @@
                     </div>
                     <!-- Card end -->
                 </div>
-                <div class="col-sm-12 col-md-6">
+                <!--<div class="col-sm-12 col-md-6">-->
+                     <div class="col-12">
                     <!-- Card start -->
                     <div class="card mb-4">
                         <div class="card-header">
@@ -366,17 +382,18 @@
             });
 
             $(function () {
-                $("#scrollVertical3").DataTable({
-                    scrollY: "150px",
+                $("#customButtons1").DataTable({
+                   scrollY: "200px",
                     scrollCollapse: false,
                     paging: false,
                     bInfo: false,
                 });
             });
+            
 
             $(function () {
                 $("#scrollVertical4").DataTable({
-                    scrollY: "150px",
+                    scrollY: "200px",
                     scrollCollapse: false,
                     paging: false,
                     bInfo: false,
@@ -384,7 +401,7 @@
             });
 
             var options = {
-                series: [0, 0, 0, 0, 0],
+                series: [${countMaverick},0, 0, 0, 0, 0,0],
                 chart: {
 //                    width: 370,
                     height: 370,
@@ -400,7 +417,7 @@
                         speed: 800
                     }
                 },
-                labels: ['VM Before Loading', 'BIB Test before Loading', 'Abnormal Loading', 'Ionic Test', 'VM After Loading'],
+                labels: ['VM HW Registration','Functional Test HW Registration','VM Before Loading', 'Functional Test before Loading', 'Abnormal Loading', 'Ionic Test', 'VM After Loading'],
                 fill: {
                     opacity: 0.85,
                     gradient: {
@@ -411,7 +428,7 @@
                     width: 2,
                     colors: ['#ffffff']
                 },
-                colors: ["#50589C", "#D97D55", "#5ec3f1", "#9DB6FF", "#59AC77"],
+                colors: ["#50589C", "#D97D55", "#5ec3f1", "#9DB6FF", "#59AC77","#F63049","#94A378"],
                 yaxis: {
                     show: false
                 },

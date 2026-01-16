@@ -2,12 +2,14 @@ package com.onsemi.mib.controller;
 
 import com.onsemi.mib.dao.HostnameDAO;
 import com.onsemi.mib.dao.ItemDAO;
+import com.onsemi.mib.dao.ItemMaverickDAO;
 import com.onsemi.mib.dao.LDAPUserDAO;
 import com.onsemi.mib.dao.RetrieveDAO;
 import com.onsemi.mib.dao.SRInventoryMgtDAO;
 import com.onsemi.mib.model.Hostname;
 import com.onsemi.mib.model.InventoryMgt;
 import com.onsemi.mib.model.Item;
+import com.onsemi.mib.model.ItemMaverick;
 import com.onsemi.mib.model.LDAPUser;
 import java.util.Locale;
 import javax.servlet.ServletContext;
@@ -111,7 +113,14 @@ public class HomeController {
         int countItemPending = itemDao.getCountItemWithFlagZero();
         model.addAttribute("countItemPending", countItemPending);
 
-//        String fullDebit = "";
+        ItemMaverickDAO itemMaverickD = new ItemMaverickDAO();
+        int countMaverick = itemMaverickD.getCountFlagZero();
+        model.addAttribute("countMaverick", countMaverick);
+
+        itemMaverickD = new ItemMaverickDAO();
+        List<ItemMaverick> maverickList = itemMaverickD.getItemMaverickListFlagZero();
+        model.addAttribute("maverickList", maverickList);
+
 //        String fullCredit = "";
 //        Integer totalFrom = 0;
 //        Integer totalTo = 0;

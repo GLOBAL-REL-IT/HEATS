@@ -12,6 +12,7 @@ import com.onsemi.mib.dao.ItemActivityConfigDAO;
 import com.onsemi.mib.dao.ItemAluConfigDAO;
 import com.onsemi.mib.dao.ItemFunctionalTestDAO;
 import com.onsemi.mib.dao.ItemLogDAO;
+import com.onsemi.mib.dao.ItemMaverickDAO;
 import com.onsemi.mib.dao.ItemRecallDAO;
 import com.onsemi.mib.dao.ItemStorageFactoryDAO;
 import com.onsemi.mib.dao.ItemTransactionDAO;
@@ -30,6 +31,7 @@ import com.onsemi.mib.model.Hostname;
 import com.onsemi.mib.model.ItemActivityConfig;
 import com.onsemi.mib.model.ItemFunctionalTest;
 import com.onsemi.mib.model.ItemLog;
+import com.onsemi.mib.model.ItemMaverick;
 import com.onsemi.mib.model.ItemRecall;
 import com.onsemi.mib.model.ItemStorageFactory;
 import com.onsemi.mib.model.ItemTransaction;
@@ -3495,12 +3497,17 @@ public class ItemController {
 
             if ("Fail".equals(finalStatus)) {
 
-                //send email to recepient
-//                List<String> emails = new ArrayList<String>();
-//                emails.add("global-rel-it@onsemi.com"); // add email requestor to the list
-//
-//                String[] myArray = new String[emails.size()];
-//                String[] emailTo = emails.toArray(myArray);
+                //save to maverick table
+                ItemMaverick maverick = new ItemMaverick();
+                maverick.setMibItemId(mibItemId);
+                maverick.setModule("Hardware Registration");
+                maverick.setSubmodule("Visual Inspection");
+                maverick.setStatus("Failed Visual Inspection");
+                maverick.setFlag("0");
+                maverick.setCreatedBy(userSession.getFullname());
+                ItemMaverickDAO maverickD = new ItemMaverickDAO();
+                QueryResult maverickAdd = maverickD.insertItemMaverick(maverick);
+
                 EmailVmFailDAO userDao = new EmailVmFailDAO();
                 List<EmailVmFail> userRecipientsList = userDao.getEmailVmFailList();
 
