@@ -212,6 +212,7 @@
                                                     <button type="button" onclick="createRows()">Create Components</button>
                                                 </div>
                                             </div>
+                                            <small class="hint">Please ensure your information is accurate. You can make changes anytime via the Update Page.</small>
 
                                             <table id="manual_test_component">
                                                 <thead>
