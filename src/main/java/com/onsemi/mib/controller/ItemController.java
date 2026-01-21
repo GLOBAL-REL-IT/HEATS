@@ -464,15 +464,15 @@ public class ItemController {
                     QueryResult q = hwD.updateHardwareDetailFromSpts(hw);
                     countAdd += q.getResult();
 
-                    hwD = new ItemDAO();
-                    Item items = hwD.getHardwareDetailByPkid(Integer.toString(getItemByParam.getJSONObject(i).getInt("PKID")));
-                    //update log
-                    ItemLog log = new ItemLog();
-                    log.setItemId(items.getId());
-                    log.setDetail("Updated From SPTS");
-                    log.setCreatedBy(userSession.getFullname());
-                    ItemLogDAO logD = new ItemLogDAO();
-                    QueryResult logQ = logD.insertItemLog(log);
+//                    hwD = new ItemDAO();
+//                    Item items = hwD.getHardwareDetailByPkid(Integer.toString(getItemByParam.getJSONObject(i).getInt("PKID")));
+//                    //update log
+//                    ItemLog log = new ItemLog();
+//                    log.setItemId(items.getId());
+//                    log.setDetail("Updated From SPTS");
+//                    log.setCreatedBy(userSession.getFullname());
+//                    ItemLogDAO logD = new ItemLogDAO();
+//                    QueryResult logQ = logD.insertItemLog(log);
                 }
                 count += 1;
             }
