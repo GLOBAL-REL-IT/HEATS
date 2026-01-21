@@ -96,10 +96,10 @@
             <!-- Row start -->
             <div class="row gx-4">
                 <nav class="navbar bg-body-tertiary">
-                    <div class="container-fluid justify-content-start">
+<!--                    <div class="container-fluid justify-content-start">
                         <a href="${contextPath}/admin/parameterMaster/add" class="btn btn-outline-success me-2" role="button">
                             <i class='bi bi-plus-square'></i>&nbsp;&nbsp;Add New</a>
-                    </div>
+                    </div>-->
                 </nav>
             </div>
             <!-- Row end -->
