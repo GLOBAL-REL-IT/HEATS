@@ -3030,7 +3030,58 @@ public class ItemController {
 
         return "item/item_add2";
     }
+    
+    @RequestMapping(value = "/item/updateManualTestStatus", method = {RequestMethod.GET, RequestMethod.POST})
+    public String updateManualTestStatus(
+            Model model,
+            Locale locale,
+            RedirectAttributes redirectAttrs,
+            @ModelAttribute UserSession userSession,
+            @RequestParam(required = false) String mibItemId
+    ) {
 
+        String finalStatus = "";
+        String statusMan = "";
+        String statusLeak = "";
+        String statusPs = "";
+        String statusWin = "";
+        
+        ItemActivityConfig iac = new ItemActivityConfig();
+        ItemActivityConfigDAO iacdao = new ItemActivityConfigDAO();
+
+        iac = iacdao.getItemActivityByItemId(mibItemId);
+        if (iac != null) {
+            statusMan = iac.getManualTest();
+            statusLeak = iac.getLeakageTest();
+            statusPs = iac.getPsLeakageTest();
+            statusWin = iac.getWinchesterChamberLeakageTest();
+        }
+        
+        if (statusMan.equals("Yes")) {
+            if (statusLeak.equals("Yes")) {
+                finalStatus = "Pending Functional Test - Leakage Test";
+            } else if (statusPs.equals("Yes")) {
+                finalStatus = "Pending Functional Test - Power Supply Test";
+            } else if (statusWin.equals("Yes")) {
+                finalStatus = "Pending Functional Test - Winchester Chamber Test";
+            }
+            
+            ItemDAO itemdao = new ItemDAO();
+            
+            Item hardwaredetail = new Item();
+            hardwaredetail.setId(mibItemId);
+            hardwaredetail.setStatus(finalStatus);
+            
+            QueryResult q2 = itemdao.updateItemStatus(hardwaredetail);
+        } else {
+            LOGGER.info("DO NOT PROCESS ANYTHING HERE");
+        }
+        
+        // FUNCTION UPDATE STATUS KE NEXT FUNCTIONAL TEST
+//        redirectAttrs.addFlashAttribute("error", "Failed to save Visual Inspection. Pls Contact System Admin");
+        return "redirect:/hw/item/add2/" + mibItemId;
+    }
+    
     public String getLatestStatus(String itemId) {
         String status = "";
         String statusVi = "";
@@ -3672,7 +3723,7 @@ public class ItemController {
 
                 if (bibResult.equals("Pass")) {
                     if (checkMan.equals("Yes")) {
-                        newStatus = "Pending Funcational Test - Manual Test";
+                        newStatus = "Pending Functional Test - Manual Test";
                     } else if (checkLeak.equals("Yes")) {
                         newStatus = "Pending Functional Test - Leakage Test";
                     } else if (checkPs.equals("Yes")) {
@@ -3682,9 +3733,11 @@ public class ItemController {
                     } else {
                         newStatus = "Good";
                         item0.setFlag("1");
+                        insertSPTSData(mibItemId, username);
                     }
                 } else {
                     newStatus = "Failed Functional Test - BIB Test";
+                    updateMaverickAndEmail(mibItemId, username, "BIB");
                 }
                 item0.setStatus(newStatus);
 
@@ -3732,9 +3785,11 @@ public class ItemController {
                     } else {
                         newStatus = "Good";
                         item0.setFlag("1");
+                        insertSPTSData(mibItemId, username);
                     }
                 } else {
                     newStatus = "Failed Functional Test - Leakage Test";
+                    updateMaverickAndEmail(mibItemId, username, "Leakage");
                 }
                 item0.setStatus(newStatus);
 
@@ -3781,9 +3836,11 @@ public class ItemController {
                     } else {
                         newStatus = "Good";
                         item0.setFlag("1");
+                        insertSPTSData(mibItemId, username);
                     }
                 } else {
                     newStatus = "Failed Functional Test - Power Supply Test";
+                    updateMaverickAndEmail(mibItemId, username, "Power");
                 }
                 item0.setStatus(newStatus);
 
@@ -3826,8 +3883,10 @@ public class ItemController {
 
                 if (winResult.equals("Pass")) {
                     newStatus = "Good";
+                    insertSPTSData(mibItemId, username);
                 } else {
                     newStatus = "Failed Functional Test - BIB Test";
+                    updateMaverickAndEmail(mibItemId, username, "Winchester");
                 }
                 item0.setStatus(newStatus);
 
@@ -3841,6 +3900,218 @@ public class ItemController {
         }
 
         return "redirect:/hw/item/add2/" + mibItemId;
+    }
+    
+    public void updateMaverickAndEmail(String mibItemId, String username, String jenis) {
+        
+        String module = "Hardware Registration";
+        String sub = "";
+        String status = "Failed Functional Test";
+        
+        switch (jenis) {
+            case "BIB":
+                sub = "BIB Test";
+                break;
+            case "Manual":
+                sub = "Manual Test";
+                break;
+            case "Leakage":
+                sub = "Leakage Test";
+                break;
+            case "Power":
+                sub = "Power Supply Leakage Test";
+                break;
+            case "Winchester":
+                sub = "Winchester Chamber Leakage Test";
+                break;
+            default:
+                break;
+        }
+        
+        ItemMaverick maverick = new ItemMaverick();
+        maverick.setMibItemId(mibItemId);
+        maverick.setModule(module);
+        maverick.setSubmodule(sub);
+        maverick.setStatus(status + " - " + sub);
+        maverick.setFlag("0");
+        maverick.setCreatedBy(username);
+        ItemMaverickDAO maverickD = new ItemMaverickDAO();
+        QueryResult maverickAdd = maverickD.insertItemMaverick(maverick);
+
+        EmailVmFailDAO userDao = new EmailVmFailDAO();
+        List<EmailVmFail> userRecipientsList = userDao.getEmailVmFailList();
+
+        String[] to = new String[userRecipientsList.size()];
+        for (int i = 0; i < userRecipientsList.size(); i++) {
+            to[i] = userRecipientsList.get(i).getEmail();
+        }
+
+        //get current date and time
+        LocalDateTime instance = LocalDateTime.now();
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm");
+        String formattedString = formatter.format(instance); //15-02-2022 12:43
+
+        //gethostname
+        HostnameDAO hostnameD = new HostnameDAO();
+        Hostname h = hostnameD.getHostnameFlagZero();
+        String hostname = h.getHostname();
+
+        ItemDAO itemD = new ItemDAO();
+        Item item2 = itemD.getHardwareDetail(mibItemId);
+
+        //send INFORMATION email
+        LOGGER.info("######################### START EMAIL TO  ########################### ");
+        EmailSender emailSender = new EmailSender();
+        emailSender.htmlEmailTable(
+                servletContext,
+                "", //user name requestor
+                to, //to
+                //                        emailTo,
+                "Hardware Registration - "+status+" ["+sub+"]", //subject
+                "<br />"
+                + "Please be informed that the hardware below failed the functional test inspection."
+                + "<br /> "
+                + "<br /> "
+                + "Item ID: " + item2.getItemId()
+                + "<br /> "
+                + "Inspection Date: " + formattedString
+                + "<br /> "
+                + "<br /> "
+                + "Please click <a href=\"http://" + hostname + "/HEATS/hw/item/add2/" + mibItemId + " \">HERE</a> for more detail."
+                + "<br /> "
+                + "<br />Thank you." //msg
+        );
+
+    }
+    
+    public void insertSPTSData(String mibItemId, String username) throws IOException {
+        
+        ItemDAO itemdao = new ItemDAO();
+        Item item = itemdao.getHardwareDetail(mibItemId);
+        
+        String itemId = item.getItemId();
+        String itemName = item.getItemName();
+        String onHandQty = item.getOnHandQty();
+        String productionQty = item.getProductionQty();
+        String repairQty = item.getRepairQty();
+        String otherQty = item.getOtherQty();
+        String quarantineQty = item.getQuarantineQty();
+        String externalCleanQty = item.getExternalCleanQty();
+        String externalRecleanQty = item.getExternalRecleanQty();
+        String internalCleanQty = item.getInternalCleanQty();
+        String internalRecleanQty = item.getInternalRecleanQty();
+        String storageFactoryQty = item.getStorageFactoryQty();
+        String productionStagingQty = item.getProductionStagingQty();
+        String otherOnsemiQty = item.getOtherOnsemiQty();
+        String vendorQty = item.getVendorQty();
+        String minQty = item.getMinQty();
+        String maxQty = item.getMaxQty();
+        String unitCost = item.getUnitCost();
+        String rack = item.getRack();
+        String shelf = item.getShelf();
+        String model = item.getModel();
+        String manufacturer = item.getManufacturer();
+        String equipmentType = item.getEquipmentType();
+        String equipmentModel = item.getEquipmentModel();
+        String equipmentManufacturer = item.getEquipmentManufacturer();
+        String stressType = item.getStressType();
+        String isConsumable = item.getIsConsumable();
+        String itemTypeRead = item.getItemType();
+        String subType = item.getSubType();
+        String assemblyId = item.getAssemblyId();
+        String remarks = item.getRemarks();
+        String expirationDate = item.getExpirationDate();
+        String downtimeValue = "";
+        String downtimeUnit = "";
+        String implementationCost = "";
+        String manpowerValue = "";
+        String manpowerUnit = "";
+        
+        JSONObject params2 = new JSONObject();
+        String date1 = expirationDate.substring(0, 10);
+        String time = expirationDate.substring(11, 19);
+        String completeDateTime = date1 + "T" + time;
+        LOGGER.info("completeDateTime : " + completeDateTime);
+        
+        JSONObject addItem = new JSONObject();
+        addItem.put("itemID", itemId);
+        addItem.put("itemName", itemName);
+        addItem.put("onHandQty", onHandQty);
+        addItem.put("prodQty", productionQty);
+        addItem.put("repairQty", repairQty);
+        addItem.put("otherQty", otherQty);
+        addItem.put("quarantineQty", quarantineQty);
+        addItem.put("externalCleaningQty", externalCleanQty);
+        addItem.put("externalRecleaningQty", externalRecleanQty);
+        addItem.put("internalCleaningQty", internalCleanQty);
+        addItem.put("internalRecleaningQty", internalRecleanQty);
+        addItem.put("storageFactoryQty", storageFactoryQty);
+        addItem.put("prodStagingQty", productionStagingQty);
+        addItem.put("otherONQty", otherOnsemiQty);
+        addItem.put("vendorQty", vendorQty);
+        addItem.put("minQty", minQty);
+        addItem.put("maxQty", maxQty);
+        addItem.put("unit", "pcs");
+        addItem.put("unitCost", unitCost);
+        addItem.put("rack", rack);
+        addItem.put("shelf", shelf);
+        addItem.put("model", model);
+        addItem.put("manufacturer", manufacturer);
+        addItem.put("equipmentType", equipmentType);
+        addItem.put("equipmentModel", equipmentModel);
+        addItem.put("equipmentManufacturer", equipmentManufacturer);
+        addItem.put("stressType", stressType);
+        addItem.put("isCritical", "0");
+        if ("true".equals(isConsumable)) {
+            addItem.put("isConsumeable", "1");
+        } else {
+            addItem.put("isConsumeable", "0");
+        }
+        addItem.put("itemType", itemTypeRead);
+        addItem.put("subType", subType);
+        addItem.put("assemblyID", assemblyId);
+        addItem.put("remarks", remarks);
+        addItem.put("expirationDate", completeDateTime);
+//        addItem.put("downtimeValue", downtimeValue);
+//        addItem.put("downtimeUnit", downtimeUnit);
+//        addItem.put("implementationCost", implementationCost);
+//        addItem.put("manpowerValue", manpowerValue);
+//        addItem.put("manpowerUnit", manpowerUnit);
+        addItem.put("complexityScore", "0");
+
+        SPTSResponse sr = SPTSWebService.insertItem(addItem);
+
+        if (sr.getStatus()) {
+
+            //update log
+            ItemLog log = new ItemLog();
+//            log = new ItemLog();
+            log.setItemId(mibItemId);
+            log.setDetail("Successfully Added into SPTS");
+            log.setCreatedBy(username);
+            ItemLogDAO logD = new ItemLogDAO();
+            QueryResult logQ2 = logD.insertItemLog(log);
+
+            //update SPTS PKID into MIB DB
+            item = new Item();
+            item.setSptsPkid(sr.getResponseId().toString());
+            item.setId(mibItemId);
+
+            ItemDAO itemD = new ItemDAO();
+            QueryResult i2 = itemD.updateItemSPTSPKID(item);
+        } else {
+            LinkedHashMap<String, String> item2;
+            ObjectMapper mapper = new ObjectMapper();
+            item2 = mapper.readValue(addItem.toString(), new TypeReference<LinkedHashMap<String, String>>() {});
+            String errorMessage;
+            if (sr.getErrorDetail().equals("")) {
+                errorMessage = sr.getErrorCode() + " - " + sr.getErrorMessage();
+            } else {
+                errorMessage = sr.getErrorCode() + " - " + sr.getErrorDetail();
+            }
+//            model.addAttribute("error", errorMessage);
+//            model.addAttribute("item2", item2);
+        }
     }
 
     public void checkInsertFunctionalTest(String itemId, String username) {

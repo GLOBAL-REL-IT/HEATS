@@ -302,14 +302,8 @@
 
                                 <!-- Form actions start -->
                                 <div class="col-md-12">
-                                    <!--<div class="justify-content-end">-->
-                                    <!--<button type="button" class="btn btn-light">Cancel</button>-->
                                     <button type="submit" id="submit" id="submit" class="btn btn-primary float-end" <c:if test="${userItemActEdit ne 'Yes'}">disabled</c:if> >Save</button>
-                                        <!--</div>-->
-                                        <!--<div class="justify-content-start">-->
-                                        <!--<button type="button" class="btn btn-light">Cancel</button>-->
                                         <a href="${contextPath}/hw/item/pending" class="btn btn-dark float-start">Back</a>
-                                    <!--</div>-->
                                 </div>
                                 <!-- Form actions end -->
                             </form>
@@ -371,10 +365,6 @@
                 allInputs[i].disabled = true;
             }
         }
-        
-        document.addEventListener('DOMContentLoaded', (event) => {
-            
-        });
         
         function addRow() {
             const quantity = document.getElementById("inputQuantity").value || 1;
