@@ -4137,7 +4137,7 @@ public class ItemController {
     public String updateStatus(
             Model model,
             @ModelAttribute UserSession userSession,
-            @PathVariable("id") String id) {
+            @PathVariable("id") String id) throws IOException {
         
         String username = userSession.getFullname();
         insertSPTSData(id, username);
