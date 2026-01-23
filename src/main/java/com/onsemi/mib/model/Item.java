@@ -62,6 +62,16 @@ public class Item {
     private String activityId;
     private String selected;
 
+    private String vmId;
+
+    public String getVmId() {
+        return vmId;
+    }
+
+    public void setVmId(String vmId) {
+        this.vmId = vmId;
+    }
+
     public String getSelected() {
         return selected;
     }

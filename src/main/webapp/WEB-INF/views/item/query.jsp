@@ -355,6 +355,11 @@
                                                                     <a sptsPkid="${parameterMaster.sptsPkid}" href="#" onclick="ajaxHardware(this);" class="table-link" title="Hardware List"><i class="bi bi-list-task h4"></i></a>
                                                                     <a sptsPkid="${parameterMaster.sptsPkid}" href="#" onclick="ajaxTrans(this);" class="table-link" title="Movement"><i class="bi bi-arrow-left-right h4"></i></a>
                                                                     <a sptsPkid="${parameterMaster.sptsPkid}" href="#" onclick="ajaxStorage(this);" class="table-link" title="Storage Factory"><i class="bi bi-house-door h4"></i></a>
+                                                                    <c:if test="${not empty parameterMaster.vmId}">
+                                                                    <a href="${contextPath}/hw/item/add2Query/${parameterMaster.id}" class="table-link" title="VM and Functional Test Data">
+                                                                        <i class="bi bi-clock-history h4"></i>
+                                                                    </a>
+                                                                    </c:if>
                                                                 </td>
                                                                 <td><c:out value="${parameterMaster.itemType}"/></td>
                                                                 <td><c:out value="${parameterMaster.subType}"/></td>

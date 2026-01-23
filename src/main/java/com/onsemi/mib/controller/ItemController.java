@@ -3031,6 +3031,237 @@ public class ItemController {
         return "item/item_add2";
     }
     
+    @RequestMapping(value = "/item/add2Query/{mibItemId}", method = RequestMethod.GET)
+    public String itemAdd2Query(
+            Model model,
+            @ModelAttribute UserSession userSession,
+            @PathVariable("mibItemId") String mibItemId
+    ) throws IOException {
+
+        ItemActivityConfigDAO itemdao = new ItemActivityConfigDAO();
+        ItemActivityConfig itemData = itemdao.getItemActivityByItemId(mibItemId);
+        String viCheck = "NO";
+        String bibCheck = "NO";
+        String manCheck = "NO";
+        String leakCheck = "NO";
+        String psCheck = "NO";
+        String winCheck = "NO";
+        if (itemData != null) {
+            viCheck = itemData.getVi();
+            bibCheck = itemData.getBibTest();
+            manCheck = itemData.getManualTest();
+            leakCheck = itemData.getLeakageTest();
+            psCheck = itemData.getPsLeakageTest();
+            winCheck = itemData.getWinchesterChamberLeakageTest();
+        } else {
+            return "redirect:/hw/item/addActivity/" + mibItemId;
+        }
+
+        ItemDAO itemD = new ItemDAO();
+        Item item = itemD.getHardwareDetail(mibItemId);
+        model.addAttribute("item", item);
+
+        String isConsumable = "";
+        if ("on".equals(item.getIsConsumable()) || "true".equals(item.getIsConsumable())) {
+            isConsumable = "checked";
+        } else {
+            isConsumable = "";
+        }
+        model.addAttribute("isConsumable", isConsumable);
+
+        ItemVisualInspection itemVm = new ItemVisualInspection(); //declare new model to prevent null pointer exception
+
+        ItemVisualInspectionDAO itemVmD = new ItemVisualInspectionDAO(); //check if already have VM data
+        int count = itemVmD.getCountItemIdWithModuleItemRegistration(mibItemId);
+
+        if (count == 1) { // assigned itemVm model with data
+            itemVmD = new ItemVisualInspectionDAO();
+            itemVm = itemVmD.getItemVisualInspectionByMibItemIdWithModuleItemRegistration(mibItemId);
+        }
+
+        model.addAttribute("itemVm", itemVm);
+
+        ParameterDetailsDAO pD = new ParameterDetailsDAO();
+        List<ParameterDetails> BibPassFail = pD.getGroupParameterDetailList("", "016");
+        model.addAttribute("BibPassFail", BibPassFail);
+
+        pD = new ParameterDetailsDAO();
+        List<ParameterDetails> paramItemUsage = pD.getGroupParameterDetailList(item.getItemUsage(), "001");
+        model.addAttribute("paramItemUsage", paramItemUsage);
+
+        pD = new ParameterDetailsDAO();
+        List<ParameterDetails> pcbReject = pD.getGroupParameterDetailList(itemVm.getPcbReject(), "003");
+        model.addAttribute("pcbReject", pcbReject);
+
+        pD = new ParameterDetailsDAO();
+        List<ParameterDetails> handleReject = pD.getGroupParameterDetailList(itemVm.getHandleReject(), "004");
+        model.addAttribute("handleReject", handleReject);
+
+        pD = new ParameterDetailsDAO();
+        List<ParameterDetails> metalFrameReject = pD.getGroupParameterDetailList(itemVm.getMetalFrameReject(), "005");
+        model.addAttribute("metalFrameReject", metalFrameReject);
+
+        pD = new ParameterDetailsDAO();
+        List<ParameterDetails> hardwareFasternersReject = pD.getGroupParameterDetailList(itemVm.getHardwareFasternersReject(), "006");
+        model.addAttribute("hardwareFasternersReject", hardwareFasternersReject);
+
+        pD = new ParameterDetailsDAO();
+        List<ParameterDetails> clipHolderReject = pD.getGroupParameterDetailList(itemVm.getClipHolderReject(), "007");
+        model.addAttribute("clipHolderReject", clipHolderReject);
+
+        pD = new ParameterDetailsDAO();
+        List<ParameterDetails> pcbEdgeFingerReject = pD.getGroupParameterDetailList(itemVm.getPcbEdgeFingerReject(), "008");
+        model.addAttribute("pcbEdgeFingerReject", pcbEdgeFingerReject);
+
+        pD = new ParameterDetailsDAO();
+        List<ParameterDetails> connectorReject = pD.getGroupParameterDetailList(itemVm.getConnectorReject(), "009");
+        model.addAttribute("connectorReject", connectorReject);
+
+        pD = new ParameterDetailsDAO();
+        List<ParameterDetails> dutSocketsReject = pD.getGroupParameterDetailList(itemVm.getDutSocketsReject(), "010");
+        model.addAttribute("dutSocketsReject", dutSocketsReject);
+
+        pD = new ParameterDetailsDAO();
+        List<ParameterDetails> edgeMbBananaReject = pD.getGroupParameterDetailList(itemVm.getEdgeMbBananaReject(), "011");
+        model.addAttribute("edgeMbBananaReject", edgeMbBananaReject);
+
+        pD = new ParameterDetailsDAO();
+        List<ParameterDetails> electComponentReject = pD.getGroupParameterDetailList(itemVm.getElectComponentReject(), "012");
+        model.addAttribute("electComponentReject", electComponentReject);
+
+//        pD = new ParameterDetailsDAO();
+//        List<ParameterDetails> cableWireReject = pD.getGroupParameterDetailList(item.getItemUsage(), "013");
+//        model.addAttribute("cableWireReject", cableWireReject);
+        pD = new ParameterDetailsDAO();
+        List<ParameterDetails> solderJointReject = pD.getGroupParameterDetailList(itemVm.getSolderJointReject(), "014");
+        model.addAttribute("solderJointReject", solderJointReject);
+
+        pD = new ParameterDetailsDAO();
+        List<ParameterDetails> winConnectorReject = pD.getGroupParameterDetailList(itemVm.getWinConnectorReject(), "015");
+        model.addAttribute("winConnectorReject", winConnectorReject);
+
+        if (item.getStatus().contains("Good")) {
+            String hwActive = "active";
+            String hwActiveTab = "show active";
+            model.addAttribute("hwActive", hwActive);
+            model.addAttribute("hwActiveTab", hwActiveTab);
+        } else {
+            String hwActive = "";
+            String hwActiveTab = "";
+            model.addAttribute("hwActive", hwActive);
+            model.addAttribute("hwActiveTab", hwActiveTab);
+        }
+        if (item.getStatus().contains("Visual Inspection")) {
+            String vmActive = "active";
+            String vmActiveTab = "show active";
+            model.addAttribute("vmActive", vmActive);
+            model.addAttribute("vmActiveTab", vmActiveTab);
+        } else {
+            String vmActive = "";
+            String vmActiveTab = "";
+            model.addAttribute("vmActive", vmActive);
+            model.addAttribute("vmActiveTab", vmActiveTab);
+        }
+
+        if (item.getStatus().contains("Test")) {
+            String teActive = "active";
+            String teActiveTab = "show active";
+            String buttonDisabled = "disabled";
+            model.addAttribute("teActive", teActive);
+            model.addAttribute("teActiveTab", teActiveTab);
+
+            if (item.getStatus().contains("BIB")) {
+                model.addAttribute("bibshow", teActiveTab);
+//                model.addAttribute("bibbutton",buttonDisabled);
+                model.addAttribute("manbutton", buttonDisabled);
+                model.addAttribute("leakbutton", buttonDisabled);
+                model.addAttribute("psbutton", buttonDisabled);
+                model.addAttribute("winbutton", buttonDisabled);
+            } else if (item.getStatus().contains("Manual")) {
+                model.addAttribute("manshow", teActiveTab);
+                model.addAttribute("bibbutton", buttonDisabled);
+//                model.addAttribute("manbutton",buttonDisabled);
+                model.addAttribute("leakbutton", buttonDisabled);
+                model.addAttribute("psbutton", buttonDisabled);
+                model.addAttribute("winbutton", buttonDisabled);
+            } else if (item.getStatus().contains("Leakage")) {
+                model.addAttribute("leakshow", teActiveTab);
+                model.addAttribute("bibbutton", buttonDisabled);
+                model.addAttribute("manbutton", buttonDisabled);
+//                model.addAttribute("leakbutton",buttonDisabled);
+                model.addAttribute("psbutton", buttonDisabled);
+                model.addAttribute("winbutton", buttonDisabled);
+            } else if (item.getStatus().contains("Power")) {
+                model.addAttribute("psshow", teActiveTab);
+                model.addAttribute("bibbutton", buttonDisabled);
+                model.addAttribute("manbutton", buttonDisabled);
+                model.addAttribute("leakbutton", buttonDisabled);
+//                model.addAttribute("psbutton",buttonDisabled);
+                model.addAttribute("winbutton", buttonDisabled);
+            } else if (item.getStatus().contains("Winchester")) {
+                model.addAttribute("winshow", teActiveTab);
+                model.addAttribute("bibbutton", buttonDisabled);
+                model.addAttribute("manbutton", buttonDisabled);
+                model.addAttribute("leakbutton", buttonDisabled);
+                model.addAttribute("psbutton", buttonDisabled);
+//                model.addAttribute("winbutton",buttonDisabled);
+            }
+        } else {
+            String teActive = "";
+            String teActiveTab = "";
+            model.addAttribute("teActive", teActive);
+            model.addAttribute("teActiveTab", teActiveTab);
+        }
+
+        ItemFunctionalTestDAO itemdao2 = new ItemFunctionalTestDAO();
+        ItemFunctionalTest itemdata2 = itemdao2.getItemActivityByItemId(mibItemId);
+
+        if (itemdata2 != null) {
+            model.addAttribute("dataTest", itemdata2);
+
+            ParameterDetailsDAO pDx = new ParameterDetailsDAO();
+            List<ParameterDetails> bibResultData = pDx.getGroupParameterDetailList(itemdata2.getBibStatus(), "016");
+            model.addAttribute("bibResultData", bibResultData);
+
+            pDx = new ParameterDetailsDAO();
+            List<ParameterDetails> leakResultData = pDx.getGroupParameterDetailList(itemdata2.getLeakStatus(), "016");
+            model.addAttribute("leakResultData", leakResultData);
+
+            pDx = new ParameterDetailsDAO();
+            List<ParameterDetails> psResultData = pDx.getGroupParameterDetailList(itemdata2.getPsStatus(), "016");
+            model.addAttribute("psResultData", psResultData);
+
+            pDx = new ParameterDetailsDAO();
+            List<ParameterDetails> winResultData = pDx.getGroupParameterDetailList(itemdata2.getWinStatus(), "016");
+            model.addAttribute("winResultData", winResultData);
+        } else {
+            ParameterDetailsDAO pDx = new ParameterDetailsDAO();
+            List<ParameterDetails> bibResultData = pDx.getGroupParameterDetailList("", "016");
+            model.addAttribute("bibResultData", bibResultData);
+
+            pDx = new ParameterDetailsDAO();
+            List<ParameterDetails> leakResultData = pDx.getGroupParameterDetailList("", "016");
+            model.addAttribute("leakResultData", leakResultData);
+
+            pDx = new ParameterDetailsDAO();
+            List<ParameterDetails> psResultData = pDx.getGroupParameterDetailList("", "016");
+            model.addAttribute("psResultData", psResultData);
+
+            pDx = new ParameterDetailsDAO();
+            List<ParameterDetails> winResultData = pDx.getGroupParameterDetailList("", "016");
+            model.addAttribute("winResultData", winResultData);
+        }
+
+        model.addAttribute("viCheck", viCheck);
+        model.addAttribute("bibCheck", bibCheck);
+        model.addAttribute("manCheck", manCheck);
+        model.addAttribute("leakCheck", leakCheck);
+        model.addAttribute("psCheck", psCheck);
+        model.addAttribute("winCheck", winCheck);
+
+        return "item/item_add2_query";
+    }
+
     @RequestMapping(value = "/item/updateManualTestStatus", method = {RequestMethod.GET, RequestMethod.POST})
     public String updateManualTestStatus(
             Model model,
@@ -3045,7 +3276,7 @@ public class ItemController {
         String statusLeak = "";
         String statusPs = "";
         String statusWin = "";
-        
+
         ItemActivityConfig iac = new ItemActivityConfig();
         ItemActivityConfigDAO iacdao = new ItemActivityConfigDAO();
 
@@ -3056,7 +3287,7 @@ public class ItemController {
             statusPs = iac.getPsLeakageTest();
             statusWin = iac.getWinchesterChamberLeakageTest();
         }
-        
+
         if (statusMan.equals("Yes")) {
             if (statusLeak.equals("Yes")) {
                 finalStatus = "Pending Functional Test - Leakage Test";
@@ -3065,23 +3296,23 @@ public class ItemController {
             } else if (statusWin.equals("Yes")) {
                 finalStatus = "Pending Functional Test - Winchester Chamber Test";
             }
-            
+
             ItemDAO itemdao = new ItemDAO();
-            
+
             Item hardwaredetail = new Item();
             hardwaredetail.setId(mibItemId);
             hardwaredetail.setStatus(finalStatus);
-            
+
             QueryResult q2 = itemdao.updateItemStatus(hardwaredetail);
         } else {
             LOGGER.info("DO NOT PROCESS ANYTHING HERE");
         }
-        
+
         // FUNCTION UPDATE STATUS KE NEXT FUNCTIONAL TEST
 //        redirectAttrs.addFlashAttribute("error", "Failed to save Visual Inspection. Pls Contact System Admin");
         return "redirect:/hw/item/add2/" + mibItemId;
     }
-    
+
     public String getLatestStatus(String itemId) {
         String status = "";
         String statusVi = "";
@@ -3901,13 +4132,13 @@ public class ItemController {
 
         return "redirect:/hw/item/add2/" + mibItemId;
     }
-    
+
     public void updateMaverickAndEmail(String mibItemId, String username, String jenis) {
-        
+
         String module = "Hardware Registration";
         String sub = "";
         String status = "Failed Functional Test";
-        
+
         switch (jenis) {
             case "BIB":
                 sub = "BIB Test";
@@ -3927,7 +4158,7 @@ public class ItemController {
             default:
                 break;
         }
-        
+
         ItemMaverick maverick = new ItemMaverick();
         maverick.setMibItemId(mibItemId);
         maverick.setModule(module);
@@ -3967,7 +4198,7 @@ public class ItemController {
                 "", //user name requestor
                 to, //to
                 //                        emailTo,
-                "Hardware Registration - "+status+" ["+sub+"]", //subject
+                "Hardware Registration - " + status + " [" + sub + "]", //subject
                 "<br />"
                 + "Please be informed that the hardware below failed the functional test inspection."
                 + "<br /> "
@@ -3983,12 +4214,12 @@ public class ItemController {
         );
 
     }
-    
+
     public void insertSPTSData(String mibItemId, String username) throws IOException {
-        
+
         ItemDAO itemdao = new ItemDAO();
         Item item = itemdao.getHardwareDetail(mibItemId);
-        
+
         String itemId = item.getItemId();
         String itemName = item.getItemName();
         String onHandQty = item.getOnHandQty();
@@ -4026,13 +4257,13 @@ public class ItemController {
         String implementationCost = "";
         String manpowerValue = "";
         String manpowerUnit = "";
-        
+
         JSONObject params2 = new JSONObject();
         String date1 = expirationDate.substring(0, 10);
         String time = expirationDate.substring(11, 19);
         String completeDateTime = date1 + "T" + time;
         LOGGER.info("completeDateTime : " + completeDateTime);
-        
+
         JSONObject addItem = new JSONObject();
         addItem.put("itemID", itemId);
         addItem.put("itemName", itemName);
@@ -4102,7 +4333,8 @@ public class ItemController {
         } else {
             LinkedHashMap<String, String> item2;
             ObjectMapper mapper = new ObjectMapper();
-            item2 = mapper.readValue(addItem.toString(), new TypeReference<LinkedHashMap<String, String>>() {});
+            item2 = mapper.readValue(addItem.toString(), new TypeReference<LinkedHashMap<String, String>>() {
+            });
             String errorMessage;
             if (sr.getErrorDetail().equals("")) {
                 errorMessage = sr.getErrorCode() + " - " + sr.getErrorMessage();
@@ -5306,7 +5538,8 @@ public class ItemController {
         String finalQuery = "";
 
         if (count != 0) {
-            finalQuery = "SELECT * FROM item " + query + " ORDER BY item_type, item_id";
+//            finalQuery = "SELECT * FROM item " + query + " ORDER BY item_type, item_id";
+            finalQuery = "SELECT it.*, vm.id AS vmId FROM item it LEFT JOIN item_visual_inspection vm ON it.id = vm.mib_item_id " + query + " ORDER BY it.item_type, it.item_id";
 
         } else {
             finalQuery = "SELECT * FROM item WHERE flag = '1000'";
