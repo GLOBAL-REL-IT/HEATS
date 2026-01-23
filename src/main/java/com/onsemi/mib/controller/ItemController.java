@@ -3967,7 +3967,7 @@ public class ItemController {
                         insertSPTSData(mibItemId, username);
                     }
                 } else {
-                    newStatus = "Failed Functional Test - BIB Test";
+                    newStatus = "Failed Functional Test - BIB Test - Waiting Maverick CA";
                     updateMaverickAndEmail(mibItemId, username, "BIB");
                 }
                 item0.setStatus(newStatus);
@@ -4019,7 +4019,7 @@ public class ItemController {
                         insertSPTSData(mibItemId, username);
                     }
                 } else {
-                    newStatus = "Failed Functional Test - Leakage Test";
+                    newStatus = "Failed Functional Test - Leakage Test - Waiting Maverick CA";
                     updateMaverickAndEmail(mibItemId, username, "Leakage");
                 }
                 item0.setStatus(newStatus);
@@ -4070,7 +4070,7 @@ public class ItemController {
                         insertSPTSData(mibItemId, username);
                     }
                 } else {
-                    newStatus = "Failed Functional Test - Power Supply Test";
+                    newStatus = "Failed Functional Test - Power Supply Test - Waiting Maverick CA";
                     updateMaverickAndEmail(mibItemId, username, "Power");
                 }
                 item0.setStatus(newStatus);
@@ -4116,7 +4116,7 @@ public class ItemController {
                     newStatus = "Good";
                     insertSPTSData(mibItemId, username);
                 } else {
-                    newStatus = "Failed Functional Test - BIB Test";
+                    newStatus = "Failed Functional Test - Winchester Chamber Leakage Test - Waiting Maverick CA";
                     updateMaverickAndEmail(mibItemId, username, "Winchester");
                 }
                 item0.setStatus(newStatus);
@@ -4133,6 +4133,39 @@ public class ItemController {
         return "redirect:/hw/item/add2/" + mibItemId;
     }
 
+    @RequestMapping(value = "/item/updateStatus/{id}", method = RequestMethod.GET)
+    public String updateStatus(
+            Model model,
+            @ModelAttribute UserSession userSession,
+            @PathVariable("id") String id) {
+        
+        String username = userSession.getFullname();
+        insertSPTSData(id, username);
+        return "redirect:/hw/item/add2/" + id;
+    }
+    
+    @RequestMapping(value = "/item/updateStatusFailed/{id}", method = RequestMethod.GET)
+    public String updateStatusFailed(
+            Model model,
+            @ModelAttribute UserSession userSession,
+            @PathVariable("id") String id) {
+        
+        String username = userSession.getFullname();
+        String manual = "Manual";
+        String status = "Failed Functional Test - Manual Test - Waiting Maverick CA";
+        
+        Item item0 = new Item();
+        ItemDAO itemDA = new ItemDAO();
+        
+        item0.setId(id);
+        item0.setFlag("0");
+        item0.setStatus(status);
+        QueryResult iQ = itemDA.updateItemStatusAndFlag(item0);
+        
+        updateMaverickAndEmail(id, username, manual);
+        return "redirect:/hw/item/add2/" + id;
+    }
+    
     public void updateMaverickAndEmail(String mibItemId, String username, String jenis) {
 
         String module = "Hardware Registration";
@@ -4333,8 +4366,7 @@ public class ItemController {
         } else {
             LinkedHashMap<String, String> item2;
             ObjectMapper mapper = new ObjectMapper();
-            item2 = mapper.readValue(addItem.toString(), new TypeReference<LinkedHashMap<String, String>>() {
-            });
+            item2 = mapper.readValue(addItem.toString(), new TypeReference<LinkedHashMap<String, String>>() {});
             String errorMessage;
             if (sr.getErrorDetail().equals("")) {
                 errorMessage = sr.getErrorCode() + " - " + sr.getErrorMessage();
