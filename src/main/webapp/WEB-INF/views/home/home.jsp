@@ -399,9 +399,13 @@
                     bInfo: false,
                 });
             });
-
-            var options = {
-                series: [${countMaverick},0, 0, 0, 0, 0,0],
+            
+            if(${countMaverick} > 0){
+//                            alert("Test 1");
+                            
+                            var options = {
+                series: [${countMaverick}, 0, 0, 0, 0, 0],
+                        
                 chart: {
 //                    width: 370,
                     height: 370,
@@ -417,7 +421,7 @@
                         speed: 800
                     }
                 },
-                labels: ['VM HW Registration','Functional Test HW Registration','VM Before Loading', 'Functional Test before Loading', 'Abnormal Loading', 'Ionic Test', 'VM After Loading'],
+                labels: ['HW Registration','VM Before Loading', 'Functional Test before Loading', 'Abnormal Loading', 'Ionic Test', 'VM After Loading'],
                 fill: {
                     opacity: 0.85,
                     gradient: {
@@ -428,7 +432,7 @@
                     width: 2,
                     colors: ['#ffffff']
                 },
-                colors: ["#50589C", "#D97D55", "#5ec3f1", "#9DB6FF", "#59AC77","#F63049","#94A378"],
+                colors: ["#50589C", "#5ec3f1", "#9DB6FF", "#59AC77","#F63049","#94A378"],
                 yaxis: {
                     show: false
                 },
@@ -482,6 +486,97 @@
                         }
                     }]
             };
+                            
+                        }else{
+//                            alert("Test 2");
+                            
+                            var options = {
+               series: [1],
+               chart: {
+//                    width: 370,
+                    height: 370,
+                    type: 'polarArea',
+                    fontFamily: 'Poppins, sans-serif',
+                    background: '#FCFCEB',
+                    toolbar: {
+                        show: false
+                    },
+                    animations: {
+                        enabled: true,
+                        easing: 'easeinout',
+                        speed: 800
+                    }
+                },
+//              labels: [],
+              labels: ['','HW Registration','VM Before Loading', 'Functional Test before Loading', 'Abnormal Loading', 'Ionic Test', 'VM After Loading'],
+//              colors: ['#f0f0f0'],
+              colors: ["#f0f0f0","#50589C", "#5ec3f1", "#9DB6FF", "#59AC77","#F63049","#94A378"],
+              fill: {
+                    opacity: 0.85,
+                    gradient: {
+                        enabled: true
+                    }
+                },
+                stroke: {
+                    width: 2,
+                    colors: ['#ffffff']
+                },
+                yaxis: {
+                    show: false
+                },
+                legend: {
+                    position: 'bottom',
+                    fontSize: '14px',
+                    markers: {
+                        radius: 3
+                    }
+                },
+                tooltip: {
+                    y: {
+                        formatter: function (val) {
+//                            return val + " Million"
+                            return val
+                        }
+                    },
+                    theme: 'dark'
+                },
+                dataLabels: {
+                    enabled: true,
+                    formatter: function (val) {
+                        return Math.round(val) + "%"
+                    },
+                    style: {
+                        fontSize: '12px',
+                        fontWeight: 'bold'
+                    }
+                },
+                plotOptions: {
+                    polarArea: {
+                        rings: {
+                            strokeWidth: 0
+                        },
+                        spokes: {
+                            strokeWidth: 0
+                        },
+                        offsetY: 0,
+                        offsetX: 0
+                    }
+                },
+                responsive: [{
+                        breakpoint: 480,
+                        options: {
+                            chart: {
+                                width: 280
+                            },
+                            legend: {
+                                position: 'bottom'
+                            }
+                        }
+                    }]
+                        };
+                                    }
+
+            
 //            chart.updateOptions({
 //                series: [1],
 //                labels: [],
