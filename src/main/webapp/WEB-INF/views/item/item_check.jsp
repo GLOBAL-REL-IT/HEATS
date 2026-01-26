@@ -112,6 +112,9 @@
                 font-size: 16px;
                 transition: border-color 0.3s;
             }
+            th {
+                text-transform: capitalize;
+            }
         </style>
     </s:layout-component>
     <s:layout-component name="page_container">
@@ -206,10 +209,14 @@
                                                     <label class="col-2" for="dutField">DUT #:</label>
                                                     <input class="col-2" type="number" id="dutField" name="dutField" min="1" >
                                                 </div>
-                                                <div>
+<!--                                                <div>
                                                     <label class="col-2" for="manComp">Components :</label>
                                                     <input class="col-2" type="number" id="manComp" name="manComp" min="1" >
                                                     <button type="button" onclick="createRows()">Create Components</button>
+                                                </div>-->
+                                                <div>
+                                                    <label for="componentField">Components:</label>
+                                                    <button type="button" class="add-row-btn" onclick="addRow()">Add Component</button>
                                                 </div>
                                                 </div>
                                             <small class="hint">Please ensure your information is accurate. You can make changes anytime via the Update Page.</small>
@@ -217,9 +224,9 @@
                                             <table id="manual_test_component">
                                                 <thead>
                                                     <tr>
-                                                        <th>Item #</th>
-                                                        <th>Component Type</th>
+                                                        <!--<th>Item #</th>-->
                                                         <th>Component Name</th>
+                                                        <th>Component Type</th>
                                                         <th>Value</th>
                                                         <th>Percentage</th>
                                                         <th>Lower Limit</th>
@@ -299,8 +306,16 @@
                 newRow.id = 'row_' + w;
 
                 // Item #
-                newRow.insertCell(0).textContent = w;
+//                newRow.insertCell(0).textContent = w;
 
+                // Name (component_name) - Now required
+                const inputName = document.createElement('input');
+                inputName.type = 'text';
+                inputName.name = 'component_name[]';
+                inputName.className = 'standard-input';
+                inputName.required = true; // Added required attribute
+                newRow.insertCell(0).appendChild(inputName);
+                
                 // Type (component_type)
                 const selectList = document.createElement("select");
                 selectList.name = 'component_type[]';
@@ -315,16 +330,8 @@
                 });
                 newRow.insertCell(1).appendChild(selectList);
 
-                // Name (component_name) - Now required
-                const inputName = document.createElement('input');
-                inputName.type = 'text';
-                inputName.name = 'component_name[]';
-                inputName.className = 'standard-input';
-                inputName.required = true; // Added required attribute
-                newRow.insertCell(2).appendChild(inputName);
-
                 // Value Cell (actual_value)
-                const valueCell = newRow.insertCell(3);
+                const valueCell = newRow.insertCell(2);
                 valueCell.id = 'value_cell_' + w;
                 const inputValue = document.createElement('input');
                 inputValue.type = 'number';
@@ -351,7 +358,7 @@
                 valueCell.appendChild(completeInput);
 
                 // Percentage Cell (percentage)
-                const percentCell = newRow.insertCell(4);
+                const percentCell = newRow.insertCell(3);
                 percentCell.id = 'percent_cell_' + w;
                 const inputPercent = document.createElement('input');
                 inputPercent.type = 'number';
@@ -378,7 +385,7 @@
                 percentCell.appendChild(completeInput2);
 
                 // Lower Limit Cell (lower)
-                const lowerCell = newRow.insertCell(5);
+                const lowerCell = newRow.insertCell(4);
                 lowerCell.id = 'lower_cell_' + w;
                 const inputLower = document.createElement('input');
                 inputLower.type = 'number';
@@ -389,7 +396,7 @@
                 lowerCell.appendChild(inputLower);
 
                 // Upper Limit Cell (upper)
-                const upperCell = newRow.insertCell(6);
+                const upperCell = newRow.insertCell(5);
                 upperCell.id = 'upper_cell_' + w;
                 const inputUpper = document.createElement('input');
                 inputUpper.type = 'number';
@@ -405,17 +412,31 @@
 
                 handleDropdownChange(w);
 
-                const deleteCell = newRow.insertCell(7);
+//                const deleteCell = newRow.insertCell(6);
+//                const deleteButton = document.createElement("button");
+//                deleteButton.innerText = "Delete";
+//                deleteButton.className = "delete-btn";
+//                 Add an event listener to the button to remove its parent row
+//                deleteButton.onclick = function () {
+//                    this.parentNode.parentNode.remove();
+//                };
+//                deleteCell.appendChild(deleteButton);
+                
+                const deleteCell = newRow.insertCell(6);
                 const deleteButton = document.createElement("button");
-                deleteButton.innerText = "Delete";
-                deleteButton.className = "delete-btn";
-                // Add an event listener to the button to remove its parent row
+                deleteButton.type = "button";
+                deleteButton.style.backgroundColor = "#FFE5B4";
+                deleteButton.className = "delete-btn"; // optional Bootstrap styles
+//                deleteButton.setAttribute("aria-label", "Delete row");
+
+                // Insert Bootstrap icon (bi bi-trash) at h3 size and gray color
+                deleteButton.innerHTML = '<i class="bi bi-trash h3" style="color: gray;"></i>';
+
+                // Remove the row on click
                 deleteButton.onclick = function () {
-                    // 'this' refers to the button element clicked
-                    // .parentNode is the <td> (cell)
-                    // .parentNode.parentNode is the <tr> (row)
-                    this.parentNode.parentNode.remove();
+                    this.closest("tr").remove();
                 };
+
                 deleteCell.appendChild(deleteButton);
             }
         }
@@ -485,31 +506,31 @@
 
                 // Merge the value cell across the 4 columns
                 valueCell.colSpan = 4;
-            } else if (selectElement.value === 'Zener' || selectElement.value === 'Diode') {
-                valueInput.value = '1';
-                percentInput.value = 0;
-                lowerInput.value = 0;
-                upperInput.value = 1;
-                valueInput.removeAttribute('required');
-                percentInput.removeAttribute('required');
-
-                valueInput.classList.remove('hidden');
-                percentInput.classList.add('hidden');
-                lowerInput.classList.add('hidden');
-                upperInput.classList.add('hidden');
-
-                valueCell.classList.remove('hidden');
-                percentCell.classList.remove('hidden');
-                lowerCell.classList.add('hidden');
-                upperCell.classList.add('hidden');
-
-                // Show the 'COMPLETE' input field in the value cell
-                completeInput.classList.add('hidden');
-                completeInput2.classList.remove('hidden');
-
-                // Merge the value cell across the 4 columns
-                percentCell.colSpan = 3;
-                valueCell.colSpan = 1;
+//            } else if (selectElement.value === 'Zener' || selectElement.value === 'Diode') {
+//                valueInput.value = '1';
+//                percentInput.value = 0;
+//                lowerInput.value = 0;
+//                upperInput.value = 1;
+//                valueInput.removeAttribute('required');
+//                percentInput.removeAttribute('required');
+//
+//                valueInput.classList.remove('hidden');
+//                percentInput.classList.add('hidden');
+//                lowerInput.classList.add('hidden');
+//                upperInput.classList.add('hidden');
+//
+//                valueCell.classList.remove('hidden');
+//                percentCell.classList.remove('hidden');
+//                lowerCell.classList.add('hidden');
+//                upperCell.classList.add('hidden');
+//
+//                // Show the 'COMPLETE' input field in the value cell
+//                completeInput.classList.add('hidden');
+//                completeInput2.classList.remove('hidden');
+//
+//                // Merge the value cell across the 4 columns
+//                percentCell.colSpan = 3;
+//                valueCell.colSpan = 1;
 
             } else {
                 valueInput.value = 1; // Clear numerical value input
@@ -582,14 +603,14 @@
         }
         
         function addRow() {
-            const quantity = document.getElementById("inputQuantity").value || 1;
-            const dut = document.getElementById("inputDUT").value || 1;
+//            const quantity = document.getElementById("inputQuantity").value || 1;
+//            const dut = document.getElementById("inputDUT").value || 1;
 
-            const tableBody = document.getElementById("tableBody");
+            const tableBody = document.getElementById("manual_test_component");
             const newRow = tableBody.insertRow(-1);
 
-            const typeCell = newRow.insertCell(0);
-            const nameCell = newRow.insertCell(1);
+            const nameCell = newRow.insertCell(0);
+            const typeCell = newRow.insertCell(1);
             const valueCell = newRow.insertCell(2);
             const percentageCell = newRow.insertCell(3);
             const lowerLimitCell = newRow.insertCell(4);
@@ -599,6 +620,7 @@
             // --- Component Type Select ---
             const typeSelect = document.createElement("select");
             typeSelect.name = 'component_type[]';
+            typeSelect.className = 'standard-input';
             typeSelect.innerHTML = `
                 <option value="Capacitor">Capacitor</option>
                 <option value="Resistor">Resistor</option>
@@ -615,7 +637,7 @@
             nameInput.name = 'component_name[]';
             nameInput.placeholder = "Name";
             nameInput.className = 'standard-input';
-            nameInput.style.width = '90px';
+//            nameInput.style.width = '90px';
             nameInput.required = true;
             nameCell.appendChild(nameInput);
 
@@ -626,7 +648,7 @@
             valueInput.step = "any";
             valueInput.placeholder = "Value";
             valueInput.className = 'standard-input';
-            valueInput.style.width = '70px';
+//            valueInput.style.width = '70px';
             valueInput.required = true;
             valueInput.step = '0.01';
             valueInput.addEventListener('blur', function() {
@@ -643,7 +665,7 @@
             percentageInput.step = "any";
             percentageInput.placeholder = "%";
             percentageInput.className = 'standard-input';
-            percentageInput.style.width = '70px';
+//            percentageInput.style.width = '70px';
             percentageInput.step = '0.01';
             percentageInput.addEventListener('blur', function() {
                 if (this.value) {
@@ -658,7 +680,7 @@
             lowerLimitInput.name = "lower[]";
             lowerLimitInput.readOnly = true; // Prevents manual editing
             lowerLimitInput.className = "standard-input";
-            lowerLimitInput.style.width = "70px";
+//            lowerLimitInput.style.width = "70px";
             lowerLimitInput.value = "N/A";
             lowerLimitInput.addEventListener('blur', function() {
                 if (this.value) {
@@ -673,7 +695,7 @@
             upperLimitInput.name = "upper[]";
             upperLimitInput.readOnly = true;
             upperLimitInput.className = "standard-input";
-            upperLimitInput.style.width = "70px";
+//            upperLimitInput.style.width = "70px";
             upperLimitInput.value = "N/A";
             upperLimitInput.addEventListener('blur', function() {
                 if (this.value) {
@@ -695,7 +717,7 @@
             // --- Calculation Logic ---
             const calculateLimits = () => {
                 const type = typeSelect.value;
-                if (type === "Capacitor" || type === "Resistor") {
+                if (type !== "Fuse") {
                     const val = parseFloat(valueInput.value);
                     const pcnt = parseFloat(percentageInput.value);
 
@@ -730,16 +752,16 @@
                     span.className = 'status-text';
                     span.innerText = "OPEN / SHORT";
                     valueCell.appendChild(span);
-                } else if (type === "Diode" || type === "Zener") {
-                    percentageInput.value = 0;
-                    percentageInput.style.display = 'none';
-                    percentageCell.colSpan = 3;
-                    lowerLimitCell.style.display = 'none';
-                    upperLimitCell.style.display = 'none';
-                    const span = document.createElement('span');
-                    span.className = 'status-text';
-                    span.innerText = "OPEN / SHORT";
-                    percentageCell.appendChild(span);
+//                } else if (type === "Diode" || type === "Zener") {
+//                    percentageInput.value = 0;
+//                    percentageInput.style.display = 'none';
+//                    percentageCell.colSpan = 3;
+//                    lowerLimitCell.style.display = 'none';
+//                    upperLimitCell.style.display = 'none';
+//                    const span = document.createElement('span');
+//                    span.className = 'status-text';
+//                    span.innerText = "OPEN / SHORT";
+//                    percentageCell.appendChild(span);
                 } else {
                     calculateLimits();
                 }

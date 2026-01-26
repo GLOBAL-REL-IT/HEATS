@@ -4137,7 +4137,7 @@ public class ItemController {
     public String updateStatus(
             Model model,
             @ModelAttribute UserSession userSession,
-            @PathVariable("id") String id) {
+            @PathVariable("id") String id) throws IOException {
         
         String username = userSession.getFullname();
         insertSPTSData(id, username);
@@ -4591,7 +4591,7 @@ public class ItemController {
             @RequestParam(required = false) String winchesterChamberLeakageTest,
             @RequestParam(required = false) String qtyField,
             @RequestParam(required = false) String dutField,
-            @RequestParam(required = false) String manComp,
+//            @RequestParam(required = false) String manComp,
             @RequestParam(required = false, value = "component_name[]") List<String> nameRows,
             @RequestParam(required = false, value = "component_type[]") List<String> type,
             @RequestParam(required = false, value = "actual_value[]") List<String> num1Rows,
@@ -4622,6 +4622,7 @@ public class ItemController {
             ManualTestDAO test = new ManualTestDAO();
             int saizQty = Integer.parseInt(qtyField);
             int saizDut = Integer.parseInt(dutField);
+            String manComp = String.valueOf(nameRows.size());
 
             if (nameRows != null) {
                 itemA.setManualTest("Yes");
@@ -4737,11 +4738,6 @@ public class ItemController {
         ItemActivityConfigDAO itemD = new ItemActivityConfigDAO();
         ItemActivityConfig item = itemD.getItemActivityConfigWithItemDetail(id);
 
-        LOGGER.info("SATU >>>>> " + item.getBibTest());
-        LOGGER.info(" DUA >>>>> " + item.getManualTest());
-        LOGGER.info("TIGA >>>>> " + item.getLeakageTest());
-        LOGGER.info("MPAT >>>>> " + item.getPsLeakageTest());
-        LOGGER.info("LIMA >>>>> " + item.getWinchesterChamberLeakageTest());
         mibItemId = item.getMibItemId();
 
         ItemDAO itemdao = new ItemDAO();
