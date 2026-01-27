@@ -1215,7 +1215,12 @@ public class ItemController {
                     item.setAlu(Double.toString(getTransactionByParam.getJSONObject(i).getDouble("LifetimeUsageHrs")));
                 }
                 if (getTransactionByParam.getJSONObject(i).has("Remarks")) {
-                    item.setRemarks(getTransactionByParam.getJSONObject(i).getString("Remarks"));
+                    Object assembly = getTransactionByParam.getJSONObject(i).get("Remarks");
+                    if (assembly instanceof String) {
+                        item.setRemarks(getTransactionByParam.getJSONObject(i).getString("Remarks"));
+                    } else {
+                        item.setRemarks(Integer.toString(getTransactionByParam.getJSONObject(i).getInt("Remarks")));
+                    }
                 }
 
                 itemD = new ItemTransactionDAO();
@@ -2699,6 +2704,180 @@ public class ItemController {
 
     }
 
+    @RequestMapping(value = "/item/update2", method = {RequestMethod.GET, RequestMethod.POST})
+    public String itemUpdate2(
+            Model model,
+            Locale locale,
+            RedirectAttributes redirectAttrs,
+            @ModelAttribute UserSession userSession,
+            //            @RequestParam(required = false) String itemPKID,
+            @RequestParam(required = false) String id,
+            //            @RequestParam(required = false) String itemType2,
+            @RequestParam(required = false) String itemTypeRead,
+            @RequestParam(required = false) String subType,
+            @RequestParam(required = false) String itemId,
+            @RequestParam(required = false) String itemName,
+            @RequestParam(required = false) String assemblyId,
+            @RequestParam(required = false) String itemUsage,
+            @RequestParam(required = false) String model2,
+            @RequestParam(required = false) String manufacturer,
+            @RequestParam(required = false) String unitCost,
+            @RequestParam(required = false) String equipmentType,
+            @RequestParam(required = false) String equipmentModel,
+            @RequestParam(required = false) String equipmentManufacturer,
+            @RequestParam(required = false) String minQty,
+            @RequestParam(required = false) String maxQty,
+            @RequestParam(required = false) String rack,
+            @RequestParam(required = false) String shelf,
+            @RequestParam(required = false) String stressType,
+            @RequestParam(required = false) String onHandQty,
+            @RequestParam(required = false) String productionQty,
+            @RequestParam(required = false) String otherOnsemiQty,
+            @RequestParam(required = false) String productionStagingQty,
+            @RequestParam(required = false) String repairQty,
+            @RequestParam(required = false) String quarantineQty,
+            @RequestParam(required = false) String externalCleanQty,
+            @RequestParam(required = false) String externalRecleanQty,
+            @RequestParam(required = false) String internalCleanQty,
+            @RequestParam(required = false) String internalRecleanQty,
+            @RequestParam(required = false) String otherQty,
+            @RequestParam(required = false) String vendorQty,
+            @RequestParam(required = false) String storageFactoryQty,
+            @RequestParam(required = false) String totalQty,
+            @RequestParam(required = false) String isConsumable,
+            @RequestParam(required = false) String remarks,
+            @RequestParam(required = false) String status,
+            @RequestParam(required = false) String flag,
+            @RequestParam(required = false) String aluHrs,
+            @RequestParam(required = false) String expirationDate
+    ) throws IOException {
+
+        if (productionQty == null || "".equals(productionQty)) {
+            productionQty = "0";
+        }
+        if (productionStagingQty == null || "".equals(productionStagingQty)) {
+            productionStagingQty = "0";
+        }
+        if (repairQty == null || "".equals(repairQty)) {
+            repairQty = "0";
+        }
+        if (otherQty == null || "".equals(otherQty)) {
+            otherQty = "0";
+        }
+        if (quarantineQty == null || "".equals(quarantineQty)) {
+            quarantineQty = "0";
+        }
+        if (externalCleanQty == null || "".equals(externalCleanQty)) {
+            externalCleanQty = "0";
+        }
+        if (externalRecleanQty == null || "".equals(externalRecleanQty)) {
+            externalRecleanQty = "0";
+        }
+        if (internalCleanQty == null || "".equals(internalCleanQty)) {
+            internalCleanQty = "0";
+        }
+        if (internalRecleanQty == null || "".equals(internalRecleanQty)) {
+            internalRecleanQty = "0";
+        }
+        if (storageFactoryQty == null || "".equals(storageFactoryQty)) {
+            storageFactoryQty = "0";
+        }
+        if (otherOnsemiQty == null || "".equals(otherOnsemiQty)) {
+            otherOnsemiQty = "0";
+        }
+        if (vendorQty == null || "".equals(vendorQty)) {
+            vendorQty = "0";
+        }
+        if (aluHrs == null || "".equals(aluHrs)) {
+            aluHrs = "0";
+        }
+
+        Item item = new Item();
+        item.setId(id);
+//        item.setSptsPkid(itemPKID);
+        item.setItemType(itemTypeRead);
+        item.setSubType(subType);
+        item.setSiteName("Seremban");
+        item.setItemId(itemId);
+        item.setItemName(itemName);
+        item.setAssemblyId(assemblyId);
+        item.setRack(rack);
+        item.setShelf(shelf);
+        item.setItemUsage(itemUsage);
+        item.setOnHandQty(onHandQty);
+
+        item.setProductionQty(productionQty);
+        item.setProductionStagingQty(productionStagingQty);
+        item.setRepairQty(repairQty);
+        item.setOtherQty(otherQty);
+        item.setQuarantineQty(quarantineQty);
+        item.setExternalCleanQty(externalCleanQty);
+        item.setExternalRecleanQty(externalRecleanQty);
+        item.setInternalCleanQty(internalCleanQty);
+        item.setInternalRecleanQty(internalRecleanQty);
+        item.setStorageFactoryQty(storageFactoryQty);
+        item.setOtherOnsemiQty(otherOnsemiQty);
+        item.setVendorQty(vendorQty);
+
+        int totalQ = Integer.parseInt(onHandQty) + Integer.parseInt(productionQty) + Integer.parseInt(productionStagingQty) + Integer.parseInt(repairQty) + Integer.parseInt(otherQty) + Integer.parseInt(quarantineQty) + Integer.parseInt(externalCleanQty)
+                + Integer.parseInt(externalRecleanQty) + Integer.parseInt(internalCleanQty) + Integer.parseInt(internalRecleanQty) + Integer.parseInt(storageFactoryQty) + Integer.parseInt(otherOnsemiQty) + Integer.parseInt(vendorQty);
+
+        item.setTotalQty(Integer.toString(totalQ));
+        item.setUnitCost(unitCost);
+
+        Double totalCost = totalQ * Double.parseDouble(unitCost);
+        item.setTotalCost(totalCost.toString());
+
+        item.setMinQty(minQty);
+        item.setMaxQty(maxQty);
+        item.setExpirationDate(expirationDate);
+        if ("on".equals(isConsumable)) {
+            isConsumable = "true";
+        } else {
+            isConsumable = "false";
+        }
+        item.setIsConsumable(isConsumable);
+        item.setModel(model2);
+        item.setManufacturer(manufacturer);
+        item.setEquipmentType(equipmentType);
+        item.setEquipmentModel(equipmentModel);
+        item.setEquipmentManufacturer(equipmentManufacturer);
+        item.setStressType(stressType);
+        item.setRemarks(remarks);
+        item.setAluHrs(aluHrs);
+        item.setCreatedBy(userSession.getFullname());
+        item.setStatus(status);
+        item.setFlag(flag);
+        //check if itemID exist or not
+        ItemDAO itemD = new ItemDAO();
+        int count = itemD.getCountItemIdAndNotMibId(itemId, id);
+        if (count > 0) {
+            redirectAttrs.addFlashAttribute("error", "Duplicate Item ID: " + itemId + ". Pls register with different Item ID.");
+            return "redirect:/hw/item/add2/" + id;
+        } else {
+            itemD = new ItemDAO();
+            QueryResult i = itemD.updateHardwareDetail(item);
+
+            if (i.getResult() == 1) {
+
+                //update log
+                ItemLog log = new ItemLog();
+                log.setItemId(id);
+                log.setDetail("Data Updated");
+                log.setCreatedBy(userSession.getFullname());
+                ItemLogDAO logD = new ItemLogDAO();
+                QueryResult logQ = logD.insertItemLog(log);
+
+                redirectAttrs.addFlashAttribute("success", "Succesfully update Item ID: " + itemId);
+                return "redirect:/hw/item/add2/" + id;
+            } else {
+                redirectAttrs.addFlashAttribute("error", "Failed to update Item ID: " + itemId + ". Pls contact system admin.");
+                return "redirect:/hw/item/add2/" + id;
+            }
+        }
+
+    }
+
     @RequestMapping(value = "/item/delete/{itemPKID}/{mibId}", method = {RequestMethod.GET, RequestMethod.POST})
     public String itemDelete(
             Model model2,
@@ -3028,9 +3207,40 @@ public class ItemController {
         model.addAttribute("psCheck", psCheck);
         model.addAttribute("winCheck", winCheck);
 
+        String groupId = userSession.getGroup();
+        model.addAttribute("groupId", groupId);
+
+        itemD = new ItemDAO();
+        List<Item> listAssemblyId = itemD.getItemAssemblyId(item.getAssemblyId());
+        model.addAttribute("listAssemblyId", listAssemblyId);
+
+        itemD = new ItemDAO();
+        List<Item> listModel = itemD.getItemModel(item.getModel());
+        model.addAttribute("listModel", listModel);
+
+        itemD = new ItemDAO();
+        List<Item> listManufacturer = itemD.getItemManufacturer(item.getManufacturer());
+        model.addAttribute("listManufacturer", listManufacturer);
+
+        itemD = new ItemDAO();
+        List<Item> listEqptModel = itemD.getItemEqptModel(item.getEquipmentModel());
+        model.addAttribute("listEqptModel", listEqptModel);
+
+        itemD = new ItemDAO();
+        List<Item> listEqptType = itemD.getItemEqptType(item.getEquipmentType());
+        model.addAttribute("listEqptType", listEqptType);
+
+        itemD = new ItemDAO();
+        List<Item> listEqptManufacturer = itemD.getItemEqptManufacturer(item.getEquipmentManufacturer());
+        model.addAttribute("listEqptManufacturer", listEqptManufacturer);
+
+        itemD = new ItemDAO();
+        List<Item> listStressType = itemD.getItemStressType(item.getStressType());
+        model.addAttribute("listStressType", listStressType);
+
         return "item/item_add2";
     }
-    
+
     @RequestMapping(value = "/item/add2Query/{mibItemId}", method = RequestMethod.GET)
     public String itemAdd2Query(
             Model model,
@@ -4143,34 +4353,34 @@ public class ItemController {
             Model model,
             @ModelAttribute UserSession userSession,
             @PathVariable("id") String id) throws IOException {
-        
+
         String username = userSession.getFullname();
         insertSPTSData(id, username);
         return "redirect:/hw/item/add2/" + id;
     }
-    
+
     @RequestMapping(value = "/item/updateStatusFailed/{id}", method = RequestMethod.GET)
     public String updateStatusFailed(
             Model model,
             @ModelAttribute UserSession userSession,
             @PathVariable("id") String id) {
-        
+
         String username = userSession.getFullname();
         String manual = "Manual";
         String status = "Failed Functional Test - Manual Test - Waiting Maverick CA";
-        
+
         Item item0 = new Item();
         ItemDAO itemDA = new ItemDAO();
-        
+
         item0.setId(id);
         item0.setFlag("0");
         item0.setStatus(status);
         QueryResult iQ = itemDA.updateItemStatusAndFlag(item0);
-        
+
         updateMaverickAndEmail(id, username, manual);
         return "redirect:/hw/item/add2/" + id;
     }
-    
+
     public void updateMaverickAndEmail(String mibItemId, String username, String jenis) {
 
         String module = "Hardware Registration";
@@ -4371,7 +4581,8 @@ public class ItemController {
         } else {
             LinkedHashMap<String, String> item2;
             ObjectMapper mapper = new ObjectMapper();
-            item2 = mapper.readValue(addItem.toString(), new TypeReference<LinkedHashMap<String, String>>() {});
+            item2 = mapper.readValue(addItem.toString(), new TypeReference<LinkedHashMap<String, String>>() {
+            });
             String errorMessage;
             if (sr.getErrorDetail().equals("")) {
                 errorMessage = sr.getErrorCode() + " - " + sr.getErrorMessage();
@@ -4596,7 +4807,7 @@ public class ItemController {
             @RequestParam(required = false) String winchesterChamberLeakageTest,
             @RequestParam(required = false) String qtyField,
             @RequestParam(required = false) String dutField,
-//            @RequestParam(required = false) String manComp,
+            //            @RequestParam(required = false) String manComp,
             @RequestParam(required = false, value = "component_name[]") List<String> nameRows,
             @RequestParam(required = false, value = "component_type[]") List<String> type,
             @RequestParam(required = false, value = "actual_value[]") List<String> num1Rows,
@@ -4799,7 +5010,7 @@ public class ItemController {
             @RequestParam(required = false) String winchesterChamberLeakageTest,
             @RequestParam(required = false) String inputQuantity,
             @RequestParam(required = false) String inputDUT,
-//            @RequestParam(required = false) String manComp,
+            //            @RequestParam(required = false) String manComp,
             @RequestParam(required = false, value = "component_name[]") List<String> nameRows,
             @RequestParam(required = false, value = "component_type[]") List<String> type,
             @RequestParam(required = false, value = "actual_value[]") List<String> num1Rows,
@@ -4809,16 +5020,16 @@ public class ItemController {
     ) {
 
         LOGGER.info("NEED TO ADD THE UPDATE FUNCTION HERE : MAKE SURE READ ALL CURRENT VALUE AND NEW ONE");
-        
-        LOGGER.info("id >>> "+id);
-        LOGGER.info("mibItemId >>> "+mibItemId);
-        LOGGER.info("viCheck >>> "+viCheck);
-        LOGGER.info("bibTestCheck >>> "+bibTestCheck);
-        LOGGER.info("manualTestCheck >>> "+manualTestCheck);
-        LOGGER.info("leakageTestCheck >>> "+leakageTestCheck);
-        LOGGER.info("psLeakageTestCheck >>> "+psLeakageTestCheck);
-        LOGGER.info("winchesterChamberLeakageTest >>> "+winchesterChamberLeakageTest);
-        
+
+        LOGGER.info("id >>> " + id);
+        LOGGER.info("mibItemId >>> " + mibItemId);
+        LOGGER.info("viCheck >>> " + viCheck);
+        LOGGER.info("bibTestCheck >>> " + bibTestCheck);
+        LOGGER.info("manualTestCheck >>> " + manualTestCheck);
+        LOGGER.info("leakageTestCheck >>> " + leakageTestCheck);
+        LOGGER.info("psLeakageTestCheck >>> " + psLeakageTestCheck);
+        LOGGER.info("winchesterChamberLeakageTest >>> " + winchesterChamberLeakageTest);
+
         String vi = "No";
         String bb = "No";
         String mn = "No";
@@ -4826,7 +5037,7 @@ public class ItemController {
         String ps = "No";
         String wn = "No";
         int saiz = 0;
-        
+
         if ("on".equals(viCheck)) {
             vi = "Yes";
         }
@@ -4849,7 +5060,7 @@ public class ItemController {
             man1 = new ManualTestDAO();
             man1.deleteConfigLevel03(mibItemId);
             LOGGER.info("REMOVE LEVEL 03");
-            
+
             // SINI KITA NK CREATE BALIK SEMUA SETUP / CONFIG
             saiz = nameRows.size();
             String flag = "1";
@@ -4871,7 +5082,7 @@ public class ItemController {
                     if (!"0".equals(q1.getGeneratedKey())) {
                         qtyId = q1.getGeneratedKey();
                     } else {
-                        
+
                     }
                     for (int c2 = 1; c2 <= saizDut; c2++) {
                         String dutId = "0";
@@ -4892,16 +5103,16 @@ public class ItemController {
                     }
                 }
             }
-            
+
             ManualTestDAO mt = new ManualTestDAO();
             mt.updateConfigId(id, configId);
             // ADA ERROR DEKAT SINI, ESOK SAMBUNG
         }
-        
-        LOGGER.info("qtyField >> "+inputQuantity);
-        LOGGER.info("dutField >> "+inputDUT);
-        LOGGER.info("komponen >> "+saiz);
-        
+
+        LOGGER.info("qtyField >> " + inputQuantity);
+        LOGGER.info("dutField >> " + inputDUT);
+        LOGGER.info("komponen >> " + saiz);
+
         if ("on".equals(leakageTestCheck)) {
             lk = "Yes";
         }
@@ -4911,7 +5122,7 @@ public class ItemController {
         if ("on".equals(winchesterChamberLeakageTest)) {
             wn = "Yes";
         }
-        
+
         ItemActivityConfig xtvt = new ItemActivityConfig();
         ItemActivityConfigDAO itemdao = new ItemActivityConfigDAO();
         xtvt.setVi(vi);
@@ -4924,7 +5135,7 @@ public class ItemController {
         xtvt.setFlag("0");
         xtvt.setId(id);
         QueryResult q = itemdao.updateItemActivityConfig(xtvt);
-        
+
 //        return "redirect:/hw/item/add2editActivity/" + mibItemId;
         return "redirect:/hw/item/editActivity/" + id;
     }

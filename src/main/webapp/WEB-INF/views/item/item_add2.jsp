@@ -199,14 +199,17 @@
                                         <c:choose>
                                             <c:when test="${(fn:contains(String, 'BIB')) || (fn:contains(String, 'DRIVER BOARD'))}">
                                                 <div class="bib" id="bib">
-                                                    <form class="row gx-3 " role="form" action="${contextPath}/hw/item/update" method="post">
+                                                    <form class="row gx-3 " role="form" action="${contextPath}/hw/item/update2" method="post">
                                                         <div class="col-xl-3 col-sm-12 col-12">
                                                             <div class="mb-3">
                                                                 <label for="subType" class="form-label">Item Type</label>
                                                                 <div class="input input-group">
                                                                     <input type="text" class="form-control" id="itemTypeRead" name="itemTypeRead" placeholder="" value="${item.itemType}" readonly>
+                                                                    <input type="hidden" class="form-control" id="groupId" name="groupId" placeholder="" value="${groupId}" readonly>
+                                                                    <input type="hidden" class="form-control" id="status" name="status" placeholder="" value="${item.status}">
                                                                     <input type="hidden" class="form-control" id="itemPKID" name="itemPKID" placeholder="" value="${item.sptsPkid}">
                                                                     <input type="hidden" class="form-control" id="id" name="id" placeholder="" value="${item.id}">
+                                                                    <input type="hidden" class="form-control" id="flag" name="flag" placeholder="" value="${item.flag}">
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -247,7 +250,13 @@
                                                             <div class="mb-3">
                                                                 <label for="assemblyId" class="form-label">Assembly ID</label>
                                                                 <div class="input input-group">
-                                                                    <input type="text" class="form-control" id="assemblyId" name="assemblyId" placeholder="" value="${item.assemblyId}">
+                                                                    <!--<input type="text" class="form-control" id="assemblyId" name="assemblyId" placeholder="" value="${item.assemblyId}">-->
+                                                                    <select class="js-example-tags" id="assemblyId" name="assemblyId" style="width: 100%">
+                                                                        <option></option>
+                                                                        <c:forEach items="${listAssemblyId}" var="invInner">
+                                                                            <option value="${invInner.assemblyId}" ${invInner.selected}>${invInner.assemblyId}</option>
+                                                                        </c:forEach>
+                                                                    </select>
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -255,7 +264,13 @@
                                                             <div class="mb-3">
                                                                 <label for="model" class="form-label">Spare Part Model</label>
                                                                 <div class="input input-group">
-                                                                    <input type="text" class="form-control" id="model2" name="model2" value="${item.model}">
+                                                                    <!--<input type="text" class="form-control" id="model2" name="model2" value="${item.model}">-->
+                                                                    <select class="js-example-tags" id="model2" name="model2" style="width: 100%">
+                                                                        <option></option>
+                                                                        <c:forEach items="${listModel}" var="invInner">
+                                                                            <option value="${invInner.model}" ${invInner.selected}>${invInner.model}</option>
+                                                                        </c:forEach>
+                                                                    </select>
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -263,7 +278,13 @@
                                                             <div class="mb-3">
                                                                 <label for="manufacturer" class="form-label">Spare Part Manufacturer</label>
                                                                 <div class="input input-group">
-                                                                    <input type="text" class="form-control" id="manufacturer" name="manufacturer" placeholder="" value="${item.manufacturer}">
+                                                                    <!--<input type="text" class="form-control" id="manufacturer" name="manufacturer" placeholder="" value="${item.manufacturer}">-->
+                                                                    <select class="js-example-tags" id="manufacturer" name="manufacturer" style="width: 100%">
+                                                                        <option></option>
+                                                                        <c:forEach items="${listManufacturer}" var="invInner">
+                                                                            <option value="${invInner.manufacturer}" ${invInner.selected}>${invInner.manufacturer}</option>
+                                                                        </c:forEach>
+                                                                    </select>
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -279,7 +300,13 @@
                                                             <div class="mb-3">
                                                                 <label for="equipmentType" class="form-label">Equipment Type</label>
                                                                 <div class="input input-group">
-                                                                    <input type="text" class="form-control" id="equipmentType" name="equipmentType" placeholder="" value="${item.equipmentType}">
+                                                                    <!--<input type="text" class="form-control" id="equipmentType" name="equipmentType" placeholder="" value="${item.equipmentType}">-->
+                                                                    <select class="js-example-tags" id="equipmentType" name="equipmentType" style="width: 100%">
+                                                                        <option></option>
+                                                                        <c:forEach items="${listEqptType}" var="invInner">
+                                                                            <option value="${invInner.equipmentType}" ${invInner.selected}>${invInner.equipmentType}</option>
+                                                                        </c:forEach>
+                                                                    </select>
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -287,7 +314,13 @@
                                                             <div class="mb-3">
                                                                 <label for="equipmentModel" class="form-label">Equipment Model</label>
                                                                 <div class="input input-group">
-                                                                    <input type="text" class="form-control" id="equipmentModel" name="equipmentModel" value="${item.equipmentModel}">
+                                                                    <!--<input type="text" class="form-control" id="equipmentModel" name="equipmentModel" value="${item.equipmentModel}">-->
+                                                                    <select class="js-example-tags" id="equipmentModel" name="equipmentModel" style="width: 100%">
+                                                                        <option></option>
+                                                                        <c:forEach items="${listEqptModel}" var="invInner">
+                                                                            <option value="${invInner.equipmentModel}" ${invInner.selected}>${invInner.equipmentModel}</option>
+                                                                        </c:forEach>
+                                                                    </select>
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -295,7 +328,13 @@
                                                             <div class="mb-3">
                                                                 <label for="equipmentManufacturer" class="form-label">Eqpt Manufacturer</label>
                                                                 <div class="input input-group">
-                                                                    <input type="text" class="form-control" id="equipmentManufacturer" name="equipmentManufacturer" value="${item.equipmentManufacturer}" >
+                                                                    <!--<input type="text" class="form-control" id="equipmentManufacturer" name="equipmentManufacturer" value="${item.equipmentManufacturer}" >-->
+                                                                    <select class="js-example-tags" id="equipmentManufacturer" name="equipmentManufacturer" style="width: 100%">
+                                                                        <option></option>
+                                                                        <c:forEach items="${listEqptManufacturer}" var="invInner">
+                                                                            <option value="${invInner.equipmentManufacturer}" ${invInner.selected}>${invInner.equipmentManufacturer}</option>
+                                                                        </c:forEach>
+                                                                    </select>
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -335,7 +374,13 @@
                                                             <div class="mb-3">
                                                                 <label for="stressType" class="form-label">Stress Type</label>
                                                                 <div class="input input-group">
-                                                                    <input type="text" class="form-control" id="stressType" name="stressType" placeholder="" value="${item.stressType}">
+                                                                    <!--<input type="text" class="form-control" id="stressType" name="stressType" placeholder="" value="${item.stressType}">-->
+                                                                    <select class="js-example-tags" id="stressType" name="stressType" style="width: 100%">
+                                                                        <option></option>
+                                                                        <c:forEach items="${listStressType}" var="invInner">
+                                                                            <option value="${invInner.stressType}" ${invInner.selected}>${invInner.stressType}</option>
+                                                                        </c:forEach>
+                                                                    </select>
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -487,7 +532,7 @@
 
                                                         <!-- Form actions start -->
                                                         <div class="col-md-12">
-                                                            <button type="submit" id="submit" id="submit" class="btn btn-primary float-end">Save</button>
+                                                            <button type="submit" id="submitHw" name="submitHw" class="btn btn-primary float-end">Save</button>
                                                             <a href="${contextPath}/hw/item/pending" class="btn btn-dark float-start">Back</a>
                                                         </div>
                                                         <!-- Form actions end -->
@@ -496,7 +541,7 @@
                                             </c:when>
                                             <c:when test="${(fn:contains(String, 'Flux')) || (fn:contains(String, 'IPA')) || (fn:contains(String, 'Ionox'))}">
                                                 <div class="chemical" id="chemical">
-                                                    <form class="row gx-3 " role="form" action="${contextPath}/hw/item/update" method="post">
+                                                    <form class="row gx-3 " role="form" action="${contextPath}/hw/item/update2" method="post">
                                                         <div class="col-xl-2 col-sm-12 col-12">
                                                             <div class="mb-3">
                                                                 <label for="subType" class="form-label">Item Type</label>
@@ -785,7 +830,7 @@
                                             </c:when>
                                             <c:when test="${(fn:contains(String, 'ATE'))}">
                                                 <div class="ate" id="ate">
-                                                    <form class="row gx-3 " role="form" action="${contextPath}/hw/item/update" method="post">
+                                                    <form class="row gx-3 " role="form" action="${contextPath}/hw/item/update2" method="post">
                                                         <div class="col-xl-2 col-sm-12 col-12">
                                                             <div class="mb-3">
                                                                 <label for="subType" class="form-label">Item Type</label>
@@ -1075,7 +1120,7 @@
                                             </c:when>
                                             <c:when test="${(fn:contains(String, 'EQP_'))}">
                                                 <div class="eqp" id="eqp">
-                                                    <form class="row gx-3 " role="form" action="${contextPath}/hw/item/update" method="post">
+                                                    <form class="row gx-3 " role="form" action="${contextPath}/hw/item/update2" method="post">
                                                         <div class="col-xl-2 col-sm-12 col-12">
                                                             <div class="mb-3">
                                                                 <label for="subType" class="form-label">Item Type</label>
@@ -1365,7 +1410,7 @@
                                             </c:when>
                                             <c:when test="${(fn:contains(String, 'FOL')) || (fn:contains(String, 'TRAY'))}">
                                                 <div class="fol" id="fol">
-                                                    <form class="row gx-3 " role="form" action="${contextPath}/hw/item/update" method="post">
+                                                    <form class="row gx-3 " role="form" action="${contextPath}/hw/item/update2" method="post">
                                                         <div class="col-xl-2 col-sm-12 col-12">
                                                             <div class="mb-3">
                                                                 <label for="subType" class="form-label">Item Type</label>
@@ -1650,7 +1695,7 @@
                                             </c:when>
                                             <c:when test="${(fn:contains(String, 'PCB'))}">
                                                 <div class="pcb" id="pcb">
-                                                    <form class="row gx-3 " role="form" action="${contextPath}/hw/item/update" method="post">
+                                                    <form class="row gx-3 " role="form" action="${contextPath}/hw/item/update2" method="post">
                                                         <div class="col-xl-2 col-sm-12 col-12">
                                                             <div class="mb-3">
                                                                 <label for="subType" class="form-label">Item Type</label>
@@ -1934,7 +1979,7 @@
                                             </c:when>
                                             <c:when test="${(fn:contains(String, 'Solder Paste'))}">
                                                 <div class="solderPaste" id="solderPaste">
-                                                    <form class="row gx-3 " role="form" action="${contextPath}/hw/item/update" method="post">
+                                                    <form class="row gx-3 " role="form" action="${contextPath}/hw/item/update2" method="post">
                                                         <div class="col-xl-2 col-sm-12 col-12">
                                                             <div class="mb-3">
                                                                 <label for="subType" class="form-label">Item Type</label>
@@ -2230,7 +2275,7 @@
                                             </c:when>
                                             <c:when test="${(fn:contains(String, 'Stencil'))}">
                                                 <div class="stencil" id="stencil">
-                                                    <form class="row gx-3 " role="form" action="${contextPath}/hw/item/update" method="post">
+                                                    <form class="row gx-3 " role="form" action="${contextPath}/hw/item/update2" method="post">
                                                         <div class="col-xl-2 col-sm-12 col-12">
                                                             <div class="mb-3">
                                                                 <label for="subType" class="form-label">Item Type</label>
@@ -2515,7 +2560,7 @@
                                             </c:when>
                                             <c:otherwise>
                                                 <div class="initial" id="initial">
-                                                    <form class="row gx-3 " role="form" action="${contextPath}/hw/item/update" method="post">
+                                                    <form class="row gx-3 " role="form" action="${contextPath}/hw/item/update2" method="post">
                                                         <div class="col-xl-2 col-sm-12 col-12">
                                                             <div class="mb-3">
                                                                 <label for="subType" class="form-label">Item Type</label>
@@ -4012,6 +4057,10 @@
             placeholder: "Choose one",
             allowClear: true
         });
+        
+        $(".js-example-tags").select2({
+                tags: true
+            });
         // Get references to the elements
 
         const pcbPass = document.getElementById('pcb1');
@@ -4110,9 +4159,9 @@
         const winConnectorRejectUpload = document.getElementById('winConnectorRejectUpload');
         const winConnectorAttach = document.getElementById('winConnectorAttach');
 
-        const bibResult = document.getElementById('bibResult');
-
-        bibResult.required = true;
+//        const bibResult = document.getElementById('bibResult');
+//
+//        bibResult.required = true;
 
 // Function to handle the radio button change
         function handleRadioChange() {
@@ -4531,11 +4580,14 @@
         });
 
         $(document).ready(function () {
-            var element = $('#itemTypeRead');
-            if (element.val()) {
-                $("#submit").attr("disabled", true);
-            } else {
-                $("#submit").removeAttr('disabled');
+//            var element = $('#itemTypeRead');
+            var element = $('#groupId');
+            if (element.val() !== '1' && element.val() !== '2' && element.val() !== '12' && element.val() !== '13') {
+//                $("#submit").removeAttr('disabled');
+                 $("#submitHw").attr("disabled", true);
+            } 
+            else {
+                 $("#submitHw").removeAttr('disabled');
             }
 
             var element2 = $('#viId');

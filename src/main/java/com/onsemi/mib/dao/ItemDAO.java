@@ -880,11 +880,11 @@ public class ItemDAO {
         return count;
     }
 
-    public Integer getCountItemIdAndNotMibId(String itemId, String mibId) {
+    public Integer getCountItemIdAndNotMibId(String itemId, String id) {
         Integer count = null;
         try {
             PreparedStatement ps = conn.prepareStatement(
-                    "SELECT COUNT(*) AS count FROM item inc WHERE inc.item_id = '" + itemId + "' AND inc.id <> '" + mibId + "'"
+                    "SELECT COUNT(*) AS count FROM item inc WHERE inc.item_id = '" + itemId + "' AND inc.id <> '" + id + "'"
             );
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
