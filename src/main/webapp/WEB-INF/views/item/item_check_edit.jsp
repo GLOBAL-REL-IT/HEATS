@@ -549,16 +549,40 @@
         function toggleVisibility() {
             var checkbox = document.getElementById("manualTestCheck");
             var inputContainer = document.getElementById("manual_page_control");
+            var checkQty = document.getElementById("inputQuantity");
+            var checkDut = document.getElementById("inputDUT");
 
             if (checkbox.checked) {
                 inputContainer.classList.remove("hidden");
+                document.getElementById("inputQuantity").setAttribute("required", "required");
+                document.getElementById("inputDUT").setAttribute("required", "required");
             } else {
                 inputContainer.classList.add("hidden");
+                document.getElementById("inputQuantity").removeAttribute("required");
+                document.getElementById("inputDUT").removeAttribute("required");
             }
         }
         
+        const calculateLimits = () => {
+            const type = typeSelect.value;
+            if (type !== "Fuse") {
+                const val = parseFloat(valueInput.value);
+                const pcnt = parseFloat(percentageInput.value);
+
+                if (!isNaN(val) && !isNaN(pcnt)) {
+                    const tolerance = (val * pcnt) / 100;
+                    lowerLimitInput.value = (val - tolerance).toFixed(2);
+                    upperLimitInput.value = (val + tolerance).toFixed(2);
+                } else {
+                    lowerLimitInput.value = "N/A";
+                    upperLimitInput.value = "N/A";
+                }
+            }
+        };
+        
         const testdata = document.createElement("actual_value[]");
         testdata.addEventListener('input', calculateLimits);
+        
         
 //        $(document).ready(function () {
             
