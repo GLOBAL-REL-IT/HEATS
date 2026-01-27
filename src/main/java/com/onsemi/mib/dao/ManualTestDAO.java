@@ -1,4 +1,4 @@
-/*
+ /*
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
@@ -259,6 +259,102 @@ public class ManualTestDAO {
 //            ps.setString(1, itemactivityConfig.getMibItemId());
             ps.setString(1, configId);
             ps.setString(2, manualId);
+            queryResult.setResult(ps.executeUpdate());
+            ps.close();
+        } catch (SQLException e) {
+            queryResult.setErrorMessage(e.getMessage());
+            LOGGER.error(e.getMessage());
+        } finally {
+            if (conn != null) {
+                try {
+                    conn.close();
+                } catch (SQLException e) {
+                    LOGGER.error(e.getMessage());
+                }
+            }
+        }
+        return queryResult;
+    }
+    
+    public QueryResult deleteConfigId(String configId) {
+        QueryResult queryResult = new QueryResult();
+        try {
+            PreparedStatement ps = conn.prepareStatement(
+                    "UPDATE item_manual_test SET flag = 0 WHERE id = ?"
+            );
+            ps.setString(1, configId);
+            queryResult.setResult(ps.executeUpdate());
+            ps.close();
+        } catch (SQLException e) {
+            queryResult.setErrorMessage(e.getMessage());
+            LOGGER.error(e.getMessage());
+        } finally {
+            if (conn != null) {
+                try {
+                    conn.close();
+                } catch (SQLException e) {
+                    LOGGER.error(e.getMessage());
+                }
+            }
+        }
+        return queryResult;
+    }
+    
+    public QueryResult deleteConfigLevel01(String itemId) {
+        QueryResult queryResult = new QueryResult();
+        try {
+            PreparedStatement ps = conn.prepareStatement(
+                    "UPDATE item_manual_test_l1 SET flag = 0 WHERE mib_item_id = ?"
+            );
+            ps.setString(1, itemId);
+            queryResult.setResult(ps.executeUpdate());
+            ps.close();
+        } catch (SQLException e) {
+            queryResult.setErrorMessage(e.getMessage());
+            LOGGER.error(e.getMessage());
+        } finally {
+            if (conn != null) {
+                try {
+                    conn.close();
+                } catch (SQLException e) {
+                    LOGGER.error(e.getMessage());
+                }
+            }
+        }
+        return queryResult;
+    }
+    
+    public QueryResult deleteConfigLevel02(String itemId) {
+        QueryResult queryResult = new QueryResult();
+        try {
+            PreparedStatement ps = conn.prepareStatement(
+                    "UPDATE item_manual_test_l2 SET flag = 0 WHERE mib_item_id = ?"
+            );
+            ps.setString(1, itemId);
+            queryResult.setResult(ps.executeUpdate());
+            ps.close();
+        } catch (SQLException e) {
+            queryResult.setErrorMessage(e.getMessage());
+            LOGGER.error(e.getMessage());
+        } finally {
+            if (conn != null) {
+                try {
+                    conn.close();
+                } catch (SQLException e) {
+                    LOGGER.error(e.getMessage());
+                }
+            }
+        }
+        return queryResult;
+    }
+    
+    public QueryResult deleteConfigLevel03(String itemId) {
+        QueryResult queryResult = new QueryResult();
+        try {
+            PreparedStatement ps = conn.prepareStatement(
+                    "UPDATE item_manual_test_l3 SET flag = 0 WHERE mib_item_id = ?"
+            );
+            ps.setString(1, itemId);
             queryResult.setResult(ps.executeUpdate());
             ps.close();
         } catch (SQLException e) {

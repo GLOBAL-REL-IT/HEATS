@@ -3377,6 +3377,8 @@ public class ItemController {
             status = "Pending Functional Test - Power Supply Test";
         } else if (statusWin.equals("Yes")) {
             status = "Pending Functional Test - Winchester Chamber Test";
+        } else {
+            status = "Good";
         }
 
         return status;
@@ -3764,6 +3766,9 @@ public class ItemController {
             } else {
 //                status = "Pending Functional Test";
                 status = getCurrentStatus(mibItemId);
+                if (status.equals("Good")) {
+                    item.setFlag("1");
+                }
             }
             item.setStatus(status);
             ItemDAO iD = new ItemDAO();
@@ -4751,6 +4756,7 @@ public class ItemController {
         ManualTestDAO itemB = new ManualTestDAO();
         ManualTest itemA1 = itemA.getComponentConfig(id);
 
+        // 2026 JAN - PLEASE ADD ON THE ALGORITHM HERE FOR ALL FOUND SCENARIO
         if (itemA1 == null) {
             if (status.contains("Pending Visual Inspection")) {
 
@@ -4783,6 +4789,7 @@ public class ItemController {
             Locale locale,
             RedirectAttributes redirectAttrs,
             @ModelAttribute UserSession userSession,
+            @RequestParam(required = false) String id,
             @RequestParam(required = false) String mibItemId,
             @RequestParam(required = false) String viCheck,
             @RequestParam(required = false) String bibTestCheck,
@@ -4790,9 +4797,9 @@ public class ItemController {
             @RequestParam(required = false) String leakageTestCheck,
             @RequestParam(required = false) String psLeakageTestCheck,
             @RequestParam(required = false) String winchesterChamberLeakageTest,
-            @RequestParam(required = false) String qtyField,
-            @RequestParam(required = false) String dutField,
-            @RequestParam(required = false) String manComp,
+            @RequestParam(required = false) String inputQuantity,
+            @RequestParam(required = false) String inputDUT,
+//            @RequestParam(required = false) String manComp,
             @RequestParam(required = false, value = "component_name[]") List<String> nameRows,
             @RequestParam(required = false, value = "component_type[]") List<String> type,
             @RequestParam(required = false, value = "actual_value[]") List<String> num1Rows,
@@ -4802,20 +4809,113 @@ public class ItemController {
     ) {
 
         LOGGER.info("NEED TO ADD THE UPDATE FUNCTION HERE : MAKE SURE READ ALL CURRENT VALUE AND NEW ONE");
-        int saiz = nameRows.size();
-        for (int i = 0; i < saiz; i++) {
-            if (num3Rows != null && i >= 0 && i < num3Rows.size()) {
-                Object value = num3Rows.get(i);
-                if (value == null) {
-                    // Handle null element case
-                } else {
-
-                }
-            } else {
-                LOGGER.warn("List is null or index is out of bounds");
-            }
+        
+        LOGGER.info("id >>> "+id);
+        LOGGER.info("mibItemId >>> "+mibItemId);
+        LOGGER.info("viCheck >>> "+viCheck);
+        LOGGER.info("bibTestCheck >>> "+bibTestCheck);
+        LOGGER.info("manualTestCheck >>> "+manualTestCheck);
+        LOGGER.info("leakageTestCheck >>> "+leakageTestCheck);
+        LOGGER.info("psLeakageTestCheck >>> "+psLeakageTestCheck);
+        LOGGER.info("winchesterChamberLeakageTest >>> "+winchesterChamberLeakageTest);
+        
+//        LOGGER.info("manComp >> "+manComp);
+        
+        String vi = "No";
+        String bb = "No";
+        String mn = "No";
+        String lk = "No";
+        String ps = "No";
+        String wn = "No";
+        int saiz = 0;
+        
+        if ("on".equals(viCheck)) {
+            vi = "Yes";
         }
-        return "redirect:/hw/item/add2/" + mibItemId;
+        if ("on".equals(bibTestCheck)) {
+            bb = "Yes";
+        }
+        if ("on".equals(manualTestCheck)) {
+            mn = "Yes";
+            // SINI FUNCTION NK DELETE / DEACTIVATE SEMUA CURRENT SETUP CONFIG
+            ManualTestDAO man1 = new ManualTestDAO();
+            man1.deleteConfigId(id);
+            man1.deleteConfigLevel01(mibItemId);
+            man1.deleteConfigLevel02(mibItemId);
+            man1.deleteConfigLevel03(mibItemId);
+            
+            // SINI KITA NK CREATE BALIK SEMUA SETUP / CONFIG
+            saiz = nameRows.size();
+            String flag = "1";
+            String configId = "0";
+            String status = "";
+            String user = userSession.getFullname();
+            ItemActivityConfig itemA = new ItemActivityConfig();
+            itemA.setManualTest("Yes");
+            ManualTestDAO test = new ManualTestDAO();
+            QueryResult q0 = test.insertManualTest(mibItemId, inputQuantity, inputDUT, String.valueOf(saiz), user, flag);
+            if (!"0".equals(q0.getGeneratedKey())) {
+                configId = q0.getGeneratedKey();
+                for (int c1 = 1; c1 <= inputQuantity; c1++) {
+                    String qtyId = "0";
+                    test = new ManualTestDAO();
+                    QueryResult q1 = test.insertManual01(mibItemId, String.valueOf(c1), user, flag);
+                    if (!"0".equals(q1.getGeneratedKey())) {
+                        qtyId = q1.getGeneratedKey();
+                    } else {
+
+                    }
+                    for (int c2 = 1; c2 <= inputDUT; c2++) {
+                        String dutId = "0";
+                        test = new ManualTestDAO();
+                        QueryResult q2 = test.insertManual02(mibItemId, qtyId, String.valueOf(c2), user, flag);
+                        if (!"0".equals(q2.getGeneratedKey())) {
+                            dutId = q2.getGeneratedKey();
+                        } else {
+
+                        }
+                        for (int i = 0; i < saiz; i++) {
+                            test = new ManualTestDAO();
+                            QueryResult q3 = test.insertManual03(mibItemId, qtyId, dutId, type.get(i), nameRows.get(i), num1Rows.get(i), num3Rows.get(i), num4Rows.get(i), num2Rows.get(i), status, user, flag);
+                            if (!"0".equals(q3.getGeneratedKey())) {
+
+                            }
+                        }
+                    }
+                }
+            }
+            // ADA ERROR DEKAT SINI, ESOK SAMBUNG
+        }
+        
+        LOGGER.info("qtyField >> "+inputQuantity);
+        LOGGER.info("dutField >> "+inputDUT);
+        LOGGER.info("komponen >> "+saiz);
+        
+        if ("on".equals(leakageTestCheck)) {
+            lk = "Yes";
+        }
+        if ("on".equals(psLeakageTestCheck)) {
+            ps = "Yes";
+        }
+        if ("on".equals(winchesterChamberLeakageTest)) {
+            wn = "Yes";
+        }
+        
+        ItemActivityConfig xtvt = new ItemActivityConfig();
+        ItemActivityConfigDAO itemdao = new ItemActivityConfigDAO();
+        xtvt.setVi(vi);
+        xtvt.setBibTest(bb);
+        xtvt.setManualTest(mn);
+        xtvt.setLeakageTest(lk);
+        xtvt.setPsLeakageTest(ps);
+        xtvt.setWinchesterChamberLeakageTest(wn);
+        xtvt.setStatus("Update Config");
+        xtvt.setFlag("0");
+        xtvt.setId(id);
+//        QueryResult q = itemdao.updateItemActivityConfig(xtvt);
+        
+//        return "redirect:/hw/item/add2editActivity/" + mibItemId;
+        return "redirect:/hw/item/editActivity/" + id;
     }
 
     @RequestMapping(value = "/equipment", method = RequestMethod.GET)

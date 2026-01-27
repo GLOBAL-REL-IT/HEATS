@@ -28,7 +28,6 @@
                 float:none;
                 text-align:right;
             }
-
             .select2-container-active .select2-choice,
             .select2-container-active .select2-choices {
                 border: 1px solid $input-border-focus !important;
@@ -37,7 +36,6 @@
                 -webkit-box-shadow: inset 0 1px 1px rgba(0,0,0,.075), 0 0 8px rgba(102, 175, 233, .6) !important;
                 box-shadow: inset 0 1px 1px rgba(0,0,0,.075), 0 0 8px rgba(102, 175, 233, .6) !important;
             }
-
             .select2-dropdown-open .select2-choice {
                 border-bottom: 0 !important;
                 background-image: none;
@@ -46,7 +44,6 @@
                 -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, .075), 0 0 6px #009d9b !important;
                 box-shadow: inset 0 1px 1px rgba(0, 0, 0, .075), 0 0 6px #009d9b !important;
             }
-
             .select2-dropdown-open.select2-drop-above .select2-choice,
             .select2-dropdown-open.select2-drop-above .select2-choices {
                 border: 1px solid $input-border-focus !important;
@@ -57,31 +54,25 @@
                 -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, .075), 0 0 6px #009d9b !important;
                 box-shadow: inset 0 1px 1px rgba(0, 0, 0, .075), 0 0 6px #009d9b !important;
             }
-
             .no-border {
                 border: 0;
                 box-shadow: none;  /*You may want to include this as bootstrap applies these styles too */
             }
-
             span.tab-space {
                 padding-left:20em;
             }
-
             .move-left {
                 width: auto;
                 box-shadow: none;
             }
-
             .form-group.required .form-label:after {
                 content:"*";
                 color:red;
             }
-
             .img3 {
                 width: 55px; /* Sets a fixed width */
                 height: 18px; /* Sets a fixed height */
             }
-
             .pending thead th {
                 background-color: #f06a0a; /* Light blue */
                 color: #FFFFFF; /* White text for contrast */
@@ -101,6 +92,9 @@
             td.standard-input {
                 border: 1px solid #ccc;
             }
+            /*table#dataTable th, table#dataTable td {*/
+                /*background-color: lightgray;*/
+            /*}*/
 /*            input.standard-input {
                 display: block;
                 width: 95%;  Adjust width for the merged cell span 
@@ -129,6 +123,12 @@
                 border-radius: 16px;
                 text-align:center !important;
             }
+            table#dataTable thead th {
+                text-transform: capitalize;
+            }
+            input.standard-input-read {
+                background-color: lightgray;
+            }
         </style>
     </s:layout-component>
     <s:layout-component name="page_container">
@@ -153,6 +153,7 @@
                                             <div class="col-sm-6">
                                                 <input type="text" class="form-control" id="itemId" name="itemId" value="${item.itemType}" disabled>
                                                 <input type="hidden" class="form-control" id="id" name="id" value="${item.id}">
+                                                <input type="hidden" class="form-control" id="mibItemId" name="mibItemId" value="${item.mibItemId}">
                                                 <input type="hidden" class="form-control" id="userItemActEdit" name="userItemActEdit" value="${userItemActEdit}">
                                             </div>
                                         </div>
@@ -271,27 +272,27 @@
                                                 <tbody id="tableBody">
                                                     <c:forEach items="${listData}" var="manualList" varStatus="manualLoop">
                                                         <tr>
-                                                            <td class="standard-input" name="component_type[]"><c:out value="${manualList.componentType}"/></td>
-                                                            <td class="standard-input" name="component_name[]"><c:out value="${manualList.componentName}"/></td>
+                                                            <td><input type="text" class="standard-input-read" name="component_type[]" value="<c:out value="${manualList.componentType}"/>" readonly></td>
+                                                            <td><input type="text" class="standard-input-read" name="component_name[]" value="<c:out value="${manualList.componentName}"/>" readonly></td>
                                                             <c:choose>
                                                                 <%-- Condition 3: Fuse -> Combined value/percentage/limits into one cell, text changes to SHORT/OPEN --%>
                                                                 <c:when test="${manualList.componentType == 'Fuse'}">
                                                                     <td class="status2-text" style="text-align: right;" colspan="4">OPEN / SHORT</td>
                                                                 </c:when>
                                                                 <%-- Condition 4: Zener or Diode -> View value, combined percentage/limits, text update to OPEN/SHORT --%>
-                                                                <c:when test="${manualList.componentType == 'Zener' || manualList.componentType == 'Diode'}">
+                                                                <%--<c:when test="${manualList.componentType == 'Zener' || manualList.componentType == 'Diode'}">
                                                                     <td name="actual_value[]"><c:out value="${manualList.componentValue}"/></td>
                                                                     <td class="status2-text" style="text-align: right;" colspan="3">OPEN / SHORT</td>
-                                                                </c:when>
+                                                                </c:when> --%>
                                                                 <%-- Optional: Default case if the component type doesn't match any specific rule --%>
                                                                 <c:otherwise>
-                                                                    <td class="standard-input" name="actual_value[]"><c:out value="${manualList.componentValue}"/></td>
-                                                                    <td class="standard-input" name="percentage[]"><c:out value="${manualList.percentage}"/></td>
-                                                                    <td class="standard-input" name="lower[]"><c:out value="${manualList.lowerLimit}"/></td>
-                                                                    <td class="standard-input" name="upper[]"><c:out value="${manualList.upperLimit}"/></td>
+                                                                    <td><input type="text" class="standard-input-read" name="actual_value[]" value="<c:out value="${manualList.componentValue}"/>" readonly></td>
+                                                                    <td><input type="text" class="standard-input-read" name="percentage[]" value="<c:out value="${manualList.percentage}"/>" readonly></td>
+                                                                    <td><input type="text" class="standard-input-read" name="lower[]" value="<c:out value="${manualList.lowerLimit}"/>" readonly></td>
+                                                                    <td><input type="text" class="standard-input-read" name="upper[]" value="<c:out value="${manualList.upperLimit}"/>" readonly></td>
                                                                 </c:otherwise>
                                                             </c:choose>
-                                                            <td><button class="delete-btn" onclick="deleteRow(this)">Delete</button></td>
+                                                            <td><button class="delete-btn" onclick="deleteRow(this)"><i class="bi bi-trash h3" style="color: gray;"></i></button></td>
                                                         </tr>
                                                     </c:forEach>
                                                 </tbody>
@@ -400,7 +401,7 @@
             nameInput.name = 'component_name[]';
             nameInput.placeholder = "Name";
             nameInput.className = 'standard-input';
-            nameInput.style.width = '90px';
+//            nameInput.style.width = '90px';
             nameInput.required = true;
             nameCell.appendChild(nameInput);
 
@@ -411,7 +412,7 @@
             valueInput.step = "any";
             valueInput.placeholder = "Value";
             valueInput.className = 'standard-input';
-            valueInput.style.width = '70px';
+//            valueInput.style.width = '70px';
             valueInput.required = true;
             valueInput.step = '0.01';
             valueInput.addEventListener('blur', function() {
@@ -428,7 +429,7 @@
             percentageInput.step = "any";
             percentageInput.placeholder = "%";
             percentageInput.className = 'standard-input';
-            percentageInput.style.width = '70px';
+//            percentageInput.style.width = '70px';
             percentageInput.step = '0.01';
             percentageInput.addEventListener('blur', function() {
                 if (this.value) {
@@ -443,7 +444,7 @@
             lowerLimitInput.name = "lower[]";
             lowerLimitInput.readOnly = true; // Prevents manual editing
             lowerLimitInput.className = "standard-input";
-            lowerLimitInput.style.width = "70px";
+//            lowerLimitInput.style.width = "70px";
             lowerLimitInput.value = "N/A";
             lowerLimitInput.addEventListener('blur', function() {
                 if (this.value) {
@@ -458,7 +459,7 @@
             upperLimitInput.name = "upper[]";
             upperLimitInput.readOnly = true;
             upperLimitInput.className = "standard-input";
-            upperLimitInput.style.width = "70px";
+//            upperLimitInput.style.width = "70px";
             upperLimitInput.value = "N/A";
             upperLimitInput.addEventListener('blur', function() {
                 if (this.value) {
@@ -469,8 +470,8 @@
 
             const deleteButton = document.createElement("button");
             const trashIcon = document.createElement("i");
-            trashIcon.className = "bi bi-trash h3"; // Bootstrap classes
-            trashIcon.style.color = "gray";         // Your custom color
+            trashIcon.className = "bi bi-trash h3";
+            trashIcon.style.color = "gray";
             deleteButton.innerText = "";
             deleteButton.appendChild(trashIcon);
             deleteButton.className = "delete-btn";
@@ -480,7 +481,7 @@
             // --- Calculation Logic ---
             const calculateLimits = () => {
                 const type = typeSelect.value;
-                if (type === "Capacitor" || type === "Resistor") {
+                if (type !== "Fuse") {
                     const val = parseFloat(valueInput.value);
                     const pcnt = parseFloat(percentageInput.value);
 
@@ -515,16 +516,16 @@
                     span.className = 'status-text';
                     span.innerText = "OPEN / SHORT";
                     valueCell.appendChild(span);
-                } else if (type === "Diode" || type === "Zener") {
-                    percentageInput.value = 0;
-                    percentageInput.style.display = 'none';
-                    percentageCell.colSpan = 3;
-                    lowerLimitCell.style.display = 'none';
-                    upperLimitCell.style.display = 'none';
-                    const span = document.createElement('span');
-                    span.className = 'status-text';
-                    span.innerText = "OPEN / SHORT";
-                    percentageCell.appendChild(span);
+//                } else if (type === "Diode" || type === "Zener") {
+//                    percentageInput.value = 0;
+//                    percentageInput.style.display = 'none';
+//                    percentageCell.colSpan = 3;
+//                    lowerLimitCell.style.display = 'none';
+//                    upperLimitCell.style.display = 'none';
+//                    const span = document.createElement('span');
+//                    span.className = 'status-text';
+//                    span.innerText = "OPEN / SHORT";
+//                    percentageCell.appendChild(span);
                 } else {
                     calculateLimits();
                 }
@@ -555,6 +556,9 @@
                 inputContainer.classList.add("hidden");
             }
         }
+        
+        const testdata = document.createElement("actual_value[]");
+        testdata.addEventListener('input', calculateLimits);
         
 //        $(document).ready(function () {
             
