@@ -276,13 +276,13 @@ public class ManualTestDAO {
         return queryResult;
     }
     
-    public QueryResult deleteConfigId(String configId) {
+    public QueryResult deleteConfigId(String itemId) {
         QueryResult queryResult = new QueryResult();
         try {
             PreparedStatement ps = conn.prepareStatement(
-                    "UPDATE item_manual_test SET flag = 0 WHERE id = ?"
+                    "UPDATE item_manual_test SET flag = 0 WHERE mib_item_id = ?"
             );
-            ps.setString(1, configId);
+            ps.setString(1, itemId);
             queryResult.setResult(ps.executeUpdate());
             ps.close();
         } catch (SQLException e) {
@@ -427,7 +427,7 @@ public class ManualTestDAO {
     }
     
     public List<ManualTest> getAllComponentConfig(String mibItemId) {
-        String sql = "SELECT * FROM item_manual_test_l3 WHERE mib_item_id = '"+mibItemId+"' GROUP BY component_name ";
+        String sql = "SELECT * FROM item_manual_test_l3 WHERE mib_item_id = '"+mibItemId+"' AND flag = '1' GROUP BY component_name ";
         LOGGER.info("SQL KITA KENA DEKAT SINI >>>> "+sql);
         List<ManualTest> manualList = new ArrayList<ManualTest>();
         try {

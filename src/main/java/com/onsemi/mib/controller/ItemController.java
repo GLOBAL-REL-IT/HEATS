@@ -4819,8 +4819,6 @@ public class ItemController {
         LOGGER.info("psLeakageTestCheck >>> "+psLeakageTestCheck);
         LOGGER.info("winchesterChamberLeakageTest >>> "+winchesterChamberLeakageTest);
         
-//        LOGGER.info("manComp >> "+manComp);
-        
         String vi = "No";
         String bb = "No";
         String mn = "No";
@@ -4838,34 +4836,44 @@ public class ItemController {
         if ("on".equals(manualTestCheck)) {
             mn = "Yes";
             // SINI FUNCTION NK DELETE / DEACTIVATE SEMUA CURRENT SETUP CONFIG
+            LOGGER.info("11111");
             ManualTestDAO man1 = new ManualTestDAO();
-            man1.deleteConfigId(id);
+            man1.deleteConfigId(mibItemId);
+            LOGGER.info("REMOVE CONFIG");
+            man1 = new ManualTestDAO();
             man1.deleteConfigLevel01(mibItemId);
+            LOGGER.info("REMOVE LEVEL 1");
+            man1 = new ManualTestDAO();
             man1.deleteConfigLevel02(mibItemId);
+            LOGGER.info("REMOVE LEBEL 02");
+            man1 = new ManualTestDAO();
             man1.deleteConfigLevel03(mibItemId);
+            LOGGER.info("REMOVE LEVEL 03");
             
             // SINI KITA NK CREATE BALIK SEMUA SETUP / CONFIG
             saiz = nameRows.size();
             String flag = "1";
             String configId = "0";
             String status = "";
-            String user = userSession.getFullname();
+            int saizQty = Integer.parseInt(inputQuantity);
+            int saizDut = Integer.parseInt(inputDUT);
+            String user = userSession.getLoginId();
             ItemActivityConfig itemA = new ItemActivityConfig();
             itemA.setManualTest("Yes");
             ManualTestDAO test = new ManualTestDAO();
             QueryResult q0 = test.insertManualTest(mibItemId, inputQuantity, inputDUT, String.valueOf(saiz), user, flag);
             if (!"0".equals(q0.getGeneratedKey())) {
                 configId = q0.getGeneratedKey();
-                for (int c1 = 1; c1 <= inputQuantity; c1++) {
+                for (int c1 = 1; c1 <= saizQty; c1++) {
                     String qtyId = "0";
                     test = new ManualTestDAO();
                     QueryResult q1 = test.insertManual01(mibItemId, String.valueOf(c1), user, flag);
                     if (!"0".equals(q1.getGeneratedKey())) {
                         qtyId = q1.getGeneratedKey();
                     } else {
-
+                        
                     }
-                    for (int c2 = 1; c2 <= inputDUT; c2++) {
+                    for (int c2 = 1; c2 <= saizDut; c2++) {
                         String dutId = "0";
                         test = new ManualTestDAO();
                         QueryResult q2 = test.insertManual02(mibItemId, qtyId, String.valueOf(c2), user, flag);
@@ -4884,6 +4892,9 @@ public class ItemController {
                     }
                 }
             }
+            
+            ManualTestDAO mt = new ManualTestDAO();
+            mt.updateConfigId(id, configId);
             // ADA ERROR DEKAT SINI, ESOK SAMBUNG
         }
         
@@ -4912,7 +4923,7 @@ public class ItemController {
         xtvt.setStatus("Update Config");
         xtvt.setFlag("0");
         xtvt.setId(id);
-//        QueryResult q = itemdao.updateItemActivityConfig(xtvt);
+        QueryResult q = itemdao.updateItemActivityConfig(xtvt);
         
 //        return "redirect:/hw/item/add2editActivity/" + mibItemId;
         return "redirect:/hw/item/editActivity/" + id;
