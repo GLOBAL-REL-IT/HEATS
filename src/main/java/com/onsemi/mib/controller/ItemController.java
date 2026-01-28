@@ -3651,7 +3651,7 @@ public class ItemController {
             @RequestParam(required = false) MultipartFile solderJointRejectUpload,
             @RequestParam(required = false) String winConnectorRejectQty,
             @RequestParam(required = false) MultipartFile winConnectorRejectUpload
-    ) {
+    ) throws IOException {
 
         String finalStatus = "";
         String stringPathPcb = "";
@@ -3979,6 +3979,7 @@ public class ItemController {
                 if (status.equals("Good")) {
                     item.setFlag("1");
                 }
+                insertSPTSData(mibItemId, userSession.getFullname());
             }
             item.setStatus(status);
             ItemDAO iD = new ItemDAO();
