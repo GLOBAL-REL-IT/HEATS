@@ -2856,7 +2856,7 @@ public class ItemController {
             return "redirect:/hw/item/add2/" + id;
         } else {
             itemD = new ItemDAO();
-            QueryResult i = itemD.updateHardwareDetail(item);
+            QueryResult i = itemD.updateHardwareDetail2(item);
 
             if (i.getResult() == 1) {
 
@@ -3962,21 +3962,25 @@ public class ItemController {
 
             //update Item DB
             String status = "";
+            String flag = "";
             Item item = new Item();
             item.setId(mibItemId);
             if ("Fail".equals(finalStatus)) {
                 status = "Failed Visual Inspection - Waiting Maverick CA";
+                flag = "0";
             } else {
 //                status = "Pending Functional Test";
                 status = getCurrentStatus(mibItemId);
                 if (status.equals("Good")) {
-                    item.setFlag("1");
+                    flag = "1";
+                    insertSPTSData(mibItemId, userSession.getFullname()); //insert to SPTS if no functional test
                 } else {
-                    item.setFlag("0");
+                    flag = "0";
                 }
-                insertSPTSData(mibItemId, userSession.getFullname());
+//                insertSPTSData(mibItemId, userSession.getFullname());
             }
             item.setStatus(status);
+            item.setFlag(flag);
             ItemDAO iD = new ItemDAO();
 //            QueryResult q2 = iD.updateItemStatus(item);
             QueryResult q2 = iD.updateItemStatusAndFlag(item);
@@ -4052,7 +4056,12 @@ public class ItemController {
                 return "redirect:/hw/item/add2/" + mibItemId;
             } else {
                 redirectAttrs.addFlashAttribute("success", "Visual Inspection Pass.");
-                return "redirect:/hw/item/add2/" + mibItemId;
+                if (status.equals("Good")) {
+                    return "redirect:/hw/item/pending";
+                } else {
+                    return "redirect:/hw/item/add2/" + mibItemId;
+                }
+
             }
 
         } else {
@@ -4561,6 +4570,7 @@ public class ItemController {
             QueryResult logQ2 = logD.insertItemLog(log);
 
             //update SPTS PKID into MIB DB
+            LOGGER.info("sr.getResponseId().toString(): " + sr.getResponseId().toString());
             item = new Item();
             item.setSptsPkid(sr.getResponseId().toString());
             item.setId(mibItemId);

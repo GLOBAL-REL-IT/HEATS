@@ -260,6 +260,84 @@ public class ItemDAO {
         return queryResult;
     }
 
+    public QueryResult updateHardwareDetail2(Item hardwaredetail) {
+        QueryResult queryResult = new QueryResult();
+        try {
+            PreparedStatement ps = conn.prepareStatement(
+                    "UPDATE item SET item_type = ?, sub_type = ?, item_id = ?, item_name = ?, assembly_id = ?, rack = ?, shelf = ?, on_hand_qty = ?, "
+                    + "production_staging_qty = ?, production_qty = ?, repair_qty = ?, other_qty = ?, quarantine_qty = ?, external_clean_qty = ?, "
+                    + "external_reclean_qty = ?, internal_clean_qty = ?, internal_reclean_qty = ?, storage_factory_qty = ?, other_onsemi_qty = ?, "
+                    + "vendor_qty = ?, total_qty = ?, unit_cost = ?, total_cost = ?, status = ?, alu_hrs = ?, movement_alu_hrs = ?, min_qty = ?, "
+                    + "max_qty = ?, pm_ww1 = ?, pm_ww2 = ?, expiration_date = ?, is_critical = ?, is_consumable = ?, downtime_value = ?, downtime_unit = ?, "
+                    + "implementation_cost = ?, manpower_value = ?, manpower_unit = ?, complexity = ?, model = ?, manufacturer = ?, equipment_type = ?, "
+                    + "equipment_model = ?, equipment_manufacturer = ?, stress_type = ?, remarks = ?, flag = ?, modifed_by = ?, modified_date = NOW() WHERE id = ?"
+            );
+            ps.setString(1, hardwaredetail.getItemType());
+            ps.setString(2, hardwaredetail.getSubType());
+            ps.setString(3, hardwaredetail.getItemId());
+            ps.setString(4, hardwaredetail.getItemName());
+            ps.setString(5, hardwaredetail.getAssemblyId());
+            ps.setString(6, hardwaredetail.getRack());
+            ps.setString(7, hardwaredetail.getShelf());
+            ps.setString(8, hardwaredetail.getOnHandQty());
+            ps.setString(9, hardwaredetail.getProductionStagingQty());
+            ps.setString(10, hardwaredetail.getProductionQty());
+            ps.setString(11, hardwaredetail.getRepairQty());
+            ps.setString(12, hardwaredetail.getOtherQty());
+            ps.setString(13, hardwaredetail.getQuarantineQty());
+            ps.setString(14, hardwaredetail.getExternalCleanQty());
+            ps.setString(15, hardwaredetail.getExternalRecleanQty());
+            ps.setString(16, hardwaredetail.getInternalCleanQty());
+            ps.setString(17, hardwaredetail.getInternalRecleanQty());
+            ps.setString(18, hardwaredetail.getStorageFactoryQty());
+            ps.setString(19, hardwaredetail.getOtherOnsemiQty());
+            ps.setString(20, hardwaredetail.getVendorQty());
+            ps.setString(21, hardwaredetail.getTotalQty());
+            ps.setString(22, hardwaredetail.getUnitCost());
+            ps.setString(23, hardwaredetail.getTotalCost());
+            ps.setString(24, hardwaredetail.getStatus());
+            ps.setString(25, hardwaredetail.getAluHrs());
+            ps.setString(26, hardwaredetail.getMovementAluHrs());
+            ps.setString(27, hardwaredetail.getMinQty());
+            ps.setString(28, hardwaredetail.getMaxQty());
+            ps.setString(29, hardwaredetail.getPmWw1());
+            ps.setString(30, hardwaredetail.getPmWw2());
+            ps.setString(31, hardwaredetail.getExpirationDate());
+            ps.setString(32, hardwaredetail.getIsCritical());
+            ps.setString(33, hardwaredetail.getIsConsumable());
+            ps.setString(34, hardwaredetail.getDowntimeValue());
+            ps.setString(35, hardwaredetail.getDowntimeUnit());
+            ps.setString(36, hardwaredetail.getImplementationCost());
+            ps.setString(37, hardwaredetail.getManpowerValue());
+            ps.setString(38, hardwaredetail.getManpowerUnit());
+            ps.setString(39, hardwaredetail.getComplexity());
+            ps.setString(40, hardwaredetail.getModel());
+            ps.setString(41, hardwaredetail.getManufacturer());
+            ps.setString(42, hardwaredetail.getEquipmentType());
+            ps.setString(43, hardwaredetail.getEquipmentModel());
+            ps.setString(44, hardwaredetail.getEquipmentManufacturer());
+            ps.setString(45, hardwaredetail.getStressType());
+            ps.setString(46, hardwaredetail.getRemarks());
+            ps.setString(47, hardwaredetail.getFlag());
+            ps.setString(48, hardwaredetail.getModifedBy());
+            ps.setString(49, hardwaredetail.getId());
+            queryResult.setResult(ps.executeUpdate());
+            ps.close();
+        } catch (SQLException e) {
+            queryResult.setErrorMessage(e.getMessage());
+            LOGGER.error(e.getMessage());
+        } finally {
+            if (conn != null) {
+                try {
+                    conn.close();
+                } catch (SQLException e) {
+                    LOGGER.error(e.getMessage());
+                }
+            }
+        }
+        return queryResult;
+    }
+
     public QueryResult updateItemStatus(Item hardwaredetail) {
         QueryResult queryResult = new QueryResult();
         try {
