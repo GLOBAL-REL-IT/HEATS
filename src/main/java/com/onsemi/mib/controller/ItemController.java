@@ -3544,13 +3544,6 @@ public class ItemController {
             statusWin = iac.getWinchesterChamberLeakageTest();
         }
 
-        LOGGER.info("KITA NK STATUS STATUS MASING2");
-        LOGGER.info("BIB >>> " + statusBib);
-        LOGGER.info("MANUAL >>> " + statusMan);
-        LOGGER.info("LEAKAGE >>> " + statusLeak);
-        LOGGER.info("POWER SUPPLY >>> " + statusPs);
-        LOGGER.info("WINCHESTER >>> " + statusWin);
-
         // APA BENDA KITA KENA BUAT DEKAT SINI UNTUK DOUBLE CHECK ON THE LATEST CODE SO NO REPEATED STATUS
         return status;
     }
@@ -4104,23 +4097,15 @@ public class ItemController {
         switch (jenis) {
             case "bibTest":
                 LOGGER.info("KITA MASUK DEKAT BIB TEST");
-                LOGGER.info("quantity dia >>>> " + totalQty);
-                LOGGER.info("result kita >>>> " + bibResult);
                 break;
             case "leakTest":
                 LOGGER.info("KITA MASUK UNTUK LEAKEAGE TEST");
-                LOGGER.info("quantity dia >>>> " + totalQty);
-                LOGGER.info("result kita >>>> " + leakResult);
                 break;
             case "psTest":
                 LOGGER.info("KITA DAPAT BUAT POWER SUPPLY TEST");
-                LOGGER.info("quantity dia >>>> " + totalQty);
-                LOGGER.info("result kita >>>> " + psResult);
                 break;
             case "winTest":
                 LOGGER.info("KITA BUAT WINCHESTER TEST");
-                LOGGER.info("quantity dia >>>> " + totalQty);
-                LOGGER.info("result kita >>>> " + winResult);
                 break;
             default:
                 LOGGER.info("KITA BREAK BY DEFAULT");
@@ -4131,7 +4116,7 @@ public class ItemController {
 
         ItemActivityConfigDAO itemdao2 = new ItemActivityConfigDAO();
         ItemActivityConfig itemdata = itemdao2.getItemActivityByItemId(mibItemId);
-        // SINI TAK CHECK DATA NULL - ASSYUME SEBELUM NI DA CHECK AND *MESTI* ADA DATA
+        // SINI TAK CHECK DATA NULL - ASSUME SEBELUM NI DA CHECK AND *MESTI* ADA DATA
         String checkBib = itemdata.getBibTest();
         String checkMan = itemdata.getManualTest();
         String checkLeak = itemdata.getLeakageTest();
@@ -4965,7 +4950,6 @@ public class ItemController {
         model.addAttribute("userItemActEdit", userSession.getItemActivityEdit());
 
         ManualTestDAO itemA = new ManualTestDAO();
-        ManualTestDAO itemB = new ManualTestDAO();
         ManualTest itemA1 = itemA.getComponentConfig(id);
 
         // 2026 JAN - PLEASE ADD ON THE ALGORITHM HERE FOR ALL FOUND SCENARIO
@@ -4981,6 +4965,7 @@ public class ItemController {
             if (status.contains("Pending Visual Inspection")) {
                 qty = itemA1.getQty();
                 dut = itemA1.getDut();
+                ManualTestDAO itemB = new ManualTestDAO();
                 List<ManualTest> itemB1 = itemB.getAllComponentConfig(mibItemId);
                 model.addAttribute("listData", itemB1);
             } else {
@@ -5011,25 +4996,12 @@ public class ItemController {
             @RequestParam(required = false) String winchesterChamberLeakageTest,
             @RequestParam(required = false) String inputQuantity,
             @RequestParam(required = false) String inputDUT,
-            //            @RequestParam(required = false) String manComp,
             @RequestParam(required = false, value = "component_name[]") List<String> nameRows,
             @RequestParam(required = false, value = "component_type[]") List<String> type,
             @RequestParam(required = false, value = "actual_value[]") List<String> num1Rows,
             @RequestParam(required = false, value = "percentage[]") List<String> num2Rows,
             @RequestParam(required = false, value = "lower[]") List<String> num3Rows,
-            @RequestParam(required = false, value = "upper[]") List<String> num4Rows
-    ) {
-
-        LOGGER.info("NEED TO ADD THE UPDATE FUNCTION HERE : MAKE SURE READ ALL CURRENT VALUE AND NEW ONE");
-
-        LOGGER.info("id >>> " + id);
-        LOGGER.info("mibItemId >>> " + mibItemId);
-        LOGGER.info("viCheck >>> " + viCheck);
-        LOGGER.info("bibTestCheck >>> " + bibTestCheck);
-        LOGGER.info("manualTestCheck >>> " + manualTestCheck);
-        LOGGER.info("leakageTestCheck >>> " + leakageTestCheck);
-        LOGGER.info("psLeakageTestCheck >>> " + psLeakageTestCheck);
-        LOGGER.info("winchesterChamberLeakageTest >>> " + winchesterChamberLeakageTest);
+            @RequestParam(required = false, value = "upper[]") List<String> num4Rows) {
 
         String vi = "No";
         String bb = "No";
@@ -5048,19 +5020,14 @@ public class ItemController {
         if ("on".equals(manualTestCheck)) {
             mn = "Yes";
             // SINI FUNCTION NK DELETE / DEACTIVATE SEMUA CURRENT SETUP CONFIG
-            LOGGER.info("11111");
             ManualTestDAO man1 = new ManualTestDAO();
             man1.deleteConfigId(mibItemId);
-            LOGGER.info("REMOVE CONFIG");
             man1 = new ManualTestDAO();
             man1.deleteConfigLevel01(mibItemId);
-            LOGGER.info("REMOVE LEVEL 1");
             man1 = new ManualTestDAO();
             man1.deleteConfigLevel02(mibItemId);
-            LOGGER.info("REMOVE LEBEL 02");
             man1 = new ManualTestDAO();
             man1.deleteConfigLevel03(mibItemId);
-            LOGGER.info("REMOVE LEVEL 03");
 
             // SINI KITA NK CREATE BALIK SEMUA SETUP / CONFIG
             saiz = nameRows.size();
@@ -5107,12 +5074,7 @@ public class ItemController {
 
             ManualTestDAO mt = new ManualTestDAO();
             mt.updateConfigId(id, configId);
-            // ADA ERROR DEKAT SINI, ESOK SAMBUNG
         }
-
-        LOGGER.info("qtyField >> " + inputQuantity);
-        LOGGER.info("dutField >> " + inputDUT);
-        LOGGER.info("komponen >> " + saiz);
 
         if ("on".equals(leakageTestCheck)) {
             lk = "Yes";
@@ -5325,17 +5287,16 @@ public class ItemController {
             transtype = "28";
         }
 
-        LOGGER.info("transactionDate : " + transactionDate);
-        LOGGER.info("sptsPkid : " + sptsPkid);
-        LOGGER.info("transtype : " + transtype);
-        LOGGER.info("alu : " + alu);
-        LOGGER.info("countAlu: " + countAlu);
+//        LOGGER.info("transactionDate : " + transactionDate);
+//        LOGGER.info("sptsPkid : " + sptsPkid);
+//        LOGGER.info("transtype : " + transtype);
+//        LOGGER.info("alu : " + alu);
+//        LOGGER.info("countAlu: " + countAlu);
         //update to SPTS
         JSONObject params2 = new JSONObject();
         String date1 = transactionDate.substring(0, 10);
         String time = transactionDate.substring(11, 19);
         String completeDateTime = date1 + "T" + time;
-        LOGGER.info("completeDateTime : " + completeDateTime);
 
         params2.put("dateTime", completeDateTime);
         params2.put("itemsPKID", sptsPkid);
@@ -5344,7 +5305,6 @@ public class ItemController {
         params2.put("remarks", remarks);
         if ("1".equals(countAlu)) {
             if ("2".equals(transtype) || "6".equals(transtype) || "27".equals(transtype) || "28".equals(transtype)) {
-                LOGGER.info("masuk jugak!!!!!!!!");
                 params2.put("lifetimeUsageHrs", alu);
             }
 
