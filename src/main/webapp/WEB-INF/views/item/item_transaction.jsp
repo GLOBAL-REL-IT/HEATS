@@ -461,6 +461,60 @@
             </div>
             <!-- Row end -->
 
+            <!-- Row start -->
+            <div class="row gx-4">
+
+                <div class="col-sm-12 col-12">
+
+                    <!-- Card start -->
+                    <div class="card mb-4">
+                        <div class="card-header">
+                            <h5 class="card-title">Hardware Module - <span style="color:#D97D55">Movement List</span></h5>
+                            <!--<h5 class="card-title">Hardware Module - <span style="color:#D97D55">New Hardware Registration</span></h5>-->
+                        </div>
+                        <div class="card-body">
+
+                            <!-- Row start -->
+                            <div class="row gx-3">
+                                <div class="card-body">
+                                    <div class="table-responsive">
+                                        <table id="customButtons1" class="table custom-table pending">
+                                            <thead>
+                                                <tr>
+                                                    <th><span>No</span></th>
+                                                    <th><span>Date</span></th>
+                                                    <th><span>Movement Type</span></th>
+                                                    <th><span>In</span></th>
+                                                    <th><span>Out</span></th>
+                                                    <th><span>ALU</span></th>
+                                                    <th><span>Remarks</span></th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                            <c:forEach items="${itemList}" var="parameterMaster" varStatus="parameterMasterLoop">
+                                                <tr>
+                                                    <td><c:out value="${parameterMasterLoop.index+1}"/></td>
+                                                <td><c:out value="${parameterMaster.dateTime}"/></td>
+                                                <td><c:out value="${parameterMaster.transTypeName}"/></td>
+                                                <td><c:out value="${parameterMaster.transInQty}"/></td>
+                                                <td><c:out value="${parameterMaster.transOutQty}"/></td>
+                                                <td><c:out value="${parameterMaster.alu}"/></td>
+                                                <td><c:out value="${parameterMaster.remarks}"/></td>
+                                                </tr>
+                                            </c:forEach>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- Row end -->
+                        </div>
+                    </div>
+                    <!-- Card end -->
+                </div>
+            </div>
+            <!-- Row end -->
+
         </div>
         <!-- Content wrapper end -->
 
@@ -469,370 +523,372 @@
             <img class="img3" src="${contextPath}/resources/onsemi logo.webp" alt="onsemi">
             <span>© HEATs 2025</span>
         </div>
-    </div>
-</s:layout-component>
-<s:layout-component name="page_js">
+        </div>
+    </s:layout-component>
+    <s:layout-component name="page_js">
 
-    <!-- Date Range JS -->
-    <script src="${contextPath}/resources/statflow/vendor/daterange/daterange.js"></script>
-    <script src="${contextPath}/resources/statflow/vendor/daterange/custom-daterange.js"></script>
+        <!-- Date Range JS -->
+        <script src="${contextPath}/resources/statflow/vendor/daterange/daterange.js"></script>
+        <script src="${contextPath}/resources/statflow/vendor/daterange/custom-daterange.js"></script>
 
-    <!-- Data Tables -->
-    <script src="${contextPath}/resources/statflow/vendor/datatables/dataTables.min.js"></script>
-    <script src="${contextPath}/resources/statflow/vendor/datatables/dataTables.bootstrap.min.js"></script>
+        <!-- Data Tables -->
+        <script src="${contextPath}/resources/statflow/vendor/datatables/dataTables.min.js"></script>
+        <script src="${contextPath}/resources/statflow/vendor/datatables/dataTables.bootstrap.min.js"></script>
 
-    <!-- Custom Data tables -->
-    <script src="${contextPath}/resources/statflow/vendor/datatables/custom/custom-datatables.js"></script>
+        <!-- Custom Data tables -->
+        <script src="${contextPath}/resources/statflow/vendor/datatables/custom/custom-datatables.js"></script>
 
-    <!-- JQuery Validation -->
-    <script src="${contextPath}/resources/validation/jquery.validate.min.js"></script>
+        <!-- JQuery Validation -->
+        <script src="${contextPath}/resources/validation/jquery.validate.min.js"></script>
 
-    <!-- DataTable Buttons -->
-    <script src="${contextPath}/resources/statflow/vendor/datatables/buttons/dataTables.buttons.min.js"></script>
-    <script src="${contextPath}/resources/statflow/vendor/datatables/buttons/jszip.min.js"></script>
-    <script src="${contextPath}/resources/statflow/vendor/datatables/buttons/dataTables.buttons.min.js"></script>
-    <script src="${contextPath}/resources/statflow/vendor/datatables/buttons/pdfmake.min.js"></script>
-    <script src="${contextPath}/resources/statflow/vendor/datatables/buttons/vfs_fonts.js"></script>
-    <script src="${contextPath}/resources/statflow/vendor/datatables/buttons/buttons.html5.min.js"></script>
-    <script src="${contextPath}/resources/statflow/vendor/datatables/buttons/buttons.print.min.js"></script>
-    <script src="${contextPath}/resources/statflow/vendor/datatables/buttons/buttons.colVis.min.js"></script>
+        <!-- DataTable Buttons -->
+        <script src="${contextPath}/resources/statflow/vendor/datatables/buttons/dataTables.buttons.min.js"></script>
+        <script src="${contextPath}/resources/statflow/vendor/datatables/buttons/jszip.min.js"></script>
+        <script src="${contextPath}/resources/statflow/vendor/datatables/buttons/dataTables.buttons.min.js"></script>
+        <script src="${contextPath}/resources/statflow/vendor/datatables/buttons/pdfmake.min.js"></script>
+        <script src="${contextPath}/resources/statflow/vendor/datatables/buttons/vfs_fonts.js"></script>
+        <script src="${contextPath}/resources/statflow/vendor/datatables/buttons/buttons.html5.min.js"></script>
+        <script src="${contextPath}/resources/statflow/vendor/datatables/buttons/buttons.print.min.js"></script>
+        <script src="${contextPath}/resources/statflow/vendor/datatables/buttons/buttons.colVis.min.js"></script>
 
-    <!-- Bootstrap Select JS -->
-    <script src="${contextPath}/resources/statflow/vendor/bs-select/bs-select.min.js"></script>
-    <script src="${contextPath}/resources/statflow/vendor/bs-select/bs-select-custom.js"></script>
+        <!-- Bootstrap Select JS -->
+        <script src="${contextPath}/resources/statflow/vendor/bs-select/bs-select.min.js"></script>
+        <script src="${contextPath}/resources/statflow/vendor/bs-select/bs-select-custom.js"></script>
 
-</s:layout-component>
-<s:layout-component name="page_js_inline">
-    <script>
+    </s:layout-component>
+    <s:layout-component name="page_js_inline">
+        <script>
 
-        // Fetch all the forms we want to apply custom Bootstrap validation styles to
-        //        const forms = document.querySelectorAll('.needs-validation');
-        //        // Loop over them and prevent submission
-        //        Array.prototype.slice.call(forms).forEach((form) => {
-        //            form.addEventListener('submit', (event) => {
-        //                if (!form.checkValidity()) {
-        //                    event.preventDefault();
-        //                    event.stopPropagation();
-        //                }
-        //
-        //                form.classList.add('was-validated');
-        //            }, false);
-        //        });
-        $(".js-example-basic-single").select2({
-            placeholder: "Choose one",
-            allowClear: true
-        });
-        // Get references to the elements
-
-        $(".datepicker-time-seconds").daterangepicker({
-            drops: "up",
-            singleDatePicker: true,
-            timePicker: true,
-            timePicker24Hour: true,
-            startDate: moment().startOf("minute"),
-            endDate: moment().startOf("hour").add(32, "hour"),
-            locale: {
-//                format: "DD/MM/YYYY hh:mm:ss A",
-                format: "yyyy-MM-DD HH:mm:ss",
-            },
-        });
-
-        $(document).ready(function () {
-            // Disable all radio buttons with name "myRadioGroup"
-            $("input[name='transactionToFrom']").prop("disabled", true);
-
-            var validator = $("#add_hardwarequest_form").validate({
-                rules: {
-                    qty: {
-                        required: true,
-                        min: 1,
-                        max: function (value, element) {
-                            // Example: If a radio button with name 'option' and value '2' is checked,
-                            // the max value for 'myField' is 100. Otherwise, it's 50.
-                            if ($("input[name='transaction']:checked").val() === 'Out') {
-                                if ($("input[name='transactionToFrom']:checked").val() !== 'Out Production From Staging') {
-                                    return parseInt($('#onHandQty').val());
-                                } else {
-                                    return parseInt($('#productionStagingQty').val());
-                                }
-                            } else if ($("input[name='transaction']:checked").val() === 'Return') {
-                                if ($("input[name='transactionToFrom']:checked").val() === 'Production') {
-                                    return parseInt($('#productionQty').val());
-                                } else if ($("input[name='transactionToFrom']:checked").val() === 'Production Staging') {
-                                    return parseInt($('#productionStagingQty').val());
-                                } else if ($("input[name='transactionToFrom']:checked").val() === 'Repair') {
-                                    return parseInt($('#repairQty').val());
-                                } else if ($("input[name='transactionToFrom']:checked").val() === 'Vendor') {
-                                    return parseInt($('#vendorQty').val());
-                                } else if ($("input[name='transactionToFrom']:checked").val() === 'Other') {
-                                    return parseInt($('#otherQty').val());
-                                } else if ($("input[name='transactionToFrom']:checked").val() === 'Quarantine') {
-                                    return parseInt($('#quarantineQty').val());
-                                } else if ($("input[name='transactionToFrom']:checked").val() === 'External Clean') {
-                                    return parseInt($('#extCleanQty').val());
-                                } else if ($("input[name='transactionToFrom']:checked").val() === 'External Re-clean') {
-                                    return parseInt($('#extRecleanQty').val());
-                                } else if ($("input[name='transactionToFrom']:checked").val() === 'Internal Clean') {
-                                    return parseInt($('#intCleanQty').val());
-                                } else if ($("input[name='transactionToFrom']:checked").val() === 'Internal Re-clean') {
-                                    return parseInt($('#internalRecleanQty').val());
-                                } else if ($("input[name='transactionToFrom']:checked").val() === 'Other Onsemi') {
-                                    return parseInt($('#otherOnsemiQty').val());
-                                } else if ($("input[name='transactionToFrom']:checked").val() === 'Storage Factory') {
-                                    return parseInt($('#storageFactoryQty').val());
-                                } else if ($("input[name='transactionToFrom']:checked").val() === 'Retun Production to Staging') {
-                                    return parseInt($('#productionQty').val());
-                                }
-                            }
-                        }
+            $(function () {
+                $("#customButtons1").DataTable({
+                    lengthMenu: [
+                        [10, 25, 50],
+                        [10, 25, 50, "All"],
+                    ],
+                    language: {
+                        lengthMenu: "Display _MENU_ Records Per Page",
+                        info: "Showing Page _PAGE_ of _PAGES_",
                     },
-                    alu: {
-                        required: true
-                    },
-                    transactionDate: {
-                        required: true
-                    },
-                    transaction: {
-                        required: true
-                    },
-                    //inventory
-                    transactionToFrom: {
-                        required: true
-                    }
-                }
+                    dom: "Blfrtip",
+                    buttons: ["copy", "csv", "pdf", "print"],
+                });
             });
 
-        });
+            $(".js-example-basic-single").select2({
+                placeholder: "Choose one",
+                allowClear: true
+            });
+            // Get references to the elements
 
-        const transactionNew = document.getElementById('transactionNew');
-        const transactionOut = document.getElementById('transactionOut');
-        const transactionReturn = document.getElementById('transactionReturn');
-        const transactionProd = document.getElementById('transactionProd');
-        const transactionProdStaging = document.getElementById('transactionProdStaging');
-        const transactionRepair = document.getElementById('transactionRepair');
-        const transactionQuarantine = document.getElementById('transactionQuarantine');
-        const transactionExtClean = document.getElementById('transactionExtClean');
-        const transactionExtReclean = document.getElementById('transactionExtReclean');
-        const transactionIntClean = document.getElementById('transactionIntClean');
-        const transactionIntReclean = document.getElementById('transactionIntReclean');
-        const transactionOther = document.getElementById('transactionOther');
-        const transactionVendor = document.getElementById('transactionVendor');
-        const transactionOtherOnsemi = document.getElementById('transactionOtherOnsemi');
-        const transactionStorageFactory = document.getElementById('transactionStorageFactory');
-        const transactionAdjustment = document.getElementById('transactionAdjustment');
-        const transactionOutProdFromStaging = document.getElementById('transactionOutProdFromStaging');
-        const transactionReturnProdToStaging = document.getElementById('transactionReturnProdToStaging');
+            $(".datepicker-time-seconds").daterangepicker({
+                drops: "up",
+                singleDatePicker: true,
+                timePicker: true,
+                timePicker24Hour: true,
+                startDate: moment().startOf("minute"),
+                endDate: moment().startOf("hour").add(32, "hour"),
+                locale: {
+                    //                format: "DD/MM/YYYY hh:mm:ss A",
+                    format: "yyyy-MM-DD HH:mm:ss",
+                },
+            });
 
-        const onHandQty = document.getElementById('onHandQty');
-        const productionQty = document.getElementById('productionQty');
-        const productionStagingQty = document.getElementById('productionStagingQty');
-        const repairQty = document.getElementById('repairQty');
-        const quarantineQty = document.getElementById('quarantineQty');
-        const externalCleanQty = document.getElementById('externalCleanQty');
-        const externalRecleanQty = document.getElementById('externalRecleanQty');
-        const internalCleanQty = document.getElementById('internalCleanQty');
-        const internalRecleanQty = document.getElementById('internalRecleanQty');
-        const otherQty = document.getElementById('otherQty');
-        const vendorQty = document.getElementById('vendorQty');
-        const otherOnsemiQty = document.getElementById('otherOnsemiQty');
-        const storageFactoryQty = document.getElementById('storageFactoryQty');
-        const totalQty = document.getElementById('totalQty');
+            $(document).ready(function () {
+                // Disable all radio buttons with name "myRadioGroup"
+                $("input[name='transactionToFrom']").prop("disabled", true);
 
-        const alu = document.getElementById('alu');
-        const aluLabel = document.getElementById('aluLabel');
+                var validator = $("#add_hardwarequest_form").validate({
+                    rules: {
+                        qty: {
+                            required: true,
+                            min: 1,
+                            max: function (value, element) {
+                                // Example: If a radio button with name 'option' and value '2' is checked,
+                                // the max value for 'myField' is 100. Otherwise, it's 50.
+                                if ($("input[name='transaction']:checked").val() === 'Out') {
+                                    if ($("input[name='transactionToFrom']:checked").val() !== 'Out Production From Staging') {
+                                        return parseInt($('#onHandQty').val());
+                                    } else {
+                                        return parseInt($('#productionStagingQty').val());
+                                    }
+                                } else if ($("input[name='transaction']:checked").val() === 'Return') {
+                                    if ($("input[name='transactionToFrom']:checked").val() === 'Production') {
+                                        return parseInt($('#productionQty').val());
+                                    } else if ($("input[name='transactionToFrom']:checked").val() === 'Production Staging') {
+                                        return parseInt($('#productionStagingQty').val());
+                                    } else if ($("input[name='transactionToFrom']:checked").val() === 'Repair') {
+                                        return parseInt($('#repairQty').val());
+                                    } else if ($("input[name='transactionToFrom']:checked").val() === 'Vendor') {
+                                        return parseInt($('#vendorQty').val());
+                                    } else if ($("input[name='transactionToFrom']:checked").val() === 'Other') {
+                                        return parseInt($('#otherQty').val());
+                                    } else if ($("input[name='transactionToFrom']:checked").val() === 'Quarantine') {
+                                        return parseInt($('#quarantineQty').val());
+                                    } else if ($("input[name='transactionToFrom']:checked").val() === 'External Clean') {
+                                        return parseInt($('#extCleanQty').val());
+                                    } else if ($("input[name='transactionToFrom']:checked").val() === 'External Re-clean') {
+                                        return parseInt($('#extRecleanQty').val());
+                                    } else if ($("input[name='transactionToFrom']:checked").val() === 'Internal Clean') {
+                                        return parseInt($('#intCleanQty').val());
+                                    } else if ($("input[name='transactionToFrom']:checked").val() === 'Internal Re-clean') {
+                                        return parseInt($('#internalRecleanQty').val());
+                                    } else if ($("input[name='transactionToFrom']:checked").val() === 'Other Onsemi') {
+                                        return parseInt($('#otherOnsemiQty').val());
+                                    } else if ($("input[name='transactionToFrom']:checked").val() === 'Storage Factory') {
+                                        return parseInt($('#storageFactoryQty').val());
+                                    } else if ($("input[name='transactionToFrom']:checked").val() === 'Retun Production to Staging') {
+                                        return parseInt($('#productionQty').val());
+                                    }
+                                }
+                            }
+                        },
+                        alu: {
+                            required: true
+                        },
+                        transactionDate: {
+                            required: true
+                        },
+                        transaction: {
+                            required: true
+                        },
+                        //inventory
+                        transactionToFrom: {
+                            required: true
+                        }
+                    }
+                });
 
-        //            Function to handle the radio button change
-        function handleRadioChange() {
-            if (transactionProd.checked || transactionOutProdFromStaging.checked || transactionReturnProdToStaging.checked) {
-                if (${countAlu == 1}) {
-//                    alert();
-                    alu.hidden = false;
-                    aluLabel.hidden = false;
-                    alu.required = true;
+            });
+
+            const transactionNew = document.getElementById('transactionNew');
+            const transactionOut = document.getElementById('transactionOut');
+            const transactionReturn = document.getElementById('transactionReturn');
+            const transactionProd = document.getElementById('transactionProd');
+            const transactionProdStaging = document.getElementById('transactionProdStaging');
+            const transactionRepair = document.getElementById('transactionRepair');
+            const transactionQuarantine = document.getElementById('transactionQuarantine');
+            const transactionExtClean = document.getElementById('transactionExtClean');
+            const transactionExtReclean = document.getElementById('transactionExtReclean');
+            const transactionIntClean = document.getElementById('transactionIntClean');
+            const transactionIntReclean = document.getElementById('transactionIntReclean');
+            const transactionOther = document.getElementById('transactionOther');
+            const transactionVendor = document.getElementById('transactionVendor');
+            const transactionOtherOnsemi = document.getElementById('transactionOtherOnsemi');
+            const transactionStorageFactory = document.getElementById('transactionStorageFactory');
+            const transactionAdjustment = document.getElementById('transactionAdjustment');
+            const transactionOutProdFromStaging = document.getElementById('transactionOutProdFromStaging');
+            const transactionReturnProdToStaging = document.getElementById('transactionReturnProdToStaging');
+
+            const onHandQty = document.getElementById('onHandQty');
+            const productionQty = document.getElementById('productionQty');
+            const productionStagingQty = document.getElementById('productionStagingQty');
+            const repairQty = document.getElementById('repairQty');
+            const quarantineQty = document.getElementById('quarantineQty');
+            const externalCleanQty = document.getElementById('externalCleanQty');
+            const externalRecleanQty = document.getElementById('externalRecleanQty');
+            const internalCleanQty = document.getElementById('internalCleanQty');
+            const internalRecleanQty = document.getElementById('internalRecleanQty');
+            const otherQty = document.getElementById('otherQty');
+            const vendorQty = document.getElementById('vendorQty');
+            const otherOnsemiQty = document.getElementById('otherOnsemiQty');
+            const storageFactoryQty = document.getElementById('storageFactoryQty');
+            const totalQty = document.getElementById('totalQty');
+
+            const alu = document.getElementById('alu');
+            const aluLabel = document.getElementById('aluLabel');
+
+            //            Function to handle the radio button change
+            function handleRadioChange() {
+                if (transactionProd.checked || transactionOutProdFromStaging.checked || transactionReturnProdToStaging.checked) {
+                    if (${countAlu == 1}) {
+                        //                    alert();
+                        alu.hidden = false;
+                        aluLabel.hidden = false;
+                        alu.required = true;
+                    } else {
+                        alu.hidden = true;
+                        aluLabel.hidden = true;
+                    }
                 } else {
                     alu.hidden = true;
                     aluLabel.hidden = true;
                 }
-            } else {
-                alu.hidden = true;
-                aluLabel.hidden = true;
-            }
 
-            if (transactionNew.checked) {
-                $("input[name='transactionToFrom']").prop("checked", false);
-                $("input[name='transactionToFrom']").prop("disabled", true);
-                $("input[name='transactionToFrom']").prop("required", false);
-            } else {
-                $("input[name='transactionToFrom']").prop("disabled", false);
-            }
+                if (transactionNew.checked) {
+                    $("input[name='transactionToFrom']").prop("checked", false);
+                    $("input[name='transactionToFrom']").prop("disabled", true);
+                    $("input[name='transactionToFrom']").prop("required", false);
+                } else {
+                    $("input[name='transactionToFrom']").prop("disabled", false);
+                }
 
-            if (transactionOut.checked) {
-                $("input[name='transactionToFrom']").prop("required", true);
-                transactionReturnProdToStaging.disabled = true;
-                if (onHandQty.value === "0") {
-                    transactionProd.disabled = true;
-                    transactionProdStaging.disabled = true;
-                    transactionOther.disabled = true;
-                    transactionVendor.disabled = true;
-                    transactionQuarantine.disabled = true;
-                    transactionExtClean.disabled = true;
-                    transactionExtReclean.disabled = true;
-                    transactionIntClean.disabled = true;
-                    transactionIntReclean.disabled = true;
-                    transactionOtherOnsemi.disabled = true;
-                    transactionRepair.disabled = true;
-                    transactionStorageFactory.disabled = true;
+                if (transactionOut.checked) {
+                    $("input[name='transactionToFrom']").prop("required", true);
+                    transactionReturnProdToStaging.disabled = true;
+                    if (onHandQty.value === "0") {
+                        transactionProd.disabled = true;
+                        transactionProdStaging.disabled = true;
+                        transactionOther.disabled = true;
+                        transactionVendor.disabled = true;
+                        transactionQuarantine.disabled = true;
+                        transactionExtClean.disabled = true;
+                        transactionExtReclean.disabled = true;
+                        transactionIntClean.disabled = true;
+                        transactionIntReclean.disabled = true;
+                        transactionOtherOnsemi.disabled = true;
+                        transactionRepair.disabled = true;
+                        transactionStorageFactory.disabled = true;
+                        transactionAdjustment.disabled = true;
+                        transactionReturnProdToStaging.disabled = true;
+                    }
+                    if (productionStagingQty.value === "0" || productionStagingQty.value === null || typeof productionStagingQty.value === 'undefined' || productionStagingQty.value === '') {
+                        transactionOutProdFromStaging.disabled = true;
+                    } else {
+                        transactionOutProdFromStaging.disabled = false;
+                    }
+
+                }
+                if (transactionReturn.checked) {
                     transactionAdjustment.disabled = true;
-                    transactionReturnProdToStaging.disabled = true;
-                }
-                if (productionStagingQty.value === "0" || productionStagingQty.value === null || typeof productionStagingQty.value === 'undefined' || productionStagingQty.value === '') {
+                    transactionAdjustment.checked = false;
+
                     transactionOutProdFromStaging.disabled = true;
-                } else {
-                    transactionOutProdFromStaging.disabled = false;
-                }
+                    transactionOutProdFromStaging.checked = false;
 
-            }
-            if (transactionReturn.checked) {
-                transactionAdjustment.disabled = true;
-                transactionAdjustment.checked = false;
+                    $("input[name='transactionToFrom']").prop("required", true);
 
-                transactionOutProdFromStaging.disabled = true;
-                transactionOutProdFromStaging.checked = false;
+                    if (productionQty.value === "0" || productionQty.value === null || typeof productionQty.value === 'undefined' || productionQty.value === '') {
+                        transactionProd.disabled = true;
+                        transactionReturnProdToStaging.disabled = true;
+                    } else {
+                        transactionProd.disabled = false;
+                        transactionReturnProdToStaging.disabled = false;
+                    }
 
-                $("input[name='transactionToFrom']").prop("required", true);
+                    if (productionStagingQty.value === "0" || productionStagingQty.value === null || typeof productionStagingQty.value === 'undefined' || productionStagingQty.value === '') {
+                        transactionProdStaging.disabled = true;
+                    } else {
+                        transactionProdStaging.disabled = false;
+                    }
 
-                if (productionQty.value === "0" || productionQty.value === null || typeof productionQty.value === 'undefined' || productionQty.value === '') {
-                    transactionProd.disabled = true;
-                    transactionReturnProdToStaging.disabled = true;
-                } else {
-                    transactionProd.disabled = false;
-                    transactionReturnProdToStaging.disabled = false;
-                }
+                    if (repairQty.value === "0" || repairQty.value === null || typeof repairQty.value === 'undefined' || repairQty.value === '') {
+                        transactionRepair.disabled = true;
+                    } else {
+                        transactionRepair.disabled = false;
+                    }
 
-                if (productionStagingQty.value === "0" || productionStagingQty.value === null || typeof productionStagingQty.value === 'undefined' || productionStagingQty.value === '') {
-                    transactionProdStaging.disabled = true;
-                } else {
-                    transactionProdStaging.disabled = false;
-                }
+                    if (otherQty.value === "0" || otherQty.value === null || typeof otherQty.value === 'undefined' || otherQty.value === '') {
+                        transactionOther.disabled = true;
+                    } else {
+                        transactionOther.disabled = false;
+                    }
 
-                if (repairQty.value === "0" || repairQty.value === null || typeof repairQty.value === 'undefined' || repairQty.value === '') {
-                    transactionRepair.disabled = true;
-                } else {
-                    transactionRepair.disabled = false;
-                }
+                    if (quarantineQty.value === "0" || quarantineQty.value === null || typeof quarantineQty.value === 'undefined' || quarantineQty.value === '') {
+                        transactionQuarantine.disabled = true;
+                    } else {
+                        transactionQuarantine.disabled = false;
+                    }
 
-                if (otherQty.value === "0" || otherQty.value === null || typeof otherQty.value === 'undefined' || otherQty.value === '') {
-                    transactionOther.disabled = true;
-                } else {
-                    transactionOther.disabled = false;
-                }
+                    if (externalCleanQty.value === "0" || externalCleanQty.value === null || typeof externalCleanQty.value === 'undefined' || externalCleanQty.value === '') {
+                        transactionExtClean.disabled = true;
+                    } else {
+                        transactionExtClean.disabled = false;
+                    }
 
-                if (quarantineQty.value === "0" || quarantineQty.value === null || typeof quarantineQty.value === 'undefined' || quarantineQty.value === '') {
-                    transactionQuarantine.disabled = true;
-                } else {
-                    transactionQuarantine.disabled = false;
-                }
+                    if (externalRecleanQty.value === "0" || externalRecleanQty.value === null || typeof externalRecleanQty.value === 'undefined' || externalRecleanQty.value === '') {
+                        transactionExtReclean.disabled = true;
+                    } else {
+                        transactionExtReclean.disabled = false;
+                    }
 
-                if (externalCleanQty.value === "0" || externalCleanQty.value === null || typeof externalCleanQty.value === 'undefined' || externalCleanQty.value === '') {
-                    transactionExtClean.disabled = true;
-                } else {
-                    transactionExtClean.disabled = false;
-                }
+                    if (internalCleanQty.value === "0" || internalCleanQty.value === null || typeof internalCleanQty.value === 'undefined' || internalCleanQty.value === '') {
+                        transactionIntClean.disabled = true;
+                    } else {
+                        transactionIntClean.disabled = false;
+                    }
 
-                if (externalRecleanQty.value === "0" || externalRecleanQty.value === null || typeof externalRecleanQty.value === 'undefined' || externalRecleanQty.value === '') {
-                    transactionExtReclean.disabled = true;
-                } else {
-                    transactionExtReclean.disabled = false;
-                }
+                    if (internalRecleanQty.value === "0" || internalRecleanQty.value === null || typeof internalRecleanQty.value === 'undefined' || internalRecleanQty.value === '') {
+                        transactionIntReclean.disabled = true;
+                    } else {
+                        transactionIntReclean.disabled = false;
+                    }
 
-                if (internalCleanQty.value === "0" || internalCleanQty.value === null || typeof internalCleanQty.value === 'undefined' || internalCleanQty.value === '') {
-                    transactionIntClean.disabled = true;
-                } else {
-                    transactionIntClean.disabled = false;
-                }
+                    if (otherOnsemiQty.value === "0" || otherOnsemiQty.value === null || typeof otherOnsemiQty.value === 'undefined' || otherOnsemiQty.value === '') {
+                        transactionOtherOnsemi.disabled = true;
+                    } else {
+                        transactionOtherOnsemi.disabled = false;
+                    }
 
-                if (internalRecleanQty.value === "0" || internalRecleanQty.value === null || typeof internalRecleanQty.value === 'undefined' || internalRecleanQty.value === '') {
-                    transactionIntReclean.disabled = true;
-                } else {
-                    transactionIntReclean.disabled = false;
-                }
+                    if (vendorQty.value === "0" || vendorQty.value === null || typeof vendorQty.value === 'undefined' || vendorQty.value === '') {
+                        transactionVendor.disabled = true;
+                    } else {
+                        transactionVendor.disabled = false;
+                    }
 
-                if (otherOnsemiQty.value === "0" || otherOnsemiQty.value === null || typeof otherOnsemiQty.value === 'undefined' || otherOnsemiQty.value === '') {
-                    transactionOtherOnsemi.disabled = true;
-                } else {
-                    transactionOtherOnsemi.disabled = false;
-                }
-
-                if (vendorQty.value === "0" || vendorQty.value === null || typeof vendorQty.value === 'undefined' || vendorQty.value === '') {
-                    transactionVendor.disabled = true;
-                } else {
-                    transactionVendor.disabled = false;
-                }
-
-                if (storageFactoryQty.value === "0" || storageFactoryQty.value === null || typeof storageFactoryQty.value === 'undefined' || storageFactoryQty.value === '') {
-                    transactionStorageFactory.disabled = true;
-                } else {
-                    transactionStorageFactory.disabled = false;
+                    if (storageFactoryQty.value === "0" || storageFactoryQty.value === null || typeof storageFactoryQty.value === 'undefined' || storageFactoryQty.value === '') {
+                        transactionStorageFactory.disabled = true;
+                    } else {
+                        transactionStorageFactory.disabled = false;
+                    }
                 }
             }
-        }
 
-        // Attach event listeners to the radio buttons
-        transactionNew.addEventListener('change', handleRadioChange);
-        transactionOut.addEventListener('change', handleRadioChange);
-        transactionReturn.addEventListener('change', handleRadioChange);
-        transactionProd.addEventListener('change', handleRadioChange);
-        transactionProdStaging.addEventListener('change', handleRadioChange);
-        transactionRepair.addEventListener('change', handleRadioChange);
-        transactionQuarantine.addEventListener('change', handleRadioChange);
-        transactionExtClean.addEventListener('change', handleRadioChange);
-        transactionExtReclean.addEventListener('change', handleRadioChange);
-        transactionIntClean.addEventListener('change', handleRadioChange);
-        transactionIntReclean.addEventListener('change', handleRadioChange);
-        transactionOther.addEventListener('change', handleRadioChange);
-        transactionVendor.addEventListener('change', handleRadioChange);
-        transactionOtherOnsemi.addEventListener('change', handleRadioChange);
-        transactionStorageFactory.addEventListener('change', handleRadioChange);
-        transactionAdjustment.addEventListener('change', handleRadioChange);
-        transactionOutProdFromStaging.addEventListener('change', handleRadioChange);
-        transactionReturnProdToStaging.addEventListener('change', handleRadioChange);
+            // Attach event listeners to the radio buttons
+            transactionNew.addEventListener('change', handleRadioChange);
+            transactionOut.addEventListener('change', handleRadioChange);
+            transactionReturn.addEventListener('change', handleRadioChange);
+            transactionProd.addEventListener('change', handleRadioChange);
+            transactionProdStaging.addEventListener('change', handleRadioChange);
+            transactionRepair.addEventListener('change', handleRadioChange);
+            transactionQuarantine.addEventListener('change', handleRadioChange);
+            transactionExtClean.addEventListener('change', handleRadioChange);
+            transactionExtReclean.addEventListener('change', handleRadioChange);
+            transactionIntClean.addEventListener('change', handleRadioChange);
+            transactionIntReclean.addEventListener('change', handleRadioChange);
+            transactionOther.addEventListener('change', handleRadioChange);
+            transactionVendor.addEventListener('change', handleRadioChange);
+            transactionOtherOnsemi.addEventListener('change', handleRadioChange);
+            transactionStorageFactory.addEventListener('change', handleRadioChange);
+            transactionAdjustment.addEventListener('change', handleRadioChange);
+            transactionOutProdFromStaging.addEventListener('change', handleRadioChange);
+            transactionReturnProdToStaging.addEventListener('change', handleRadioChange);
 
 
-        // Initial state: Disable button if no radio is checked on page load
-        // Or set based on a default checked radio
-        alu.hidden = true;
-        aluLabel.hidden = true;
+            // Initial state: Disable button if no radio is checked on page load
+            // Or set based on a default checked radio
+            alu.hidden = true;
+            aluLabel.hidden = true;
 
-        if (totalQty.value === "0") {
-            transactionOut.disabled = true;
-            transactionReturn.disabled = true;
-        }
-        if (onHandQty.value === "0") {
-            transactionOut.disabled = true;
-            if (!(productionStagingQty.value === "0" || productionStagingQty.value === null || typeof productionStagingQty.value === 'undefined' || productionStagingQty.value === '')) {
-                transactionOut.disabled = false;
+            if (totalQty.value === "0") {
+                transactionOut.disabled = true;
+                transactionReturn.disabled = true;
             }
-        }
-        if ((productionQty.value === "0" || productionQty.value === null || typeof productionQty.value === 'undefined' || productionQty.value === '')
-                && (productionStagingQty.value === "0" || productionStagingQty.value === null || typeof productionStagingQty.value === 'undefined' || productionStagingQty.value === '')
-                && (repairQty.value === "0" || repairQty.value === null || typeof repairQty.value === 'undefined' || repairQty.value === '')
-                && (otherQty.value === "0" || otherQty.value === null || typeof otherQty.value === 'undefined' || otherQty.value === '')
-                && (quarantineQty.value === "0" || quarantineQty.value === null || typeof quarantineQty.value === 'undefined' || quarantineQty.value === '')
-                && (externalCleanQty.value === "0" || externalCleanQty.value === null || typeof externalCleanQty.value === 'undefined' || externalCleanQty.value === '')
-                && (externalRecleanQty.value === "0" || externalRecleanQty.value === null || typeof externalRecleanQty.value === 'undefined' || externalRecleanQty.value === '')
-                && (internalCleanQty.value === "0" || internalCleanQty.value === null || typeof internalCleanQty.value === 'undefined' || internalCleanQty.value === '')
-                && (internalRecleanQty.value === "0" || internalRecleanQty.value === null || typeof internalRecleanQty.value === 'undefined' || internalRecleanQty.value === '')
-                && (otherOnsemiQty.value === "0" || otherOnsemiQty.value === null || typeof otherOnsemiQty.value === 'undefined' || otherOnsemiQty.value === '')
-                && (vendorQty.value === "0" || vendorQty.value === null || typeof vendorQty.value === 'undefined' || vendorQty.value === '')
-                && (storageFactoryQty.value === "0" || storageFactoryQty.value === null || typeof storageFactoryQty.value === 'undefined' || storageFactoryQty.value === '')) {
-            transactionReturn.disabled = true;
-        } else {
-            transactionReturn.disabled = false;
-        }
-        //            else {
-        //                handleRadioChange(); // Set initial state based on default checked radio
-        //            }
+            if (onHandQty.value === "0") {
+                transactionOut.disabled = true;
+                if (!(productionStagingQty.value === "0" || productionStagingQty.value === null || typeof productionStagingQty.value === 'undefined' || productionStagingQty.value === '')) {
+                    transactionOut.disabled = false;
+                }
+            }
+            if ((productionQty.value === "0" || productionQty.value === null || typeof productionQty.value === 'undefined' || productionQty.value === '')
+                    && (productionStagingQty.value === "0" || productionStagingQty.value === null || typeof productionStagingQty.value === 'undefined' || productionStagingQty.value === '')
+                    && (repairQty.value === "0" || repairQty.value === null || typeof repairQty.value === 'undefined' || repairQty.value === '')
+                    && (otherQty.value === "0" || otherQty.value === null || typeof otherQty.value === 'undefined' || otherQty.value === '')
+                    && (quarantineQty.value === "0" || quarantineQty.value === null || typeof quarantineQty.value === 'undefined' || quarantineQty.value === '')
+                    && (externalCleanQty.value === "0" || externalCleanQty.value === null || typeof externalCleanQty.value === 'undefined' || externalCleanQty.value === '')
+                    && (externalRecleanQty.value === "0" || externalRecleanQty.value === null || typeof externalRecleanQty.value === 'undefined' || externalRecleanQty.value === '')
+                    && (internalCleanQty.value === "0" || internalCleanQty.value === null || typeof internalCleanQty.value === 'undefined' || internalCleanQty.value === '')
+                    && (internalRecleanQty.value === "0" || internalRecleanQty.value === null || typeof internalRecleanQty.value === 'undefined' || internalRecleanQty.value === '')
+                    && (otherOnsemiQty.value === "0" || otherOnsemiQty.value === null || typeof otherOnsemiQty.value === 'undefined' || otherOnsemiQty.value === '')
+                    && (vendorQty.value === "0" || vendorQty.value === null || typeof vendorQty.value === 'undefined' || vendorQty.value === '')
+                    && (storageFactoryQty.value === "0" || storageFactoryQty.value === null || typeof storageFactoryQty.value === 'undefined' || storageFactoryQty.value === '')) {
+                transactionReturn.disabled = true;
+            } else {
+                transactionReturn.disabled = false;
+            }
+            //            else {
+            //                handleRadioChange(); // Set initial state based on default checked radio
+            //            }
 
-    </script>
-</s:layout-component>
+        </script>
+    </s:layout-component>
 </s:layout-render>

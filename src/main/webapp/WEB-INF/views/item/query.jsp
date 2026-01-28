@@ -344,6 +344,7 @@
                                                             <th class="col-1">Int. Re-cleaning</th>
                                                             <th class="col-1">Storage Factory</th>
                                                             <th class="col-1">Total Qty</th>
+                                                            <th class="col-1">Remarks</th>
                                                             <th class="col-1">Status</th>
                                                         </tr>
                                                     </thead>
@@ -396,6 +397,7 @@
                                                                 <td><c:out value="${parameterMaster.internalRecleanQty}"/></td>
                                                                 <td><c:out value="${parameterMaster.storageFactoryQty}"/></td>
                                                                 <td><c:out value="${parameterMaster.totalQty}"/></td>
+                                                                <td><c:out value="${parameterMaster.remarks}"/></td>
                                                                 <td><c:out value="${parameterMaster.status}"/></td>
                                                             </tr>
                                                         </c:forEach>

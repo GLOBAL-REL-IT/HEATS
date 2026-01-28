@@ -3971,12 +3971,15 @@ public class ItemController {
                 status = getCurrentStatus(mibItemId);
                 if (status.equals("Good")) {
                     item.setFlag("1");
+                } else {
+                    item.setFlag("0");
                 }
                 insertSPTSData(mibItemId, userSession.getFullname());
             }
             item.setStatus(status);
             ItemDAO iD = new ItemDAO();
-            QueryResult q2 = iD.updateItemStatus(item);
+//            QueryResult q2 = iD.updateItemStatus(item);
+            QueryResult q2 = iD.updateItemStatusAndFlag(item);
 
             //update log
             ItemLog log = new ItemLog();
@@ -5196,6 +5199,11 @@ public class ItemController {
         ItemAluConfigDAO itemA = new ItemAluConfigDAO();
         int countAlu = itemA.getCountItemType(item.getItemType());
 
+        //add movement history
+        ItemTransactionDAO hwD = new ItemTransactionDAO();
+        List<ItemTransaction> itemList = hwD.getItemTransactionListByItemPkid(pkid);
+        model.addAttribute("itemList", itemList);
+
         model.addAttribute("item", item);
         model.addAttribute("countAlu", countAlu);
         return "item/item_transaction";
@@ -5611,7 +5619,9 @@ public class ItemController {
 
             redirectAttrs.addFlashAttribute("success", "Transaction is added");
 //            return "redirect:/hw/item";
-            return "redirect:/hw";
+//            return "redirect:/hw";
+            return "redirect:/hw/item/transaction/" + sptsPkid;
+
         } else {
             LOGGER.info("TransPkid.getResponseId(): " + TransPkid.getResponseId());
             redirectAttrs.addFlashAttribute("error", "Failed to save transaction. Pls contact system admin for more detail.");
