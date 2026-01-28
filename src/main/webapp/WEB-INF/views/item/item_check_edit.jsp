@@ -10,6 +10,7 @@
         <link rel="stylesheet" href="${contextPath}/resources/statflow/vendor/bs-select/bs-select.css">
         <!-- Date Range CSS -->
         <link rel="stylesheet" href="${contextPath}/resources/statflow/vendor/daterange/daterange.css">
+        <!--<link rel="stylesheet" href="${contextPath}/resources/css/item_check.css">-->
         <link rel="stylesheet" href="${contextPath}/resources/css/item_check_edit.css">
     </s:layout-component>
     <s:layout-component name="page_css_inline">
@@ -240,65 +241,126 @@
                                             </div>
                                         </div>
 
-                                    <c:if test="${item.manualTest == 'Yes'}">
-                                        <div class="col-xl-6 col-sm-12 col-12" id="manual_page_control">
-                                            <div class="static-fields">
-                                                <div>
-                                                    <label for="inputQuantity">Quantity :</label>
-                                                    <input type="number" id="inputQuantity" name="inputQuantity" required min="1" value="${qty}">
+                                    <c:choose>
+                                        <c:when test="${item.manualTest == 'Yes'}">
+                                            <div class="col-xl-6 col-sm-12 col-12" id="manual_page_control">
+                                                <div class="static-fields">
+                                                    <div>
+                                                        <label for="inputQuantity">Quantity :</label>
+                                                        <input type="number" id="inputQuantity" name="inputQuantity" required min="1" value="${qty}">
+                                                    </div>
+                                                    <div>
+                                                        <label for="inputDUT">DUT #:</label>
+                                                        <input type="number" id="inputDUT" name="inputDUT" required min="1" value="${dut}">
+                                                    </div>
+                                                    <div>
+                                                        <label for="componentField">Components:</label>
+                                                        <button type="button" class="add-row-btn" onclick="addRow()">Add Component</button>
+                                                    </div>
                                                 </div>
-                                                <div>
-                                                    <label for="inputDUT">DUT #:</label>
-                                                    <input type="number" id="inputDUT" name="inputDUT" required min="1" value="${dut}">
-                                                </div>
-                                                <div>
-                                                    <label for="componentField">Components:</label>
-                                                    <button type="button" class="add-row-btn" onclick="addRow()">Add Component</button>
-                                                </div>
-                                            </div>
 
-                                            <table id="dataTable">
-                                                <thead>
-                                                    <tr>
-                                                        <th>Component Type</th>
-                                                        <th>Component Name</th>
-                                                        <th class="header-value">Value</th>
-                                                        <th class="header-percent">Percentage</th>
-                                                        <th>Lower Limit</th>
-                                                        <th>Upper Limit</th>
-                                                        <th>Action</th>
-                                                    </tr>
-                                                </thead>
-                                                <tbody id="tableBody">
-                                                    <c:forEach items="${listData}" var="manualList" varStatus="manualLoop">
+                                                <table id="dataTable">
+                                                    <thead>
                                                         <tr>
-                                                            <td><input type="text" class="standard-input-read" name="component_type[]" value="<c:out value="${manualList.componentType}"/>" readonly></td>
-                                                            <td><input type="text" class="standard-input-read" name="component_name[]" value="<c:out value="${manualList.componentName}"/>" readonly></td>
-                                                            <c:choose>
-                                                                <%-- Condition 3: Fuse -> Combined value/percentage/limits into one cell, text changes to SHORT/OPEN --%>
-                                                                <c:when test="${manualList.componentType == 'Fuse'}">
-                                                                    <td class="status2-text" style="text-align: right;" colspan="4">OPEN / SHORT</td>
-                                                                </c:when>
-                                                                <%-- Condition 4: Zener or Diode -> View value, combined percentage/limits, text update to OPEN/SHORT --%>
-                                                                <%--<c:when test="${manualList.componentType == 'Zener' || manualList.componentType == 'Diode'}">
-                                                                    <td name="actual_value[]"><c:out value="${manualList.componentValue}"/></td>
-                                                                    <td class="status2-text" style="text-align: right;" colspan="3">OPEN / SHORT</td>
-                                                                </c:when> --%>
-                                                                <%-- Optional: Default case if the component type doesn't match any specific rule --%>
-                                                                <c:otherwise>
-                                                                    <td><input type="text" class="standard-input-read" name="actual_value[]" value="<c:out value="${manualList.componentValue}"/>" readonly></td>
-                                                                    <td><input type="text" class="standard-input-read" name="percentage[]" value="<c:out value="${manualList.percentage}"/>" readonly></td>
-                                                                    <td><input type="text" class="standard-input-read" name="lower[]" value="<c:out value="${manualList.lowerLimit}"/>" readonly></td>
-                                                                    <td><input type="text" class="standard-input-read" name="upper[]" value="<c:out value="${manualList.upperLimit}"/>" readonly></td>
-                                                                </c:otherwise>
-                                                            </c:choose>
-                                                            <td><button class="delete-btn" onclick="deleteRow(this)"><i class="bi bi-trash h3" style="color: gray;"></i></button></td>
+                                                            <th>Component Type</th>
+                                                            <th>Component Name</th>
+                                                            <th class="header-value">Value</th>
+                                                            <th class="header-percent">Percentage</th>
+                                                            <th>Lower Limit</th>
+                                                            <th>Upper Limit</th>
+                                                            <th>Action</th>
                                                         </tr>
-                                                    </c:forEach>
-                                                </tbody>
-                                            </table>
-                                        </div>
-                                    </c:if>
+                                                    </thead>
+                                                    <tbody id="tableBody">
+                                                        <c:forEach items="${listData}" var="manualList" varStatus="manualLoop">
+                                                            <tr>
+                                                                <td><input type="text" class="standard-input-read" name="component_type[]" value="<c:out value="${manualList.componentType}"/>" readonly></td>
+                                                                <td><input type="text" class="standard-input-read" name="component_name[]" value="<c:out value="${manualList.componentName}"/>" readonly></td>
+                                                                <c:choose>
+                                                                    <%-- Condition 3: Fuse -> Combined value/percentage/limits into one cell, text changes to SHORT/OPEN --%>
+                                                                    <c:when test="${manualList.componentType == 'Fuse'}">
+                                                                        <td class="status2-text" style="text-align: right;" colspan="4">OPEN / SHORT</td>
+                                                                    </c:when>
+                                                                    <%-- Condition 4: Zener or Diode -> View value, combined percentage/limits, text update to OPEN/SHORT --%>
+                                                                    <%--<c:when test="${manualList.componentType == 'Zener' || manualList.componentType == 'Diode'}">
+                                                                        <td name="actual_value[]"><c:out value="${manualList.componentValue}"/></td>
+                                                                        <td class="status2-text" style="text-align: right;" colspan="3">OPEN / SHORT</td>
+                                                                    </c:when> --%>
+                                                                    <%-- Optional: Default case if the component type doesn't match any specific rule --%>
+                                                                    <c:otherwise>
+                                                                        <td><input type="text" class="standard-input-read" name="actual_value[]" value="<c:out value="${manualList.componentValue}"/>" readonly></td>
+                                                                        <td><input type="text" class="standard-input-read" name="percentage[]" value="<c:out value="${manualList.percentage}"/>" readonly></td>
+                                                                        <td><input type="text" class="standard-input-read" name="lower[]" value="<c:out value="${manualList.lowerLimit}"/>" readonly></td>
+                                                                        <td><input type="text" class="standard-input-read" name="upper[]" value="<c:out value="${manualList.upperLimit}"/>" readonly></td>
+                                                                    </c:otherwise>
+                                                                </c:choose>
+                                                                <td><button class="delete-btn" onclick="deleteRow(this)"><i class="bi bi-trash h3" style="color: gray;"></i></button></td>
+                                                            </tr>
+                                                        </c:forEach>
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </c:when>
+                                        <c:otherwise>
+                                            <div class="col-xl-6 col-sm-12 col-12 hidden" id="manual_page_control">
+                                                <div class="static-fields">
+                                                    <div>
+                                                        <label for="inputQuantity">Quantity :</label>
+                                                        <input type="number" id="inputQuantity" name="inputQuantity" required min="1" value="${qty}">
+                                                    </div>
+                                                    <div>
+                                                        <label for="inputDUT">DUT #:</label>
+                                                        <input type="number" id="inputDUT" name="inputDUT" required min="1" value="${dut}">
+                                                    </div>
+                                                    <div>
+                                                        <label for="componentField">Components:</label>
+                                                        <button type="button" class="add-row-btn" onclick="addRow()">Add Component</button>
+                                                    </div>
+                                                </div>
+
+                                                <table id="dataTable">
+                                                    <thead>
+                                                        <tr>
+                                                            <th>Component Type</th>
+                                                            <th>Component Name</th>
+                                                            <th class="header-value">Value</th>
+                                                            <th class="header-percent">Percentage</th>
+                                                            <th>Lower Limit</th>
+                                                            <th>Upper Limit</th>
+                                                            <th>Action</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody id="tableBody">
+                                                        <c:forEach items="${listData}" var="manualList" varStatus="manualLoop">
+                                                            <tr>
+                                                                <td><input type="text" class="standard-input-read" name="component_type[]" value="<c:out value="${manualList.componentType}"/>" readonly></td>
+                                                                <td><input type="text" class="standard-input-read" name="component_name[]" value="<c:out value="${manualList.componentName}"/>" readonly></td>
+                                                                <c:choose>
+                                                                    <%-- Condition 3: Fuse -> Combined value/percentage/limits into one cell, text changes to SHORT/OPEN --%>
+                                                                    <c:when test="${manualList.componentType == 'Fuse'}">
+                                                                        <td class="status2-text" style="text-align: right;" colspan="4">OPEN / SHORT</td>
+                                                                    </c:when>
+                                                                    <%-- Condition 4: Zener or Diode -> View value, combined percentage/limits, text update to OPEN/SHORT --%>
+                                                                    <%--<c:when test="${manualList.componentType == 'Zener' || manualList.componentType == 'Diode'}">
+                                                                        <td name="actual_value[]"><c:out value="${manualList.componentValue}"/></td>
+                                                                        <td class="status2-text" style="text-align: right;" colspan="3">OPEN / SHORT</td>
+                                                                    </c:when> --%>
+                                                                    <%-- Optional: Default case if the component type doesn't match any specific rule --%>
+                                                                    <c:otherwise>
+                                                                        <td><input type="text" class="standard-input-read" name="actual_value[]" value="<c:out value="${manualList.componentValue}"/>" readonly></td>
+                                                                        <td><input type="text" class="standard-input-read" name="percentage[]" value="<c:out value="${manualList.percentage}"/>" readonly></td>
+                                                                        <td><input type="text" class="standard-input-read" name="lower[]" value="<c:out value="${manualList.lowerLimit}"/>" readonly></td>
+                                                                        <td><input type="text" class="standard-input-read" name="upper[]" value="<c:out value="${manualList.upperLimit}"/>" readonly></td>
+                                                                    </c:otherwise>
+                                                                </c:choose>
+                                                                <td><button class="delete-btn" onclick="deleteRow(this)"><i class="bi bi-trash h3" style="color: gray;"></i></button></td>
+                                                            </tr>
+                                                        </c:forEach>
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </c:otherwise>
+                                    </c:choose>
                                 </div>
 
                                 <!-- Form actions start -->
@@ -561,6 +623,14 @@
                 document.getElementById("inputQuantity").removeAttribute("required");
                 document.getElementById("inputDUT").removeAttribute("required");
             }
+            
+//            var inputContainer2 = document.getElementById("additionalInputs");
+//
+//            if (checkbox.checked) {
+//                inputContainer2.classList.remove("hidden");
+//            } else {
+//                inputContainer2.classList.add("hidden");
+//            }
         }
         
         const calculateLimits = () => {
