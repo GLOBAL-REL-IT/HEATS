@@ -4100,6 +4100,7 @@ public class ItemController {
         String newStatus = "";
         String latestResult = "";
         checkInsertFunctionalTest(mibItemId, username);
+        String target_location = "redirect:/hw/item/add2/" + mibItemId;
 
         String pathBib = "";
         String pathLeak = "";
@@ -4178,6 +4179,7 @@ public class ItemController {
                         newStatus = "Good";
                         item0.setFlag("1");
                         insertSPTSData(mibItemId, username);
+                        target_location = "redirect:/hw/item/pending";
                     }
                 } else {
                     newStatus = "Failed Functional Test - BIB Test - Waiting Maverick CA";
@@ -4230,6 +4232,7 @@ public class ItemController {
                         newStatus = "Good";
                         item0.setFlag("1");
                         insertSPTSData(mibItemId, username);
+                        target_location = "redirect:/hw/item/pending";
                     }
                 } else {
                     newStatus = "Failed Functional Test - Leakage Test - Waiting Maverick CA";
@@ -4281,6 +4284,7 @@ public class ItemController {
                         newStatus = "Good";
                         item0.setFlag("1");
                         insertSPTSData(mibItemId, username);
+                        target_location = "redirect:/hw/item/pending";
                     }
                 } else {
                     newStatus = "Failed Functional Test - Power Supply Test - Waiting Maverick CA";
@@ -4328,6 +4332,7 @@ public class ItemController {
                 if (winResult.equals("Pass")) {
                     newStatus = "Good";
                     insertSPTSData(mibItemId, username);
+                    target_location = "redirect:/hw/item/pending";
                 } else {
                     newStatus = "Failed Functional Test - Winchester Chamber Leakage Test - Waiting Maverick CA";
                     updateMaverickAndEmail(mibItemId, username, "Winchester");
@@ -4343,7 +4348,8 @@ public class ItemController {
 //            itemVm.setWinConnectorRejectUpload(pathBib);
         }
 
-        return "redirect:/hw/item/add2/" + mibItemId;
+//        return "redirect:/hw/item/add2/" + mibItemId;
+        return target_location;
     }
 
     @RequestMapping(value = "/item/updateStatus/{id}", method = RequestMethod.GET)
