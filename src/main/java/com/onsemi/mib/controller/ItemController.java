@@ -4967,24 +4967,24 @@ public class ItemController {
 
         // 2026 JAN - PLEASE ADD ON THE ALGORITHM HERE FOR ALL FOUND SCENARIO
         if (itemA1 == null) {
-            if (status.contains("Pending Visual Inspection")) {
-
-            } else {
-
-            }
+//            if (status.contains("Pending Visual Inspection")) {
+//
+//            } else {
+//
+//            }
 //            redirectAttrs.addFlashAttribute("error", "Manual Test Configuration is missing. Please contact admin for further assistance.");
 //            return "redirect:/hw/item/pending";
         } else {
-            if (status.contains("Pending Visual Inspection")) {
+//            if (status.contains("Pending Visual Inspection")) {
                 qty = itemA1.getQty();
                 dut = itemA1.getDut();
                 ManualTestDAO itemB = new ManualTestDAO();
                 List<ManualTest> itemB1 = itemB.getAllComponentConfig(mibItemId);
                 model.addAttribute("listData", itemB1);
-            } else {
-                redirectAttrs.addFlashAttribute("error", "Functional Test already on-going.");
-                return "redirect:/hw/item/pending";
-            }
+//            } else {
+//                redirectAttrs.addFlashAttribute("error", "Functional Test already on-going.");
+//                return "redirect:/hw/item/pending";
+//            }
         }
         model.addAttribute("qty", qty);
         model.addAttribute("dut", dut);
