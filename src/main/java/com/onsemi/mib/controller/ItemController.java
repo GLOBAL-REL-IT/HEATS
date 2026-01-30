@@ -178,6 +178,91 @@ public class ItemController {
 //        return "hardware/hardware_json";
     }
 
+    @RequestMapping(value = "/{itemPkid}", method = {RequestMethod.GET, RequestMethod.POST}) //without checking SPTS data and update to MIB DB
+    public String request(
+            Model model,
+            @ModelAttribute UserSession userSession,
+            @RequestParam(required = false) String itemType,
+            @PathVariable("itemPkid") String itemPkid
+    ) throws IOException {
+
+        JSONArray getItemTypeAll = SPTSWebService.getItemTypeAll();
+        List<LinkedHashMap<String, String>> itemTpeAll = SystemUtil.jsonArrayToList(getItemTypeAll);
+        model.addAttribute("itemTpeAll", itemTpeAll);
+
+        String itemTypeTitle = "";
+
+        ItemDAO itemD = new ItemDAO();
+        Item item = itemD.getHardwareDetailByPkid(itemPkid);
+        model.addAttribute("item", item);
+
+        itemType = item.getItemType();
+
+        if (itemType == null || "".equals(itemType)) {
+            ItemDAO hwD = new ItemDAO();
+            List<Item> itemList = hwD.getHardwareDetailListByItemType("No Item Type");
+            model.addAttribute("itemList", itemList);
+        } else {
+            ItemDAO hwD = new ItemDAO();
+            List<Item> itemList = hwD.getHardwareDetailListByItemType(item.getItemType());
+            model.addAttribute("itemList", itemList);
+            itemTypeTitle = " (" + itemType + ")";
+        }
+        model.addAttribute("itemTypeTitle", itemTypeTitle);
+
+        ParameterDetailsDAO pD = new ParameterDetailsDAO();
+        List<ParameterDetails> paramItemUsage = pD.getGroupParameterDetailList(item.getItemUsage(), "001");
+        model.addAttribute("paramItemUsage", paramItemUsage);
+        LOGGER.info("item.getItemUsage(): " + item.getItemUsage());
+
+        pD = new ParameterDetailsDAO();
+        List<ParameterDetails> paramItemUsageEqpt = pD.getGroupParameterDetailList(item.getItemUsage(), "018");
+        model.addAttribute("paramItemUsageEqpt", paramItemUsageEqpt);
+
+        itemD = new ItemDAO();
+        List<Item> listAssemblyId = itemD.getItemAssemblyId(item.getAssemblyId());
+        model.addAttribute("listAssemblyId", listAssemblyId);
+
+        itemD = new ItemDAO();
+        List<Item> listModel = itemD.getItemModel(item.getModel());
+        model.addAttribute("listModel", listModel);
+
+        itemD = new ItemDAO();
+        List<Item> listManufacturer = itemD.getItemManufacturer(item.getManufacturer());
+        model.addAttribute("listManufacturer", listManufacturer);
+
+        itemD = new ItemDAO();
+        List<Item> listEqptModel = itemD.getItemEqptModel(item.getEquipmentModel());
+        model.addAttribute("listEqptModel", listEqptModel);
+
+        itemD = new ItemDAO();
+        List<Item> listEqptType = itemD.getItemEqptType(item.getEquipmentType());
+        model.addAttribute("listEqptType", listEqptType);
+
+        itemD = new ItemDAO();
+        List<Item> listEqptManufacturer = itemD.getItemEqptManufacturer(item.getEquipmentManufacturer());
+        model.addAttribute("listEqptManufacturer", listEqptManufacturer);
+
+        itemD = new ItemDAO();
+        List<Item> listStressType = itemD.getItemStressType(item.getStressType());
+        model.addAttribute("listStressType", listStressType);
+
+        model.addAttribute("userItemAdd", userSession.getItemAdd());
+        model.addAttribute("userItemEdit", userSession.getItemEdit());
+        model.addAttribute("userItemDelete", userSession.getItemDelete());
+        model.addAttribute("userItemHwAdd", userSession.getItemHardwareAdd());
+        model.addAttribute("userItemHwEdit", userSession.getItemHardwareEdit());
+        model.addAttribute("userItemHwDelete", userSession.getItemHardwareDelete());
+        model.addAttribute("userItemActConfig", userSession.getItemActivityConfig());
+        model.addAttribute("userItemActAdd", userSession.getItemActivityAdd());
+        model.addAttribute("userItemActEdit", userSession.getItemActivityEdit());
+        model.addAttribute("userItemMovement", userSession.getItemMovementAdd());
+        model.addAttribute("userItemSfRecall", userSession.getItemSfRecall());
+
+        return "item/item";
+//        return "hardware/hardware_json";
+    }
+
     @RequestMapping(value = "/item2/{itemType}", method = {RequestMethod.GET, RequestMethod.POST}) //checking SPTS data and update to MIB DB
     public String request2(
             Model model,
@@ -2536,57 +2621,100 @@ public class ItemController {
         addItem.put("otherONQty", otherOnsemiQty);
         addItem.put("vendorQty", vendorQty);
         addItem.put("unit", "pcs");
-//        if (minQty != null || !"".equals(minQty)) {
-        addItem.put("minQty", minQty);
-//        }
-//        if (maxQty != null || !"".equals(maxQty)) {
-        addItem.put("maxQty", maxQty);
-//        }
-//        if (unitCost != null || !"".equals(unitCost)) {
-        addItem.put("unitCost", unitCost);
-//        }
-//        if (rack != null || !"".equals(rack)) {
-        addItem.put("rack", rack);
-//        }
-//        if (shelf != null || !"".equals(shelf)) {
-        addItem.put("shelf", shelf);
-//        }
-//        if (model2 != null || !"".equals(model2)) {
-        addItem.put("model", model);
-//        }
-//        if (manufacturer != null || !"".equals(manufacturer)) {
-        addItem.put("manufacturer", manufacturer);
-//        }
-//        if (equipmentType != null || !"".equals(equipmentType)) {
-        addItem.put("equipmentType", equipmentType);
-//        }
-//        if (equipmentModel != null || !"".equals(equipmentModel)) {
-        addItem.put("equipmentModel", equipmentModel);
-//        }
-//        if (equipmentManufacturer != null || !"".equals(equipmentManufacturer)) {
-        addItem.put("equipmentManufacturer", equipmentManufacturer);
-//        }
-//        if (stressType != null || !"".equals(stressType)) {
-        addItem.put("stressType", stressType);
-//        }
-//        if (itemType2 != null || !"".equals(itemType2)) {
-        addItem.put("itemType", itemType2);
-//        }
-//        if (subType != null || !"".equals(subType)) {
-        addItem.put("subType", subType);
-//        }
-//        if (assemblyId != null || !"".equals(assemblyId)) {
-        addItem.put("assemblyID", assemblyId);
-//        }
-//        if (remarks != null || !"".equals(remarks)) {
-        addItem.put("remarks", remarks);
-//        }
-//        if (expirationDate != null || !"".equals(expirationDate)) {
-        addItem.put("expirationDate", expirationDate);
-//        }
-//        if (aluHrs != null || !"".equals(aluHrs)) {
-        addItem.put("aluHrs", aluHrs);
-//        }
+
+        LOGGER.info("pkid: " + itemPKID);
+        LOGGER.info("version: " + version);
+        LOGGER.info("itemID: " + itemId);
+        LOGGER.info("itemName: " + itemName);
+        LOGGER.info("onHandQty: " + onHandQty);
+        LOGGER.info("prodQty: " + productionQty);
+        LOGGER.info("repairQty: " + repairQty);
+        LOGGER.info("otherQty: " + otherQty);
+        LOGGER.info("quarantineQty: " + quarantineQty);
+        LOGGER.info("externalCleaningQty: " + externalCleanQty);
+        LOGGER.info("externalRecleaningQty " + externalRecleanQty);
+        LOGGER.info("internalCleaningQty: " + internalCleanQty);
+        LOGGER.info("internalRecleaningQty: " + internalRecleanQty);
+        LOGGER.info("storageFactoryQty:" + storageFactoryQty);
+        LOGGER.info("prodStagingQty: " + productionStagingQty);
+        LOGGER.info("otherONQty: " + otherOnsemiQty);
+        LOGGER.info("vendorQty: " + vendorQty);
+        LOGGER.info("unit : " + "pcs");
+
+        if (minQty != null && !"".equals(minQty)) {
+            LOGGER.info("minQty: " + minQty);
+            addItem.put("minQty", minQty);
+        } else {
+            minQty = "0";
+        }
+        if (maxQty != null && !"".equals(maxQty)) {
+            LOGGER.info("maxQty: " + maxQty);
+            addItem.put("maxQty", maxQty);
+        } else {
+            maxQty = "1";
+        }
+        if (unitCost != null && !"".equals(unitCost)) {
+            LOGGER.info("unitCost: " + unitCost);
+            addItem.put("unitCost", unitCost);
+        }
+        if (rack != null && !"".equals(rack)) {
+            LOGGER.info("rack: " + rack);
+            addItem.put("rack", rack);
+        }
+        if (shelf != null && !"".equals(shelf)) {
+            LOGGER.info("shelf: " + shelf);
+            addItem.put("shelf", shelf);
+        }
+        if (model != null && !"".equals(model)) {
+            LOGGER.info("model: " + model);
+            addItem.put("model", model);
+        }
+        if (manufacturer != null && !"".equals(manufacturer)) {
+            LOGGER.info("manufacturer: " + manufacturer);
+            addItem.put("manufacturer", manufacturer);
+        }
+        if (equipmentType != null && !"".equals(equipmentType)) {
+            LOGGER.info("equipmentType: " + equipmentType);
+            addItem.put("equipmentType", equipmentType);
+        }
+        if (equipmentModel != null && !"".equals(equipmentModel)) {
+            LOGGER.info("equipmentModel: " + equipmentModel);
+            addItem.put("equipmentModel", equipmentModel);
+        }
+        if (equipmentManufacturer != null && !"".equals(equipmentManufacturer)) {
+            LOGGER.info("equipmentManufacturer: " + equipmentManufacturer);
+            addItem.put("equipmentManufacturer", equipmentManufacturer);
+        }
+        if (stressType != null && !"".equals(stressType)) {
+            LOGGER.info("stressType: " + stressType);
+            addItem.put("stressType", stressType);
+        }
+        if (itemType2 != null && !"".equals(itemType2)) {
+            LOGGER.info("itemType: " + itemType2);
+            addItem.put("itemType", itemType2);
+        }
+        if (subType != null && !"".equals(subType)) {
+            LOGGER.info("subType: " + subType);
+            addItem.put("subType", subType);
+        }
+        if (assemblyId != null && !"".equals(assemblyId)) {
+            LOGGER.info("assemblyID: " + assemblyId);
+            addItem.put("assemblyID", assemblyId);
+        }
+        if (remarks != null && !"".equals(remarks)) {
+            LOGGER.info("remarks: " + remarks);
+            addItem.put("remarks", remarks);
+        }
+        if (expirationDate != null && !"".equals(expirationDate)) {
+            LOGGER.info("expirationDate: " + expirationDate);
+            addItem.put("expirationDate", expirationDate);
+        }
+        if (aluHrs != null && !"".equals(aluHrs)) {
+            LOGGER.info("aluHrs: " + aluHrs);
+            addItem.put("aluHrs", aluHrs);
+        } else {
+            aluHrs = "0";
+        }
         if ("on".equals(isConsumable)) {
             addItem.put("isConsumeable", "1");
         } else {
@@ -2594,6 +2722,16 @@ public class ItemController {
         }
         addItem.put("complexityScore", "0");
         addItem.put("isCritical", "0");
+
+        String consume = "";
+        if ("on".equals(isConsumable)) {
+            consume = "1";
+        } else {
+            consume = "0";
+        }
+        LOGGER.info("isConsumeable: " + consume);
+        LOGGER.info("complexityScore: " + "0");
+        LOGGER.info("isCritical: " + "0");
 
         SPTSResponse sr = SPTSWebService.updateItem(addItem);
         if (sr.getStatus()) {
@@ -2662,7 +2800,7 @@ public class ItemController {
             int count = itemD.getCountItemIdAndNotMibId(itemId, mibId);
             if (count > 0) {
                 redirectAttrs.addFlashAttribute("error", "Duplicate Item ID: " + itemId + ". Pls register with different Item ID.");
-                return "redirect:/hw";
+                return "redirect:/hw/" + itemPKID;
             } else {
                 itemD = new ItemDAO();
                 QueryResult i = itemD.updateHardwareDetail(item);
@@ -2678,10 +2816,10 @@ public class ItemController {
                     QueryResult logQ = logD.insertItemLog(log);
 
                     redirectAttrs.addFlashAttribute("success", "Succesfully update Item ID: " + itemId);
-                    return "redirect:/hw";
+                    return "redirect:/hw/" + itemPKID;
                 } else {
                     redirectAttrs.addFlashAttribute("error", "Failed to update Item ID: " + itemId + ". Pls contact system admin.");
-                    return "redirect:/hw";
+                    return "redirect:/hw/" + itemPKID;
                 }
             }
         } else {
@@ -2695,11 +2833,15 @@ public class ItemController {
             } else {
                 errorMessage = sr.getErrorCode() + " - " + sr.getErrorDetail();
             }
+            LOGGER.info("sr.getErrorCode(): " + sr.getErrorCode());
+            LOGGER.info("sr.getErrorMessage(): " + sr.getErrorMessage());
+            LOGGER.info("sr.getErrorDetail(): " + sr.getErrorDetail());
+            LOGGER.info("errorMessage: " + errorMessage);
             model2.addAttribute("error", errorMessage);
             model2.addAttribute("item2", item2);
             redirectAttrs.addFlashAttribute("error", errorMessage);
 //                        return "spts/add";
-            return "redirect:/hw";
+            return "redirect:/hw/" + itemPKID;
         }
 
     }
@@ -4982,11 +5124,11 @@ public class ItemController {
 //            return "redirect:/hw/item/pending";
         } else {
 //            if (status.contains("Pending Visual Inspection")) {
-                qty = itemA1.getQty();
-                dut = itemA1.getDut();
-                ManualTestDAO itemB = new ManualTestDAO();
-                List<ManualTest> itemB1 = itemB.getAllComponentConfig(mibItemId);
-                model.addAttribute("listData", itemB1);
+            qty = itemA1.getQty();
+            dut = itemA1.getDut();
+            ManualTestDAO itemB = new ManualTestDAO();
+            List<ManualTest> itemB1 = itemB.getAllComponentConfig(mibItemId);
+            model.addAttribute("listData", itemB1);
 //            } else {
 //                redirectAttrs.addFlashAttribute("error", "Functional Test already on-going.");
 //                return "redirect:/hw/item/pending";

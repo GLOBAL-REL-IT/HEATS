@@ -191,7 +191,7 @@ public class ItemDAO {
                     + "vendor_qty = ?, total_qty = ?, unit_cost = ?, total_cost = ?, status = ?, alu_hrs = ?, movement_alu_hrs = ?, min_qty = ?, "
                     + "max_qty = ?, pm_ww1 = ?, pm_ww2 = ?, expiration_date = ?, is_critical = ?, is_consumable = ?, downtime_value = ?, downtime_unit = ?, "
                     + "implementation_cost = ?, manpower_value = ?, manpower_unit = ?, complexity = ?, model = ?, manufacturer = ?, equipment_type = ?, "
-                    + "equipment_model = ?, equipment_manufacturer = ?, stress_type = ?, remarks = ?, flag = ?, modifed_by = ?, modified_date = NOW() WHERE id = ?"
+                    + "equipment_model = ?, equipment_manufacturer = ?, stress_type = ?, remarks = ?, flag = ?, modifed_by = ?, modified_date = NOW(), item_usage = ? WHERE id = ?"
             );
             ps.setString(1, hardwaredetail.getSptsPkid());
             ps.setString(2, hardwaredetail.getItemType());
@@ -242,7 +242,8 @@ public class ItemDAO {
             ps.setString(47, hardwaredetail.getRemarks());
             ps.setString(48, hardwaredetail.getFlag());
             ps.setString(49, hardwaredetail.getModifedBy());
-            ps.setString(50, hardwaredetail.getId());
+            ps.setString(50, hardwaredetail.getItemUsage());
+            ps.setString(51, hardwaredetail.getId());
             queryResult.setResult(ps.executeUpdate());
             ps.close();
         } catch (SQLException e) {
