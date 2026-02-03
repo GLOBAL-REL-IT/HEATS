@@ -142,6 +142,86 @@ public class EquipmentController {
         return "equipment/equipment";
     }
 
+    @RequestMapping(value = "/{sptsPkid}", method = {RequestMethod.GET, RequestMethod.POST})
+    public String equipmentWithSptsPkid(
+            Model model,
+            @ModelAttribute UserSession userSession,
+            //            @RequestParam(required = false) String relTestGroup,
+            @PathVariable("sptsPkid") String sptsPkid
+    ) throws IOException {
+
+        //eqptType 1 = Life ; 2 = Environment
+        //cbmsType 0 = No ; 1 = Yes
+        //Rule Life = Slot, Environment = rack (tray, basket)
+        //currentStatus 0 = Inactive ; 1 = Active
+        model.addAttribute("userEqptAdd", userSession.getEqptAdd());
+        model.addAttribute("userEqptEdit", userSession.getEqptEdit());
+        model.addAttribute("userEqptDelete", userSession.getEqptDelete());
+
+        EquipmentDAO eqptD = new EquipmentDAO();
+        Equipment eqpt = eqptD.getEquipmentBySptsPkid(sptsPkid);
+        model.addAttribute("eqpt", eqpt);
+
+        JSONObject param = new JSONObject();
+        param.put("param", "");
+        JSONArray getRelTestGroup = SPTSWebService.getEqptRelTestGroupByParam(param);
+
+        List<LinkedHashMap<String, String>> relTestGroupList = SystemUtil.jsonArrayToList(getRelTestGroup);
+        model.addAttribute("relTestGroupList", relTestGroupList);
+
+        String relTestGroupTitle = "";
+
+        if (eqpt.getRelTestGroup() == null || "".equals(eqpt.getRelTestGroup())) {
+            eqptD = new EquipmentDAO();
+            List<Equipment> eqptList = eqptD.getEquipmentListByRelTestGroupPkid("No Rel Test Group");
+            model.addAttribute("eqptList", eqptList);
+        } else {
+            String pkid = "";
+            //get pkid
+            JSONObject param1 = new JSONObject();
+            param1.put("relTestGroup", eqpt.getRelTestGroup());
+            JSONArray getItemByParam = SPTSWebService.getEqptRelTestGroupByName(param1);
+            for (int i = 0; i < getItemByParam.length(); i++) {
+                pkid = Integer.toString(getItemByParam.getJSONObject(i).getInt("pkid"));
+            }
+            eqptD = new EquipmentDAO();
+            List<Equipment> eqptList = eqptD.getEquipmentListByRelTestGroupPkid(pkid);
+            model.addAttribute("eqptList", eqptList);
+            relTestGroupTitle = " (" + eqpt.getRelTestGroup() + ")";
+        }
+        model.addAttribute("relTestGroupTitle", relTestGroupTitle);
+
+        eqptD = new EquipmentDAO();
+        List<Equipment> eqptManufacturerList = eqptD.getEqptManufacturer(eqpt.getEquipmentManufacturer());
+        model.addAttribute("eqptManufacturerList", eqptManufacturerList);
+
+        eqptD = new EquipmentDAO();
+        List<Equipment> eqptModelList = eqptD.getEqptModel(eqpt.getEquipmentModel());
+        model.addAttribute("eqptModelList", eqptModelList);
+
+        EquipmentFamilyDAO eqptFD = new EquipmentFamilyDAO();
+        List<EquipmentFamily> eqptFamilyList = eqptFD.getEquipmentFamilyList(eqpt.getFamilyName());
+        model.addAttribute("eqptFamilyList", eqptFamilyList);
+
+        EquipmentRelTestGroupDAO eqptRD = new EquipmentRelTestGroupDAO();
+        List<EquipmentRelTestGroup> eqptRelTestGroupList = eqptRD.getEquipmentRelTestGroupList(eqpt.getRelTestGroup());
+        model.addAttribute("eqptRelTestGroupList", eqptRelTestGroupList);
+
+        EquipmentTechDAO eqptTD = new EquipmentTechDAO();
+        List<EquipmentTech> eqptTechList = eqptTD.getEquipmentTechList(eqpt.getEquipTechPkid());
+        model.addAttribute("eqptTechList", eqptTechList);
+
+        EquipmentMonitoringDAO eqptMD = new EquipmentMonitoringDAO();
+        List<EquipmentMonitoring> eqptMonList = eqptMD.getEquipmentMonitoringList(eqpt.getEquipMonitoringPkid());
+        model.addAttribute("eqptMonList", eqptMonList);
+
+        EquipmentViMonitoringDAO eqptVD = new EquipmentViMonitoringDAO();
+        List<EquipmentViMonitoring> eqptViMonList = eqptVD.getEquipmentViMonitoringList(eqpt.getViMonitoringPkid());
+        model.addAttribute("eqptViMonList", eqptViMonList);
+
+        return "equipment/equipment";
+    }
+
     @RequestMapping(value = "/updateListSpts", method = {RequestMethod.GET, RequestMethod.POST}) //checking SPTS data and update to MIB DB
     public String updateListSpts(
             Model model,
@@ -567,7 +647,7 @@ public class EquipmentController {
                     QueryResult logQ = logD.insertEquipmentLog(log);
 
                     redirectAttrs.addFlashAttribute("success", "Successfully add equipment ID: " + eqptId);
-                    return "redirect:/equipment";
+                    return "redirect:/equipment/" + epqtPkid;
                 }
             } else {
                 //delete eqpt ID because failed to insert slot/tray
@@ -761,16 +841,16 @@ public class EquipmentController {
                     LOGGER.info("Failed to update local DB");
                     redirectAttrs.addFlashAttribute("error", "Fail to update equipment ID: " + eqptId + ". Pls contact system admin");
                 }
-                return "redirect:/equipment";
+                return "redirect:/equipment/" + itemPKID;
             } else {
                 LOGGER.info("Failed to update slot/tray table");
-                return "redirect:/equipment";
+                return "redirect:/equipment/" + itemPKID;
             }
         } else {
             LOGGER.info("Failed to update eqpt ID ");
 
             redirectAttrs.addFlashAttribute("error", "Fail to update equipment ID: " + eqptId + ". Pls contact system admin");
-            return "redirect:/equipment";
+            return "redirect:/equipment/" + itemPKID;
         }
 
     }

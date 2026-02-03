@@ -248,9 +248,9 @@
                                                     <label for="eqptId" class="form-label">Equipment ID</label>
                                                     <div class="input input-group">
                                                         <!--<span class="input-group-text"><i class="bi bi-person"></i></span>-->
-                                                        <input type="text" class="input form-control" id="eqptId" name="eqptId" placeholder="" value="" readonly required >
-                                                        <input type="hidden" class="form-control" id="itemPKID" name="itemPKID" placeholder="" value="" readonly>
-                                                        <input type="hidden" class="form-control" id="mibId" name="mibId" placeholder="" value="" readonly>
+                                                        <input type="text" class="input form-control" id="eqptId" name="eqptId" placeholder="" value="${eqpt.equipmentId}" readonly required >
+                                                        <input type="hidden" class="form-control" id="itemPKID" name="itemPKID" placeholder="" value="${eqpt.sptsPkid}" readonly>
+                                                        <input type="hidden" class="form-control" id="mibId" name="mibId" placeholder="" value="${eqpt.id}" readonly>
                                                         <!--<div class="valid-feedback">Looks good!</div>-->
                                                         <!--<div class="invalid-feedback">Please provide a valid zip.</div>-->
                                                     </div>
@@ -291,8 +291,8 @@
                                                         <select class="input js-example-tags" id="eqptType" name="eqptType"
                                                                 title="Select Eqpt Type" data-live-search="true" style="width: 100%" disabled onchange="toggleLinkVisibility()">
                                                             <option></option>
-                                                            <option value="1">Life</option>
-                                                            <option value="2">Environment</option>
+                                                            <option value="1" <c:if test="${eqpt.equipmentType == '1'}">selected</c:if>>Life</option>
+                                                            <option value="2" <c:if test="${eqpt.equipmentType == '2'}">selected</c:if>>Environment</option>
                                                         </select>
                                                     </div>
                                                 </div>
@@ -304,8 +304,8 @@
                                                         <select class="input js-example-tags" id="eqptStatus" name="eqptStatus"
                                                                 title="Select Eqpt Status" data-live-search="true" style="width: 100%" disabled>
                                                             <option></option>
-                                                            <option value="1">Active</option>
-                                                            <option value="0">Inactive</option>
+                                                            <option value="1" <c:if test="${eqpt.currentStatus == '1'}">selected</c:if>>Active</option>
+                                                            <option value="0" <c:if test="${eqpt.currentStatus == '0'}">selected</c:if>>Inactive</option>
                                                         </select>
                                                     </div>
                                                 </div>
@@ -385,7 +385,7 @@
                                                     <label for="eqptCapability" class="form-label">Equipment Capability</label>
                                                     <div class="input input-group">
                                                         <!--<span class="input-group-text"><i class="bi bi-envelope"></i></span>-->
-                                                        <input type="text" class="input form-control" id="eqptCapability" name="eqptCapability" placeholder="" value="" readonly>
+                                                        <input type="text" class="input form-control" id="eqptCapability" name="eqptCapability" placeholder="" value="${eqpt.equipCapability}" readonly>
                                                     </div>
                                                 </div>
                                             </div>
@@ -394,7 +394,7 @@
                                                     <label for="slotQty" class="form-label">Slot Qty</label>
                                                     <div class="input input-group">
                                                         <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
-                                                        <input type="number" class="input form-control" id="slotQty" name="slotQty" placeholder="" value="" readonly min="0">
+                                                        <input type="number" class="input form-control" id="slotQty" name="slotQty" placeholder="" value="${eqpt.slot}" readonly min="0">
                                                     </div>
                                                 </div>
                                             </div>
@@ -402,7 +402,7 @@
                                                 <div class="mb-3">
                                                     <label for="rackQty" class="form-label">Rack Total</label>
                                                     <div class="input input-group">
-                                                        <input type="number" class="input form-control" id="rackQty" name="rackQty" placeholder="" value="" readonly min="0">
+                                                        <input type="number" class="input form-control" id="rackQty" name="rackQty" placeholder="" value="${eqpt.rackTotal}" readonly min="0">
                                                     </div>
                                                 </div>
                                             </div>
@@ -410,7 +410,7 @@
                                                 <div class="mb-3">
                                                     <label for="zonePerRack" class="form-label">Zone per Rack</label>
                                                     <div class="input input-group">
-                                                        <input type="number" class="input form-control" id="zonePerRack" name="zonePerRack" placeholder="" value="" readonly min="0">
+                                                        <input type="number" class="input form-control" id="zonePerRack" name="zonePerRack" placeholder="" value="${eqpt.zonePerRack}" readonly min="0">
                                                     </div>
                                                 </div>
                                             </div>
@@ -418,7 +418,7 @@
                                                 <div class="mb-3">
                                                     <label for="trayQtyPerRack" class="form-label">Tray Qty per Rack</label>
                                                     <div class="input input-group">
-                                                        <input type="number" class="input form-control" id="trayQtyPerRack" name="trayQtyPerRack" placeholder="" value="" readonly min="0">
+                                                        <input type="number" class="input form-control" id="trayQtyPerRack" name="trayQtyPerRack" placeholder="" value="${eqpt.trayQtyPerRack}" readonly min="0">
                                                     </div>
                                                 </div>
                                             </div>
@@ -426,7 +426,7 @@
                                                 <div class="mb-3">
                                                     <label for="basketQtyPerRack" class="form-label">Crocodile Qty per Rack</label>
                                                     <div class="input input-group">
-                                                        <input type="number" class="input form-control" id="basketQtyPerRack" name="basketQtyPerRack" placeholder="" value="" readonly min="0">
+                                                        <input type="number" class="input form-control" id="basketQtyPerRack" name="basketQtyPerRack" placeholder="" value="${eqpt.basketQtyPerRack}" readonly min="0">
                                                     </div>
                                                 </div>
                                             </div>
@@ -434,7 +434,7 @@
                                                 <div class="mb-3">
                                                     <label for="trayQtyPerZone" class="form-label">Tray Qty per Zone</label>
                                                     <div class="input input-group">
-                                                        <input type="number" class="input form-control" id="trayQtyPerZone" name="trayQtyPerZone" placeholder="" value="" readonly min="0">
+                                                        <input type="number" class="input form-control" id="trayQtyPerZone" name="trayQtyPerZone" placeholder="" value="${eqpt.trayQtyPerZone}" readonly min="0">
                                                     </div>
                                                 </div>
                                             </div>
@@ -442,7 +442,7 @@
                                                 <div class="mb-3">
                                                     <label for="basketQtyPerZone" class="form-label">Crocodile Qty per Zone</label>
                                                     <div class="input input-group">
-                                                        <input type="number" class="input form-control" id="basketQtyPerZone" name="basketQtyPerZone" placeholder="" value="" readonly min="0">
+                                                        <input type="number" class="input form-control" id="basketQtyPerZone" name="basketQtyPerZone" placeholder="" value="${eqpt.basketQtyPerZone}" readonly min="0">
                                                     </div>
                                                 </div>
                                             </div>
@@ -453,8 +453,8 @@
                                                         <select class="input js-example-tags" id="cbmsType" name="cbmsType"
                                                                 title="Select Eqpt Type" data-live-search="true" style="width: 100%" disabled>
                                                             <option></option>
-                                                            <option value="1">Yes</option>
-                                                            <option value="0">No</option>
+                                                            <option value="1" <c:if test="${eqpt.cbmsType == '1'}">selected</c:if>>Yes</option>
+                                                            <option value="0" <c:if test="${eqpt.cbmsType == '0'}">selected</c:if>>No</option>
                                                         </select>
                                                     </div>
                                                 </div>
@@ -472,7 +472,7 @@
                                                     <div class="input input-group">
                                                         <span class="input input-group-text"><i class="bi bi-pencil"></i></span>
                                                         <textarea class="input form-control" id="remarks" name="remarks" placeholder="Enter Message"
-                                                                  rows="3" disabled></textarea>
+                                                                  rows="3" disabled>${eqpt.remarks}</textarea>
                                                     </div>
                                                 </div>
                                             </div>
@@ -548,6 +548,72 @@
                                                                     });
 
                                                                     $(document).ready(function () {
+                                                                        
+                                                                        //new added 3/2/26 utk redirect page guna sptsid
+                                                                        
+                                                                         var select = document.getElementById('eqptType');
+                                                                        var slotQtyDiv = document.getElementById('slotQtyDiv');
+                                                                        var rackQtyDiv = document.getElementById('rackQtyDiv');
+                                                                        var zonePerRackDiv = document.getElementById('zonePerRackDiv');
+                                                                        var trayQtyPerRackDiv = document.getElementById('trayQtyPerRackDiv');
+                                                                        var basketQtyPerRackDiv = document.getElementById('basketQtyPerRackDiv');
+                                                                        var trayQtyPerZoneDiv = document.getElementById('trayQtyPerZoneDiv');
+                                                                        var basketQtyPerZoneDiv = document.getElementById('basketQtyPerZoneDiv');
+                                                                        var slotQty = document.getElementById('slotQty');
+                                                                        var rackQty = document.getElementById('rackQty');
+                                                                        var zonePerRack = document.getElementById('zonePerRack');
+                                                                        var trayQtyPerRack = document.getElementById('trayQtyPerRack');
+                                                                        var basketQtyPerRack = document.getElementById('basketQtyPerRack');
+                                                                        var trayQtyPerZone = document.getElementById('trayQtyPerZone');
+                                                                        var basketQtyPerZone = document.getElementById('basketQtyPerZone');
+
+                                                                        if (select.value === "1") {
+                                                                            slotQtyDiv.hidden = false; // Show 
+                                                                            rackQtyDiv.hidden = true;
+                                                                            zonePerRackDiv.hidden = true;
+                                                                            trayQtyPerRackDiv.hidden = true;
+                                                                            basketQtyPerRackDiv.hidden = true;
+                                                                            trayQtyPerZoneDiv.hidden = true;
+                                                                            basketQtyPerZoneDiv.hidden = true;
+
+
+                                                                        } else if (select.value === "2") {
+                                                                            slotQtyDiv.hidden = true; // Hide
+                                                                            rackQtyDiv.hidden = false;
+                                                                            zonePerRackDiv.hidden = false;
+                                                                            trayQtyPerRackDiv.hidden = false;
+                                                                            basketQtyPerRackDiv.hidden = false;
+                                                                            trayQtyPerZoneDiv.hidden = false;
+                                                                            basketQtyPerZoneDiv.hidden = false;
+
+                                                                        } else {
+                                                                            slotQtyDiv.hidden = true; // Hide
+                                                                            rackQtyDiv.hidden = true;
+                                                                            zonePerRackDiv.hidden = true;
+                                                                            trayQtyPerRackDiv.hidden = true;
+                                                                            basketQtyPerRackDiv.hidden = true;
+                                                                            trayQtyPerZoneDiv.hidden = true;
+                                                                            basketQtyPerZoneDiv.hidden = true;
+                                                                        }
+                                                                        
+                                                                        if (zonePerRack.value === 0) {
+                                                                            trayQtyPerRack.disabled = false;
+                                                                            basketQtyPerRack.disabled = false;
+                                                                            trayQtyPerZone.disabled = true;
+                                                                            basketQtyPerZone.disabled = true;
+                                                                        } else if (zonePerRack.value > 0) {
+                                                                            trayQtyPerRack.disabled = true;
+                                                                            basketQtyPerRack.disabled = true;
+                                                                            trayQtyPerZone.disabled = false;
+                                                                            basketQtyPerZone.disabled = false;
+                                                                        } else {
+                                                                            trayQtyPerRack.disabled = false;
+                                                                            basketQtyPerRack.disabled = false;
+                                                                            trayQtyPerZone.disabled = true;
+                                                                            basketQtyPerZone.disabled = true;
+                                                                        }
+                                                                        
+                                                                        
                                                                         $('.js-example-basic-single').select2();
                                                                         $(".js-example-tags").select2({
                                                                             tags: true
@@ -674,7 +740,7 @@
                                                                                 $("#cbmsType").val(data.cbmsType).trigger('change');
                                                                                 $("#remarks").val(data.remarks);
                                                                                 
-                                                                                const zonePerRack = document.getElementById('zonePerRack');
+                                                                        const zonePerRack = document.getElementById('zonePerRack');
                                                                         const trayQtyPerRack = document.getElementById('trayQtyPerRack');
                                                                         const basketQtyPerRack = document.getElementById('basketQtyPerRack');
                                                                         const trayQtyPerZone = document.getElementById('trayQtyPerZone');
