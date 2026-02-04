@@ -10,6 +10,8 @@ public class ItemHardwareConfig {
 	private String assemblyNo;
 	private String revision;
 	private String mfgDate;
+	private String component;
+	private String event;
 	private String partNumber;
 	private String alu;
 	private String shelfTime;
@@ -79,6 +81,22 @@ public class ItemHardwareConfig {
 
 	public void setMfgDate(String mfgDate) {
 		this.mfgDate = mfgDate;
+	}
+
+	public String getComponent() {
+		return component;
+	}
+
+	public void setComponent(String component) {
+		this.component = component;
+	}
+
+	public String getEvent() {
+		return event;
+	}
+
+	public void setEvent(String event) {
+		this.event = event;
 	}
 
 	public String getPartNumber() {

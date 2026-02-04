@@ -31,7 +31,7 @@ public class ItemHardwareConfigDAO {
 		QueryResult queryResult = new QueryResult();
 		try {
 			PreparedStatement ps = conn.prepareStatement(
-				"INSERT INTO item_hardware_config (item_type, sub_type, same_item_id, supplier, assembly_no, revision, mfg_date, part_number, alu, shelf_time, created_date, created_by, flag) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?)", Statement.RETURN_GENERATED_KEYS
+				"INSERT INTO item_hardware_config (item_type, sub_type, same_item_id, supplier, assembly_no, revision, mfg_date, component, event, part_number, alu, shelf_time, created_date, created_by, flag) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)", Statement.RETURN_GENERATED_KEYS
 			);
 			ps.setString(1, itemhardwareConfig.getItemType());
 			ps.setString(2, itemhardwareConfig.getSubType());
@@ -40,12 +40,14 @@ public class ItemHardwareConfigDAO {
 			ps.setString(5, itemhardwareConfig.getAssemblyNo());
 			ps.setString(6, itemhardwareConfig.getRevision());
 			ps.setString(7, itemhardwareConfig.getMfgDate());
-			ps.setString(8, itemhardwareConfig.getPartNumber());
-			ps.setString(9, itemhardwareConfig.getAlu());
-			ps.setString(10, itemhardwareConfig.getShelfTime());
-			ps.setString(11, itemhardwareConfig.getCreatedDate());
-			ps.setString(12, itemhardwareConfig.getCreatedBy());
-			ps.setString(13, itemhardwareConfig.getFlag());
+			ps.setString(8, itemhardwareConfig.getComponent());
+			ps.setString(9, itemhardwareConfig.getEvent());
+			ps.setString(10, itemhardwareConfig.getPartNumber());
+			ps.setString(11, itemhardwareConfig.getAlu());
+			ps.setString(12, itemhardwareConfig.getShelfTime());
+			ps.setString(13, itemhardwareConfig.getCreatedDate());
+			ps.setString(14, itemhardwareConfig.getCreatedBy());
+			ps.setString(15, itemhardwareConfig.getFlag());
 			queryResult.setResult(ps.executeUpdate());
 			ResultSet rs = ps.getGeneratedKeys();
 			if (rs.next()) {
@@ -72,7 +74,7 @@ public class ItemHardwareConfigDAO {
 		QueryResult queryResult = new QueryResult();
 		try {
 			PreparedStatement ps = conn.prepareStatement(
-				"UPDATE item_hardware_config SET item_type = ?, sub_type = ?, same_item_id = ?, supplier = ?, assembly_no = ?, revision = ?, mfg_date = ?, part_number = ?, alu = ?, shelf_time = ?, created_date = ?, created_by = ?, flag = ? WHERE id = ?"
+				"UPDATE item_hardware_config SET item_type = ?, sub_type = ?, same_item_id = ?, supplier = ?, assembly_no = ?, revision = ?, mfg_date = ?, component = ?, event = ?, part_number = ?, alu = ?, shelf_time = ?, created_date = ?, created_by = ?, flag = ? WHERE id = ?"
 			);
 			ps.setString(1, itemhardwareConfig.getItemType());
 			ps.setString(2, itemhardwareConfig.getSubType());
@@ -81,13 +83,15 @@ public class ItemHardwareConfigDAO {
 			ps.setString(5, itemhardwareConfig.getAssemblyNo());
 			ps.setString(6, itemhardwareConfig.getRevision());
 			ps.setString(7, itemhardwareConfig.getMfgDate());
-			ps.setString(8, itemhardwareConfig.getPartNumber());
-			ps.setString(9, itemhardwareConfig.getAlu());
-			ps.setString(10, itemhardwareConfig.getShelfTime());
-			ps.setString(11, itemhardwareConfig.getCreatedDate());
-			ps.setString(12, itemhardwareConfig.getCreatedBy());
-			ps.setString(13, itemhardwareConfig.getFlag());
-			ps.setString(14, itemhardwareConfig.getId());
+			ps.setString(8, itemhardwareConfig.getComponent());
+			ps.setString(9, itemhardwareConfig.getEvent());
+			ps.setString(10, itemhardwareConfig.getPartNumber());
+			ps.setString(11, itemhardwareConfig.getAlu());
+			ps.setString(12, itemhardwareConfig.getShelfTime());
+			ps.setString(13, itemhardwareConfig.getCreatedDate());
+			ps.setString(14, itemhardwareConfig.getCreatedBy());
+			ps.setString(15, itemhardwareConfig.getFlag());
+			ps.setString(16, itemhardwareConfig.getId());
 			queryResult.setResult(ps.executeUpdate());
 			ps.close();
 		} catch (SQLException e) {
@@ -144,6 +148,8 @@ public class ItemHardwareConfigDAO {
 				itemhardwareConfig.setAssemblyNo(rs.getString("assembly_no"));
 				itemhardwareConfig.setRevision(rs.getString("revision"));
 				itemhardwareConfig.setMfgDate(rs.getString("mfg_date"));
+				itemhardwareConfig.setComponent(rs.getString("component"));
+				itemhardwareConfig.setEvent(rs.getString("event"));
 				itemhardwareConfig.setPartNumber(rs.getString("part_number"));
 				itemhardwareConfig.setAlu(rs.getString("alu"));
 				itemhardwareConfig.setShelfTime(rs.getString("shelf_time"));
@@ -184,6 +190,8 @@ public class ItemHardwareConfigDAO {
 				itemhardwareConfig.setAssemblyNo(rs.getString("assembly_no"));
 				itemhardwareConfig.setRevision(rs.getString("revision"));
 				itemhardwareConfig.setMfgDate(rs.getString("mfg_date"));
+				itemhardwareConfig.setComponent(rs.getString("component"));
+				itemhardwareConfig.setEvent(rs.getString("event"));
 				itemhardwareConfig.setPartNumber(rs.getString("part_number"));
 				itemhardwareConfig.setAlu(rs.getString("alu"));
 				itemhardwareConfig.setShelfTime(rs.getString("shelf_time"));
