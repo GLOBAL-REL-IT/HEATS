@@ -3398,6 +3398,7 @@ public class ItemController {
         String leakCheck = "NO";
         String psCheck = "NO";
         String winCheck = "NO";
+        String manualStatus = "Manual Test Status";
         if (itemData != null) {
             viCheck = itemData.getVi();
             bibCheck = itemData.getBibTest();
@@ -3586,6 +3587,8 @@ public class ItemController {
             pDx = new ParameterDetailsDAO();
             List<ParameterDetails> winResultData = pDx.getGroupParameterDetailList(itemdata2.getWinStatus(), "016");
             model.addAttribute("winResultData", winResultData);
+            
+            manualStatus = itemdata2.getManStatus();
         } else {
             ParameterDetailsDAO pDx = new ParameterDetailsDAO();
             List<ParameterDetails> bibResultData = pDx.getGroupParameterDetailList("", "016");
@@ -3603,7 +3606,11 @@ public class ItemController {
             List<ParameterDetails> winResultData = pDx.getGroupParameterDetailList("", "016");
             model.addAttribute("winResultData", winResultData);
         }
-
+        
+        if ("".equalsIgnoreCase(manualStatus)) {
+            manualStatus = item.getStatus();
+        }
+        model.addAttribute("manualStatus", manualStatus);
         model.addAttribute("viCheck", viCheck);
         model.addAttribute("bibCheck", bibCheck);
         model.addAttribute("manCheck", manCheck);

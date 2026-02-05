@@ -3722,7 +3722,7 @@
                                                                                 <div class="col-sm-6">
                                                                                     <label for="status" class="form-label">Status</label>
                                                                                     <div>
-                                                                                        <input type="text" class="form-control" id="labelStatus" name="labelStatus" placeholder="" value="${item.status}" readonly>
+                                                                                        <input type="text" class="form-control" id="labelStatus" name="labelStatus" placeholder="" value="${manualStatus}" readonly>
                                                                                         <input type="hidden" class="form-control" id="mibItemId" name="mibItemId" placeholder="" value="${item.id}">
                                                                                     </div>
                                                                                 </div>
