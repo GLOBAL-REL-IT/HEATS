@@ -3,6 +3,7 @@ package com.onsemi.mib.model;
 public class ItemHardwareConfig {
 
 	private String id;
+	private String sptsPkid;
 	private String itemType;
 	private String subType;
 	private String sameItemId;
@@ -25,6 +26,14 @@ public class ItemHardwareConfig {
 
 	public void setId(String id) {
 		this.id = id;
+	}
+
+	public String getSptsPkid() {
+		return sptsPkid;
+	}
+
+	public void setSptsPkid(String sptsPkid) {
+		this.sptsPkid = sptsPkid;
 	}
 
 	public String getItemType() {

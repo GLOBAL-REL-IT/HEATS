@@ -1,9 +1,10 @@
 package com.onsemi.mib.model;
 
-public class ItemHardwareLog {
+public class ItemHardwareMovement {
 
 	private String id;
 	private String mibHardwareId;
+	private String transType;
 	private String rmsEvent;
 	private String alu;
 	private String createdBy;
@@ -23,6 +24,14 @@ public class ItemHardwareLog {
 
 	public void setMibHardwareId(String mibHardwareId) {
 		this.mibHardwareId = mibHardwareId;
+	}
+
+	public String getTransType() {
+		return transType;
+	}
+
+	public void setTransType(String transType) {
+		this.transType = transType;
 	}
 
 	public String getRmsEvent() {
