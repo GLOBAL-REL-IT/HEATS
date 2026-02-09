@@ -2248,7 +2248,12 @@ public class ItemController {
         List<Item> listStressType = itemD.getItemStressType("");
         model.addAttribute("listStressType", listStressType);
 
-        return "item/item_add";
+        if (itemType == null || "".equals(itemType)) {
+            return "item/item_add1";
+        } else {
+            return "item/item_add";
+        }
+
     }
 
     @RequestMapping(value = "/item/save", method = {RequestMethod.GET, RequestMethod.POST})
@@ -3587,7 +3592,7 @@ public class ItemController {
             pDx = new ParameterDetailsDAO();
             List<ParameterDetails> winResultData = pDx.getGroupParameterDetailList(itemdata2.getWinStatus(), "016");
             model.addAttribute("winResultData", winResultData);
-            
+
             manualStatus = itemdata2.getManStatus();
         } else {
             ParameterDetailsDAO pDx = new ParameterDetailsDAO();
@@ -3606,7 +3611,7 @@ public class ItemController {
             List<ParameterDetails> winResultData = pDx.getGroupParameterDetailList("", "016");
             model.addAttribute("winResultData", winResultData);
         }
-        
+
         if ("".equalsIgnoreCase(manualStatus)) {
             manualStatus = item.getStatus();
         }
