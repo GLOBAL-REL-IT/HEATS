@@ -1286,4 +1286,59 @@ public class ItemDAO {
         return hardwaredetailList;
     }
 
+    public List<Item> getItemSubType(String subType, String itemType) {
+        String sql = "SELECT DISTINCT(it.sub_type) AS sub_type FROM item it WHERE item_type = '" + itemType + "' AND it.sub_type LIKE '%" + subType + "%' AND it.sub_type <> '' ORDER BY it.sub_type ASC";
+        List<Item> itemList = new ArrayList<Item>();
+        try {
+            PreparedStatement ps = conn.prepareStatement(sql);
+            Item itemdetail;
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                itemdetail = new Item();
+                itemdetail.setSubType(rs.getString("sub_type"));
+                itemList.add(itemdetail);
+            }
+        } catch (SQLException e) {
+            LOGGER.error(e.getMessage());
+        } finally {
+            if (conn != null) {
+                try {
+                    conn.close();
+                } catch (SQLException e) {
+                    LOGGER.error(e.getMessage());
+                }
+            }
+        }
+        return itemList;
+    }
+
+    public List<Item> getItemSubType02(String subType, String itemType) {
+        String sql = "SELECT DISTINCT(it.sub_type) AS subType, IF(sub_type=\"" + subType + "\",\"selected=''\",\"\") AS selected FROM item it WHERE item_type = '" + itemType + "' AND it.sub_type <> '' ORDER BY it.sub_type ASC";
+        LOGGER.info("apo dioooo >>>>>> "+sql);
+        List<Item> itemList = new ArrayList<Item>();
+        try {
+            PreparedStatement ps = conn.prepareStatement(sql);
+            Item itemdetail;
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                itemdetail = new Item(
+                        rs.getString("subType"),
+                        rs.getString("selected")
+                );
+                itemList.add(itemdetail);
+            }
+        } catch (SQLException e) {
+            LOGGER.error(e.getMessage());
+        } finally {
+            if (conn != null) {
+                try {
+                    conn.close();
+                } catch (SQLException e) {
+                    LOGGER.error(e.getMessage());
+                }
+            }
+        }
+        return itemList;
+    }
+
 }

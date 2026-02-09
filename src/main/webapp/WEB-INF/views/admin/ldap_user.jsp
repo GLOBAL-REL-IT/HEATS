@@ -6,11 +6,7 @@
         <link rel="stylesheet" href="${contextPath}/resources/statflow/vendor/datatables/dataTables.bs5.css">
         <link rel="stylesheet" href="${contextPath}/resources/statflow/vendor/datatables/dataTables.bs5-custom.css">
         <link rel="stylesheet" href="${contextPath}/resources/statflow/vendor/datatables/buttons/dataTables.bs5-custom.css">
-        <!-- Bootstrap Select CSS -->
         <link rel="stylesheet" href="${contextPath}/resources/statflow/vendor/bs-select/bs-select.css">
-
-<!--        <link rel="stylesheet" href="${contextPath}/resources/vendor/DataTables/customitem/dataTables.dataTables.css"/>
-<link rel="stylesheet" href="${contextPath}/resources/vendor/DataTables/customitem/bootstrap.min.css"/>-->
     </s:layout-component>
     <s:layout-component name="page_css_inline">
         <style>
@@ -28,16 +24,13 @@
                 float:none;
                 text-align:right;
             }
-
             .select2-container-active .select2-choice,
             .select2-container-active .select2-choices {
-                border: 1px solid $input-border-focus !important;
                 -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, .075), 0 0 6px #009d9b !important;
                 box-shadow: inset 0 1px 1px rgba(0, 0, 0, .075), 0 0 6px #009d9b !important;
                 -webkit-box-shadow: inset 0 1px 1px rgba(0,0,0,.075), 0 0 8px rgba(102, 175, 233, .6) !important;
                 box-shadow: inset 0 1px 1px rgba(0,0,0,.075), 0 0 8px rgba(102, 175, 233, .6) !important;
             }
-
             .select2-dropdown-open .select2-choice {
                 border-bottom: 0 !important;
                 background-image: none;
@@ -46,10 +39,8 @@
                 -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, .075), 0 0 6px #009d9b !important;
                 box-shadow: inset 0 1px 1px rgba(0, 0, 0, .075), 0 0 6px #009d9b !important;
             }
-
             .select2-dropdown-open.select2-drop-above .select2-choice,
             .select2-dropdown-open.select2-drop-above .select2-choices {
-                border: 1px solid $input-border-focus !important;
                 border-top: 0 !important;
                 background-image: none;
                 background-color: #fff;
@@ -57,43 +48,33 @@
                 -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, .075), 0 0 6px #009d9b !important;
                 box-shadow: inset 0 1px 1px rgba(0, 0, 0, .075), 0 0 6px #009d9b !important;
             }
-
             .no-border {
                 border: 0;
                 box-shadow: none;  /*You may want to include this as bootstrap applies these styles too */
             }
-
             span.tab-space {
                 padding-left:20em;
             }
-
             .move-left {
                 width: auto;
                 box-shadow: none;
             }
-
             .form-group.required .form-label:after {
                 content:"*";
                 color:red;
             }
-
             .img3 {
-                width: 55px; /* Sets a fixed width */
-                height: 18px; /* Sets a fixed height */
+                width: 55px;
+                height: 18px;
             }
-
             .pending thead th {
-                background-color: #f06a0a; /* Light blue */
-                color: #FFFFFF; /* White text for contrast */
+                background-color: #f06a0a;
+                color: #FFFFFF;
             }
-
         </style>
     </s:layout-component>
     <s:layout-component name="page_container">
-        <!-- Content wrapper start -->
         <div class="content-wrapper">
-
-            <!-- Row start -->
             <div class="row gx-4">
                 <nav class="navbar bg-body-tertiary">
                     <div class="container-fluid justify-content-start">
@@ -102,22 +83,13 @@
                     </div>
                 </nav>
             </div>
-            <!-- Row end -->
-
-            <!-- Row start -->
             <div class="row gx-4">
-
                 <div class="col-sm-12 col-12">
-
-                    <!-- Card start -->
                     <div class="card mb-4">
                         <div class="card-header">
                             <h5 class="card-title">Configuration - <span style="color:#D97D55">User Management</span></h5>
-                            <!--<h5 class="card-title">Hardware Module - <span style="color:#D97D55">New Hardware Registration</span></h5>-->
                         </div>
                         <div class="card-body">
-
-                            <!-- Row start -->
                             <div class="row gx-3">
                                 <div class="card-body">
                                     <div class="table-responsive">
@@ -156,7 +128,6 @@
                                                     </a>
                                                     <a modaldeleteid="${user.id}" title="Delete" data-bs-toggle="modal" data-bs-target="#delete_modal" class="table-link danger group_delete" onclick="modalDelete(this);">
                                                         <i class="bi bi-trash h3" style="color:red"></i>
-                                                        <!--</span>-->
                                                     </a>
                                                 </td>
                                                 </tr>
@@ -166,18 +137,12 @@
                                     </div>
                                 </div>
                             </div>
-                            <!-- Row end -->
                         </div>
                     </div>
-                    <!-- Card end -->
                 </div>
             </div>
-            <!-- Row end -->
-
         </div>
-        <!-- Content wrapper end -->
 
-        <!-- App Footer start -->
         <div class="app-footer">
             <img class="img3" src="${contextPath}/resources/onsemi logo.webp" alt="onsemi">
             <span>© HEATs 2025</span>
@@ -189,14 +154,10 @@
         <script src="${contextPath}/resources/vendor/DataTables/customitem/bootstrap.bundle.min.js"></script>
         <script src="${contextPath}/resources/vendor/DataTables/customitem/dataTables.js"></script>
 
-        <!-- Data Tables -->
         <script src="${contextPath}/resources/statflow/vendor/datatables/dataTables.min.js"></script>
         <script src="${contextPath}/resources/statflow/vendor/datatables/dataTables.bootstrap.min.js"></script>
 
-        <!-- Custom Data tables -->
         <script src="${contextPath}/resources/statflow/vendor/datatables/custom/custom-datatables.js"></script>
-
-        <!-- DataTable Buttons -->
         <script src="${contextPath}/resources/statflow/vendor/datatables/buttons/dataTables.buttons.min.js"></script>
         <script src="${contextPath}/resources/statflow/vendor/datatables/buttons/jszip.min.js"></script>
         <script src="${contextPath}/resources/statflow/vendor/datatables/buttons/dataTables.buttons.min.js"></script>
@@ -206,96 +167,92 @@
         <script src="${contextPath}/resources/statflow/vendor/datatables/buttons/buttons.print.min.js"></script>
         <script src="${contextPath}/resources/statflow/vendor/datatables/buttons/buttons.colVis.min.js"></script>
 
-        <!-- Bootstrap Select JS -->
         <script src="${contextPath}/resources/statflow/vendor/bs-select/bs-select.min.js"></script>
         <script src="${contextPath}/resources/statflow/vendor/bs-select/bs-select-custom.js"></script>
     </s:layout-component>
     <s:layout-component name="page_js_inline">
         <script>
-                                                        $(document).ready(function () {
+            $(document).ready(function () {
 
-                                                            $.fn.center = function () {
-                                                                this.css("position", "absolute");
-                                                                this.css("top", ($(window).height() - this.height()) / 2 + $(window).scrollTop() + "px");
-                                                                this.css("left", ($(window).width() - this.width()) / 2 + $(window).scrollLeft() + "px");
-                                                                return this;
-                                                            };
+                $.fn.center = function () {
+                    this.css("position", "absolute");
+                    this.css("top", ($(window).height() - this.height()) / 2 + $(window).scrollTop() + "px");
+                    this.css("left", ($(window).width() - this.width()) / 2 + $(window).scrollLeft() + "px");
+                    return this;
+                };
 
-                                                            function showBlockUI() {
-                                                                $.blockUI({
-                                                                    css: {
-                                                                        width: 'auto',
-                                                                        padding: '5px',
-                                                                        backgroundColor: '#fff',
-                                                                        '-webkit-border-radius': '10px',
-                                                                        '-moz-border-radius': '10px'
-                                                                    },
-                                                                    message: '<img src="${contextPath}/resources/private/img/loading_gedik.gif" width="100" />'
-                                                                });
-                                                                $('.blockUI.blockMsg').center();
-                                                            }
+                function showBlockUI() {
+                    $.blockUI({
+                        css: {
+                            width: 'auto',
+                            padding: '5px',
+                            backgroundColor: '#fff',
+                            '-webkit-border-radius': '10px',
+                            '-moz-border-radius': '10px'
+                        },
+                        message: '<img src="${contextPath}/resources/private/img/loading_gedik.gif" width="100" />'
+                    });
+                    $('.blockUI.blockMsg').center();
+                }
 
-                                                            function hideBlockUI() {
-                                                                $.unblockUI();
-                                                            }
+                function hideBlockUI() {
+                    $.unblockUI();
+                }
 
-                                                            function userSync(loginId) {
-                                                                var url = '${contextPath}/admin/user/sync/' + loginId;
-                                                                var data = {};
+                function userSync(loginId) {
+                    var url = '${contextPath}/admin/user/sync/' + loginId;
+                    var data = {};
 
-                                                                function success(res) {
-                                                                    hideBlockUI();
-                                                                    if (res.status) {
-                                                                        swal({
-                                                                            title: "Success",
-                                                                            text: res.statusMessage,
-                                                                            html: true,
-                                                                            type: "success",
-                                                                            showCancelButton: false,
-                                                                            closeOnConfirm: false
-                                                                        },
-                                                                                function () {
-                                                                                    window.location.reload(true);
-                                                                                });
-                                                                    } else {
-                                                                        swal('Error!', res.statusMessage, 'error');
-                                                                    }
-                                                                }
+                    function success(res) {
+                        hideBlockUI();
+                        if (res.status) {
+                            swal({
+                                title: "Success",
+                                text: res.statusMessage,
+                                html: true,
+                                type: "success",
+                                showCancelButton: false,
+                                closeOnConfirm: false
+                            },
+                                    function () {
+                                        window.location.reload(true);
+                                    });
+                        } else {
+                            swal('Error!', res.statusMessage, 'error');
+                        }
+                    }
 
-                                                                $.get(url, data, success, 'json').fail(function (res) {
-                                                                    hideBlockUI();
-                                                                    swal('Error!', JSON.stringify(res, null, 4), 'error');
-                                                                });
-                                                            }
-                                                        });
+                    $.get(url, data, success, 'json').fail(function (res) {
+                        hideBlockUI();
+                        swal('Error!', JSON.stringify(res, null, 4), 'error');
+                    });
+                }
+            });
 
 
-                                                        $(function () {
-                                                            $("#customButtons1").DataTable({
-                                                                lengthMenu: [
-                                                                    [10, 25, 50],
-                                                                    [10, 25, 50, "All"],
-                                                                ],
-                                                                language: {
-                                                                    lengthMenu: "Display _MENU_ Records Per Page",
-                                                                    info: "Showing Page _PAGE_ of _PAGES_",
-                                                                },
-                                                                dom: "Blfrtip",
-                                                                buttons: ["copy", "csv", "pdf", "print"],
-                                                            });
-                                                        });
+            $(function () {
+                $("#customButtons1").DataTable({
+                    lengthMenu: [
+                        [10, 25, 50],
+                        [10, 25, 50, "All"],
+                    ],
+                    language: {
+                        lengthMenu: "Display _MENU_ Records Per Page",
+                        info: "Showing Page _PAGE_ of _PAGES_",
+                    },
+                    dom: "Blfrtip",
+                    buttons: ["copy", "csv", "pdf", "print"],
+                });
+            });
 
-                                                        function modalDelete(e) {
-                                                            var deleteId = $(e).attr("modaldeleteid");
-                                                            var deleteInfo = $("#modal_delete_info_" + deleteId).html();
-                                                            var deleteUrl = "${contextPath}/admin/user/delete/" + deleteId;
-                                                            var deleteMsg = "<f:message key='general.label.delete.confirmation'><f:param value='" + deleteInfo + "'/></f:message>";
-                                                            $("#delete_modal .modal-body").html(deleteMsg);
-                                                            $("#modal_delete_button").attr("href", deleteUrl);
-                                                        }
-                                                        //                                                    $(document).ready(function () {
-                                                        //                                                        $('.js-example-basic-single').select2();
-                                                        //                                                    });
+            function modalDelete(e) {
+                var deleteId = $(e).attr("modaldeleteid");
+                var deleteInfo = $("#modal_delete_info_" + deleteId).html();
+                var deleteUrl = "${contextPath}/admin/user/delete/" + deleteId;
+                var deleteMsg = "<f:message key='general.label.delete.confirmation'><f:param value='" + deleteInfo + "'/></f:message>";
+                $("#delete_modal .modal-body").html(deleteMsg);
+                $("#modal_delete_button").attr("href", deleteUrl);
+            }
 
         </script>
     </s:layout-component>

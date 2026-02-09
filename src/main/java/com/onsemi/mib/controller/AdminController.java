@@ -1,8 +1,10 @@
 package com.onsemi.mib.controller;
 
+import com.google.common.base.Strings;
 import com.onsemi.mib.dao.ItemActivityConfigDAO;
 import com.onsemi.mib.dao.ItemAluConfigDAO;
 import com.onsemi.mib.dao.ItemDAO;
+import com.onsemi.mib.dao.ItemHardwareConfigDAO;
 import com.onsemi.mib.dao.LDAPUserDAO;
 import java.util.List;
 import java.util.Locale;
@@ -19,6 +21,7 @@ import com.onsemi.mib.model.EventGroup;
 import com.onsemi.mib.model.Item;
 import com.onsemi.mib.model.ItemActivityConfig;
 import com.onsemi.mib.model.ItemAluConfig;
+import com.onsemi.mib.model.ItemHardwareConfig;
 import com.onsemi.mib.model.JSONResponse;
 import com.onsemi.mib.model.LDAPUser;
 import com.onsemi.mib.model.Menu;
@@ -38,7 +41,10 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.Enumeration;
+import java.util.HashMap;
 import java.util.Hashtable;
+import java.util.Map;
+import java.util.stream.Collectors;
 import javax.naming.Context;
 import javax.naming.NamingEnumeration;
 import javax.naming.NamingException;
@@ -1344,6 +1350,222 @@ public class AdminController {
             redirectAttrs.addFlashAttribute("error", messageSource.getMessage("Failed to delete the selected Item Type. Please try again.", args, locale));
         }
         return "redirect:/admin/aluConfig";
+    }
+
+    @RequestMapping(value = "/hw", method = {RequestMethod.GET, RequestMethod.POST})
+    public String hardware(
+            Model model,
+            @ModelAttribute UserSession userSession) throws IOException {
+
+        LOGGER.info("SINI MASUK DEKAT FUNCTION HARDWARE ID CONFIG LIST PAGE");
+        ItemHardwareConfigDAO itemdao = new ItemHardwareConfigDAO();
+        List<ItemHardwareConfig> itemList = itemdao.getItemHardwareConfigList();
+        model.addAttribute("itemList", itemList);
+
+        return "admin/hw_id_list";
+    }
+
+    @RequestMapping(value = "/hw/add", method = {RequestMethod.GET, RequestMethod.POST})
+    public String addhardware(
+            Model model,
+            @RequestParam(required = false) String loginId) {
+
+        ParameterDetailsDAO pD = new ParameterDetailsDAO();
+        List<ParameterDetails> paramItemType = pD.getGroupParameterDetailList("", "002");
+        model.addAttribute("itemTypeList", paramItemType);
+
+        return "admin/hw_id_add";
+    }
+
+    @RequestMapping(value = "/hw/save", method = {RequestMethod.GET, RequestMethod.POST})
+    public String hwAddSave(
+            Model model,
+            Locale locale,
+            RedirectAttributes redirectAttrs,
+            @ModelAttribute UserSession userSession,
+            @RequestParam(required = false) String itemType,
+            @RequestParam(required = false) String subType,
+            @RequestParam(required = false) String itemId,
+            @RequestParam(required = false) String supplier,
+            @RequestParam(required = false) String assemblyno,
+            @RequestParam(required = false) String revision,
+            @RequestParam(required = false) String mfgdate,
+            @RequestParam(required = false) String component,
+            @RequestParam(required = false) String event,
+            @RequestParam(required = false) String partnumber,
+            @RequestParam(required = false) String alu,
+            @RequestParam(required = false) String shelf) {
+
+        itemId = onToYesNo(itemId);
+        supplier = onToYesNo(supplier);
+        assemblyno = onToYesNo(assemblyno);
+        revision = onToYesNo(revision);
+        mfgdate = onToYesNo(mfgdate);
+        component = onToYesNo(component);
+        event = onToYesNo(event);
+        partnumber = onToYesNo(partnumber);
+        alu = onToYesNo(alu);
+        shelf = onToYesNo(shelf);
+
+        ItemHardwareConfigDAO itemdao = new ItemHardwareConfigDAO();
+        ItemHardwareConfig item = itemdao.getConfigItem(itemType, subType);
+        if (item != null) {
+            redirectAttrs.addFlashAttribute("error", messageSource.getMessage("admin.label.hardware.exist", args, locale));
+            return "redirect:/admin/hw/add";
+        } else {
+            item = new ItemHardwareConfig();
+            item.setItemType(itemType);
+            item.setSubType(subType);
+            item.setSameItemId(itemId);
+            item.setSupplier(supplier);
+            item.setAssemblyNo(assemblyno);
+            item.setRevision(revision);
+            item.setMfgDate(mfgdate);
+            item.setComponent(component);
+            item.setEvent(event);
+            item.setPartNumber(partnumber);
+            item.setAlu(alu);
+            item.setShelfTime(shelf);
+            // PLEASE NOTE THAT THERE WILL BE ADDED COLUMN, PLEASE HARDCODE THEM HERE IF ANY
+            item.setSptsPkid("0");
+            item.setCreatedBy(userSession.getLoginId());
+            item.setFlag("1");
+
+            itemdao = new ItemHardwareConfigDAO();
+            QueryResult queryResult = itemdao.insertItemHardwareConfig(item);
+
+            if (!"0".equals(queryResult.getGeneratedKey())) {
+                redirectAttrs.addFlashAttribute("success", messageSource.getMessage("admin.label.hardware.success", args, locale));
+                return "redirect:/admin/hw";
+            } else {
+                redirectAttrs.addFlashAttribute("error", messageSource.getMessage("admin.label.hardware.error", args, locale));
+                return "redirect:/admin/hw/add";
+            }
+        }
+    }
+
+    private static String onToYesNo(String s) {
+        return (s != null && "on".equalsIgnoreCase(s.trim())) ? "Yes" : "No";
+    }
+
+    @RequestMapping(value = "/hw/ajaxSample/{itemType}", method = {RequestMethod.GET, RequestMethod.POST})
+    @ResponseBody
+    public List<Map<String, String>> ajaxSample(
+            @ModelAttribute UserSession userSession,
+            Model model,
+            HttpServletRequest request,
+            @PathVariable("itemType") String itemType) {
+
+        ItemDAO item = new ItemDAO();
+        List<Item> itemList = item.getItemSubType("", itemType);
+
+        return itemList.stream().map(itm -> {
+            Map<String, String> m = new HashMap<>();
+            m.put("id", Strings.nullToEmpty(itm.getId()));
+            m.put("text", Strings.nullToEmpty(itm.getSubType()));
+            m.put("value", Strings.nullToEmpty(itm.getSubType()));
+            return m;
+        }).collect(Collectors.toList());
+    }
+
+    @RequestMapping(value = "/hw/edit/{userId}", method = {RequestMethod.GET, RequestMethod.POST})
+    public String hwConfigEdit(
+            Model model,
+            @ModelAttribute UserSession userSession,
+            @PathVariable("userId") String configId) {
+
+        ItemHardwareConfigDAO itemdao = new ItemHardwareConfigDAO();
+        ItemHardwareConfig item = itemdao.getItemHardwareConfig(configId);
+        model.addAttribute("itemdata", item);
+
+        ParameterDetailsDAO pD = new ParameterDetailsDAO();
+        List<ParameterDetails> paramItemType = pD.getGroupParameterDetailList(item.getItemType(), "002");
+        model.addAttribute("itemTypeList", paramItemType);
+
+        ItemDAO items = new ItemDAO();
+        List<Item> itemList = items.getItemSubType02(item.getSubType(), item.getItemType());
+        model.addAttribute("subTypeList", itemList);
+
+        return "admin/hw_id_edit";
+    }
+
+    @RequestMapping(value = "/hw/update", method = {RequestMethod.GET, RequestMethod.POST})
+    public String hwAddUpdate(
+            Model model,
+            Locale locale,
+            RedirectAttributes redirectAttrs,
+            @ModelAttribute UserSession userSession,
+            @RequestParam(required = false) String id,
+            @RequestParam(required = false) String spts_pkid,
+            @RequestParam(required = false) String itemType,
+            @RequestParam(required = false) String subType,
+            @RequestParam(required = false) String itemId,
+            @RequestParam(required = false) String supplier,
+            @RequestParam(required = false) String assemblyno,
+            @RequestParam(required = false) String revision,
+            @RequestParam(required = false) String mfgdate,
+            @RequestParam(required = false) String component,
+            @RequestParam(required = false) String event,
+            @RequestParam(required = false) String partnumber,
+            @RequestParam(required = false) String alu,
+            @RequestParam(required = false) String shelf) {
+
+        itemId = onToYesNo(itemId);
+        supplier = onToYesNo(supplier);
+        assemblyno = onToYesNo(assemblyno);
+        revision = onToYesNo(revision);
+        mfgdate = onToYesNo(mfgdate);
+        component = onToYesNo(component);
+        event = onToYesNo(event);
+        partnumber = onToYesNo(partnumber);
+        alu = onToYesNo(alu);
+        shelf = onToYesNo(shelf);
+
+        ItemHardwareConfig itemupdate = new ItemHardwareConfig();
+        itemupdate.setId(id);
+        itemupdate.setSptsPkid(spts_pkid);
+        itemupdate.setItemType(itemType);
+        itemupdate.setSubType(subType);
+        itemupdate.setSameItemId(itemId);
+        itemupdate.setSupplier(supplier);
+        itemupdate.setAssemblyNo(assemblyno);
+        itemupdate.setRevision(revision);
+        itemupdate.setMfgDate(mfgdate);
+        itemupdate.setComponent(component);
+        itemupdate.setEvent(event);
+        itemupdate.setPartNumber(partnumber);
+        itemupdate.setAlu(alu);
+        itemupdate.setShelfTime(shelf);
+        itemupdate.setUpdatedBy(userSession.getLoginId());
+        itemupdate.setFlag("1");
+        
+        ItemHardwareConfigDAO itemdao = new ItemHardwareConfigDAO();
+        QueryResult qr = itemdao.updateItemHardwareConfig(itemupdate);
+        
+        if (qr.getResult() > 0) {
+            redirectAttrs.addFlashAttribute("success", messageSource.getMessage("admin.label.hardware.update.success", args, locale));
+        } else {
+            redirectAttrs.addFlashAttribute("error", messageSource.getMessage("admin.label.hardware.update.error", args, locale));
+        }
+
+        return "redirect:/admin/hw";
+    }
+
+    @RequestMapping(value = "/hw/delete/{hwid}", method = {RequestMethod.GET, RequestMethod.POST})
+    public String hwConfigDelete(
+            Model model,
+            Locale locale,
+            RedirectAttributes redirectAttrs,
+            @PathVariable("hwid") String hwid) {
+
+        ItemHardwareConfigDAO itemdao = new ItemHardwareConfigDAO();
+        QueryResult queryResult = itemdao.deleteItemHardwareConfig(hwid);
+        if (queryResult.getResult() == 1) {
+            redirectAttrs.addFlashAttribute("success", messageSource.getMessage("admin.label.hardware.delete.success", args, locale));
+        } else {
+            redirectAttrs.addFlashAttribute("error", messageSource.getMessage("admin.label.hardware.delete.error", args, locale));
+        }
+        return "redirect:/admin/hw";
     }
 
 }

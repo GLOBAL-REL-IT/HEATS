@@ -63,11 +63,18 @@ public class Item {
     private String selected;
 
     private String vmId;
+    
+    public Item() { }
+    
+    public Item(String subType, String selected) {
+        this.subType = subType;
+        this.selected = selected;
+    }
 
     public String getVmId() {
         return vmId;
     }
-
+    
     public void setVmId(String vmId) {
         this.vmId = vmId;
     }
