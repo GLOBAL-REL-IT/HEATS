@@ -3790,34 +3790,37 @@
                                             <!-- Row start -->
                                             <div class="row gx-4">
                                                 <div class="mb-3 container-fluid justify-content-start">
-                                                    <!--<button class="btn btn-outline-success me-2" type="button">Pending Registration (BIB/ Bib Card)</button>-->
-                                                <c:if test="${userItemHwAdd == 'Yes'}"><a href="" class="btn btn-outline-success me-2" role="button">
-                                                        <i class='bi bi-plus-circle'></i>&nbsp;&nbsp;New Hardware ID</a></c:if>
-                                                </div>
-                                                <div class="table-responsive">
-                                                    <table id="listHardware" class="table custom-table pending">
-                                                        <thead>
-                                                            <tr>
-                                                                <th>Site</th>
-                                                                <th>Hardware ID</th>
-                                                                <th>ALU</th>
-                                                                <th>MFG Date</th>
-                                                                <th>RMS_Event</th>
-                                                                <th>Status</th>
-                                                            </tr>
-                                                        </thead>
-                                                        <tbody>
-                                                        </tbody>
-                                                    </table>
-                                                </div>
+                                                <c:if test="${userItemHwAdd == 'Yes'}">
+                                                    <a class="btn btn-outline-success me-2" role="button" onclick="createHardwareID()"><i class='bi bi-plus-circle'></i>&nbsp;&nbsp;New Hardware ID</a>
+                                                    <!--<a id="btnNewHWID" class="btn btn-outline-success me-2" data-bs-toggle="offcanvas" data-bs-target="#offcanvasBottom" aria-controls="offcanvasBottom"><i class='bi bi-plus-circle'></i>&nbsp;&nbsp;New Hardware ID-->
+                                                    </a>
+                                                    <input type="hidden" name="hwconfig" id="hwconfig" value="${item.activityId}">
+                                                </c:if>
                                             </div>
-                                            <!-- Row end -->
+                                            <div class="table-responsive">
+                                                <table id="listHardware" class="table custom-table pending">
+                                                    <thead>
+                                                        <tr>
+                                                            <th>Site</th>
+                                                            <th>Hardware ID</th>
+                                                            <th>ALU</th>
+                                                            <th>MFG Date</th>
+                                                            <th>RMS_Event</th>
+                                                            <th>Status</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                    </tbody>
+                                                </table>
+                                            </div>
                                         </div>
-                                        <!--end dive for second tab-->
-                                        <div class="tab-pane fade" id="threeAAA" role="tabpanel">
-                                            <!-- Row start -->
-                                            <div class="row gx-4">
-                                                <div class="mb-3 container-fluid justify-content-start">
+                                        <!-- Row end -->
+                                    </div>
+                                    <!--end dive for second tab-->
+                                    <div class="tab-pane fade" id="threeAAA" role="tabpanel">
+                                        <!-- Row start -->
+                                        <div class="row gx-4">
+                                            <div class="mb-3 container-fluid justify-content-start">
                                                 <c:if test="${userItemMovement == 'Yes'}"><button onclick="goToPage();" class="btn btn-outline-success me-2">
                                                         <i class='bi bi-plus-circle'></i>&nbsp;&nbsp;New Movement</button></c:if>
                                                 </div>
@@ -3886,6 +3889,27 @@
 
         </div>
         <!-- Content wrapper end -->
+
+        <div class="offcanvas-placeholder">
+            <div class="offcanvas offcanvas-bottom" tabindex="-1" id="offcanvasBottom" aria-labelledby="offcanvasBottomLabel">
+                <div class="offcanvas-header">
+                    <h5 class="offcanvas-title" id="offcanvasBottomLabel">Create Hardware ID</h5>
+                    <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+                </div>
+                <div class="offcanvas-body">
+                    <input type="input" class="form-control" id="hui" name="hui" value="${item.sptsPkid}">
+                    <input type="input" name="name" value="-">
+                    <div class="col-xl-2 col-sm-12 col-12">
+                        <div class="mb-3">
+                            <label for="otherQty" class="form-label">Other Qty</label>
+                            <div class="input input-group">
+                                <input type="text" class="input form-control" id="otherQty" name="otherQty" value="${item.otherQty}">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
 
         <!-- App Footer start -->
         <div class="app-footer">
@@ -4017,13 +4041,13 @@
 //                                                        var deleteUrl = "${contextPath}/hw/delete/" + deleteId;
                                                         if (itemPKID) {
                                                             var deleteUrl = "${contextPath}/hw/item/delete/" + itemPKID + "/" + mibId;
-                                                            var deleteMsg = "Are you sure want to scrap "+itemId+"?";
+                                                            var deleteMsg = "Are you sure want to scrap " + itemId + "?";
                                                             $("#delete_modal .modal-body").html(deleteMsg);
                                                             $("#modal_delete_button").attr("href", deleteUrl);
                                                         } else {
                                                             var deleteUrl = "";
                                                             var deleteMsg = "No Item Selected.";
-                                                          $("#delete_modal .modal-body").html(deleteMsg);
+                                                            $("#delete_modal .modal-body").html(deleteMsg);
                                                             $("#modal_delete_button").attr("href", deleteUrl);
                                                         }
                                                     }
@@ -4033,6 +4057,20 @@
                                                             var itemPKID = $("#itemPKID").val();
                                                             var Url = "${contextPath}/hw/item/transaction/" + itemPKID;
                                                             window.location.href = Url;
+                                                        } else {
+                                                            alert("No Item Selected.")
+                                                        }
+                                                    }
+                                                    function createHardwareID() {
+                                                        if ($("#itemPKID").val()) {
+                                                            if ($("#hwconfig").val()) {
+                                                                var itemPKID = $("#itemPKID").val();
+                                                                var itemType = $("#itemType2").val();
+                                                                var Url = "${contextPath}/hw/hardware/" + itemPKID + "/"+itemType;
+                                                                window.location.href = Url;
+                                                            } else {
+                                                                alert("No Hardware ID Configuration");
+                                                            }
                                                         } else {
                                                             alert("No Item Selected.")
                                                         }
@@ -4122,8 +4160,9 @@
                                                                 $("#totalQty").val(data.totalQty);
                                                                 $("#remarks").val(data.remarks);
                                                                 $("#itemUsage").val(data.itemUsage);
+                                                                $("#hwconfig").val(data.activityId);
                                                                 $("#stressType").val(data.stressType).trigger('change');
-
+                                                                
 //                                                                     const data001 = data.assemblyId;
 //                                                            const myDropdown = document.getElementById("assemblyId");
 //                                                            alert(myDropdown.value);
@@ -4240,6 +4279,22 @@
                                                             $("#modal_button").attr("href", deleteUrl);
                                                         }
 
+                                                    });
+
+                                                    document.getElementById('btnNewHWID').addEventListener('click', function (e) {
+                                                        if (!$("#itemPKID").val()) {
+                                                            e.preventDefault();  // stops data API from triggering show
+                                                            e.stopPropagation(); // belt & suspenders
+                                                            alert("No Item Selected.");
+                                                        }
+                                                    });
+
+                                                    // (Optional) Keep show.bs.offcanvas clean (no alert) if you use the click for alert
+                                                    document.getElementById('offcanvasBottom').addEventListener('show.bs.offcanvas', function (e) {
+                                                        if (!$("#itemPKID").val()) {
+                                                            e.preventDefault();
+                                                            // No alert here to avoid double prompts
+                                                        }
                                                     });
     </script>
 </s:layout-component>

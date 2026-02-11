@@ -596,6 +596,97 @@ public class ItemDAO {
         return hardwaredetail;
     }
 
+    public Item getHardwareByPkid(String pkid) {
+        String sql = "SELECT it.id, it.spts_pkid, it.item_type, it.sub_type, it.item_id, it.item_name, it.assembly_id, it.rack, it.shelf, " +
+                        "it.on_hand_qty, it.production_staging_qty, it.production_qty, it.repair_qty, it.other_qty, it.quarantine_qty, " +
+                        "it.external_clean_qty, it.external_reclean_qty, it.internal_clean_qty, it.internal_reclean_qty, it.storage_factory_qty, " +
+                        "it.other_onsemi_qty, it.vendor_qty, it.total_qty, it.unit_cost, it.total_cost, it.status, it.alu_hrs, it.movement_alu_hrs, " +
+                        "it.min_qty, it.max_qty, it.pm_ww1, it.pm_ww2, DATE_FORMAT(expiration_date,'%d-%M-%Y') AS expiration_date, it.is_critical, " +
+                        "it.is_consumable, it.downtime_value, it.downtime_unit, it.implementation_cost, it.manpower_value, it.manpower_unit, " +
+                        "it.complexity, it.model, it.manufacturer, it.equipment_type, it.equipment_model, it.equipment_manufacturer, " +
+                        "it.stress_type, it.remarks, it.flag, it.created_by, it.created_date, it.modifed_by, it.modified_date, it.item_usage, " +
+                        "cf.item_type AS config FROM item it " +
+                        "LEFT JOIN item_hardware_config cf ON it.item_type = cf.item_type AND it.sub_type = cf.sub_type " +
+                        "WHERE it.spts_pkid = '" + pkid + "'";
+        LOGGER.info("SINI MASUK KE AMIK DATA ITEM");
+        Item hardwaredetail = null;
+        try {
+            PreparedStatement ps = conn.prepareStatement(sql);
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                hardwaredetail = new Item();
+                hardwaredetail.setId(rs.getString("id"));
+                hardwaredetail.setSptsPkid(rs.getString("spts_pkid"));
+                hardwaredetail.setItemType(rs.getString("item_type"));
+                hardwaredetail.setSubType(rs.getString("sub_type"));
+                hardwaredetail.setItemId(rs.getString("item_id"));
+                hardwaredetail.setItemName(rs.getString("item_name"));
+                hardwaredetail.setAssemblyId(rs.getString("assembly_id"));
+                hardwaredetail.setRack(rs.getString("rack"));
+                hardwaredetail.setShelf(rs.getString("shelf"));
+                hardwaredetail.setOnHandQty(rs.getString("on_hand_qty"));
+                hardwaredetail.setProductionStagingQty(rs.getString("production_staging_qty"));
+                hardwaredetail.setProductionQty(rs.getString("production_qty"));
+                hardwaredetail.setRepairQty(rs.getString("repair_qty"));
+                hardwaredetail.setOtherQty(rs.getString("other_qty"));
+                hardwaredetail.setQuarantineQty(rs.getString("quarantine_qty"));
+                hardwaredetail.setExternalCleanQty(rs.getString("external_clean_qty"));
+                hardwaredetail.setExternalRecleanQty(rs.getString("external_reclean_qty"));
+                hardwaredetail.setInternalCleanQty(rs.getString("internal_clean_qty"));
+                hardwaredetail.setInternalRecleanQty(rs.getString("internal_reclean_qty"));
+                hardwaredetail.setStorageFactoryQty(rs.getString("storage_factory_qty"));
+                hardwaredetail.setOtherOnsemiQty(rs.getString("other_onsemi_qty"));
+                hardwaredetail.setVendorQty(rs.getString("vendor_qty"));
+                hardwaredetail.setTotalQty(rs.getString("total_qty"));
+                hardwaredetail.setUnitCost(rs.getString("unit_cost"));
+                hardwaredetail.setTotalCost(rs.getString("total_cost"));
+                hardwaredetail.setStatus(rs.getString("status"));
+                hardwaredetail.setAluHrs(rs.getString("alu_hrs"));
+                hardwaredetail.setMovementAluHrs(rs.getString("movement_alu_hrs"));
+                hardwaredetail.setMinQty(rs.getString("min_qty"));
+                hardwaredetail.setMaxQty(rs.getString("max_qty"));
+                hardwaredetail.setPmWw1(rs.getString("pm_ww1"));
+                hardwaredetail.setPmWw2(rs.getString("pm_ww2"));
+                hardwaredetail.setExpirationDate(rs.getString("expiration_date"));
+                hardwaredetail.setIsCritical(rs.getString("is_critical"));
+                hardwaredetail.setIsConsumable(rs.getString("is_consumable"));
+                hardwaredetail.setDowntimeValue(rs.getString("downtime_value"));
+                hardwaredetail.setDowntimeUnit(rs.getString("downtime_unit"));
+                hardwaredetail.setImplementationCost(rs.getString("implementation_cost"));
+                hardwaredetail.setManpowerValue(rs.getString("manpower_value"));
+                hardwaredetail.setManpowerUnit(rs.getString("manpower_unit"));
+                hardwaredetail.setComplexity(rs.getString("complexity"));
+                hardwaredetail.setModel(rs.getString("model"));
+                hardwaredetail.setManufacturer(rs.getString("manufacturer"));
+                hardwaredetail.setEquipmentType(rs.getString("equipment_type"));
+                hardwaredetail.setEquipmentModel(rs.getString("equipment_model"));
+                hardwaredetail.setEquipmentManufacturer(rs.getString("equipment_manufacturer"));
+                hardwaredetail.setStressType(rs.getString("stress_type"));
+                hardwaredetail.setRemarks(rs.getString("remarks"));
+                hardwaredetail.setFlag(rs.getString("flag"));
+                hardwaredetail.setCreatedBy(rs.getString("created_by"));
+                hardwaredetail.setCreatedDate(rs.getString("created_date"));
+                hardwaredetail.setModifedBy(rs.getString("modifed_by"));
+                hardwaredetail.setModifiedDate(rs.getString("modified_date"));
+                hardwaredetail.setItemUsage(rs.getString("item_usage"));
+                hardwaredetail.setActivityId(rs.getString("config"));
+            }
+            rs.close();
+            ps.close();
+        } catch (SQLException e) {
+            LOGGER.error(e.getMessage());
+        } finally {
+            if (conn != null) {
+                try {
+                    conn.close();
+                } catch (SQLException e) {
+                    LOGGER.error(e.getMessage());
+                }
+            }
+        }
+        return hardwaredetail;
+    }
+
     public List<Item> getHardwareDetailList() {
         String sql = "SELECT * FROM item ORDER BY id ASC";
         List<Item> hardwaredetailList = new ArrayList<Item>();

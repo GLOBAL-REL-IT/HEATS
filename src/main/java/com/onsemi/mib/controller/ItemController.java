@@ -11,6 +11,7 @@ import com.onsemi.mib.dao.HostnameDAO;
 import com.onsemi.mib.dao.ItemActivityConfigDAO;
 import com.onsemi.mib.dao.ItemAluConfigDAO;
 import com.onsemi.mib.dao.ItemFunctionalTestDAO;
+import com.onsemi.mib.dao.ItemHardwareConfigDAO;
 import com.onsemi.mib.dao.ItemLogDAO;
 import com.onsemi.mib.dao.ItemMaverickDAO;
 import com.onsemi.mib.dao.ItemRecallDAO;
@@ -30,6 +31,7 @@ import com.onsemi.mib.model.HimsInventory;
 import com.onsemi.mib.model.Hostname;
 import com.onsemi.mib.model.ItemActivityConfig;
 import com.onsemi.mib.model.ItemFunctionalTest;
+import com.onsemi.mib.model.ItemHardwareConfig;
 import com.onsemi.mib.model.ItemLog;
 import com.onsemi.mib.model.ItemMaverick;
 import com.onsemi.mib.model.ItemRecall;
@@ -193,7 +195,8 @@ public class ItemController {
         String itemTypeTitle = "";
 
         ItemDAO itemD = new ItemDAO();
-        Item item = itemD.getHardwareDetailByPkid(itemPkid);
+//        Item item = itemD.getHardwareDetailByPkid(itemPkid);
+        Item item = itemD.getHardwareByPkid(itemPkid);
         model.addAttribute("item", item);
 
         itemType = item.getItemType();
@@ -870,7 +873,8 @@ public class ItemController {
 
         //set to model
         ItemDAO hwD = new ItemDAO();
-        Item hw = hwD.getHardwareDetailByPkid(pkID);
+//        Item hw = hwD.getHardwareDetailByPkid(pkID);
+        Item hw = hwD.getHardwareByPkid(pkID);
 
         //add transaction to DB
         JSONObject params2 = new JSONObject();
@@ -6064,6 +6068,75 @@ public class ItemController {
         Request request = reqD.getRequestWithFtpAndInventory(reqId);
 
         return new ModelAndView("barcodeStickerPdf", "request", request);
+    }
+    
+    @RequestMapping(value = "/hardware/{sptsPkid}/{itemType}", method = RequestMethod.GET)
+    public String hardwareAdd(
+            Model model,
+            @ModelAttribute UserSession userSession,
+            @PathVariable("sptsPkid") String sptsId,
+            @PathVariable("itemType") String itemType) throws IOException {
+        
+        ItemDAO itemdao = new ItemDAO();
+        Item item = itemdao.getHardwareDetailByPkid(sptsId);
+        model.addAttribute("item", item);
+        model.addAttribute("sptsId", sptsId);
+        
+        ItemHardwareConfigDAO itemhwdao = new ItemHardwareConfigDAO();
+        ItemHardwareConfig itemconfig = itemhwdao.getConfigItem(item.getItemType(), item.getSubType());
+        
+        if (itemconfig == null || "".equals(itemconfig)) {
+            model.addAttribute("maklumatconfig", "");
+        } else {
+            model.addAttribute("maklumatconfig", itemconfig);
+            model.addAttribute("config", item.getComplexity());
+        }
+        
+        return "item/create_hardware_id";
+    }
+    
+    @RequestMapping(value = "/item/hardware/create", method = {RequestMethod.GET, RequestMethod.POST})
+    public String hwCreate(
+            Model model,
+            Locale locale,
+            RedirectAttributes redirectAttrs,
+            @ModelAttribute UserSession userSession,
+            @RequestParam(required = false) String itemType,
+            @RequestParam(required = false) String subType,
+            @RequestParam(required = false) String itemId,
+            @RequestParam(required = false) String itemName,
+            @RequestParam(required = false) String sameItemId,
+            @RequestParam(required = false) String supplier,
+            @RequestParam(required = false) String assemblyNo,
+            @RequestParam(required = false) String revision,
+            @RequestParam(required = false) String mfgDate,
+            @RequestParam(required = false) String component,
+            @RequestParam(required = false) String event,
+            @RequestParam(required = false) String partNo,
+            @RequestParam(required = false) String alu,
+            @RequestParam(required = false) String shelfTime,
+            @RequestParam(required = false) String runningNumber) {
+        
+        LOGGER.info("SINI MASUK FUNCTION UNTUK HARDWARE ID CREATION FOR ALL THE ITEM HARDWARE SELECTED");
+        LOGGER.info("itemType       >>>> "+itemType);
+        LOGGER.info("subType        >>>> "+subType);
+        LOGGER.info("itemId         >>>> "+itemId);
+        LOGGER.info("itemName       >>>> "+itemName);
+        LOGGER.info("sameItemId     >>>> "+sameItemId);
+        LOGGER.info("supplier       >>>> "+supplier);
+        LOGGER.info("assemblyNo     >>>> "+assemblyNo);
+        LOGGER.info("revision       >>>> "+revision);
+        LOGGER.info("mfgDate        >>>> "+mfgDate);
+        LOGGER.info("component      >>>> "+component);
+        LOGGER.info("event          >>>> "+event);
+        LOGGER.info("partNo         >>>> "+partNo);
+        LOGGER.info("alu            >>>> "+alu);
+        LOGGER.info("shelfTime      >>>> "+shelfTime);
+        LOGGER.info("runningNumber  >>>> "+runningNumber);
+
+        redirectAttrs.addFlashAttribute("success", messageSource.getMessage("admin.label.hardware.create.success", args, locale));
+//        redirectAttrs.addFlashAttribute("error", messageSource.getMessage("admin.label.hardware.create.error", args, locale));
+        return "redirect:/hw/item2/"+itemType;
     }
 
 }
