@@ -12,6 +12,7 @@ import com.onsemi.mib.dao.ItemActivityConfigDAO;
 import com.onsemi.mib.dao.ItemAluConfigDAO;
 import com.onsemi.mib.dao.ItemFunctionalTestDAO;
 import com.onsemi.mib.dao.ItemHardwareConfigDAO;
+import com.onsemi.mib.dao.ItemHardwareDAO;
 import com.onsemi.mib.dao.ItemLogDAO;
 import com.onsemi.mib.dao.ItemMaverickDAO;
 import com.onsemi.mib.dao.ItemRecallDAO;
@@ -31,6 +32,7 @@ import com.onsemi.mib.model.HimsInventory;
 import com.onsemi.mib.model.Hostname;
 import com.onsemi.mib.model.ItemActivityConfig;
 import com.onsemi.mib.model.ItemFunctionalTest;
+import com.onsemi.mib.model.ItemHardware;
 import com.onsemi.mib.model.ItemHardwareConfig;
 import com.onsemi.mib.model.ItemLog;
 import com.onsemi.mib.model.ItemMaverick;
@@ -63,6 +65,7 @@ import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Locale;
+import java.util.StringJoiner;
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletResponse;
 import org.json.JSONArray;
@@ -1205,19 +1208,23 @@ public class ItemController {
             @RequestParam(required = false) String itemPKID
     ) throws IOException {
 
-        ItemDAO item = new ItemDAO();
-        List<Item> itemList = item.getDataTest(itemPKID);
+//        ItemDAO item = new ItemDAO();
+//        List<Item> itemList = item.getDataTest(itemPKID);
+        
+        ItemHardwareDAO itemdao = new ItemHardwareDAO();
+        List<ItemHardware> itemList = itemdao.getItemHwListByItemId(itemPKID);
 
         JSONArray jsonArray = new JSONArray();
-        for (Item itm : itemList) {
+        for (ItemHardware itm : itemList) {
             JSONObject jsonObject = new JSONObject();
             jsonObject.put("id", Strings.nullToEmpty(itm.getId()));
-            jsonObject.put("item_id", Strings.nullToEmpty(itm.getItemId()));
-            jsonObject.put("item_name", Strings.nullToEmpty(itm.getItemName()));
-            jsonObject.put("item_type", Strings.nullToEmpty(itm.getItemType()));
-            jsonObject.put("assembly_id", Strings.nullToEmpty(itm.getAssemblyId()));
-            jsonObject.put("spts_id", Strings.nullToEmpty(itm.getSptsPkid()));
-            jsonObject.put("aluhrs", Strings.nullToEmpty(itm.getAluHrs()));
+            jsonObject.put("mib_item_id", Strings.nullToEmpty(itm.getMibItemId()));
+            jsonObject.put("hardware_id", Strings.nullToEmpty(itm.getHardwareId()));
+            jsonObject.put("alu", Strings.nullToEmpty(itm.getAlu()));
+            jsonObject.put("shelf_time", Strings.nullToEmpty(itm.getShelfTime()));
+            jsonObject.put("status", Strings.nullToEmpty(itm.getStatus()));
+            jsonObject.put("rms_event", Strings.nullToEmpty(itm.getRmsEvent()));
+            jsonObject.put("flag", Strings.nullToEmpty(itm.getFlag()));
             jsonArray.put(jsonObject);
         }
 
@@ -6074,38 +6081,38 @@ public class ItemController {
 
         return new ModelAndView("barcodeStickerPdf", "request", request);
     }
-    
+
     @RequestMapping(value = "/hardware/{sptsPkid}/{itemType}", method = RequestMethod.GET)
     public String hardwareAdd(
             Model model,
             @ModelAttribute UserSession userSession,
             @PathVariable("sptsPkid") String sptsId,
             @PathVariable("itemType") String itemType) throws IOException {
-        
+
         ItemDAO itemdao = new ItemDAO();
         Item item = itemdao.getHardwareDetailByPkid(sptsId);
         model.addAttribute("item", item);
         model.addAttribute("sptsId", sptsId);
-        
+
         ItemHardwareConfigDAO itemhwdao = new ItemHardwareConfigDAO();
         ItemHardwareConfig itemconfig = itemhwdao.getConfigItem(item.getItemType(), item.getSubType());
-        
+
         if (itemconfig == null || "".equals(itemconfig)) {
             model.addAttribute("maklumatconfig", "");
         } else {
             model.addAttribute("maklumatconfig", itemconfig);
-            model.addAttribute("config", item.getComplexity());
         }
-        
+
         return "item/create_hardware_id";
     }
-    
+
     @RequestMapping(value = "/item/hardware/create", method = {RequestMethod.GET, RequestMethod.POST})
     public String hwCreate(
             Model model,
             Locale locale,
             RedirectAttributes redirectAttrs,
             @ModelAttribute UserSession userSession,
+            @RequestParam(required = false) String sptsId,
             @RequestParam(required = false) String itemType,
             @RequestParam(required = false) String subType,
             @RequestParam(required = false) String itemId,
@@ -6115,33 +6122,73 @@ public class ItemController {
             @RequestParam(required = false) String assemblyNo,
             @RequestParam(required = false) String revision,
             @RequestParam(required = false) String mfgDate,
+            @RequestParam(required = false) String viewMessage,
             @RequestParam(required = false) String component,
-            @RequestParam(required = false) String event,
+            @RequestParam(required = false) String eventStress,
             @RequestParam(required = false) String partNo,
             @RequestParam(required = false) String alu,
             @RequestParam(required = false) String shelfTime,
             @RequestParam(required = false) String runningNumber) {
-        
-        LOGGER.info("SINI MASUK FUNCTION UNTUK HARDWARE ID CREATION FOR ALL THE ITEM HARDWARE SELECTED");
-        LOGGER.info("itemType       >>>> "+itemType);
-        LOGGER.info("subType        >>>> "+subType);
-        LOGGER.info("itemId         >>>> "+itemId);
-        LOGGER.info("itemName       >>>> "+itemName);
-        LOGGER.info("sameItemId     >>>> "+sameItemId);
-        LOGGER.info("supplier       >>>> "+supplier);
-        LOGGER.info("assemblyNo     >>>> "+assemblyNo);
-        LOGGER.info("revision       >>>> "+revision);
-        LOGGER.info("mfgDate        >>>> "+mfgDate);
-        LOGGER.info("component      >>>> "+component);
-        LOGGER.info("event          >>>> "+event);
-        LOGGER.info("partNo         >>>> "+partNo);
-        LOGGER.info("alu            >>>> "+alu);
-        LOGGER.info("shelfTime      >>>> "+shelfTime);
-        LOGGER.info("runningNumber  >>>> "+runningNumber);
 
-        redirectAttrs.addFlashAttribute("success", messageSource.getMessage("admin.label.hardware.create.success", args, locale));
-//        redirectAttrs.addFlashAttribute("error", messageSource.getMessage("admin.label.hardware.create.error", args, locale));
-        return "redirect:/hw/item2/"+itemType;
+
+        ItemHardwareConfigDAO itemdao = new ItemHardwareConfigDAO();
+        ItemHardwareConfig itemconfig = itemdao.getConfigItem(itemType, subType);
+        
+        ItemDAO dao1 = new ItemDAO();
+        String mibItemId = dao1.getMibItemIdBySptsPkId(sptsId);
+        
+        ItemHardware itemhardware = new ItemHardware();
+        itemhardware.setMibItemId(mibItemId);
+//        itemhardware.setSptsPkid(sptsId);
+        itemhardware.setStatus("Pending Verification");
+        itemhardware.setCreatedBy(userSession.getLoginId());
+        itemhardware.setFlag("0");
+
+        if (itemconfig == null || "".equals(itemconfig)) {
+            redirectAttrs.addFlashAttribute("error", messageSource.getMessage("admin.label.hardware.create.error", args, locale));
+        } else {
+            String maklumatterakhir = "";
+            if (itemconfig.getSameItemId().equals("Yes")) {
+                LOGGER.info("SINI CREATE DIA SAHAJA");
+                LOGGER.info("CHECK KALAU DA CREATE, TAKKAN CREATE LAGI SEKALI");
+            } else {
+                StringJoiner sj = new StringJoiner("-");
+                addIfYes(sj, itemconfig.getSupplier(), supplier);
+                addIfYes(sj, itemconfig.getAssemblyNo(), assemblyNo);
+                addIfYes(sj, itemconfig.getRevision(), revision);
+                addIfYes(sj, itemconfig.getMfgDate(), viewMessage);
+                addIfYes(sj, itemconfig.getComponent(), component);
+                addIfYes(sj, itemconfig.getEvent(), eventStress);
+                addIfYes(sj, itemconfig.getPartNumber(), partNo);
+                maklumatterakhir = sj.toString();
+                
+                // FUNCTION UNTUK DAPATKAN EXISTING DATA DLU, THEN ASSIGN DLM exist
+                
+                int exist = 0;
+                // assign dekat sini
+                int n = Integer.parseInt(runningNumber);
+                
+                int start = exist + 1;
+                int end = exist + n;
+                
+                for(int i=start; i<=end; i++) {
+                    String larian = String.format("%03d",i);
+                    LOGGER.info("KITA TENGOK DATA DEKAT DALAM NI >>> "+maklumatterakhir+"-"+larian);
+                    itemhardware.setHardwareId(maklumatterakhir+"-"+larian);
+                    ItemHardwareDAO dao2 = new ItemHardwareDAO();
+                    QueryResult q = dao2.insertHardwareID(itemhardware);
+                }
+            }
+            redirectAttrs.addFlashAttribute("success", messageSource.getMessage("admin.label.hardware.create.success", args, locale));
+        }
+
+        return "redirect:/hw/" + sptsId;
+    }
+
+    private static void addIfYes(StringJoiner sj, String flag, String value) {
+        if ("Yes".equalsIgnoreCase(flag) && value != null) {
+            sj.add(value.trim());
+        }
     }
 
 }

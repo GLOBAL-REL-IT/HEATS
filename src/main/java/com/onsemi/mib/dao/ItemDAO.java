@@ -1078,7 +1078,7 @@ public class ItemDAO {
     }
 
     public List<Item> getDataTest(String id) {
-        String sql = "SELECT * FROM item WHERE id = '" + id + "'";
+        String sql = "SELECT * FROM item WHERE spts_pkid = '" + id + "'";
         List<Item> itemList = new ArrayList<Item>();
         try {
             PreparedStatement ps = conn.prepareStatement(sql);
@@ -1116,6 +1116,30 @@ public class ItemDAO {
             }
         }
         return itemList;
+    }
+    
+    public String getMibItemIdBySptsPkId(String sptsId) {
+        String count = null;
+        try {
+            PreparedStatement ps = conn.prepareStatement("SELECT id FROM item WHERE spts_pkid = '" + sptsId + "'");
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                count = rs.getString("id");
+            }
+            rs.close();
+            ps.close();
+        } catch (SQLException e) {
+            LOGGER.error(e.getMessage());
+        } finally {
+            if (conn != null) {
+                try {
+                    conn.close();
+                } catch (SQLException e) {
+                    LOGGER.error(e.getMessage());
+                }
+            }
+        }
+        return count;
     }
 
     public List<Item> getItemAssemblyId(String assemblyId) {

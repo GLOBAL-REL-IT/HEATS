@@ -3801,12 +3801,12 @@
                                                 <table id="listHardware" class="table custom-table pending">
                                                     <thead>
                                                         <tr>
-                                                            <th>Site</th>
                                                             <th>Hardware ID</th>
                                                             <th>ALU</th>
-                                                            <th>MFG Date</th>
-                                                            <th>RMS_Event</th>
+                                                            <th>Shelf Time</th>
                                                             <th>Status</th>
+                                                            <th>RMS_Event</th>
+                                                            <th>Flag</th>
                                                         </tr>
                                                     </thead>
                                                     <tbody>
@@ -4215,20 +4215,27 @@
 
                                                     function ajaxListHardware() {
                                                         var itemPKID = $("#itemPKID").val();
+                                                        var mibItemId = $("#mibId").val();
                                                         $('#listHardware').DataTable().destroy();
                                                         new DataTable('#listHardware', {
                                                             ajax: {
-                                                                data: {itemPKID: itemPKID},
+                                                                data: {itemPKID: mibItemId},
                                                                 url: '${contextPath}/hw/item/ajaxHtmlSampleHardware',
                                                                 dataSrc: ''
                                                             },
                                                             columns: [
-                                                                {data: 'item_id'},
-                                                                {data: 'item_name'},
-                                                                {data: 'item_type'},
-                                                                {data: 'assembly_id'},
-                                                                {data: 'spts_id'},
-                                                                {data: 'aluhrs'},
+//                                                                {data: 'item_id'},
+//                                                                {data: 'item_name'},
+//                                                                {data: 'item_type'},
+//                                                                {data: 'assembly_id'},
+//                                                                {data: 'spts_id'},
+//                                                                {data: 'aluhrs'},
+                                                                {data: 'hardware_id'},
+                                                                {data: 'alu'},
+                                                                {data: 'shelf_time'},
+                                                                {data: 'status'},
+                                                                {data: 'rms_event'},
+                                                                {data: 'flag'},
                                                             ]
                                                         });
                                                     }
