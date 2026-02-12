@@ -187,7 +187,7 @@
                                               data-bs-target="#staticBackdrop" aria-controls="staticBackdrop" onclick="getData(this);">
                                                 <i class="bi bi-list-ol h3"></i>
                                             </a>
-                                            <a href="${contextPath}/hw/item/add2/${parameterMaster.id}" class="table-link" title="Manage">
+                                            <a href="${contextPath}/rmsbookingDetail/detail/${parameterMaster.id}" class="table-link" title="Manage">
                                                 <i class="bi bi-box-arrow-in-right h3"></i>
                                             </a>
                                     </td>
@@ -394,7 +394,7 @@
                                             <label for="model" class="form-label">Priority</label>
                                             <div class="input input-group">
                                                 <select class="input input-group" id="priority" name="priority" style="width: 100%">
-                                                    <option></option>
+                                                    <!--<option></option>-->
                                                     <c:forEach items="${priorityList}" var="invInner">
                                                         <option value="${invInner.name}" ${invInner.selected}>${invInner.name}</option>
                                                     </c:forEach>

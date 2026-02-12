@@ -236,7 +236,7 @@
                                             <label for="model" class="form-label">Priority</label>
                                             <div class="input input-group">
                                                 <select class="input input-group" id="priority" name="priority" style="width: 100%">
-                                                    <option></option>
+                                                    <!--<option></option>-->
                                                     <c:forEach items="${priorityList}" var="invInner">
                                                         <option value="${invInner.name}" ${invInner.selected}>${invInner.name}</option>
                                                     </c:forEach>

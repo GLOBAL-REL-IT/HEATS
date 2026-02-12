@@ -119,7 +119,7 @@
                                             <div class="input input-group">
                                                 <input type="hidden" class="form-control" id="id" name="id" placeholder="" value="${rms.id}">
                                                 <input type="hidden" class="form-control" id="bookingPkid" name="bookingPkid" placeholder="" value="${rms.bookingPkid}">
-                                                <input type="text" class="form-control" id="rmsNo" name="rmsNo" placeholder="" value="${rms.rmsNo}">
+                                                <input type="text" class="form-control" id="rmsNo" name="rmsNo" placeholder="" value="${rms.rmsNo}" readonly>
                                             </div>
                                         </div>
                                     </div>
@@ -127,7 +127,7 @@
                                         <div class="mb-1">
                                             <label for="itemId" class="form-label">Event</label>
                                             <div class="input input-group">
-                                                <input type="text" class="form-control" id="event" name="event" placeholder="" value="${rms.event}">
+                                                <input type="text" class="form-control" id="event" name="event" placeholder="" value="${rms.event}" readonly>
                                             </div>
                                         </div>
                                     </div>
@@ -135,7 +135,7 @@
                                         <div class="mb-1">
                                             <label for="itemId" class="form-label">Device</label>
                                             <div class="input input-group">
-                                                <input type="text" class="form-control" id="device" name="device" placeholder="" value="${rms.device}">
+                                                <input type="text" class="form-control" id="device" name="device" placeholder="" value="${rms.device}" readonly>
                                             </div>
                                         </div>
                                     </div>
@@ -143,7 +143,7 @@
                                         <div class="mb-1">
                                             <label for="itemId" class="form-label">Package</label>
                                             <div class="input input-group">
-                                                <input type="text" class="form-control" id="packages" name="packages" placeholder="" value="${rms.packages}">
+                                                <input type="text" class="form-control" id="packages" name="packages" placeholder="" value="${rms.packages}" readonly>
                                             </div>
                                         </div>
                                     </div>
@@ -151,7 +151,7 @@
                                         <div class="mb-1">
                                             <label for="itemId" class="form-label">Actual Start Date</label>
                                             <div class="input input-group">
-                                                <input type="text" class="form-control" id="actStartDate" name="actStartDate" placeholder="" value="${rms.actStartDate}">
+                                                <input type="text" class="form-control" id="actStartDate" name="actStartDate" placeholder="" value="${rms.actStartDate}" readonly>
                                             </div>
                                         </div>
                                     </div>
@@ -159,7 +159,7 @@
                                         <div class="mb-1">
                                             <label for="itemId" class="form-label">RMS Status</label>
                                             <div class="input input-group">
-                                                <input type="text" class="form-control" id="rmsStatus" name="rmsStatus" placeholder="" value="${rms.rmsStatus}">
+                                                <input type="text" class="form-control" id="rmsStatus" name="rmsStatus" placeholder="" value="${rms.rmsStatus}" readonly>
                                             </div>
                                         </div>
                                     </div>
@@ -167,7 +167,7 @@
                                         <div class="mb-1">
                                             <label for="itemId" class="form-label">Equipment Location</label>
                                             <div class="input input-group">
-                                                <input type="text" class="form-control" id="equipmentLocation" name="equipmentLocation" placeholder="" value="${rms.equipmentLocation}">
+                                                <input type="text" class="form-control" id="equipmentLocation" name="equipmentLocation" placeholder="" value="${rms.equipmentLocation}" readonly>
                                             </div>
                                         </div>
                                     </div>
@@ -175,7 +175,7 @@
                                         <div class="mb-1">
                                             <label for="itemId" class="form-label">Est Event Start Date</label>
                                             <div class="input input-group">
-                                                <input type="text" class="form-control" id="eventStartDate" name="eventStartDate" placeholder="" value="${rms.eventStartDate}">
+                                                <input type="text" class="form-control" id="eventStartDate" name="eventStartDate" placeholder="" value="${rms.eventStartDate}" readonly>
                                             </div>
                                         </div>
                                     </div>
@@ -183,7 +183,7 @@
                                         <div class="mb-1">
                                             <label for="itemId" class="form-label">Days to Event Start</label>
                                             <div class="input input-group">
-                                                <input type="text" class="form-control" id="daysToEventStart" name="daysToEventStart" placeholder="" value="${rms.daysToEventStart}">
+                                                <input type="text" class="form-control" id="daysToEventStart" name="daysToEventStart" placeholder="" value="${rms.daysToEventStart}" readonly>
                                             </div>
                                         </div>
                                     </div>
@@ -191,7 +191,7 @@
                                         <div class="mb-1">
                                             <label for="itemId" class="form-label">Status</label>
                                             <div class="input input-group">
-                                                <input type="text" class="form-control" id="itemId" name="itemId" placeholder="" value="${rms.status}">
+                                                <input type="text" class="form-control" id="itemId" name="itemId" placeholder="" value="${rms.status}" readonly>
                                             </div>
                                         </div>
                                     </div>
@@ -199,7 +199,7 @@
                                         <div class="mb-1">
                                             <label for="itemId" class="form-label">Priority</label>
                                             <div class="input input-group">
-                                                <input type="text" class="form-control" id="itemId" name="itemId" placeholder="" value="${rms.priority}">
+                                                <input type="text" class="form-control" id="itemId" name="itemId" placeholder="" value="${rms.priority}" readonly>
                                             </div>
                                         </div>
                                     </div>
@@ -210,7 +210,7 @@
                                         <div class="mb-1">
                                             <label for="itemId" class="form-label">Priority Remarks</label>
                                             <div class="input input-group">
-                                                <textarea class="form-control" rows="5" id="remarks" name="remarks">${rms.priorityRemarks}</textarea>
+                                                <textarea class="form-control" rows="5" id="remarks" name="remarks" readonly>${rms.priorityRemarks}</textarea>
                                             </div>
                                         </div>
                                     </div>
@@ -218,7 +218,7 @@
                                         <div class="mb-1">
                                             <label for="itemId" class="form-label">FOL filename</label>
                                             <div class="input input-group">
-                                                <textarea class="form-control" rows="5" id="remarks" name="remarks">${rms.folFilename}</textarea>
+                                                <textarea class="form-control" rows="5" id="remarks" name="remarks" readonly>${rms.folFilename}</textarea>
                                             </div>
                                         </div>
                                     </div>
