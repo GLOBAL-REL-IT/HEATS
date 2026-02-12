@@ -1004,7 +1004,7 @@ public class SPTSRequestXML {
                 + "</soap:Envelope>";
         return xmlString;
     }
-    
+
     public static String getEqptByPkid(JSONObject params) throws IOException {
         String paramsXmlString = "";
         for (Iterator iterator = params.keySet().iterator(); iterator.hasNext();) {
@@ -1022,7 +1022,7 @@ public class SPTSRequestXML {
                 + "</soap:Envelope>";
         return xmlString;
     }
-    
+
     public static String insertGlobalRelTestGroup(JSONObject params) throws IOException {
         String paramsXmlString = "";
         for (Iterator iterator = params.keySet().iterator(); iterator.hasNext();) {
@@ -1068,7 +1068,7 @@ public class SPTSRequestXML {
                 + "</soap:Envelope>";
         return xmlString;
     }
-    
+
     public static String getGlobalRelTestGroupByParam(JSONObject params) throws IOException {
         String paramsXmlString = "";
         for (Iterator iterator = params.keySet().iterator(); iterator.hasNext();) {
@@ -1086,7 +1086,7 @@ public class SPTSRequestXML {
                 + "</soap:Envelope>";
         return xmlString;
     }
-    
+
     public static String insertGlobalFamilyName(JSONObject params) throws IOException {
         String paramsXmlString = "";
         for (Iterator iterator = params.keySet().iterator(); iterator.hasNext();) {
@@ -1132,7 +1132,7 @@ public class SPTSRequestXML {
                 + "</soap:Envelope>";
         return xmlString;
     }
-    
+
     public static String getGlobalFamilyNameByParam(JSONObject params) throws IOException {
         String paramsXmlString = "";
         for (Iterator iterator = params.keySet().iterator(); iterator.hasNext();) {
@@ -1150,4 +1150,59 @@ public class SPTSRequestXML {
                 + "</soap:Envelope>";
         return xmlString;
     }
+
+    public static String getBookingDetailByPKID(int pkID) throws IOException {
+        String xmlString = "<?xml version=\"1.0\" encoding=\"utf-8\"?>"
+                + "<soap:Envelope xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\" xmlns:soap=\"http://schemas.xmlsoap.org/soap/envelope/\">"
+                + "<soap:Body>"
+                + "<BookingDetail_GetByBookingPKID  xmlns=\"http://tempuri.org/\">"
+                + "<bookingPKID>" + pkID + "</bookingPKID>"
+                + "</BookingDetail_GetByBookingPKID>"
+                + "</soap:Body>"
+                + "</soap:Envelope>";
+        return xmlString;
+    }
+
+    public static String getBookedEquipment(JSONObject params) throws IOException {
+        String paramsXmlString = "";
+        for (Iterator iterator = params.keySet().iterator(); iterator.hasNext();) {
+            String key = (String) iterator.next();
+            String value = params.get(key).toString();
+            paramsXmlString += "<" + key + ">" + value + "</" + key + ">";
+        }
+        String xmlString = "<?xml version=\"1.0\" encoding=\"utf-8\"?>"
+                + "<soap:Envelope xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\" xmlns:soap=\"http://schemas.xmlsoap.org/soap/envelope/\">"
+                + "<soap:Body>"
+                + "<GetBookedEquipment xmlns=\"http://tempuri.org/\">"
+                + paramsXmlString
+                + "</GetBookedEquipment>"
+                + "</soap:Body>"
+                + "</soap:Envelope>";
+        return xmlString;
+    }
+
+    public static String getBookedEqptFOLFiles(boolean noFtp) throws IOException {
+        String xmlString = "<?xml version=\"1.0\" encoding=\"utf-8\"?>"
+                + "<soap:Envelope xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\" xmlns:soap=\"http://schemas.xmlsoap.org/soap/envelope/\">"
+                + "<soap:Body>"
+                + "<GetBookedEquipmentFOLFiles  xmlns=\"http://tempuri.org/\">"
+                + "<noFTP>" + noFtp + "</noFTP>"
+                + "</GetBookedEquipmentFOLFiles>"
+                + "</soap:Body>"
+                + "</soap:Envelope>";
+        return xmlString;
+    }
+
+    public static String getBookingByPKID(int pkID) throws IOException {
+        String xmlString = "<?xml version=\"1.0\" encoding=\"utf-8\"?>"
+                + "<soap:Envelope xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\" xmlns:soap=\"http://schemas.xmlsoap.org/soap/envelope/\">"
+                + "<soap:Body>"
+                + "<Booking_GetByPKID xmlns=\"http://tempuri.org/\">"
+                + "<pkid>" + pkID + "</pkid>"
+                + "</Booking_GetByPKID>"
+                + "</soap:Body>"
+                + "</soap:Envelope>";
+        return xmlString;
+    }
+
 }
