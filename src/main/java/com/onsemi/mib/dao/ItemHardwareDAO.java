@@ -273,5 +273,33 @@ public class ItemHardwareDAO {
         }
         return itemhardwareList;
     }
+    
+    public String getLatestHardwareID(String mibItemId, String hardwareId) {
+        String data = "";
+        try {
+            PreparedStatement ps = conn.prepareStatement("SELECT MAX(hardware_id) as data FROM item_hardware WHERE mib_item_id = '"+mibItemId+"' AND hardware_id LIKE '"+hardwareId+"%'");
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                data = rs.getString("data");
+                if (data != null) {
+                    data = data.substring(data.length() - 3);
+                }
+            }
+            rs.close();
+            ps.close();
+        } catch (SQLException e) {
+            LOGGER.error(e.getMessage());
+        } finally {
+            if (conn != null) {
+                try {
+                    conn.close();
+                } catch (SQLException e) {
+                    LOGGER.error(e.getMessage());
+                }
+            }
+        }
+        
+        return data;
+    }
 
 }

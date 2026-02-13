@@ -28,11 +28,9 @@
                 float:none;
                 text-align:right;
             }
-
             .select2-dropdown.select2-dropdown--below{
                 /*width: 148px !important;*/
             }
-
             .select2-container--default .select2-selection--single{
                 border: 1.5px solid #000;
                 border-radius: 0.5rem;
@@ -40,37 +38,29 @@
                 outline: none;
                 transition: ease 0.25s;
             }
-
             .no-border {
                 border: 0;
                 box-shadow: none;  /*You may want to include this as bootstrap applies these styles too */
             }
-
             span.tab-space {
                 padding-left:20em;
             }
-
             .move-left {
                 width: auto;
                 box-shadow: none;
             }
-
             .form-group.required .form-label:after {
                 content:"*";
                 color:red;
             }
-
             .img3 {
                 width: 55px; /* Sets a fixed width */
                 height: 18px; /* Sets a fixed height */
             }
-
             .pending thead th {
                 background-color: #f06a0a; /* Light blue */
                 color: #FFFFFF; /* White text for contrast */
             }
-
-
             .input {
                 /*max-width: 190px;*/
                 /*padding: 0.875rem;*/
@@ -81,12 +71,9 @@
                 outline: none;
                 transition: ease 0.25s;
             }
-
             .input:focus {
                 box-shadow: 5.5px 7px 0 black;
             }
-
-
         </style>
     </s:layout-component>
     <s:layout-component name="page_container">

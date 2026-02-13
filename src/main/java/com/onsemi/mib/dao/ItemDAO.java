@@ -606,9 +606,8 @@ public class ItemDAO {
                         "it.complexity, it.model, it.manufacturer, it.equipment_type, it.equipment_model, it.equipment_manufacturer, " +
                         "it.stress_type, it.remarks, it.flag, it.created_by, it.created_date, it.modifed_by, it.modified_date, it.item_usage, " +
                         "cf.item_type AS config FROM item it " +
-                        "LEFT JOIN item_hardware_config cf ON it.item_type = cf.item_type AND it.sub_type = cf.sub_type " +
+                        "LEFT JOIN item_hardware_config cf ON it.item_type = cf.item_type AND IFNULL(it.sub_type, '') = cf.sub_type " +
                         "WHERE it.spts_pkid = '" + pkid + "'";
-        LOGGER.info("SINI MASUK KE AMIK DATA ITEM");
         Item hardwaredetail = null;
         try {
             PreparedStatement ps = conn.prepareStatement(sql);

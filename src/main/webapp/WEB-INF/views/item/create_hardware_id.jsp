@@ -132,7 +132,7 @@
                                                     </div>
                                                 </div>
                                             </c:if>
-                                            <c:if test="${hardwareconfig.alu == 'Yes'}">
+                                            <c:if test="${hardwareconfig.alu == 'YesA'}">  <!-- LETAK NI SEBAB TAK NAK DIA KELUAR BUAT MASA SEKARANG 20260213 -->
                                                 <div class="col-sm-8 col-12">
                                                     <div class="mb-3">
                                                         <label class="form-label" for="alu">ALU?<span class="text-danger"> *</span></label>
@@ -140,7 +140,7 @@
                                                     </div>
                                                 </div>
                                             </c:if>
-                                            <c:if test="${hardwareconfig.shelfTime == 'Yes'}">
+                                            <c:if test="${hardwareconfig.shelfTime == 'YesA'}">  <!-- LETAK NI SEBAB TAK NAK DIA KELUAR BUAT MASA SEKARANG 20260213 -->
                                                 <div class="col-sm-8 col-12">
                                                     <div class="mb-3">
                                                         <label class="form-label" for="shelfTime">Shelf Time?<span class="text-danger"> *</span></label>
@@ -148,12 +148,14 @@
                                                     </div>
                                                 </div>
                                             </c:if>
-                                            <div class="col-sm-8 col-12">
-                                                <div class="mb-3">
-                                                    <label class="form-label" for="runningNumber">Running Number<span class="text-danger"> *</span></label>
-                                                    <input type="number" class="form-control" id="runningNumber" name="runningNumber" min="1" step="1" placeholder="Key in running number">
+                                            <c:if test="${hardwareconfig.sameItemId == 'No'}">
+                                                <div class="col-sm-8 col-12">
+                                                    <div class="mb-3">
+                                                        <label class="form-label" for="runningNumber">Running Number<span class="text-danger"> *</span></label>
+                                                        <input type="number" class="form-control" id="runningNumber" name="runningNumber" min="1" step="1" placeholder="Key in running number">
+                                                    </div>
                                                 </div>
-                                            </div>
+                                            </c:if>
                                         </div>
                                         <div class="col-sm-6 col-12" hidden>
                                             <label class="form-label">Preview</label>
@@ -168,9 +170,20 @@
                                     <button hidden id="btnDownload" class="btn btn-outline-secondary" disabled>Download TXT</button>
                                 </div>
 
-                                <div class="d-flex gap-2 justify-content-end">
-                                    <button type="button" class="btn btn-light" onclick="window.location.href='${contextPath}/hw/${sptsId}'">Cancel</button>
-                                    <button type="submit" class="btn btn-primary">Submit</button>
+                                <div class="d-flex gap-2 justify-content-between">
+                                    <c:choose>
+                                        <c:when test="${hardwareconfig.sameItemId eq 'No' and hardwareconfig.supplier eq 'No'
+                                                    and hardwareconfig.assemblyNo eq 'No' and hardwareconfig.revision eq 'No'
+                                                    and hardwareconfig.mfgDate eq 'No' and hardwareconfig.component eq 'No'
+                                                    and hardwareconfig.event eq 'No' and hardwareconfig.partNumber eq 'No' }">
+                                            <button type="button" class="btn btn-light" onclick="window.location.href='${contextPath}/hw/${sptsId}'">Back</button>
+                                        </c:when>
+                                        <c:otherwise>
+                                            <button type="button" class="btn btn-light" onclick="window.location.href='${contextPath}/hw/${sptsId}'">Back</button>
+                                            <button type="submit" class="btn btn-primary">Submit</button>
+                                        </c:otherwise>
+                                    </c:choose>
+                                    
                                 </div>
                             </div>
                         </form>

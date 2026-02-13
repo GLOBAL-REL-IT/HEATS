@@ -6095,7 +6095,8 @@ public class ItemController {
         model.addAttribute("sptsId", sptsId);
 
         ItemHardwareConfigDAO itemhwdao = new ItemHardwareConfigDAO();
-        ItemHardwareConfig itemconfig = itemhwdao.getConfigItem(item.getItemType(), item.getSubType());
+        String subtype = item.getSubType() == null ? "" : item.getSubType();
+        ItemHardwareConfig itemconfig = itemhwdao.getConfigItem(item.getItemType(), subtype);
 
         if (itemconfig == null || "".equals(itemconfig)) {
             model.addAttribute("maklumatconfig", "");
@@ -6163,9 +6164,10 @@ public class ItemController {
                 maklumatterakhir = sj.toString();
                 
                 // FUNCTION UNTUK DAPATKAN EXISTING DATA DLU, THEN ASSIGN DLM exist
+                ItemHardwareDAO itemdao1 = new ItemHardwareDAO();
+                String check1 = itemdao1.getLatestHardwareID(mibItemId, maklumatterakhir);
                 
-                int exist = 0;
-                // assign dekat sini
+                int exist = (check1 == null || check1.isEmpty()) ? 0 : Integer.parseInt(check1);
                 int n = Integer.parseInt(runningNumber);
                 
                 int start = exist + 1;
