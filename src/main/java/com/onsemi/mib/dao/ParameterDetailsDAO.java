@@ -358,6 +358,75 @@ public class ParameterDetailsDAO {
         return parameterDetailList;
     }
 
+    public List<ParameterDetails> getGroupParameterDetailListForPriorityBooking(String name, String masterCode) {
+        String sql = "SELECT id, master_code AS masterCode, detail_code AS detailCode, name AS name, IF(name=\"" + name + "\",\"selected=''\",\"\") AS selected FROM parameter_details "
+                + "Where name NOT IN (SELECT rm1.priority FROM rms_booking_detail rm1 WHERE rm1.flag = '0') AND master_code = '" + masterCode + "' ORDER BY detailCode";
+        List<ParameterDetails> parameterDetailList = new ArrayList<ParameterDetails>();
+        try {
+            PreparedStatement ps = conn.prepareStatement(sql);
+            ParameterDetails parameterDetails;
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                parameterDetails = new ParameterDetails(
+                        rs.getString("id"),
+                        rs.getString("masterCode"),
+                        rs.getString("detailCode"),
+                        rs.getString("name"),
+                        rs.getString("selected")
+                );
+                parameterDetailList.add(parameterDetails);
+            }
+        } catch (SQLException e) {
+            LOGGER.error(e.getMessage());
+        } finally {
+            if (conn != null) {
+                try {
+                    conn.close();
+                } catch (SQLException e) {
+                    LOGGER.error(e.getMessage());
+                }
+            }
+        }
+        return parameterDetailList;
+    }
+
+    public List<ParameterDetails> getGroupParameterDetailListForPriorityBooking2(String name, String masterCode) {
+        String sql = "SELECT id, master_code AS masterCode, detail_code AS detailCode, name AS name, "
+                + "IF(name=\"" + name + "\",\"selected=''\",\"\") AS selected, "
+                + "IF(name IN (SELECT rm1.priority FROM rms_booking_detail rm1 WHERE rm1.flag = '0'),\"disabled\",\"\") AS disabled, "
+                + "FROM parameter_details "
+                + "Where master_code = '" + masterCode + "' ORDER BY detailCode";
+        List<ParameterDetails> parameterDetailsList = new ArrayList<ParameterDetails>();
+        try {
+            PreparedStatement ps = conn.prepareStatement(sql);
+            ParameterDetails parameterDetails;
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                parameterDetails = new ParameterDetails();
+                parameterDetails.setId(rs.getString("id"));
+                parameterDetails.setMasterCode(rs.getString("masterCode"));
+                parameterDetails.setDetailCode(rs.getString("detailCode"));
+                parameterDetails.setName(rs.getString("name"));
+                parameterDetails.setSelected(rs.getString("selected"));
+                parameterDetails.setDisabled(rs.getString("disabled"));
+                parameterDetailsList.add(parameterDetails);
+            }
+            rs.close();
+            ps.close();
+        } catch (SQLException e) {
+            LOGGER.error(e.getMessage());
+        } finally {
+            if (conn != null) {
+                try {
+                    conn.close();
+                } catch (SQLException e) {
+                    LOGGER.error(e.getMessage());
+                }
+            }
+        }
+        return parameterDetailsList;
+    }
+
     public Integer getCountMasterCodeAndName(String masterCode, String name) {
         Integer count = null;
         try {

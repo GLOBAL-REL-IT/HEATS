@@ -107,6 +107,13 @@ public class SPTSWebService {
     private static final String GETGLOBALFAMILYNAMEALL = "http://tempuri.org/GetGlobalEquipmentFamilyNameAll";
     private static final String GETGLOBALFAMILYNAMEBYPARAM = "http://tempuri.org/GetGlobalEquipmentFamilyNameDetailsByParam";
 
+    //CBMS
+    private static final String CBMS_WEB_SERVICE_URL = "http://mysed-rel-app02/CBMSServer/CBMSService.asmx";
+    private static final String CBMS_ACTION_GETEQPTBOOKEDFOLFILES = "http://tempuri.org/GetBookedEquipmentFOLFiles";
+    private static final String CBMS_ACTION_BOOKINGDETAILGETBYBOOKINGPKID = "http://tempuri.org/BookingDetail_GetByBookingPKID";
+    private static final String CBMS_ACTION_GETBOOKEDEQUIPMENT = "http://tempuri.org/GetBookedEquipment";
+    private static final String CBMS_ACTION_GETBOOKINGBYPKID = "http://tempuri.org/Booking_GetByPKID";
+
     public static JSONArray getItemAll() throws IOException {
         JSONArray items = new JSONArray();
         RequestEntity requestEntity = new StringRequestEntity(SPTSRequestXML.getItemAll(), "text/xml", "ISO-8859-1");
@@ -3153,6 +3160,174 @@ public class SPTSWebService {
                 JSONArray jsonArray = itemDS.optJSONArray("GLOBALEQUIPMENTFAMILYNAME");
                 if (jsonArray == null) {
                     JSONObject jo = itemDS.getJSONObject("GLOBALEQUIPMENTFAMILYNAME");
+                    JSONArray ja = new JSONArray();
+                    ja.put(jo);
+                    items = ja;
+                } else {
+                    items = jsonArray;
+                }
+            } catch (Exception e) {
+                //Ignore
+            }
+        } else {
+            String errorResponse = postMethod.getResponseBodyAsString();
+            errorResponse(result, errorResponse);
+        }
+        return items;
+    }
+
+    public static JSONArray getBookedEqptFOLFiles(boolean noFtp) throws IOException {
+        JSONArray items = new JSONArray();
+        RequestEntity requestEntity = new StringRequestEntity(SPTSRequestXML.getBookedEqptFOLFiles(noFtp), "text/xml", "ISO-8859-1");
+        PostMethod postMethod = new PostMethod(CBMS_WEB_SERVICE_URL);
+        postMethod.setRequestEntity(requestEntity);
+        postMethod.setRequestHeader("SOAPAction", CBMS_ACTION_GETEQPTBOOKEDFOLFILES);
+        HttpClient httpClient = new HttpClient();
+        int result = httpClient.executeMethod(postMethod);
+        if (result == 200) {
+            InputStream inputStream = postMethod.getResponseBodyAsStream();
+            StringBuilder stringBuilder = new StringBuilder();
+            Reader reader = new InputStreamReader(inputStream, "UTF-8");
+            copy(reader, stringBuilder);
+            reader.close();
+            String xmlString = stringBuilder.toString();
+            JSONObject jsonObject = XML.toJSONObject(xmlString);
+            JSONObject soapEnvelope = jsonObject.getJSONObject("soap:Envelope");
+            JSONObject soapBody = soapEnvelope.getJSONObject("soap:Body");
+            JSONObject getAllItemResponse = soapBody.getJSONObject("GetBookedEquipmentFOLFilesResponse");
+            try {
+                JSONObject getAllItemResult = getAllItemResponse.getJSONObject("GetBookedEquipmentFOLFilesResult");
+                JSONObject resultContent = getAllItemResult.getJSONObject("diffgr:diffgram");
+                JSONObject itemDS = resultContent.getJSONObject("NewDataSet");
+                JSONArray jsonArray = itemDS.optJSONArray("BookedEquipmentFOLFiles");
+                if (jsonArray == null) {
+                    JSONObject jo = itemDS.getJSONObject("BookedEquipmentFOLFiles");
+                    JSONArray ja = new JSONArray();
+                    ja.put(jo);
+                    items = ja;
+                } else {
+                    items = jsonArray;
+                }
+            } catch (Exception e) {
+                //Ignore
+            }
+        } else {
+            String errorResponse = postMethod.getResponseBodyAsString();
+            errorResponse(result, errorResponse);
+        }
+        return items;
+    }
+
+    public static JSONArray getBookingDetailByPKID(int pkid) throws IOException {
+        JSONArray items = new JSONArray();
+        RequestEntity requestEntity = new StringRequestEntity(SPTSRequestXML.getBookingDetailByPKID(pkid), "text/xml", "ISO-8859-1");
+        PostMethod postMethod = new PostMethod(CBMS_WEB_SERVICE_URL);
+        postMethod.setRequestEntity(requestEntity);
+        postMethod.setRequestHeader("SOAPAction", CBMS_ACTION_BOOKINGDETAILGETBYBOOKINGPKID);
+        HttpClient httpClient = new HttpClient();
+        int result = httpClient.executeMethod(postMethod);
+        if (result == 200) {
+            InputStream inputStream = postMethod.getResponseBodyAsStream();
+            StringBuilder stringBuilder = new StringBuilder();
+            Reader reader = new InputStreamReader(inputStream, "UTF-8");
+            copy(reader, stringBuilder);
+            reader.close();
+            String xmlString = stringBuilder.toString();
+            JSONObject jsonObject = XML.toJSONObject(xmlString);
+            JSONObject soapEnvelope = jsonObject.getJSONObject("soap:Envelope");
+            JSONObject soapBody = soapEnvelope.getJSONObject("soap:Body");
+            JSONObject getAllItemResponse = soapBody.getJSONObject("BookingDetail_GetByBookingPKIDResponse");
+            try {
+                JSONObject getAllItemResult = getAllItemResponse.getJSONObject("BookingDetail_GetByBookingPKIDResult");
+                JSONObject resultContent = getAllItemResult.getJSONObject("diffgr:diffgram");
+                JSONObject itemDS = resultContent.getJSONObject("BookingDetailData");
+                JSONArray jsonArray = itemDS.optJSONArray("BookingDetail");
+                if (jsonArray == null) {
+                    JSONObject jo = itemDS.getJSONObject("BookingDetail");
+                    JSONArray ja = new JSONArray();
+                    ja.put(jo);
+                    items = ja;
+                } else {
+                    items = jsonArray;
+                }
+            } catch (Exception e) {
+                //Ignore
+            }
+        } else {
+            String errorResponse = postMethod.getResponseBodyAsString();
+            errorResponse(result, errorResponse);
+        }
+        return items;
+    }
+
+    public static JSONArray getBookedEquipment(JSONObject params) throws IOException {
+        JSONArray items = new JSONArray();
+        RequestEntity requestEntity = new StringRequestEntity(SPTSRequestXML.getBookedEquipment(params), "text/xml", "ISO-8859-1");
+        PostMethod postMethod = new PostMethod(CBMS_WEB_SERVICE_URL);
+        postMethod.setRequestEntity(requestEntity);
+        postMethod.setRequestHeader("SOAPAction", CBMS_ACTION_GETBOOKEDEQUIPMENT);
+        HttpClient httpClient = new HttpClient();
+        int result = httpClient.executeMethod(postMethod);
+        if (result == 200) {
+            InputStream inputStream = postMethod.getResponseBodyAsStream();
+            StringBuilder stringBuilder = new StringBuilder();
+            Reader reader = new InputStreamReader(inputStream, "UTF-8");
+            copy(reader, stringBuilder);
+            reader.close();
+            String xmlString = stringBuilder.toString();
+            JSONObject jsonObject = XML.toJSONObject(xmlString);
+            JSONObject soapEnvelope = jsonObject.getJSONObject("soap:Envelope");
+            JSONObject soapBody = soapEnvelope.getJSONObject("soap:Body");
+            JSONObject getAllItemResponse = soapBody.getJSONObject("GetBookedEquipmentResponse");
+            try {
+                JSONObject getAllItemResult = getAllItemResponse.getJSONObject("GetBookedEquipmentResult");
+                JSONObject resultContent = getAllItemResult.getJSONObject("diffgr:diffgram");
+                JSONObject itemDS = resultContent.getJSONObject("NewDataSet");
+                JSONArray jsonArray = itemDS.optJSONArray("BookedEquipment");
+                if (jsonArray == null) {
+                    JSONObject jo = itemDS.getJSONObject("BookedEquipment");
+                    JSONArray ja = new JSONArray();
+                    ja.put(jo);
+                    items = ja;
+                } else {
+                    items = jsonArray;
+                }
+            } catch (Exception e) {
+                //Ignore
+            }
+        } else {
+            String errorResponse = postMethod.getResponseBodyAsString();
+            errorResponse(result, errorResponse);
+        }
+        return items;
+    }
+    
+    public static JSONArray getBookingByPKID(int pkid) throws IOException {
+        JSONArray items = new JSONArray();
+        RequestEntity requestEntity = new StringRequestEntity(SPTSRequestXML.getBookingByPKID(pkid), "text/xml", "ISO-8859-1");
+        PostMethod postMethod = new PostMethod(CBMS_WEB_SERVICE_URL);
+        postMethod.setRequestEntity(requestEntity);
+        postMethod.setRequestHeader("SOAPAction", CBMS_ACTION_GETBOOKINGBYPKID);
+        HttpClient httpClient = new HttpClient();
+        int result = httpClient.executeMethod(postMethod);
+        if (result == 200) {
+            InputStream inputStream = postMethod.getResponseBodyAsStream();
+            StringBuilder stringBuilder = new StringBuilder();
+            Reader reader = new InputStreamReader(inputStream, "UTF-8");
+            copy(reader, stringBuilder);
+            reader.close();
+            String xmlString = stringBuilder.toString();
+            JSONObject jsonObject = XML.toJSONObject(xmlString);
+            JSONObject soapEnvelope = jsonObject.getJSONObject("soap:Envelope");
+            JSONObject soapBody = soapEnvelope.getJSONObject("soap:Body");
+            JSONObject getAllItemResponse = soapBody.getJSONObject("Booking_GetByPKIDResponse");
+            try {
+                JSONObject getAllItemResult = getAllItemResponse.getJSONObject("Booking_GetByPKIDResult");
+                JSONObject resultContent = getAllItemResult.getJSONObject("diffgr:diffgram");
+                JSONObject itemDS = resultContent.getJSONObject("BookingData");
+                JSONArray jsonArray = itemDS.optJSONArray("Booking");
+                if (jsonArray == null) {
+                    JSONObject jo = itemDS.getJSONObject("Booking");
                     JSONArray ja = new JSONArray();
                     ja.put(jo);
                     items = ja;

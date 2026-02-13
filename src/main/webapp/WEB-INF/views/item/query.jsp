@@ -313,6 +313,7 @@
                                                             <th class="col-2">Sub Type</th>
                                                             <th class="col-2">Item ID</th>
                                                             <th class="col-2">Item Name</th>
+                                                            <th class="col-1">Status</th>
                                                             <th class="col-2">Assembly ID</th>
                                                             <th class="col-2">Item Usage</th>
                                                             <th class="col-2">Stress Type</th>
@@ -345,7 +346,6 @@
                                                             <th class="col-1">Storage Factory</th>
                                                             <th class="col-1">Total Qty</th>
                                                             <th class="col-1">Remarks</th>
-                                                            <th class="col-1">Status</th>
                                                         </tr>
                                                     </thead>
                                                     <tbody>
@@ -356,16 +356,17 @@
                                                                     <a sptsPkid="${parameterMaster.sptsPkid}" href="#" onclick="ajaxHardware(this);" class="table-link" title="Hardware List"><i class="bi bi-list-task h4"></i></a>
                                                                     <a sptsPkid="${parameterMaster.sptsPkid}" href="#" onclick="ajaxTrans(this);" class="table-link" title="Movement"><i class="bi bi-arrow-left-right h4"></i></a>
                                                                     <a sptsPkid="${parameterMaster.sptsPkid}" href="#" onclick="ajaxStorage(this);" class="table-link" title="Storage Factory"><i class="bi bi-house-door h4"></i></a>
-                                                                    <c:if test="${not empty parameterMaster.vmId}">
-                                                                    <a href="${contextPath}/hw/item/add2Query/${parameterMaster.id}" class="table-link" title="VM and Functional Test Data">
-                                                                        <i class="bi bi-clock-history h4"></i>
-                                                                    </a>
+                                                                        <c:if test="${not empty parameterMaster.vmId}">
+                                                                        <a href="${contextPath}/hw/item/add2Query/${parameterMaster.id}" class="table-link" title="VM and Functional Test Data">
+                                                                            <i class="bi bi-clock-history h4"></i>
+                                                                        </a>
                                                                     </c:if>
                                                                 </td>
                                                                 <td><c:out value="${parameterMaster.itemType}"/></td>
                                                                 <td><c:out value="${parameterMaster.subType}"/></td>
                                                                 <td><c:out value="${parameterMaster.itemId}"/></td>
                                                                 <td><c:out value="${parameterMaster.itemName}"/></td>
+                                                                <td><c:out value="${parameterMaster.status}"/></td>
                                                                 <td><c:out value="${parameterMaster.assemblyId}"/></td>
                                                                 <td><c:out value="${parameterMaster.itemUsage}"/></td>
                                                                 <td><c:out value="${parameterMaster.stressType}"/></td>
@@ -398,7 +399,6 @@
                                                                 <td><c:out value="${parameterMaster.storageFactoryQty}"/></td>
                                                                 <td><c:out value="${parameterMaster.totalQty}"/></td>
                                                                 <td><c:out value="${parameterMaster.remarks}"/></td>
-                                                                <td><c:out value="${parameterMaster.status}"/></td>
                                                             </tr>
                                                         </c:forEach>
                                                     </tbody>

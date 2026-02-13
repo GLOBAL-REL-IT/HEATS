@@ -132,27 +132,68 @@
                     <!-- Card start -->
                     <div class="card mb-4">
                         <div class="card-header">
-                            <h5 class="card-title">RMS <span style="color:#D97D55">Pending for</span> Loading (CBMS) <span class="h6" style="color:red">(0)</span></h5>
+                            <h5 class="card-title">RMS <span style="color:#D97D55">Pending for</span> Loading (CBMS) <span class="h6" style="color:red">(${countBooking})</span></h5>
                         </div>
                         <div class="card-body">
                             <div class="table-responsive">
                                 <table id="scrollVerticalFromLoading" class="table pending custom-table">
                                     <thead>
                                         <tr>
+                                            <th>No</th>
                                             <th>RMS No</th>
+                                            <th>Event</th>
                                             <th>Actual Start Date</th>
                                             <th>Device</th>
                                             <th>Package</th>
-                                            <th>Event</th>
                                             <th>Est Event Start Date</th>
                                             <th>RMS Status</th>
                                             <th>Event Begin Status</th>
                                             <th>Days to Event Start</th>
-                                            <!--<th>Manage</th>-->
+                                            <th>Priority</th>
+                                            <th>Manage</th>
                                         </tr>
                                     </thead>
                                     <tbody>
-                                    </tbody>
+                                <c:forEach items="${booking}" var="parameterMaster" varStatus="parameterMasterLoop">
+                                    <tr>
+                                        <c:if test="${parameterMaster.priority != '999'}">
+                                    <td style="color: red;"><c:out value="${parameterMasterLoop.index+1}"/></td>
+                                    <td style="color: red;" id="modal_delete_info_countItemPending}"><c:out value="${parameterMaster.rmsNo}"/></td>
+                                    <td style="color: red;"><c:out value="${parameterMaster.event}"/></td>
+                                    <td style="color: red;"><c:out value="${parameterMaster.actStartDate}"/></td>
+                                    <td style="color: red;"><c:out value="${parameterMaster.device}"/></td>
+                                    <td style="color: red;"><c:out value="${parameterMaster.packages}"/></td>
+                                    <td style="color: red;"><c:out value="${parameterMaster.eventStartDate}"/></td>
+                                    <td style="color: red;"><c:out value="${parameterMaster.rmsStatus}"/></td>
+                                    <td style="color: red;"><c:out value="${parameterMaster.eventBeginStatus}"/></td>
+                                    <td style="color: red;"><c:out value="${parameterMaster.daysToEventStart}"/></td>
+                                    <td style="color: red;font-size: 1.2em;"><span class="badge bg-danger"><c:out value="${parameterMaster.priority}"/></span></td>
+                                        </c:if>
+                                        <c:if test="${parameterMaster.priority == '999'}">
+                                    <td><c:out value="${parameterMasterLoop.index+1}"/></td>
+                                    <td id="modal_delete_info_countItemPending}"><c:out value="${parameterMaster.rmsNo}"/></td>
+                                    <td><c:out value="${parameterMaster.event}"/></td>
+                                    <td><c:out value="${parameterMaster.actStartDate}"/></td>
+                                    <td><c:out value="${parameterMaster.device}"/></td>
+                                    <td><c:out value="${parameterMaster.packages}"/></td>
+                                    <td><c:out value="${parameterMaster.eventStartDate}"/></td>
+                                    <td><c:out value="${parameterMaster.rmsStatus}"/></td>
+                                    <td><c:out value="${parameterMaster.eventBeginStatus}"/></td>
+                                    <td><c:out value="${parameterMaster.daysToEventStart}"/></td>
+                                    <td><c:out value=""/></td>
+                                        </c:if>
+                                    <td align="center">
+                                            <a modaldeleteid="${parameterMaster.id}" type="button" data-bs-toggle="offcanvas" title="Set Priority"
+                                              data-bs-target="#staticBackdrop" aria-controls="staticBackdrop" onclick="getData(this);">
+                                                <i class="bi bi-list-ol h3"></i>
+                                            </a>
+                                            <a href="${contextPath}/rmsbookingDetail/detail/${parameterMaster.id}" class="table-link" title="Manage">
+                                                <i class="bi bi-box-arrow-in-right h3"></i>
+                                            </a>
+                                    </td>
+                                    </tr>
+                                </c:forEach>
+                                </tbody>
                                 </table>
                             </div>
                         </div>
@@ -302,12 +343,97 @@
             <span>© HEATs 2025</span>
         </div>
         <!-- App footer end -->
+        
+        <!-- Add Offcanvas Here -->
+        <div class="offcanvas-placeholder">
+
+          <!-- Toggle static offcanvas -->
+          <div class="offcanvas offcanvas-start" data-bs-backdrop="static" tabindex="-1" id="staticBackdrop"
+            aria-labelledby="staticBackdropLabel">
+            <div class="offcanvas-header">
+              <h5 class="offcanvas-title" id="staticBackdropLabel">Set Priority</h5>
+              <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+            </div>
+            <div class="offcanvas-body">
+              <div>
+                <form class="row g-3 align-items-center" role="form" action="${contextPath}/savePriority" method="post">
+                                <div class="row mb-3">
+                                    <div class="col-xl-12 col-sm-12 col-12">
+                                        <div class="mb-1">
+                                            <label for="itemId" class="form-label">RMS</label>
+                                            <div class="input input-group">
+                                                <input type="text" class="form-control" id="rmsNo" name="rmsNo" placeholder="" value="" disabled>
+                                                <input type="hidden" class="form-control" id="id" name="id" placeholder="" value="">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    </div>
+                                <div class="row mb-3">
+                                    <div class="col-xl-12 col-sm-12 col-12">
+                                        <div class="mb-1">
+                                            <label for="itemId" class="form-label">Event</label>
+                                            <div class="input input-group">
+                                                <input type="text" class="form-control" id="event" name="event" placeholder="" value="" disabled>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    </div>
+                                <div class="row mb-3">
+                                    <div class="col-xl-12 col-sm-12 col-12">
+                                        <div class="mb-1">
+                                            <label for="itemId" class="form-label">Priority</label>
+                                            <div class="input input-group">
+                                                <input type="text" class="form-control" id="priorityRead" name="priorityRead" placeholder="" value="" disabled>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    </div>
+                                <div class="row mb-3">
+                                    <div class="col-xl-12 col-sm-12 col-12">
+                                        <div class="mb-1">
+                                            <label for="model" class="form-label">Priority</label>
+                                            <div class="input input-group">
+                                                <select class="input input-group" id="priority" name="priority" style="width: 100%">
+                                                    <!--<option></option>-->
+                                                    <c:forEach items="${priorityList}" var="invInner">
+                                                        <option value="${invInner.name}" ${invInner.selected}>${invInner.name}</option>
+                                                    </c:forEach>
+                                                </select>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row mb-3">
+                                    <div class="col-xl-12 col-sm-12 col-12">
+                                        <div class="mb-1">
+                                            <label for="itemId" class="form-label">Remarks</label>
+                                            <div class="input input-group">
+                                                <textarea class="form-control" rows="5" id="remarks" name="remarks"></textarea>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    </div>
+                                <!-- Form actions start -->
+                                <div class="col-md-12">
+                                        <a title="Delete Priority" data-bs-toggle="modal" data-bs-target="#delete_modal" class="table-link danger group_delete" onclick="modalDelete();">
+                                            <i class="bi bi-trash h3" style="color:red"></i>
+                                        </a>
+                                    <button type="submit" id="submit" id="submit" class="btn btn-primary float-end">Save</button>
+                                </div>
+                                
+                                <!-- Form actions end -->
+                            </form>
+              </div>
+            </div>
+          </div>
+
+        </div>
     </s:layout-component>
     <s:layout-component name="page_js">
 
         <!-- Apex Charts -->
         <script src="${contextPath}/resources/statflow/vendor/apex/apexcharts.min.js"></script>
-        <script src="${contextPath}/resources/statflow/vendor/apex/custom/repotrs/demography.js"></script>
+<!--        <script src="${contextPath}/resources/statflow/vendor/apex/custom/repotrs/demography.js"></script>
         <script src="${contextPath}/resources/statflow/vendor/apex/examples/bar/basic-bar-graph-grouped.js"></script>
         <script src="${contextPath}/resources/statflow/vendor/apex/custom/widgets/graph1.js"></script>
         <script src="${contextPath}/resources/statflow/vendor/apex/custom/widgets/graph2.js"></script>
@@ -316,20 +442,20 @@
         <script src="${contextPath}/resources/statflow/vendor/apex/custom/widgets/graph5.js"></script>
         <script src="${contextPath}/resources/statflow/vendor/apex/custom/widgets/graph6.js"></script>
         <script src="${contextPath}/resources/statflow/vendor/apex/custom/widgets/graph7.js"></script>
-        <script src="${contextPath}/resources/statflow/vendor/apex/custom/widgets/graph8.js"></script>
+        <script src="${contextPath}/resources/statflow/vendor/apex/custom/widgets/graph8.js"></script>-->
 
         <!-- jVector Maps -->
-        <script src="${contextPath}/resources/statflow/vendor/jvectormap/jquery-jvectormap-2.0.5.min.js"></script>
+<!--        <script src="${contextPath}/resources/statflow/vendor/jvectormap/jquery-jvectormap-2.0.5.min.js"></script>
         <script src="${contextPath}/resources/statflow/vendor/jvectormap/gdp-data.js"></script>
         <script src="${contextPath}/resources/statflow/vendor/jvectormap/world-mill-en.js"></script>
         <script src="${contextPath}/resources/statflow/vendor/jvectormap/africa-mill.js"></script>
         <script src="${contextPath}/resources/statflow/vendor/jvectormap/europe-mill.js"></script>
         <script src="${contextPath}/resources/statflow/vendor/jvectormap/custom/map-europe.js"></script>
         <script src="${contextPath}/resources/statflow/vendor/jvectormap/custom/map-africa.js"></script>
-        <script src="${contextPath}/resources/statflow/vendor/jvectormap/custom/world-map-markers2.js"></script>
+        <script src="${contextPath}/resources/statflow/vendor/jvectormap/custom/world-map-markers2.js"></script>-->
 
         <!-- jQcloud Keywords -->
-        <script src="${contextPath}/resources/statflow/vendor/tagsCloud/tagsCloud.js"></script>
+        <!--<script src="${contextPath}/resources/statflow/vendor/tagsCloud/tagsCloud.js"></script>-->
 
         <!-- Data Tables -->
         <script src="${contextPath}/resources/statflow/vendor/datatables/dataTables.min.js"></script>
@@ -351,6 +477,53 @@
     </s:layout-component>
     <s:layout-component name="page_js_inline">
         <script>
+            
+             $(document).ready(function () {
+                $('.js-example-basic-single').select2();
+            });
+            
+            function modalDelete() {
+                var id = $('#id');
+                var priorityRead = $('#priorityRead');
+//                if(priorityRead.val() == ""){
+//                    alert("No Priority was set for this RMS_Event");
+//                   var modalElement = document.getElementById('delete_modal');
+//var modalInstance = bootstrap.Modal.getOrCreateInstance(modalElement);
+//modalInstance.hide();
+//                }else{
+                var deleteUrl = "${contextPath}/cancelPriority/" + id.val();
+                var deleteMsg = "Are you sure want to remove priority for this RMS_Event?";
+                $("#delete_modal .modal-body").html(deleteMsg);
+                $("#modal_delete_button").attr("href", deleteUrl);  
+//                }
+                
+            }
+            
+            function getData(e) {
+                var id = $(e).attr("modaldeleteid");
+                $.ajax({
+                    url: '${contextPath}/priorityDetail', // Replace with your controller URL
+                    type: 'GET',
+                    data: {id: id},
+                    dataType: 'json',
+                    success: function (data) {
+                        // Populate form fields with received data
+                        $("#rmsNo").val(data.rmsNo);
+                        $("#id").val(data.id);
+                        $("#event").val(data.event);
+                        $("#remarks").val(data.priorityRemarks);
+                        if(data.priority !== "999"){
+                            $("#priorityRead").val(data.priority);
+                        }else{
+                            $("#priorityRead").val("");
+                        }
+                        $('#priority').val(data.priority).trigger('change');
+                    },
+                    error: function (jqXHR, textStatus, errorThrown) {
+                        console.error("Error loading data: " + textStatus, errorThrown);
+                    }
+                });
+            }
 
 
             //RMS Return from Loading

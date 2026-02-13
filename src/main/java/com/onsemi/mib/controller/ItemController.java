@@ -1208,9 +1208,6 @@ public class ItemController {
             @RequestParam(required = false) String itemPKID
     ) throws IOException {
 
-//        ItemDAO item = new ItemDAO();
-//        List<Item> itemList = item.getDataTest(itemPKID);
-        
         ItemHardwareDAO itemdao = new ItemHardwareDAO();
         List<ItemHardware> itemList = itemdao.getItemHwListByItemId(itemPKID);
 
@@ -5801,7 +5798,9 @@ public class ItemController {
             redirectAttrs.addFlashAttribute("success", "Transaction is added");
 //            return "redirect:/hw/item";
 //            return "redirect:/hw";
-            return "redirect:/hw/item/transaction/" + sptsPkid;
+//            return "redirect:/hw/item/transaction/" + sptsPkid; //change redirect location
+
+            return "redirect:/hw/" + sptsPkid; //requested by Afiq 12.2.2026
 
         } else {
             LOGGER.info("TransPkid.getResponseId(): " + TransPkid.getResponseId());
@@ -6131,13 +6130,12 @@ public class ItemController {
             @RequestParam(required = false) String shelfTime,
             @RequestParam(required = false) String runningNumber) {
 
-
         ItemHardwareConfigDAO itemdao = new ItemHardwareConfigDAO();
         ItemHardwareConfig itemconfig = itemdao.getConfigItem(itemType, subType);
-        
+
         ItemDAO dao1 = new ItemDAO();
         String mibItemId = dao1.getMibItemIdBySptsPkId(sptsId);
-        
+
         ItemHardware itemhardware = new ItemHardware();
         itemhardware.setMibItemId(mibItemId);
 //        itemhardware.setSptsPkid(sptsId);
@@ -6162,21 +6160,21 @@ public class ItemController {
                 addIfYes(sj, itemconfig.getEvent(), eventStress);
                 addIfYes(sj, itemconfig.getPartNumber(), partNo);
                 maklumatterakhir = sj.toString();
-                
+
                 // FUNCTION UNTUK DAPATKAN EXISTING DATA DLU, THEN ASSIGN DLM exist
                 ItemHardwareDAO itemdao1 = new ItemHardwareDAO();
                 String check1 = itemdao1.getLatestHardwareID(mibItemId, maklumatterakhir);
                 
                 int exist = (check1 == null || check1.isEmpty()) ? 0 : Integer.parseInt(check1);
                 int n = Integer.parseInt(runningNumber);
-                
+
                 int start = exist + 1;
                 int end = exist + n;
-                
-                for(int i=start; i<=end; i++) {
-                    String larian = String.format("%03d",i);
-                    LOGGER.info("KITA TENGOK DATA DEKAT DALAM NI >>> "+maklumatterakhir+"-"+larian);
-                    itemhardware.setHardwareId(maklumatterakhir+"-"+larian);
+
+                for (int i = start; i <= end; i++) {
+                    String larian = String.format("%03d", i);
+                    LOGGER.info("KITA TENGOK DATA DEKAT DALAM NI >>> " + maklumatterakhir + "-" + larian);
+                    itemhardware.setHardwareId(maklumatterakhir + "-" + larian);
                     ItemHardwareDAO dao2 = new ItemHardwareDAO();
                     QueryResult q = dao2.insertHardwareID(itemhardware);
                 }

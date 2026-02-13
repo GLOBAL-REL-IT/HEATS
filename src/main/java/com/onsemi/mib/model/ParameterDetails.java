@@ -12,6 +12,7 @@ public class ParameterDetails {
     private String modifiedBy;
     private String modifiedDate;
     private String selected;
+    private String disabled;
 
     public ParameterDetails() {
 
@@ -129,6 +130,14 @@ public class ParameterDetails {
 
     public void setSelected(String selected) {
         this.selected = selected;
+    }
+
+    public String getDisabled() {
+        return disabled;
+    }
+
+    public void setDisabled(String disabled) {
+        this.disabled = disabled;
     }
 
 }
