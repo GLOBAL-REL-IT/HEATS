@@ -3640,8 +3640,7 @@ public class ItemController {
             Locale locale,
             RedirectAttributes redirectAttrs,
             @ModelAttribute UserSession userSession,
-            @RequestParam(required = false) String mibItemId
-    ) {
+            @RequestParam(required = false) String mibItemId) {
 
         String finalStatus = "";
         String statusMan = "";
@@ -3661,6 +3660,7 @@ public class ItemController {
         }
 
         if (statusMan.equals("Yes")) {
+            LOGGER.info("UPDATE MANUAL TEST STATUS");
             if (statusLeak.equals("Yes")) {
                 finalStatus = "Pending Functional Test - Leakage Test";
             } else if (statusPs.equals("Yes")) {
@@ -5473,11 +5473,6 @@ public class ItemController {
             transtype = "28";
         }
 
-//        LOGGER.info("transactionDate : " + transactionDate);
-//        LOGGER.info("sptsPkid : " + sptsPkid);
-//        LOGGER.info("transtype : " + transtype);
-//        LOGGER.info("alu : " + alu);
-//        LOGGER.info("countAlu: " + countAlu);
         //update to SPTS
         JSONObject params2 = new JSONObject();
         String date1 = transactionDate.substring(0, 10);
@@ -6148,8 +6143,15 @@ public class ItemController {
         } else {
             String maklumatterakhir = "";
             if (itemconfig.getSameItemId().equals("Yes")) {
-                LOGGER.info("SINI CREATE DIA SAHAJA");
-                LOGGER.info("CHECK KALAU DA CREATE, TAKKAN CREATE LAGI SEKALI");
+                ItemHardwareDAO dao2 = new ItemHardwareDAO();
+                ItemHardware item2 = dao2.getItemHardwareByItemId(mibItemId);
+                if (item2 == null) {
+                    itemhardware.setHardwareId(sameItemId);
+                    dao2 = new ItemHardwareDAO();
+                    QueryResult q = dao2.insertHardwareID(itemhardware);
+                } else {
+                    redirectAttrs.addFlashAttribute("error", messageSource.getMessage("admin.label.hardware.create.error", args, locale));
+                }
             } else {
                 StringJoiner sj = new StringJoiner("-");
                 addIfYes(sj, itemconfig.getSupplier(), supplier);
@@ -6173,13 +6175,13 @@ public class ItemController {
 
                 for (int i = start; i <= end; i++) {
                     String larian = String.format("%03d", i);
-                    LOGGER.info("KITA TENGOK DATA DEKAT DALAM NI >>> " + maklumatterakhir + "-" + larian);
+//                    LOGGER.info("LOOPING DATA : HARDWARE ID >>> " + maklumatterakhir + "-" + larian);
                     itemhardware.setHardwareId(maklumatterakhir + "-" + larian);
                     ItemHardwareDAO dao2 = new ItemHardwareDAO();
                     QueryResult q = dao2.insertHardwareID(itemhardware);
                 }
+                redirectAttrs.addFlashAttribute("success", messageSource.getMessage("admin.label.hardware.create.success", args, locale));
             }
-            redirectAttrs.addFlashAttribute("success", messageSource.getMessage("admin.label.hardware.create.success", args, locale));
         }
 
         return "redirect:/hw/" + sptsId;

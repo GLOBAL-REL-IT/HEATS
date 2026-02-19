@@ -193,6 +193,44 @@ public class ItemHardwareDAO {
         }
         return itemhardware;
     }
+    
+    public ItemHardware getItemHardwareByItemId(String itemId) {
+        String sql = "SELECT * FROM item_hardware WHERE mib_item_id = '" + itemId + "'";
+        ItemHardware itemhardware = null;
+        try {
+            PreparedStatement ps = conn.prepareStatement(sql);
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                itemhardware = new ItemHardware();
+                itemhardware.setId(rs.getString("id"));
+                itemhardware.setMibItemId(rs.getString("mib_item_id"));
+                itemhardware.setSptsPkid(rs.getString("spts_pkid"));
+                itemhardware.setHardwareId(rs.getString("hardware_id"));
+                itemhardware.setAlu(rs.getString("alu"));
+                itemhardware.setStatus(rs.getString("status"));
+                itemhardware.setRmsEvent(rs.getString("rms_event"));
+                itemhardware.setShelfTime(rs.getString("shelf_time"));
+                itemhardware.setCreatedBy(rs.getString("created_by"));
+                itemhardware.setCreatedDate(rs.getString("created_date"));
+                itemhardware.setVerifyBy(rs.getString("verify_by"));
+                itemhardware.setVerifyDate(rs.getString("verify_date"));
+                itemhardware.setFlag(rs.getString("flag"));
+            }
+            rs.close();
+            ps.close();
+        } catch (SQLException e) {
+            LOGGER.error(e.getMessage());
+        } finally {
+            if (conn != null) {
+                try {
+                    conn.close();
+                } catch (SQLException e) {
+                    LOGGER.error(e.getMessage());
+                }
+            }
+        }
+        return itemhardware;
+    }
 
     public List<ItemHardware> getItemHardwareList() {
         String sql = "SELECT * FROM item_hardware ORDER BY id ASC";

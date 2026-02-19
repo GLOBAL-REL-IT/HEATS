@@ -16,7 +16,10 @@
     </s:layout-component>
     <s:layout-component name="page_css_inline">
         <style>
-            
+            .fw-bolder {
+                -webkit-text-stroke: 0.5px currentColor;
+                text-stroke: 0.5px currentColor;
+            }
         </style>
     </s:layout-component>
     <s:layout-component name="page_container">
@@ -64,16 +67,25 @@
                                                     <td><c:out value="${userLoop.index+1}"/></td>
                                                 <td id="modal_delete_info_${user.id}"><c:out value="${user.itemType}"/></td>
                                                 <td><c:out value="${user.subType}"/></td>
-                                                <td><c:out value="${user.sameItemId == 'No' ? '<i class=\"bi bi-x-square h4\" style=\"color:red\"></i>' : '<i class=\"bi bi-check2-square h4\" style=\"color:green\"></i>'}" escapeXml="false"/></td>
-                                                <!--<td><c:out value="${user.supplier == 'No' ? '<i class=\"bi bi-x-square h4\" style=\"color:red\"></i>' : '<i class=\"bi bi-check2-square h4\" style=\"color:green\"></i>'}" escapeXml="false"/></td>-->
-                                                <td><c:out value="${user.assemblyNo == 'No' ? '<i class=\"bi bi-x-square h4\" style=\"color:red\"></i>' : '<i class=\"bi bi-check2-square h4\" style=\"color:green\"></i>'}" escapeXml="false"/></td>
-                                                <!--<td><c:out value="${user.revision == 'No' ? '<i class=\"bi bi-x-square h4\" style=\"color:red\"></i>' : '<i class=\"bi bi-check2-square h4\" style=\"color:green\"></i>'}" escapeXml="false"/></td>-->
-                                                <td><c:out value="${user.mfgDate == 'No' ? '<i class=\"bi bi-x-square h4\" style=\"color:red\"></i>' : '<i class=\"bi bi-check2-square h4\" style=\"color:green\"></i>'}" escapeXml="false"/></td>
-                                                <!--<td><c:out value="${user.component == 'No' ? '<i class=\"bi bi-x-square h4\" style=\"color:red\"></i>' : '<i class=\"bi bi-check2-square h4\" style=\"color:green\"></i>'}" escapeXml="false"/></td>-->
-                                                <td><c:out value="${user.event == 'No' ? '<i class=\"bi bi-x-square h4\" style=\"color:red\"></i>' : '<i class=\"bi bi-check2-square h4\" style=\"color:green\"></i>'}" escapeXml="false"/></td>
-                                                <td><c:out value="${user.partNumber == 'No' ? '<i class=\"bi bi-x-square h4\" style=\"color:red\"></i>' : '<i class=\"bi bi-check2-square h4\" style=\"color:green\"></i>'}" escapeXml="false"/></td>
-                                                <td><c:out value="${user.alu == 'No' ? '<i class=\"bi bi-x-square h4\" style=\"color:red\"></i>' : '<i class=\"bi bi-check2-square h4\" style=\"color:green\"></i>'}" escapeXml="false"/></td>
-                                                <td><c:out value="${user.shelfTime == 'No' ? '<i class=\"bi bi-x-square h4\" style=\"color:red\"></i>' : '<i class=\"bi bi-check2-square h4\" style=\"color:green\"></i>'}" escapeXml="false"/></td>
+                                                <td><c:out value="${user.sameItemId == 'No' ? '<i class=\"bi bi-x-square h4 fw-bolder\" style=\"color:red\"></i>' : '<i class=\"bi bi-check2-square h4 fw-bolder\" style=\"color:green\"></i>'}" escapeXml="false"/></td>
+                                                <!--<td><c:out value="${user.supplier == 'No' ? '<i class=\"bi bi-x-square h4 fw-bolder\" style=\"color:red\"></i>' : '<i class=\"bi bi-check2-square h4 fw-bolder\" style=\"color:green\"></i>'}" escapeXml="false"/></td>-->
+                                                <td><c:out value="${user.assemblyNo == 'No' ? '<i class=\"bi bi-x-square h4 fw-bolder\" style=\"color:red\"></i>' : '<i class=\"bi bi-check2-square h4 fw-bolder\" style=\"color:green\"></i>'}" escapeXml="false"/></td>
+                                                <!--<td><c:out value="${user.revision == 'No' ? '<i class=\"bi bi-x-square h4 fw-bolder\" style=\"color:red\"></i>' : '<i class=\"bi bi-check2-square h4 fw-bolder\" style=\"color:green\"></i>'}" escapeXml="false"/></td>-->
+                                                <td><c:out value="${user.mfgDate == 'No' ? '<i class=\"bi bi-x-square h4 fw-bolder\" style=\"color:red\"></i>' : '<i class=\"bi bi-check2-square h4 fw-bolder\" style=\"color:green\"></i>'}" escapeXml="false"/></td>
+                                                <!--<td><c:out value="${user.component == 'No' ? '<i class=\"bi bi-x-square h4 fw-bolder\" style=\"color:red\"></i>' : '<i class=\"bi bi-check2-square h4 fw-bolder\" style=\"color:green\"></i>'}" escapeXml="false"/></td>-->
+                                                <td><c:out value="${user.event == 'No' ? '<i class=\"bi bi-x-square h4 fw-bolder\" style=\"color:red\"></i>' : '<i class=\"bi bi-check2-square h4 fw-bolder\" style=\"color:green\"></i>'}" escapeXml="false"/></td>
+                                                <td><c:out value="${user.partNumber == 'No' ? '<i class=\"bi bi-x-square h4 fw-bolder\" style=\"color:red\"></i>' : '<i class=\"bi bi-check2-square h4 fw-bolder\" style=\"color:green\"></i>'}" escapeXml="false"/></td>
+                                                <td><c:out value="${user.alu == 'No' ? '<i class=\"bi bi-x-square h4 fw-bolder\" style=\"color:red\"></i>' : '<i class=\"bi bi-check2-square h4 fw-bolder\" style=\"color:green\"></i>'}" escapeXml="false"/></td>
+                                                <td><c:out value="${user.shelfTime == 'No' ? '<i class=\"bi bi-x-square h4 fw-bolder\" style=\"color:red\"></i>' : '<i class=\"bi bi-check2-square h4 fw-bolder\" style=\"color:green\"></i>'}" escapeXml="false"/></td>
+                                                
+<!--                                                <td><c:out value="${user.sameItemId == 'No' ? '<span class=\"badge border border-2 border-danger text-danger px-3 py-2\">No</span>' : '<span class=\"badge border border-2 border-success text-success px-3 py-2\">Yes</span>'}" escapeXml="false"/></td>
+                                                <td><c:out value="${user.assemblyNo == 'No' ? '<span class=\"badge border border-2 border-danger text-danger px-3 py-2\">No</span>' : '<span class=\"badge border border-2 border-success text-success px-3 py-2\">Yes</span>'}" escapeXml="false"/></td>
+                                                <td><c:out value="${user.mfgDate == 'No' ? '<span class=\"badge border border-2 border-danger text-danger px-3 py-2\">No</span>' : '<span class=\"badge border border-2 border-success text-success px-3 py-2\">Yes</span>'}" escapeXml="false"/></td>
+                                                <td><c:out value="${user.event == 'No' ? '<span class=\"badge border border-2 border-danger text-danger px-3 py-2\">No</span>' : '<span class=\"badge border border-2 border-success text-success px-3 py-2\">Yes</span>'}" escapeXml="false"/></td>
+                                                <td><c:out value="${user.partNumber == 'No' ? '<span class=\"badge border border-2 border-danger text-danger px-3 py-2\">No</span>' : '<span class=\"badge border border-2 border-success text-success px-3 py-2\">Yes</span>'}" escapeXml="false"/></td>
+                                                <td><c:out value="${user.alu == 'No' ? '<span class=\"badge border border-2 border-danger text-danger px-3 py-2\">No</span>' : '<span class=\"badge border border-2 border-success text-success px-3 py-2\">Yes</span>'}" escapeXml="false"/></td>
+                                                <td><c:out value="${user.shelfTime == 'No' ? '<span class=\"badge border border-2 border-danger text-danger px-3 py-2\">No</span>' : '<span class=\"badge border border-2 border-success text-success px-3 py-2\">Yes</span>'}" escapeXml="false"/></td>-->
+                                                
                                                 <td align="center">
                                                     <a href="${contextPath}/admin/hw/edit/${user.id}" class="table-link">
                                                         <i class="bi bi-box-arrow-in-right h3"></i>
