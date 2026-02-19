@@ -908,7 +908,12 @@ public class ItemController {
                     item.setAlu(Double.toString(getTransactionByParam.getJSONObject(i).getDouble("LifetimeUsageHrs")));
                 }
                 if (getTransactionByParam.getJSONObject(i).has("Remarks")) {
-                    item.setRemarks(getTransactionByParam.getJSONObject(i).getString("Remarks"));
+                    Object assembly = getTransactionByParam.getJSONObject(i).get("Remarks");
+                    if (assembly instanceof String) {
+                        item.setRemarks(getTransactionByParam.getJSONObject(i).getString("Remarks"));
+                    } else {
+                        item.setRemarks(Integer.toString(getTransactionByParam.getJSONObject(i).getInt("Remarks")));
+                    }
                 }
 
                 itemD = new ItemTransactionDAO();
