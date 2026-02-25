@@ -8,6 +8,56 @@
         <!--<link rel="stylesheet" href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css"/>-->
         <!-- tagsCloud Keywords CSS -->
         <link rel="stylesheet" href="${contextPath}/resources/statflow/vendor/tagsCloud/tagsCloud.css">
+        <!-- Data Tables -->
+        <link rel="stylesheet" href="${contextPath}/resources/statflow/vendor/datatables/dataTables.bs5.css">
+        <link rel="stylesheet" href="${contextPath}/resources/statflow/vendor/datatables/dataTables.bs5-custom.css">
+        <link rel="stylesheet" href="${contextPath}/resources/statflow/vendor/datatables/buttons/dataTables.bs5-custom.css">
+    </s:layout-component>
+    <s:layout-component name="page_css_inline">
+        <style>
+            .font-link-rms {
+                font-weight: bold;
+                color:blue;
+                font-style: italic;
+                text-decoration: underline;
+            }
+
+            .pending thead th {
+                background-color: #f06a0a; /* Light blue */
+                color: #FFFFFF; /* White text for contrast */
+            }
+
+            .after thead th {
+                background-color: #D97D55; /* Light blue */
+                color: #FFFFFF; /* White text for contrast */
+            }
+
+            .mpe thead th {
+                background-color: #5ec3f1; /* Light blue */
+                color: #FFFFFF; /* White text for contrast */
+            }
+
+            .new thead th {
+                background-color: #59AC77; /* Light blue */
+                color: #FFFFFF; /* White text for contrast */
+            }
+
+            /*            .img3 {
+                            width: 55px;  Sets a fixed width 
+                            height: 18px;  Sets a fixed height 
+                        }
+            
+                        .app-footer2 {
+                            position: fixed;
+                            bottom: 0;
+                            right: 0;
+                            font-size: 0.7rem;
+                            margin: 0;
+                            padding: 15px 20px 0 20px;
+                            display: flex;
+                            justify-content: flex-end;
+                        }*/
+        </style>
     </s:layout-component>
     <s:layout-component name="page_header">
         <f:message key="general.label.dashboard"/>
@@ -23,11 +73,11 @@
                         <div class="card-body p-3">
                             <div class="d-flex align-items-center">
                                 <div>
-                                    <h6 class="text-muted mb-1 fw-light">Completed</h6>
-                                    <h3 class="fw-bold mb-1">60</h3>
-                                    <span class="badge bg-success-subtle text-success rounded-pill px-2 py-1">
-                                        <i class="bi bi-arrow-up-right"></i> 12%
-                                    </span>
+                                    <h6 class="text-muted mb-1 fw-light">RMS Pending for Loading</h6>
+                                    <h3 class="fw-bold mb-1">0</h3>
+                                    <!--                                    <span class="badge bg-success-subtle text-success rounded-pill px-2 py-1">
+                                                                            <i class="bi bi-arrow-up-right"></i> 12%
+                                                                        </span>-->
                                 </div>
                                 <div id="taskStats1" class="ms-auto"></div>
                             </div>
@@ -39,11 +89,11 @@
                         <div class="card-body p-3">
                             <div class="d-flex align-items-center">
                                 <div>
-                                    <h6 class="text-muted mb-1 fw-light">Pending</h6>
-                                    <h3 class="fw-bold mb-1">20</h3>
-                                    <span class="badge bg-warning-subtle text-warning rounded-pill px-2 py-1">
-                                        <i class="bi bi-arrow-down-right"></i> 5%
-                                    </span>
+                                    <h6 class="text-muted mb-1 fw-light">RMS Return from Loading</h6>
+                                    <h3 class="fw-bold mb-1">0</h3>
+                                    <!--                                    <span class="badge bg-warning-subtle text-warning rounded-pill px-2 py-1">
+                                                                            <i class="bi bi-arrow-down-right"></i> 5%
+                                                                        </span>-->
                                 </div>
                                 <div id="taskStats2" class="ms-auto"></div>
                             </div>
@@ -55,11 +105,11 @@
                         <div class="card-body p-3">
                             <div class="d-flex align-items-center">
                                 <div>
-                                    <h6 class="text-muted mb-1 fw-light">Progress</h6>
-                                    <h3 class="fw-bold mb-1">30</h3>
-                                    <span class="badge bg-primary-subtle text-primary rounded-pill px-2 py-1">
-                                        <i class="bi bi-arrow-up-right"></i> 8%
-                                    </span>
+                                    <h6 class="text-muted mb-1 fw-light">Maverick</h6>
+                                    <h3 class="fw-bold mb-1">4</h3>
+                                    <!--                                    <span class="badge bg-primary-subtle text-primary rounded-pill px-2 py-1">
+                                                                            <i class="bi bi-arrow-up-right"></i> 8%
+                                                                        </span>-->
                                 </div>
                                 <div id="taskStats3" class="ms-auto"></div>
                             </div>
@@ -71,11 +121,11 @@
                         <div class="card-body p-3">
                             <div class="d-flex align-items-center">
                                 <div>
-                                    <h6 class="text-muted mb-1 fw-light">Closed</h6>
-                                    <h3 class="fw-bold mb-1">80</h3>
-                                    <span class="badge bg-info-subtle text-info rounded-pill px-2 py-1">
-                                        <i class="bi bi-arrow-up-right"></i> 15%
-                                    </span>
+                                    <h6 class="text-muted mb-1 fw-light">New HW Fabrication</h6>
+                                    <h3 class="fw-bold mb-1">3</h3>
+                                    <!--                                    <span class="badge bg-info-subtle text-info rounded-pill px-2 py-1">
+                                                                            <i class="bi bi-arrow-up-right"></i> 15%
+                                                                        </span>-->
                                 </div>
                                 <div id="taskStats4" class="ms-auto"></div>
                             </div>
@@ -88,581 +138,560 @@
             <!-- Row start -->
             <div class="row gx-4">
                 <div class="col-12">
+                    <!-- Card start -->
                     <div class="card mb-4">
                         <div class="card-header">
-                            <div class="d-flex justify-content-between align-items-center">
-                                <h5 class="m-0 fw-semibold">Compare</h5>
-                                <div class="btn-group rounded-pill p-1 bg-light gap-1" role="group">
-                                    <button type="button" class="btn btn-sm rounded-pill px-3 btn-outline-primary">Week</button>
-                                    <button type="button" class="btn btn-sm rounded-pill px-3 btn-primary">Month</button>
-                                    <button type="button" class="btn btn-sm rounded-pill px-3 btn-outline-primary">Year</button>
-                                </div>
-                            </div>
+                            <h5 class="card-title">RMS <span style="color:#50589C">Pending for</span> Loading (CBMS)</h5>
                         </div>
                         <div class="card-body">
-
-                            <!-- Row starts -->
-                            <div class="row gx-4">
-                                <div class="col-xxl-2 col-lg-3 col-sm-12 col-12">
-                                    <div class="card border-0 h-100 shadow-sm hover-shadow-lg">
-                                        <div class="card-body p-4">
-                                            <div class="text-center">
-                                                <h5 class="mb-4 fw-semibold text-muted">Weekly Stats</h5>
-                                                <div class="my-4 p-3 rounded-4 bg-primary-subtle">
-                                                    <h3 class="text-primary fw-bold mb-1">4,000</h3>
-                                                    <h6 class="m-0 text-primary fw-medium">Claimed</h6>
-                                                    <div class="mt-2">
-                                                        <span class="badge bg-white text-primary rounded-pill px-3 py-2">
-                                                            <i class="bi bi-arrow-up-right me-1"></i>12% Growth
-                                                        </span>
-                                                    </div>
-                                                </div>
-                                                <div class="my-4 p-3 rounded-4 bg-danger-subtle">
-                                                    <h3 class="text-danger fw-bold mb-1">2,000</h3>
-                                                    <h6 class="m-0 text-danger">Expired</h6>
-                                                    <div class="mt-2">
-                                                        <span class="badge bg-white text-danger rounded-pill px-3 py-2">
-                                                            <i class="bi bi-arrow-down-right me-1"></i>5% Decline
-                                                        </span>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-xxl-8 col-lg-6 col-sm-12 col-12">
-                                    <div class="overflow-hidden">
-                                        <div id="graph4" class="mt-2"></div>
-                                    </div>
-                                </div>
-                                <div class="col-xxl-2 col-lg-3 col-sm-12 col-12">
-                                    <div class="card border-0 h-100 shadow-sm hover-shadow-lg transition-300">
-                                        <div class="card-body p-4">
-                                            <div class="text-center">
-                                                <h5 class="mb-4 fw-semibold text-muted">Monthly Stats</h5>
-                                                <div class="my-4 p-3 rounded-4 bg-primary-subtle">
-                                                    <h3 class="text-primary fw-bold mb-1">36,000</h3>
-                                                    <h6 class="m-0 text-primary fw-medium">Claimed</h6>
-                                                    <div class="mt-2">
-                                                        <span class="badge bg-white text-primary rounded-pill px-3 py-2">
-                                                            <i class="bi bi-arrow-up-right me-1"></i>18% Growth
-                                                        </span>
-                                                    </div>
-                                                </div>
-                                                <div class="my-4 p-3 rounded-4 bg-danger-subtle">
-                                                    <h3 class="text-danger fw-bold mb-1">22,000</h3>
-                                                    <h6 class="m-0 text-danger">Expired</h6>
-                                                    <div class="mt-2">
-                                                        <span class="badge bg-white text-danger rounded-pill px-3 py-2">
-                                                            <i class="bi bi-arrow-down-right me-1"></i>7% Decline
-                                                        </span>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
+                            <div class="table-responsive">
+                                <table id="scrollVertical" class="table pending custom-table">
+                                    <thead>
+                                        <tr>
+                                            <th>RMS No</th>
+                                            <th>Actual Start Date</th>
+                                            <th>Device</th>
+                                            <th>Package</th>
+                                            <th>Event</th>
+                                            <th>Est Event Start Date</th>
+                                            <th>RMS Status</th>
+                                            <th>Event Begin Status</th>
+                                            <th>Days to Event Start</th>
+                                            <!--<th>Manage</th>-->
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td><a class="font-link-rms" href=""> S106696</a></td>
+                                            <td>25-Sep-25</td>
+                                            <td>NVTFWS027N10MCLTAG</td>
+                                            <td>S08FL</td>
+                                            <td>HTGB</td>
+                                            <td>30-Sep-25</td>
+                                            <td>IN PROCESS</td>
+                                            <td>NOT START</td>
+                                            <td>5</td>
+                                            <!--                                            <td>
+                                                                                            <a class="btn btn-primary btn-sm me-1" href="#"><i class="bi bi-pencil"></i></a>
+                                                                                        </td>-->
+                                        </tr>
+                                        <tr>
+                                            <td><a class="font-link-rms" href="">S106696</a></td>
+                                            <td>25-Sep-25</td>
+                                            <td>NVTFWS027N10MCLTAG</td>
+                                            <td>S08FL</td>
+                                            <td>HTRB</td>
+                                            <td>30-Sep-25</td>
+                                            <td>IN PROCESS</td>
+                                            <td>NOT START</td>
+                                            <td>5</td>
+                                        </tr>
+                                        <tr>
+                                            <td><a class="font-link-rms" href="">S106696</a></td>
+                                            <td>25-Sep-25</td>
+                                            <td>NVTFWS027N10MCLTAG</td>
+                                            <td>S08FL</td>
+                                            <td>IOL</td>
+                                            <td>12-Oct-25</td>
+                                            <td>IN PROCESS</td>
+                                            <td>NOT START</td>
+                                            <td>17</td>
+                                        </tr>
+                                        <tr>
+                                            <td><a class="font-link-rms" href="">S107174</a></td>
+                                            <td>27-Sep-25</td>
+                                            <td>SNXH150B120H3Q2F2PG</td>
+                                            <td>PIM40 93*47 (PRESS FIT)</td>
+                                            <td>H3TRB</td>
+                                            <td>01-Oct-25</td>
+                                            <td>IN PROCESS</td>
+                                            <td>NOT START</td>
+                                            <td>4</td>
+                                        </tr>
+                                        <tr>
+                                            <td><a class="font-link-rms" href="">S106511</a></td>
+                                            <td>28-Sep-25</td>
+                                            <td>ENGNVMFS1D8N10XT1G-TST</td>
+                                            <td>SO8FL - CLIP DFN 6 5*6*1MM PBFR</td>
+                                            <td>HTRB</td>
+                                            <td>01-Oct-25</td>
+                                            <td>IN PROCESS</td>
+                                            <td>NOT START</td>
+                                            <td>3</td>
+                                        </tr>
+                                        <tr>
+                                            <td><a class="font-link-rms" href="">S106992</a></td>
+                                            <td>28-Sep-25</td>
+                                            <td>NCV2561SQT1G</td>
+                                            <td>SC-88 6 EPO SNGL PB FREE</td>
+                                            <td>HAST</td>
+                                            <td>19-Oct-25</td>
+                                            <td>IN PROCESS</td>
+                                            <td>NOT START</td>
+                                            <td>21</td>
+                                        </tr>
+                                        <tr>
+                                            <td><a class="font-link-rms" href="">S106992</a></td>
+                                            <td>28-Sep-25</td>
+                                            <td>NCV2561SQT1G</td>
+                                            <td>SC-88 6 EPO SNGL PB FREE</td>
+                                            <td>HTOL</td>
+                                            <td>05-Oct-25</td>
+                                            <td>IN PROCESS</td>
+                                            <td>NOT START</td>
+                                            <td>7</td>
+                                        </tr>
+                                        <tr>
+                                            <td><a class="font-link-rms" href="">S104684</a></td>
+                                            <td>29-Sep-25</td>
+                                            <td>NVTFWS005N08XLTAG</td>
+                                            <td>WDFN8 3.3*3.3*0.65</td>
+                                            <td>HAST</td>
+                                            <td>14-Oct-25</td>
+                                            <td>IN PROCESS</td>
+                                            <td>NOT START</td>
+                                            <td>15</td>
+                                        </tr>
+                                        <tr>
+                                            <td><a class="font-link-rms" href="">S104684</a></td>
+                                            <td>29-Sep-25</td>
+                                            <td>NVTFWS005N08XLTAG</td>
+                                            <td>WDFN8 3.3*3.3*0.65</td>
+                                            <td>HTGB</td>
+                                            <td>05-Oct-25</td>
+                                            <td>IN PROCESS</td>
+                                            <td>NOT START</td>
+                                            <td>6</td>
+                                        </tr>
+                                        <tr>
+                                            <td><a class="font-link-rms" href="">S104684</a></td>
+                                            <td>29-Sep-25</td>
+                                            <td>NVTFWS005N08XLTAG</td>
+                                            <td>WDFN8 3.3*3.3*0.65</td>
+                                            <td>HTGBx</td>
+                                            <td>03-Oct-25</td>
+                                            <td>IN PROCESS</td>
+                                            <td>NOT START</td>
+                                            <td>4</td>
+                                        </tr>
+                                        <tr>
+                                            <td><a class="font-link-rms" href="">S104684</a></td>
+                                            <td>29-Oct-25</td>
+                                            <td>NVTFWS005N08XLTAG</td>
+                                            <td>WDFN8 3.3*3.3*0.65</td>
+                                            <td>HTRB</td>
+                                            <td>02-Oct-25</td>
+                                            <td>IN PROCESS</td>
+                                            <td>NOT START</td>
+                                            <td>3</td>
+                                        </tr>
+                                        <tr>
+                                            <td><a class="font-link-rms" href="">S104684</a></td>
+                                            <td>29-Oct-25</td>
+                                            <td>NVTFWS005N08XLTAG</td>
+                                            <td>WDFN8 3.3*3.3*0.65</td>
+                                            <td>IOL</td>
+                                            <td>15-Oct-25</td>
+                                            <td>IN PROCESS</td>
+                                            <td>NOT START</td>
+                                            <td>16</td>
+                                        </tr>
+                                        <tr>
+                                            <td><a class="font-link-rms" href="">S105952</a></td>
+                                            <td>30-Sep-25</td>
+                                            <td>PCNVSR19S120M3ECPE-08</td>
+                                            <td>* NOT APPLICABLE *</td>
+                                            <td>HTRB</td>
+                                            <td>02-Oct-25</td>
+                                            <td>IN PROCESS</td>
+                                            <td>NOT START</td>
+                                            <td>2</td>
+                                        </tr>
+                                        <tr>
+                                            <td><a class="font-link-rms" href="">S105952</a></td>
+                                            <td>30-Sep-25</td>
+                                            <td>PCNVSR19S120M3ECPE-08</td>
+                                            <td>* NOT APPLICABLE *</td>
+                                            <td>HTRBx</td>
+                                            <td>02-Oct-25</td>
+                                            <td>IN PROCESS</td>
+                                            <td>NOT START</td>
+                                            <td>2</td>
+                                        </tr>
+                                        <tr>
+                                            <td><a class="font-link-rms" href="">S106877</a></td>
+                                            <td>30-Sep-25</td>
+                                            <td>SURS8340T3G-GA01</td>
+                                            <td>SMC</td>
+                                            <td>h3TRB</td>
+                                            <td>17-Oct-25</td>
+                                            <td>IN PROCESS</td>
+                                            <td>NOT START</td>
+                                            <td>17</td>
+                                        </tr>
+                                        <tr>
+                                            <td><a class="font-link-rms" href="">S106877</a></td>
+                                            <td>30-Sep-25</td>
+                                            <td>SURS8340T3G-GA01</td>
+                                            <td>SMC</td>
+                                            <td>IOL</td>
+                                            <td>17-Oct-25</td>
+                                            <td>IN PROCESS</td>
+                                            <td>NOT START</td>
+                                            <td>17</td>
+                                        </tr>
+                                        <tr>
+                                            <td><a class="font-link-rms" href="">S104795</a></td>
+                                            <td>01-Oct-25</td>
+                                            <td>NVTFWS005N08XLTAG</td>
+                                            <td>WDFN8 3.3*3.3*0.65</td>
+                                            <td>HAST</td>
+                                            <td>26-Sep-25</td>
+                                            <td>IN PROCESS</td>
+                                            <td>NOT START</td>
+                                            <td>-5</td>
+                                        </tr>
+                                        <tr>
+                                            <td><a class="font-link-rms" href="">S104795</a></td>
+                                            <td>01-Oct-25</td>
+                                            <td>NVTFWS005N08XLTAG</td>
+                                            <td>WDFN8 3.3*3.3*0.65</td>
+                                            <td>HTGB</td>
+                                            <td>26-Sep-25</td>
+                                            <td>IN PROCESS</td>
+                                            <td>NOT START</td>
+                                            <td>-5</td>
+                                        </tr>
+                                        <tr>
+                                            <td><a class="font-link-rms" href="">S104795</a></td>
+                                            <td>01-Oct-25</td>
+                                            <td>NVTFWS005N08XLTAG</td>
+                                            <td>WDFN8 3.3*3.3*0.65</td>
+                                            <td>HTGBx</td>
+                                            <td>26-Sep-25</td>
+                                            <td>IN PROCESS</td>
+                                            <td>NOT START</td>
+                                            <td>-5</td>
+                                        </tr>
+                                        <tr>
+                                            <td><a class="font-link-rms" href="">S104795</a></td>
+                                            <td>01-Oct-25</td>
+                                            <td>NVTFWS005N08XLTAG</td>
+                                            <td>WDFN8 3.3*3.3*0.65</td>
+                                            <td>HTGBy</td>
+                                            <td>26-Sep-25</td>
+                                            <td>IN PROCESS</td>
+                                            <td>NOT START</td>
+                                            <td>-5</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
                             </div>
-                            <!-- Row end -->
-
                         </div>
                     </div>
+                    <!-- Card end -->
                 </div>
                 <div class="col-12">
+                    <!-- Card start -->
                     <div class="card mb-4">
                         <div class="card-header">
-                            <h5 class="card-title">Compare</h5>
+                            <h5 class="card-title">RMS <span style="color:#D97D55">Return from</span> Loading (LRT)</h5>
                         </div>
                         <div class="card-body">
-                            <div class="row gx-4">
-                                <div class="col-xxl-2 col-lg-3 col-sm-12 col-12">
-                                    <div class="border rounded-2 p-3 h-100 d-flex justify-content-center align-items-center">
-                                        <div class="text-center">
-                                            <h5 class="mb-5">Africa</h5>
-                                            <div class="my-4">
-                                                <h4 class="text-primary">88M</h4>
-                                                <h6 class="m-0">Visitors</h6>
-                                            </div>
-                                            <div class="my-4">
-                                                <h4 class="text-secondary">$96B</h4>
-                                                <h6 class="m-0">Sales</h6>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-xxl-8 col-lg-6 col-sm-12 col-12">
-                                    <!-- Row start -->
-                                    <div class="row align-items-center">
-                                        <div class="col-sm-5 col-12">
-                                            <div id="mapAfrica" class="chart-height-xl"></div>
-                                        </div>
-                                        <div class="col-sm-2 col-12">
-                                            <div class="vs"></div>
-                                        </div>
-                                        <div class="col-sm-5 col-12">
-                                            <div id="mapEurope" class="chart-height-xl"></div>
-                                        </div>
-                                    </div>
-                                    <!-- Row end -->
-                                </div>
-                                <div class="col-xxl-2 col-lg-3 col-sm-12 col-12">
-                                    <div class="border rounded-2 p-3 h-100 d-flex justify-content-center align-items-center">
-                                        <div class="text-center">
-                                            <h5 class="mb-5">Europe</h5>
-                                            <div class="my-4">
-                                                <h4 class="text-primary">48M</h4>
-                                                <h6 class="m-0">Visitors</h6>
-                                            </div>
-                                            <div class="my-4">
-                                                <h4 class="text-secondary">$69B</h4>
-                                                <h6 class="m-0">Sales</h6>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
+                            <div class="table-responsive">
+                                <table id="scrollVertical2" class="table pending custom-table">
+                                    <thead>
+                                        <tr>
+                                            <th>RMS No</th>
+                                            <th>Event Start Date</th>
+                                            <th>Event End Date</th>
+                                            <th>Device</th>
+                                            <th>Package</th>
+                                            <th>Event</th>
+                                            <th>RMS Status</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td><a class="font-link-rms" href=""> S106696</a></td>
+                                            <td>01-Sep-25</td>
+                                            <td>30-Sep-25</td>
+                                            <td>NVTFWS027N10MCLTAG</td>
+                                            <td>S08FL</td>
+                                            <td>HTGB</td>
+                                            <td>IN PROCESS</td>
+                                            <!--                                            <td>
+                                                                                            <a class="btn btn-primary btn-sm me-1" href="#"><i class="bi bi-pencil"></i></a>
+                                                                                        </td>-->
+                                        </tr>
+                                        <tr>
+                                            <td><a class="font-link-rms" href=""> S106696</a></td>
+                                            <td>01-Sep-25</td>
+                                            <td>30-Sep-25</td>
+                                            <td>NVTFWS027N10MCLTAG</td>
+                                            <td>S08FL</td>
+                                            <td>HTGB</td>
+                                            <td>IN PROCESS</td>
+                                        </tr>
+                                        <tr>
+                                            <td><a class="font-link-rms" href=""> S106696</a></td>
+                                            <td>01-Sep-25</td>
+                                            <td>30-Sep-25</td>
+                                            <td>NVTFWS027N10MCLTAG</td>
+                                            <td>S08FL</td>
+                                            <td>HTGB</td>
+                                            <td>IN PROCESS</td>
+                                        </tr>
+                                        <tr>
+                                            <td><a class="font-link-rms" href=""> S106696</a></td>
+                                            <td>01-Sep-25</td>
+                                            <td>30-Sep-25</td>
+                                            <td>NVTFWS027N10MCLTAG</td>
+                                            <td>S08FL</td>
+                                            <td>HTGB</td>
+                                            <td>IN PROCESS</td>
+                                        </tr>
+                                        <tr>
+                                            <td><a class="font-link-rms" href=""> S106696</a></td>
+                                            <td>01-Sep-25</td>
+                                            <td>30-Sep-25</td>
+                                            <td>NVTFWS027N10MCLTAG</td>
+                                            <td>S08FL</td>
+                                            <td>HTGB</td>
+                                            <td>IN PROCESS</td>
+                                        </tr>
+                                        <tr>
+                                            <td><a class="font-link-rms" href=""> S106696</a></td>
+                                            <td>01-Sep-25</td>
+                                            <td>30-Sep-25</td>
+                                            <td>NVTFWS027N10MCLTAG</td>
+                                            <td>S08FL</td>
+                                            <td>HTGB</td>
+                                            <td>IN PROCESS</td>
+                                        </tr>
+                                        <tr>
+                                            <td><a class="font-link-rms" href=""> S106696</a></td>
+                                            <td>01-Sep-25</td>
+                                            <td>30-Sep-25</td>
+                                            <td>NVTFWS027N10MCLTAG</td>
+                                            <td>S08FL</td>
+                                            <td>HTGB</td>
+                                            <td>IN PROCESS</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
                             </div>
                         </div>
                     </div>
-                </div>
-                <div class="col-xxl-8 col-sm-12 col-12">
-                    <div class="card mb-4">
-                        <div class="card-header">
-                            <h5 class="card-title">Sales</h5>
-                        </div>
-                        <div class="card-body">
-                            <div class="row gx-4">
-                                <div class="col-lg-3 col-sm-12 col-12">
-                                    <div class="border rounded-2 p-3 h-100 d-flex justify-content-center align-items-center">
-                                        <div class="text-center">
-                                            <h5 class="mb-5">Weekly</h5>
-                                            <div class="my-4">
-                                                <h4 class="text-primary">$3,200</h4>
-                                                <h6 class="m-0">Direct</h6>
-                                            </div>
-                                            <div class="my-4">
-                                                <h4 class="text-secondary">$7,100</h4>
-                                                <h6 class="m-0">Online</h6>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-lg-6 col-sm-12 col-12">
-                                    <div class="border rounded-2 p-3">
-                                        <div class="scroll250">
-
-                                            <div class="d-grid gap-3">
-                                                <div class="d-flex">
-                                                    <div>Apple Inc</div>
-                                                    <div class="ms-auto d-flex gap-2">
-                                                        <i class="bi bi-arrow-up-right text-primary"></i>
-                                                        <span>46,540</span>
-                                                        <span class="text-primary">+2.005</span>
-                                                    </div>
-                                                </div>
-                                                <div class="d-flex">
-                                                    <div>Google Inc</div>
-                                                    <div class="ms-auto d-flex gap-2">
-                                                        <i class="bi bi-arrow-down-right text-secondary"></i>
-                                                        <span>8219</span>
-                                                        <small class="text-secondary">-4.031</small>
-                                                    </div>
-                                                </div>
-                                                <div class="d-flex">
-                                                    <div>Yahoo Inc</div>
-                                                    <div class="ms-auto d-flex gap-2">
-                                                        <i class="bi bi-arrow-up-right text-primary"></i>
-                                                        <span>3388</span>
-                                                        <small class="text-primary">+7.652</small>
-                                                    </div>
-                                                </div>
-                                                <div class="d-flex">
-                                                    <div>Facebook Inc</div>
-                                                    <div class="ms-auto d-flex gap-2">
-                                                        <i class="bi bi-arrow-up-right text-primary"></i>
-                                                        <span>4654</span>
-                                                        <small class="text-primary">+11.98</small>
-                                                    </div>
-                                                </div>
-                                                <div class="d-flex">
-                                                    <div>Ebay Inc</div>
-                                                    <div class="ms-auto d-flex gap-2">
-                                                        <i class="bi bi-arrow-down-right text-secondary"></i>
-                                                        <span>2893</span>
-                                                        <small class="text-secondary">-5.281</small>
-                                                    </div>
-                                                </div>
-                                                <div class="d-flex">
-                                                    <div>Amazon Inc</div>
-                                                    <div class="ms-auto d-flex gap-2">
-                                                        <i class="bi bi-arrow-down-right text-secondary"></i>
-                                                        <span>27880</span>
-                                                        <small class="text-secondary">+7.318</small>
-                                                    </div>
-                                                </div>
-                                                <div class="d-flex">
-                                                    <div>Microsoft Inc</div>
-                                                    <div class="ms-auto d-flex gap-2">
-                                                        <i class="bi bi-arrow-up-right text-primary"></i>
-                                                        <span>68964</span>
-                                                        <small class="text-primary">+4.980</small>
-                                                    </div>
-                                                </div>
-                                                <div class="d-flex">
-                                                    <div>Apple Inc</div>
-                                                    <div class="ms-auto d-flex gap-2">
-                                                        <i class="bi bi-arrow-up-right text-primary"></i>
-                                                        <span>46,540</span>
-                                                        <span class="text-primary">+2.005</span>
-                                                    </div>
-                                                </div>
-                                                <div class="d-flex">
-                                                    <div>Google Inc</div>
-                                                    <div class="ms-auto d-flex gap-2">
-                                                        <i class="bi bi-arrow-down-right text-secondary"></i>
-                                                        <span>8219</span>
-                                                        <small class="text-secondary">-4.031</small>
-                                                    </div>
-                                                </div>
-                                                <div class="d-flex">
-                                                    <div>Yahoo Inc</div>
-                                                    <div class="ms-auto d-flex gap-2">
-                                                        <i class="bi bi-arrow-up-right text-primary"></i>
-                                                        <span>3388</span>
-                                                        <small class="text-primary">+7.652</small>
-                                                    </div>
-                                                </div>
-                                                <div class="d-flex">
-                                                    <div>Facebook Inc</div>
-                                                    <div class="ms-auto d-flex gap-2">
-                                                        <i class="bi bi-arrow-up-right text-primary"></i>
-                                                        <span>4654</span>
-                                                        <small class="text-primary">+11.98</small>
-                                                    </div>
-                                                </div>
-                                                <div class="d-flex">
-                                                    <div>Ebay Inc</div>
-                                                    <div class="ms-auto d-flex gap-2">
-                                                        <i class="bi bi-arrow-down-right text-secondary"></i>
-                                                        <span>2893</span>
-                                                        <small class="text-secondary">-5.281</small>
-                                                    </div>
-                                                </div>
-                                                <div class="d-flex">
-                                                    <div>Amazon Inc</div>
-                                                    <div class="ms-auto d-flex gap-2">
-                                                        <i class="bi bi-arrow-down-right text-secondary"></i>
-                                                        <span>27880</span>
-                                                        <small class="text-secondary">+7.318</small>
-                                                    </div>
-                                                </div>
-                                                <div class="d-flex">
-                                                    <div>Microsoft Inc</div>
-                                                    <div class="ms-auto d-flex gap-2">
-                                                        <i class="bi bi-arrow-up-right text-primary"></i>
-                                                        <span>68964</span>
-                                                        <small class="text-primary">+4.980</small>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-lg-3 col-sm-12 col-12">
-                                    <div class="border rounded-2 p-3 h-100 d-flex justify-content-center align-items-center">
-                                        <div class="text-center">
-                                            <h5 class="mb-5">Monthly</h5>
-                                            <div class="my-4">
-                                                <h4 class="text-primary">$18,300</h4>
-                                                <h6 class="m-0">Direct</h6>
-                                            </div>
-                                            <div class="my-4">
-                                                <h4 class="text-secondary">$35,700</h4>
-                                                <h6 class="m-0">Online</h6>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-xxl-4 col-lg-6 col-sm-12 col-12">
-                    <div class="card mb-4">
-                        <div class="card-header">
-                            <h5 class="card-title">Chart with Alert</h5>
-                        </div>
-                        <div class="card-body">
-                            <div class="position-relative">
-                                <span class="badge bg-primary position-absolute top-0 end-0 mt-n3">
-                                    7 Orders Pending
-                                </span>
-                            </div>
-                            <div id="graph1"></div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-lg-6 col-sm-12 col-12">
-                    <div class="card mb-4">
-                        <div class="card-header">
-                            <h5 class="card-title">Chart with Buttons</h5>
-                        </div>
-                        <div class="card-body">
-                            <div class="d-flex justify-content-end">
-                                <div class="btn-group" role="group" aria-label="Basic outlined example">
-                                    <button type="button" class="btn btn-outline-light">Month</button>
-                                    <button type="button" class="btn btn-outline-light">Week</button>
-                                    <button type="button" class="btn btn-outline-light">Today</button>
-                                </div>
-                            </div>
-                            <div id="graph2"></div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-xxl-6 col-sm-12 col-12">
-                    <div class="card mb-4">
-                        <div class="card-header">
-                            <h5 class="card-title">Chart with Icons</h5>
-                        </div>
-                        <div class="card-body">
-                            <div class="d-flex justify-content-end">
-                                <div class="btn-group" role="group" aria-label="Basic outlined example">
-                                    <button type="button" class="btn btn-outline-light">
-                                        <i class="bi bi-cloud-download"></i>
-                                    </button>
-                                    <button type="button" class="btn btn-outline-light">
-                                        <i class="bi bi-printer"></i>
-                                    </button>
-                                </div>
-                            </div>
-                            <div id="graph3"></div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-xxl-6 col-sm-12 col-12">
-                    <div class="card mb-4">
-                        <div class="card-body">
-                            <div id="graph6"></div>
-                            <!-- Row start -->
-                            <div class="row gx-4">
-                                <div class="col-sm-6 col-6">
-                                    <div class="text-center">
-                                        <h5>Claimed</h5>
-                                        <h3 class="text-primary">3200</h3>
-                                    </div>
-                                </div>
-                                <div class="col-sm-6 col-6">
-                                    <div class="text-center">
-                                        <h5>Expired</h5>
-                                        <h3 class="text-secondary">1500</h3>
-                                    </div>
-                                </div>
-                            </div>
-                            <!-- Row end -->
-                        </div>
-                    </div>
-                </div>
-                <div class="col-xxl-6 col-sm-12 col-12">
-                    <div class="card mb-4">
-                        <div class="card-body">
-                            <div id="graph7"></div>
-                            <div class="text-center">
-                                <h3>7520</h3>
-                                <h5 class="text-truncate fw-light">26% higher than last month.</h5>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-xxl-6 col-sm-12 col-12">
-                    <div class="card mb-4">
-                        <div class="card-header">
-                            <h5 class="card-title">Cutomers</h5>
-                        </div>
-                        <div class="card-body">
-
-                            <div class="scroll300">
-                                <!-- Row start -->
-                                <div class="row gx-4">
-                                    <div class="col-sm-6 col-12">
-                                        <div class="d-grid gap-4 my-5">
-                                            <div class="d-flex align-items-center">
-                                                <i class="bi bi-person fs-1 text-primary"></i>
-                                                <div class="ms-3">
-                                                    <h5>Current Customers</h5>
-                                                    <p class="m-0">Active 74%</p>
-                                                </div>
-                                            </div>
-                                            <div class="d-flex align-items-center">
-                                                <i class="bi bi-person-check fs-1 text-secondary"></i>
-                                                <div class="ms-3">
-                                                    <h5>New Customers</h5>
-                                                    <p class="m-0">Increased 21%</p>
-                                                </div>
-                                            </div>
-                                            <div class="d-flex align-items-center">
-                                                <i class="bi bi-person-plus fs-1 text-secondary"></i>
-                                                <div class="ms-3">
-                                                    <h5>Targeted Customers</h5>
-                                                    <p class="m-0">Increased 38%</p>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="col-sm-6 col-12">
-                                        <div id="graph8"></div>
-                                    </div>
-                                </div>
-                                <!-- Row end -->
-                            </div>
-
-                        </div>
-                    </div>
-                </div>
-                <div class="col-xxl-3 col-sm-6 col-12">
-                    <div class="card mb-4">
-                        <div class="card-header">
-                            <h5 class="card-title">Logs</h5>
-                        </div>
-                        <div class="card-body">
-                            <div class="scroll300">
-                                <div class="d-grid gap-3">
-                                    <div class="d-flex">
-                                        <div class="bi bi-play-circle-fill text-primary"></div>
-                                        <div class="ms-2">New item sold</div>
-                                        <div class="ms-auto">10:10</div>
-                                    </div>
-                                    <div class="d-flex">
-                                        <div class="bi bi-play-circle-fill text-primary"></div>
-                                        <div class="ms-2">Notification from bank</div>
-                                        <div class="ms-auto">05:25</div>
-                                    </div>
-                                    <div class="d-flex">
-                                        <div class="bi bi-play-circle-fill text-primary"></div>
-                                        <div class="ms-2">Transaction success alert</div>
-                                        <div class="ms-auto">09:45</div>
-                                    </div>
-                                    <div class="d-flex">
-                                        <div class="bi bi-play-circle-fill text-primary"></div>
-                                        <div class="ms-2">Your item has been updated</div>
-                                        <div class="ms-auto">06:50</div>
-                                    </div>
-                                    <div class="d-flex">
-                                        <div class="bi bi-play-circle-fill text-primary"></div>
-                                        <div class="ms-2">New order</div>
-                                        <div class="ms-auto">12:30</div>
-                                    </div>
-                                    <div class="d-flex">
-                                        <div class="bi bi-play-circle-fill text-primary"></div>
-                                        <div class="ms-2">Item bought</div>
-                                        <div class="ms-auto">04:22</div>
-                                    </div>
-                                    <div class="d-flex">
-                                        <div class="bi bi-play-circle-fill text-primary"></div>
-                                        <div class="ms-2">New sale: Messi Wills</div>
-                                        <div class="ms-auto">10:10</div>
-                                    </div>
-                                    <div class="d-flex">
-                                        <div class="bi bi-play-circle-fill text-primary"></div>
-                                        <div class="ms-2">Order received</div>
-                                        <div class="ms-auto">12:55</div>
-                                    </div>
-                                    <div class="d-flex">
-                                        <div class="bi bi-play-circle-fill text-primary"></div>
-                                        <div class="ms-2">Service information</div>
-                                        <div class="ms-auto">09:12</div>
-                                    </div>
-                                    <div class="d-flex">
-                                        <div class="bi bi-play-circle-fill text-primary"></div>
-                                        <div class="ms-2">Message from Wilson</div>
-                                        <div class="ms-auto">09:27</div>
-                                    </div>
-                                    <div class="d-flex">
-                                        <div class="bi bi-play-circle-fill text-primary"></div>
-                                        <div class="ms-2">New item sale: Joy Root</div>
-                                        <div class="ms-auto">02:39</div>
-                                    </div>
-                                    <div class="d-flex">
-                                        <div class="bi bi-play-circle-fill text-primary"></div>
-                                        <div class="ms-2">Product update</div>
-                                        <div class="ms-auto">08:22</div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-xxl-3 col-sm-6 col-12">
-                    <div class="card mb-4">
-                        <div class="card-header">
-                            <h5 class="card-title">Keywords</h5>
-                        </div>
-                        <div class="card-body">
-                            <div id="tagscloud">
-                                <a href="reports.html" class="tagc1">Analytics</a>
-                                <a href="reports.html" class="tagc2">Tasks</a>
-                                <a href="index.html" class="tagc3">Sales</a>
-                                <a href="#" class="tagc4">Bootstrap</a>
-                                <a href="#" class="tagc1">Scss</a>
-                                <a href="#" class="tagc2">Bootstrap</a>
-                                <a href="index.html" class="tagc3">Admin</a>
-                                <a href="index.html" class="tagc4">Dashboard</a>
-                                <a href="#" class="tagc1">Creative</a>
-                                <a href="#" class="tagc2">Rising Stars</a>
-                                <a href="reports.html" class="tagc3">BS Admin</a>
-                                <a href="#" class="tagc4">Top Rated</a>
-                                <a href="#" class="tagc1">Admin</a>
-                                <a href="#" class="tagc2">Creative</a>
-                                <a href="#" class="tagc3">Best Selling</a>
-                                <a href="#" class="tagc4">Awesome</a>
-                                <a href="#" class="tagc1">jQuery</a>
-                                <a href="#" class="tagc2">Hot Under $19</a>
-                                <a href="reports.html" class="tagc3">High</a>
-                                <a href="#" class="tagc4">Low Price</a>
-                                <a href="#" class="tagc1">Top Selling</a>
-                                <a href="index.html" class="tagc2">Best Admin</a>
-                                <a href="#" class="tagc3">Popular</a>
-                                <a href="#" class="tagc1">Best Sellers</a>
-                                <a href="index.html" class="tagc2">eCommerce</a>
-                                <a href="reports.html" class="tagc3">Analytics</a>
-                                <a href="#" class="tagc4">Rising Stars</a>
-                                <a href="tasks.html" class="tagc1">Crm</a>
-                                <a href="#" class="tagc2">Sass</a>
-                                <a href="#" class="tagc3">Template Monster</a>
-                                <a href="index.html" class="tagc4">Dashboard</a>
-                                <a href="#" class="tagc1">Admin</a>
-                                <a href="reports.html" class="tagc2">Creative</a>
-                                <a href="#" class="tagc3">Template Monster</a>
-                                <a href="#" class="tagc4">Theme</a>
-                                <a href="#" class="tagc1">Dashboard</a>
-                                <a href="#" class="tagc2">Rising stars</a>
-                                <a href="#" class="tagc3">Template</a>
-                                <a href="index.html" class="tagc4">Top Rated</a>
-                            </div>
-                        </div>
-                    </div>
+                    <!-- Card end -->
                 </div>
                 <div class="col-12">
+                    <!-- Card start -->
                     <div class="card mb-4">
                         <div class="card-header">
-                            <h5 class="card-title">Earnings</h5>
+                            <h5 class="card-title">New Hardware - Pending Vm/Functional Test</h5>
                         </div>
                         <div class="card-body">
-                            <!-- Row start -->
-                            <div class="row gx-4">
-                                <div class="col-xxl-8 col-sm-8 col-12">
-                                    <div id="world-map-markers2" class="chart-height-xl"></div>
-                                </div>
-                                <div class="col-sm-4 col-12">
-                                    <div class="d-flex align-items-center mb-2">
-                                        <i class="bi bi-globe display-5 text-primary me-2"></i>
-                                        <h3 class="m-0">$6,99,000</h3>
-                                        <i class="bi bi-arrow-up-right text-primary ms-2"></i>
-                                    </div>
-                                    <p>This dashboard unquestionably the largest visitors in the world with TWO million monthly active
-                                        users and ONE million daily active.</p>
-                                    <a href="index.html" class="btn btn-primary">View Stats</a>
-                                </div>
+                            <div class="table-responsive">
+                                <table id="scrollVertical2" class="table pending custom-table">
+                                    <thead>
+                                        <tr>
+                                            <th><span>No</span></th>
+                                            <th><span>Item Type</span></th>
+                                            <th><span>Sub Type</span></th>
+                                            <th><span>Item ID</span></th>
+                                            <th><span>Item Name</span></th>
+                                            <th><span>Assembly ID</span></th>
+                                            <th><span>Registered By</span></th>
+                                            <th><span>Registered Date</span></th>
+                                            <th><span>Status</span></th>
+                                            <th class="col-1"><span>Manage</span></th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <c:forEach items="${item}" var="parameterMaster" varStatus="parameterMasterLoop">
+                                            <tr>
+                                                <td><c:out value="${parameterMasterLoop.index+1}"/></td>
+                                                <td><c:out value="${parameterMaster.itemType}"/></td>
+                                                <td id="modal_delete_info_${parameterMaster.id}"><c:out value="${parameterMaster.subType}"/></td>
+                                                <td><c:out value="${parameterMaster.itemId}"/></td>
+                                                <td><c:out value="${parameterMaster.itemName}"/></td>
+                                                <td><c:out value="${parameterMaster.assemblyId}"/></td>
+                                                <td><c:out value="${parameterMaster.createdBy}"/></td>
+                                                <td><c:out value="${parameterMaster.createdDate}"/></td>
+                                                <td><c:out value="${parameterMaster.status}"/></td>
+                                                <td align="center">
+                                                    <c:set var="String" value="${parameterMaster.status}"/>
+                                                    <c:choose>
+                                                        <c:when test="${(fn:contains(String, 'Activity Selection'))}">
+                                                            <a href="${contextPath}/hw/item/addActivity/${parameterMaster.id}" class="table-link" title="Edit">
+                                                                <i class="bi bi-box-arrow-in-right h3"></i>
+                                                            </a>
+                                                        </c:when>
+                                                        <c:otherwise>
+                                                            <a href="${contextPath}/hw/item/add2/${parameterMaster.id}" class="table-link" title="Edit">
+                                                                <i class="bi bi-box-arrow-in-right h3"></i>
+                                                            </a>
+                                                        </c:otherwise>
+                                                    </c:choose>
+
+                                                </td>
+                                            </tr>
+                                        </c:forEach>
+                                    </tbody>
+                                </table>
                             </div>
-                            <!-- Row end -->
+                        </div>
+                    </div>
+                    <!-- Card end -->
+                </div>
+                <div class="col-sm-12 col-md-6">
+                    <!-- Card start -->
+                    <div class="card mb-4">
+                        <div class="card-header">
+                            <!--<h5 class="card-title" style="color:#5ec3f1">MPE</h5>-->
+                            <h5 class="card-title">Maverick</h5>
+                        </div>
+                        <div class="card-body">
+                            <div class="table-responsive">
+                                <table id="scrollVertical3" class="table pending custom-table">
+                                    <thead>
+                                        <tr>
+                                            <th>Hardware Type</th>
+                                            <th>Hardware ID</th>
+                                            <th>MPE Category</th>
+                                            <th>MPE Date</th>
+                                            <th>Status</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td>Motherboard</td>
+                                            <td><a class="font-link-rms" href=""> AVI111-01</a></td>
+                                            <td>VM After Loading</td>
+                                            <td>30-Sep-25</td>
+                                            <td>Pending Disposition</td>
+                                        </tr>
+                                        <tr>
+                                            <td>Motherboard</td>
+                                            <td><a class="font-link-rms" href=""> AVI111-01</a></td>
+                                            <td>VM After Loading</td>
+                                            <td>30-Sep-25</td>
+                                            <td>Pending Disposition</td>
+                                        </tr>
+                                        <tr>
+                                            <td>Motherboard</td>
+                                            <td><a class="font-link-rms" href=""> AVI111-01</a></td>
+                                            <td>VM After Loading</td>
+                                            <td>30-Sep-25</td>
+                                            <td>Pending Disposition</td>
+                                        </tr>
+                                        <tr>
+                                            <td>Motherboard</td>
+                                            <td><a class="font-link-rms" href=""> AVI111-01</a></td>
+                                            <td>VM After Loading</td>
+                                            <td>30-Sep-25</td>
+                                            <td>Pending Disposition</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Card end -->
+                </div>
+                <div class="col-sm-12 col-md-6">
+                    <!-- Card start -->
+                    <div class="card mb-4">
+                        <div class="card-header">
+                            <h5 class="card-title">New HW Fabrication</h5>
+                            <!--<h5 class="card-title" style="color:#59AC77">New HW Fabrication</h5>-->
+                        </div>
+                        <div class="card-body">
+                            <div class="table-responsive">
+                                <table id="scrollVertical4" class="table pending custom-table">
+                                    <thead>
+                                        <tr>
+                                            <th>Hardware Type</th>
+                                            <th>Device</th>
+                                            <th>Package</th>
+                                            <th>Event</th>
+                                            <th>Requestor</th>
+                                            <th>Request Date</th>
+                                            <th>Status</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td><a class="font-link-rms" href=""> Motherboard</a></td>
+                                            <td>NVTFWS027N10MCLTAG</td>
+                                            <td>S08FL</td>
+                                            <td>HTGB</td>
+                                            <td>Atiqah</td>
+                                            <td>01-09-2025</td>
+                                            <td>Pending PR</td>
+                                        </tr>
+                                        <tr>
+                                            <td><a class="font-link-rms" href=""> Motherboard</a></td>
+                                            <td>NVTFWS027N10MCLTAG</td>
+                                            <td>S08FL</td>
+                                            <td>IOL</td>
+                                            <td>Hakim</td>
+                                            <td>01-09-2025</td>
+                                            <td>Pending PO</td>
+                                        </tr>
+                                        <tr>
+                                            <td><a class="font-link-rms" href=""> Motherboard</a></td>
+                                            <td>NVTFWS027N10MCLTAG</td>
+                                            <td>S08FL</td>
+                                            <td>HTGB</td>
+                                            <td>Atiqah</td>
+                                            <td>01-09-2025</td>
+                                            <td>Fabrication in Process</td>
+                                        </tr>
+
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Card end -->
+                </div>
+                <div class="col-xxl-6 col-sm-12 col-12">
+                    <div class="card mb-4">
+                        <div class="card-header">
+                            <h5 class="card-title">Maverick 2025</h5>
+                        </div>
+                        <div class="card-body">
+
+                            <div class="scroll370">
+                                <div class="overflow-hidden">
+                                    <div id="demography2" class="auto-align-graph"></div>
+                                </div>
+
+                                <!--                                <div class="bg-light rounded-5 p-3 mt-3">
+                                                                    <div class="d-flex align-items-center">
+                                                                        <div class="icon-box sm bg-primary rounded-5 me-2">
+                                                                            <i class="bi bi-percent"></i>
+                                                                        </div>
+                                                                        <p class="m-0">Conversion rate is 20% higher than last week.</p>
+                                                                    </div>
+                                                                </div>-->
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+                <div class="col-xxl-6 col-sm-12 col-12">
+                    <div class="card mb-4">
+                        <div class="card-header">
+                            <h5 class="card-title">Hardware Readiness Report 2024/2025</h5>
+                            <!--<h6>*Cycle Time Calculation : number of HW release to production divide by number of RMS_Event (Status In Process)</h6>-->
+                            <p style="font-size: 12px; color: blue;">
+                                *Cycle Time : Days taken to release hardware to production from the first day the RMS_Event with 'In Process' status comes in.</p>
+                        </div>
+                        <div class="card-body">
+                            <div id="chartsample"></div>
                         </div>
                     </div>
                 </div>
@@ -674,6 +703,7 @@
 
         <!-- App Footer start -->
         <div class="app-footer">
+            <img class="img3" src="${contextPath}/resources/onsemi logo.webp" alt="onsemi">
             <span>© HEATs 2025</span>
         </div>
         <!-- App footer end -->
@@ -682,6 +712,8 @@
 
         <!-- Apex Charts -->
         <script src="${contextPath}/resources/statflow/vendor/apex/apexcharts.min.js"></script>
+        <script src="${contextPath}/resources/statflow/vendor/apex/custom/repotrs/demography.js"></script>
+        <script src="${contextPath}/resources/statflow/vendor/apex/examples/bar/basic-bar-graph-grouped.js"></script>
         <script src="${contextPath}/resources/statflow/vendor/apex/custom/widgets/graph1.js"></script>
         <script src="${contextPath}/resources/statflow/vendor/apex/custom/widgets/graph2.js"></script>
         <script src="${contextPath}/resources/statflow/vendor/apex/custom/widgets/graph3.js"></script>
@@ -704,66 +736,424 @@
         <!-- jQcloud Keywords -->
         <script src="${contextPath}/resources/statflow/vendor/tagsCloud/tagsCloud.js"></script>
 
+        <!-- Data Tables -->
+        <script src="${contextPath}/resources/statflow/vendor/datatables/dataTables.min.js"></script>
+        <script src="${contextPath}/resources/statflow/vendor/datatables/dataTables.bootstrap.min.js"></script>
+
+        <!-- Custom Data tables -->
+        <script src="${contextPath}/resources/statflow/vendor/datatables/custom/custom-datatables.js"></script>
+
+        <!-- DataTable Buttons -->
+        <script src="${contextPath}/resources/statflow/vendor/datatables/buttons/dataTables.buttons.min.js"></script>
+        <script src="${contextPath}/resources/statflow/vendor/datatables/buttons/jszip.min.js"></script>
+        <script src="${contextPath}/resources/statflow/vendor/datatables/buttons/dataTables.buttons.min.js"></script>
+        <script src="${contextPath}/resources/statflow/vendor/datatables/buttons/pdfmake.min.js"></script>
+        <script src="${contextPath}/resources/statflow/vendor/datatables/buttons/vfs_fonts.js"></script>
+        <script src="${contextPath}/resources/statflow/vendor/datatables/buttons/buttons.html5.min.js"></script>
+        <script src="${contextPath}/resources/statflow/vendor/datatables/buttons/buttons.print.min.js"></script>
+        <script src="${contextPath}/resources/statflow/vendor/datatables/buttons/buttons.colVis.min.js"></script>
+
     </s:layout-component>
     <s:layout-component name="page_js_inline">
+        <script>
 
-<!--        <script>
-            var options1 = {
-                series: [{
-                        name: 'Completed',
-                        data: [1, 2, 3, 2, 3]
-                    }],
+            
+
+            //RMS Return from Loading
+            $(function () {
+                $("#scrollVertical2").DataTable({
+                    scrollY: "207px",
+                    scrollCollapse: false,
+                    paging: false,
+                    bInfo: false,
+                });
+            });
+
+            $(function () {
+                $("#scrollVertical3").DataTable({
+                    scrollY: "150px",
+                    scrollCollapse: false,
+                    paging: false,
+                    bInfo: false,
+                });
+            });
+
+            $(function () {
+                $("#scrollVertical4").DataTable({
+                    scrollY: "150px",
+                    scrollCollapse: false,
+                    paging: false,
+                    bInfo: false,
+                });
+            });
+
+            var options = {
+                series: [42, 47, 52, 58, 65],
                 chart: {
-                    type: 'line',
-                    width: 130,
-                    height: 75,
-                    sparkline: {
-                        enabled: true
+//                    width: 370,
+                    height: 370,
+                    type: 'polarArea',
+                    fontFamily: 'Poppins, sans-serif',
+                    background: '#FCFCEB',
+                    toolbar: {
+                        show: false
                     },
+                    animations: {
+                        enabled: true,
+                        easing: 'easeinout',
+                        speed: 800
+                    }
                 },
-                colors: ['#507dff'],
-                stroke: {
-                    curve: 'smooth',
-                    width: 7,
-                },
+                labels: ['VM Before Loading', 'BIB Test before Loading', 'Abnormal Loading', 'Ionic Test', 'VM After Loading'],
                 fill: {
-                    type: 'gradient',
+                    opacity: 0.85,
                     gradient: {
-                        shade: 'light',
-                        type: 'vertical',
-                        shadeIntensity: 0.5,
-                        gradientToColors: ['#8e9fff'],
-                        inverseColors: false,
-                        opacityFrom: 0.8,
-                        opacityTo: 0.2,
+                        enabled: true
                     }
                 },
-                tooltip: {
-                    fixed: {
-                        enabled: false
-                    },
-                    x: {
-                        show: false
-                    },
-                    marker: {
-                        show: false
-                    }
+                stroke: {
+                    width: 2,
+                    colors: ['#ffffff']
                 },
-                xaxis: {
-                    type: 'day',
-                    categories: ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"],
+                colors: ["#50589C", "#D97D55", "#5ec3f1", "#9DB6FF", "#59AC77"],
+                yaxis: {
+                    show: false
+                },
+                legend: {
+                    position: 'bottom',
+                    fontSize: '14px',
+                    markers: {
+                        radius: 3
+                    }
                 },
                 tooltip: {
                     y: {
                         formatter: function (val) {
+//                            return val + " Million"
                             return val
                         }
+                    },
+                    theme: 'dark'
+                },
+                dataLabels: {
+                    enabled: true,
+                    formatter: function (val) {
+                        return Math.round(val) + "%"
+                    },
+                    style: {
+                        fontSize: '12px',
+                        fontWeight: 'bold'
                     }
                 },
+                plotOptions: {
+                    polarArea: {
+                        rings: {
+                            strokeWidth: 0
+                        },
+                        spokes: {
+                            strokeWidth: 0
+                        },
+                        offsetY: 0,
+                        offsetX: 0
+                    }
+                },
+                responsive: [{
+                        breakpoint: 480,
+                        options: {
+                            chart: {
+                                width: 280
+                            },
+                            legend: {
+                                position: 'bottom'
+                            }
+                        }
+                    }]
             };
-            var chart1 = new ApexCharts(document.querySelector("#taskStats1"), options1);
-            chart1.render();
-        </script>-->
+
+            var chart = new ApexCharts(document.querySelector("#demography2"), options);
+            chart.render();
+
+//            var optionsss = {
+//                chart: {
+//                    height: 355,
+//                    type: 'bar',
+//                    toolbar: {
+//                        show: false,
+//                    },
+//                },
+//                plotOptions: {
+//                    bar: {
+//                        horizontal: true,
+//                        dataLabels: {
+//                            position: 'top',
+//                        },
+//                    }
+//                },
+//                dataLabels: {
+//                    enabled: true,
+//                    offsetX: -6,
+//                    style: {
+//                        fontSize: '12px',
+//                        colors: ['#fff']
+//                    }
+//                },
+//                stroke: {
+//                    show: true,
+//                    width: 0,
+//                },
+//                series: [{
+//                        name: 'WIP Incoming Request',
+//                        data: [44, 55, 41, 64, 22, 11, 43, 50, 66, 12, 33, 45]
+//                    }, {
+//                        name: 'WIP Completed',
+//                        data: [53, 32, 33, 44, 32, 32, 12, 5, 34, 12, 47, 6]
+//                    }],
+//                xaxis: {
+//                    categories: ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"],
+//                },
+//                grid: {
+//                    borderColor: '#ffe4a7',
+//                    strokeDashArray: 5,
+//                    xaxis: {
+//                        lines: {
+//                            show: true
+//                        }
+//                    },
+//                    yaxis: {
+//                        lines: {
+//                            show: false,
+//                        }
+//                    },
+//                    padding: {
+//                        top: 0,
+//                        right: 0,
+//                        bottom: 0,
+//                        left: 0
+//                    },
+//                },
+//                colors: ['#615FFF', '#05DF72'],
+//            }
+//            var chartss = new ApexCharts(
+//                    document.querySelector("#basic-bar-graph-grouped2"),
+//                    optionsss
+//                    );
+//            chartss.render();
+
+//                    var options1 = {
+//                        series: [{
+//                                name: 'Completed',
+//                                data: [1, 2, 3, 2, 3]
+//                            }],
+//                        chart: {
+//                            type: 'line',
+//                            width: 130,
+//                            height: 75,
+//                            sparkline: {
+//                                enabled: true
+//                            },
+//                        },
+//                        colors: ['#507dff'],
+//                        stroke: {
+//                            curve: 'smooth',
+//                            width: 7,
+//                        },
+//                        fill: {
+//                            type: 'gradient',
+//                            gradient: {
+//                                shade: 'light',
+//                                type: 'vertical',
+//                                shadeIntensity: 0.5,
+//                                gradientToColors: ['#8e9fff'],
+//                                inverseColors: false,
+//                                opacityFrom: 0.8,
+//                                opacityTo: 0.2,
+//                            }
+//                        },
+//                        tooltip: {
+//                            fixed: {
+//                                enabled: false
+//                            },
+//                            x: {
+//                                show: false
+//                            },
+//                            marker: {
+//                                show: false
+//                            }
+//                        },
+//                        xaxis: {
+//                            type: 'day',
+//                            categories: ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"],
+//                        },
+//                        tooltip: {
+//                            y: {
+//                                formatter: function (val) {
+//                                    return val
+//                                }
+//                            }
+//                        },
+//                    };
+//                    var chart1 = new ApexCharts(document.querySelector("#taskStats1"), options1);
+//                    chart1.render();
+
+            const averageValue = 3;
+            const averageData = new Array(12).fill(averageValue);
+            var options = {
+                series: [
+                    {
+                        name: 'HW In',
+                        type: 'column',
+                        data: [10, 12, 15, 15, 15, 18, 18, 16, 13, 14, 12, 12]
+                    }, {
+                        name: 'HW Released',
+                        type: 'column',
+                        data: [10, 10, 7, 10, 16, 19, 15, 15, 17, 15, 11, 12]
+                    }, {
+                        name: 'Cycle Time Goal',
+                        type: 'line',
+                        data: averageData
+                    }, {
+                        name: 'Average Cycle Time',
+                        type: 'line',
+                        data: [4.1, 3, 3.2, 2.5, 4.4, 4.5, 5.0, 5.8, 5.5, 5.4, 3.5, 4.5]
+                    }],
+                chart: {
+                    height: 350,
+                    type: 'line',
+                    background: '#FCFCEB',
+                    stacked: false
+                },
+                dataLabels: {
+                    enabled: false
+                },
+                stroke: {
+                    width: [1, 1, 4]
+                },
+                title: {
+//                    text: 'WIP Report 2025',
+                    align: 'left',
+                    offsetX: 110
+                },
+                xaxis: {
+                    categories: ['Dec 24', 'Jan 25', 'Feb 25', 'Mar 25', 'Apr 25', 'May 25', 'Jun 25', 'Jul 25', 'Aug 25', 'Sep 25', 'Oct 25', 'Nov 25']
+                },
+                yaxis: [
+
+                    {
+                        seriesName: 'HW In',
+                        min: 0,
+                        max: 20,
+                        axisTicks: {
+                            show: true
+                        },
+                        axisBorder: {
+                            show: true,
+                            color: '#008FFB'
+                        },
+                        labels: {
+                            style: {
+                                colors: '#008FFB'
+                            }
+                        },
+                        title: {
+                            text: "HW (RMS_EVENT)",
+                            style: {
+                                color: '#008FFB'
+                            }
+                        },
+                        tooltip: {
+                            enabled: true
+                        }
+                    },
+                    {
+                        seriesName: 'HW Released',
+                        show: false,
+                        min: 0,
+                        max: 20,
+                        opposite: true,
+                        axisTicks: {
+                            show: true
+                        },
+                        axisBorder: {
+                            show: true,
+                            color: '#00E396'
+                        },
+                        labels: {
+                            style: {
+                                colors: '#00E396'
+                            }
+                        },
+                        title: {
+                            text: "New Task",
+                            style: {
+                                color: '#00E396'
+                            }
+                        }
+                    }, {
+                        seriesName: 'AVERAGE',
+                        show: false,
+                        min: 0,
+                        max: 10,
+                        axisTicks: {
+                            show: true
+                        },
+                        axisBorder: {
+                            show: true,
+                            color: '#008FFB'
+                        },
+                        labels: {
+                            style: {
+                                colors: '#008FFB'
+                            }
+                        },
+                        title: {
+                            text: "kira dia",
+                            style: {
+                                color: '#00E396'
+                            }
+                        }
+                    },
+                    {
+                        seriesName: 'Average Cycle Time',
+                        opposite: true,
+                        min: 0,
+                        max: 10,
+                        axisTicks: {
+                            show: true
+                        },
+                        axisBorder: {
+                            show: true,
+                            color: '#C48204'
+                        },
+                        labels: {
+                            style: {
+                                colors: '#C48204'
+                            }
+                        },
+                        title: {
+                            text: "Cycle Time (Readiness Day)",
+                            style: {
+                                color: '#C48204'
+                            }
+                        }
+                    }
+                ],
+                tooltip: {
+                    fixed: {
+                        enabled: true,
+                        position: 'topLeft', // topRight, topLeft, bottomRight, bottomLeft
+                        offsetY: 30,
+                        offsetX: 60
+                    }
+                },
+                legend: {
+                    horizontalAlign: 'left',
+                    offsetX: 40
+                }
+            };
+
+            var chart = new ApexCharts(document.querySelector("#chartsample"), options);
+            chart.render();
+        </script>
 
     </s:layout-component>
 </s:layout-render>

@@ -286,6 +286,56 @@ public class RmsBookingDetailDAO {
         return rmsbookingDetail;
     }
 
+    public RmsBookingDetail getRmsBookingDetailByBookingPkid(String bookingPkid) {
+        String sql = "SELECT *,DATE_FORMAT(act_start_date,'%d-%M-%Y') AS actStartDate, DATE_FORMAT(event_start_date,'%d-%M-%Y') AS eventStartDate FROM rms_booking_detail WHERE booking_pkid = '" + bookingPkid + "'";
+        RmsBookingDetail rmsbookingDetail = null;
+        try {
+            PreparedStatement ps = conn.prepareStatement(sql);
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                rmsbookingDetail = new RmsBookingDetail();
+                rmsbookingDetail.setId(rs.getString("id"));
+                rmsbookingDetail.setBookingPkid(rs.getString("booking_pkid"));
+                rmsbookingDetail.setRmsNo(rs.getString("rms_no"));
+                rmsbookingDetail.setEvent(rs.getString("event"));
+                rmsbookingDetail.setDevice(rs.getString("device"));
+                rmsbookingDetail.setPackages(rs.getString("packages"));
+                rmsbookingDetail.setEventStartDate(rs.getString("eventStartDate"));
+                rmsbookingDetail.setRmsStatus(rs.getString("rms_status"));
+                rmsbookingDetail.setEventBeginStatus(rs.getString("event_begin_status"));
+                rmsbookingDetail.setEventEndStatus(rs.getString("event_end_status"));
+                rmsbookingDetail.setNoCurrentFtp(rs.getString("no_current_ftp"));
+                rmsbookingDetail.setEquipmentLocation(rs.getString("equipment_location"));
+                rmsbookingDetail.setEstStartDate(rs.getString("est_start_date"));
+                rmsbookingDetail.setActStartDate(rs.getString("actStartDate"));
+                rmsbookingDetail.setFolFilename(rs.getString("fol_filename"));
+                rmsbookingDetail.setTotalBooking(rs.getString("total_booking"));
+                rmsbookingDetail.setCreatedDate(rs.getString("created_date"));
+                rmsbookingDetail.setModifiedDate(rs.getString("modified_date"));
+                rmsbookingDetail.setStatus(rs.getString("status"));
+                rmsbookingDetail.setPriority(rs.getString("priority"));
+                rmsbookingDetail.setPriorityRemarks(rs.getString("priority_remarks"));
+                rmsbookingDetail.setPriorityBy(rs.getString("priority_by"));
+                rmsbookingDetail.setPriorityDate(rs.getString("priority_date"));
+                rmsbookingDetail.setFlag(rs.getString("flag"));
+                rmsbookingDetail.setDaysToEventStart(rs.getString("days_to_event_start"));
+            }
+            rs.close();
+            ps.close();
+        } catch (SQLException e) {
+            LOGGER.error(e.getMessage());
+        } finally {
+            if (conn != null) {
+                try {
+                    conn.close();
+                } catch (SQLException e) {
+                    LOGGER.error(e.getMessage());
+                }
+            }
+        }
+        return rmsbookingDetail;
+    }
+
     public List<RmsBookingDetail> getRmsBookingDetailList() {
         String sql = "SELECT * FROM rms_booking_detail ORDER BY id ASC";
         List<RmsBookingDetail> rmsbookingDetailList = new ArrayList<RmsBookingDetail>();

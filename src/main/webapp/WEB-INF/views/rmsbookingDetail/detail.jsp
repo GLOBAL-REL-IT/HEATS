@@ -222,6 +222,14 @@
                                             </div>
                                         </div>
                                     </div>
+                                    <div class="col-xl-3 col-sm-12 col-12">
+                                        <div class="mb-1">
+                                            <label for="itemId" class="form-label">Booking Remarks</label>
+                                            <div class="input input-group">
+                                                <textarea class="form-control" rows="5" id="bookingRemarks" name="bookingRemarks" readonly>${rmsRemarks}</textarea>
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
 
 
@@ -243,6 +251,80 @@
             <!-- Row start -->
             <div class="row gx-4">
 
+
+                <div class="col-sm-7 col-12">
+                    <div class="card mb-4">
+                        <div class="card-body">
+
+                            <!-- Row start -->
+                            <div class="row gx-3">
+                                <!-- Personal Information Section -->
+                                <div class="col-12 mb-3">
+                                    <h6 class="fw-semibold mb-3 border-start border-primary ps-2"
+                                        style="border-left-width: 3px !important;">
+                                        <i class="bi bi-list-ul me-2"></i>List of Hardware <b><span style="color:#D97D55">(Other Support Items}</span></b>
+                                    </h6>
+                                </div>
+                                <div class="card-body">
+                                    <div class="table-responsive">
+                                        <table id="customButtons2" class="table custom-table pending">
+                                            <thead>
+                                                <tr>
+                                                    <th>No</th>
+                                                    <th>Item Type</th>
+                                                    <th>Item ID</th>
+                                                    <th>Qty</th>
+                                                    <th>Status</th>
+                                                    <th>Manage</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <c:forEach items="${otherList}" var="parameterMaster" varStatus="parameterMasterLoop">
+                                                    <tr>
+                                                        <c:if test="${parameterMaster.flag == '99'}">
+                                                            <td style="color:red"><strike><c:out value="${parameterMasterLoop.index+1}"/></strike></td>
+                                                    <td style="color:red" id="modal_delete_info_${parameterMaster.id}"><strike><c:out value="${parameterMaster.itemType}"/></strike></td>
+                                                    <td style="color:red"><strike><c:out value="${parameterMaster.itemId}"/></strike></td>
+                                                    <td style="color:red"><strike><c:out value="${parameterMaster.qty}"/></strike></td>
+                                                    <td style="color:red"><strike><c:out value="${parameterMaster.status}"/></strike></td>
+                                                    <td align="center">
+                                                    </td>
+                                                </c:if>
+                                                <c:if test="${parameterMaster.flag != '99'}">
+                                                    <td><c:out value="${parameterMasterLoop.index+1}"/></td>
+                                                    <td id="modal_delete_info_${parameterMaster.id}"><c:out value="${parameterMaster.itemType}"/></td>
+                                                    <td><c:out value="${parameterMaster.itemId}"/></td>
+                                                    <td><c:out value="${parameterMaster.qty}"/></td>
+                                                    <td><c:out value="${parameterMaster.status}"/></td>
+                                                    <td align="center">
+                                                        <c:if test="${parameterMaster.status != 'NA'}">
+                                                            <c:if test="${parameterMaster.recall == 'Yes'}">
+                                                                <a modaldeleteid="${parameterMaster.id}" type="button" data-bs-toggle="offcanvas" title="Email to Planner"
+                                                                   data-bs-target="#staticBackdropRecall" aria-controls="staticBackdropRecall" onclick="getDataRecall(this);">
+                                                                    <i class="bi bi-house-up h4"></i>
+                                                                </a>
+                                                            </c:if>
+                                                            <c:if test="${parameterMaster.status.contains('Not Available')}">
+                                                                <a modaldeleteid="${parameterMaster.id}" type="button" data-bs-toggle="offcanvas" title="Email to Planner"
+                                                                   data-bs-target="#staticBackdrop" aria-controls="staticBackdrop" onclick="getData(this);">
+                                                                    <i class="bi bi-envelope-arrow-up h4"></i>
+                                                                </a>
+                                                            </c:if>
+
+                                                        </c:if>
+                                                    </td>
+                                                </c:if>
+                                                </tr>
+                                            </c:forEach>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- Row end -->
+                        </div>
+                    </div>
+                </div>
                 <div class="col-sm-5 col-12">
 
                     <!-- Card start -->
@@ -255,7 +337,7 @@
                                 <div class="col-12 mb-3">
                                     <h6 class="fw-semibold mb-3 border-start border-primary ps-2"
                                         style="border-left-width: 3px !important;">
-                                        <i class="bi bi-list-ul me-2"></i>List of Hardware (Motherboard)
+                                        <i class="bi bi-list-ul me-2"></i>List of Hardware <b><span style="color:#D97D55">(Motherboard)</span></b>
                                     </h6>
                                 </div>
                                 <div class="card-body">
@@ -272,6 +354,42 @@
                                                 </tr>
                                             </thead>
                                             <tbody>
+                                                <c:forEach items="${BibList}" var="parameterMaster" varStatus="parameterMasterLoop">
+                                                    <tr>
+                                                        <c:if test="${parameterMaster.flag == '99'}">
+                                                            <td style="color:red" style="color:red"><strike><c:out value="${parameterMasterLoop.index+1}"/></strike></td>
+                                                    <td style="color:red" id="modal_delete_info_${parameterMaster.id}"><strike><c:out value="${parameterMaster.itemType}"/></strike></td>
+                                                    <td style="color:red"><strike><c:out value="${parameterMaster.itemId}"/></strike></td>
+                                                    <td style="color:red"><strike><c:out value="${parameterMaster.status}"/></strike></td>
+                                                    <td align="center">
+                                                    </td>
+                                                </c:if>
+                                                <c:if test="${parameterMaster.flag != '99'}">
+                                                    <td><c:out value="${parameterMasterLoop.index+1}"/></td>
+                                                    <td id="modal_delete_info_${parameterMaster.id}"><c:out value="${parameterMaster.itemType}"/></td>
+                                                    <td><c:out value="${parameterMaster.itemId}"/></td>
+                                                    <td><c:out value="${parameterMaster.status}"/></td>
+                                                    <td align="center">
+                                                        <c:if test="${parameterMaster.recall == 'Yes'}">
+                                                            <a modaldeleteid="${parameterMaster.id}" type="button" data-bs-toggle="offcanvas" title="Email to Planner"
+                                                               data-bs-target="#staticBackdropRecall" aria-controls="staticBackdropRecall" onclick="getDataRecall(this);">
+                                                                <i class="bi bi-house-up h4"></i>
+                                                            </a>
+                                                        </c:if>
+                                                        <c:if test="${parameterMaster.status.contains('Not Available')}">
+                                                            <a modaldeleteid="${parameterMaster.id}" type="button" data-bs-toggle="offcanvas" title="Email to Planner"
+                                                               data-bs-target="#staticBackdrop" aria-controls="staticBackdrop" onclick="getData(this);">
+                                                                <i class="bi bi-envelope-arrow-up h4"></i>
+                                                            </a>
+                                                        </c:if>
+
+                                                        <a href="${contextPath}/rmsbookingDetail/detail/${parameterMaster.id}" class="table-link" title="Manage">
+                                                            <i class="bi bi-box-arrow-in-right h3" style="color:orangered"></i>
+                                                        </a>
+                                                    </td>
+                                                </c:if>
+                                                </tr>
+                                            </c:forEach>
                                             </tbody>
                                         </table>
                                     </div>
@@ -281,43 +399,6 @@
                         </div>
                     </div>
                     <!-- Card end -->
-                </div>
-                <div class="col-sm-7 col-12">
-                    <div class="card mb-4">
-                        <div class="card-body">
-
-                            <!-- Row start -->
-                            <div class="row gx-3">
-                                <!-- Personal Information Section -->
-                                <div class="col-12 mb-3">
-                                    <h6 class="fw-semibold mb-3 border-start border-primary ps-2"
-                                        style="border-left-width: 3px !important;">
-                                        <i class="bi bi-list-ul me-2"></i>List of Hardware (Other Support Items}
-                                    </h6>
-                                </div>
-                                <div class="card-body">
-                                    <div class="table-responsive">
-                                        <table id="customButtons2" class="table custom-table pending">
-                                            <thead>
-                                                <tr>
-                                                    <th>No</th>
-                                                    <th>Item Type</th>
-                                                    <th>Sub Type</th>
-                                                    <th>Item ID</th>
-                                                    <th>Qty</th>
-                                                    <th>Status</th>
-                                                    <th>Detail</th>
-                                                </tr>
-                                            </thead>
-                                            <tbody>
-                                            </tbody>
-                                        </table>
-                                    </div>
-                                </div>
-                            </div>
-                            <!-- Row end -->
-                        </div>
-                    </div>
                 </div>
             </div>
             <!-- Row end -->
@@ -330,70 +411,213 @@
             <img class="img3" src="${contextPath}/resources/onsemi logo.webp" alt="onsemi">
             <span>© HEATs 2025</span>
         </div>
-    </div>
-</s:layout-component>
-<s:layout-component name="page_js">
-    <script src="${contextPath}/resources/vendor/DataTables/customitem/jquery-3.7.1.min.js"></script>
-    <script src="${contextPath}/resources/vendor/DataTables/customitem/bootstrap.bundle.min.js"></script>
-    <script src="${contextPath}/resources/vendor/DataTables/customitem/dataTables.js"></script>
+        <div class="offcanvas-placeholder">
+            <!-- Toggle static offcanvas for email replacement--> 
+            <div class="offcanvas offcanvas-start" data-bs-backdrop="static" tabindex="-1" id="staticBackdrop"
+                 aria-labelledby="staticBackdropLabel">
+                <div class="offcanvas-header">
+                    <h5 class="offcanvas-title" id="staticBackdropLabel">Send Email for HW Replacement</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+                </div>
+                <div class="offcanvas-body">
+                    <div>
+                        <form class="row g-3 align-items-center" role="form" action="${contextPath}/rmsbookingDetail/sendEmailReplacement" method="post">
+                            <div class="row mb-3">
+                                <div class="col-xl-12 col-sm-12 col-12">
+                                    <div class="mb-1">
+                                        <label for="itemId" class="form-label">Item Type</label>
+                                        <div class="input input-group">
+                                            <input type="text" class="form-control" id="itemType" name="itemType" placeholder="" value="" disabled>
+                                            <input type="hidden" class="form-control" id="id2" name="id2" placeholder="" value="">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row mb-3">
+                                <div class="col-xl-12 col-sm-12 col-12">
+                                    <div class="mb-1">
+                                        <label for="itemId" class="form-label">Item ID</label>
+                                        <div class="input input-group">
+                                            <input type="text" class="form-control" id="itemId2" name="itemId2" placeholder="" value="" disabled>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row mb-3">
+                                <div class="col-xl-12 col-sm-12 col-12">
+                                    <div class="mb-1">
+                                        <label for="itemId" class="form-label">Remarks</label>
+                                        <div class="input input-group">
+                                            <textarea class="form-control" rows="5" id="remarks" name="remarks"></textarea>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- Form actions start -->
+                            <div class="col-md-12">
+                                <button type="submit" id="submit" id="submit" class="btn btn-primary float-end">Send Email</button>
+                            </div>
 
-    <!-- Data Tables -->
-    <script src="${contextPath}/resources/statflow/vendor/datatables/dataTables.min.js"></script>
-    <script src="${contextPath}/resources/statflow/vendor/datatables/dataTables.bootstrap.min.js"></script>
+                            <!-- Form actions end -->
+                        </form>
+                    </div>
+                </div>
+            </div>
+            <!-- Toggle static offcanvas for recall from storage factory--> 
+            <div class="offcanvas offcanvas-start" data-bs-backdrop="static" tabindex="-1" id="staticBackdropRecall"
+                 aria-labelledby="staticBackdropLabel">
+                <div class="offcanvas-header">
+                    <h5 class="offcanvas-title" id="staticBackdropLabel">Recall from Storage Factory</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+                </div>
+                <div class="offcanvas-body">
+                    <div>
+                        <form class="row g-3 align-items-center" role="form" action="${contextPath}/rmsbookingDetail/testtest" method="post">
+                            <div class="row mb-3">
+                                <div class="col-xl-12 col-sm-12 col-12">
+                                    <div class="mb-1">
+                                        <label for="itemId" class="form-label">Item Type</label>
+                                        <div class="input input-group">
+                                            <input type="text" class="form-control" id="itemType2" name="itemType2" placeholder="" value="" disabled>
+                                            <input type="hidden" class="form-control" id="id3" name="id3" placeholder="" value="">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row mb-3">
+                                <div class="col-xl-12 col-sm-12 col-12">
+                                    <div class="mb-1">
+                                        <label for="itemId" class="form-label">Item ID</label>
+                                        <div class="input input-group">
+                                            <input type="text" class="form-control" id="itemId3" name="itemId3" placeholder="" value="" disabled>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row mb-3">
+                                <div class="col-xl-12 col-sm-12 col-12">
+                                    <div class="mb-1">
+                                        <label for="itemId" class="form-label">Remarks</label>
+                                        <div class="input input-group">
+                                            <textarea class="form-control" rows="5" id="remarks" name="remarks"></textarea>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- Form actions start -->
+                            <div class="col-md-12">
+                                <button type="submit" id="submit" id="submit" class="btn btn-primary float-end">Send Email</button>
+                            </div>
 
-    <!-- Custom Data tables -->
-    <script src="${contextPath}/resources/statflow/vendor/datatables/custom/custom-datatables.js"></script>
+                            <!-- Form actions end -->
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
 
-    <!-- DataTable Buttons -->
-    <script src="${contextPath}/resources/statflow/vendor/datatables/buttons/dataTables.buttons.min.js"></script>
-    <script src="${contextPath}/resources/statflow/vendor/datatables/buttons/jszip.min.js"></script>
-    <script src="${contextPath}/resources/statflow/vendor/datatables/buttons/dataTables.buttons.min.js"></script>
-    <script src="${contextPath}/resources/statflow/vendor/datatables/buttons/pdfmake.min.js"></script>
-    <script src="${contextPath}/resources/statflow/vendor/datatables/buttons/vfs_fonts.js"></script>
-    <script src="${contextPath}/resources/statflow/vendor/datatables/buttons/buttons.html5.min.js"></script>
-    <script src="${contextPath}/resources/statflow/vendor/datatables/buttons/buttons.print.min.js"></script>
-    <script src="${contextPath}/resources/statflow/vendor/datatables/buttons/buttons.colVis.min.js"></script>
+        <!--</div>-->
+    </s:layout-component>
+    <s:layout-component name="page_js">
+        <script src="${contextPath}/resources/vendor/DataTables/customitem/jquery-3.7.1.min.js"></script>
+        <script src="${contextPath}/resources/vendor/DataTables/customitem/bootstrap.bundle.min.js"></script>
+        <script src="${contextPath}/resources/vendor/DataTables/customitem/dataTables.js"></script>
 
-    <!-- Bootstrap Select JS -->
-    <script src="${contextPath}/resources/statflow/vendor/bs-select/bs-select.min.js"></script>
-    <script src="${contextPath}/resources/statflow/vendor/bs-select/bs-select-custom.js"></script>
-</s:layout-component>
-<s:layout-component name="page_js_inline">
-    <script>
+        <!-- Data Tables -->
+        <script src="${contextPath}/resources/statflow/vendor/datatables/dataTables.min.js"></script>
+        <script src="${contextPath}/resources/statflow/vendor/datatables/dataTables.bootstrap.min.js"></script>
 
-        $(document).ready(function () {
-            $('.js-example-basic-single').select2();
-        });
+        <!-- Custom Data tables -->
+        <script src="${contextPath}/resources/statflow/vendor/datatables/custom/custom-datatables.js"></script>
 
-        $(function () {
-            $("#customButtons1").DataTable({
-                lengthMenu: [
-                    [10, 25, 50],
-                    [10, 25, 50, "All"],
-                ],
-                language: {
-                    lengthMenu: "Display _MENU_ Records Per Page",
-                    info: "Showing Page _PAGE_ of _PAGES_",
-                },
-                dom: "Blfrtip",
-                buttons: ["copy", "csv", "pdf", "print"],
-            });
-        });
+        <!-- DataTable Buttons -->
+        <script src="${contextPath}/resources/statflow/vendor/datatables/buttons/dataTables.buttons.min.js"></script>
+        <script src="${contextPath}/resources/statflow/vendor/datatables/buttons/jszip.min.js"></script>
+        <script src="${contextPath}/resources/statflow/vendor/datatables/buttons/dataTables.buttons.min.js"></script>
+        <script src="${contextPath}/resources/statflow/vendor/datatables/buttons/pdfmake.min.js"></script>
+        <script src="${contextPath}/resources/statflow/vendor/datatables/buttons/vfs_fonts.js"></script>
+        <script src="${contextPath}/resources/statflow/vendor/datatables/buttons/buttons.html5.min.js"></script>
+        <script src="${contextPath}/resources/statflow/vendor/datatables/buttons/buttons.print.min.js"></script>
+        <script src="${contextPath}/resources/statflow/vendor/datatables/buttons/buttons.colVis.min.js"></script>
 
-        $(function () {
-            $("#customButtons2").DataTable({
-                lengthMenu: [
-                    [10, 25, 50],
-                    [10, 25, 50, "All"],
-                ],
-                language: {
-                    lengthMenu: "Display _MENU_ Records Per Page",
-                    info: "Showing Page _PAGE_ of _PAGES_",
-                },
-                dom: "Blfrtip",
-                buttons: ["copy", "csv", "pdf", "print"],
-            });
-        });
-    </script>
-</s:layout-component>
+        <!-- Bootstrap Select JS -->
+        <script src="${contextPath}/resources/statflow/vendor/bs-select/bs-select.min.js"></script>
+        <script src="${contextPath}/resources/statflow/vendor/bs-select/bs-select-custom.js"></script>
+    </s:layout-component>
+    <s:layout-component name="page_js_inline">
+        <script>
+
+                                                               function getData(e) {
+                                                                   var id = $(e).attr("modaldeleteid");
+                                                                   $.ajax({
+                                                                       url: '${contextPath}/rmsbookingDetail/emailBody', // Replace with your controller URL
+                                                                       type: 'GET',
+                                                                       data: {id: id},
+                                                                       dataType: 'json',
+                                                                       success: function (data) {
+                                                                           // Populate form fields with received data
+                                                                           $("#itemId2").val(data.itemId);
+                                                                           $("#id2").val(data.id);
+                                                                           $("#itemType").val(data.itemType);
+                                                                       },
+                                                                       error: function (jqXHR, textStatus, errorThrown) {
+                                                                           console.error("Error loading data: " + textStatus, errorThrown);
+                                                                       }
+                                                                   });
+                                                               }
+
+                                                               function getDataRecall(e) {
+                                                                   var id = $(e).attr("modaldeleteid");
+                                                                   $.ajax({
+                                                                       url: '${contextPath}/rmsbookingDetail/emailBody', // Replace with your controller URL
+                                                                       type: 'GET',
+                                                                       data: {id: id},
+                                                                       dataType: 'json',
+                                                                       success: function (data) {
+                                                                           // Populate form fields with received data
+                                                                           $("#itemId3").val(data.itemId);
+                                                                           $("#id3").val(data.id);
+                                                                           $("#itemType2").val(data.itemType);
+                                                                       },
+                                                                       error: function (jqXHR, textStatus, errorThrown) {
+                                                                           console.error("Error loading data: " + textStatus, errorThrown);
+                                                                       }
+                                                                   });
+                                                               }
+
+                                                               $(document).ready(function () {
+                                                                   $('.js-example-basic-single').select2();
+                                                               });
+
+                                                               $(function () {
+                                                                   $("#customButtons1").DataTable({
+                                                                       lengthMenu: [
+                                                                           [10, 25, 50],
+                                                                           [10, 25, 50, "All"],
+                                                                       ],
+                                                                       language: {
+                                                                           lengthMenu: "Display _MENU_ Records Per Page",
+                                                                           info: "Showing Page _PAGE_ of _PAGES_",
+                                                                       },
+                                                                       dom: "Blfrtip",
+                                                                       buttons: ["copy", "csv", "pdf", "print"],
+                                                                   });
+                                                               });
+
+                                                               $(function () {
+                                                                   $("#customButtons2").DataTable({
+                                                                       lengthMenu: [
+                                                                           [10, 25, 50],
+                                                                           [10, 25, 50, "All"],
+                                                                       ],
+                                                                       language: {
+                                                                           lengthMenu: "Display _MENU_ Records Per Page",
+                                                                           info: "Showing Page _PAGE_ of _PAGES_",
+                                                                       },
+                                                                       dom: "Blfrtip",
+                                                                       buttons: ["copy", "csv", "pdf", "print"],
+                                                                   });
+                                                               });
+        </script>
+    </s:layout-component>
 </s:layout-render>

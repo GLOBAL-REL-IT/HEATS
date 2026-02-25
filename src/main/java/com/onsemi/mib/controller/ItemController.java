@@ -6039,9 +6039,262 @@ public class ItemController {
         String finalQuery = "";
 
         if (count != 0) {
-//            finalQuery = "SELECT * FROM item " + query + " ORDER BY item_type, item_id";
             finalQuery = "SELECT it.*, vm.id AS vmId FROM item it LEFT JOIN item_visual_inspection vm ON it.id = vm.mib_item_id " + query + " ORDER BY it.item_type, it.item_id";
 
+            itemD = new ItemDAO();
+            List<Item> resultQuery = itemD.getitemQuery(finalQuery);
+            int countItem = 0;
+            int countAdd = 0;
+
+            for (int x = 0; x < resultQuery.size(); x++) {
+
+                //update DB from SPTS first
+                if (resultQuery.get(x).getSptsPkid() == null || "".equals(resultQuery.get(x).getSptsPkid())) {
+                    //do nothing
+                } else {
+                    JSONObject params = new JSONObject();
+                    params.put("pkID", resultQuery.get(x).getSptsPkid());
+                    JSONArray getItemByParam = SPTSWebService.getItemByParam(params);
+
+                    //insert into database
+                    for (int i = 0; i < getItemByParam.length(); i++) {
+
+                        ItemDAO hwD = new ItemDAO();
+                        int countPkid = hwD.getCountPkid(Integer.toString(getItemByParam.getJSONObject(i).getInt("PKID")));
+                        if (countPkid == 1) {
+
+                            Item hw = new Item();
+                            hw.setSptsPkid(Integer.toString(getItemByParam.getJSONObject(i).getInt("PKID")));
+                            hw.setItemType(getItemByParam.getJSONObject(i).getString("ItemType"));
+                            hw.setItemId(getItemByParam.getJSONObject(i).getString("ItemID"));
+                            hw.setItemName(getItemByParam.getJSONObject(i).getString("ItemName"));
+                            if (getItemByParam.getJSONObject(i).has("SubType")) {
+                                hw.setSubType(getItemByParam.getJSONObject(i).getString("SubType"));
+                            }
+                            if (getItemByParam.getJSONObject(i).has("ALUHrs")) {
+                                hw.setAluHrs(Double.toString(getItemByParam.getJSONObject(i).getDouble("ALUHrs")));
+                            }
+                            if (getItemByParam.getJSONObject(i).has("AssemblyID")) {
+                                Object assembly = getItemByParam.getJSONObject(i).get("AssemblyID");
+                                if (assembly instanceof String) {
+                                    hw.setAssemblyId(getItemByParam.getJSONObject(i).getString("AssemblyID"));
+                                } else {
+                                    hw.setAssemblyId(Integer.toString(getItemByParam.getJSONObject(i).getInt("AssemblyID")));
+                                }
+                            }
+                            if (getItemByParam.getJSONObject(i).has("Complexity")) {
+                                hw.setComplexity(getItemByParam.getJSONObject(i).getString("Complexity"));
+                            }
+                            if (getItemByParam.getJSONObject(i).has("EquipmentManufacturer")) {
+                                Object assembly = getItemByParam.getJSONObject(i).get("EquipmentManufacturer");
+                                if (assembly instanceof String) {
+                                    hw.setEquipmentManufacturer(getItemByParam.getJSONObject(i).getString("EquipmentManufacturer"));
+                                } else {
+                                    hw.setEquipmentManufacturer(Integer.toString(getItemByParam.getJSONObject(i).getInt("EquipmentManufacturer")));
+                                }
+                            }
+                            if (getItemByParam.getJSONObject(i).has("EquipmentModel")) {
+                                Object eqptModel = getItemByParam.getJSONObject(i).get("EquipmentModel");
+                                if (eqptModel instanceof String) {
+                                    hw.setEquipmentModel(getItemByParam.getJSONObject(i).getString("EquipmentModel"));
+                                } else {
+                                    hw.setEquipmentModel(Integer.toString(getItemByParam.getJSONObject(i).getInt("EquipmentModel")));
+                                }
+                            }
+                            if (getItemByParam.getJSONObject(i).has("EquipmentType")) {
+                                hw.setEquipmentType(getItemByParam.getJSONObject(i).getString("EquipmentType"));
+                            }
+                            if (getItemByParam.getJSONObject(i).has("ExpirationDate")) {
+                                String date1 = getItemByParam.getJSONObject(i).getString("ExpirationDate").substring(0, 10);
+                                hw.setExpirationDate(date1);
+                            }
+                            if (getItemByParam.getJSONObject(i).has("ExternalRecleaningQty")) {
+                                hw.setExternalRecleanQty(Integer.toString(getItemByParam.getJSONObject(i).getInt("ExternalRecleaningQty")));
+                            }
+                            if (getItemByParam.getJSONObject(i).has("ExternalCleaningQty")) {
+                                hw.setExternalCleanQty(Integer.toString(getItemByParam.getJSONObject(i).getInt("ExternalCleaningQty")));
+                            }
+                            if (getItemByParam.getJSONObject(i).has("InternalCleaningQty")) {
+                                hw.setInternalCleanQty(Integer.toString(getItemByParam.getJSONObject(i).getInt("InternalCleaningQty")));
+                            }
+                            if (getItemByParam.getJSONObject(i).has("InternalRecleaningQty")) {
+                                hw.setInternalRecleanQty(Integer.toString(getItemByParam.getJSONObject(i).getInt("InternalRecleaningQty")));
+                            }
+                            if (getItemByParam.getJSONObject(i).has("IsConsumeable")) {
+                                hw.setIsConsumable(Boolean.toString(getItemByParam.getJSONObject(i).getBoolean("IsConsumeable")));
+                            }
+                            if (getItemByParam.getJSONObject(i).has("IsCritical")) {
+                                hw.setIsCritical(Boolean.toString(getItemByParam.getJSONObject(i).getBoolean("IsCritical")));
+                            }
+                            if (getItemByParam.getJSONObject(i).has("Manufacturer")) {
+                                Object assembly = getItemByParam.getJSONObject(i).get("Manufacturer");
+                                if (assembly instanceof String) {
+                                    hw.setManufacturer(getItemByParam.getJSONObject(i).getString("Manufacturer"));
+                                } else {
+                                    hw.setManufacturer(Integer.toString(getItemByParam.getJSONObject(i).getInt("Manufacturer")));
+                                }
+                            }
+                            if (getItemByParam.getJSONObject(i).has("MaxQty")) {
+                                hw.setMaxQty(Integer.toString(getItemByParam.getJSONObject(i).getInt("MaxQty")));
+                            }
+                            if (getItemByParam.getJSONObject(i).has("MinQty")) {
+                                hw.setMinQty(Integer.toString(getItemByParam.getJSONObject(i).getInt("MinQty")));
+                            }
+                            if (getItemByParam.getJSONObject(i).has("Model")) {
+
+                                Object modelSpts = getItemByParam.getJSONObject(i).get("Model");
+                                if (modelSpts instanceof String) {
+                                    hw.setModel(getItemByParam.getJSONObject(i).getString("Model"));
+                                } else {
+                                    hw.setModel(Integer.toString(getItemByParam.getJSONObject(i).getInt("Model")));
+                                }
+                            }
+                            if (getItemByParam.getJSONObject(i).has("OnHandQty")) {
+                                hw.setOnHandQty(Integer.toString(getItemByParam.getJSONObject(i).getInt("OnHandQty")));
+                            }
+                            if (getItemByParam.getJSONObject(i).has("OtherONQty")) {
+                                hw.setOtherOnsemiQty(Integer.toString(getItemByParam.getJSONObject(i).getInt("OtherONQty")));
+                            }
+                            if (getItemByParam.getJSONObject(i).has("OtherQty")) {
+                                hw.setOtherQty(Integer.toString(getItemByParam.getJSONObject(i).getInt("OtherQty")));
+                            }
+                            if (getItemByParam.getJSONObject(i).has("PMWW1")) {
+                                Object assembly = getItemByParam.getJSONObject(i).get("PMWW1");
+                                if (assembly instanceof String) {
+                                    hw.setPmWw1(getItemByParam.getJSONObject(i).getString("PMWW1"));
+                                } else {
+                                    hw.setPmWw1(Integer.toString(getItemByParam.getJSONObject(i).getInt("PMWW1")));
+                                }
+                            }
+                            if (getItemByParam.getJSONObject(i).has("PMWW2")) {
+                                Object assembly = getItemByParam.getJSONObject(i).get("PMWW2");
+                                if (assembly instanceof String) {
+                                    hw.setPmWw2(getItemByParam.getJSONObject(i).getString("PMWW2"));
+                                } else {
+                                    hw.setPmWw2(Integer.toString(getItemByParam.getJSONObject(i).getInt("PMWW2")));
+                                }
+                            }
+                            if (getItemByParam.getJSONObject(i).has("ProductionQty")) {
+                                hw.setProductionQty(Integer.toString(getItemByParam.getJSONObject(i).getInt("ProductionQty")));
+                            }
+                            if (getItemByParam.getJSONObject(i).has("ProductionStagingQty")) {
+                                hw.setProductionStagingQty(Integer.toString(getItemByParam.getJSONObject(i).getInt("ProductionStagingQty")));
+                            }
+                            if (getItemByParam.getJSONObject(i).has("QuarantineQty")) {
+                                hw.setQuarantineQty(Integer.toString(getItemByParam.getJSONObject(i).getInt("QuarantineQty")));
+                            }
+                            if (getItemByParam.getJSONObject(i).has("Rack")) {
+
+                                Object rack = getItemByParam.getJSONObject(i).get("Rack");
+                                if (rack instanceof String) {
+                                    hw.setRack(getItemByParam.getJSONObject(i).getString("Rack"));
+                                } else {
+                                    hw.setRack(Integer.toString(getItemByParam.getJSONObject(i).getInt("Rack")));
+                                }
+                            }
+                            if (getItemByParam.getJSONObject(i).has("Remarks")) {
+                                Object assembly = getItemByParam.getJSONObject(i).get("Remarks");
+                                if (assembly instanceof String) {
+                                    hw.setRemarks(getItemByParam.getJSONObject(i).getString("Remarks"));
+                                } else {
+                                    hw.setRemarks(Integer.toString(getItemByParam.getJSONObject(i).getInt("Remarks")));
+                                }
+                            }
+                            if (getItemByParam.getJSONObject(i).has("RepairQty")) {
+                                hw.setRepairQty(Integer.toString(getItemByParam.getJSONObject(i).getInt("RepairQty")));
+                            }
+                            if (getItemByParam.getJSONObject(i).has("Shelf")) {
+
+                                Object shelfStr = getItemByParam.getJSONObject(i).get("Shelf");
+                                if (shelfStr instanceof String) {
+                                    hw.setShelf(getItemByParam.getJSONObject(i).getString("Shelf"));
+                                } else {
+                                    hw.setShelf(Integer.toString(getItemByParam.getJSONObject(i).getInt("Shelf")));
+                                }
+                            }
+                            if (getItemByParam.getJSONObject(i).has("StatusName")) {
+                                Object assembly = getItemByParam.getJSONObject(i).get("StatusName");
+                                if (assembly instanceof String) {
+                                    hw.setStatus(getItemByParam.getJSONObject(i).getString("StatusName"));
+                                    if ("Scrapped".equals(getItemByParam.getJSONObject(i).getString("StatusName"))) {
+                                        hw.setFlag("99");
+                                    } else {
+                                        hw.setFlag("1");
+                                    }
+                                } else {
+                                    hw.setStatus(Integer.toString(getItemByParam.getJSONObject(i).getInt("StatusName")));
+                                    if ("Scrapped".equals(Integer.toString(getItemByParam.getJSONObject(i).getInt("StatusName")))) {
+                                        hw.setFlag("99");
+                                    } else {
+                                        hw.setFlag("1");
+                                    }
+                                }
+                            }
+                            if (getItemByParam.getJSONObject(i).has("StorageFactoryQty")) {
+                                Object storage = getItemByParam.getJSONObject(i).get("StorageFactoryQty");
+                                if (storage instanceof String) {
+                                    hw.setStorageFactoryQty(getItemByParam.getJSONObject(i).getString("StorageFactoryQty"));
+                                } else {
+                                    hw.setStorageFactoryQty(Integer.toString(getItemByParam.getJSONObject(i).getInt("StorageFactoryQty")));
+                                }
+                            }
+                            if (getItemByParam.getJSONObject(i).has("StressType")) {
+                                Object assembly = getItemByParam.getJSONObject(i).get("StressType");
+                                if (assembly instanceof String) {
+                                    hw.setStressType(getItemByParam.getJSONObject(i).getString("StressType"));
+                                } else {
+                                    hw.setStressType(Integer.toString(getItemByParam.getJSONObject(i).getInt("StressType")));
+                                }
+                            }
+                            if (getItemByParam.getJSONObject(i).has("TotalCost")) {
+                                hw.setTotalCost(Double.toString(getItemByParam.getJSONObject(i).getDouble("TotalCost")));
+                            }
+                            if (getItemByParam.getJSONObject(i).has("TotalQty")) {
+                                hw.setTotalQty(Integer.toString(getItemByParam.getJSONObject(i).getInt("TotalQty")));
+                            }
+                            if (getItemByParam.getJSONObject(i).has("UnitCost")) {
+                                hw.setUnitCost(Double.toString(getItemByParam.getJSONObject(i).getDouble("UnitCost")));
+                            }
+                            if (getItemByParam.getJSONObject(i).has("VendorQty")) {
+                                hw.setVendorQty(Integer.toString(getItemByParam.getJSONObject(i).getInt("VendorQty")));
+                            }
+                            if (getItemByParam.getJSONObject(i).has("DowntimeUnit")) {
+                                Object assembly = getItemByParam.getJSONObject(i).get("DowntimeUnit");
+                                if (assembly instanceof String) {
+                                    hw.setDowntimeUnit(getItemByParam.getJSONObject(i).getString("DowntimeUnit"));
+                                } else {
+                                    hw.setDowntimeUnit(Integer.toString(getItemByParam.getJSONObject(i).getInt("DowntimeUnit")));
+                                }
+                            }
+                            if (getItemByParam.getJSONObject(i).has("DowntimeValue")) {
+                                hw.setDowntimeValue(Double.toString(getItemByParam.getJSONObject(i).getDouble("DowntimeValue")));
+                            }
+                            if (getItemByParam.getJSONObject(i).has("ImplementationCost")) {
+                                hw.setImplementationCost(Double.toString(getItemByParam.getJSONObject(i).getDouble("ImplementationCost")));
+                            }
+                            if (getItemByParam.getJSONObject(i).has("ManpowerUnit")) {
+                                Object assembly = getItemByParam.getJSONObject(i).get("ManpowerUnit");
+                                if (assembly instanceof String) {
+                                    hw.setManpowerUnit(getItemByParam.getJSONObject(i).getString("ManpowerUnit"));
+                                } else {
+                                    hw.setManpowerUnit(Integer.toString(getItemByParam.getJSONObject(i).getInt("ManpowerUnit")));
+                                }
+                            }
+                            if (getItemByParam.getJSONObject(i).has("ManpowerValue")) {
+                                hw.setManpowerValue(Double.toString(getItemByParam.getJSONObject(i).getDouble("ManpowerValue")));
+                            }
+
+                            hwD = new ItemDAO();
+                            QueryResult q = hwD.updateHardwareDetailFromSpts(hw);
+                            countAdd += q.getResult();
+                        }
+                        countItem += 1;
+                    }
+                }
+
+            }
+            LOGGER.info("countItem: " + countItem);
+            LOGGER.info("countAdd: " + countAdd);
         } else {
             finalQuery = "SELECT * FROM item WHERE flag = '1000'";
         }
@@ -6171,7 +6424,7 @@ public class ItemController {
                 // FUNCTION UNTUK DAPATKAN EXISTING DATA DLU, THEN ASSIGN DLM exist
                 ItemHardwareDAO itemdao1 = new ItemHardwareDAO();
                 String check1 = itemdao1.getLatestHardwareID(mibItemId, maklumatterakhir);
-                
+
                 int exist = (check1 == null || check1.isEmpty()) ? 0 : Integer.parseInt(check1);
                 int n = Integer.parseInt(runningNumber);
 
