@@ -601,7 +601,7 @@ public class ItemDAO {
                         "it.on_hand_qty, it.production_staging_qty, it.production_qty, it.repair_qty, it.other_qty, it.quarantine_qty, " +
                         "it.external_clean_qty, it.external_reclean_qty, it.internal_clean_qty, it.internal_reclean_qty, it.storage_factory_qty, " +
                         "it.other_onsemi_qty, it.vendor_qty, it.total_qty, it.unit_cost, it.total_cost, it.status, it.alu_hrs, it.movement_alu_hrs, " +
-                        "it.min_qty, it.max_qty, it.pm_ww1, it.pm_ww2, DATE_FORMAT(expiration_date,'%d-%M-%Y') AS expiration_date, it.is_critical, " +
+                        "it.min_qty, it.max_qty, it.pm_ww1, it.pm_ww2, DATE_FORMAT(expiration_date,'%Y-%m-%d') AS expiration_date, DATE_FORMAT(expiration_date,'%d-%M-%Y') AS expiration_date_view, it.is_critical, " +
                         "it.is_consumable, it.downtime_value, it.downtime_unit, it.implementation_cost, it.manpower_value, it.manpower_unit, " +
                         "it.complexity, it.model, it.manufacturer, it.equipment_type, it.equipment_model, it.equipment_manufacturer, " +
                         "it.stress_type, it.remarks, it.flag, it.created_by, it.created_date, it.modifed_by, it.modified_date, it.item_usage, " +

@@ -512,7 +512,8 @@
                                                                     <span class="input-group-text">
                                                                         <i class="bi bi-calendar4"></i>
                                                                     </span>
-                                                                    <input type="text" id="expirationDate" name="expirationDate" class="form-control datepicker-week-numbers">
+                                                                    <!--<input type="text" id="expirationDate" name="expirationDate" class="form-control datepicker-week-numbers">-->
+                                                                    <input type="date" id="expirationDate" name="expirationDate" class="form-control" data-date-format="yyyy-mm-dd"> 
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -870,7 +871,8 @@
                                                                     <span class="input-group-text">
                                                                         <i class="bi bi-calendar4"></i>
                                                                     </span>
-                                                                    <input type="text" id="expirationDate" name="expirationDate" class="form-control datepicker-week-numbers">
+                                                                    <!--<input type="text" id="expirationDate" name="expirationDate" class="form-control datepicker-week-numbers">-->
+                                                                    <input type="date" id="expirationDate" name="expirationDate" class="form-control" data-date-format="yyyy-mm-dd"> 
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -2646,7 +2648,8 @@
                                                                     <span class="input-group-text">
                                                                         <i class="bi bi-calendar4"></i>
                                                                     </span>
-                                                                    <input type="text" id="expirationDate" name="expirationDate" class="form-control datepicker-week-numbers" required> 
+                                                                    <!--<input type="text" id="expirationDate" name="expirationDate" class="form-control datepicker-week-numbers" required>--> 
+                                                                    <input type="date" id="expirationDate" name="expirationDate" class="form-control" data-date-format="yyyy-mm-dd" required> 
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -3308,7 +3311,8 @@
                                                                     <span class="input-group-text">
                                                                         <i class="bi bi-calendar4"></i>
                                                                     </span>
-                                                                    <input type="text" id="expirationDate" name="expirationDate" class="form-control datepicker-week-numbers">
+                                                                    <!--<input type="text" id="expirationDate" name="expirationDate" class="form-control datepicker-week-numbers">-->
+                                                                    <input type="date" id="expirationDate" name="expirationDate" class="form-control" data-date-format="yyyy-mm-dd"> 
                                                                 </div>
                                                             </div>
                                                         </div>

@@ -22,6 +22,25 @@ public class RmsBookingHardware {
     private String requestReplacementRemarks;
     private String requestReplacementDate;
 
+    private String recallSfBy;
+    private String recallSfDate;
+
+    public String getRecallSfBy() {
+        return recallSfBy;
+    }
+
+    public void setRecallSfBy(String recallSfBy) {
+        this.recallSfBy = recallSfBy;
+    }
+
+    public String getRecallSfDate() {
+        return recallSfDate;
+    }
+
+    public void setRecallSfDate(String recallSfDate) {
+        this.recallSfDate = recallSfDate;
+    }
+
     public String getRequestReplacementBy() {
         return requestReplacementBy;
     }

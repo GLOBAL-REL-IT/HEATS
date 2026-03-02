@@ -200,6 +200,7 @@ public class ItemController {
         ItemDAO itemD = new ItemDAO();
 //        Item item = itemD.getHardwareDetailByPkid(itemPkid);
         Item item = itemD.getHardwareByPkid(itemPkid);
+        LOGGER.info("item ExpiredDate: " + item.getExpirationDate());
         model.addAttribute("item", item);
 
         itemType = item.getItemType();
@@ -944,11 +945,22 @@ public class ItemController {
                 if (getSFItemByParam.getJSONObject(i).has("TransQty")) {
                     itemSf.setQty(Integer.toString(getSFItemByParam.getJSONObject(i).getInt("TransQty")));
                 }
+
                 if (getSFItemByParam.getJSONObject(i).has("SFRack")) {
-                    itemSf.setRack(getSFItemByParam.getJSONObject(i).getString("SFRack"));
+                    Object assembly = getSFItemByParam.getJSONObject(i).get("SFRack");
+                    if (assembly instanceof String) {
+                        itemSf.setRack(getSFItemByParam.getJSONObject(i).getString("SFRack"));
+                    } else {
+                        itemSf.setRack(Integer.toString(getSFItemByParam.getJSONObject(i).getInt("SFRack")));
+                    }
                 }
                 if (getSFItemByParam.getJSONObject(i).has("SFShelf")) {
-                    itemSf.setShelf(getSFItemByParam.getJSONObject(i).getString("SFShelf"));
+                    Object assembly = getSFItemByParam.getJSONObject(i).get("SFShelf");
+                    if (assembly instanceof String) {
+                        itemSf.setShelf(getSFItemByParam.getJSONObject(i).getString("SFShelf"));
+                    } else {
+                        itemSf.setShelf(Integer.toString(getSFItemByParam.getJSONObject(i).getInt("SFShelf")));
+                    }
                 }
                 if (getSFItemByParam.getJSONObject(i).has("DateTime")) {
                     String dateTimeSf = getSFItemByParam.getJSONObject(i).getString("DateTime").substring(0, 10) + " " + getSFItemByParam.getJSONObject(i).getString("DateTime").substring(11, 19);
@@ -2795,7 +2807,10 @@ public class ItemController {
 
             item.setMinQty(minQty);
             item.setMaxQty(maxQty);
-            item.setExpirationDate(expirationDate);
+            if (expirationDate != null && !"".equals(expirationDate)) {
+                item.setExpirationDate(expirationDate);
+            }
+
             if ("on".equals(isConsumable)) {
                 isConsumable = "true";
             } else {

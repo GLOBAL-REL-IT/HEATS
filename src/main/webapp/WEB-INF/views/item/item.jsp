@@ -8,6 +8,8 @@
         <link rel="stylesheet" href="${contextPath}/resources/statflow/vendor/datatables/buttons/dataTables.bs5-custom.css">
         <!-- Bootstrap Select CSS -->
         <link rel="stylesheet" href="${contextPath}/resources/statflow/vendor/bs-select/bs-select.css">
+        <!-- Date Range CSS -->
+        <!--<link rel="stylesheet" href="${contextPath}/resources/statflow/vendor/daterange/daterange.css">-->
 
 <!--        <link rel="stylesheet" href="${contextPath}/resources/vendor/DataTables/customitem/dataTables.dataTables.css"/>
 <link rel="stylesheet" href="${contextPath}/resources/vendor/DataTables/customitem/bootstrap.min.css"/>-->
@@ -577,6 +579,18 @@
                                                             </div>
                                                         </div>
                                                     </div>
+                                                    <div class="form-group col-xl-2 col-sm-12 col-12">
+                                                        <div class="mb-3">
+                                                            <label for="expirationDate" class="form-label">Expiration Date</label>
+                                                            <div class="input input-group">
+                                                                <span class="input-group-text">
+                                                                    <i class="bi bi-calendar4"></i>
+                                                                </span>
+                                                                <!--<input type="date" id="expirationDate" name="expirationDate" class="form-control datepicker-week-numbers">--> 
+                                                                <input type="date" id="expirationDate" name="expirationDate" class="form-control" data-date-format="yyyy-mm-dd" value="${item.expirationDate}"> 
+                                                            </div>
+                                                        </div>
+                                                    </div>
                                                     <div class="col-xl-2 col-sm-12 col-12">
                                                         <div class="mb-3">
                                                             <label for="isConsumable" class="form-label">Consumable?</label>
@@ -961,6 +975,18 @@
                                                                 <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
                                                                 <input type="text" class="form-control" id="totalQty" name="totalQty"
                                                                        placeholder="" value="${item.totalQty}" readonly>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-group required col-xl-2 col-sm-12 col-12">
+                                                        <div class="mb-3">
+                                                            <label for="expirationDate" class="form-label">Expiration Date</label>
+                                                            <div class="input input-group">
+                                                                <span class="input-group-text">
+                                                                    <i class="bi bi-calendar4"></i>
+                                                                </span>
+                                                                <!--<input type="date" id="expirationDate" name="expirationDate" class="form-control datepicker-week-numbers" required>--> 
+                                                                <input type="date" id="expirationDate" name="expirationDate" class="form-control" data-date-format="yyyy-mm-dd" value="${item.expirationDate}" required> 
                                                             </div>
                                                         </div>
                                                     </div>
@@ -2942,6 +2968,18 @@
                                                             </div>
                                                         </div>
                                                     </div>
+                                                    <div class="form-group required col-xl-2 col-sm-12 col-12">
+                                                        <div class="mb-3">
+                                                            <label for="expirationDate" class="form-label">Expiration Date</label>
+                                                            <div class="input input-group">
+                                                                <span class="input-group-text">
+                                                                    <i class="bi bi-calendar4"></i>
+                                                                </span>
+                                                                <!--<input type="date" id="expirationDate" name="expirationDate" class="form-control datepicker-week-numbers" required>--> 
+                                                                <input type="date" id="expirationDate" name="expirationDate" class="form-control" data-date-format="yyyy-mm-dd" value="${item.expirationDate}" required> 
+                                                            </div>
+                                                        </div>
+                                                    </div>
                                                     <div class="col-xl-2 col-sm-12 col-12">
                                                         <div class="mb-3">
                                                             <label for="isConsumable" class="form-label">Consumable?</label>
@@ -3725,6 +3763,18 @@
                                                             </div>
                                                         </div>
                                                     </div>
+                                                    <div class="form-group col-xl-2 col-sm-12 col-12">
+                                                        <div class="mb-3">
+                                                            <label for="expirationDate" class="form-label">Expiration Date</label>
+                                                            <div class="input input-group">
+                                                                <span class="input-group-text">
+                                                                    <i class="bi bi-calendar4"></i>
+                                                                </span>
+                                                                <!--<input type="date" id="expirationDate" name="expirationDate" class="form-control datepicker-week-numbers">--> 
+                                                                <input type="date" id="expirationDate" name="expirationDate" class="form-control" data-date-format="yyyy-mm-dd" value="${item.expirationDate}"> 
+                                                            </div>
+                                                        </div>
+                                                    </div>
                                                     <div class="col-xl-2 col-sm-12 col-12">
                                                         <div class="mb-3">
                                                             <label for="isConsumable" class="form-label">Consumable?</label>
@@ -3906,9 +3956,14 @@
     </div>
 </s:layout-component>
 <s:layout-component name="page_js">
-    <script src="${contextPath}/resources/vendor/DataTables/customitem/jquery-3.7.1.min.js"></script>
+    
+     <!-- Date Range JS -->
+<!--    <script src="${contextPath}/resources/statflow/vendor/daterange/daterange.js"></script>
+    <script src="${contextPath}/resources/statflow/vendor/daterange/custom-daterange.js"></script>-->
+    
+<!--    <script src="${contextPath}/resources/vendor/DataTables/customitem/jquery-3.7.1.min.js"></script>
     <script src="${contextPath}/resources/vendor/DataTables/customitem/bootstrap.bundle.min.js"></script>
-    <script src="${contextPath}/resources/vendor/DataTables/customitem/dataTables.js"></script>
+    <script src="${contextPath}/resources/vendor/DataTables/customitem/dataTables.js"></script>-->
 
     <!-- Data Tables -->
     <script src="${contextPath}/resources/statflow/vendor/datatables/dataTables.min.js"></script>
@@ -3947,6 +4002,16 @@
                                                             form.classList.add('was-validated');
                                                         }, false);
                                                     });
+
+//                                                    $(".datepicker-week-numbers").daterangepicker({
+//                                                        singleDatePicker: true,
+//                                                        showWeekNumbers: true,
+////                                                        startDate: moment().startOf("hour"),
+////                                                        endDate: moment().startOf("hour").add(32, "hour"),
+//                                                        locale: {
+//                                                            format: "YYYY-MM-DD"
+//                                                        },
+//                                                    });
 
                                                     function toggleLinkVisibility() {
                                                         var select = document.getElementById('itemType');
@@ -4053,7 +4118,7 @@
                                                             if ($("#hwconfig").val()) {
                                                                 var itemPKID = $("#itemPKID").val();
                                                                 var itemType = $("#itemType2").val();
-                                                                var Url = "${contextPath}/hw/hardware/" + itemPKID + "/"+itemType;
+                                                                var Url = "${contextPath}/hw/hardware/" + itemPKID + "/" + itemType;
                                                                 window.location.href = Url;
                                                             } else {
                                                                 alert("No Hardware ID Configuration");
@@ -4149,7 +4214,7 @@
                                                                 $("#itemUsage").val(data.itemUsage);
                                                                 $("#hwconfig").val(data.activityId);
                                                                 $("#stressType").val(data.stressType).trigger('change');
-                                                                
+
 //                                                                     const data001 = data.assemblyId;
 //                                                            const myDropdown = document.getElementById("assemblyId");
 //                                                            alert(myDropdown.value);
@@ -4275,21 +4340,21 @@
 
                                                     });
 
-                                                    document.getElementById('btnNewHWID').addEventListener('click', function (e) {
-                                                        if (!$("#itemPKID").val()) {
-                                                            e.preventDefault();  // stops data API from triggering show
-                                                            e.stopPropagation(); // belt & suspenders
-                                                            alert("No Item Selected.");
-                                                        }
-                                                    });
+//                                                    document.getElementById('btnNewHWID').addEventListener('click', function (e) {
+//                                                        if (!$("#itemPKID").val()) {
+//                                                            e.preventDefault();  // stops data API from triggering show
+//                                                            e.stopPropagation(); // belt & suspenders
+//                                                            alert("No Item Selected.");
+//                                                        }
+//                                                    });
 
                                                     // (Optional) Keep show.bs.offcanvas clean (no alert) if you use the click for alert
-                                                    document.getElementById('offcanvasBottom').addEventListener('show.bs.offcanvas', function (e) {
-                                                        if (!$("#itemPKID").val()) {
-                                                            e.preventDefault();
-                                                            // No alert here to avoid double prompts
-                                                        }
-                                                    });
+//                                                    document.getElementById('offcanvasBottom').addEventListener('show.bs.offcanvas', function (e) {
+//                                                        if (!$("#itemPKID").val()) {
+//                                                            e.preventDefault();
+//                                                            // No alert here to avoid double prompts
+//                                                        }
+//                                                    });
     </script>
 </s:layout-component>
 </s:layout-render>

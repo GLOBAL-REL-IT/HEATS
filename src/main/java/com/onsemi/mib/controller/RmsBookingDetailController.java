@@ -23,9 +23,11 @@ import com.onsemi.mib.model.RmsBookingHardware;
 import com.onsemi.mib.model.RmsBookingLog;
 import com.onsemi.mib.model.UserSession;
 import com.onsemi.mib.tools.EmailSender;
+import com.onsemi.mib.tools.HimsRetrieve;
 import com.onsemi.mib.tools.QueryResult;
 import com.onsemi.mib.tools.SPTSWebService;
 import java.io.IOException;
+import java.sql.SQLException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -354,6 +356,8 @@ public class RmsBookingDetailController {
             @PathVariable("id") String id,
             @ModelAttribute UserSession userSession) throws IOException {
 
+        model.addAttribute("userItemSfRecall", userSession.getItemSfRecall());
+
         //to cross check with existing hardware booked
         List<String> list = new ArrayList<>();
 
@@ -368,6 +372,8 @@ public class RmsBookingDetailController {
         int bookingPkid = Integer.parseInt(rms.getBookingPkid());
         JSONArray getItemByParamV = SPTSWebService.getBookingDetailByPKID(bookingPkid);
         for (int i = 0; i < getItemByParamV.length(); i++) {
+
+//            LOGGER.info("1st step: " + LocalDateTime.now());
 
             list.add(Integer.toString(getItemByParamV.getJSONObject(i).getInt("pkid")));
 
@@ -426,6 +432,8 @@ public class RmsBookingDetailController {
                     JSONArray getItemByParam = SPTSWebService.getItemByParam(paramV);
                     for (int x = 0; x < getItemByParam.length(); x++) {
 
+//                        LOGGER.info("2nd step: " + LocalDateTime.now());
+
                         rmsH.setItemPkid(Integer.toString(getItemByParam.getJSONObject(x).getInt("PKID")));
                         onhandQty = getItemByParam.getJSONObject(x).getInt("OnHandQty");
                         if (onhandQty >= requestQty) {
@@ -437,7 +445,7 @@ public class RmsBookingDetailController {
                             if (count == 1) {
                                 rmsBH = new RmsBookingHardwareDAO();
                                 RmsBookingHardware rmsB = rmsBH.getRmsBookingHardwareByPkid(Integer.toString(getItemByParamV.getJSONObject(i).getInt("pkid")));
-                                if (rmsB.getStatus().contains("Request for Replacement")) {
+                                if (rmsB.getStatus().contains("Request for Replacement") || rmsB.getStatus().contains("Recall from Storage Factory")) {
                                     rmsH.setStatus(rmsB.getStatus());
                                 } else {
                                     rmsH.setStatus("Not Available - " + getItemByParam.getJSONObject(x).getString("StatusName"));
@@ -486,6 +494,7 @@ public class RmsBookingDetailController {
         List<RmsBookingHardware> hw = rmsH.getRmsBookingHardwareListByBookingPkidWithFlagZero(Integer.toString(bookingPkid));
         for (int i = 0; i < hw.size(); i++) {
             if (!list.contains(hw.get(i).getPkid())) {
+
                 RmsBookingHardware h = new RmsBookingHardware();
                 h.setId(hw.get(i).getId());
                 h.setFlag("99");
@@ -624,6 +633,44 @@ public class RmsBookingDetailController {
             redirectAttrs.addFlashAttribute("success", "Email sent to planner.");
             return "redirect:/rmsbookingDetail/detail/" + rms.getId();
         }
+    }
+
+    @RequestMapping(value = "/retrieveSF/{invId}/{pkid}/{id}/{rmsBookingId}", method = {RequestMethod.GET, RequestMethod.POST})
+    public String retrieveSF(
+            Model model,
+            Locale locale,
+            RedirectAttributes redirectAttrs,
+            @ModelAttribute UserSession userSession,
+            @PathVariable("invId") String invId,
+            @PathVariable("pkid") String pkid,
+            @PathVariable("id") String id,
+            @PathVariable("rmsBookingId") String rmsBookingId
+    ) throws ClassNotFoundException, SQLException {
+
+        LOGGER.info("invId: " + invId);
+        LOGGER.info("pkid: " + pkid);
+        LOGGER.info("id: " + id);
+        LOGGER.info("rmsBookingId: " + rmsBookingId);
+
+        String himsRetrieve = HimsRetrieve.himsRetrieve(servletContext, userSession, invId);
+
+        if (himsRetrieve.contains("Successfully")) {
+            LOGGER.info("+++++++Retrieve Success+++++++");
+            redirectAttrs.addFlashAttribute("success", "Item successfully recall from Storage Factory");
+
+            //update item status
+            RmsBookingHardware h = new RmsBookingHardware();
+            h.setId(id);
+            h.setStatus("Recall from Storage Factory");
+            h.setRecallSfBy(userSession.getFullname());
+            RmsBookingHardwareDAO hD = new RmsBookingHardwareDAO();
+            QueryResult q = hD.updateRmsBookingHardwareForRecallSf(h);
+
+        } else {
+            LOGGER.info("+++++++Retrieve Failed+++++++");
+            redirectAttrs.addFlashAttribute("error", "Failed to recall from Storage Factory. Pls contact system admin for more detail");
+        }
+        return "redirect:/rmsbookingDetail/detail/" + rmsBookingId;
     }
 
     @RequestMapping(value = "/add", method = RequestMethod.GET)

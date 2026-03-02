@@ -85,8 +85,18 @@
                 color: #FFFFFF; /* White text for contrast */
             }
             div.dt-container {
-                width: 800px;
+                width: 900px;
                 margin: 0 auto;
+            }
+
+            .offcanvas.offcanvas-start-recall {
+                top: 0;
+                left: 0;
+                width: 900px;
+                border-right: 1px solid rgba(0, 6, 28, 0.175);
+                transform: translateX(-100%);
+                transition: transform 0.2s ease-in-out;
+                ;
             }
 
         </style>
@@ -262,7 +272,7 @@
                                 <div class="col-12 mb-3">
                                     <h6 class="fw-semibold mb-3 border-start border-primary ps-2"
                                         style="border-left-width: 3px !important;">
-                                        <i class="bi bi-list-ul me-2"></i>List of Hardware <b><span style="color:#D97D55">(Other Support Items}</span></b>
+                                        <i class="bi bi-list-ul me-2"></i>List of Hardware <b><span style="color:#D97D55">(Other Support Items)</span></b>
                                     </h6>
                                 </div>
                                 <div class="card-body">
@@ -299,8 +309,8 @@
                                                     <td align="center">
                                                         <c:if test="${parameterMaster.status != 'NA'}">
                                                             <c:if test="${parameterMaster.recall == 'Yes'}">
-                                                                <a modaldeleteid="${parameterMaster.id}" type="button" data-bs-toggle="offcanvas" title="Email to Planner"
-                                                                   data-bs-target="#staticBackdropRecall" aria-controls="staticBackdropRecall" onclick="getDataRecall(this);">
+                                                                <a modaldeleteid="${parameterMaster.itemPkid}" modaldeleteid2="${parameterMaster.id}" type="button" data-bs-toggle="offcanvas" title="Recall from Storage Factory"
+                                                                   data-bs-target="#staticBackdropRecall" aria-controls="staticBackdropRecall" onclick="ajaxStorage(this);">
                                                                     <i class="bi bi-house-up h4"></i>
                                                                 </a>
                                                             </c:if>
@@ -371,8 +381,8 @@
                                                     <td><c:out value="${parameterMaster.status}"/></td>
                                                     <td align="center">
                                                         <c:if test="${parameterMaster.recall == 'Yes'}">
-                                                            <a modaldeleteid="${parameterMaster.id}" type="button" data-bs-toggle="offcanvas" title="Email to Planner"
-                                                               data-bs-target="#staticBackdropRecall" aria-controls="staticBackdropRecall" onclick="getDataRecall(this);">
+                                                            <a modaldeleteid="${parameterMaster.itemPkid}" modaldeleteid2="${parameterMaster.id}" type="button" data-bs-toggle="offcanvas" title="Recall from Storage Factory"
+                                                               data-bs-target="#staticBackdropRecall" aria-controls="staticBackdropRecall" onclick="ajaxStorage(this);">
                                                                 <i class="bi bi-house-up h4"></i>
                                                             </a>
                                                         </c:if>
@@ -464,53 +474,30 @@
                 </div>
             </div>
             <!-- Toggle static offcanvas for recall from storage factory--> 
-            <div class="offcanvas offcanvas-start" data-bs-backdrop="static" tabindex="-1" id="staticBackdropRecall"
+            <div class="offcanvas offcanvas-start-recall" data-bs-backdrop="static" tabindex="-1" id="staticBackdropRecall"
                  aria-labelledby="staticBackdropLabel">
                 <div class="offcanvas-header">
                     <h5 class="offcanvas-title" id="staticBackdropLabel">Recall from Storage Factory</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
                 </div>
                 <div class="offcanvas-body">
-                    <div>
-                        <form class="row g-3 align-items-center" role="form" action="${contextPath}/rmsbookingDetail/testtest" method="post">
-                            <div class="row mb-3">
-                                <div class="col-xl-12 col-sm-12 col-12">
-                                    <div class="mb-1">
-                                        <label for="itemId" class="form-label">Item Type</label>
-                                        <div class="input input-group">
-                                            <input type="text" class="form-control" id="itemType2" name="itemType2" placeholder="" value="" disabled>
-                                            <input type="hidden" class="form-control" id="id3" name="id3" placeholder="" value="">
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="row mb-3">
-                                <div class="col-xl-12 col-sm-12 col-12">
-                                    <div class="mb-1">
-                                        <label for="itemId" class="form-label">Item ID</label>
-                                        <div class="input input-group">
-                                            <input type="text" class="form-control" id="itemId3" name="itemId3" placeholder="" value="" disabled>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="row mb-3">
-                                <div class="col-xl-12 col-sm-12 col-12">
-                                    <div class="mb-1">
-                                        <label for="itemId" class="form-label">Remarks</label>
-                                        <div class="input input-group">
-                                            <textarea class="form-control" rows="5" id="remarks" name="remarks"></textarea>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <!-- Form actions start -->
-                            <div class="col-md-12">
-                                <button type="submit" id="submit" id="submit" class="btn btn-primary float-end">Send Email</button>
-                            </div>
-
-                            <!-- Form actions end -->
-                        </form>
+                    <div class="table-responsive">
+                        <table id="listStorage" class="table custom-table pending">
+                            <thead>
+                                <tr>
+                                    <th class="col-3">Item ID</th>
+                                    <th class="col-1">Box No</th>
+                                    <th class="col-1">Rack</th>
+                                    <th class="col-2">Shelf</th>
+                                    <th class="col-1">Qty</th>
+                                    <th class="col-1">Inventory Date</th>
+                                    <!--<th class="col-2">Movement Type</th>-->
+                                    <th class="col-1">Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                            </tbody>
+                        </table>
                     </div>
                 </div>
             </div>
@@ -566,25 +553,6 @@
                                                                    });
                                                                }
 
-                                                               function getDataRecall(e) {
-                                                                   var id = $(e).attr("modaldeleteid");
-                                                                   $.ajax({
-                                                                       url: '${contextPath}/rmsbookingDetail/emailBody', // Replace with your controller URL
-                                                                       type: 'GET',
-                                                                       data: {id: id},
-                                                                       dataType: 'json',
-                                                                       success: function (data) {
-                                                                           // Populate form fields with received data
-                                                                           $("#itemId3").val(data.itemId);
-                                                                           $("#id3").val(data.id);
-                                                                           $("#itemType2").val(data.itemType);
-                                                                       },
-                                                                       error: function (jqXHR, textStatus, errorThrown) {
-                                                                           console.error("Error loading data: " + textStatus, errorThrown);
-                                                                       }
-                                                                   });
-                                                               }
-
                                                                $(document).ready(function () {
                                                                    $('.js-example-basic-single').select2();
                                                                });
@@ -617,6 +585,58 @@
                                                                        dom: "Blfrtip",
                                                                        buttons: ["copy", "csv", "pdf", "print"],
                                                                    });
+                                                               });
+
+                                                               function ajaxStorage(e) {
+                                                                   var itemPKID = $(e).attr("modaldeleteid");
+                                                                   var id = $(e).attr("modaldeleteid2");
+                                                                   $('#listStorage').DataTable().destroy();
+                                                                   new DataTable('#listStorage', {
+                                                                       ajax: {
+                                                                           data: {itemPKID: itemPKID},
+                                                                           url: '${contextPath}/hw/item/ajaxStorage',
+                                                                           dataSrc: ''
+                                                                       },
+                                                                       columns: [
+                                                                           {"data": "itemId"},
+                                                                           {"data": "boxNo"},
+                                                                           {"data": "rack"},
+                                                                           {"data": "shelf"},
+                                                                           {"data": "qty"},
+                                                                           {"data": "movementDateTime"},
+                                                                           //                                                           {"data": "movementType"},
+                                                                           {
+                                                                               data: "invId", // This column won't directly map to a data field
+                                                                               render: function (data, type, row) {
+                                                                                   return '<c:if test="${userItemSfRecall == 'Yes'}"><button class="btn btn-primary edit-btn" data-inv="' + data + '" data-pkid="' + itemPKID + '" data-id="' + id + '" data-bs-toggle="modal" data-bs-target="#confirmation_modal">Recall</button></c:if>';
+                                                                                   // 'row' contains the entire data object for the current row
+
+                                                                               }
+                                                                           }
+                                                                       ],
+                                                                       //                                                        processing: true,
+                                                                   });
+                                                               }
+
+                                                               $('#listStorage tbody').on('click', '.edit-btn', function () {
+                                                                   var rowInv = $(this).data('inv'); // Get the 'data-id' attribute
+                                                                   var rowPkid = $(this).data('pkid'); // Get the 'data-id' attribute
+                                                                   var rowId = $(this).data('id'); // Get the 'data-id' attribute
+                                                                   var rmsBookingId = $("#id").val();
+                                                                   // Perform further actions, e.g., open a modal for editing
+                                                                   if (rowId) {
+//                                                                       alert(rowInv + " | " + rowPkid + " | "+ rowId + " | "+ rmsBookingId);
+                                                                       var deleteUrl = "${contextPath}/rmsbookingDetail/retrieveSF/" + rowInv + "/" + rowPkid + "/" + rowId + "/" + rmsBookingId;
+                                                                       var deleteMsg = "Are you sure want to retrieve this item from Storage Factory?";
+                                                                       $("#confirmation_modal .modal-body").html(deleteMsg);
+                                                                       $("#modal_button").attr("href", deleteUrl);
+                                                                   } else {
+                                                                       var deleteUrl = "";
+                                                                       var deleteMsg = "No Item Selected.";
+                                                                       $("#confirmation_modal .modal-body").html(deleteMsg);
+                                                                       $("#modal_button").attr("href", deleteUrl);
+                                                                   }
+
                                                                });
         </script>
     </s:layout-component>

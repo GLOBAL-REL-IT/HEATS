@@ -369,9 +369,9 @@
         </div>
     </s:layout-component>
     <s:layout-component name="page_js">
-        <script src="${contextPath}/resources/vendor/DataTables/customitem/jquery-3.7.1.min.js"></script>
+<!--        <script src="${contextPath}/resources/vendor/DataTables/customitem/jquery-3.7.1.min.js"></script>
         <script src="${contextPath}/resources/vendor/DataTables/customitem/bootstrap.bundle.min.js"></script>
-        <script src="${contextPath}/resources/vendor/DataTables/customitem/dataTables.js"></script>
+        <script src="${contextPath}/resources/vendor/DataTables/customitem/dataTables.js"></script>-->
 
         <!-- Data Tables -->
         <script src="${contextPath}/resources/statflow/vendor/datatables/dataTables.min.js"></script>

@@ -130,6 +130,32 @@ public class RmsBookingHardwareDAO {
         return queryResult;
     }
 
+    public QueryResult updateRmsBookingHardwareForRecallSf(RmsBookingHardware rmsbookingHardware) {
+        QueryResult queryResult = new QueryResult();
+        try {
+            PreparedStatement ps = conn.prepareStatement(
+                    "UPDATE rms_booking_hardware SET recall_sf_by = ?, recall_sf_date = NOW(), status = ? WHERE id = ?"
+            );
+            ps.setString(1, rmsbookingHardware.getRecallSfBy());
+            ps.setString(2, rmsbookingHardware.getStatus());
+            ps.setString(3, rmsbookingHardware.getId());
+            queryResult.setResult(ps.executeUpdate());
+            ps.close();
+        } catch (SQLException e) {
+            queryResult.setErrorMessage(e.getMessage());
+            LOGGER.error(e.getMessage());
+        } finally {
+            if (conn != null) {
+                try {
+                    conn.close();
+                } catch (SQLException e) {
+                    LOGGER.error(e.getMessage());
+                }
+            }
+        }
+        return queryResult;
+    }
+
     public QueryResult updateRmsBookingHardwareForFlagAndStatusById(RmsBookingHardware rmsbookingHardware) {
         QueryResult queryResult = new QueryResult();
         try {
