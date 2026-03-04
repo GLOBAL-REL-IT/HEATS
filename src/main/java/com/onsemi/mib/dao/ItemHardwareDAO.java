@@ -339,5 +339,55 @@ public class ItemHardwareDAO {
         
         return data;
     }
+    
+    public String checkForExistingData(String mibItemId, String hardwareId) {
+        String data = "";
+        // KITA NK CARI EXISTING DATA COMBINATION FOR ANOTHER ITEM ID IN THE DATABASE
+        try {
+          PreparedStatement ps = conn.prepareStatement("SELECT COUNT(*) AS data FROM item_hardware WHERE mib_item_id != '"+mibItemId+"' AND hardware_id LIKE '"+hardwareId+"%'");
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                data = rs.getString("data");
+            }
+            rs.close();
+            ps.close();
+        } catch (SQLException e) {
+            LOGGER.error(e.getMessage());
+        } finally {
+            if (conn != null) {
+                try {
+                    conn.close();
+                } catch (SQLException e) {
+                    LOGGER.error(e.getMessage());
+                }
+            }
+        }
+        return data;
+    }
+    
+    public String getOtherMibId(String mibItemId, String hardwareId) {
+        String data = "";
+        // KITA NK CARI EXISTING DATA COMBINATION FOR ANOTHER ITEM ID IN THE DATABASE
+        try {
+          PreparedStatement ps = conn.prepareStatement("SELECT mib_item_id FROM item_hardware WHERE mib_item_id != '"+mibItemId+"' AND hardware_id LIKE '"+hardwareId+"%'");
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                data = rs.getString("mib_item_id");
+            }
+            rs.close();
+            ps.close();
+        } catch (SQLException e) {
+            LOGGER.error(e.getMessage());
+        } finally {
+            if (conn != null) {
+                try {
+                    conn.close();
+                } catch (SQLException e) {
+                    LOGGER.error(e.getMessage());
+                }
+            }
+        }
+        return data;
+    }
 
 }

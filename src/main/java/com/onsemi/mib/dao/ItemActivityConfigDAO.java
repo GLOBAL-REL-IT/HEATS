@@ -322,6 +322,31 @@ public class ItemActivityConfigDAO {
         }
         return itemactivityConfig;
     }
+    
+    public String getItemIdByConfigId(String configId) {
+        String data = "";
+        try {
+            String sql = "SELECT mib_item_id FROM item_activity_config WHERE id = '" + configId + "'";
+            PreparedStatement ps = conn.prepareStatement(sql);
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                data = rs.getString("mib_item_id");
+            }
+            rs.close();
+            ps.close();
+        } catch (SQLException e) {
+            LOGGER.error(e.getMessage());
+        } finally {
+            if (conn != null) {
+                try {
+                    conn.close();
+                } catch (SQLException e) {
+                    LOGGER.error(e.getMessage());
+                }
+            }
+        }
+        return data;
+    }
 
     public Integer getCountByMibItemId(String mibItemId) {
         Integer count = null;

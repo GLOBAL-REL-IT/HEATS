@@ -597,17 +597,17 @@ public class ItemDAO {
     }
 
     public Item getHardwareByPkid(String pkid) {
-        String sql = "SELECT it.id, it.spts_pkid, it.item_type, it.sub_type, it.item_id, it.item_name, it.assembly_id, it.rack, it.shelf, " +
-                        "it.on_hand_qty, it.production_staging_qty, it.production_qty, it.repair_qty, it.other_qty, it.quarantine_qty, " +
-                        "it.external_clean_qty, it.external_reclean_qty, it.internal_clean_qty, it.internal_reclean_qty, it.storage_factory_qty, " +
-                        "it.other_onsemi_qty, it.vendor_qty, it.total_qty, it.unit_cost, it.total_cost, it.status, it.alu_hrs, it.movement_alu_hrs, " +
-                        "it.min_qty, it.max_qty, it.pm_ww1, it.pm_ww2, DATE_FORMAT(expiration_date,'%Y-%m-%d') AS expiration_date, DATE_FORMAT(expiration_date,'%d-%M-%Y') AS expiration_date_view, it.is_critical, " +
-                        "it.is_consumable, it.downtime_value, it.downtime_unit, it.implementation_cost, it.manpower_value, it.manpower_unit, " +
-                        "it.complexity, it.model, it.manufacturer, it.equipment_type, it.equipment_model, it.equipment_manufacturer, " +
-                        "it.stress_type, it.remarks, it.flag, it.created_by, it.created_date, it.modifed_by, it.modified_date, it.item_usage, " +
-                        "cf.item_type AS config FROM item it " +
-                        "LEFT JOIN item_hardware_config cf ON it.item_type = cf.item_type AND IFNULL(it.sub_type, '') = cf.sub_type " +
-                        "WHERE it.spts_pkid = '" + pkid + "'";
+        String sql = "SELECT it.id, it.spts_pkid, it.item_type, it.sub_type, it.item_id, it.item_name, it.assembly_id, it.rack, it.shelf, "
+                + "it.on_hand_qty, it.production_staging_qty, it.production_qty, it.repair_qty, it.other_qty, it.quarantine_qty, "
+                + "it.external_clean_qty, it.external_reclean_qty, it.internal_clean_qty, it.internal_reclean_qty, it.storage_factory_qty, "
+                + "it.other_onsemi_qty, it.vendor_qty, it.total_qty, it.unit_cost, it.total_cost, it.status, it.alu_hrs, it.movement_alu_hrs, "
+                + "it.min_qty, it.max_qty, it.pm_ww1, it.pm_ww2, DATE_FORMAT(expiration_date,'%Y-%m-%d') AS expiration_date, DATE_FORMAT(expiration_date,'%d-%M-%Y') AS expiration_date_view, it.is_critical, "
+                + "it.is_consumable, it.downtime_value, it.downtime_unit, it.implementation_cost, it.manpower_value, it.manpower_unit, "
+                + "it.complexity, it.model, it.manufacturer, it.equipment_type, it.equipment_model, it.equipment_manufacturer, "
+                + "it.stress_type, it.remarks, it.flag, it.created_by, it.created_date, it.modifed_by, it.modified_date, it.item_usage, "
+                + "cf.item_type AS config FROM item it "
+                + "LEFT JOIN item_hardware_config cf ON it.item_type = cf.item_type AND IFNULL(it.sub_type, '') = cf.sub_type "
+                + "WHERE it.spts_pkid = '" + pkid + "'";
         Item hardwaredetail = null;
         try {
             PreparedStatement ps = conn.prepareStatement(sql);
@@ -1116,7 +1116,7 @@ public class ItemDAO {
         }
         return itemList;
     }
-    
+
     public String getMibItemIdBySptsPkId(String sptsId) {
         String count = null;
         try {
@@ -1428,7 +1428,6 @@ public class ItemDAO {
 
     public List<Item> getItemSubType02(String subType, String itemType) {
         String sql = "SELECT DISTINCT(it.sub_type) AS subType, IF(sub_type=\"" + subType + "\",\"selected=''\",\"\") AS selected FROM item it WHERE item_type = '" + itemType + "' AND it.sub_type <> '' ORDER BY it.sub_type ASC";
-        LOGGER.info("apo dioooo >>>>>> "+sql);
         List<Item> itemList = new ArrayList<Item>();
         try {
             PreparedStatement ps = conn.prepareStatement(sql);
@@ -1453,6 +1452,30 @@ public class ItemDAO {
             }
         }
         return itemList;
+    }
+
+    public String getItemIdById(String mibItemId) {
+        String count = null;
+        try {
+            PreparedStatement ps = conn.prepareStatement("SELECT item_id FROM item WHERE id = '" + mibItemId + "'");
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                count = rs.getString("item_id");
+            }
+            rs.close();
+            ps.close();
+        } catch (SQLException e) {
+            LOGGER.error(e.getMessage());
+        } finally {
+            if (conn != null) {
+                try {
+                    conn.close();
+                } catch (SQLException e) {
+                    LOGGER.error(e.getMessage());
+                }
+            }
+        }
+        return count;
     }
 
 }

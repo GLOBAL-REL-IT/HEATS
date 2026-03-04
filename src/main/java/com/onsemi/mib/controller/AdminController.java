@@ -6,6 +6,7 @@ import com.onsemi.mib.dao.ItemAluConfigDAO;
 import com.onsemi.mib.dao.ItemDAO;
 import com.onsemi.mib.dao.ItemHardwareConfigDAO;
 import com.onsemi.mib.dao.LDAPUserDAO;
+import com.onsemi.mib.dao.ManualTestDAO;
 import java.util.List;
 import java.util.Locale;
 import javax.servlet.http.HttpServletRequest;
@@ -24,6 +25,7 @@ import com.onsemi.mib.model.ItemAluConfig;
 import com.onsemi.mib.model.ItemHardwareConfig;
 import com.onsemi.mib.model.JSONResponse;
 import com.onsemi.mib.model.LDAPUser;
+import com.onsemi.mib.model.ManualTest;
 import com.onsemi.mib.model.Menu;
 import com.onsemi.mib.model.ParameterDetails;
 import com.onsemi.mib.tools.QueryResult;
@@ -1191,13 +1193,28 @@ public class AdminController {
     public String bibActivityEdit(
             Model model,
             @ModelAttribute UserSession userSession,
-            @PathVariable("id") String id
-    ) {
+            @PathVariable("id") String id) {
 
         ItemActivityConfigDAO itemD = new ItemActivityConfigDAO();
         ItemActivityConfig item = itemD.getItemActivityConfigWithItemDetail(id);
         model.addAttribute("item", item);
-
+        
+        // CHECK IF DATA EXIST - DO NOTHING IF NO DATA FOUND
+        ManualTestDAO itemA = new ManualTestDAO();
+        ManualTest itemA1 = itemA.getComponentConfigBefore(id);
+        if (itemA1 == null) {
+            // DO NOTHING HERE?
+        } else {
+            String dut = itemA1.getDut();
+            
+            ItemActivityConfigDAO itemactdao = new ItemActivityConfigDAO();
+            String mibItemId = itemactdao.getItemIdByConfigId(id);
+            ManualTestDAO itemB = new ManualTestDAO();
+            List<ManualTest> itemB1 = itemB.getAllComponentConfigBefore(mibItemId);
+            
+            model.addAttribute("dut", dut);
+            model.addAttribute("listData", itemB1);
+        }
         return "admin/bib_config_edit";
     }
 
@@ -1213,8 +1230,17 @@ public class AdminController {
             @RequestParam(required = false) String manualTestCheck,
             @RequestParam(required = false) String leakageTestCheck,
             @RequestParam(required = false) String psLeakageTestCheck,
-            @RequestParam(required = false) String winchesterChamberLeakageTest
-    ) {
+            @RequestParam(required = false) String winchesterChamberLeakageTest,
+            @RequestParam(required = false) String inputDUT,
+            @RequestParam(required = false, value = "component_name[]") List<String> compName,
+            @RequestParam(required = false, value = "component_type[]") List<String> type,
+            @RequestParam(required = false, value = "actual_value[]") List<String> compValue,
+            @RequestParam(required = false, value = "percentage[]") List<String> percentageValue,
+            @RequestParam(required = false, value = "lower[]") List<String> lowerValue,
+            @RequestParam(required = false, value = "upper[]") List<String> upperValue) {
+        
+        int saiz = 0;
+        int inputQuantity = 1;
 
         ItemActivityConfig itemA = new ItemActivityConfig();
         itemA.setId(id);
@@ -1230,6 +1256,44 @@ public class AdminController {
         }
         if ("on".equals(manualTestCheck)) {
             itemA.setManualTest("Yes");
+            saiz = compName.size();
+            String flag = "1";
+            String status = "";
+            int saizDut = Integer.parseInt(inputDUT);
+            String user = userSession.getLoginId();
+
+            ItemActivityConfigDAO itemactdao = new ItemActivityConfigDAO();
+            String itemId = itemactdao.getItemIdByConfigId(id);
+            
+            ManualTestDAO test = new ManualTestDAO();
+            Integer check1 = test.getManualTestCurrentRecord(itemId);
+            
+            if ("0".equals(check1)) {
+                test = new ManualTestDAO();
+                QueryResult q0 = test.insertManualTestBeforeLoading(itemId, id, String.valueOf(inputQuantity), inputDUT, String.valueOf(saiz), user, flag);
+                
+                if (!"0".equals(q0.getGeneratedKey())) {
+                    String configId = q0.getGeneratedKey();
+                    for (int c1 = 0; c1 < saiz; c1++) { 
+                        test = new ManualTestDAO();
+                        QueryResult q3 = test.insertManualTestBeforeLoadingSub(itemId, configId, inputDUT, type.get(c1), compName.get(c1), compValue.get(c1), percentageValue.get(c1), lowerValue.get(c1), upperValue.get(c1), user, flag);
+                    }
+                }
+            } else {
+                test = new ManualTestDAO();
+                Integer configId = test.getConfigIdByItemId(itemId);
+                test = new ManualTestDAO();
+                QueryResult q0 = test.updateItemActivityConfig(String.valueOf(inputQuantity), inputDUT, String.valueOf(saiz), String.valueOf(configId));
+                
+                // FUNCTION TO REMOVE PREVIOUS COMPONENT, AND THEN SAVE THE NEW ONE
+                test = new ManualTestDAO();
+                test.removeCurrentDataBefore(String.valueOf(configId), itemId);
+                
+                for (int c1 = 0; c1 < saiz; c1++) { 
+                    test = new ManualTestDAO();
+                    QueryResult q3 = test.insertManualTestBeforeLoadingSub(itemId, String.valueOf(configId), inputDUT, type.get(c1), compName.get(c1), compValue.get(c1), percentageValue.get(c1), lowerValue.get(c1), upperValue.get(c1), user, flag);
+                }
+            }
         } else {
             itemA.setManualTest("No");
         }
@@ -1254,15 +1318,15 @@ public class AdminController {
         ItemActivityConfigDAO itemD = new ItemActivityConfigDAO();
         QueryResult itemQ = itemD.updateItemActivityConfig(itemA);
         if (!"0".equals(itemQ.getResult())) {
-            redirectAttrs.addFlashAttribute("success", "Activity Configuration Succesfully Updated.");
-//            return "redirect:/admin/bibActivity";
-            return "redirect:/hw//item/pending";
+//            redirectAttrs.addFlashAttribute("success", "Activity Configuration Succesfully Updated.");
+            redirectAttrs.addFlashAttribute("success", messageSource.getMessage("item.label.configuration.bib.success", args, locale));
+            return "redirect:/admin/bibActivity";
+//            return "redirect:/hw//item/pending";
         } else {
-
+//            redirectAttrs.addFlashAttribute("error", "Failed to update Activity Configuration. Pls Contact System Admin");
+            redirectAttrs.addFlashAttribute("success", messageSource.getMessage("item.label.configuration.bib.error", args, locale));
+            return "redirect:/admin/bibActivity/edit/" + id;
         }
-
-        redirectAttrs.addFlashAttribute("error", "Failed to update Activity Configuration. Pls Contact System Admin");
-        return "redirect:/admin/bibActivity/edit/" + id;
     }
 
     @RequestMapping(value = "/aluConfig", method = {RequestMethod.GET, RequestMethod.POST})

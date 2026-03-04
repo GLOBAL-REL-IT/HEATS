@@ -653,7 +653,6 @@
         const testdata = document.createElement("actual_value[]");
         testdata.addEventListener('input', calculateLimits);
         
-        
 //        $(document).ready(function () {
             
 //        });

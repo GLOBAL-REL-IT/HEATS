@@ -3680,7 +3680,6 @@ public class ItemController {
         }
 
         if (statusMan.equals("Yes")) {
-            LOGGER.info("UPDATE MANUAL TEST STATUS");
             if (statusLeak.equals("Yes")) {
                 finalStatus = "Pending Functional Test - Leakage Test";
             } else if (statusPs.equals("Yes")) {
@@ -4289,6 +4288,7 @@ public class ItemController {
         String pathPs = "";
         String pathWin = "";
 
+        /*  // COMMENT BECAUSE JUST CHECK THE DATA
         switch (jenis) {
             case "bibTest":
                 LOGGER.info("KITA MASUK DEKAT BIB TEST");
@@ -4306,6 +4306,7 @@ public class ItemController {
                 LOGGER.info("KITA BREAK BY DEFAULT");
                 break;
         }
+        */
 
         ItemFunctionalTest item = new ItemFunctionalTest();
 
@@ -4625,7 +4626,7 @@ public class ItemController {
         Item item2 = itemD.getHardwareDetail(mibItemId);
 
         //send INFORMATION email
-        LOGGER.info("######################### START EMAIL TO  ########################### ");
+        LOGGER.info("######################### START MAVERICK EMAIL ########################### ");
         EmailSender emailSender = new EmailSender();
         emailSender.htmlEmailTable(
                 servletContext,
@@ -4696,7 +4697,6 @@ public class ItemController {
         String date1 = expirationDate.substring(0, 10);
         String time = expirationDate.substring(11, 19);
         String completeDateTime = date1 + "T" + time;
-        LOGGER.info("completeDateTime : " + completeDateTime);
 
         JSONObject addItem = new JSONObject();
         addItem.put("itemID", itemId);
@@ -5153,26 +5153,14 @@ public class ItemController {
         ManualTestDAO itemA = new ManualTestDAO();
         ManualTest itemA1 = itemA.getComponentConfig(id);
 
-        // 2026 JAN - PLEASE ADD ON THE ALGORITHM HERE FOR ALL FOUND SCENARIO
         if (itemA1 == null) {
-//            if (status.contains("Pending Visual Inspection")) {
-//
-//            } else {
-//
-//            }
-//            redirectAttrs.addFlashAttribute("error", "Manual Test Configuration is missing. Please contact admin for further assistance.");
-//            return "redirect:/hw/item/pending";
+            // DO NOTHING HERE
         } else {
-//            if (status.contains("Pending Visual Inspection")) {
             qty = itemA1.getQty();
             dut = itemA1.getDut();
             ManualTestDAO itemB = new ManualTestDAO();
             List<ManualTest> itemB1 = itemB.getAllComponentConfig(mibItemId);
             model.addAttribute("listData", itemB1);
-//            } else {
-//                redirectAttrs.addFlashAttribute("error", "Functional Test already on-going.");
-//                return "redirect:/hw/item/pending";
-//            }
         }
         model.addAttribute("qty", qty);
         model.addAttribute("dut", dut);
@@ -6411,6 +6399,7 @@ public class ItemController {
         itemhardware.setCreatedBy(userSession.getLoginId());
         itemhardware.setFlag("0");
 
+        // CHECK IF THE CONFIGURATION EXIST IN DATABASE OR NOT
         if (itemconfig == null || "".equals(itemconfig)) {
             redirectAttrs.addFlashAttribute("error", messageSource.getMessage("admin.label.hardware.create.error", args, locale));
         } else {
@@ -6436,24 +6425,36 @@ public class ItemController {
                 addIfYes(sj, itemconfig.getPartNumber(), partNo);
                 maklumatterakhir = sj.toString();
 
-                // FUNCTION UNTUK DAPATKAN EXISTING DATA DLU, THEN ASSIGN DLM exist
-                ItemHardwareDAO itemdao1 = new ItemHardwareDAO();
-                String check1 = itemdao1.getLatestHardwareID(mibItemId, maklumatterakhir);
+                // FUNCTION INI UNTUK CHECK SAMADA ADA SETTING SAMA UNTUK ITEM ID YANG BERLAINAN
+                ItemHardwareDAO itemdao4 = new ItemHardwareDAO();
+                String checkExistingData = itemdao4.checkForExistingData(mibItemId, maklumatterakhir);
+                if ("0".equalsIgnoreCase(checkExistingData)) {
+                    // FUNCTION UNTUK DAPATKAN EXISTING DATA DLU, THEN ASSIGN DLM exist
+                    ItemHardwareDAO itemdao1 = new ItemHardwareDAO();
+                    String check1 = itemdao1.getLatestHardwareID(mibItemId, maklumatterakhir);
 
-                int exist = (check1 == null || check1.isEmpty()) ? 0 : Integer.parseInt(check1);
-                int n = Integer.parseInt(runningNumber);
+                    int exist = (check1 == null || check1.isEmpty()) ? 0 : Integer.parseInt(check1);
+                    int n = Integer.parseInt(runningNumber);
 
-                int start = exist + 1;
-                int end = exist + n;
+                    int start = exist + 1;
+                    int end = exist + n;
 
-                for (int i = start; i <= end; i++) {
-                    String larian = String.format("%03d", i);
-//                    LOGGER.info("LOOPING DATA : HARDWARE ID >>> " + maklumatterakhir + "-" + larian);
-                    itemhardware.setHardwareId(maklumatterakhir + "-" + larian);
-                    ItemHardwareDAO dao2 = new ItemHardwareDAO();
-                    QueryResult q = dao2.insertHardwareID(itemhardware);
+                    for (int i = start; i <= end; i++) {
+                        String larian = String.format("%03d", i);
+                        itemhardware.setHardwareId(maklumatterakhir + "-" + larian);
+                        ItemHardwareDAO dao2 = new ItemHardwareDAO();
+                        QueryResult q = dao2.insertHardwareID(itemhardware);
+                    }
+                    redirectAttrs.addFlashAttribute("success", messageSource.getMessage("admin.label.hardware.create.success", args, locale));
+                } else {
+                    itemdao4 = new ItemHardwareDAO();
+                    String otherId = itemdao4.getOtherMibId(mibItemId, maklumatterakhir);
+                    dao1 = new ItemDAO();
+                    String nama = dao1.getItemIdById(otherId);
+                    args = new String[1];
+                    args[0] = nama;
+                    redirectAttrs.addFlashAttribute("error", messageSource.getMessage("admin.label.hardware.error.exist", args, locale));
                 }
-                redirectAttrs.addFlashAttribute("success", messageSource.getMessage("admin.label.hardware.create.success", args, locale));
             }
         }
 

@@ -193,8 +193,8 @@
                                                 <div class="input-group form-check form-switch">
                                                     <input class="form-check-input" type="checkbox" role="switch" id="${xtvt.remarks}" name="${xtvt.remarks}" 
                                                            <c:if test="${xtvt.remarks eq 'viCheck'}"> checked onclick="return false;"</c:if>
-                                                           <c:if test="${xtvt.remarks eq 'manualTestCheck'}"> onchange="toggleVisibility()"" onclick="toggleRequired();"</c:if>>
-                                                    </div>
+                                                           <c:if test="${xtvt.remarks eq 'manualTestCheck'}"> onchange="toggleVisibility()" onclick="toggleRequired();"</c:if>>
+                                                </div>
                                             </c:forEach>
                                         </div>
                                     </div>
@@ -209,11 +209,6 @@
                                                     <label class="col-2" for="dutField">DUT #:</label>
                                                     <input class="col-2" type="number" id="dutField" name="dutField" min="1" >
                                                 </div>
-<!--                                                <div>
-                                                    <label class="col-2" for="manComp">Components :</label>
-                                                    <input class="col-2" type="number" id="manComp" name="manComp" min="1" >
-                                                    <button type="button" onclick="createRows()">Create Components</button>
-                                                </div>-->
                                                 <div>
                                                     <label for="componentField">Components:</label>
                                                     <button type="button" class="add-row-btn" onclick="addRow()">Add Component</button>

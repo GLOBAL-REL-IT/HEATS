@@ -18,6 +18,16 @@
                 border: none;
                 /*background-color:#f0f0f0;*/
             }
+            .input {
+                border: 1.5px solid #000;
+                border-radius: 0.5rem;
+                box-shadow: 2.5px 3px 0 #000 !important;
+                outline: none;
+                transition: ease 0.25s;
+            }
+            .input:focus {
+                box-shadow: 5.5px 7px 0 black;
+            }
         </style>
     </s:layout-component>
     <s:layout-component name="page_container">
@@ -36,26 +46,34 @@
                                         <div class="col-sm-3 col-12">
                                             <div class="mb-3">
                                                 <label class="form-label" for="itemType">Item Type </label>
-                                                <input type="text" class="form-control" id="itemType" name="itemType" value="${item.itemType}" readonly>
+                                                <div class="input input-group">
+                                                    <input type="text" class="form-control" id="itemType" name="itemType" value="${item.itemType}" readonly>
+                                                </div>
                                                 <input type="hidden" name="sptsId" value="${sptsId}">
                                             </div>
                                         </div>
                                         <div class="col-sm-3 col-12">
                                             <div class="mb-3">
                                                 <label class="form-label" for="subType">Sub Type</label>
-                                                <input type="text" class="form-control" id="subType" name="subType" placeholder="No Sub Type" value="${item.subType}" readonly>
+                                                <div class="input input-group">
+                                                    <input type="text" class="form-control" id="subType" name="subType" placeholder="No Sub Type" value="${item.subType}" readonly>
+                                                </div>
                                             </div>
                                         </div>
                                         <div class="col-sm-3 col-12">
                                             <div class="mb-3">
                                                 <label class="form-label" for="itemId">Item ID </label>
-                                                <input type="text" class="form-control" id="itemId" name="itemId" placeholder="Item ID" value="${item.itemId}" readonly>
+                                                <div class="input input-group">
+                                                    <input type="text" class="form-control" id="itemId" name="itemId" placeholder="Item ID" value="${item.itemId}" readonly>
+                                                </div>
                                             </div>
                                         </div>
                                         <div class="col-sm-3 col-12">
                                             <div class="mb-3">
                                                 <label class="form-label" for="itemName">Item Name </label>
-                                                <input type="text" class="form-control" id="itemName" name="itemName" placeholder="Item Name" value="${item.itemName}" readonly>
+                                                <div class="input input-group">
+                                                    <input type="text" class="form-control" id="itemName" name="itemName" placeholder="Item Name" value="${item.itemName}" readonly>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
@@ -72,7 +90,9 @@
                                                 <div class="col-sm-8 col-12">
                                                     <div class="mb-3">
                                                         <label class="form-label" for="sameItemId">Same Item ID<span class="text-danger"> *</span></label>
-                                                        <input type="text" class="form-control" id="sameItemId" name="sameItemId" placeholder="Same Item ID" value="${item.itemId}" required>
+                                                        <div class="input input-group">
+                                                            <input type="text" class="form-control" id="sameItemId" name="sameItemId" placeholder="Same Item ID" value="${item.itemId}" required>
+                                                        </div>
                                                     </div>
                                                 </div>
                                             </c:if>
@@ -80,7 +100,9 @@
                                                 <div class="col-sm-8 col-12">
                                                     <div class="mb-3">
                                                         <label class="form-label" for="supplier">Supplier<span class="text-danger"> *</span></label>
-                                                        <input type="text" class="form-control" id="supplier" name="supplier" placeholder="Key in supplier" value="" required>
+                                                        <div class="input input-group">
+                                                            <input type="text" class="form-control" id="supplier" name="supplier" placeholder="Key in supplier" value="" required>
+                                                        </div>
                                                     </div>
                                                 </div>
                                             </c:if>
@@ -88,7 +110,9 @@
                                                 <div class="col-sm-8 col-12">
                                                     <div class="mb-3">
                                                         <label class="form-label" for="assemblyNo">Assembly Number<span class="text-danger"> *</span></label>
-                                                        <input type="text" class="form-control" id="assemblyNo" name="assemblyNo" placeholder="Key in assembly number" value="${item.assemblyId}" required>
+                                                        <div class="input input-group">
+                                                            <input type="text" class="form-control" id="assemblyNo" name="assemblyNo" placeholder="Key in assembly number" value="${item.assemblyId}" required>
+                                                        </div>
                                                     </div>
                                                 </div>
                                             </c:if>
@@ -96,7 +120,9 @@
                                                 <div class="col-sm-8 col-12">
                                                     <div class="mb-3">
                                                         <label class="form-label" for="revision">Revision<span class="text-danger"> *</span></label>
-                                                        <input type="text" class="form-control" id="revision" name="revision" placeholder="Key in revision" value="" required>
+                                                        <div class="input input-group">
+                                                            <input type="text" class="form-control" id="revision" name="revision" placeholder="Key in revision" value="" required>
+                                                        </div>
                                                     </div>
                                                 </div>
                                             </c:if>
@@ -104,7 +130,9 @@
                                                 <div class="col-sm-8 col-12">
                                                     <div class="mb-3">
                                                         <label for="mfgDate" class="form-label">Mfg Date<span class="text-danger"> *</span></label>
-                                                        <input type="month" class="form-control" id="mfgDate" name="mfgDate" required >
+                                                        <div class="input input-group">
+                                                            <input type="month" class="form-control" id="mfgDate" name="mfgDate" required >
+                                                        </div>
                                                         <div class="mb-3" hidden>
                                                             <label class="form-label">msgDate (mmyy)</label>
                                                             <input type="text" id="viewMessage" name="viewMessage" class="form-control" readonly value=""/>
@@ -116,7 +144,9 @@
                                                 <div class="col-sm-8 col-12">
                                                     <div class="mb-3">
                                                         <label class="form-label" for="component">Component<span class="text-danger"> *</span></label>
-                                                        <input type="text" class="form-control" id="component" name="component" placeholder="Key in component?" value="" required>
+                                                        <div class="input input-group">
+                                                            <input type="text" class="form-control" id="component" name="component" placeholder="Key in component?" value="" required>
+                                                        </div>
                                                     </div>
                                                 </div>
                                             </c:if>
@@ -124,7 +154,9 @@
                                                 <div class="col-sm-8 col-12">
                                                     <div class="mb-3">
                                                         <label class="form-label" for="eventStress">Event<span class="text-danger"> *</span></label>
-                                                        <input type="text" class="form-control" id="eventStress" name="eventStress" placeholder="Key in Event" value="${item.stressType}" required>
+                                                        <div class="input input-group">
+                                                            <input type="text" class="form-control" id="eventStress" name="eventStress" placeholder="Key in Event" value="${item.stressType}" required>
+                                                        </div>
                                                     </div>
                                                 </div>
                                             </c:if>
@@ -132,7 +164,9 @@
                                                 <div class="col-sm-8 col-12">
                                                     <div class="mb-3">
                                                         <label class="form-label" for="partNo">Part Number<span class="text-danger"> *</span></label>
-                                                        <input type="text" class="form-control" id="partNo" name="partNo" placeholder="Key in Part Number" value="" required>
+                                                        <div class="input input-group">
+                                                            <input type="text" class="form-control" id="partNo" name="partNo" placeholder="Key in Part Number" value="" required>
+                                                        </div>
                                                     </div>
                                                 </div>
                                             </c:if>
@@ -140,7 +174,9 @@
                                                 <div class="col-sm-8 col-12">
                                                     <div class="mb-3">
                                                         <label class="form-label" for="alu">ALU?<span class="text-danger"> *</span></label>
-                                                        <input type="text" class="form-control" id="alu" name="alu" placeholder="Calculate ALU?" value="" required>
+                                                        <div class="input input-group">
+                                                            <input type="text" class="form-control" id="alu" name="alu" placeholder="Calculate ALU?" value="" required>
+                                                        </div>
                                                     </div>
                                                 </div>
                                             </c:if>
@@ -148,7 +184,9 @@
                                                 <div class="col-sm-8 col-12">
                                                     <div class="mb-3">
                                                         <label class="form-label" for="shelfTime">Shelf Time?<span class="text-danger"> *</span></label>
-                                                        <input type="text" class="form-control" id="shelfTime" name="shelfTime" placeholder="Calculate Shelf Time?" value="" required>
+                                                        <div class="input input-group">
+                                                            <input type="text" class="form-control" id="shelfTime" name="shelfTime" placeholder="Calculate Shelf Time?" value="" required>
+                                                        </div>
                                                     </div>
                                                 </div>
                                             </c:if>
@@ -156,7 +194,9 @@
                                                 <div class="col-sm-8 col-12">
                                                     <div class="mb-3">
                                                         <label class="form-label" for="runningNumber">Running Number<span class="text-danger"> *</span></label>
-                                                        <input type="number" class="form-control" id="runningNumber" name="runningNumber" min="1" step="1" placeholder="Key in running number">
+                                                        <div class="input input-group">
+                                                            <input type="number" class="form-control" id="runningNumber" name="runningNumber" min="1" step="1" placeholder="Key in running number">
+                                                        </div>
                                                     </div>
                                                 </div>
                                             </c:if>
