@@ -110,6 +110,31 @@ public class ItemHardwareConfigDAO {
         }
         return queryResult;
     }
+    
+    public QueryResult updateSPTSPKID_HardwareId(ItemHardwareConfig item) {
+        QueryResult queryResult = new QueryResult();
+        try {
+            PreparedStatement ps = conn.prepareStatement(
+                    "UPDATE item_hardware_config SET spts_pkid = ? WHERE id = ?"
+            );
+            ps.setString(1, item.getSptsPkid());
+            ps.setString(2, item.getId());
+            queryResult.setResult(ps.executeUpdate());
+            ps.close();
+        } catch (SQLException e) {
+            queryResult.setErrorMessage(e.getMessage());
+            LOGGER.error(e.getMessage());
+        } finally {
+            if (conn != null) {
+                try {
+                    conn.close();
+                } catch (SQLException e) {
+                    LOGGER.error(e.getMessage());
+                }
+            }
+        }
+        return queryResult;
+    }
 
     public QueryResult deleteItemHardwareConfig(String itemhardwareConfigId) {
         QueryResult queryResult = new QueryResult();
@@ -174,6 +199,32 @@ public class ItemHardwareConfigDAO {
             }
         }
         return itemhardwareConfig;
+    }
+    
+    public String getSptsId(String itemhardwareConfigId) {
+        String sptsId = "0";
+        String sql = "SELECT spts_pkid FROM item_hardware_config WHERE id = '" + itemhardwareConfigId + "'";
+        ItemHardwareConfig itemhardwareConfig = null;
+        try {
+            PreparedStatement ps = conn.prepareStatement(sql);
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                sptsId = rs.getString("spts_pkid");
+            }
+            rs.close();
+            ps.close();
+        } catch (SQLException e) {
+            LOGGER.error(e.getMessage());
+        } finally {
+            if (conn != null) {
+                try {
+                    conn.close();
+                } catch (SQLException e) {
+                    LOGGER.error(e.getMessage());
+                }
+            }
+        }
+        return sptsId;
     }
 
     public ItemHardwareConfig getConfigItem(String itemType, String subType) {

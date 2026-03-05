@@ -12,7 +12,7 @@
     </s:layout-component>
     <s:layout-component name="page_css_inline">
         <style>
-
+            
         </style>
     </s:layout-component>
     <s:layout-component name="page_container">\
@@ -62,24 +62,11 @@
                                             <div class="col-sm-6">
                                                 <div class="form-check form-switch">
                                                     <input class="form-check-input" type="checkbox" role="switch" id="itemId" name="itemId">
-                                                    <!--<label class="form-check-label" for="itemId">Default switchS</label>-->
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
-<!--                                <div class="row mb-1">
-                                    <label class="col-sm-2 col-md-2 col-form-label fw-semibold" for="supplier">Supplier</label>
-                                    <div class="col-lg-5">
-                                        <div class="row g-2">
-                                            <div class="col-sm-6">
-                                                <div class="form-check form-switch">
-                                                    <input class="form-check-input toggle-input" type="checkbox" role="switch" id="supplier" name="supplier">
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>-->
                                 <div class="row mb-1">
                                     <label class="col-sm-2 col-md-2 col-form-label fw-semibold" for="assemblyno">Assembly Number</label>
                                     <div class="col-lg-5">
@@ -92,18 +79,6 @@
                                         </div>
                                     </div>
                                 </div>
-<!--                                <div class="row mb-1">
-                                    <label class="col-sm-2 col-md-2 col-form-label fw-semibold" for="revision">Revision</label>
-                                    <div class="col-lg-5">
-                                        <div class="row g-2">
-                                            <div class="col-sm-6">
-                                                <div class="form-check form-switch">
-                                                    <input class="form-check-input toggle-input" type="checkbox" role="switch" id="revision" name="revision">
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>-->
                                 <div class="row mb-1">
                                     <label class="col-sm-2 col-md-2 col-form-label fw-semibold" for="mfgdate">Manufacturing Date</label>
                                     <div class="col-lg-5">
@@ -116,18 +91,6 @@
                                         </div>
                                     </div>
                                 </div>
-<!--                                <div class="row mb-1">
-                                    <label class="col-sm-2 col-md-2 col-form-label fw-semibold" for="component">Component</label>
-                                    <div class="col-lg-5">
-                                        <div class="row g-2">
-                                            <div class="col-sm-6">
-                                                <div class="form-check form-switch">
-                                                    <input class="form-check-input toggle-input" type="checkbox" role="switch" id="component" name="component">
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>-->
                                 <div class="row mb-1">
                                     <label class="col-sm-2 col-md-2 col-form-label fw-semibold" for="event">Event</label>
                                     <div class="col-lg-5">

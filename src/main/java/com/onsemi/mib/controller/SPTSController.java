@@ -567,4 +567,59 @@ public class SPTSController {
         });
         return new ModelAndView("itemPdf", "item", item);
     }
+    
+    @RequestMapping(value = "/deleteHwConfig/{pkID}/{version}", method = RequestMethod.GET)
+    public String deleteHwConfig(
+            RedirectAttributes redirectAttrs,
+            @PathVariable("pkID") String pkID,
+            @PathVariable("version") String version
+    ) throws IOException {
+        JSONObject item = new JSONObject();
+        item.put("pkid", pkID);
+        item.put("version", version);
+        item.put("forceDelete", "false");
+
+        SPTSResponse sr = SPTSWebService.deleteHardwareIdConfigByPKID(item);
+
+        if (sr.getStatus()) {
+            redirectAttrs.addFlashAttribute("success", "Item Hardware Configuration deleted!");
+        } else {
+            String errorMessage;
+            if (sr.getErrorDetail().equals("")) {
+                errorMessage = sr.getErrorCode() + " - " + sr.getErrorMessage();
+            } else {
+                errorMessage = sr.getErrorCode() + " - " + sr.getErrorDetail();
+            }
+            redirectAttrs.addFlashAttribute("error", errorMessage);
+        }
+        return "redirect:/spts";
+    }
+    
+    @RequestMapping(value = "/deleteHwItem/{pkID}/{version}", method = RequestMethod.GET)
+    public String deleteHwItem(
+            RedirectAttributes redirectAttrs,
+            @PathVariable("pkID") String pkID,
+            @PathVariable("version") String version) throws IOException {
+        
+        JSONObject item = new JSONObject();
+        item.put("pkid", pkID);
+        item.put("version", version);
+        item.put("forceDelete", "false");
+
+        SPTSResponse sr = SPTSWebService.deleteHardwareIdByPKID(item);
+
+        if (sr.getStatus()) {
+            redirectAttrs.addFlashAttribute("success", "Item Hardware ID deleted!");
+        } else {
+            String errorMessage;
+            if (sr.getErrorDetail().equals("")) {
+                errorMessage = sr.getErrorCode() + " - " + sr.getErrorMessage();
+            } else {
+                errorMessage = sr.getErrorCode() + " - " + sr.getErrorDetail();
+            }
+            redirectAttrs.addFlashAttribute("error", errorMessage);
+        }
+        return "redirect:/spts";
+    }
+
 }

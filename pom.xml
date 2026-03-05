@@ -6,7 +6,7 @@
     <artifactId>HEATS</artifactId>
     <name>HEATS</name>
     <packaging>war</packaging>
-    <version>0.1</version>
+    <version>1.1</version>
     <properties>
         <!-- Build Properties -->
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -348,6 +348,14 @@
                 <version>3.3.2</version>
                 <configuration>
                     <failOnMissingWebXml>false</failOnMissingWebXml>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>exec-maven-plugin</artifactId>
+                <version>3.1.0</version>
+                <configuration>
+                    <mainClass>com.yourpackage.Main</mainClass>
                 </configuration>
             </plugin>
         </plugins>

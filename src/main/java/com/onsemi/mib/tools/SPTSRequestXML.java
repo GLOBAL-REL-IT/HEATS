@@ -1204,5 +1204,187 @@ public class SPTSRequestXML {
                 + "</soap:Envelope>";
         return xmlString;
     }
+    
+    //<editor-fold defaultstate="collapsed" desc="HARDWARE ID CONFIGURATION / DATA">
+    public static String ItemHardwareConfig_Insert(JSONObject params) throws IOException {
+        String paramsXmlString = "";
+        for (Iterator iterator = params.keySet().iterator(); iterator.hasNext();) {
+            String key = (String) iterator.next();
+            String value = params.get(key).toString();
+            paramsXmlString += "<" + key + ">" + value + "</" + key + ">";
+        }
+        String xmlString = "<?xml version=\"1.0\" encoding=\"utf-8\"?>"
+                + "<soap:Envelope xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\" xmlns:soap=\"http://schemas.xmlsoap.org/soap/envelope/\">"
+                + "<soap:Body>"
+                + "<ItemHardwareConfig_Insert  xmlns=\"http://tempuri.org/\">"
+                + paramsXmlString
+                + "</ItemHardwareConfig_Insert >"
+                + "</soap:Body>"
+                + "</soap:Envelope>";
+        return xmlString;
+    }
+    
+    public static String ItemHardware_Insert(JSONObject params) throws IOException {
+        String paramsXmlString = "";
+        for (Iterator iterator = params.keySet().iterator(); iterator.hasNext();) {
+            String key = (String) iterator.next();
+            String value = params.get(key).toString();
+            paramsXmlString += "<" + key + ">" + value + "</" + key + ">";
+        }
+        String xmlString = "<?xml version=\"1.0\" encoding=\"utf-8\"?>"
+                + "<soap:Envelope xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\" xmlns:soap=\"http://schemas.xmlsoap.org/soap/envelope/\">"
+                + "<soap:Body>"
+                + "<ItemHardware_Insert   xmlns=\"http://tempuri.org/\">"
+                + paramsXmlString
+                + "</ItemHardware_Insert  >"
+                + "</soap:Body>"
+                + "</soap:Envelope>";
+        return xmlString;
+    }
+    
+    public static String updateHardwareIdConfig(JSONObject params) throws IOException {
+        String paramsXmlString = "";
+        for (Iterator iterator = params.keySet().iterator(); iterator.hasNext();) {
+            String key = (String) iterator.next();
+            String value = params.get(key).toString();
+            paramsXmlString += "<" + key + ">" + value + "</" + key + ">";
+        }
+        String xmlString = "<?xml version=\"1.0\" encoding=\"utf-8\"?>"
+                + "<soap:Envelope xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\" xmlns:soap=\"http://schemas.xmlsoap.org/soap/envelope/\">"
+                + "<soap:Body>"
+                + "<ItemHardwareConfig_UpdateByPKID xmlns=\"http://tempuri.org/\">"
+                + paramsXmlString
+                + "</ItemHardwareConfig_UpdateByPKID>"
+                + "</soap:Body>"
+                + "</soap:Envelope>";
+        return xmlString;
+    }
+    
+    public static String updateHardwareId(JSONObject params) throws IOException {
+        String paramsXmlString = "";
+        for (Iterator iterator = params.keySet().iterator(); iterator.hasNext();) {
+            String key = (String) iterator.next();
+            String value = params.get(key).toString();
+            paramsXmlString += "<" + key + ">" + value + "</" + key + ">";
+        }
+        String xmlString = "<?xml version=\"1.0\" encoding=\"utf-8\"?>"
+                + "<soap:Envelope xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\" xmlns:soap=\"http://schemas.xmlsoap.org/soap/envelope/\">"
+                + "<soap:Body>"
+                + "<ItemHardware_UpdateByPKID xmlns=\"http://tempuri.org/\">"
+                + paramsXmlString
+                + "</ItemHardware_UpdateByPKID>"
+                + "</soap:Body>"
+                + "</soap:Envelope>";
+        return xmlString;
+    }
+    
+    public static String deleteHardwareIdConfig(JSONObject params) throws IOException {
+        String paramsXmlString = "";
+        for (Iterator iterator = params.keySet().iterator(); iterator.hasNext();) {
+            String key = (String) iterator.next();
+            String value = params.get(key).toString();
+            paramsXmlString += "<" + key + ">" + value + "</" + key + ">";
+        }
+        String xmlString = "<?xml version=\"1.0\" encoding=\"utf-8\"?>"
+                + "<soap:Envelope xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\" xmlns:soap=\"http://schemas.xmlsoap.org/soap/envelope/\">"
+                + "<soap:Body>"
+                + "<ItemHardwareConfig_DeleteByPKID xmlns=\"http://tempuri.org/\">"
+                + paramsXmlString
+                + "</ItemHardwareConfig_DeleteByPKID>"
+                + "</soap:Body>"
+                + "</soap:Envelope>";
+        return xmlString;
+    }
+    
+    public static String deleteHardwareId(JSONObject params) throws IOException {
+        String paramsXmlString = "";
+        for (Iterator iterator = params.keySet().iterator(); iterator.hasNext();) {
+            String key = (String) iterator.next();
+            String value = params.get(key).toString();
+            paramsXmlString += "<" + key + ">" + value + "</" + key + ">";
+        }
+        String xmlString = "<?xml version=\"1.0\" encoding=\"utf-8\"?>"
+                + "<soap:Envelope xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\" xmlns:soap=\"http://schemas.xmlsoap.org/soap/envelope/\">"
+                + "<soap:Body>"
+                + "<ItemHardware_DeleteByPKID xmlns=\"http://tempuri.org/\">"
+                + paramsXmlString
+                + "</ItemHardware_DeleteByPKID>"
+                + "</soap:Body>"
+                + "</soap:Envelope>";
+        return xmlString;
+    }
+    
+    public static String getHardwareIdConfigByPKID(JSONObject params) throws IOException {
+        String paramsXmlString = "";
+        for (Iterator iterator = params.keySet().iterator(); iterator.hasNext();) {
+            String key = (String) iterator.next();
+            String value = params.get(key).toString();
+            paramsXmlString += "<" + key + ">" + value + "</" + key + ">";
+        }
+        String xmlString = "<?xml version=\"1.0\" encoding=\"utf-8\"?>"
+                + "<soap:Envelope xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\" xmlns:soap=\"http://schemas.xmlsoap.org/soap/envelope/\">"
+                + "<soap:Body>"
+                + "<ItemHardwareConfig_GetByPKID xmlns=\"http://tempuri.org/\">"
+                + paramsXmlString
+                + "</ItemHardwareConfig_GetByPKID>"
+                + "</soap:Body>"
+                + "</soap:Envelope>";
+        return xmlString;
+    }
+    
+    public static String getHardwareIdByPKID(JSONObject params) throws IOException {
+        String paramsXmlString = "";
+        for (Iterator iterator = params.keySet().iterator(); iterator.hasNext();) {
+            String key = (String) iterator.next();
+            String value = params.get(key).toString();
+            paramsXmlString += "<" + key + ">" + value + "</" + key + ">";
+        }
+        String xmlString = "<?xml version=\"1.0\" encoding=\"utf-8\"?>"
+                + "<soap:Envelope xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\" xmlns:soap=\"http://schemas.xmlsoap.org/soap/envelope/\">"
+                + "<soap:Body>"
+                + "<ItemHardware_GetByPKID xmlns=\"http://tempuri.org/\">"
+                + paramsXmlString
+                + "</ItemHardware_GetByPKID>"
+                + "</soap:Body>"
+                + "</soap:Envelope>";
+        return xmlString;
+    }
+    
+    public static String getHardwareIdConfigByParam(JSONObject params) throws IOException {
+        String paramsXmlString = "";
+        for (Iterator iterator = params.keySet().iterator(); iterator.hasNext();) {
+            String key = (String) iterator.next();
+            String value = params.get(key).toString();
+            paramsXmlString += "<" + key + ">" + value + "</" + key + ">";
+        }
+        String xmlString = "<?xml version=\"1.0\" encoding=\"utf-8\"?>"
+                + "<soap:Envelope xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\" xmlns:soap=\"http://schemas.xmlsoap.org/soap/envelope/\">"
+                + "<soap:Body>"
+                + "<ItemHardwareConfig_GetByParams xmlns=\"http://tempuri.org/\">"
+                + paramsXmlString
+                + "</ItemHardwareConfig_GetByParams>"
+                + "</soap:Body>"
+                + "</soap:Envelope>";
+        return xmlString;
+    }
+    
+    public static String getHardwareIdByParam(JSONObject params) throws IOException {
+        String paramsXmlString = "";
+        for (Iterator iterator = params.keySet().iterator(); iterator.hasNext();) {
+            String key = (String) iterator.next();
+            String value = params.get(key).toString();
+            paramsXmlString += "<" + key + ">" + value + "</" + key + ">";
+        }
+        String xmlString = "<?xml version=\"1.0\" encoding=\"utf-8\"?>"
+                + "<soap:Envelope xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\" xmlns:soap=\"http://schemas.xmlsoap.org/soap/envelope/\">"
+                + "<soap:Body>"
+                + "<ItemHardware_GetByParams xmlns=\"http://tempuri.org/\">"
+                + paramsXmlString
+                + "</ItemHardware_GetByParams>"
+                + "</soap:Body>"
+                + "</soap:Envelope>";
+        return xmlString;
+    }
+    //</editor-fold>
 
 }

@@ -113,6 +113,18 @@ public class SPTSWebService {
     private static final String CBMS_ACTION_BOOKINGDETAILGETBYBOOKINGPKID = "http://tempuri.org/BookingDetail_GetByBookingPKID";
     private static final String CBMS_ACTION_GETBOOKEDEQUIPMENT = "http://tempuri.org/GetBookedEquipment";
     private static final String CBMS_ACTION_GETBOOKINGBYPKID = "http://tempuri.org/Booking_GetByPKID";
+    
+    // HARDWARE ID CONFIG / DATA
+    private static final String HWIDCONFIG_DELETE_BYPKID    = "http://tempuri.org/ItemHardwareConfig_DeleteByPKID";
+    private static final String HWIDCONFIG_GET_BYPKID       = "http://tempuri.org/ItemHardwareConfig_GetByPKID";
+    private static final String HWIDCONFIG_GET_BYPARAMS     = "http://tempuri.org/ItemHardwareConfig_GetByParams";
+    private static final String HWIDCONFIG_INSERT           = "http://tempuri.org/ItemHardwareConfig_Insert";
+    private static final String HWIDCONFIG_UPDATE_BYPKID    = "http://tempuri.org/ItemHardwareConfig_UpdateByPKID";
+    private static final String HWID_DELETE_BYPKID          = "http://tempuri.org/ItemHardware_DeleteByPKID";
+    private static final String HWID_GET_BYPKID             = "http://tempuri.org/ItemHardware_GetByPKID";
+    private static final String HWID_GET_BYPARAMS           = "http://tempuri.org/ItemHardware_GetByParams";
+    private static final String HWID_INSERT                 = "http://tempuri.org/ItemHardware_Insert";
+    private static final String HWID_UPDATE_BYPKID          = "http://tempuri.org/ItemHardware_UpdateByPKID";
 
     public static JSONArray getItemAll() throws IOException {
         JSONArray items = new JSONArray();
@@ -3343,4 +3355,473 @@ public class SPTSWebService {
         }
         return items;
     }
+    
+    //<editor-fold defaultstate="collapsed" desc="HARDWARE ID CONFIGURATION / DATA">
+    public static SPTSResponse insertItemHardwareConfig(JSONObject params) throws IOException {
+        SPTSResponse sr = new SPTSResponse();
+        Integer pkID = 0;
+        RequestEntity requestEntity = new StringRequestEntity(SPTSRequestXML.ItemHardwareConfig_Insert(params), "text/xml", "ISO-8859-1");
+        PostMethod postMethod = new PostMethod(SPTS_WEB_SERVICE_URL);
+        postMethod.setRequestEntity(requestEntity);
+        postMethod.setRequestHeader("SOAPAction", HWIDCONFIG_INSERT);
+        HttpClient httpClient = new HttpClient();
+        int result = httpClient.executeMethod(postMethod);
+        if (result == 200) {
+            InputStream inputStream = postMethod.getResponseBodyAsStream();
+            StringBuilder stringBuilder = new StringBuilder();
+            Reader reader = new InputStreamReader(inputStream, "UTF-8");
+            copy(reader, stringBuilder);
+            reader.close();
+            String xmlString = stringBuilder.toString();
+            JSONObject jsonObject = XML.toJSONObject(xmlString);
+            JSONObject soapEnvelope = jsonObject.getJSONObject("soap:Envelope");
+            JSONObject soapBody = soapEnvelope.getJSONObject("soap:Body");
+            JSONObject getAllItemResponse = soapBody.getJSONObject("ItemHardwareConfig_InsertResponse");
+            pkID = getAllItemResponse.getInt("ItemHardwareConfig_InsertResult");
+            sr.setStatus(Boolean.TRUE);
+            sr.setResponseCode(result);
+            sr.setResponseId(pkID);
+            sr.setErrorCode("");
+            sr.setErrorMessage("");
+            sr.setErrorDetail("");
+        } else {
+            String errorResponse = postMethod.getResponseBodyAsString();
+            HashMap error = errorResponse(result, errorResponse);
+            sr.setStatus(Boolean.FALSE);
+            sr.setResponseCode(result);
+            sr.setResponseId(pkID);
+            sr.setErrorCode(error.get("errorCode").toString());
+            sr.setErrorMessage(error.get("errorMessage").toString());
+            sr.setErrorDetail(error.get("errorDetail").toString());
+        }
+        return sr;
+    }
+    
+    public static SPTSResponse insertItemHardware(JSONObject params) throws IOException {
+        SPTSResponse sr = new SPTSResponse();
+        Integer pkID = 0;
+        RequestEntity requestEntity = new StringRequestEntity(SPTSRequestXML.ItemHardware_Insert(params), "text/xml", "ISO-8859-1");
+        PostMethod postMethod = new PostMethod(SPTS_WEB_SERVICE_URL);
+        postMethod.setRequestEntity(requestEntity);
+        postMethod.setRequestHeader("SOAPAction", HWID_INSERT);
+        HttpClient httpClient = new HttpClient();
+        int result = httpClient.executeMethod(postMethod);
+        if (result == 200) {
+            InputStream inputStream = postMethod.getResponseBodyAsStream();
+            StringBuilder stringBuilder = new StringBuilder();
+            Reader reader = new InputStreamReader(inputStream, "UTF-8");
+            copy(reader, stringBuilder);
+            reader.close();
+            String xmlString = stringBuilder.toString();
+            JSONObject jsonObject = XML.toJSONObject(xmlString);
+            JSONObject soapEnvelope = jsonObject.getJSONObject("soap:Envelope");
+            JSONObject soapBody = soapEnvelope.getJSONObject("soap:Body");
+            JSONObject getAllItemResponse = soapBody.getJSONObject("ItemHardware_InsertResponse");
+            pkID = getAllItemResponse.getInt("ItemHardware_InsertResult");
+            sr.setStatus(Boolean.TRUE);
+            sr.setResponseCode(result);
+            sr.setResponseId(pkID);
+            sr.setErrorCode("");
+            sr.setErrorMessage("");
+            sr.setErrorDetail("");
+        } else {
+            String errorResponse = postMethod.getResponseBodyAsString();
+            HashMap error = errorResponse(result, errorResponse);
+            sr.setStatus(Boolean.FALSE);
+            sr.setResponseCode(result);
+            sr.setResponseId(pkID);
+            sr.setErrorCode(error.get("errorCode").toString());
+            sr.setErrorMessage(error.get("errorMessage").toString());
+            sr.setErrorDetail(error.get("errorDetail").toString());
+        }
+        return sr;
+    }
+    
+    public static SPTSResponse updateHardwareIdConfig(JSONObject params) throws IOException {
+        SPTSResponse sr = new SPTSResponse();
+        RequestEntity requestEntity = new StringRequestEntity(SPTSRequestXML.updateHardwareIdConfig(params), "text/xml", "ISO-8859-1");
+        PostMethod postMethod = new PostMethod(SPTS_WEB_SERVICE_URL);
+        postMethod.setRequestEntity(requestEntity);
+        postMethod.setRequestHeader("SOAPAction", HWIDCONFIG_UPDATE_BYPKID);
+        HttpClient httpClient = new HttpClient();
+        int result = httpClient.executeMethod(postMethod);
+        if (result == 200) {
+            InputStream inputStream = postMethod.getResponseBodyAsStream();
+            StringBuilder stringBuilder = new StringBuilder();
+            Reader reader = new InputStreamReader(inputStream, "UTF-8");
+            copy(reader, stringBuilder);
+            reader.close();
+            String xmlString = stringBuilder.toString();
+            JSONObject jsonObject = XML.toJSONObject(xmlString);
+            JSONObject soapEnvelope = jsonObject.getJSONObject("soap:Envelope");
+            JSONObject soapBody = soapEnvelope.getJSONObject("soap:Body");
+            JSONObject getAllItemResponse = soapBody.getJSONObject("ItemHardwareConfig_UpdateByPKIDResponse");
+//            Boolean updateResult = getAllItemResponse.getBoolean("ItemHardwareConfig_UpdateByPKIDResult");
+            sr.setStatus(Boolean.TRUE);
+            sr.setResponseCode(result);
+            sr.setResponseId(0);
+            sr.setErrorCode("");
+            sr.setErrorMessage("");
+            sr.setErrorDetail("");
+        } else {
+            String errorResponse = postMethod.getResponseBodyAsString();
+            HashMap error = errorResponse(result, errorResponse);
+            sr.setStatus(Boolean.FALSE);
+            sr.setResponseCode(result);
+            sr.setResponseId(0);
+            sr.setErrorCode(error.get("errorCode").toString());
+            sr.setErrorMessage(error.get("errorMessage").toString());
+            sr.setErrorDetail(error.get("errorDetail").toString());
+        }
+        return sr;
+    }
+    
+    public static SPTSResponse updateHardwareId(JSONObject params) throws IOException {
+        SPTSResponse sr = new SPTSResponse();
+        RequestEntity requestEntity = new StringRequestEntity(SPTSRequestXML.updateHardwareId(params), "text/xml", "ISO-8859-1");
+        PostMethod postMethod = new PostMethod(SPTS_WEB_SERVICE_URL);
+        postMethod.setRequestEntity(requestEntity);
+        postMethod.setRequestHeader("SOAPAction", HWID_UPDATE_BYPKID);
+        HttpClient httpClient = new HttpClient();
+        int result = httpClient.executeMethod(postMethod);
+        if (result == 200) {
+            InputStream inputStream = postMethod.getResponseBodyAsStream();
+            StringBuilder stringBuilder = new StringBuilder();
+            Reader reader = new InputStreamReader(inputStream, "UTF-8");
+            copy(reader, stringBuilder);
+            reader.close();
+            String xmlString = stringBuilder.toString();
+            JSONObject jsonObject = XML.toJSONObject(xmlString);
+            JSONObject soapEnvelope = jsonObject.getJSONObject("soap:Envelope");
+            JSONObject soapBody = soapEnvelope.getJSONObject("soap:Body");
+            JSONObject getAllItemResponse = soapBody.getJSONObject("ItemHardware_UpdateByPKIDResponse");
+//            Boolean updateResult = getAllItemResponse.getBoolean("ItemHardware_UpdateByPKIDResult");
+            sr.setStatus(Boolean.TRUE);
+            sr.setResponseCode(result);
+            sr.setResponseId(0);
+            sr.setErrorCode("");
+            sr.setErrorMessage("");
+            sr.setErrorDetail("");
+        } else {
+            String errorResponse = postMethod.getResponseBodyAsString();
+            HashMap error = errorResponse(result, errorResponse);
+            sr.setStatus(Boolean.FALSE);
+            sr.setResponseCode(result);
+            sr.setResponseId(0);
+            sr.setErrorCode(error.get("errorCode").toString());
+            sr.setErrorMessage(error.get("errorMessage").toString());
+            sr.setErrorDetail(error.get("errorDetail").toString());
+        }
+        return sr;
+    }
+    
+    public static JSONArray getHardwareIdConfigByPKID(JSONObject params) throws IOException {
+        JSONArray items = new JSONArray();
+        RequestEntity requestEntity = new StringRequestEntity(SPTSRequestXML.getHardwareIdConfigByPKID(params), "text/xml", "ISO-8859-1");
+        PostMethod postMethod = new PostMethod(SPTS_WEB_SERVICE_URL);
+        postMethod.setRequestEntity(requestEntity);
+        postMethod.setRequestHeader("SOAPAction", HWIDCONFIG_GET_BYPKID);
+        HttpClient httpClient = new HttpClient();
+        int result = httpClient.executeMethod(postMethod);
+        if (result == 200) {
+            InputStream inputStream = postMethod.getResponseBodyAsStream();
+            StringBuilder stringBuilder = new StringBuilder();
+            Reader reader = new InputStreamReader(inputStream, "UTF-8");
+            copy(reader, stringBuilder);
+            reader.close();
+            String xmlString = stringBuilder.toString();
+            JSONObject jsonObject = XML.toJSONObject(xmlString);
+            JSONObject soapEnvelope = jsonObject.getJSONObject("soap:Envelope");
+            JSONObject soapBody = soapEnvelope.getJSONObject("soap:Body");
+            JSONObject getResponse = soapBody.getJSONObject("ItemHardwareConfig_GetByPKIDResponse");
+            try {
+                JSONObject getResult = getResponse.getJSONObject("ItemHardwareConfig_GetByPKIDResult");
+                JSONObject resultContent = getResult.getJSONObject("diffgr:diffgram");
+                JSONObject dataset = resultContent.getJSONObject("ItemHardwareConfigData");
+                JSONArray jsonArray = dataset.optJSONArray("ItemHardwareConfig");
+                if (jsonArray == null) {
+                    JSONObject jo = dataset.getJSONObject("ItemHardwareConfig");
+                    JSONArray ja = new JSONArray();
+                    ja.put(jo);
+                    items = ja;
+                } else {
+                    items = jsonArray;
+                }
+            } catch (Exception e) {
+                LOGGER.info("SINI MASUK EXCEPTION >> "+e.getMessage());
+                //Ignore
+            }
+        } else {
+            String errorResponse = postMethod.getResponseBodyAsString();
+            errorResponse(result, errorResponse);
+        }
+        return items;
+    }
+    
+    public static JSONObject getHardwareIdConfigByPKIDJO(JSONObject params) throws IOException {
+        JSONObject item = new JSONObject();
+        RequestEntity requestEntity = new StringRequestEntity(SPTSRequestXML.getHardwareIdConfigByPKID(params), "text/xml", "ISO-8859-1");
+        PostMethod postMethod = new PostMethod(SPTS_WEB_SERVICE_URL);
+        postMethod.setRequestEntity(requestEntity);
+        postMethod.setRequestHeader("SOAPAction", HWIDCONFIG_GET_BYPKID);
+        HttpClient httpClient = new HttpClient();
+        int result = httpClient.executeMethod(postMethod);
+        if (result == 200) {
+            InputStream inputStream = postMethod.getResponseBodyAsStream();
+            StringBuilder stringBuilder = new StringBuilder();
+            Reader reader = new InputStreamReader(inputStream, "UTF-8");
+            copy(reader, stringBuilder);
+            reader.close();
+            String xmlString = stringBuilder.toString();
+            JSONObject jsonObject = XML.toJSONObject(xmlString);
+            JSONObject soapEnvelope = jsonObject.getJSONObject("soap:Envelope");
+            JSONObject soapBody = soapEnvelope.getJSONObject("soap:Body");
+            JSONObject getItemByPKIDResponse = soapBody.getJSONObject("ItemHardwareConfig_GetByPKIDResponse");
+            JSONObject getItemByPKIDResult = getItemByPKIDResponse.getJSONObject("ItemHardwareConfig_GetByPKIDResult");
+            JSONObject resultContent = getItemByPKIDResult.getJSONObject("diffgr:diffgram");
+            JSONObject itemDS = resultContent.getJSONObject("ItemHardwareConfigData");
+            item = itemDS.getJSONObject("ItemHardwareConfig");
+        } else {
+            String errorResponse = postMethod.getResponseBodyAsString();
+            errorResponse(result, errorResponse);
+        }
+        return item;
+    }
+    
+    public static JSONArray getHardwareIdByPKID(JSONObject params) throws IOException {
+        JSONArray items = new JSONArray();
+        RequestEntity requestEntity = new StringRequestEntity(SPTSRequestXML.getHardwareIdByPKID(params), "text/xml", "ISO-8859-1");
+        PostMethod postMethod = new PostMethod(SPTS_WEB_SERVICE_URL);
+        postMethod.setRequestEntity(requestEntity);
+        postMethod.setRequestHeader("SOAPAction", HWID_GET_BYPKID);
+        HttpClient httpClient = new HttpClient();
+        int result = httpClient.executeMethod(postMethod);
+        if (result == 200) {
+            InputStream inputStream = postMethod.getResponseBodyAsStream();
+            StringBuilder stringBuilder = new StringBuilder();
+            Reader reader = new InputStreamReader(inputStream, "UTF-8");
+            copy(reader, stringBuilder);
+            reader.close();
+            String xmlString = stringBuilder.toString();
+            JSONObject jsonObject = XML.toJSONObject(xmlString);
+            JSONObject soapEnvelope = jsonObject.getJSONObject("soap:Envelope");
+            JSONObject soapBody = soapEnvelope.getJSONObject("soap:Body");
+            JSONObject getAllItemResponse = soapBody.getJSONObject("ItemHardware_GetByPKIDResponse");
+            try {
+                JSONObject getAllItemResult = getAllItemResponse.getJSONObject("ItemHardware_GetByPKIDResult");
+                JSONObject resultContent = getAllItemResult.getJSONObject("diffgr:diffgram");
+                JSONObject itemDS = resultContent.getJSONObject("ItemHardwareData");
+                JSONArray jsonArray = itemDS.optJSONArray("ItemHardware");
+                if (jsonArray == null) {
+                    JSONObject jo = itemDS.getJSONObject("ItemHardware");
+                    JSONArray ja = new JSONArray();
+                    ja.put(jo);
+                    items = ja;
+                } else {
+                    items = jsonArray;
+                }
+            } catch (Exception e) {
+                //Ignore
+            }
+        } else {
+            String errorResponse = postMethod.getResponseBodyAsString();
+            errorResponse(result, errorResponse);
+        }
+        return items;
+    }
+    
+    public static JSONObject getHardwareIdByPKIDJO(JSONObject params) throws IOException {
+        JSONObject item = new JSONObject();
+        RequestEntity requestEntity = new StringRequestEntity(SPTSRequestXML.getHardwareIdByPKID(params), "text/xml", "ISO-8859-1");
+        PostMethod postMethod = new PostMethod(SPTS_WEB_SERVICE_URL);
+        postMethod.setRequestEntity(requestEntity);
+        postMethod.setRequestHeader("SOAPAction", HWID_GET_BYPKID);
+        HttpClient httpClient = new HttpClient();
+        int result = httpClient.executeMethod(postMethod);
+        if (result == 200) {
+            InputStream inputStream = postMethod.getResponseBodyAsStream();
+            StringBuilder stringBuilder = new StringBuilder();
+            Reader reader = new InputStreamReader(inputStream, "UTF-8");
+            copy(reader, stringBuilder);
+            reader.close();
+            String xmlString = stringBuilder.toString();
+            JSONObject jsonObject = XML.toJSONObject(xmlString);
+            JSONObject soapEnvelope = jsonObject.getJSONObject("soap:Envelope");
+            JSONObject soapBody = soapEnvelope.getJSONObject("soap:Body");
+            JSONObject getItemByPKIDResponse = soapBody.getJSONObject("ItemHardware_GetByPKIDResponse");
+            JSONObject getItemByPKIDResult = getItemByPKIDResponse.getJSONObject("ItemHardware_GetByPKIDResult");
+            JSONObject resultContent = getItemByPKIDResult.getJSONObject("diffgr:diffgram");
+            JSONObject itemDS = resultContent.getJSONObject("ItemHardwareData");
+            item = itemDS.getJSONObject("ItemHardware");
+        } else {
+            String errorResponse = postMethod.getResponseBodyAsString();
+            errorResponse(result, errorResponse);
+        }
+        return item;
+    }
+    
+    public static JSONArray getHardwareIdConfigByParam(JSONObject params) throws IOException {
+        JSONArray items = new JSONArray();
+        RequestEntity requestEntity = new StringRequestEntity(SPTSRequestXML.getHardwareIdConfigByParam(params), "text/xml", "ISO-8859-1");
+        PostMethod postMethod = new PostMethod(SPTS_WEB_SERVICE_URL);
+        postMethod.setRequestEntity(requestEntity);
+        postMethod.setRequestHeader("SOAPAction", HWIDCONFIG_GET_BYPARAMS);
+        HttpClient httpClient = new HttpClient();
+        int result = httpClient.executeMethod(postMethod);
+        if (result == 200) {
+            InputStream inputStream = postMethod.getResponseBodyAsStream();
+            StringBuilder stringBuilder = new StringBuilder();
+            Reader reader = new InputStreamReader(inputStream, "UTF-8");
+            copy(reader, stringBuilder);
+            reader.close();
+            String xmlString = stringBuilder.toString();
+            JSONObject jsonObject = XML.toJSONObject(xmlString);
+            JSONObject soapEnvelope = jsonObject.getJSONObject("soap:Envelope");
+            JSONObject soapBody = soapEnvelope.getJSONObject("soap:Body");
+            JSONObject getAllItemResponse = soapBody.getJSONObject("ItemHardwareConfig_GetByParamsResponse");
+            try {
+                JSONObject getAllItemResult = getAllItemResponse.getJSONObject("ItemHardwareConfig_GetByParamsResult");
+                JSONObject resultContent = getAllItemResult.getJSONObject("diffgr:diffgram");
+                JSONObject itemDS = resultContent.getJSONObject("ItemHardwareConfigData");
+                JSONArray jsonArray = itemDS.optJSONArray("ItemHardwareConfig");
+                if (jsonArray == null) {
+                    JSONObject jo = itemDS.getJSONObject("ItemHardwareConfig");
+                    JSONArray ja = new JSONArray();
+                    ja.put(jo);
+                    items = ja;
+                } else {
+                    items = jsonArray;
+                }
+            } catch (Exception e) {
+                //Ignore
+            }
+        } else {
+            String errorResponse = postMethod.getResponseBodyAsString();
+            errorResponse(result, errorResponse);
+        }
+        return items;
+    }
+    
+    public static JSONArray getHardwareIdByParam(JSONObject params) throws IOException {
+        JSONArray items = new JSONArray();
+        RequestEntity requestEntity = new StringRequestEntity(SPTSRequestXML.getHardwareIdByParam(params), "text/xml", "ISO-8859-1");
+        PostMethod postMethod = new PostMethod(SPTS_WEB_SERVICE_URL);
+        postMethod.setRequestEntity(requestEntity);
+        postMethod.setRequestHeader("SOAPAction", HWID_GET_BYPARAMS);
+        HttpClient httpClient = new HttpClient();
+        int result = httpClient.executeMethod(postMethod);
+        if (result == 200) {
+            InputStream inputStream = postMethod.getResponseBodyAsStream();
+            StringBuilder stringBuilder = new StringBuilder();
+            Reader reader = new InputStreamReader(inputStream, "UTF-8");
+            copy(reader, stringBuilder);
+            reader.close();
+            String xmlString = stringBuilder.toString();
+            JSONObject jsonObject = XML.toJSONObject(xmlString);
+            JSONObject soapEnvelope = jsonObject.getJSONObject("soap:Envelope");
+            JSONObject soapBody = soapEnvelope.getJSONObject("soap:Body");
+            JSONObject getAllItemResponse = soapBody.getJSONObject("ItemHardware_GetByParamsResponse");
+            try {
+                JSONObject getAllItemResult = getAllItemResponse.getJSONObject("ItemHardware_GetByParamsResult");
+                JSONObject resultContent = getAllItemResult.getJSONObject("diffgr:diffgram");
+                JSONObject itemDS = resultContent.getJSONObject("ItemHardwareData");
+                JSONArray jsonArray = itemDS.optJSONArray("ItemHardware");
+                if (jsonArray == null) {
+                    JSONObject jo = itemDS.getJSONObject("ItemHardware");
+                    JSONArray ja = new JSONArray();
+                    ja.put(jo);
+                    items = ja;
+                } else {
+                    items = jsonArray;
+                }
+            } catch (Exception e) {
+                //Ignore
+            }
+        } else {
+            String errorResponse = postMethod.getResponseBodyAsString();
+            errorResponse(result, errorResponse);
+        }
+        return items;
+    }
+    
+    // DELETE
+    public static SPTSResponse deleteHardwareIdConfigByPKID(JSONObject params) throws IOException {
+        SPTSResponse sr = new SPTSResponse();
+        RequestEntity requestEntity = new StringRequestEntity(SPTSRequestXML.deleteHardwareIdConfig(params), "text/xml", "ISO-8859-1");
+        PostMethod postMethod = new PostMethod(SPTS_WEB_SERVICE_URL);
+        postMethod.setRequestEntity(requestEntity);
+        postMethod.setRequestHeader("SOAPAction", HWIDCONFIG_DELETE_BYPKID);
+        HttpClient httpClient = new HttpClient();
+        int result = httpClient.executeMethod(postMethod);
+        if (result == 200) {
+            LOGGER.info("WE DELETE THE SPTS DATA HERE, STATUS?");
+            InputStream inputStream = postMethod.getResponseBodyAsStream();
+            StringBuilder stringBuilder = new StringBuilder();
+            Reader reader = new InputStreamReader(inputStream, "UTF-8");
+            copy(reader, stringBuilder);
+            reader.close();
+            String xmlString = stringBuilder.toString();
+            JSONObject jsonObject = XML.toJSONObject(xmlString);
+            JSONObject soapEnvelope = jsonObject.getJSONObject("soap:Envelope");
+            JSONObject soapBody = soapEnvelope.getJSONObject("soap:Body");
+            JSONObject getAllItemResponse = soapBody.getJSONObject("ItemHardwareConfig_DeleteByPKIDResponse");
+            sr.setStatus(Boolean.TRUE);
+            sr.setResponseCode(result);
+            sr.setResponseId(0);
+            sr.setErrorCode("");
+            sr.setErrorMessage("");
+            sr.setErrorDetail("");
+        } else {
+            LOGGER.info("THIS FUNCTION WHERE IT IS FAILED TO DELETE THE DATA");
+            String errorResponse = postMethod.getResponseBodyAsString();
+            HashMap error = errorResponse(result, errorResponse);
+            sr.setStatus(Boolean.FALSE);
+            sr.setResponseCode(result);
+            sr.setResponseId(0);
+            sr.setErrorCode(error.get("errorCode").toString());
+            sr.setErrorMessage(error.get("errorMessage").toString());
+            sr.setErrorDetail(error.get("errorDetail").toString());
+        }
+        return sr;
+    }
+    
+    public static SPTSResponse deleteHardwareIdByPKID(JSONObject params) throws IOException {
+        SPTSResponse sr = new SPTSResponse();
+        RequestEntity requestEntity = new StringRequestEntity(SPTSRequestXML.deleteHardwareId(params), "text/xml", "ISO-8859-1");
+        PostMethod postMethod = new PostMethod(SPTS_WEB_SERVICE_URL);
+        postMethod.setRequestEntity(requestEntity);
+        postMethod.setRequestHeader("SOAPAction", HWID_DELETE_BYPKID);
+        HttpClient httpClient = new HttpClient();
+        int result = httpClient.executeMethod(postMethod);
+        if (result == 200) {
+            InputStream inputStream = postMethod.getResponseBodyAsStream();
+            StringBuilder stringBuilder = new StringBuilder();
+            Reader reader = new InputStreamReader(inputStream, "UTF-8");
+            copy(reader, stringBuilder);
+            reader.close();
+            String xmlString = stringBuilder.toString();
+            JSONObject jsonObject = XML.toJSONObject(xmlString);
+            JSONObject soapEnvelope = jsonObject.getJSONObject("soap:Envelope");
+            JSONObject soapBody = soapEnvelope.getJSONObject("soap:Body");
+            JSONObject getAllItemResponse = soapBody.getJSONObject("ItemHardware_DeleteByPKIDResponse");
+            sr.setStatus(Boolean.TRUE);
+            sr.setResponseCode(result);
+            sr.setResponseId(0);
+            sr.setErrorCode("");
+            sr.setErrorMessage("");
+            sr.setErrorDetail("");
+        } else {
+            String errorResponse = postMethod.getResponseBodyAsString();
+            HashMap error = errorResponse(result, errorResponse);
+            sr.setStatus(Boolean.FALSE);
+            sr.setResponseCode(result);
+            sr.setResponseId(0);
+            sr.setErrorCode(error.get("errorCode").toString());
+            sr.setErrorMessage(error.get("errorMessage").toString());
+            sr.setErrorDetail(error.get("errorDetail").toString());
+        }
+        return sr;
+    }
+    //</editor-fold>
+
 }

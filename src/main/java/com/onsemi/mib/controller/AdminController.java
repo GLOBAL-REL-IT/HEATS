@@ -1,5 +1,7 @@
 package com.onsemi.mib.controller;
 
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.base.Strings;
 import com.onsemi.mib.dao.ItemActivityConfigDAO;
 import com.onsemi.mib.dao.ItemAluConfigDAO;
@@ -35,16 +37,21 @@ import com.onsemi.mib.model.UserGroup;
 import com.onsemi.mib.model.UserGroupAccess;
 import com.onsemi.mib.model.UserManual;
 import com.onsemi.mib.model.UserSession;
+import com.onsemi.mib.tools.SPTSResponse;
 import com.onsemi.mib.tools.SPTSWebService;
 import com.onsemi.mib.tools.SpmlUtil;
+import com.onsemi.mib.tools.SystemUtil;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Hashtable;
+import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.stream.Collectors;
 import javax.naming.Context;
@@ -58,6 +65,7 @@ import javax.naming.directory.SearchResult;
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletResponse;
 import org.json.JSONArray;
+import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -129,9 +137,8 @@ public class AdminController {
     @RequestMapping(value = "/user/add", method = {RequestMethod.GET, RequestMethod.POST})
     public String userAdd(
             Model model,
-            @RequestParam(required = false) String loginId
-    ) {
-        LOGGER.info("Login Id: " + loginId);
+            @RequestParam(required = false) String loginId) {
+        
         List<LDAPUser> ldapUserList = new ArrayList<LDAPUser>();
 
         if (loginId != null) {
@@ -263,9 +270,8 @@ public class AdminController {
             @ModelAttribute UserSession userSession,
             @RequestParam(required = false) String userLdapId,
             @RequestParam(required = false) String radioSrRetrieveEmail,
-            @RequestParam(required = false) String radioSrScrapEmail
-    ) {
-//        LOGGER.info("radioFeaturesTestEmail >> " + radioFeaturesTestEmail);
+            @RequestParam(required = false) String radioSrScrapEmail) {
+        
         LDAPUser user = new LDAPUser();
         user.setId(userLdapId);
         user.setScrap(radioSrScrapEmail);
@@ -349,9 +355,8 @@ public class AdminController {
             @RequestParam(required = false) String title,
             @RequestParam(required = false) String email,
             @RequestParam(required = false) String oncid,
-            @RequestParam(required = false) String groupId
-    ) {
-//        LOGGER.info("sblum masuk sqlllllllllllllllll");
+            @RequestParam(required = false) String groupId) {
+        
         JSONResponse response = new JSONResponse();
         LDAPUser ldapUser = new LDAPUser();
         ldapUser.setLoginId(loginId);
@@ -1421,7 +1426,6 @@ public class AdminController {
             Model model,
             @ModelAttribute UserSession userSession) throws IOException {
 
-        LOGGER.info("SINI MASUK DEKAT FUNCTION HARDWARE ID CONFIG LIST PAGE");
         ItemHardwareConfigDAO itemdao = new ItemHardwareConfigDAO();
         List<ItemHardwareConfig> itemList = itemdao.getItemHardwareConfigList();
         model.addAttribute("itemList", itemList);
@@ -1458,7 +1462,7 @@ public class AdminController {
             @RequestParam(required = false) String event,
             @RequestParam(required = false) String partnumber,
             @RequestParam(required = false) String alu,
-            @RequestParam(required = false) String shelf) {
+            @RequestParam(required = false) String shelf) throws IOException {
 
         itemId = onToYesNo(itemId);
         supplier = onToYesNo(supplier);
@@ -1497,8 +1501,55 @@ public class AdminController {
 
             itemdao = new ItemHardwareConfigDAO();
             QueryResult queryResult = itemdao.insertItemHardwareConfig(item);
-
+            
             if (!"0".equals(queryResult.getGeneratedKey())) {
+                
+                LocalDateTime instance = LocalDateTime.now();
+                DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+                String formattedString = formatter.format(instance);
+                
+                // INSERT INTO SPTS function
+                JSONObject addHwIdConfig = new JSONObject();
+                addHwIdConfig.put("itemType", itemType);
+                addHwIdConfig.put("subType", subType);
+                addHwIdConfig.put("sameItemID", itemId);
+                addHwIdConfig.put("supplier", supplier);
+                addHwIdConfig.put("assemblyNo", assemblyno);
+                addHwIdConfig.put("revision", revision);
+                addHwIdConfig.put("mfgDate", mfgdate);
+                addHwIdConfig.put("component", component);
+                addHwIdConfig.put("evt", event);
+                addHwIdConfig.put("partNumber", partnumber);
+                addHwIdConfig.put("alu", alu);
+                addHwIdConfig.put("shelfTime", shelf);
+                addHwIdConfig.put("createdDate", formattedString);
+                addHwIdConfig.put("createdBy", userSession.getLoginId());
+                addHwIdConfig.put("flag", "1");
+
+                SPTSResponse sr = SPTSWebService.insertItemHardwareConfig(addHwIdConfig);
+
+                if (sr.getStatus()) {
+                    item = new ItemHardwareConfig();
+                    item.setSptsPkid(sr.getResponseId().toString());
+                    item.setId(queryResult.getGeneratedKey());
+                    
+                    itemdao = new ItemHardwareConfigDAO();
+                    QueryResult qr = itemdao.updateSPTSPKID_HardwareId(item);
+                } else {
+                    LinkedHashMap<String, String> itemhmap;
+                    ObjectMapper mapper = new ObjectMapper();
+                    itemhmap = mapper.readValue(addHwIdConfig.toString(), new TypeReference<LinkedHashMap<String, String>>() {});
+                    String errorMessage;
+                    if (sr.getErrorDetail().equals("")) {
+                        errorMessage = sr.getErrorCode() + " - " + sr.getErrorMessage();
+                    } else {
+                        errorMessage = sr.getErrorCode() + " - " + sr.getErrorDetail();
+                    }
+                    model.addAttribute("error", errorMessage);
+                    redirectAttrs.addFlashAttribute("error", errorMessage);
+                    return "redirect:/admin/hw/add";
+                }
+                
                 redirectAttrs.addFlashAttribute("success", messageSource.getMessage("admin.label.hardware.success", args, locale));
                 return "redirect:/admin/hw";
             } else {
@@ -1532,11 +1583,11 @@ public class AdminController {
         }).collect(Collectors.toList());
     }
 
-    @RequestMapping(value = "/hw/edit/{userId}", method = {RequestMethod.GET, RequestMethod.POST})
+    @RequestMapping(value = "/hw/edit/{configId}", method = {RequestMethod.GET, RequestMethod.POST})
     public String hwConfigEdit(
             Model model,
             @ModelAttribute UserSession userSession,
-            @PathVariable("userId") String configId) {
+            @PathVariable("configId") String configId) {
 
         ItemHardwareConfigDAO itemdao = new ItemHardwareConfigDAO();
         ItemHardwareConfig item = itemdao.getItemHardwareConfig(configId);
@@ -1572,7 +1623,7 @@ public class AdminController {
             @RequestParam(required = false) String event,
             @RequestParam(required = false) String partnumber,
             @RequestParam(required = false) String alu,
-            @RequestParam(required = false) String shelf) {
+            @RequestParam(required = false) String shelf) throws IOException {
 
         itemId = onToYesNo(itemId);
         supplier = onToYesNo(supplier);
@@ -1606,6 +1657,150 @@ public class AdminController {
         ItemHardwareConfigDAO itemdao = new ItemHardwareConfigDAO();
         QueryResult qr = itemdao.updateItemHardwareConfig(itemupdate);
         
+        LocalDateTime instance = LocalDateTime.now();
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        String formattedString = formatter.format(instance);
+        
+        if (spts_pkid.equals("0")) {
+            JSONObject addHwIdConfig = new JSONObject();
+            addHwIdConfig.put("itemType", itemType);
+            addHwIdConfig.put("subType", subType);
+            addHwIdConfig.put("sameItemID", itemId);
+            addHwIdConfig.put("supplier", supplier);
+            addHwIdConfig.put("assemblyNo", assemblyno);
+            addHwIdConfig.put("revision", revision);
+            addHwIdConfig.put("mfgDate", mfgdate);
+            addHwIdConfig.put("component", component);
+            addHwIdConfig.put("evt", event);
+            addHwIdConfig.put("partNumber", partnumber);
+            addHwIdConfig.put("alu", alu);
+            addHwIdConfig.put("shelfTime", shelf);
+            addHwIdConfig.put("createdDate", formattedString);
+            addHwIdConfig.put("createdBy", userSession.getLoginId());
+            addHwIdConfig.put("flag", "1");
+
+            SPTSResponse sr = SPTSWebService.insertItemHardwareConfig(addHwIdConfig);
+
+            if (sr.getStatus()) {
+                ItemHardwareConfig item = new ItemHardwareConfig();
+                item.setSptsPkid(sr.getResponseId().toString());
+                item.setId(id);
+
+                itemdao = new ItemHardwareConfigDAO();
+                QueryResult qr2 = itemdao.updateSPTSPKID_HardwareId(item);
+                redirectAttrs.addFlashAttribute("success", "SPTS data created: Item Hardware Configuration ["+itemType+"] ");
+            } else {
+                LinkedHashMap<String, String> itemhmap;
+                ObjectMapper mapper = new ObjectMapper();
+                itemhmap = mapper.readValue(addHwIdConfig.toString(), new TypeReference<LinkedHashMap<String, String>>() {});
+                String errorMessage;
+                if (sr.getErrorDetail().equals("")) {
+                    errorMessage = sr.getErrorCode() + " - " + sr.getErrorMessage();
+                } else {
+                    errorMessage = sr.getErrorCode() + " - " + sr.getErrorDetail();
+                }
+                model.addAttribute("error", errorMessage);
+                redirectAttrs.addFlashAttribute("error", errorMessage);
+                return "redirect:/admin/hw/add";
+            }
+        } else {
+            String sptsVersion = "";
+            String sptsItemType = "";
+            String sptsSubType = "";
+            JSONObject params = new JSONObject();
+            params.put("pkid", spts_pkid);
+            JSONArray getItemByPKID = SPTSWebService.getHardwareIdConfigByPKID(params);
+            int checkdata = getItemByPKID.length();
+            for (int i = 0; i < getItemByPKID.length(); i++) {
+                sptsVersion = getItemByPKID.getJSONObject(i).getString("Version");
+                sptsItemType = getItemByPKID.getJSONObject(i).getString("ItemType");
+            }
+            
+            if (checkdata == 0) {
+                // INSERT A NEW / EXISTING DATA INTO SPTS
+                JSONObject addHwIdConfig = new JSONObject();
+                addHwIdConfig.put("itemType", itemType);
+                addHwIdConfig.put("subType", subType);
+                addHwIdConfig.put("sameItemID", itemId);
+                addHwIdConfig.put("supplier", supplier);
+                addHwIdConfig.put("assemblyNo", assemblyno);
+                addHwIdConfig.put("revision", revision);
+                addHwIdConfig.put("mfgDate", mfgdate);
+                addHwIdConfig.put("component", component);
+                addHwIdConfig.put("evt", event);
+                addHwIdConfig.put("partNumber", partnumber);
+                addHwIdConfig.put("alu", alu);
+                addHwIdConfig.put("shelfTime", shelf);
+                addHwIdConfig.put("createdDate", formattedString);
+                addHwIdConfig.put("createdBy", userSession.getLoginId());
+                addHwIdConfig.put("flag", "1");
+
+                SPTSResponse sr = SPTSWebService.insertItemHardwareConfig(addHwIdConfig);
+
+                if (sr.getStatus()) {
+                    ItemHardwareConfig item = new ItemHardwareConfig();
+                    item.setSptsPkid(sr.getResponseId().toString());
+                    item.setId(id);
+
+                    itemdao = new ItemHardwareConfigDAO();
+                    QueryResult qr2 = itemdao.updateSPTSPKID_HardwareId(item);
+                    redirectAttrs.addFlashAttribute("success", "Berjaya insert data spts yang baru dekat sini");
+                } else {
+                    LinkedHashMap<String, String> itemhmap;
+                    ObjectMapper mapper = new ObjectMapper();
+                    itemhmap = mapper.readValue(addHwIdConfig.toString(), new TypeReference<LinkedHashMap<String, String>>() {});
+                    String errorMessage;
+                    if (sr.getErrorDetail().equals("")) {
+                        errorMessage = sr.getErrorCode() + " - " + sr.getErrorMessage();
+                    } else {
+                        errorMessage = sr.getErrorCode() + " - " + sr.getErrorDetail();
+                    }
+                    model.addAttribute("error", errorMessage);
+                    redirectAttrs.addFlashAttribute("error", errorMessage);
+                    return "redirect:/admin/hw/add";
+                }
+            } else {
+                // UPDATE SPTS DATA
+                JSONObject updateHardware = new JSONObject();
+                updateHardware.put("pkid", spts_pkid);
+                updateHardware.put("version", sptsVersion);
+                updateHardware.put("itemType", itemType);
+                updateHardware.put("subType", subType);
+                updateHardware.put("sameItemID", itemId);
+                updateHardware.put("supplier", supplier);
+                updateHardware.put("assemblyNo", assemblyno);
+                updateHardware.put("revision", revision);
+                updateHardware.put("mfgDate", mfgdate);
+                updateHardware.put("component", component);
+                updateHardware.put("evt", event);
+                updateHardware.put("partNumber", partnumber);
+                updateHardware.put("alu", alu);
+                updateHardware.put("shelfTime", shelf);
+
+                SPTSResponse sr = SPTSWebService.updateHardwareIdConfig(updateHardware);
+                if (sr.getStatus()) {
+                    redirectAttrs.addFlashAttribute("success", "Hardware ID Config data successfully updated!");
+                } else {
+                    LinkedHashMap<String, String> item2;
+                    ObjectMapper mapper = new ObjectMapper();
+                    item2 = mapper.readValue(updateHardware.toString(), new TypeReference<LinkedHashMap<String, String>>() {});
+                    String errorMessage;
+                    if (sr.getErrorDetail().equals("")) {
+                        errorMessage = sr.getErrorCode() + " - " + sr.getErrorMessage();
+                    } else {
+                        errorMessage = sr.getErrorCode() + " - " + sr.getErrorDetail();
+                    }
+                    LOGGER.info("sr.getErrorCode(): " + sr.getErrorCode());
+                    LOGGER.info("sr.getErrorMessage(): " + sr.getErrorMessage());
+                    LOGGER.info("sr.getErrorDetail(): " + sr.getErrorDetail());
+                    LOGGER.info("errorMessage: " + errorMessage);
+                    LOGGER.info("^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^");
+                    model.addAttribute("error", errorMessage);
+                    redirectAttrs.addFlashAttribute("error", errorMessage);
+                }
+            }
+        }
+        
         if (qr.getResult() > 0) {
             redirectAttrs.addFlashAttribute("success", messageSource.getMessage("admin.label.hardware.update.success", args, locale));
         } else {
@@ -1620,16 +1815,142 @@ public class AdminController {
             Model model,
             Locale locale,
             RedirectAttributes redirectAttrs,
-            @PathVariable("hwid") String hwid) {
+            @PathVariable("hwid") String hwid) throws IOException {
 
         ItemHardwareConfigDAO itemdao = new ItemHardwareConfigDAO();
-        QueryResult queryResult = itemdao.deleteItemHardwareConfig(hwid);
-        if (queryResult.getResult() == 1) {
-            redirectAttrs.addFlashAttribute("success", messageSource.getMessage("admin.label.hardware.delete.success", args, locale));
-        } else {
-            redirectAttrs.addFlashAttribute("error", messageSource.getMessage("admin.label.hardware.delete.error", args, locale));
+        String sptsId = itemdao.getSptsId(hwid);
+        sptsId = SystemUtil.nullToZero(sptsId);
+        
+        JSONObject params = new JSONObject();
+        params.put("pkid", sptsId);
+        JSONArray getItemByPKID = SPTSWebService.getHardwareIdConfigByPKID(params);
+        
+        String sptsVersion = "";
+        Integer pkid = 0;
+        int checkdata = getItemByPKID.length();
+        for (int i = 0; i < getItemByPKID.length(); i++) {
+            sptsVersion = getItemByPKID.getJSONObject(i).getString("Version");
+            LOGGER.info("version dia :::: "+sptsVersion);
+            pkid = getItemByPKID.getJSONObject(i).getInt("PKID");
+            LOGGER.info("GET ID SPTS ::: "+pkid);
         }
+        
+//        itemdao = new ItemHardwareConfigDAO();
+//        QueryResult queryResult = itemdao.deleteItemHardwareConfig(hwid);
+        LOGGER.info("hwid   >>> "+hwid);
+        LOGGER.info("sptsId >>> "+sptsId);
+        
+        if (sptsId.equals("0")) {
+            // DO NOTHING
+            LOGGER.info("NO SPTS DATA TO BE DELETED");
+        } else  {
+            LOGGER.info("KITA DELETE DATA");
+            JSONObject param = new JSONObject();
+            param.put("PKID", pkid);
+            param.put("Version", sptsVersion);
+            SPTSResponse deleteEqpt = SPTSWebService.deleteHardwareIdConfigByPKID(param);
+        }
+        
+//        if (queryResult.getResult() == 1) {
+//            redirectAttrs.addFlashAttribute("success", messageSource.getMessage("admin.label.hardware.delete.success", args, locale));
+//        } else {
+//            redirectAttrs.addFlashAttribute("error", messageSource.getMessage("admin.label.hardware.delete.error", args, locale));
+//        }
         return "redirect:/admin/hw";
+    }
+    
+    public String insertHardwareConfigIntoSPTS(String id, String itemType, String subType, String itemId, String supplier, String assemblyno, String revision, String mfgdate, String component, String event, String partnumber, String alu, String shelf, String datenow, String user, String flag) throws IOException {
+        String status = "SUCCESS";
+        JSONObject addHwIdConfig = new JSONObject();
+        addHwIdConfig.put("itemType", itemType);
+        addHwIdConfig.put("subType", subType);
+        addHwIdConfig.put("sameItemID", itemId);
+        addHwIdConfig.put("supplier", supplier);
+        addHwIdConfig.put("assemblyNo", assemblyno);
+        addHwIdConfig.put("revision", revision);
+        addHwIdConfig.put("mfgDate", mfgdate);
+        addHwIdConfig.put("component", component);
+        addHwIdConfig.put("evt", event);
+        addHwIdConfig.put("partNumber", partnumber);
+        addHwIdConfig.put("alu", alu);
+        addHwIdConfig.put("shelfTime", shelf);
+        addHwIdConfig.put("createdDate", datenow);
+        addHwIdConfig.put("createdBy", user);
+        addHwIdConfig.put("flag", "1");
+
+        SPTSResponse sr = SPTSWebService.insertItemHardwareConfig(addHwIdConfig);
+
+        if (sr.getStatus()) {
+            ItemHardwareConfig item = new ItemHardwareConfig();
+            item.setSptsPkid(sr.getResponseId().toString());
+            item.setId(id);
+
+            ItemHardwareConfigDAO itemdao = new ItemHardwareConfigDAO();
+            QueryResult qr2 = itemdao.updateSPTSPKID_HardwareId(item);
+            status = "SUCCESS";
+//            redirectAttrs.addFlashAttribute("success", "Berjaya insert data spts yang baru dekat sini");
+        } else {
+            LinkedHashMap<String, String> itemhmap;
+            ObjectMapper mapper = new ObjectMapper();
+            itemhmap = mapper.readValue(addHwIdConfig.toString(), new TypeReference<LinkedHashMap<String, String>>() {});
+            String errorMessage;
+            if (sr.getErrorDetail().equals("")) {
+                errorMessage = sr.getErrorCode() + " - " + sr.getErrorMessage();
+            } else {
+                errorMessage = sr.getErrorCode() + " - " + sr.getErrorDetail();
+            }
+            LOGGER.info("errorMessage >>>> "+errorMessage);
+            status = "FAILED";
+//            model.addAttribute("error", errorMessage);
+//            redirectAttrs.addFlashAttribute("error", errorMessage);
+//            return "redirect:/admin/hw/add";
+        }
+        return status;
+    }
+    
+    public String updateHardwareConfig(String id, String version, String sptsId, String itemType, String subType, String itemId, String supplier, String assemblyno, String revision, String mfgdate, String component, String event, String partnumber, String alu, String shelf, String datenow, String user, String flag) throws IOException {
+        String status = "SUCCESS";
+        JSONObject updateHardware = new JSONObject();
+        updateHardware.put("pkid", sptsId);
+        updateHardware.put("version", version);
+        updateHardware.put("itemType", itemType);
+        updateHardware.put("subType", subType);
+        updateHardware.put("sameItemID", itemId);
+        updateHardware.put("supplier", supplier);
+        updateHardware.put("assemblyNo", assemblyno);
+        updateHardware.put("revision", revision);
+        updateHardware.put("mfgDate", mfgdate);
+        updateHardware.put("component", component);
+        updateHardware.put("evt", event);
+        updateHardware.put("partNumber", partnumber);
+        updateHardware.put("alu", alu);
+        updateHardware.put("shelfTime", shelf);
+
+        SPTSResponse sr = SPTSWebService.updateHardwareIdConfig(updateHardware);
+        if (sr.getStatus()) {
+            status = "SUCCESS";
+//            redirectAttrs.addFlashAttribute("success", "Hardware ID Config data successfully updated!");
+        } else {
+            status = "FAILED";
+            LinkedHashMap<String, String> item2;
+            ObjectMapper mapper = new ObjectMapper();
+            item2 = mapper.readValue(updateHardware.toString(), new TypeReference<LinkedHashMap<String, String>>() {});
+            String errorMessage;
+            if (sr.getErrorDetail().equals("")) {
+                errorMessage = sr.getErrorCode() + " - " + sr.getErrorMessage();
+            } else {
+                errorMessage = sr.getErrorCode() + " - " + sr.getErrorDetail();
+            }
+            LOGGER.info("sr.getErrorCode(): " + sr.getErrorCode());
+            LOGGER.info("sr.getErrorMessage(): " + sr.getErrorMessage());
+            LOGGER.info("sr.getErrorDetail(): " + sr.getErrorDetail());
+            LOGGER.info("errorMessage: " + errorMessage);
+            LOGGER.info("^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^");
+//            model.addAttribute("error", errorMessage);
+//            redirectAttrs.addFlashAttribute("error", errorMessage);
+        }
+                
+        return status;
     }
 
 }
