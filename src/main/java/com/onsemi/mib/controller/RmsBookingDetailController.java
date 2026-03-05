@@ -374,7 +374,6 @@ public class RmsBookingDetailController {
         for (int i = 0; i < getItemByParamV.length(); i++) {
 
 //            LOGGER.info("1st step: " + LocalDateTime.now());
-
             list.add(Integer.toString(getItemByParamV.getJSONObject(i).getInt("pkid")));
 
             String itemType = "";
@@ -433,7 +432,6 @@ public class RmsBookingDetailController {
                     for (int x = 0; x < getItemByParam.length(); x++) {
 
 //                        LOGGER.info("2nd step: " + LocalDateTime.now());
-
                         rmsH.setItemPkid(Integer.toString(getItemByParam.getJSONObject(x).getInt("PKID")));
                         onhandQty = getItemByParam.getJSONObject(x).getInt("OnHandQty");
                         if (onhandQty >= requestQty) {
@@ -671,6 +669,26 @@ public class RmsBookingDetailController {
             redirectAttrs.addFlashAttribute("error", "Failed to recall from Storage Factory. Pls contact system admin for more detail");
         }
         return "redirect:/rmsbookingDetail/detail/" + rmsBookingId;
+    }
+
+    //group
+    @RequestMapping(value = "/groupDetail/{bookingId}/{itemPkid}", method = RequestMethod.GET)
+    public String groupDetail(Model model,
+            @PathVariable("bookingId") String bookingId,
+            @PathVariable("itemPkid") String itemPkid,
+            @ModelAttribute UserSession userSession) throws IOException {
+
+        model.addAttribute("userItemSfRecall", userSession.getItemSfRecall());
+
+        RmsBookingDetailDAO rmsd = new RmsBookingDetailDAO();
+        RmsBookingDetail rms = rmsd.getRmsBookingDetailByBookingPkid(bookingId);
+        model.addAttribute("rms", rms);
+
+        RmsBookingHardwareDAO hD = new RmsBookingHardwareDAO();
+        RmsBookingHardware h = hD.getRmsBookingHardwareByPkid(itemPkid);
+        model.addAttribute("motherboardId", h.getItemId());
+
+        return "rmsbookingDetail/detail_group";
     }
 
     @RequestMapping(value = "/add", method = RequestMethod.GET)

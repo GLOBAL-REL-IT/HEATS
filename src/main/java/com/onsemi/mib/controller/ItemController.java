@@ -68,6 +68,7 @@ import java.util.Locale;
 import java.util.StringJoiner;
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletResponse;
+import org.apache.commons.lang3.StringEscapeUtils;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.slf4j.Logger;
@@ -2330,6 +2331,7 @@ public class ItemController {
         item.setSiteName("Seremban");
         item.setItemId(itemId);
         item.setItemName(itemName);
+        LOGGER.info("assemblyId: " + assemblyId);
         item.setAssemblyId(assemblyId);
         item.setRack(rack);
         item.setShelf(shelf);
@@ -2396,7 +2398,11 @@ public class ItemController {
 
         item.setMinQty(minQty);
         item.setMaxQty(maxQty);
-        item.setExpirationDate(expirationDate);
+        if (expirationDate != null && !"".equals(expirationDate)) {
+            LOGGER.info("expirationDate: " + expirationDate);
+            item.setExpirationDate(expirationDate);
+        }
+//        item.setExpirationDate(expirationDate);
         if ("on".equals(isConsumable)) {
             isConsumable = "true";
         } else {
@@ -2443,10 +2449,11 @@ public class ItemController {
                 if ("BIB".equals(itemTypeRead) || "BIB Card".equals(itemTypeRead)) {
                     return "redirect:/hw/item/addActivity/" + i.getGeneratedKey();
                 } else {
+
                     //insert into SPTS
                     JSONObject addItem = new JSONObject();
-                    addItem.put("itemID", itemId);
-                    addItem.put("itemName", itemName);
+                    addItem.put("itemID", StringEscapeUtils.escapeXml10(itemId));
+                    addItem.put("itemName", StringEscapeUtils.escapeXml10(itemName));
                     addItem.put("onHandQty", onHandQty);
                     addItem.put("prodQty", productionQty);
                     addItem.put("repairQty", repairQty);
@@ -2464,25 +2471,29 @@ public class ItemController {
                     addItem.put("maxQty", maxQty);
                     addItem.put("unit", "pcs");
                     addItem.put("unitCost", unitCost);
-                    addItem.put("rack", rack);
-                    addItem.put("shelf", shelf);
-                    addItem.put("model", model2);
-                    addItem.put("manufacturer", manufacturer);
-                    addItem.put("equipmentType", equipmentType);
-                    addItem.put("equipmentModel", equipmentModel);
-                    addItem.put("equipmentManufacturer", equipmentManufacturer);
-                    addItem.put("stressType", stressType);
+                    addItem.put("rack", StringEscapeUtils.escapeXml10(rack));
+                    addItem.put("shelf", StringEscapeUtils.escapeXml10(shelf));
+                    addItem.put("model", StringEscapeUtils.escapeXml10(model2));
+                    addItem.put("manufacturer", StringEscapeUtils.escapeXml10(manufacturer));
+                    addItem.put("equipmentType", StringEscapeUtils.escapeXml10(equipmentType));
+                    addItem.put("equipmentModel", StringEscapeUtils.escapeXml10(equipmentModel));
+                    addItem.put("equipmentManufacturer", StringEscapeUtils.escapeXml10(equipmentManufacturer));
+                    addItem.put("stressType", StringEscapeUtils.escapeXml10(stressType));
                     addItem.put("isCritical", "0");
                     if ("true".equals(isConsumable)) {
                         addItem.put("isConsumeable", "1");
                     } else {
                         addItem.put("isConsumeable", "0");
                     }
-                    addItem.put("itemType", itemTypeRead);
-                    addItem.put("subType", subType);
-                    addItem.put("assemblyID", assemblyId);
-                    addItem.put("remarks", remarks);
-                    addItem.put("expirationDate", expirationDate);
+                    addItem.put("itemType", StringEscapeUtils.escapeXml10(itemTypeRead));
+                    addItem.put("subType", StringEscapeUtils.escapeXml10(subType));
+                    addItem.put("assemblyID", StringEscapeUtils.escapeXml10(assemblyId));
+                    addItem.put("remarks", StringEscapeUtils.escapeXml10(remarks));
+                    if (expirationDate != null && !"".equals(expirationDate)) {
+                        LOGGER.info("expirationDate: " + expirationDate);
+                        addItem.put("expirationDate", expirationDate);
+                    }
+//                    addItem.put("expirationDate", expirationDate);
 //                    addItem.put("downtimeValue", downtimeValue);
 //                    addItem.put("downtimeUnit", downtimeUnit);
 //                    addItem.put("implementationCost", implementationCost);
@@ -2631,12 +2642,17 @@ public class ItemController {
         for (int i = 0; i < getItemByParam.length(); i++) {
             version = getItemByParam.getJSONObject(i).getString("Version");
         }
+
+        // Escape for XML 1.0 (most common)
+        String escapeditemId = StringEscapeUtils.escapeXml10(itemId);
+        String escapeditemName = StringEscapeUtils.escapeXml10(itemName);
+
         //update to SPTS first then to local DB
         JSONObject addItem = new JSONObject();
         addItem.put("pkID", itemPKID);
         addItem.put("version", version);
-        addItem.put("itemID", itemId);
-        addItem.put("itemName", itemName);
+        addItem.put("itemID", escapeditemId);
+        addItem.put("itemName", escapeditemName);
         addItem.put("onHandQty", onHandQty);
         addItem.put("prodQty", productionQty);
         addItem.put("repairQty", repairQty);
@@ -2654,8 +2670,8 @@ public class ItemController {
 
         LOGGER.info("pkid: " + itemPKID);
         LOGGER.info("version: " + version);
-        LOGGER.info("itemID: " + itemId);
-        LOGGER.info("itemName: " + itemName);
+        LOGGER.info("itemID: " + escapeditemId);
+        LOGGER.info("itemName: " + escapeditemName);
         LOGGER.info("onHandQty: " + onHandQty);
         LOGGER.info("prodQty: " + productionQty);
         LOGGER.info("repairQty: " + repairQty);
@@ -2688,52 +2704,64 @@ public class ItemController {
             addItem.put("unitCost", unitCost);
         }
         if (rack != null && !"".equals(rack)) {
-            LOGGER.info("rack: " + rack);
-            addItem.put("rack", rack);
+            String escapedrack = StringEscapeUtils.escapeXml10(rack);
+            LOGGER.info("rack: " + escapedrack);
+            addItem.put("rack", escapedrack);
         }
         if (shelf != null && !"".equals(shelf)) {
-            LOGGER.info("shelf: " + shelf);
-            addItem.put("shelf", shelf);
+            String escapedshelf = StringEscapeUtils.escapeXml10(shelf);
+            LOGGER.info("shelf: " + escapedshelf);
+            addItem.put("shelf", escapedshelf);
         }
         if (model != null && !"".equals(model)) {
-            LOGGER.info("model: " + model);
-            addItem.put("model", model);
+            String escapedmodel = StringEscapeUtils.escapeXml10(model);
+            LOGGER.info("model: " + escapedmodel);
+            addItem.put("model", escapedmodel);
         }
         if (manufacturer != null && !"".equals(manufacturer)) {
-            LOGGER.info("manufacturer: " + manufacturer);
-            addItem.put("manufacturer", manufacturer);
+            String escapedmanufacturer = StringEscapeUtils.escapeXml10(manufacturer);
+            LOGGER.info("manufacturer: " + escapedmanufacturer);
+            addItem.put("manufacturer", escapedmanufacturer);
         }
         if (equipmentType != null && !"".equals(equipmentType)) {
-            LOGGER.info("equipmentType: " + equipmentType);
-            addItem.put("equipmentType", equipmentType);
+            String escapedequipmentType = StringEscapeUtils.escapeXml10(equipmentType);
+            LOGGER.info("equipmentType: " + escapedequipmentType);
+            addItem.put("equipmentType", escapedequipmentType);
         }
         if (equipmentModel != null && !"".equals(equipmentModel)) {
-            LOGGER.info("equipmentModel: " + equipmentModel);
-            addItem.put("equipmentModel", equipmentModel);
+            String escapedequipmentModel = StringEscapeUtils.escapeXml10(equipmentModel);
+            LOGGER.info("equipmentModel: " + escapedequipmentModel);
+            addItem.put("equipmentModel", escapedequipmentModel);
         }
         if (equipmentManufacturer != null && !"".equals(equipmentManufacturer)) {
-            LOGGER.info("equipmentManufacturer: " + equipmentManufacturer);
-            addItem.put("equipmentManufacturer", equipmentManufacturer);
+            String escapedequipmentManufacturer = StringEscapeUtils.escapeXml10(equipmentManufacturer);
+            LOGGER.info("equipmentManufacturer: " + escapedequipmentManufacturer);
+            addItem.put("equipmentManufacturer", escapedequipmentManufacturer);
         }
         if (stressType != null && !"".equals(stressType)) {
-            LOGGER.info("stressType: " + stressType);
-            addItem.put("stressType", stressType);
+            String escapedstressType = StringEscapeUtils.escapeXml10(stressType);
+            LOGGER.info("stressType: " + escapedstressType);
+            addItem.put("stressType", escapedstressType);
         }
         if (itemType2 != null && !"".equals(itemType2)) {
-            LOGGER.info("itemType: " + itemType2);
-            addItem.put("itemType", itemType2);
+            String escapeditemType2 = StringEscapeUtils.escapeXml10(itemType2);
+            LOGGER.info("itemType: " + escapeditemType2);
+            addItem.put("itemType", escapeditemType2);
         }
         if (subType != null && !"".equals(subType)) {
-            LOGGER.info("subType: " + subType);
-            addItem.put("subType", subType);
+            String escapedsubType = StringEscapeUtils.escapeXml10(subType);
+            LOGGER.info("subType: " + escapedsubType);
+            addItem.put("subType", escapedsubType);
         }
         if (assemblyId != null && !"".equals(assemblyId)) {
-            LOGGER.info("assemblyID: " + assemblyId);
-            addItem.put("assemblyID", assemblyId);
+            String escapedassemblyId = StringEscapeUtils.escapeXml10(assemblyId);
+            LOGGER.info("assemblyID: " + escapedassemblyId);
+            addItem.put("assemblyID", escapedassemblyId);
         }
         if (remarks != null && !"".equals(remarks)) {
-            LOGGER.info("remarks: " + remarks);
-            addItem.put("remarks", remarks);
+            String escapedremarks = StringEscapeUtils.escapeXml10(remarks);
+            LOGGER.info("remarks: " + escapedremarks);
+            addItem.put("remarks", escapedremarks);
         }
         if (expirationDate != null && !"".equals(expirationDate)) {
             LOGGER.info("expirationDate: " + expirationDate);
@@ -2752,6 +2780,8 @@ public class ItemController {
         }
         addItem.put("complexityScore", "0");
         addItem.put("isCritical", "0");
+        addItem.put("itemStatus", "0");
+        addItem.put("cdarsStatus", "0");
 
         String consume = "";
         if ("on".equals(isConsumable)) {
@@ -2762,6 +2792,8 @@ public class ItemController {
         LOGGER.info("isConsumeable: " + consume);
         LOGGER.info("complexityScore: " + "0");
         LOGGER.info("isCritical: " + "0");
+        LOGGER.info("itemStatus: " + "0");
+        LOGGER.info("cdarsStatus: " + "0");
 
         SPTSResponse sr = SPTSWebService.updateItem(addItem);
         if (sr.getStatus()) {
@@ -2879,6 +2911,7 @@ public class ItemController {
 
     }
 
+    //use for BIB & BIB Card before release to SPTS
     @RequestMapping(value = "/item/update2", method = {RequestMethod.GET, RequestMethod.POST})
     public String itemUpdate2(
             Model model,
@@ -4306,8 +4339,7 @@ public class ItemController {
                 LOGGER.info("KITA BREAK BY DEFAULT");
                 break;
         }
-        */
-
+         */
         ItemFunctionalTest item = new ItemFunctionalTest();
 
         ItemActivityConfigDAO itemdao2 = new ItemActivityConfigDAO();
@@ -4655,8 +4687,8 @@ public class ItemController {
         ItemDAO itemdao = new ItemDAO();
         Item item = itemdao.getHardwareDetail(mibItemId);
 
-        String itemId = item.getItemId();
-        String itemName = item.getItemName();
+        String itemId = StringEscapeUtils.escapeXml10(item.getItemId());
+        String itemName = StringEscapeUtils.escapeXml10(item.getItemName());
         String onHandQty = item.getOnHandQty();
         String productionQty = item.getProductionQty();
         String repairQty = item.getRepairQty();
@@ -4673,19 +4705,19 @@ public class ItemController {
         String minQty = item.getMinQty();
         String maxQty = item.getMaxQty();
         String unitCost = item.getUnitCost();
-        String rack = item.getRack();
-        String shelf = item.getShelf();
-        String model = item.getModel();
-        String manufacturer = item.getManufacturer();
-        String equipmentType = item.getEquipmentType();
-        String equipmentModel = item.getEquipmentModel();
-        String equipmentManufacturer = item.getEquipmentManufacturer();
-        String stressType = item.getStressType();
+        String rack = StringEscapeUtils.escapeXml10(item.getRack());
+        String shelf = StringEscapeUtils.escapeXml10(item.getShelf());
+        String model = StringEscapeUtils.escapeXml10(item.getModel());
+        String manufacturer = StringEscapeUtils.escapeXml10(item.getManufacturer());
+        String equipmentType = StringEscapeUtils.escapeXml10(item.getEquipmentType());
+        String equipmentModel = StringEscapeUtils.escapeXml10(item.getEquipmentModel());
+        String equipmentManufacturer = StringEscapeUtils.escapeXml10(item.getEquipmentManufacturer());
+        String stressType = StringEscapeUtils.escapeXml10(item.getStressType());
         String isConsumable = item.getIsConsumable();
-        String itemTypeRead = item.getItemType();
-        String subType = item.getSubType();
-        String assemblyId = item.getAssemblyId();
-        String remarks = item.getRemarks();
+        String itemTypeRead = StringEscapeUtils.escapeXml10(item.getItemType());
+        String subType = StringEscapeUtils.escapeXml10(item.getSubType());
+        String assemblyId = StringEscapeUtils.escapeXml10(item.getAssemblyId());
+        String remarks = StringEscapeUtils.escapeXml10(item.getRemarks());
         String expirationDate = item.getExpirationDate();
         String downtimeValue = "";
         String downtimeUnit = "";

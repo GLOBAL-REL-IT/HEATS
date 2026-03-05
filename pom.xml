@@ -39,7 +39,7 @@
             <version>${org.springframework-version}</version>
         </dependency>
         <!--LDAP Security-->
-<!--        <dependency>
+        <!--        <dependency>
             <groupId>org.springframework.security</groupId>
             <artifactId>spring-security-ldap</artifactId>
             <version>${org.springframework.security-version}</version>
@@ -305,6 +305,11 @@
             <groupId>org.springframework.ws</groupId>
             <artifactId>spring-ws-core</artifactId>
             <version>2.2.0.RELEASE</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-text</artifactId>
+            <version>1.12.0</version> <!-- Use a recent version -->
         </dependency>
         
         <!-- Simple JSON -->

@@ -3400,14 +3400,15 @@
                                                     <div class="d-flex justify-content-end gap-2">
                                                     </div>
                                                     <!-- Form actions end -->
-                                                </form>
+                                                <!--</form>-->
+                                                <!--form disable 5/3/26-->
                                                 <!-- Card end -->
                                             </c:when>
                                             <c:otherwise>
                                                 <!-- Card start -->
                                                 <!--<div class="card mb-4">-->
                                                 <!--<div class="card-body">-->
-                                                <form class="row gx-3 " role="form" action="${contextPath}/hw/item/update" method="post">
+                                                <!--<form class="row gx-3 " role="form" action="${contextPath}/hw/item/update" method="post">-->
                                                     <!-- Row start -->
                                                     <div class="form-group required col-xl-2 col-sm-12 col-12">
                                                         <div class="mb-3">
@@ -3459,7 +3460,7 @@
                                                             </div>
                                                         </div>
                                                     </div>
-                                                    <div class="col-xl-4 col-sm-12 col-12">
+                                                    <div class="visually-hidden col-xl-4 col-sm-12 col-12">
                                                         <div class="mb-3">
                                                             <label for="aluHrs" class="form-label">ALU</label>
                                                             <div class="input input-group">
@@ -3807,7 +3808,8 @@
                                                     <!--                                                        <button type="submit" class="btn btn-primary">Update</button>-->
                                                     <!--</div>-->
                                                     <!-- Form actions end -->
-                                                </form>
+                                                <!--</form>-->  
+                                                <!--disable 5/3/26-->
                                                 <!--</div>-->
                                                 <!--</div>-->
                                                 <!-- Card end -->
