@@ -9,14 +9,11 @@
 <s:layout-render name="/WEB-INF/base/base.jsp">
     <s:layout-component name="page_css">
         <!--<link rel="stylesheet" href="${contextPath}/resources/css/bootstrap.min.css"/>-->
-        <!--<link rel="stylesheet" href="${contextPath}/resources/"/>-->
-        <!--<link rel="stylesheet" href="${contextPath}/resources/"/>-->
     </s:layout-component>
     <s:layout-component name="page_css_inline">
         <style>
             input[readonly] {
                 border: none;
-                /*background-color:#f0f0f0;*/
             }
             .input {
                 border: 1.5px solid #000;
@@ -254,8 +251,6 @@
     </s:layout-component>
     <s:layout-component name="page_js">
         <!--<script src="${contextPath}/resources/vendor/DataTables/customitem/bootstrap.bundle.min.js"></script>-->
-        <!--<script src="${contextPath}/resources/"></script>-->
-        <!--<script src="${contextPath}/resources/"></script>-->
     </s:layout-component>
     <s:layout-component name="page_js_inline">
         <script>
@@ -278,135 +273,135 @@
                     console.log("count >>>> " + count);
                     for (let i = 1; i <= count; i++) {
                         out.push(`${assembly}-${mmyy}-${eventName}-${i}`);
-                                    }
-                                    return out;
-                                }
+                    }
+                    return out;
+                }
 
-                                function readInputs() {
-                                    const assembly = document.getElementById("assemblyNo").value.trim();
-                                    const yyyyDashMM = document.getElementById("mfgDate").value;
-                                    const mmyy = monthToMMYY(yyyyDashMM);   // this is your msgDate
-                                    const eventName = document.getElementById("eventStress").value.trim();
-                                    const count = Number(document.getElementById("runningNumber").value);
-                                    console.log("SINI DIA BACA SEMAU INPUT");
-                                    console.log("assembly >> " + assembly);
-                                    console.log("yyyyDashMM >> " + yyyyDashMM);
-                                    console.log("mmyy >> " + mmyy);
-                                    console.log("eventName >> " + eventName);
-                                    console.log("assembly >> " + assembly);
-                                    return {assembly, mmyy, eventName, count};
-                                }
+                function readInputs() {
+                    const assembly = document.getElementById("assemblyNo").value.trim();
+                    const yyyyDashMM = document.getElementById("mfgDate").value;
+                    const mmyy = monthToMMYY(yyyyDashMM);   // this is your msgDate
+                    const eventName = document.getElementById("eventStress").value.trim();
+                    const count = Number(document.getElementById("runningNumber").value);
+                    console.log("SINI DIA BACA SEMAU INPUT");
+                    console.log("assembly >> " + assembly);
+                    console.log("yyyyDashMM >> " + yyyyDashMM);
+                    console.log("mmyy >> " + mmyy);
+                    console.log("eventName >> " + eventName);
+                    console.log("assembly >> " + assembly);
+                    return {assembly, mmyy, eventName, count};
+                }
 
-                                function validate( { assembly, mmyy, eventName, count }) {
-                                    const errors = [];
-                                    if (!assembly)
-                                        errors.push("Assembly Number is required.");
-                                    if (!mmyy || !/^(0[1-9]|1[0-2])\d{2}$/.test(mmyy))
-                                        errors.push("Valid Mfg Date (mmyy) is required.");
-                                    if (!eventName)
-                                        errors.push("Event is required.");
-                                    if (!Number.isInteger(count) || count < 1)
-                                        errors.push("Running Number must be an integer ≥ 1.");
-                                    return errors;
-                                }
+                function validate( { assembly, mmyy, eventName, count }) {
+                    const errors = [];
+                    if (!assembly)
+                        errors.push("Assembly Number is required.");
+                    if (!mmyy || !/^(0[1-9]|1[0-2])\d{2}$/.test(mmyy))
+                        errors.push("Valid Mfg Date (mmyy) is required.");
+                    if (!eventName)
+                        errors.push("Event is required.");
+                    if (!Number.isInteger(count) || count < 1)
+                        errors.push("Running Number must be an integer ≥ 1.");
+                    return errors;
+                }
 
-                                const previewEl = document.getElementById("preview");
-                                const btnGenerate = document.getElementById("btnGenerate");
-                                const btnCopy = document.getElementById("btnCopy");
-                                const btnDownload = document.getElementById("btnDownload");
-                                const mfgMonthEl = document.getElementById("mfgDate");
-                                const msgDateEl = document.getElementById("viewMessage");
+                const previewEl = document.getElementById("preview");
+                const btnGenerate = document.getElementById("btnGenerate");
+                const btnCopy = document.getElementById("btnCopy");
+                const btnDownload = document.getElementById("btnDownload");
+                const mfgMonthEl = document.getElementById("mfgDate");
+                const msgDateEl = document.getElementById("viewMessage");
 
-                                console.log("-----------------");
-                                console.log("previewEl >>> " + previewEl);
-                                console.log("btnCopy >>> " + btnCopy);
-                                console.log("btnDownload >>> " + btnDownload);
-                                console.log("mfgMonthEl >>> " + mfgMonthEl);
-                                console.log("msgDateEl >>> " + msgDateEl);
-                                console.log("-----------------");
+                console.log("-----------------");
+                console.log("previewEl >>> " + previewEl);
+                console.log("btnCopy >>> " + btnCopy);
+                console.log("btnDownload >>> " + btnDownload);
+                console.log("mfgMonthEl >>> " + mfgMonthEl);
+                console.log("msgDateEl >>> " + msgDateEl);
+                console.log("-----------------");
 
-                                function updateMsgDate() {
-                                    msgDateEl.value = monthToMMYY(mfgMonthEl.value) || "";
-                                }
+                function updateMsgDate() {
+                    msgDateEl.value = monthToMMYY(mfgMonthEl.value) || "";
+                }
 
-                                function generate() {
-                                    const data = readInputs();
-                                    // keep msgDate display in sync
-                                    msgDateEl.value = data.mmyy;
+                function generate() {
+                    const data = readInputs();
+                    // keep msgDate display in sync
+                    msgDateEl.value = data.mmyy;
 
-                                    const errors = validate(data);
-                                    if (errors.length) {
-                                        previewEl.textContent = "⚠ " + errors.join("\n");
-                                        btnCopy.disabled = true;
-                                        btnDownload.disabled = true;
-                                        return;
-                                    }
+                    const errors = validate(data);
+                    if (errors.length) {
+                        previewEl.textContent = "⚠ " + errors.join("\n");
+                        btnCopy.disabled = true;
+                        btnDownload.disabled = true;
+                        return;
+                    }
 
-                                    const lines = buildLines(data);
-                                    console.log("lines >> " + lines);
-                                    previewEl.textContent = lines.join("\n");
-                                    btnCopy.disabled = lines.length === 0;
-                                    btnDownload.disabled = lines.length === 0;
-                                    console.log("GENERATE");
-                                }
+                    const lines = buildLines(data);
+                    console.log("lines >> " + lines);
+                    previewEl.textContent = lines.join("\n");
+                    btnCopy.disabled = lines.length === 0;
+                    btnDownload.disabled = lines.length === 0;
+                    console.log("GENERATE");
+                }
 
-                                // Wire events
-                                btnGenerate.addEventListener("click", generate);
-                                ["assemblyNo", "mfgDate", "eventStress", "runningNumber"].forEach(id => {
-                                    document.getElementById(id).addEventListener("input", () => {
-                                        // light debounce
-                                        clearTimeout(window.__genTimer);
-                                        window.__genTimer = setTimeout(() => {
-                                            updateMsgDate();
-                                            generate();
-                                        }, 120);
-                                    });
-                                });
+                // Wire events
+                btnGenerate.addEventListener("click", generate);
+                ["assemblyNo", "mfgDate", "eventStress", "runningNumber"].forEach(id => {
+                    document.getElementById(id).addEventListener("input", () => {
+                        // light debounce
+                        clearTimeout(window.__genTimer);
+                        window.__genTimer = setTimeout(() => {
+                            updateMsgDate();
+                            generate();
+                        }, 120);
+                    });
+                });
 
-                                // Copy all
-                                btnCopy.addEventListener("click", async () => {
-                                    const text = previewEl.textContent.trim();
-                                    if (!text)
-                                        return;
-                                    try {
-                                        await navigator.clipboard.writeText(text);
-                                        btnCopy.textContent = "Copied!";
-                                        setTimeout(() => (btnCopy.textContent = "Copy All"), 1200);
-                                    } catch {
-                                        // Fallback
-                                        const sel = window.getSelection();
-                                        const range = document.createRange();
-                                        range.selectNodeContents(previewEl);
-                                        sel.removeAllRanges();
-                                        sel.addRange(range);
-                                        document.execCommand("copy");
-                                        sel.removeAllRanges();
-                                        btnCopy.textContent = "Copied!";
-                                        setTimeout(() => (btnCopy.textContent = "Copy All"), 1200);
-                                    }
-                                });
+                // Copy all
+                btnCopy.addEventListener("click", async () => {
+                    const text = previewEl.textContent.trim();
+                    if (!text)
+                        return;
+                    try {
+                        await navigator.clipboard.writeText(text);
+                        btnCopy.textContent = "Copied!";
+                        setTimeout(() => (btnCopy.textContent = "Copy All"), 1200);
+                    } catch {
+                        // Fallback
+                        const sel = window.getSelection();
+                        const range = document.createRange();
+                        range.selectNodeContents(previewEl);
+                        sel.removeAllRanges();
+                        sel.addRange(range);
+                        document.execCommand("copy");
+                        sel.removeAllRanges();
+                        btnCopy.textContent = "Copied!";
+                        setTimeout(() => (btnCopy.textContent = "Copy All"), 1200);
+                    }
+                });
 
-                                // Download TXT
-                                btnDownload.addEventListener("click", () => {
-                                    const text = previewEl.textContent.trim();
-                                    if (!text)
-                                        return;
-                                    const blob = new Blob([text + "\n"], {type: "text/plain;charset=utf-8"});
-                                    const url = URL.createObjectURL(blob);
-                                    const a = document.createElement("a");
-                                    const base = (document.getElementById("assemblyNo").value || "codes").replace(/[^a-z0-9-_]+/gi, "_");
-                                    a.href = url;
-                                    a.download = `${base}.txt`;
-                                    document.body.appendChild(a);
-                                    a.click();
-                                    URL.revokeObjectURL(url);
-                                    a.remove();
-                                });
+                // Download TXT
+                btnDownload.addEventListener("click", () => {
+                    const text = previewEl.textContent.trim();
+                    if (!text)
+                        return;
+                    const blob = new Blob([text + "\n"], {type: "text/plain;charset=utf-8"});
+                    const url = URL.createObjectURL(blob);
+                    const a = document.createElement("a");
+                    const base = (document.getElementById("assemblyNo").value || "codes").replace(/[^a-z0-9-_]+/gi, "_");
+                    a.href = url;
+                    a.download = `${base}.txt`;
+                    document.body.appendChild(a);
+                    a.click();
+                    URL.revokeObjectURL(url);
+                    a.remove();
+                });
 
-                                // Initialize
-                                updateMsgDate();
-                                generate();
-                            });
+                // Initialize
+                updateMsgDate();
+                generate();
+            });
         </script>
     </s:layout-component>
 </s:layout-render>

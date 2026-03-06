@@ -1505,53 +1505,20 @@ public class AdminController {
             if (!"0".equals(queryResult.getGeneratedKey())) {
                 
                 LocalDateTime instance = LocalDateTime.now();
-                DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+                DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss");
                 String formattedString = formatter.format(instance);
                 
                 // INSERT INTO SPTS function
-                JSONObject addHwIdConfig = new JSONObject();
-                addHwIdConfig.put("itemType", itemType);
-                addHwIdConfig.put("subType", subType);
-                addHwIdConfig.put("sameItemID", itemId);
-                addHwIdConfig.put("supplier", supplier);
-                addHwIdConfig.put("assemblyNo", assemblyno);
-                addHwIdConfig.put("revision", revision);
-                addHwIdConfig.put("mfgDate", mfgdate);
-                addHwIdConfig.put("component", component);
-                addHwIdConfig.put("evt", event);
-                addHwIdConfig.put("partNumber", partnumber);
-                addHwIdConfig.put("alu", alu);
-                addHwIdConfig.put("shelfTime", shelf);
-                addHwIdConfig.put("createdDate", formattedString);
-                addHwIdConfig.put("createdBy", userSession.getLoginId());
-                addHwIdConfig.put("flag", "1");
-
-                SPTSResponse sr = SPTSWebService.insertItemHardwareConfig(addHwIdConfig);
-
-                if (sr.getStatus()) {
-                    item = new ItemHardwareConfig();
-                    item.setSptsPkid(sr.getResponseId().toString());
-                    item.setId(queryResult.getGeneratedKey());
-                    
-                    itemdao = new ItemHardwareConfigDAO();
-                    QueryResult qr = itemdao.updateSPTSPKID_HardwareId(item);
+                String status = insertHardwareConfigIntoSPTS(queryResult.getGeneratedKey(), itemType, subType, itemId, supplier, assemblyno, revision, mfgdate, component, event, partnumber, alu, shelf, formattedString, userSession.getLoginId(), "1");
+                if (status.equals("SUCCESS")) {
+                    redirectAttrs.addFlashAttribute("success", "SPTS data created: Item Hardware Configuration ["+itemType+"] ");
+                    redirectAttrs.addFlashAttribute("success", messageSource.getMessage("admin.label.hardware.success", args, locale));
+                    return "redirect:/admin/hw";
                 } else {
-                    LinkedHashMap<String, String> itemhmap;
-                    ObjectMapper mapper = new ObjectMapper();
-                    itemhmap = mapper.readValue(addHwIdConfig.toString(), new TypeReference<LinkedHashMap<String, String>>() {});
-                    String errorMessage;
-                    if (sr.getErrorDetail().equals("")) {
-                        errorMessage = sr.getErrorCode() + " - " + sr.getErrorMessage();
-                    } else {
-                        errorMessage = sr.getErrorCode() + " - " + sr.getErrorDetail();
-                    }
-                    model.addAttribute("error", errorMessage);
-                    redirectAttrs.addFlashAttribute("error", errorMessage);
+                    model.addAttribute("error", status);
+                    redirectAttrs.addFlashAttribute("error", status);
                     return "redirect:/admin/hw/add";
                 }
-                
-                redirectAttrs.addFlashAttribute("success", messageSource.getMessage("admin.label.hardware.success", args, locale));
-                return "redirect:/admin/hw";
             } else {
                 redirectAttrs.addFlashAttribute("error", messageSource.getMessage("admin.label.hardware.error", args, locale));
                 return "redirect:/admin/hw/add";
@@ -1761,6 +1728,11 @@ public class AdminController {
     
     public String insertHardwareConfigIntoSPTS(String id, String itemType, String subType, String itemId, String supplier, String assemblyno, String revision, String mfgdate, String component, String event, String partnumber, String alu, String shelf, String datenow, String user, String flag) throws IOException {
         String status = "SUCCESS";
+        
+        LocalDateTime instance = LocalDateTime.now();
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss");
+        String dateNow = formatter.format(instance);
+        
         JSONObject addHwIdConfig = new JSONObject();
         addHwIdConfig.put("itemType", itemType);
         addHwIdConfig.put("subType", subType);
@@ -1774,7 +1746,7 @@ public class AdminController {
         addHwIdConfig.put("partNumber", partnumber);
         addHwIdConfig.put("alu", alu);
         addHwIdConfig.put("shelfTime", shelf);
-        addHwIdConfig.put("createdDate", datenow);
+        addHwIdConfig.put("createdDate", dateNow);
         addHwIdConfig.put("createdBy", user);
         addHwIdConfig.put("flag", "1");
 

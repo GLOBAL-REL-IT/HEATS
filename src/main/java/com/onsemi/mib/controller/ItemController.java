@@ -6416,8 +6416,10 @@ public class ItemController {
             @RequestParam(required = false) String partNo,
             @RequestParam(required = false) String alu,
             @RequestParam(required = false) String shelfTime,
-            @RequestParam(required = false) String runningNumber) {
+            @RequestParam(required = false) String runningNumber) throws IOException {
 
+        String hwidStatus = "Pending Verification";
+        
         ItemHardwareConfigDAO itemdao = new ItemHardwareConfigDAO();
         ItemHardwareConfig itemconfig = itemdao.getConfigItem(itemType, subType);
 
@@ -6427,7 +6429,7 @@ public class ItemController {
         ItemHardware itemhardware = new ItemHardware();
         itemhardware.setMibItemId(mibItemId);
 //        itemhardware.setSptsPkid(sptsId);
-        itemhardware.setStatus("Pending Verification");
+        itemhardware.setStatus(hwidStatus);
         itemhardware.setCreatedBy(userSession.getLoginId());
         itemhardware.setFlag("0");
 
@@ -6443,6 +6445,8 @@ public class ItemController {
                     itemhardware.setHardwareId(sameItemId);
                     dao2 = new ItemHardwareDAO();
                     QueryResult q = dao2.insertHardwareID(itemhardware);
+                    
+                    // INSERT INTO SPTS
                 } else {
                     redirectAttrs.addFlashAttribute("error", messageSource.getMessage("admin.label.hardware.create.error", args, locale));
                 }
@@ -6473,11 +6477,21 @@ public class ItemController {
 
                     for (int i = start; i <= end; i++) {
                         String larian = String.format("%03d", i);
-                        itemhardware.setHardwareId(maklumatterakhir + "-" + larian);
+                        String hardwareId = maklumatterakhir + "-" + larian;
+                        itemhardware.setHardwareId(hardwareId);
                         ItemHardwareDAO dao2 = new ItemHardwareDAO();
                         QueryResult q = dao2.insertHardwareID(itemhardware);
+                        
+                        if (q.getGeneratedKey().equals("0")) {
+                            // DO NOTHING HERE
+                            redirectAttrs.addFlashAttribute("error", messageSource.getMessage("admin.label.hardware.create.error", args, locale));
+                        } else {
+                            String idMib = q.getGeneratedKey();
+                            // INSERT INTO SPTS
+                            String status = insertItemHardwareIntoSpts(idMib, mibItemId, hardwareId, hwidStatus, userSession.getLoginId());
+                            redirectAttrs.addFlashAttribute("success", messageSource.getMessage("admin.label.hardware.create.success", args, locale));
+                        }
                     }
-                    redirectAttrs.addFlashAttribute("success", messageSource.getMessage("admin.label.hardware.create.success", args, locale));
                 } else {
                     itemdao4 = new ItemHardwareDAO();
                     String otherId = itemdao4.getOtherMibId(mibItemId, maklumatterakhir);
@@ -6497,6 +6511,51 @@ public class ItemController {
         if ("Yes".equalsIgnoreCase(flag) && value != null) {
             sj.add(value.trim());
         }
+    }
+    
+    private String insertItemHardwareIntoSpts(String id, String itempkid, String hardwareId, String hwStatus, String user) throws IOException {
+        String status = "";
+        
+        String pattern = "yyyy-MM-dd'T'HH:mm:ss";
+        LocalDateTime instance = LocalDateTime.now();
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern(pattern);
+        String dateNow = formatter.format(instance);
+        
+        Integer itemPKID = Integer.parseInt(itempkid);
+        
+        JSONObject addItemHw = new JSONObject();
+        addItemHw.put("itemPKID", itemPKID);        // int
+        addItemHw.put("hardwareID", hardwareId);
+        addItemHw.put("status", hwStatus);
+        addItemHw.put("createdBy", user);
+        addItemHw.put("createdDate", dateNow);      // datetime
+        addItemHw.put("flag", "0");
+        
+        SPTSResponse sr = SPTSWebService.insertItemHardware(addItemHw);
+        
+        if (sr.getStatus()) {
+            status = "SUCCESS";
+            ItemHardware itemhw = new ItemHardware();
+            itemhw.setSptsPkid(sr.getResponseId().toString());
+            itemhw.setId(id);
+            ItemHardwareDAO dao2 = new ItemHardwareDAO();
+            dao2.updateSPTSPKID_HardwareId(itemhw);
+        } else {
+            status = "FAILED";
+            LinkedHashMap<String, String> itemhmap;
+            ObjectMapper mapper = new ObjectMapper();
+            itemhmap = mapper.readValue(addItemHw.toString(), new TypeReference<LinkedHashMap<String, String>>() {});
+            String errorMessage;
+            if (sr.getErrorDetail().equals("")) {
+                errorMessage = sr.getErrorCode() + " - " + sr.getErrorMessage();
+                status += " - " + errorMessage;
+            } else {
+                errorMessage = sr.getErrorCode() + " - " + sr.getErrorDetail();
+                status += " - " + errorMessage;
+            }
+        }
+                
+        return status;
     }
 
 }

@@ -389,5 +389,30 @@ public class ItemHardwareDAO {
         }
         return data;
     }
+    
+    public QueryResult updateSPTSPKID_HardwareId(ItemHardware item) {
+        QueryResult queryResult = new QueryResult();
+        try {
+            PreparedStatement ps = conn.prepareStatement(
+                    "UPDATE item_hardware SET spts_pkid = ? WHERE id = ?"
+            );
+            ps.setString(1, item.getSptsPkid());
+            ps.setString(2, item.getId());
+            queryResult.setResult(ps.executeUpdate());
+            ps.close();
+        } catch (SQLException e) {
+            queryResult.setErrorMessage(e.getMessage());
+            LOGGER.error(e.getMessage());
+        } finally {
+            if (conn != null) {
+                try {
+                    conn.close();
+                } catch (SQLException e) {
+                    LOGGER.error(e.getMessage());
+                }
+            }
+        }
+        return queryResult;
+    }
 
 }
