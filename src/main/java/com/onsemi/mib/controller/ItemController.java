@@ -6432,7 +6432,7 @@ public class ItemController {
         itemhardware.setStatus(hwidStatus);
         itemhardware.setCreatedBy(userSession.getLoginId());
         itemhardware.setFlag("0");
-
+        
         // CHECK IF THE CONFIGURATION EXIST IN DATABASE OR NOT
         if (itemconfig == null || "".equals(itemconfig)) {
             redirectAttrs.addFlashAttribute("error", messageSource.getMessage("admin.label.hardware.create.error", args, locale));
@@ -6482,16 +6482,18 @@ public class ItemController {
                         ItemHardwareDAO dao2 = new ItemHardwareDAO();
                         QueryResult q = dao2.insertHardwareID(itemhardware);
                         
-                        if (q.getGeneratedKey().equals("0")) {
-                            // DO NOTHING HERE
-                            redirectAttrs.addFlashAttribute("error", messageSource.getMessage("admin.label.hardware.create.error", args, locale));
-                        } else {
-                            String idMib = q.getGeneratedKey();
-                            // INSERT INTO SPTS
-                            String status = insertItemHardwareIntoSpts(idMib, mibItemId, hardwareId, hwidStatus, userSession.getLoginId());
-                            redirectAttrs.addFlashAttribute("success", messageSource.getMessage("admin.label.hardware.create.success", args, locale));
-                        }
+                        // COMMENT SEBAB BELUM MASUK KE SPTS LAGI
+//                        if (q.getGeneratedKey().equals("0")) {
+//                            // DO NOTHING HERE
+//                            redirectAttrs.addFlashAttribute("error", messageSource.getMessage("admin.label.hardware.create.error", args, locale));
+//                        } else {
+//                            String idMib = q.getGeneratedKey();
+//                            // INSERT INTO SPTS
+//                            String status = insertItemHardwareIntoSpts(idMib, mibItemId, hardwareId, hwidStatus, userSession.getLoginId());
+//                            redirectAttrs.addFlashAttribute("success", messageSource.getMessage("admin.label.hardware.create.success", args, locale));
+//                        }
                     }
+                    redirectAttrs.addFlashAttribute("success", messageSource.getMessage("admin.label.hardware.create.success", args, locale));
                 } else {
                     itemdao4 = new ItemHardwareDAO();
                     String otherId = itemdao4.getOtherMibId(mibItemId, maklumatterakhir);
@@ -6522,9 +6524,11 @@ public class ItemController {
         String dateNow = formatter.format(instance);
         
         Integer itemPKID = Integer.parseInt(itempkid);
+        ItemDAO itemdao = new ItemDAO();
+        Integer sptsId =  Integer.parseInt(itemdao.getSptsPkIdByMibItemId(itempkid));
         
         JSONObject addItemHw = new JSONObject();
-        addItemHw.put("itemPKID", itemPKID);        // int
+        addItemHw.put("itemPKID", sptsId);        // int
         addItemHw.put("hardwareID", hardwareId);
         addItemHw.put("status", hwStatus);
         addItemHw.put("createdBy", user);

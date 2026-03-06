@@ -1141,6 +1141,30 @@ public class ItemDAO {
         return count;
     }
 
+    public String getSptsPkIdByMibItemId(String itemId) {
+        String count = null;
+        try {
+            PreparedStatement ps = conn.prepareStatement("SELECT spts_pkid FROM item WHERE id = '" + itemId + "'");
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                count = rs.getString("spts_pkid");
+            }
+            rs.close();
+            ps.close();
+        } catch (SQLException e) {
+            LOGGER.error(e.getMessage());
+        } finally {
+            if (conn != null) {
+                try {
+                    conn.close();
+                } catch (SQLException e) {
+                    LOGGER.error(e.getMessage());
+                }
+            }
+        }
+        return count;
+    }
+
     public List<Item> getItemAssemblyId(String assemblyId) {
         String sql = "SELECT DISTINCT(it.assembly_id) AS assemblyId, IF(it.assembly_id=\"" + assemblyId + "\",\"selected=''\",\"\") AS selected FROM item it WHERE it.assembly_id <> '' ORDER BY it.assembly_id ASC";
         List<Item> hardwaredetailList = new ArrayList<Item>();
