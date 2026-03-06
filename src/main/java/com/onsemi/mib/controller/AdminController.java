@@ -1662,45 +1662,12 @@ public class AdminController {
         String formattedString = formatter.format(instance);
         
         if (spts_pkid.equals("0")) {
-            JSONObject addHwIdConfig = new JSONObject();
-            addHwIdConfig.put("itemType", itemType);
-            addHwIdConfig.put("subType", subType);
-            addHwIdConfig.put("sameItemID", itemId);
-            addHwIdConfig.put("supplier", supplier);
-            addHwIdConfig.put("assemblyNo", assemblyno);
-            addHwIdConfig.put("revision", revision);
-            addHwIdConfig.put("mfgDate", mfgdate);
-            addHwIdConfig.put("component", component);
-            addHwIdConfig.put("evt", event);
-            addHwIdConfig.put("partNumber", partnumber);
-            addHwIdConfig.put("alu", alu);
-            addHwIdConfig.put("shelfTime", shelf);
-            addHwIdConfig.put("createdDate", formattedString);
-            addHwIdConfig.put("createdBy", userSession.getLoginId());
-            addHwIdConfig.put("flag", "1");
-
-            SPTSResponse sr = SPTSWebService.insertItemHardwareConfig(addHwIdConfig);
-
-            if (sr.getStatus()) {
-                ItemHardwareConfig item = new ItemHardwareConfig();
-                item.setSptsPkid(sr.getResponseId().toString());
-                item.setId(id);
-
-                itemdao = new ItemHardwareConfigDAO();
-                QueryResult qr2 = itemdao.updateSPTSPKID_HardwareId(item);
+            String status = insertHardwareConfigIntoSPTS(id, itemType, subType, itemId, supplier, assemblyno, revision, mfgdate, component, event, partnumber, alu, shelf, formattedString, userSession.getLoginId(), "1");
+            if (status.equals("SUCCESS")) {
                 redirectAttrs.addFlashAttribute("success", "SPTS data created: Item Hardware Configuration ["+itemType+"] ");
             } else {
-                LinkedHashMap<String, String> itemhmap;
-                ObjectMapper mapper = new ObjectMapper();
-                itemhmap = mapper.readValue(addHwIdConfig.toString(), new TypeReference<LinkedHashMap<String, String>>() {});
-                String errorMessage;
-                if (sr.getErrorDetail().equals("")) {
-                    errorMessage = sr.getErrorCode() + " - " + sr.getErrorMessage();
-                } else {
-                    errorMessage = sr.getErrorCode() + " - " + sr.getErrorDetail();
-                }
-                model.addAttribute("error", errorMessage);
-                redirectAttrs.addFlashAttribute("error", errorMessage);
+                model.addAttribute("error", status);
+                redirectAttrs.addFlashAttribute("error", status);
                 return "redirect:/admin/hw/add";
             }
         } else {
@@ -1717,86 +1684,23 @@ public class AdminController {
             }
             
             if (checkdata == 0) {
-                // INSERT A NEW / EXISTING DATA INTO SPTS
-                JSONObject addHwIdConfig = new JSONObject();
-                addHwIdConfig.put("itemType", itemType);
-                addHwIdConfig.put("subType", subType);
-                addHwIdConfig.put("sameItemID", itemId);
-                addHwIdConfig.put("supplier", supplier);
-                addHwIdConfig.put("assemblyNo", assemblyno);
-                addHwIdConfig.put("revision", revision);
-                addHwIdConfig.put("mfgDate", mfgdate);
-                addHwIdConfig.put("component", component);
-                addHwIdConfig.put("evt", event);
-                addHwIdConfig.put("partNumber", partnumber);
-                addHwIdConfig.put("alu", alu);
-                addHwIdConfig.put("shelfTime", shelf);
-                addHwIdConfig.put("createdDate", formattedString);
-                addHwIdConfig.put("createdBy", userSession.getLoginId());
-                addHwIdConfig.put("flag", "1");
-
-                SPTSResponse sr = SPTSWebService.insertItemHardwareConfig(addHwIdConfig);
-
-                if (sr.getStatus()) {
-                    ItemHardwareConfig item = new ItemHardwareConfig();
-                    item.setSptsPkid(sr.getResponseId().toString());
-                    item.setId(id);
-
-                    itemdao = new ItemHardwareConfigDAO();
-                    QueryResult qr2 = itemdao.updateSPTSPKID_HardwareId(item);
-                    redirectAttrs.addFlashAttribute("success", "Berjaya insert data spts yang baru dekat sini");
+//                // INSERT A NEW / EXISTING DATA INTO SPTS
+                String status = insertHardwareConfigIntoSPTS(id, itemType, subType, itemId, supplier, assemblyno, revision, mfgdate, component, event, partnumber, alu, shelf, formattedString, userSession.getLoginId(), "1");
+                if (status.equals("SUCCESS")) {
+                    redirectAttrs.addFlashAttribute("success", "SPTS data created: Item Hardware Configuration ["+itemType+"] ");
                 } else {
-                    LinkedHashMap<String, String> itemhmap;
-                    ObjectMapper mapper = new ObjectMapper();
-                    itemhmap = mapper.readValue(addHwIdConfig.toString(), new TypeReference<LinkedHashMap<String, String>>() {});
-                    String errorMessage;
-                    if (sr.getErrorDetail().equals("")) {
-                        errorMessage = sr.getErrorCode() + " - " + sr.getErrorMessage();
-                    } else {
-                        errorMessage = sr.getErrorCode() + " - " + sr.getErrorDetail();
-                    }
-                    model.addAttribute("error", errorMessage);
-                    redirectAttrs.addFlashAttribute("error", errorMessage);
+                    model.addAttribute("error", status);
+                    redirectAttrs.addFlashAttribute("error", status);
                     return "redirect:/admin/hw/add";
                 }
             } else {
                 // UPDATE SPTS DATA
-                JSONObject updateHardware = new JSONObject();
-                updateHardware.put("pkid", spts_pkid);
-                updateHardware.put("version", sptsVersion);
-                updateHardware.put("itemType", itemType);
-                updateHardware.put("subType", subType);
-                updateHardware.put("sameItemID", itemId);
-                updateHardware.put("supplier", supplier);
-                updateHardware.put("assemblyNo", assemblyno);
-                updateHardware.put("revision", revision);
-                updateHardware.put("mfgDate", mfgdate);
-                updateHardware.put("component", component);
-                updateHardware.put("evt", event);
-                updateHardware.put("partNumber", partnumber);
-                updateHardware.put("alu", alu);
-                updateHardware.put("shelfTime", shelf);
-
-                SPTSResponse sr = SPTSWebService.updateHardwareIdConfig(updateHardware);
-                if (sr.getStatus()) {
+                String status = updateHardwareConfig(id, sptsVersion, spts_pkid, itemType, subType, itemId, supplier, assemblyno, revision, mfgdate, component, event, partnumber, alu, shelf, formattedString, userSession.getLoginId(), "1");
+                if (status.equals("SUCCESS")) {
                     redirectAttrs.addFlashAttribute("success", "Hardware ID Config data successfully updated!");
                 } else {
-                    LinkedHashMap<String, String> item2;
-                    ObjectMapper mapper = new ObjectMapper();
-                    item2 = mapper.readValue(updateHardware.toString(), new TypeReference<LinkedHashMap<String, String>>() {});
-                    String errorMessage;
-                    if (sr.getErrorDetail().equals("")) {
-                        errorMessage = sr.getErrorCode() + " - " + sr.getErrorMessage();
-                    } else {
-                        errorMessage = sr.getErrorCode() + " - " + sr.getErrorDetail();
-                    }
-                    LOGGER.info("sr.getErrorCode(): " + sr.getErrorCode());
-                    LOGGER.info("sr.getErrorMessage(): " + sr.getErrorMessage());
-                    LOGGER.info("sr.getErrorDetail(): " + sr.getErrorDetail());
-                    LOGGER.info("errorMessage: " + errorMessage);
-                    LOGGER.info("^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^");
-                    model.addAttribute("error", errorMessage);
-                    redirectAttrs.addFlashAttribute("error", errorMessage);
+                    model.addAttribute("error", status);
+                    redirectAttrs.addFlashAttribute("error", status);
                 }
             }
         }
@@ -1821,6 +1725,7 @@ public class AdminController {
         String sptsId = itemdao.getSptsId(hwid);
         sptsId = SystemUtil.nullToZero(sptsId);
         
+        // MUST GET THE LATEST DATA FROM THE SPTS DATABASE FIRST
         JSONObject params = new JSONObject();
         params.put("pkid", sptsId);
         JSONArray getItemByPKID = SPTSWebService.getHardwareIdConfigByPKID(params);
@@ -1829,33 +1734,28 @@ public class AdminController {
         Integer pkid = 0;
         int checkdata = getItemByPKID.length();
         for (int i = 0; i < getItemByPKID.length(); i++) {
-            sptsVersion = getItemByPKID.getJSONObject(i).getString("Version");
-            LOGGER.info("version dia :::: "+sptsVersion);
+            sptsVersion = getItemByPKID.getJSONObject(i).getString("Version").toUpperCase();
             pkid = getItemByPKID.getJSONObject(i).getInt("PKID");
-            LOGGER.info("GET ID SPTS ::: "+pkid);
         }
         
-//        itemdao = new ItemHardwareConfigDAO();
-//        QueryResult queryResult = itemdao.deleteItemHardwareConfig(hwid);
-        LOGGER.info("hwid   >>> "+hwid);
-        LOGGER.info("sptsId >>> "+sptsId);
+        // THEN USE THAT DATA TO DO THE DELETE FUNCTION - OR ELSE CANNOT DELETE
+        itemdao = new ItemHardwareConfigDAO();
+        QueryResult queryResult = itemdao.deleteItemHardwareConfig(hwid);
         
         if (sptsId.equals("0")) {
-            // DO NOTHING
-            LOGGER.info("NO SPTS DATA TO BE DELETED");
+            // DO NOTHING - SINCE THE DATA ALREADY NON-EXIST
         } else  {
-            LOGGER.info("KITA DELETE DATA");
             JSONObject param = new JSONObject();
-            param.put("PKID", pkid);
-            param.put("Version", sptsVersion);
+            param.put("pkid", pkid);
+            param.put("version", sptsVersion);
             SPTSResponse deleteEqpt = SPTSWebService.deleteHardwareIdConfigByPKID(param);
         }
         
-//        if (queryResult.getResult() == 1) {
-//            redirectAttrs.addFlashAttribute("success", messageSource.getMessage("admin.label.hardware.delete.success", args, locale));
-//        } else {
-//            redirectAttrs.addFlashAttribute("error", messageSource.getMessage("admin.label.hardware.delete.error", args, locale));
-//        }
+        if (queryResult.getResult() == 1) {
+            redirectAttrs.addFlashAttribute("success", messageSource.getMessage("admin.label.hardware.delete.success", args, locale));
+        } else {
+            redirectAttrs.addFlashAttribute("error", messageSource.getMessage("admin.label.hardware.delete.error", args, locale));
+        }
         return "redirect:/admin/hw";
     }
     
@@ -1881,29 +1781,26 @@ public class AdminController {
         SPTSResponse sr = SPTSWebService.insertItemHardwareConfig(addHwIdConfig);
 
         if (sr.getStatus()) {
+            status = "SUCCESS";
             ItemHardwareConfig item = new ItemHardwareConfig();
             item.setSptsPkid(sr.getResponseId().toString());
             item.setId(id);
 
             ItemHardwareConfigDAO itemdao = new ItemHardwareConfigDAO();
             QueryResult qr2 = itemdao.updateSPTSPKID_HardwareId(item);
-            status = "SUCCESS";
-//            redirectAttrs.addFlashAttribute("success", "Berjaya insert data spts yang baru dekat sini");
         } else {
+            status = "FAILED";
             LinkedHashMap<String, String> itemhmap;
             ObjectMapper mapper = new ObjectMapper();
             itemhmap = mapper.readValue(addHwIdConfig.toString(), new TypeReference<LinkedHashMap<String, String>>() {});
             String errorMessage;
             if (sr.getErrorDetail().equals("")) {
                 errorMessage = sr.getErrorCode() + " - " + sr.getErrorMessage();
+                status += " - " + errorMessage;
             } else {
                 errorMessage = sr.getErrorCode() + " - " + sr.getErrorDetail();
+                status += " - " + errorMessage;
             }
-            LOGGER.info("errorMessage >>>> "+errorMessage);
-            status = "FAILED";
-//            model.addAttribute("error", errorMessage);
-//            redirectAttrs.addFlashAttribute("error", errorMessage);
-//            return "redirect:/admin/hw/add";
         }
         return status;
     }
@@ -1929,7 +1826,6 @@ public class AdminController {
         SPTSResponse sr = SPTSWebService.updateHardwareIdConfig(updateHardware);
         if (sr.getStatus()) {
             status = "SUCCESS";
-//            redirectAttrs.addFlashAttribute("success", "Hardware ID Config data successfully updated!");
         } else {
             status = "FAILED";
             LinkedHashMap<String, String> item2;
@@ -1938,16 +1834,16 @@ public class AdminController {
             String errorMessage;
             if (sr.getErrorDetail().equals("")) {
                 errorMessage = sr.getErrorCode() + " - " + sr.getErrorMessage();
+                status += " - " + errorMessage;
             } else {
                 errorMessage = sr.getErrorCode() + " - " + sr.getErrorDetail();
+                status += " - " + errorMessage;
             }
             LOGGER.info("sr.getErrorCode(): " + sr.getErrorCode());
             LOGGER.info("sr.getErrorMessage(): " + sr.getErrorMessage());
             LOGGER.info("sr.getErrorDetail(): " + sr.getErrorDetail());
             LOGGER.info("errorMessage: " + errorMessage);
             LOGGER.info("^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^");
-//            model.addAttribute("error", errorMessage);
-//            redirectAttrs.addFlashAttribute("error", errorMessage);
         }
                 
         return status;
