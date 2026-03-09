@@ -98,8 +98,6 @@
                 <nav class="navbar bg-body-tertiary">
                     <div class="container-fluid justify-content-start">
                         <c:if test="${userItemAdd == 'Yes'}"><a href="${contextPath}/admin/bibActivity/" class="btn btn-outline-success me-2" role="button">
-                                <i class='bi bi-plus-square'></i>&nbsp;&nbsp;Add New</a></c:if>
-                        <c:if test="${userItemAdd == 'Yes'}"><a href="${contextPath}/admin/bibActivity/" class="btn btn-outline-success me-2" role="button">
                                 <i class='bi bi-upload'></i>&nbsp;&nbsp;Batch Upload</a></c:if>
                         </div>
                     </nav>

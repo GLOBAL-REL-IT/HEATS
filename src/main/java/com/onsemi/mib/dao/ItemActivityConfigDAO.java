@@ -337,7 +337,7 @@ public class ItemActivityConfigDAO {
     }
 
     public ItemActivityConfig getItemActivityConfigWithItemDetail(String itemactivityConfigId) {
-        String sql = "SELECT it.item_type, it.sub_type, it.item_id, it.item_name, it.assembly_id, it.stress_type, con.* "
+        String sql = "SELECT it.item_type, it.sub_type, it.item_id, it.item_name, it.assembly_id, it.stress_type, it.spts_pkid, con.* "
                 + "FROM item_activity_config con, item it "
                 + "WHERE con.id = '" + itemactivityConfigId + "' AND it.id = con.mib_item_id "
                 + "ORDER BY it.item_id ASC";
@@ -365,6 +365,7 @@ public class ItemActivityConfigDAO {
                 itemactivityConfig.setAssemblyId(rs.getString("assembly_id"));
                 itemactivityConfig.setStressType(rs.getString("stress_type"));
                 itemactivityConfig.setWinchesterChamberLeakageTest(rs.getString("winchester_chamber_leakage_test"));
+                itemactivityConfig.setSptsPkid(rs.getString("spts_pkid"));
             }
             rs.close();
             ps.close();

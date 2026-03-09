@@ -224,8 +224,11 @@
                                             <c:if test="${not empty itemTypeTitle}"><div class="mb-3 container-fluid justify-content-start">
                                                     <c:if test="${userItemDelete == 'Yes'}"><a onclick="scrapModal();" role="button" title="Scrap" data-bs-toggle="modal" data-bs-target="#delete_modal" class="btn btn-outline-danger me-2">
                                                             <i class="bi bi-trash3" style="color:red"></i>&nbsp;&nbsp;Scrap</a></c:if>
+                                                    <c:if test="${userItemDelete == 'Yes'}"><a class="btn btn-outline-success me-2" role="button" onclick="goToActivityConfig()"><i class='bi bi-sliders2'></i>&nbsp;&nbsp;Add/Edit Activity config</a></c:if>
                                                 </div></c:if>
-                                                <!--differentiate form attribute based on item type-->
+                                            <input type="hidden" class="form-control" id="configMibItemId" name="configMibItemId" value="${item.configMibItemId}" readonly> <!--for activity config button -->
+                                            <input type="hidden" class="form-control" id="activityConfigId" name="activityConfigId" value="${item.activityConfigId}" readonly> <!--for activity config button -->
+                                            <!--differentiate form attribute based on item type-->
                                             <c:set var="String" value="${itemTypeTitle}"/>
                                             <c:choose>
                                                 <c:when test="${(fn:contains(String, 'BIB')) || (fn:contains(String, 'DRIVER BOARD'))}">
@@ -246,12 +249,12 @@
                                                                 <input type="hidden" class="form-control" id="itemPKID" name="itemPKID" placeholder="" value="${item.sptsPkid}" readonly>
                                                                 <input type="hidden" class="form-control" id="mibId" name="mibId" placeholder="" value="${item.id}" readonly>
                                                                 <select class="js-example-tags" id="subType" name="subType"
-                                                                            style="width: 100%" readonly>
-                                                                        <option></option>
-                                                                        <c:forEach items="${listSubType}" var="invInner">
-                                                                            <option value="${invInner.subType}">${invInner.subType}</option>
-                                                                        </c:forEach>
-                                                                    </select>
+                                                                        style="width: 100%" readonly>
+                                                                    <option></option>
+                                                                    <c:forEach items="${listSubType}" var="invInner">
+                                                                        <option value="${invInner.subType}">${invInner.subType}</option>
+                                                                    </c:forEach>
+                                                                </select>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -652,12 +655,12 @@
                                                                 <input type="hidden" class="form-control" id="itemPKID" name="itemPKID" placeholder="" value="${item.sptsPkid}" readonly>
                                                                 <input type="hidden" class="form-control" id="mibId" name="mibId" placeholder="" value="${item.id}" readonly>
                                                                 <select class="js-example-tags" id="subType" name="subType"
-                                                                            style="width: 100%" readonly>
-                                                                        <option></option>
-                                                                        <c:forEach items="${listSubType}" var="invInner">
-                                                                            <option value="${invInner.subType}">${invInner.subType}</option>
-                                                                        </c:forEach>
-                                                                    </select>
+                                                                        style="width: 100%" readonly>
+                                                                    <option></option>
+                                                                    <c:forEach items="${listSubType}" var="invInner">
+                                                                        <option value="${invInner.subType}">${invInner.subType}</option>
+                                                                    </c:forEach>
+                                                                </select>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -1061,12 +1064,12 @@
                                                                 <input type="hidden" class="form-control" id="itemPKID" name="itemPKID" placeholder="" value="${item.sptsPkid}" readonly>
                                                                 <input type="hidden" class="form-control" id="mibId" name="mibId" placeholder="" value="${item.id}" readonly>
                                                                 <select class="js-example-tags" id="subType" name="subType"
-                                                                            style="width: 100%" readonly>
-                                                                        <option></option>
-                                                                        <c:forEach items="${listSubType}" var="invInner">
-                                                                            <option value="${invInner.subType}">${invInner.subType}</option>
-                                                                        </c:forEach>
-                                                                    </select>
+                                                                        style="width: 100%" readonly>
+                                                                    <option></option>
+                                                                    <c:forEach items="${listSubType}" var="invInner">
+                                                                        <option value="${invInner.subType}">${invInner.subType}</option>
+                                                                    </c:forEach>
+                                                                </select>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -1472,12 +1475,12 @@
                                                                 <input type="hidden" class="form-control" id="itemPKID" name="itemPKID" placeholder="" value="${item.sptsPkid}" readonly>
                                                                 <input type="hidden" class="form-control" id="mibId" name="mibId" placeholder="" value="${item.id}" readonly>
                                                                 <select class="js-example-tags" id="subType" name="subType"
-                                                                            style="width: 100%" readonly>
-                                                                        <option></option>
-                                                                        <c:forEach items="${listSubType}" var="invInner">
-                                                                            <option value="${invInner.subType}">${invInner.subType}</option>
-                                                                        </c:forEach>
-                                                                    </select>
+                                                                        style="width: 100%" readonly>
+                                                                    <option></option>
+                                                                    <c:forEach items="${listSubType}" var="invInner">
+                                                                        <option value="${invInner.subType}">${invInner.subType}</option>
+                                                                    </c:forEach>
+                                                                </select>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -1883,12 +1886,12 @@
                                                                 <input type="hidden" class="form-control" id="itemPKID" name="itemPKID" placeholder="" value="${item.sptsPkid}" readonly>
                                                                 <input type="hidden" class="form-control" id="mibId" name="mibId" placeholder="" value="${item.id}" readonly>
                                                                 <select class="js-example-tags" id="subType" name="subType"
-                                                                            style="width: 100%" readonly>
-                                                                        <option></option>
-                                                                        <c:forEach items="${listSubType}" var="invInner">
-                                                                            <option value="${invInner.subType}">${invInner.subType}</option>
-                                                                        </c:forEach>
-                                                                    </select>
+                                                                        style="width: 100%" readonly>
+                                                                    <option></option>
+                                                                    <c:forEach items="${listSubType}" var="invInner">
+                                                                        <option value="${invInner.subType}">${invInner.subType}</option>
+                                                                    </c:forEach>
+                                                                </select>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -2280,12 +2283,12 @@
                                                                 <input type="hidden" class="form-control" id="itemPKID" name="itemPKID" placeholder="" value="${item.sptsPkid}" readonly>
                                                                 <input type="hidden" class="form-control" id="mibId" name="mibId" placeholder="" value="${item.id}" readonly>
                                                                 <select class="js-example-tags" id="subType" name="subType"
-                                                                            style="width: 100%" readonly>
-                                                                        <option></option>
-                                                                        <c:forEach items="${listSubType}" var="invInner">
-                                                                            <option value="${invInner.subType}">${invInner.subType}</option>
-                                                                        </c:forEach>
-                                                                    </select>
+                                                                        style="width: 100%" readonly>
+                                                                    <option></option>
+                                                                    <c:forEach items="${listSubType}" var="invInner">
+                                                                        <option value="${invInner.subType}">${invInner.subType}</option>
+                                                                    </c:forEach>
+                                                                </select>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -2677,12 +2680,12 @@
                                                                 <input type="hidden" class="form-control" id="itemPKID" name="itemPKID" placeholder="" value="${item.sptsPkid}" readonly>
                                                                 <input type="hidden" class="form-control" id="mibId" name="mibId" placeholder="" value="${item.id}" readonly>
                                                                 <select class="js-example-tags" id="subType" name="subType"
-                                                                            style="width: 100%" readonly>
-                                                                        <option></option>
-                                                                        <c:forEach items="${listSubType}" var="invInner">
-                                                                            <option value="${invInner.subType}">${invInner.subType}</option>
-                                                                        </c:forEach>
-                                                                    </select>
+                                                                        style="width: 100%" readonly>
+                                                                    <option></option>
+                                                                    <c:forEach items="${listSubType}" var="invInner">
+                                                                        <option value="${invInner.subType}">${invInner.subType}</option>
+                                                                    </c:forEach>
+                                                                </select>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -3086,12 +3089,12 @@
                                                                 <input type="hidden" class="form-control" id="itemPKID" name="itemPKID" placeholder="" value="${item.sptsPkid}" readonly>
                                                                 <input type="hidden" class="form-control" id="mibId" name="mibId" placeholder="" value="${item.id}" readonly>
                                                                 <select class="js-example-tags" id="subType" name="subType"
-                                                                            style="width: 100%" readonly>
-                                                                        <option></option>
-                                                                        <c:forEach items="${listSubType}" var="invInner">
-                                                                            <option value="${invInner.subType}">${invInner.subType}</option>
-                                                                        </c:forEach>
-                                                                    </select>
+                                                                        style="width: 100%" readonly>
+                                                                    <option></option>
+                                                                    <c:forEach items="${listSubType}" var="invInner">
+                                                                        <option value="${invInner.subType}">${invInner.subType}</option>
+                                                                    </c:forEach>
+                                                                </select>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -3456,15 +3459,15 @@
                                                     <div class="d-flex justify-content-end gap-2">
                                                     </div>
                                                     <!-- Form actions end -->
-                                                <!--</form>-->
-                                                <!--form disable 5/3/26-->
-                                                <!-- Card end -->
-                                            </c:when>
-                                            <c:otherwise>
-                                                <!-- Card start -->
-                                                <!--<div class="card mb-4">-->
-                                                <!--<div class="card-body">-->
-                                                <!--<form class="row gx-3 " role="form" action="${contextPath}/hw/item/update" method="post">-->
+                                                    <!--</form>-->
+                                                    <!--form disable 5/3/26-->
+                                                    <!-- Card end -->
+                                                </c:when>
+                                                <c:otherwise>
+                                                    <!-- Card start -->
+                                                    <!--<div class="card mb-4">-->
+                                                    <!--<div class="card-body">-->
+                                                    <!--<form class="row gx-3 " role="form" action="${contextPath}/hw/item/update" method="post">-->
                                                     <!-- Row start -->
                                                     <div class="form-group required col-xl-2 col-sm-12 col-12">
                                                         <div class="mb-3">
@@ -3487,12 +3490,12 @@
                                                                 <input type="hidden" class="form-control" id="itemPKID" name="itemPKID" placeholder="" value="${item.sptsPkid}" readonly>
                                                                 <input type="hidden" class="form-control" id="mibId" name="mibId" placeholder="" value="${item.id}" readonly>
                                                                 <select class="js-example-tags" id="subType" name="subType"
-                                                                            style="width: 100%" readonly>
-                                                                        <option></option>
-                                                                        <c:forEach items="${listSubType}" var="invInner">
-                                                                            <option value="${invInner.subType}">${invInner.subType}</option>
-                                                                        </c:forEach>
-                                                                    </select>
+                                                                        style="width: 100%" readonly>
+                                                                    <option></option>
+                                                                    <c:forEach items="${listSubType}" var="invInner">
+                                                                        <option value="${invInner.subType}">${invInner.subType}</option>
+                                                                    </c:forEach>
+                                                                </select>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -3871,20 +3874,20 @@
                                                     <!--                                                        <button type="submit" class="btn btn-primary">Update</button>-->
                                                     <!--</div>-->
                                                     <!-- Form actions end -->
-                                                <!--</form>-->  
-                                                <!--disable 5/3/26-->
-                                                <!--</div>-->
-                                                <!--</div>-->
-                                                <!-- Card end -->
-                                            </c:otherwise>
-                                        </c:choose>
-                                        <!--end of differentiate form attribute based on item type-->
-                                        <!-- Form actions start -->
-                                        <div class="d-flex justify-content-end gap-2">
-                                            <!--<button type="button" class="btn btn-light">Cancel</button>-->
-                                            <c:if test="${userItemEdit == 'Yes'}"><button type="submit" class="btn btn-primary">Update</button></c:if>
-                                            </div>
-                                            <!-- Form actions end -->
+                                                    <!--</form>-->  
+                                                    <!--disable 5/3/26-->
+                                                    <!--</div>-->
+                                                    <!--</div>-->
+                                                    <!-- Card end -->
+                                                </c:otherwise>
+                                            </c:choose>
+                                            <!--end of differentiate form attribute based on item type-->
+                                            <!-- Form actions start -->
+                                            <div class="d-flex justify-content-end gap-2">
+                                                <!--<button type="button" class="btn btn-light">Cancel</button>-->
+                                                <c:if test="${userItemEdit == 'Yes'}"><button type="submit" class="btn btn-primary">Update</button></c:if>
+                                                </div>
+                                                <!-- Form actions end -->
                                             </form>
                                         </div> 
                                         <!--end div for 1st tab-->
@@ -4021,14 +4024,14 @@
     </div>
 </s:layout-component>
 <s:layout-component name="page_js">
-    
-     <!-- Date Range JS -->
+
+    <!-- Date Range JS -->
 <!--    <script src="${contextPath}/resources/statflow/vendor/daterange/daterange.js"></script>
-    <script src="${contextPath}/resources/statflow/vendor/daterange/custom-daterange.js"></script>-->
-    
+   <script src="${contextPath}/resources/statflow/vendor/daterange/custom-daterange.js"></script>-->
+
 <!--    <script src="${contextPath}/resources/vendor/DataTables/customitem/jquery-3.7.1.min.js"></script>
-    <script src="${contextPath}/resources/vendor/DataTables/customitem/bootstrap.bundle.min.js"></script>
-    <script src="${contextPath}/resources/vendor/DataTables/customitem/dataTables.js"></script>-->
+<script src="${contextPath}/resources/vendor/DataTables/customitem/bootstrap.bundle.min.js"></script>
+<script src="${contextPath}/resources/vendor/DataTables/customitem/dataTables.js"></script>-->
 
     <!-- Data Tables -->
     <script src="${contextPath}/resources/statflow/vendor/datatables/dataTables.min.js"></script>
@@ -4192,6 +4195,22 @@
                                                             alert("No Item Selected.")
                                                         }
                                                     }
+                                                    
+                                                    function goToActivityConfig() {
+                                                        if ($("#itemPKID").val()) {
+                                                            if ($("#configMibItemId").val()) { 
+                                                                var activityConfigId = $("#activityConfigId").val();
+                                                                var Url = "${contextPath}/admin/bibActivity/edit2/" + activityConfigId;
+                                                                window.location.href = Url;
+                                                            } else {
+                                                                 var mibItemId = $("#mibId").val();
+                                                                var Url = "${contextPath}/admin/bibActivity/add/" + mibItemId;
+                                                                window.location.href = Url;
+                                                            }
+                                                        } else {
+                                                            alert("No Item Selected.")
+                                                        }
+                                                    }
 
                                                     $(function () {
                                                         $("#scrollVertical2").DataTable({
@@ -4278,6 +4297,7 @@
                                                                 $("#remarks").val(data.remarks);
                                                                 $("#itemUsage").val(data.itemUsage);
                                                                 $("#hwconfig").val(data.activityId);
+                                                                $("#configMibItemId").val(data.configMibItemId);
                                                                 $("#stressType").val(data.stressType).trigger('change');
 
 //                                                                     const data001 = data.assemblyId;

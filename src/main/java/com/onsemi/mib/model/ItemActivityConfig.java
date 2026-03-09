@@ -20,6 +20,7 @@ public class ItemActivityConfig {
     private String itemName;
     private String assemblyId;
     private String stressType;
+    private String sptsPkid;
 
     private String winchesterChamberLeakageTest;
 
@@ -165,6 +166,14 @@ public class ItemActivityConfig {
 
     public void setFlag(String flag) {
         this.flag = flag;
+    }
+
+    public String getSptsPkid() {
+        return sptsPkid;
+    }
+
+    public void setSptsPkid(String sptsPkid) {
+        this.sptsPkid = sptsPkid;
     }
 
 }

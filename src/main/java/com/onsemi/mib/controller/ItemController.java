@@ -204,7 +204,8 @@ public class ItemController {
 
         ItemDAO itemD = new ItemDAO();
 //        Item item = itemD.getHardwareDetailByPkid(itemPkid);
-        Item item = itemD.getHardwareByPkid(itemPkid);
+//        Item item = itemD.getHardwareByPkid(itemPkid);
+        Item item = itemD.getHardwareByPkidLeftJoinWithActivityConfig(itemPkid);
         LOGGER.info("item ExpiredDate: " + item.getExpirationDate());
         model.addAttribute("item", item);
 
@@ -887,7 +888,8 @@ public class ItemController {
         //set to model
         ItemDAO hwD = new ItemDAO();
 //        Item hw = hwD.getHardwareDetailByPkid(pkID);
-        Item hw = hwD.getHardwareByPkid(pkID);
+//        Item hw = hwD.getHardwareByPkid(pkID);
+        Item hw = hwD.getHardwareByPkidLeftJoinWithActivityConfig(pkID);
 
         //add transaction to DB
         JSONObject params2 = new JSONObject();
@@ -6448,7 +6450,7 @@ public class ItemController {
         itemhardware.setStatus(hwidStatus);
         itemhardware.setCreatedBy(userSession.getLoginId());
         itemhardware.setFlag("0");
-        
+
         // CHECK IF THE CONFIGURATION EXIST IN DATABASE OR NOT
         if (itemconfig == null || "".equals(itemconfig)) {
             redirectAttrs.addFlashAttribute("error", messageSource.getMessage("admin.label.hardware.create.error", args, locale));
@@ -6540,8 +6542,8 @@ public class ItemController {
 
         Integer itemPKID = Integer.parseInt(itempkid);
         ItemDAO itemdao = new ItemDAO();
-        Integer sptsId =  Integer.parseInt(itemdao.getSptsPkIdByMibItemId(itempkid));
-        
+        Integer sptsId = Integer.parseInt(itemdao.getSptsPkIdByMibItemId(itempkid));
+
         JSONObject addItemHw = new JSONObject();
         addItemHw.put("itemPKID", sptsId);        // int
         addItemHw.put("hardwareID", hardwareId);

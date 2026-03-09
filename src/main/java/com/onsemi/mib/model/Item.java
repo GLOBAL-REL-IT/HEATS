@@ -63,9 +63,12 @@ public class Item {
     private String selected;
 
     private String vmId;
-    
-    public Item() { }
-    
+    private String configMibItemId;
+    private String activityConfigId;
+
+    public Item() {
+    }
+
     public Item(String subType, String selected) {
         this.subType = subType;
         this.selected = selected;
@@ -74,7 +77,7 @@ public class Item {
     public String getVmId() {
         return vmId;
     }
-    
+
     public void setVmId(String vmId) {
         this.vmId = vmId;
     }
@@ -541,6 +544,22 @@ public class Item {
 
     public void setModifiedDate(String modifiedDate) {
         this.modifiedDate = modifiedDate;
+    }
+
+    public String getConfigMibItemId() {
+        return configMibItemId;
+    }
+
+    public void setConfigMibItemId(String configMibItemId) {
+        this.configMibItemId = configMibItemId;
+    }
+
+    public String getActivityConfigId() {
+        return activityConfigId;
+    }
+
+    public void setActivityConfigId(String activityConfigId) {
+        this.activityConfigId = activityConfigId;
     }
 
 }
