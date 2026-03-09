@@ -224,7 +224,11 @@
                                             <c:if test="${not empty itemTypeTitle}"><div class="mb-3 container-fluid justify-content-start">
                                                     <c:if test="${userItemDelete == 'Yes'}"><a onclick="scrapModal();" role="button" title="Scrap" data-bs-toggle="modal" data-bs-target="#delete_modal" class="btn btn-outline-danger me-2">
                                                             <i class="bi bi-trash3" style="color:red"></i>&nbsp;&nbsp;Scrap</a></c:if>
-                                                    <c:if test="${userItemDelete == 'Yes'}"><a class="btn btn-outline-success me-2" role="button" onclick="goToActivityConfig()"><i class='bi bi-sliders2'></i>&nbsp;&nbsp;Add/Edit Activity config</a></c:if>
+                                                    <c:if test="${itemTypeForBib == 'BIB' || itemTypeForBib == 'BIB Card'}">
+                                                        <c:if test="${userItemActConfig == 'Yes'}">
+                                                           <a class="btn btn-outline-success me-2" role="button" onclick="goToActivityConfig()"><i class='bi bi-sliders2'></i>&nbsp;&nbsp;Add/Edit Activity config</a> 
+                                                        </c:if>
+                                                    </c:if>
                                                 </div></c:if>
                                             <input type="hidden" class="form-control" id="configMibItemId" name="configMibItemId" value="${item.configMibItemId}" readonly> <!--for activity config button -->
                                             <input type="hidden" class="form-control" id="activityConfigId" name="activityConfigId" value="${item.activityConfigId}" readonly> <!--for activity config button -->

@@ -256,7 +256,7 @@
                                 </div>
                                 <!-- Form actions start -->
                                 <div class="col-md-12">
-                                    <button type="submit" id="submit" id="submit" class="btn btn-primary float-end">Save</button>
+                                    <button type="submit" id="submit" id="submit" class="btn btn-primary float-end" <c:if test="${uac.itemActivityAdd ne 'Yes'}">disabled</c:if>>Save</button>
                                     <a href="${contextPath}/hw/${item.sptsPkid}" class="btn btn-dark float-start">Back</a>
                                 </div>
                             </form>

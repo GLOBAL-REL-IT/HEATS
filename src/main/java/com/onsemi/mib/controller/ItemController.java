@@ -131,6 +131,7 @@ public class ItemController {
             itemTypeTitle = " (" + itemType + ")";
         }
         model.addAttribute("itemTypeTitle", itemTypeTitle);
+        model.addAttribute("itemTypeForBib", itemType);
 
         ParameterDetailsDAO pD = new ParameterDetailsDAO();
         List<ParameterDetails> paramItemUsage = pD.getGroupParameterDetailList("", "001");
@@ -222,6 +223,7 @@ public class ItemController {
             itemTypeTitle = " (" + itemType + ")";
         }
         model.addAttribute("itemTypeTitle", itemTypeTitle);
+        model.addAttribute("itemTypeForBib", itemType);
 
         ParameterDetailsDAO pD = new ParameterDetailsDAO();
         List<ParameterDetails> paramItemUsage = pD.getGroupParameterDetailList(item.getItemUsage(), "001");
@@ -6652,44 +6654,44 @@ public class ItemController {
             for (ItemHardware hw : item2) {
                 if (hw.getHardwareId() != null && hw.getHardwareId().equals(currentHwId)) {
                     String hehe = "<div class=\"d-flex align-items-center justify-content-between mb-3\">"
-                    + "<div class=\"d-flex align-items-center\">"
-                    + "<div class=\"icon-box sm rounded-circle bg-info me-4\">"
-                    + "<i class=\"bi bi-bookmark-check\"></i>"
-                    + "</div>"
-                    + "<div>"
-                    + "<h6 class=\"mb-0 fw-bold\">"+hw.getHardwareId()+"</h6>"
-                    + "</div>"
-                    + "</div>"
-                    + "<span class=\"badge bg-info\">"+hw.getStatus()+"</span>"
-                    + "</div>";
+                            + "<div class=\"d-flex align-items-center\">"
+                            + "<div class=\"icon-box sm rounded-circle bg-info me-4\">"
+                            + "<i class=\"bi bi-bookmark-check\"></i>"
+                            + "</div>"
+                            + "<div>"
+                            + "<h6 class=\"mb-0 fw-bold\">" + hw.getHardwareId() + "</h6>"
+                            + "</div>"
+                            + "</div>"
+                            + "<span class=\"badge bg-info\">" + hw.getStatus() + "</span>"
+                            + "</div>";
                     data.append(hehe);
                 } // 2. Check if status is Available
                 else if ("Available".equalsIgnoreCase(hw.getStatus())) {
                     String hehe = "<div class=\"d-flex align-items-center justify-content-between mb-3\">"
-                    + "<div class=\"d-flex align-items-center\">"
-                    + "<div class=\"icon-box sm rounded-circle bg-info me-3\">"
-                    + "<i class=\"bi bi-bookmark-check\"></i>"
-                    + "</div>"
-                    + "<div>"
-                    + "<h6 class=\"mb-0 fw-semibold\">"+hw.getHardwareId()+"</h6>"
-                    + "</div>"
-                    + "</div>"
-                    + "<span class=\"badge bg-success\">"+hw.getStatus()+"</span>"
-                    + "</div>";
+                            + "<div class=\"d-flex align-items-center\">"
+                            + "<div class=\"icon-box sm rounded-circle bg-info me-3\">"
+                            + "<i class=\"bi bi-bookmark-check\"></i>"
+                            + "</div>"
+                            + "<div>"
+                            + "<h6 class=\"mb-0 fw-semibold\">" + hw.getHardwareId() + "</h6>"
+                            + "</div>"
+                            + "</div>"
+                            + "<span class=\"badge bg-success\">" + hw.getStatus() + "</span>"
+                            + "</div>";
                     data.append(hehe);
                 } // 3. Fallback
                 else {
                     String hehe = "<div class=\"d-flex align-items-center justify-content-between mb-3\">"
-                    + "<div class=\"d-flex align-items-center\">"
-                    + "<div class=\"icon-box sm rounded-circle bg-secondary me-3\">"
-                    + "<i class=\"bi bi-bookmark\"></i>"
-                    + "</div>"
-                    + "<div>"
-                    + "<h6 class=\"mb-0 fw-semibold\">"+hw.getHardwareId()+"</h6>"
-                    + "</div>"
-                    + "</div>"
-                    + "<span class=\"badge bg-secondary\">"+hw.getStatus()+"</span>"
-                    + "</div>";
+                            + "<div class=\"d-flex align-items-center\">"
+                            + "<div class=\"icon-box sm rounded-circle bg-secondary me-3\">"
+                            + "<i class=\"bi bi-bookmark\"></i>"
+                            + "</div>"
+                            + "<div>"
+                            + "<h6 class=\"mb-0 fw-semibold\">" + hw.getHardwareId() + "</h6>"
+                            + "</div>"
+                            + "</div>"
+                            + "<span class=\"badge bg-secondary\">" + hw.getStatus() + "</span>"
+                            + "</div>";
                     data.append(hehe);
                 }
             }

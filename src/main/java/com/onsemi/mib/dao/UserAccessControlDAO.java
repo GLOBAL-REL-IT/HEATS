@@ -219,6 +219,129 @@ public class UserAccessControlDAO {
                 useraccessControl.setItemHardwareDelete(rs.getString("item_hardware_delete"));
                 useraccessControl.setItemMovementAdd(rs.getString("item_movement_add"));
                 useraccessControl.setItemSfRecall(rs.getString("item_sf_recall"));
+                useraccessControl.setEqptAdd(rs.getString("eqpt_add"));
+                useraccessControl.setEqptEdit(rs.getString("eqpt_edit"));
+                useraccessControl.setEqptDelete(rs.getString("eqpt_delete"));
+                useraccessControl.setEqptFamilyAdd(rs.getString("eqpt_family_add"));
+                useraccessControl.setEqptFamilyDelete(rs.getString("eqpt_family_delete"));
+                useraccessControl.setEqptRelTestGroupAdd(rs.getString("eqpt_rel_test_group_add"));
+                useraccessControl.setEqptRelTestGroupDelete(rs.getString("eqpt_rel__test_group_delete"));
+                useraccessControl.setEqptTechAdd(rs.getString("eqpt_tech_add"));
+                useraccessControl.setEqptTechDelete(rs.getString("eqpt_tech_delete"));
+                useraccessControl.setEqptMonAdd(rs.getString("eqpt_mon_add"));
+                useraccessControl.setEqptMonDelete(rs.getString("eqpt_mon_delete"));
+                useraccessControl.setEqptViMonAdd(rs.getString("eqpt_vi_mon_add"));
+                useraccessControl.setEqptViMonDelete(rs.getString("eqpt_vi_mon_delete"));
+                useraccessControl.setEqptFamilyAddGlobal(rs.getString("eqpt_family_add_global"));
+                useraccessControl.setEqptRelTestGroupAddGlobal(rs.getString("eqpt_rel_test_group_add_global"));
+            }
+            rs.close();
+            ps.close();
+        } catch (SQLException e) {
+            LOGGER.error(e.getMessage());
+        } finally {
+            if (conn != null) {
+                try {
+                    conn.close();
+                } catch (SQLException e) {
+                    LOGGER.error(e.getMessage());
+                }
+            }
+        }
+        return useraccessControl;
+    }
+
+    public UserAccessControl getUserAccessControlByUserId(String userId) {
+        String sql = "SELECT * FROM user_access_control WHERE user_id = '" + userId + "'";
+        UserAccessControl useraccessControl = null;
+        try {
+            PreparedStatement ps = conn.prepareStatement(sql);
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                useraccessControl = new UserAccessControl();
+                useraccessControl.setId(rs.getString("id"));
+                useraccessControl.setUserId(rs.getString("user_id"));
+                useraccessControl.setItemAdd(rs.getString("item_add"));
+                useraccessControl.setItemEdit(rs.getString("item_edit"));
+                useraccessControl.setItemDelete(rs.getString("item_delete"));
+                useraccessControl.setItemActivityConfig(rs.getString("item_activity_config"));
+                useraccessControl.setItemActivityAdd(rs.getString("item_activity_add"));
+                useraccessControl.setItemActivityEdit(rs.getString("item_activity_edit"));
+                useraccessControl.setItemHardwareAdd(rs.getString("item_hardware_add"));
+                useraccessControl.setItemHardwareEdit(rs.getString("item_hardware_edit"));
+                useraccessControl.setItemHardwareDelete(rs.getString("item_hardware_delete"));
+                useraccessControl.setItemMovementAdd(rs.getString("item_movement_add"));
+                useraccessControl.setItemSfRecall(rs.getString("item_sf_recall"));
+                useraccessControl.setEqptAdd(rs.getString("eqpt_add"));
+                useraccessControl.setEqptEdit(rs.getString("eqpt_edit"));
+                useraccessControl.setEqptDelete(rs.getString("eqpt_delete"));
+                useraccessControl.setEqptFamilyAdd(rs.getString("eqpt_family_add"));
+                useraccessControl.setEqptFamilyDelete(rs.getString("eqpt_family_delete"));
+                useraccessControl.setEqptRelTestGroupAdd(rs.getString("eqpt_rel_test_group_add"));
+                useraccessControl.setEqptRelTestGroupDelete(rs.getString("eqpt_rel__test_group_delete"));
+                useraccessControl.setEqptTechAdd(rs.getString("eqpt_tech_add"));
+                useraccessControl.setEqptTechDelete(rs.getString("eqpt_tech_delete"));
+                useraccessControl.setEqptMonAdd(rs.getString("eqpt_mon_add"));
+                useraccessControl.setEqptMonDelete(rs.getString("eqpt_mon_delete"));
+                useraccessControl.setEqptViMonAdd(rs.getString("eqpt_vi_mon_add"));
+                useraccessControl.setEqptViMonDelete(rs.getString("eqpt_vi_mon_delete"));
+                useraccessControl.setEqptFamilyAddGlobal(rs.getString("eqpt_family_add_global"));
+                useraccessControl.setEqptRelTestGroupAddGlobal(rs.getString("eqpt_rel_test_group_add_global"));
+            }
+            rs.close();
+            ps.close();
+        } catch (SQLException e) {
+            LOGGER.error(e.getMessage());
+        } finally {
+            if (conn != null) {
+                try {
+                    conn.close();
+                } catch (SQLException e) {
+                    LOGGER.error(e.getMessage());
+                }
+            }
+        }
+        return useraccessControl;
+    }
+
+    public UserAccessControl getUserAccessControlByLoginId(String loginId) {
+        String sql = "SELECT u.*, l.login_id FROM user_ldap l "
+                + "LEFT JOIN user_access_control u ON l.id = u.user_id "
+                + "WHERE l.login_id = '" + loginId + "'";
+        UserAccessControl useraccessControl = null;
+        try {
+            PreparedStatement ps = conn.prepareStatement(sql);
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                useraccessControl = new UserAccessControl();
+                useraccessControl.setId(rs.getString("id"));
+                useraccessControl.setUserId(rs.getString("user_id"));
+                useraccessControl.setItemAdd(rs.getString("item_add"));
+                useraccessControl.setItemEdit(rs.getString("item_edit"));
+                useraccessControl.setItemDelete(rs.getString("item_delete"));
+                useraccessControl.setItemActivityConfig(rs.getString("item_activity_config"));
+                useraccessControl.setItemActivityAdd(rs.getString("item_activity_add"));
+                useraccessControl.setItemActivityEdit(rs.getString("item_activity_edit"));
+                useraccessControl.setItemHardwareAdd(rs.getString("item_hardware_add"));
+                useraccessControl.setItemHardwareEdit(rs.getString("item_hardware_edit"));
+                useraccessControl.setItemHardwareDelete(rs.getString("item_hardware_delete"));
+                useraccessControl.setItemMovementAdd(rs.getString("item_movement_add"));
+                useraccessControl.setItemSfRecall(rs.getString("item_sf_recall"));
+                useraccessControl.setEqptAdd(rs.getString("eqpt_add"));
+                useraccessControl.setEqptEdit(rs.getString("eqpt_edit"));
+                useraccessControl.setEqptDelete(rs.getString("eqpt_delete"));
+                useraccessControl.setEqptFamilyAdd(rs.getString("eqpt_family_add"));
+                useraccessControl.setEqptFamilyDelete(rs.getString("eqpt_family_delete"));
+                useraccessControl.setEqptRelTestGroupAdd(rs.getString("eqpt_rel_test_group_add"));
+                useraccessControl.setEqptRelTestGroupDelete(rs.getString("eqpt_rel__test_group_delete"));
+                useraccessControl.setEqptTechAdd(rs.getString("eqpt_tech_add"));
+                useraccessControl.setEqptTechDelete(rs.getString("eqpt_tech_delete"));
+                useraccessControl.setEqptMonAdd(rs.getString("eqpt_mon_add"));
+                useraccessControl.setEqptMonDelete(rs.getString("eqpt_mon_delete"));
+                useraccessControl.setEqptViMonAdd(rs.getString("eqpt_vi_mon_add"));
+                useraccessControl.setEqptViMonDelete(rs.getString("eqpt_vi_mon_delete"));
+                useraccessControl.setEqptFamilyAddGlobal(rs.getString("eqpt_family_add_global"));
+                useraccessControl.setEqptRelTestGroupAddGlobal(rs.getString("eqpt_rel_test_group_add_global"));
             }
             rs.close();
             ps.close();

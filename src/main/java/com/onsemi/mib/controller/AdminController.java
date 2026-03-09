@@ -1232,6 +1232,10 @@ public class AdminController {
             @ModelAttribute UserSession userSession,
             @PathVariable("mibId") String mibId) {
 
+        UserAccessControlDAO uacD = new UserAccessControlDAO();
+        UserAccessControl uac = uacD.getUserAccessControlByLoginId(userSession.getLoginId());
+        model.addAttribute("uac", uac);
+
         String dut = "";
 
         ItemDAO itemD = new ItemDAO();
@@ -1314,6 +1318,10 @@ public class AdminController {
             @ModelAttribute UserSession userSession,
             @PathVariable("id") String id) {
 
+        UserAccessControlDAO uacD = new UserAccessControlDAO();
+        UserAccessControl uac = uacD.getUserAccessControlByLoginId(userSession.getLoginId());
+        model.addAttribute("uac", uac);
+
         ItemActivityConfigDAO itemD = new ItemActivityConfigDAO();
         ItemActivityConfig item = itemD.getItemActivityConfigWithItemDetail(id);
         model.addAttribute("item", item);
@@ -1332,7 +1340,7 @@ public class AdminController {
                 String mibItemId = itemactdao.getItemIdByConfigId(id);
                 ManualTestDAO itemB = new ManualTestDAO();
                 List<ManualTest> itemB2 = itemB.getAllComponentConfig(mibItemId);
-                
+
                 model.addAttribute("dut", itemA2.getDut());
                 model.addAttribute("listData", itemB2);
             }
@@ -1355,6 +1363,11 @@ public class AdminController {
             Model model,
             @ModelAttribute UserSession userSession,
             @PathVariable("id") String id) {
+
+
+        UserAccessControlDAO uacD = new UserAccessControlDAO();
+        UserAccessControl uac = uacD.getUserAccessControlByLoginId(userSession.getLoginId());
+        model.addAttribute("uac", uac);
 
         ItemActivityConfigDAO itemD = new ItemActivityConfigDAO();
         ItemActivityConfig item = itemD.getItemActivityConfigWithItemDetail(id);
