@@ -138,7 +138,7 @@ public class AdminController {
     public String userAdd(
             Model model,
             @RequestParam(required = false) String loginId) {
-        
+
         List<LDAPUser> ldapUserList = new ArrayList<LDAPUser>();
 
         if (loginId != null) {
@@ -271,7 +271,7 @@ public class AdminController {
             @RequestParam(required = false) String userLdapId,
             @RequestParam(required = false) String radioSrRetrieveEmail,
             @RequestParam(required = false) String radioSrScrapEmail) {
-        
+
         LDAPUser user = new LDAPUser();
         user.setId(userLdapId);
         user.setScrap(radioSrScrapEmail);
@@ -356,7 +356,7 @@ public class AdminController {
             @RequestParam(required = false) String email,
             @RequestParam(required = false) String oncid,
             @RequestParam(required = false) String groupId) {
-        
+
         JSONResponse response = new JSONResponse();
         LDAPUser ldapUser = new LDAPUser();
         ldapUser.setLoginId(loginId);
@@ -1187,11 +1187,57 @@ public class AdminController {
             @ModelAttribute UserSession userSession
     ) {
 
+        model.addAttribute("userItemAdd", userSession.getItemAdd());
+
         ItemActivityConfigDAO itemD = new ItemActivityConfigDAO();
-        List<ItemActivityConfig> item = itemD.getItemActivityConfigListWithItemDetail();
+        List<ItemActivityConfig> item = itemD.getItemActivityConfigListWithItemDetailForBib(); //default display for motherboard only
         model.addAttribute("item", item);
 
         return "admin/bib_config";
+    }
+
+    @RequestMapping(value = "/bibActivity/bib", method = {RequestMethod.GET, RequestMethod.POST})
+    public String bibActivityBib(
+            Model model,
+            @ModelAttribute UserSession userSession
+    ) {
+
+        model.addAttribute("userItemAdd", userSession.getItemAdd());
+
+        ItemActivityConfigDAO itemD = new ItemActivityConfigDAO();
+        List<ItemActivityConfig> item = itemD.getItemActivityConfigListWithItemDetailForBib();
+        model.addAttribute("item", item);
+
+        return "admin/bib_config";
+    }
+
+    @RequestMapping(value = "/bibActivity/bibCard", method = {RequestMethod.GET, RequestMethod.POST})
+    public String bibActivityBibCard(
+            Model model,
+            @ModelAttribute UserSession userSession
+    ) {
+
+        model.addAttribute("userItemAdd", userSession.getItemAdd());
+
+        ItemActivityConfigDAO itemD = new ItemActivityConfigDAO();
+        List<ItemActivityConfig> item = itemD.getItemActivityConfigListWithItemDetailForBibCard();
+        model.addAttribute("item", item);
+
+        return "admin/bib_config";
+    }
+
+    @RequestMapping(value = "/bibActivity/add", method = {RequestMethod.GET, RequestMethod.POST})
+    public String bibActivityAdd(
+            Model model,
+            @ModelAttribute UserSession userSession) {
+
+        String dut = "";
+
+        List<ManualTest> itemB1 = new ArrayList<>();
+
+        model.addAttribute("dut", dut);
+        model.addAttribute("listData", itemB1);
+        return "admin/bib_config_add";
     }
 
     @RequestMapping(value = "/bibActivity/edit/{id}", method = {RequestMethod.GET, RequestMethod.POST})
@@ -1203,7 +1249,7 @@ public class AdminController {
         ItemActivityConfigDAO itemD = new ItemActivityConfigDAO();
         ItemActivityConfig item = itemD.getItemActivityConfigWithItemDetail(id);
         model.addAttribute("item", item);
-        
+
         // CHECK IF DATA EXIST - DO NOTHING IF NO DATA FOUND
         ManualTestDAO itemA = new ManualTestDAO();
         ManualTest itemA1 = itemA.getComponentConfigBefore(id);
@@ -1211,12 +1257,12 @@ public class AdminController {
             // DO NOTHING HERE?
         } else {
             String dut = itemA1.getDut();
-            
+
             ItemActivityConfigDAO itemactdao = new ItemActivityConfigDAO();
             String mibItemId = itemactdao.getItemIdByConfigId(id);
             ManualTestDAO itemB = new ManualTestDAO();
             List<ManualTest> itemB1 = itemB.getAllComponentConfigBefore(mibItemId);
-            
+
             model.addAttribute("dut", dut);
             model.addAttribute("listData", itemB1);
         }
@@ -1243,7 +1289,7 @@ public class AdminController {
             @RequestParam(required = false, value = "percentage[]") List<String> percentageValue,
             @RequestParam(required = false, value = "lower[]") List<String> lowerValue,
             @RequestParam(required = false, value = "upper[]") List<String> upperValue) {
-        
+
         int saiz = 0;
         int inputQuantity = 1;
 
@@ -1269,17 +1315,17 @@ public class AdminController {
 
             ItemActivityConfigDAO itemactdao = new ItemActivityConfigDAO();
             String itemId = itemactdao.getItemIdByConfigId(id);
-            
+
             ManualTestDAO test = new ManualTestDAO();
             Integer check1 = test.getManualTestCurrentRecord(itemId);
-            
+
             if ("0".equals(check1)) {
                 test = new ManualTestDAO();
                 QueryResult q0 = test.insertManualTestBeforeLoading(itemId, id, String.valueOf(inputQuantity), inputDUT, String.valueOf(saiz), user, flag);
-                
+
                 if (!"0".equals(q0.getGeneratedKey())) {
                     String configId = q0.getGeneratedKey();
-                    for (int c1 = 0; c1 < saiz; c1++) { 
+                    for (int c1 = 0; c1 < saiz; c1++) {
                         test = new ManualTestDAO();
                         QueryResult q3 = test.insertManualTestBeforeLoadingSub(itemId, configId, inputDUT, type.get(c1), compName.get(c1), compValue.get(c1), percentageValue.get(c1), lowerValue.get(c1), upperValue.get(c1), user, flag);
                     }
@@ -1289,12 +1335,12 @@ public class AdminController {
                 Integer configId = test.getConfigIdByItemId(itemId);
                 test = new ManualTestDAO();
                 QueryResult q0 = test.updateItemActivityConfig(String.valueOf(inputQuantity), inputDUT, String.valueOf(saiz), String.valueOf(configId));
-                
+
                 // FUNCTION TO REMOVE PREVIOUS COMPONENT, AND THEN SAVE THE NEW ONE
                 test = new ManualTestDAO();
                 test.removeCurrentDataBefore(String.valueOf(configId), itemId);
-                
-                for (int c1 = 0; c1 < saiz; c1++) { 
+
+                for (int c1 = 0; c1 < saiz; c1++) {
                     test = new ManualTestDAO();
                     QueryResult q3 = test.insertManualTestBeforeLoadingSub(itemId, String.valueOf(configId), inputDUT, type.get(c1), compName.get(c1), compValue.get(c1), percentageValue.get(c1), lowerValue.get(c1), upperValue.get(c1), user, flag);
                 }
@@ -1501,17 +1547,17 @@ public class AdminController {
 
             itemdao = new ItemHardwareConfigDAO();
             QueryResult queryResult = itemdao.insertItemHardwareConfig(item);
-            
+
             if (!"0".equals(queryResult.getGeneratedKey())) {
-                
+
                 LocalDateTime instance = LocalDateTime.now();
                 DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss");
                 String formattedString = formatter.format(instance);
-                
+
                 // INSERT INTO SPTS function
                 String status = insertHardwareConfigIntoSPTS(queryResult.getGeneratedKey(), itemType, subType, itemId, supplier, assemblyno, revision, mfgdate, component, event, partnumber, alu, shelf, formattedString, userSession.getLoginId(), "1");
                 if (status.equals("SUCCESS")) {
-                    redirectAttrs.addFlashAttribute("success", "SPTS data created: Item Hardware Configuration ["+itemType+"] ");
+                    redirectAttrs.addFlashAttribute("success", "SPTS data created: Item Hardware Configuration [" + itemType + "] ");
                     redirectAttrs.addFlashAttribute("success", messageSource.getMessage("admin.label.hardware.success", args, locale));
                     return "redirect:/admin/hw";
                 } else {
@@ -1620,18 +1666,18 @@ public class AdminController {
         itemupdate.setShelfTime(shelf);
         itemupdate.setUpdatedBy(userSession.getLoginId());
         itemupdate.setFlag("1");
-        
+
         ItemHardwareConfigDAO itemdao = new ItemHardwareConfigDAO();
         QueryResult qr = itemdao.updateItemHardwareConfig(itemupdate);
-        
+
         LocalDateTime instance = LocalDateTime.now();
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
         String formattedString = formatter.format(instance);
-        
+
         if (spts_pkid.equals("0")) {
             String status = insertHardwareConfigIntoSPTS(id, itemType, subType, itemId, supplier, assemblyno, revision, mfgdate, component, event, partnumber, alu, shelf, formattedString, userSession.getLoginId(), "1");
             if (status.equals("SUCCESS")) {
-                redirectAttrs.addFlashAttribute("success", "SPTS data created: Item Hardware Configuration ["+itemType+"] ");
+                redirectAttrs.addFlashAttribute("success", "SPTS data created: Item Hardware Configuration [" + itemType + "] ");
             } else {
                 model.addAttribute("error", status);
                 redirectAttrs.addFlashAttribute("error", status);
@@ -1649,12 +1695,12 @@ public class AdminController {
                 sptsVersion = getItemByPKID.getJSONObject(i).getString("Version");
                 sptsItemType = getItemByPKID.getJSONObject(i).getString("ItemType");
             }
-            
+
             if (checkdata == 0) {
 //                // INSERT A NEW / EXISTING DATA INTO SPTS
                 String status = insertHardwareConfigIntoSPTS(id, itemType, subType, itemId, supplier, assemblyno, revision, mfgdate, component, event, partnumber, alu, shelf, formattedString, userSession.getLoginId(), "1");
                 if (status.equals("SUCCESS")) {
-                    redirectAttrs.addFlashAttribute("success", "SPTS data created: Item Hardware Configuration ["+itemType+"] ");
+                    redirectAttrs.addFlashAttribute("success", "SPTS data created: Item Hardware Configuration [" + itemType + "] ");
                 } else {
                     model.addAttribute("error", status);
                     redirectAttrs.addFlashAttribute("error", status);
@@ -1671,7 +1717,7 @@ public class AdminController {
                 }
             }
         }
-        
+
         if (qr.getResult() > 0) {
             redirectAttrs.addFlashAttribute("success", messageSource.getMessage("admin.label.hardware.update.success", args, locale));
         } else {
@@ -1691,12 +1737,12 @@ public class AdminController {
         ItemHardwareConfigDAO itemdao = new ItemHardwareConfigDAO();
         String sptsId = itemdao.getSptsId(hwid);
         sptsId = SystemUtil.nullToZero(sptsId);
-        
+
         // MUST GET THE LATEST DATA FROM THE SPTS DATABASE FIRST
         JSONObject params = new JSONObject();
         params.put("pkid", sptsId);
         JSONArray getItemByPKID = SPTSWebService.getHardwareIdConfigByPKID(params);
-        
+
         String sptsVersion = "";
         Integer pkid = 0;
         int checkdata = getItemByPKID.length();
@@ -1704,20 +1750,20 @@ public class AdminController {
             sptsVersion = getItemByPKID.getJSONObject(i).getString("Version").toUpperCase();
             pkid = getItemByPKID.getJSONObject(i).getInt("PKID");
         }
-        
+
         // THEN USE THAT DATA TO DO THE DELETE FUNCTION - OR ELSE CANNOT DELETE
         itemdao = new ItemHardwareConfigDAO();
         QueryResult queryResult = itemdao.deleteItemHardwareConfig(hwid);
-        
+
         if (sptsId.equals("0")) {
             // DO NOTHING - SINCE THE DATA ALREADY NON-EXIST
-        } else  {
+        } else {
             JSONObject param = new JSONObject();
             param.put("pkid", pkid);
             param.put("version", sptsVersion);
             SPTSResponse deleteEqpt = SPTSWebService.deleteHardwareIdConfigByPKID(param);
         }
-        
+
         if (queryResult.getResult() == 1) {
             redirectAttrs.addFlashAttribute("success", messageSource.getMessage("admin.label.hardware.delete.success", args, locale));
         } else {
@@ -1725,14 +1771,14 @@ public class AdminController {
         }
         return "redirect:/admin/hw";
     }
-    
+
     public String insertHardwareConfigIntoSPTS(String id, String itemType, String subType, String itemId, String supplier, String assemblyno, String revision, String mfgdate, String component, String event, String partnumber, String alu, String shelf, String datenow, String user, String flag) throws IOException {
         String status = "SUCCESS";
-        
+
         LocalDateTime instance = LocalDateTime.now();
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss");
         String dateNow = formatter.format(instance);
-        
+
         JSONObject addHwIdConfig = new JSONObject();
         addHwIdConfig.put("itemType", itemType);
         addHwIdConfig.put("subType", subType);
@@ -1764,7 +1810,8 @@ public class AdminController {
             status = "FAILED";
             LinkedHashMap<String, String> itemhmap;
             ObjectMapper mapper = new ObjectMapper();
-            itemhmap = mapper.readValue(addHwIdConfig.toString(), new TypeReference<LinkedHashMap<String, String>>() {});
+            itemhmap = mapper.readValue(addHwIdConfig.toString(), new TypeReference<LinkedHashMap<String, String>>() {
+            });
             String errorMessage;
             if (sr.getErrorDetail().equals("")) {
                 errorMessage = sr.getErrorCode() + " - " + sr.getErrorMessage();
@@ -1776,7 +1823,7 @@ public class AdminController {
         }
         return status;
     }
-    
+
     public String updateHardwareConfig(String id, String version, String sptsId, String itemType, String subType, String itemId, String supplier, String assemblyno, String revision, String mfgdate, String component, String event, String partnumber, String alu, String shelf, String datenow, String user, String flag) throws IOException {
         String status = "SUCCESS";
         JSONObject updateHardware = new JSONObject();
@@ -1802,7 +1849,8 @@ public class AdminController {
             status = "FAILED";
             LinkedHashMap<String, String> item2;
             ObjectMapper mapper = new ObjectMapper();
-            item2 = mapper.readValue(updateHardware.toString(), new TypeReference<LinkedHashMap<String, String>>() {});
+            item2 = mapper.readValue(updateHardware.toString(), new TypeReference<LinkedHashMap<String, String>>() {
+            });
             String errorMessage;
             if (sr.getErrorDetail().equals("")) {
                 errorMessage = sr.getErrorCode() + " - " + sr.getErrorMessage();
@@ -1817,7 +1865,7 @@ public class AdminController {
             LOGGER.info("errorMessage: " + errorMessage);
             LOGGER.info("^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^");
         }
-                
+
         return status;
     }
 

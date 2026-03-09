@@ -242,9 +242,16 @@
                                                         <div class="mb-3">
                                                             <label for="subType" class="form-label">Sub Type</label>
                                                             <div class="input input-group">
-                                                                <input type="text" class="form-control" id="subType" name="subType" placeholder="" value="${item.subType}" readonly>
+                                                                <!--<input type="text" class="form-control" id="subType" name="subType" placeholder="" value="${item.subType}" readonly>-->
                                                                 <input type="hidden" class="form-control" id="itemPKID" name="itemPKID" placeholder="" value="${item.sptsPkid}" readonly>
                                                                 <input type="hidden" class="form-control" id="mibId" name="mibId" placeholder="" value="${item.id}" readonly>
+                                                                <select class="js-example-tags" id="subType" name="subType"
+                                                                            style="width: 100%" readonly>
+                                                                        <option></option>
+                                                                        <c:forEach items="${listSubType}" var="invInner">
+                                                                            <option value="${invInner.subType}">${invInner.subType}</option>
+                                                                        </c:forEach>
+                                                                    </select>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -641,9 +648,16 @@
                                                             <label for="subType" class="form-label">Sub Type</label>
                                                             <div class="input input-group">
                                                                 <!--<span class="input-group-text"><i class="bi bi-person"></i></span>-->
-                                                                <input type="text" class="form-control" id="subType" name="subType" placeholder="" value="${item.subType}" readonly>
+                                                                <!--<input type="text" class="form-control" id="subType" name="subType" placeholder="" value="${item.subType}" readonly>-->
                                                                 <input type="hidden" class="form-control" id="itemPKID" name="itemPKID" placeholder="" value="${item.sptsPkid}" readonly>
                                                                 <input type="hidden" class="form-control" id="mibId" name="mibId" placeholder="" value="${item.id}" readonly>
+                                                                <select class="js-example-tags" id="subType" name="subType"
+                                                                            style="width: 100%" readonly>
+                                                                        <option></option>
+                                                                        <c:forEach items="${listSubType}" var="invInner">
+                                                                            <option value="${invInner.subType}">${invInner.subType}</option>
+                                                                        </c:forEach>
+                                                                    </select>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -1043,9 +1057,16 @@
                                                             <label for="subType" class="form-label">Sub Type</label>
                                                             <div class="input input-group">
                                                                 <!--<span class="input-group-text"><i class="bi bi-person"></i></span>-->
-                                                                <input type="text" class="form-control" id="subType" name="subType" placeholder="" value="${item.subType}" readonly>
+                                                                <!--<input type="text" class="form-control" id="subType" name="subType" placeholder="" value="${item.subType}" readonly>-->
                                                                 <input type="hidden" class="form-control" id="itemPKID" name="itemPKID" placeholder="" value="${item.sptsPkid}" readonly>
                                                                 <input type="hidden" class="form-control" id="mibId" name="mibId" placeholder="" value="${item.id}" readonly>
+                                                                <select class="js-example-tags" id="subType" name="subType"
+                                                                            style="width: 100%" readonly>
+                                                                        <option></option>
+                                                                        <c:forEach items="${listSubType}" var="invInner">
+                                                                            <option value="${invInner.subType}">${invInner.subType}</option>
+                                                                        </c:forEach>
+                                                                    </select>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -1447,9 +1468,16 @@
                                                             <label for="subType" class="form-label">Sub Type</label>
                                                             <div class="input input-group">
                                                                 <!--<span class="input-group-text"><i class="bi bi-person"></i></span>-->
-                                                                <input type="text" class="form-control" id="subType" name="subType" placeholder="" value="${item.subType}" readonly>
+                                                                <!--<input type="text" class="form-control" id="subType" name="subType" placeholder="" value="${item.subType}" readonly>-->
                                                                 <input type="hidden" class="form-control" id="itemPKID" name="itemPKID" placeholder="" value="${item.sptsPkid}" readonly>
                                                                 <input type="hidden" class="form-control" id="mibId" name="mibId" placeholder="" value="${item.id}" readonly>
+                                                                <select class="js-example-tags" id="subType" name="subType"
+                                                                            style="width: 100%" readonly>
+                                                                        <option></option>
+                                                                        <c:forEach items="${listSubType}" var="invInner">
+                                                                            <option value="${invInner.subType}">${invInner.subType}</option>
+                                                                        </c:forEach>
+                                                                    </select>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -1851,9 +1879,16 @@
                                                             <label for="subType" class="form-label">Sub Type</label>
                                                             <div class="input input-group">
                                                                 <!--<span class="input-group-text"><i class="bi bi-person"></i></span>-->
-                                                                <input type="text" class="form-control" id="subType" name="subType" placeholder="" value="${item.subType}" readonly>
+<!--                                                                <input type="text" class="form-control" id="subType" name="subType" placeholder="" value="${item.subType}" readonly>-->
                                                                 <input type="hidden" class="form-control" id="itemPKID" name="itemPKID" placeholder="" value="${item.sptsPkid}" readonly>
                                                                 <input type="hidden" class="form-control" id="mibId" name="mibId" placeholder="" value="${item.id}" readonly>
+                                                                <select class="js-example-tags" id="subType" name="subType"
+                                                                            style="width: 100%" readonly>
+                                                                        <option></option>
+                                                                        <c:forEach items="${listSubType}" var="invInner">
+                                                                            <option value="${invInner.subType}">${invInner.subType}</option>
+                                                                        </c:forEach>
+                                                                    </select>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -2241,9 +2276,16 @@
                                                             <label for="subType" class="form-label">Sub Type</label>
                                                             <div class="input input-group">
                                                                 <!--<span class="input-group-text"><i class="bi bi-person"></i></span>-->
-                                                                <input type="text" class="form-control" id="subType" name="subType" placeholder="" value="${item.subType}" readonly>
+                                                                <!--<input type="text" class="form-control" id="subType" name="subType" placeholder="" value="${item.subType}" readonly>-->
                                                                 <input type="hidden" class="form-control" id="itemPKID" name="itemPKID" placeholder="" value="${item.sptsPkid}" readonly>
                                                                 <input type="hidden" class="form-control" id="mibId" name="mibId" placeholder="" value="${item.id}" readonly>
+                                                                <select class="js-example-tags" id="subType" name="subType"
+                                                                            style="width: 100%" readonly>
+                                                                        <option></option>
+                                                                        <c:forEach items="${listSubType}" var="invInner">
+                                                                            <option value="${invInner.subType}">${invInner.subType}</option>
+                                                                        </c:forEach>
+                                                                    </select>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -2631,9 +2673,16 @@
                                                             <label for="subType" class="form-label">Sub Type</label>
                                                             <div class="input input-group">
                                                                 <!--<span class="input-group-text"><i class="bi bi-person"></i></span>-->
-                                                                <input type="text" class="form-control" id="subType" name="subType" placeholder="" value="${item.subType}" readonly>
+<!--                                                                <input type="text" class="form-control" id="subType" name="subType" placeholder="" value="${item.subType}" readonly>-->
                                                                 <input type="hidden" class="form-control" id="itemPKID" name="itemPKID" placeholder="" value="${item.sptsPkid}" readonly>
                                                                 <input type="hidden" class="form-control" id="mibId" name="mibId" placeholder="" value="${item.id}" readonly>
+                                                                <select class="js-example-tags" id="subType" name="subType"
+                                                                            style="width: 100%" readonly>
+                                                                        <option></option>
+                                                                        <c:forEach items="${listSubType}" var="invInner">
+                                                                            <option value="${invInner.subType}">${invInner.subType}</option>
+                                                                        </c:forEach>
+                                                                    </select>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -3033,9 +3082,16 @@
                                                             <label for="subType" class="form-label">Sub Type</label>
                                                             <div class="input input-group">
                                                                 <!--<span class="input-group-text"><i class="bi bi-person"></i></span>-->
-                                                                <input type="text" class="form-control" id="subType" name="subType" placeholder="" value="${item.subType}" readonly>
+                                                                <!--<input type="text" class="form-control" id="subType" name="subType" placeholder="" value="${item.subType}" readonly>-->
                                                                 <input type="hidden" class="form-control" id="itemPKID" name="itemPKID" placeholder="" value="${item.sptsPkid}" readonly>
                                                                 <input type="hidden" class="form-control" id="mibId" name="mibId" placeholder="" value="${item.id}" readonly>
+                                                                <select class="js-example-tags" id="subType" name="subType"
+                                                                            style="width: 100%" readonly>
+                                                                        <option></option>
+                                                                        <c:forEach items="${listSubType}" var="invInner">
+                                                                            <option value="${invInner.subType}">${invInner.subType}</option>
+                                                                        </c:forEach>
+                                                                    </select>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -3427,9 +3483,16 @@
                                                             <label for="subType" class="form-label">Sub Type</label>
                                                             <div class="input input-group">
                                                                 <!--<span class="input-group-text"><i class="bi bi-person"></i></span>-->
-                                                                <input type="text" class="input form-control" id="subType" name="subType" placeholder="" value="${item.subType}" readonly>
+                                                                <!--<input type="text" class="input form-control" id="subType" name="subType" placeholder="" value="${item.subType}" readonly>-->
                                                                 <input type="hidden" class="form-control" id="itemPKID" name="itemPKID" placeholder="" value="${item.sptsPkid}" readonly>
                                                                 <input type="hidden" class="form-control" id="mibId" name="mibId" placeholder="" value="${item.id}" readonly>
+                                                                <select class="js-example-tags" id="subType" name="subType"
+                                                                            style="width: 100%" readonly>
+                                                                        <option></option>
+                                                                        <c:forEach items="${listSubType}" var="invInner">
+                                                                            <option value="${invInner.subType}">${invInner.subType}</option>
+                                                                        </c:forEach>
+                                                                    </select>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -4166,7 +4229,7 @@
                                                                 tableBody.empty(); // Clear existing table rows
                                                                 // Populate form fields with received data
                                                                 $("#itemType2").val(data.itemType);
-                                                                $("#subType").val(data.subType);
+                                                                $("#subType").val(data.subType).trigger('change');
                                                                 $("#itemPKID").val(data.sptsPkid);
                                                                 $("#itemId").val(data.itemId);
                                                                 $("#mibId").val(data.id);

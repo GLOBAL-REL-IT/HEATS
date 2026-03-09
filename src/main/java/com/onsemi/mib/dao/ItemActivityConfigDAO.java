@@ -240,6 +240,102 @@ public class ItemActivityConfigDAO {
         return itemactivityConfigList;
     }
 
+    public List<ItemActivityConfig> getItemActivityConfigListWithItemDetailForBib() {
+        String sql = "SELECT it.item_type, it.sub_type, it.item_id, it.item_name, it.assembly_id, it.stress_type, con.* "
+                + "FROM item_activity_config con, item it "
+                + "WHERE it.id = con.mib_item_id AND it.item_type = 'BIB' "
+                + "ORDER BY it.item_id ASC";
+        List<ItemActivityConfig> itemactivityConfigList = new ArrayList<ItemActivityConfig>();
+        try {
+            PreparedStatement ps = conn.prepareStatement(sql);
+            ItemActivityConfig itemactivityConfig;
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                itemactivityConfig = new ItemActivityConfig();
+                itemactivityConfig.setId(rs.getString("id"));
+                itemactivityConfig.setMibItemId(rs.getString("mib_item_id"));
+                itemactivityConfig.setVi(rs.getString("vi"));
+                itemactivityConfig.setBibTest(rs.getString("bib_test"));
+                itemactivityConfig.setManualTest(rs.getString("manual_test"));
+                itemactivityConfig.setLeakageTest(rs.getString("leakage_test"));
+                itemactivityConfig.setPsLeakageTest(rs.getString("ps_leakage_test"));
+                itemactivityConfig.setCreatedBy(rs.getString("created_by"));
+                itemactivityConfig.setCreatedDate(rs.getString("created_date"));
+                itemactivityConfig.setStatus(rs.getString("status"));
+                itemactivityConfig.setFlag(rs.getString("flag"));
+                itemactivityConfig.setItemType(rs.getString("item_type"));
+                itemactivityConfig.setSubType(rs.getString("sub_type"));
+                itemactivityConfig.setItemId(rs.getString("item_id"));
+                itemactivityConfig.setItemName(rs.getString("item_name"));
+                itemactivityConfig.setAssemblyId(rs.getString("assembly_id"));
+                itemactivityConfig.setStressType(rs.getString("stress_type"));
+                itemactivityConfig.setWinchesterChamberLeakageTest(rs.getString("winchester_chamber_leakage_test"));
+                itemactivityConfigList.add(itemactivityConfig);
+            }
+            rs.close();
+            ps.close();
+        } catch (SQLException e) {
+            LOGGER.error(e.getMessage());
+        } finally {
+            if (conn != null) {
+                try {
+                    conn.close();
+                } catch (SQLException e) {
+                    LOGGER.error(e.getMessage());
+                }
+            }
+        }
+        return itemactivityConfigList;
+    }
+
+    public List<ItemActivityConfig> getItemActivityConfigListWithItemDetailForBibCard() {
+        String sql = "SELECT it.item_type, it.sub_type, it.item_id, it.item_name, it.assembly_id, it.stress_type, con.* "
+                + "FROM item_activity_config con, item it "
+                + "WHERE it.id = con.mib_item_id AND it.item_type = 'BIB Card' "
+                + "ORDER BY it.item_id ASC";
+        List<ItemActivityConfig> itemactivityConfigList = new ArrayList<ItemActivityConfig>();
+        try {
+            PreparedStatement ps = conn.prepareStatement(sql);
+            ItemActivityConfig itemactivityConfig;
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                itemactivityConfig = new ItemActivityConfig();
+                itemactivityConfig.setId(rs.getString("id"));
+                itemactivityConfig.setMibItemId(rs.getString("mib_item_id"));
+                itemactivityConfig.setVi(rs.getString("vi"));
+                itemactivityConfig.setBibTest(rs.getString("bib_test"));
+                itemactivityConfig.setManualTest(rs.getString("manual_test"));
+                itemactivityConfig.setLeakageTest(rs.getString("leakage_test"));
+                itemactivityConfig.setPsLeakageTest(rs.getString("ps_leakage_test"));
+                itemactivityConfig.setCreatedBy(rs.getString("created_by"));
+                itemactivityConfig.setCreatedDate(rs.getString("created_date"));
+                itemactivityConfig.setStatus(rs.getString("status"));
+                itemactivityConfig.setFlag(rs.getString("flag"));
+                itemactivityConfig.setItemType(rs.getString("item_type"));
+                itemactivityConfig.setSubType(rs.getString("sub_type"));
+                itemactivityConfig.setItemId(rs.getString("item_id"));
+                itemactivityConfig.setItemName(rs.getString("item_name"));
+                itemactivityConfig.setAssemblyId(rs.getString("assembly_id"));
+                itemactivityConfig.setStressType(rs.getString("stress_type"));
+                itemactivityConfig.setWinchesterChamberLeakageTest(rs.getString("winchester_chamber_leakage_test"));
+                itemactivityConfigList.add(itemactivityConfig);
+            }
+            rs.close();
+            ps.close();
+        } catch (SQLException e) {
+            LOGGER.error(e.getMessage());
+        } finally {
+            if (conn != null) {
+                try {
+                    conn.close();
+                } catch (SQLException e) {
+                    LOGGER.error(e.getMessage());
+                }
+            }
+        }
+        return itemactivityConfigList;
+    }
+
     public ItemActivityConfig getItemActivityConfigWithItemDetail(String itemactivityConfigId) {
         String sql = "SELECT it.item_type, it.sub_type, it.item_id, it.item_name, it.assembly_id, it.stress_type, con.* "
                 + "FROM item_activity_config con, item it "
@@ -322,7 +418,7 @@ public class ItemActivityConfigDAO {
         }
         return itemactivityConfig;
     }
-    
+
     public String getItemIdByConfigId(String configId) {
         String data = "";
         try {

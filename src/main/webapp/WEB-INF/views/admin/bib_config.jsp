@@ -96,35 +96,36 @@
             <!-- Row start -->
             <div class="row gx-4">
                 <nav class="navbar bg-body-tertiary">
-<!--                    <div class="container-fluid justify-content-start">
-                        <a href="${contextPath}/admin/parameterMaster/add" class="btn btn-outline-success me-2" role="button">
-                            <i class='bi bi-plus-square'></i>&nbsp;&nbsp;Add New</a>
-                    </div>-->
-                </nav>
-            </div>
-            <!-- Row end -->
-
-            <!-- Row start -->
-            <div class="row gx-4">
-
-                <div class="col-sm-12 col-12">
-
-                    <!-- Card start -->
-                    <div class="card mb-4">
-                        <div class="card-header">
-                            <h5 class="card-title">Activity Configuration for BIB/ BIB Cards</h5>
+                    <div class="container-fluid justify-content-start">
+                        <c:if test="${userItemAdd == 'Yes'}"><a href="${contextPath}/admin/bibActivity/" class="btn btn-outline-success me-2" role="button">
+                                <i class='bi bi-plus-square'></i>&nbsp;&nbsp;Add New</a></c:if>
+                        <c:if test="${userItemAdd == 'Yes'}"><a href="${contextPath}/admin/bibActivity/" class="btn btn-outline-success me-2" role="button">
+                                <i class='bi bi-upload'></i>&nbsp;&nbsp;Batch Upload</a></c:if>
                         </div>
-                        <div class="card-body">
+                    </nav>
+                </div>
+                <!-- Row end -->
 
-                            <!-- Row start -->
-                            <div class="row gx-3">
-                                <!-- Personal Information Section -->
-                                <!--                                <div class="col-10 mb-3">
-                                                                    <h6 class="fw-semibold mb-3 border-start border-primary ps-2"
-                                                                        style="border-left-width: 3px !important;">
-                                                                        <i class="bi bi-list-ul me-2"></i>List of Parameter
-                                                                    </h6>
-                                                                </div>-->
+                <!-- Row start -->
+                <div class="row gx-4">
+
+                    <div class="col-sm-12 col-12">
+
+                        <!-- Card start -->
+                        <div class="card mb-4">
+                            <div class="card-header">
+                                <h5 class="card-title">Activity Configuration for BIB/ BIB Cards</h5>
+                            </div>
+                            <div class="card-body">
+
+                                <!-- Row start -->
+                                <div class="row gx-3">
+                                    <div class="container-fluid justify-content-start">
+                                        <a href="${contextPath}/admin/bibActivity/bib" class="btn btn-outline-success me-2" role="button">
+                                        <i class='bi bi-motherboard'></i>&nbsp;&nbsp;BIB</a>
+                                    <a href="${contextPath}/admin/bibActivity/bibCard" class="btn btn-outline-success me-2" role="button">
+                                        <i class='bi bi-credit-card-2-front'></i>&nbsp;&nbsp;BIB Card</a>
+                                </div>
                                 <div class="card-body">
                                     <div class="table-responsive">
                                         <table id="customButtons1" class="table custom-table pending">
@@ -163,9 +164,9 @@
                                                         <td><c:out value="${parameterMaster.psLeakageTest}"/></td>
                                                         <td><c:out value="${parameterMaster.winchesterChamberLeakageTest}"/></td>
                                                         <td align="center">
-                                                                    <a href="${contextPath}/admin/bibActivity/edit/${parameterMaster.id}" class="table-link" title="Edit">
-                                                                        <i class="bi bi-box-arrow-in-right h3"></i>
-                                                                    </a>
+                                                            <a href="${contextPath}/admin/bibActivity/edit/${parameterMaster.id}" class="table-link" title="Edit">
+                                                                <i class="bi bi-box-arrow-in-right h3"></i>
+                                                            </a>
                                                         </td>
                                                     </tr>
                                                 </c:forEach>
@@ -220,33 +221,33 @@
 </s:layout-component>
 <s:layout-component name="page_js_inline">
     <script>
-                                                    $(function () {
-                                                        $("#customButtons1").DataTable({
-                                                            lengthMenu: [
-                                                                [10, 25, 50],
-                                                                [10, 25, 50, "All"],
-                                                            ],
-                                                            language: {
-                                                                lengthMenu: "Display _MENU_ Records Per Page",
-                                                                info: "Showing Page _PAGE_ of _PAGES_",
-                                                            },
-                                                            dom: "Blfrtip",
-                                                            buttons: ["copy", "csv", "pdf", "print"],
-                                                        });
-                                                    });
+        $(function () {
+            $("#customButtons1").DataTable({
+                lengthMenu: [
+                    [10, 25, 50],
+                    [10, 25, 50, "All"],
+                ],
+                language: {
+                    lengthMenu: "Display _MENU_ Records Per Page",
+                    info: "Showing Page _PAGE_ of _PAGES_",
+                },
+                dom: "Blfrtip",
+                buttons: ["copy", "csv", "pdf", "print"],
+            });
+        });
 
 
-                                                    function modalDelete(e) {
-                                                        var deleteId = $(e).attr("modaldeleteid");
-                                                        var deleteInfo = $("#modal_delete_info_" + deleteId).html();
-                                                        var deleteUrl = "${contextPath}/admin/parameterMaster/delete/" + deleteId;
-                                                        var deleteMsg = "<f:message key='general.label.delete.confirmation'><f:param value='" + deleteInfo + "'/></f:message>";
-                                                        $("#delete_modal .modal-body").html(deleteMsg);
-                                                        $("#modal_delete_button").attr("href", deleteUrl);
-                                                    }
-//                                                    $(document).ready(function () {
-//                                                        $('.js-example-basic-single').select2();
-//                                                    });
+        function modalDelete(e) {
+            var deleteId = $(e).attr("modaldeleteid");
+            var deleteInfo = $("#modal_delete_info_" + deleteId).html();
+            var deleteUrl = "${contextPath}/admin/parameterMaster/delete/" + deleteId;
+            var deleteMsg = "<f:message key='general.label.delete.confirmation'><f:param value='" + deleteInfo + "'/></f:message>";
+            $("#delete_modal .modal-body").html(deleteMsg);
+            $("#modal_delete_button").attr("href", deleteUrl);
+        }
+        //                                                    $(document).ready(function () {
+        //                                                        $('.js-example-basic-single').select2();
+        //                                                    });
 
         </script>
 </s:layout-component>

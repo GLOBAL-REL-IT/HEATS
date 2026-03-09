@@ -183,9 +183,14 @@
                                                             <div class="mb-3">
                                                                 <label for="subType" class="form-label">Sub Type</label>
                                                                 <div class="input input-group">
-                                                                    <!--<span class="input-group-text"><i class="bi bi-person"></i></span>-->
-                                                                    <input type="text" class="form-control" id="subType" name="subType" placeholder="" value="">
-                                                                    <input type="hidden" class="form-control" id="itemPKID" name="itemPKID" placeholder="" value="">
+                                                                    <!--<input type="text" class="form-control" id="subType" name="subType" placeholder="" value="">-->
+                                                                    <select class="js-example-tags" id="subType" name="subType"
+                                                                            style="width: 100%">
+                                                                        <option></option>
+                                                                        <c:forEach items="${listSubType}" var="invInner">
+                                                                            <option value="${invInner.subType}">${invInner.subType}</option>
+                                                                        </c:forEach>
+                                                                    </select>
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -235,8 +240,6 @@
                                                             <div class="mb-3">
                                                                 <label for="model" class="form-label">Spare Part Model</label>
                                                                 <div class="input input-group">
-                                                                    <!--<span class="input-group-text"><i class="bi bi-telephone"></i></span>-->
-                                                                    <!--<input type="text" class="form-control" id="model2" name="model2" value="">-->
                                                                     <select class="js-example-tags" id="model2" name="model2"
                                                                             style="width: 100%">
                                                                         <option></option>
@@ -575,8 +578,14 @@
                                                                 <label for="subType" class="form-label">Sub Type</label>
                                                                 <div class="input input-group">
                                                                     <!--<span class="input-group-text"><i class="bi bi-person"></i></span>-->
-                                                                    <input type="text" class="form-control" id="subType" name="subType" placeholder="" value="">
-                                                                    <input type="hidden" class="form-control" id="itemPKID" name="itemPKID" placeholder="" value="">
+                                                                    <!--<input type="text" class="form-control" id="subType" name="subType" placeholder="" value="">-->
+                                                                    <select class="js-example-tags" id="subType" name="subType"
+                                                                            style="width: 100%">
+                                                                        <option></option>
+                                                                        <c:forEach items="${listSubType}" var="invInner">
+                                                                            <option value="${invInner.subType}">${invInner.subType}</option>
+                                                                        </c:forEach>
+                                                                    </select>
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -934,8 +943,14 @@
                                                                 <label for="subType" class="form-label">Sub Type</label>
                                                                 <div class="input input-group">
                                                                     <!--<span class="input-group-text"><i class="bi bi-person"></i></span>-->
-                                                                    <input type="text" class="form-control" id="subType" name="subType" placeholder="" value="">
-                                                                    <input type="hidden" class="form-control" id="itemPKID" name="itemPKID" placeholder="" value="">
+                                                                    <!--<input type="text" class="form-control" id="subType" name="subType" placeholder="" value="">-->
+                                                                    <select class="js-example-tags" id="subType" name="subType"
+                                                                            style="width: 100%">
+                                                                        <option></option>
+                                                                        <c:forEach items="${listSubType}" var="invInner">
+                                                                            <option value="${invInner.subType}">${invInner.subType}</option>
+                                                                        </c:forEach>
+                                                                    </select>
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -1302,8 +1317,14 @@
                                                                 <label for="subType" class="form-label">Sub Type</label>
                                                                 <div class="input input-group">
                                                                     <!--<span class="input-group-text"><i class="bi bi-person"></i></span>-->
-                                                                    <input type="text" class="form-control" id="subType" name="subType" placeholder="" value="">
-                                                                    <input type="hidden" class="form-control" id="itemPKID" name="itemPKID" placeholder="" value="">
+                                                                    <!--<input type="text" class="form-control" id="subType" name="subType" placeholder="" value="">-->
+                                                                    <select class="js-example-tags" id="subType" name="subType"
+                                                                            style="width: 100%">
+                                                                        <option></option>
+                                                                        <c:forEach items="${listSubType}" var="invInner">
+                                                                            <option value="${invInner.subType}">${invInner.subType}</option>
+                                                                        </c:forEach>
+                                                                    </select>
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -1666,8 +1687,14 @@
                                                                 <label for="subType" class="form-label">Sub Type</label>
                                                                 <div class="input input-group">
                                                                     <!--<span class="input-group-text"><i class="bi bi-person"></i></span>-->
-                                                                    <input type="text" class="form-control" id="subType" name="subType" placeholder="" value="">
-                                                                    <input type="hidden" class="form-control" id="itemPKID" name="itemPKID" placeholder="" value="">
+                                                                    <!--<input type="text" class="form-control" id="subType" name="subType" placeholder="" value="">-->
+                                                                    <select class="js-example-tags" id="subType" name="subType"
+                                                                            style="width: 100%">
+                                                                        <option></option>
+                                                                        <c:forEach items="${listSubType}" var="invInner">
+                                                                            <option value="${invInner.subType}">${invInner.subType}</option>
+                                                                        </c:forEach>
+                                                                    </select>
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -2025,8 +2052,14 @@
                                                                 <label for="subType" class="form-label">Sub Type</label>
                                                                 <div class="input input-group">
                                                                     <!--<span class="input-group-text"><i class="bi bi-person"></i></span>-->
-                                                                    <input type="text" class="form-control" id="subType" name="subType" placeholder="" value="">
-                                                                    <input type="hidden" class="form-control" id="itemPKID" name="itemPKID" placeholder="" value="">
+                                                                    <!--<input type="text" class="form-control" id="subType" name="subType" placeholder="" value="">-->
+                                                                    <select class="js-example-tags" id="subType" name="subType"
+                                                                            style="width: 100%">
+                                                                        <option></option>
+                                                                        <c:forEach items="${listSubType}" var="invInner">
+                                                                            <option value="${invInner.subType}">${invInner.subType}</option>
+                                                                        </c:forEach>
+                                                                    </select>
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -2360,8 +2393,14 @@
                                                                 <label for="subType" class="form-label">Sub Type</label>
                                                                 <div class="input input-group">
                                                                     <!--<span class="input-group-text"><i class="bi bi-person"></i></span>-->
-                                                                    <input type="text" class="form-control" id="subType" name="subType" placeholder="" value="">
-                                                                    <input type="hidden" class="form-control" id="itemPKID" name="itemPKID" placeholder="" value="">
+                                                                    <!--<input type="text" class="form-control" id="subType" name="subType" placeholder="" value="">-->
+                                                                    <select class="js-example-tags" id="subType" name="subType"
+                                                                            style="width: 100%">
+                                                                        <option></option>
+                                                                        <c:forEach items="${listSubType}" var="invInner">
+                                                                            <option value="${invInner.subType}">${invInner.subType}</option>
+                                                                        </c:forEach>
+                                                                    </select>
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -2711,8 +2750,14 @@
                                                                 <label for="subType" class="form-label">Sub Type</label>
                                                                 <div class="input input-group">
                                                                     <!--<span class="input-group-text"><i class="bi bi-person"></i></span>-->
-                                                                    <input type="text" class="form-control" id="subType" name="subType" placeholder="" value="">
-                                                                    <input type="hidden" class="form-control" id="itemPKID" name="itemPKID" placeholder="" value="">
+                                                                    <!--<input type="text" class="form-control" id="subType" name="subType" placeholder="" value="">-->
+                                                                    <select class="js-example-tags" id="subType" name="subType"
+                                                                            style="width: 100%">
+                                                                        <option></option>
+                                                                        <c:forEach items="${listSubType}" var="invInner">
+                                                                            <option value="${invInner.subType}">${invInner.subType}</option>
+                                                                        </c:forEach>
+                                                                    </select>
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -3048,7 +3093,14 @@
                                                             <div class="mb-3">
                                                                 <label for="subType" class="form-label">Sub Type</label>
                                                                 <div class="input input-group">
-                                                                    <input type="text" class="form-control" id="subType" name="subType" placeholder="" value="">
+                                                                    <!--<input type="text" class="form-control" id="subType" name="subType" placeholder="" value="">-->
+                                                                    <select class="js-example-tags" id="subType" name="subType"
+                                                                            style="width: 100%">
+                                                                        <option></option>
+                                                                        <c:forEach items="${listSubType}" var="invInner">
+                                                                            <option value="${invInner.subType}">${invInner.subType}</option>
+                                                                        </c:forEach>
+                                                                    </select>
                                                                 </div>
                                                             </div>
                                                         </div>

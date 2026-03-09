@@ -168,6 +168,10 @@ public class ItemController {
         List<Item> listStressType = itemD.getItemStressType("");
         model.addAttribute("listStressType", listStressType);
 
+        itemD = new ItemDAO();
+        List<Item> listSubType = itemD.getItemSubType();
+        model.addAttribute("listSubType", listSubType);
+
         model.addAttribute("userItemAdd", userSession.getItemAdd());
         model.addAttribute("userItemEdit", userSession.getItemEdit());
         model.addAttribute("userItemDelete", userSession.getItemDelete());
@@ -254,6 +258,10 @@ public class ItemController {
         itemD = new ItemDAO();
         List<Item> listStressType = itemD.getItemStressType(item.getStressType());
         model.addAttribute("listStressType", listStressType);
+
+        itemD = new ItemDAO();
+        List<Item> listSubType = itemD.getItemSubType();
+        model.addAttribute("listSubType", listSubType);
 
         model.addAttribute("userItemAdd", userSession.getItemAdd());
         model.addAttribute("userItemEdit", userSession.getItemEdit());
@@ -2274,6 +2282,10 @@ public class ItemController {
         List<Item> listStressType = itemD.getItemStressType("");
         model.addAttribute("listStressType", listStressType);
 
+        itemD = new ItemDAO();
+        List<Item> listSubType = itemD.getItemSubType();
+        model.addAttribute("listSubType", listSubType);
+
         if (itemType == null || "".equals(itemType)) {
             return "item/item_add1";
         } else {
@@ -3445,6 +3457,10 @@ public class ItemController {
         itemD = new ItemDAO();
         List<Item> listStressType = itemD.getItemStressType(item.getStressType());
         model.addAttribute("listStressType", listStressType);
+
+        itemD = new ItemDAO();
+        List<Item> listSubType = itemD.getItemSubType();
+        model.addAttribute("listSubType", listSubType);
 
         return "item/item_add2";
     }
@@ -6419,7 +6435,7 @@ public class ItemController {
             @RequestParam(required = false) String runningNumber) throws IOException {
 
         String hwidStatus = "Pending Verification";
-        
+
         ItemHardwareConfigDAO itemdao = new ItemHardwareConfigDAO();
         ItemHardwareConfig itemconfig = itemdao.getConfigItem(itemType, subType);
 
@@ -6445,7 +6461,7 @@ public class ItemController {
                     itemhardware.setHardwareId(sameItemId);
                     dao2 = new ItemHardwareDAO();
                     QueryResult q = dao2.insertHardwareID(itemhardware);
-                    
+
                     // INSERT INTO SPTS
                 } else {
                     redirectAttrs.addFlashAttribute("error", messageSource.getMessage("admin.label.hardware.create.error", args, locale));
@@ -6481,7 +6497,6 @@ public class ItemController {
                         itemhardware.setHardwareId(hardwareId);
                         ItemHardwareDAO dao2 = new ItemHardwareDAO();
                         QueryResult q = dao2.insertHardwareID(itemhardware);
-                        
                         // COMMENT SEBAB BELUM MASUK KE SPTS LAGI
 //                        if (q.getGeneratedKey().equals("0")) {
 //                            // DO NOTHING HERE
@@ -6514,15 +6529,15 @@ public class ItemController {
             sj.add(value.trim());
         }
     }
-    
+
     private String insertItemHardwareIntoSpts(String id, String itempkid, String hardwareId, String hwStatus, String user) throws IOException {
         String status = "";
-        
+
         String pattern = "yyyy-MM-dd'T'HH:mm:ss";
         LocalDateTime instance = LocalDateTime.now();
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern(pattern);
         String dateNow = formatter.format(instance);
-        
+
         Integer itemPKID = Integer.parseInt(itempkid);
         ItemDAO itemdao = new ItemDAO();
         Integer sptsId =  Integer.parseInt(itemdao.getSptsPkIdByMibItemId(itempkid));
@@ -6534,9 +6549,9 @@ public class ItemController {
         addItemHw.put("createdBy", user);
         addItemHw.put("createdDate", dateNow);      // datetime
         addItemHw.put("flag", "0");
-        
+
         SPTSResponse sr = SPTSWebService.insertItemHardware(addItemHw);
-        
+
         if (sr.getStatus()) {
             status = "SUCCESS";
             ItemHardware itemhw = new ItemHardware();
@@ -6548,7 +6563,8 @@ public class ItemController {
             status = "FAILED";
             LinkedHashMap<String, String> itemhmap;
             ObjectMapper mapper = new ObjectMapper();
-            itemhmap = mapper.readValue(addItemHw.toString(), new TypeReference<LinkedHashMap<String, String>>() {});
+            itemhmap = mapper.readValue(addItemHw.toString(), new TypeReference<LinkedHashMap<String, String>>() {
+            });
             String errorMessage;
             if (sr.getErrorDetail().equals("")) {
                 errorMessage = sr.getErrorCode() + " - " + sr.getErrorMessage();
@@ -6558,7 +6574,7 @@ public class ItemController {
                 status += " - " + errorMessage;
             }
         }
-                
+
         return status;
     }
 

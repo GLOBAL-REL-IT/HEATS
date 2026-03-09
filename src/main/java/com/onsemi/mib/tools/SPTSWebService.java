@@ -204,6 +204,7 @@ public class SPTSWebService {
         int result = httpClient.executeMethod(postMethod);
         if (result == 200) {
             InputStream inputStream = postMethod.getResponseBodyAsStream();
+//            System.out.println("postMethod.getResponseBodyAsString(): " + postMethod.getResponseBodyAsString());
             StringBuilder stringBuilder = new StringBuilder();
             Reader reader = new InputStreamReader(inputStream, "UTF-8");
             copy(reader, stringBuilder);

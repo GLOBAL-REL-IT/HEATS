@@ -625,11 +625,11 @@
                                     } else if ($("input[name='transactionToFrom']:checked").val() === 'Quarantine') {
                                         return parseInt($('#quarantineQty').val());
                                     } else if ($("input[name='transactionToFrom']:checked").val() === 'External Clean') {
-                                        return parseInt($('#extCleanQty').val());
+                                        return parseInt($('#externalCleanQty').val());
                                     } else if ($("input[name='transactionToFrom']:checked").val() === 'External Re-clean') {
-                                        return parseInt($('#extRecleanQty').val());
+                                        return parseInt($('#externalRecleanQty').val());
                                     } else if ($("input[name='transactionToFrom']:checked").val() === 'Internal Clean') {
-                                        return parseInt($('#intCleanQty').val());
+                                        return parseInt($('#internalCleanQty').val());
                                     } else if ($("input[name='transactionToFrom']:checked").val() === 'Internal Re-clean') {
                                         return parseInt($('#internalRecleanQty').val());
                                     } else if ($("input[name='transactionToFrom']:checked").val() === 'Other Onsemi') {
