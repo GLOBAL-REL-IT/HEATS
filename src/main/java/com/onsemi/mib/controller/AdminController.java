@@ -1323,6 +1323,19 @@ public class AdminController {
         ManualTest itemA1 = itemA.getComponentConfigBefore(id);
         if (itemA1 == null) {
             // DO NOTHING HERE?
+            itemA = new ManualTestDAO();
+            ManualTest itemA2 = itemA.getComponentConfig(id);
+            if (itemA2 == null) {
+                // BARU DO NOTHING
+            } else {
+                ItemActivityConfigDAO itemactdao = new ItemActivityConfigDAO();
+                String mibItemId = itemactdao.getItemIdByConfigId(id);
+                ManualTestDAO itemB = new ManualTestDAO();
+                List<ManualTest> itemB2 = itemB.getAllComponentConfig(mibItemId);
+                
+                model.addAttribute("dut", itemA2.getDut());
+                model.addAttribute("listData", itemB2);
+            }
         } else {
             String dut = itemA1.getDut();
 
@@ -1417,6 +1430,7 @@ public class AdminController {
             Integer check1 = test.getManualTestCurrentRecord(itemId);
 
             if ("0".equals(check1)) {
+                LOGGER.info("111");
                 test = new ManualTestDAO();
                 QueryResult q0 = test.insertManualTestBeforeLoading(itemId, id, String.valueOf(inputQuantity), inputDUT, String.valueOf(saiz), user, flag);
 
@@ -1428,6 +1442,7 @@ public class AdminController {
                     }
                 }
             } else {
+                LOGGER.info("2222");
                 test = new ManualTestDAO();
                 Integer configId = test.getConfigIdByItemId(itemId);
                 test = new ManualTestDAO();

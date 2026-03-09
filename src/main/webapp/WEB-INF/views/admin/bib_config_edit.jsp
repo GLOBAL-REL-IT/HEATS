@@ -393,7 +393,16 @@
     <s:layout-component name="page_js_inline">
         <script>
             $(document).ready(function () {
-                $('#inputDUT').removeAttr('required');
+//                $('#inputDUT').removeAttr('required');
+                var inputContainer = document.getElementById("manual_page_control");
+                var checkbox = document.getElementById("manualTestCheck");
+                if (checkbox.checked) {
+                    inputContainer.classList.remove("hidden");
+                    document.getElementById("inputDUT").setAttribute("required", "required");
+                } else {
+                    inputContainer.classList.add("hidden");
+                    document.getElementById("inputDUT").removeAttribute("required");
+                }
                 //            $('#onHandQty').change(function () {
                 ////                    $('#totalQty').val(parseInt($('#onHandQty').val()) + parseInt($('#productionQty').val()) + parseInt($('#productionStagingQty').val()) + parseInt($('#repairQty').val()));
                 //                $('#totalQty').val(parseInt($('#onHandQty').val()));

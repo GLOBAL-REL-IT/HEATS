@@ -700,7 +700,7 @@ public class ManualTestDAO {
     }
 
     public Integer getManualTestCurrentRecord(String mibItemId) {
-        Integer count = null;
+        Integer count = 0;
         try {
             PreparedStatement ps = conn.prepareStatement(
                     "SELECT COUNT(*) AS count FROM item_manual_test_before WHERE mib_item_id = '" + mibItemId + "'"
@@ -783,7 +783,7 @@ public class ManualTestDAO {
         QueryResult queryResult = new QueryResult();
         try {
             PreparedStatement ps = conn.prepareStatement(
-                    "UPDATE item_activity_config SET qty = ?, dut = ?, component = ? WHERE id = ?"
+                    "UPDATE item_manual_test_before SET qty = ?, dut = ?, component = ? WHERE id = ?"
             );
             ps.setString(1, qty);
             ps.setString(2, dut);
