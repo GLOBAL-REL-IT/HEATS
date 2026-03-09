@@ -393,6 +393,7 @@
     <s:layout-component name="page_js_inline">
         <script>
             $(document).ready(function () {
+                $('#inputDUT').removeAttr('required');
                 //            $('#onHandQty').change(function () {
                 ////                    $('#totalQty').val(parseInt($('#onHandQty').val()) + parseInt($('#productionQty').val()) + parseInt($('#productionStagingQty').val()) + parseInt($('#repairQty').val()));
                 //                $('#totalQty').val(parseInt($('#onHandQty').val()));

@@ -3910,8 +3910,9 @@
                                                             <th>ALU</th>
                                                             <th>Shelf Time</th>
                                                             <th>Status</th>
-                                                            <th>RMS_Event</th>
-                                                            <th>Flag</th>
+                                                            <th>Manage</th>
+<!--                                                            <th>RMS_Event</th>
+                                                            <th>Flag</th>-->
                                                         </tr>
                                                     </thead>
                                                     <tbody>
@@ -4371,10 +4372,36 @@
                                                                 {data: 'alu'},
                                                                 {data: 'shelf_time'},
                                                                 {data: 'status'},
-                                                                {data: 'rms_event'},
-                                                                {data: 'flag'},
+//                                                                {data: 'rms_event'},
+//                                                                {data: 'flag'},
+                                                                {
+                                                                    data: "invId", // This column won't directly map to a data field
+                                                                    render: function (data, type, row) {
+//                                                                        if (row.status === 'Available') {
+//                                                                            return `<button class="btn btn-secondary edit-btn">Verify</button> 
+//                                                                                    <button class="btn btn-info edit-btn" onclick="viewRow(`+row.id+`)">Log</button>`;
+                                                                        if (row.status === 'Available') {
+                                                                            return `<button class="btn btn-info edit-btn" onclick="viewRow(`+row.id+`)">Log</button>`;
+                                                                        } else {
+                                                                            return `<button class="btn btn-success edit-btn" onclick="verifyRow(`+row.id+`)">Verify</button> 
+                                                                                    <button class="btn btn-info edit-btn" onclick="viewRow(`+row.id+`)">Log</button>`;
+                                                                        }
+                                                                    }
+                                                                }
                                                             ]
                                                         });
+                                                    }
+
+                                                    function verifyRow(itemPKID) {
+                                                        var Url = "${contextPath}/hw/item/toverifyHardwareId/" + itemPKID;
+                                                        window.location.href = Url;
+                                                        // Add your delete logic here (e.g., confirmation dialog, API call)
+                                                    }
+                                                    
+                                                    function viewRow(itemPKID) {
+                                                        var Url = "${contextPath}/hw/item/deleteHardwareId/" + itemPKID;
+                                                        window.location.href = Url;
+                                                        // Add your delete logic here (e.g., confirmation dialog, API call)
                                                     }
 
                                                     function ajaxStorage() {

@@ -194,12 +194,39 @@ public class ItemHardwareDAO {
         return itemhardware;
     }
     
-    public ItemHardware getItemHardwareByItemId(String itemId) {
-        String sql = "SELECT * FROM item_hardware WHERE mib_item_id = '" + itemId + "'";
-        ItemHardware itemhardware = null;
+    public String getMibItemIdByItemHwId(String itemhardwareId) {
+        String sql = "SELECT mib_item_id FROM item_hardware WHERE id = '" + itemhardwareId + "'";
+        String mibItemId = "0";
         try {
             PreparedStatement ps = conn.prepareStatement(sql);
             ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                mibItemId = rs.getString("mib_item_id");
+            }
+            rs.close();
+            ps.close();
+        } catch (SQLException e) {
+            LOGGER.error(e.getMessage());
+        } finally {
+            if (conn != null) {
+                try {
+                    conn.close();
+                } catch (SQLException e) {
+                    LOGGER.error(e.getMessage());
+                }
+            }
+        }
+        return mibItemId;
+    }
+    
+    public List<ItemHardware> getItemHardwareByItemId(String itemId) {
+        String sql = "SELECT * FROM item_hardware WHERE mib_item_id = '" + itemId + "'";
+        
+        List<ItemHardware> itemhardwareList = new ArrayList<ItemHardware>();
+        try {
+            PreparedStatement ps = conn.prepareStatement(sql);
+            ResultSet rs = ps.executeQuery();
+            ItemHardware itemhardware = null;
             while (rs.next()) {
                 itemhardware = new ItemHardware();
                 itemhardware.setId(rs.getString("id"));
@@ -215,6 +242,7 @@ public class ItemHardwareDAO {
                 itemhardware.setVerifyBy(rs.getString("verify_by"));
                 itemhardware.setVerifyDate(rs.getString("verify_date"));
                 itemhardware.setFlag(rs.getString("flag"));
+                itemhardwareList.add(itemhardware);
             }
             rs.close();
             ps.close();
@@ -229,7 +257,7 @@ public class ItemHardwareDAO {
                 }
             }
         }
-        return itemhardware;
+        return itemhardwareList;
     }
 
     public List<ItemHardware> getItemHardwareList() {
@@ -398,6 +426,30 @@ public class ItemHardwareDAO {
             );
             ps.setString(1, item.getSptsPkid());
             ps.setString(2, item.getId());
+            queryResult.setResult(ps.executeUpdate());
+            ps.close();
+        } catch (SQLException e) {
+            queryResult.setErrorMessage(e.getMessage());
+            LOGGER.error(e.getMessage());
+        } finally {
+            if (conn != null) {
+                try {
+                    conn.close();
+                } catch (SQLException e) {
+                    LOGGER.error(e.getMessage());
+                }
+            }
+        }
+        return queryResult;
+    }
+    
+    public QueryResult updateHardwareIdStatus(ItemHardware item) {
+        QueryResult queryResult = new QueryResult();
+        try {
+            PreparedStatement ps = conn.prepareStatement(
+                    "UPDATE item_hardware SET status = 'Available' WHERE id = ?"
+            );
+            ps.setString(1, item.getId());
             queryResult.setResult(ps.executeUpdate());
             ps.close();
         } catch (SQLException e) {

@@ -6458,7 +6458,7 @@ public class ItemController {
             String maklumatterakhir = "";
             if (itemconfig.getSameItemId().equals("Yes")) {
                 ItemHardwareDAO dao2 = new ItemHardwareDAO();
-                ItemHardware item2 = dao2.getItemHardwareByItemId(mibItemId);
+                List<ItemHardware> item2 = dao2.getItemHardwareByItemId(mibItemId);
                 if (item2 == null) {
                     itemhardware.setHardwareId(sameItemId);
                     dao2 = new ItemHardwareDAO();
@@ -6526,6 +6526,66 @@ public class ItemController {
         return "redirect:/hw/" + sptsId;
     }
 
+    @RequestMapping(value = "/item/toverifyHardwareId/{itemHwId}", method = RequestMethod.GET)
+    public String toverifyHardware(
+            Model model,
+            @ModelAttribute UserSession userSession,
+            @PathVariable("itemHwId") String itemHwId) throws IOException {
+
+        ItemHardwareDAO itemhwdao = new ItemHardwareDAO();
+        String itemId = itemhwdao.getMibItemIdByItemHwId(itemHwId);
+
+        itemhwdao = new ItemHardwareDAO();
+        ItemHardware itemhw = itemhwdao.getItemHardware(itemHwId);
+        model.addAttribute("itemhw", itemhw);
+        model.addAttribute("itemhwid", itemhw.getHardwareId());
+        model.addAttribute("itemhwidid", itemhw.getId());
+
+        ItemDAO itemdao = new ItemDAO();
+        String sptsId = itemdao.getSptsPkIdByMibItemId(itemId);
+        itemdao = new ItemDAO();
+        Item item = itemdao.getHardwareByPkid(sptsId);
+        model.addAttribute("item", item);
+        model.addAttribute("itemId", itemId);
+
+        String maklumatHwIdList = getHardwareIdList(itemId, itemhw.getHardwareId());
+        model.addAttribute("maklumatList", maklumatHwIdList);
+
+        return "item/verify_hardware_id";
+    }
+
+    @RequestMapping(value = "/item/hardware/verify", method = {RequestMethod.GET, RequestMethod.POST})
+    public String verifyHardwareId(
+            Model model,
+            Locale locale,
+            RedirectAttributes redirectAttrs,
+            @ModelAttribute UserSession userSession,
+            @RequestParam(required = false) String hwid,
+            @RequestParam(required = false) String hardwareId,
+            @RequestParam(required = false) String mibId,
+            @RequestParam(required = false) String sptsPkid,
+            @RequestParam(required = false) String itemType,
+            @RequestParam(required = false) String subType,
+            @RequestParam(required = false) String itemId,
+            @RequestParam(required = false) String itemName) throws IOException {
+
+        String hwidStatus = "Available";
+
+        ItemHardware itemhw = new ItemHardware();
+        itemhw.setId(hwid);
+
+        ItemHardwareDAO itemhwdao = new ItemHardwareDAO();
+        QueryResult qr = itemhwdao.updateHardwareIdStatus(itemhw);
+
+        String status = insertItemHardwareIntoSpts(hwid, mibId, hardwareId, hwidStatus, userSession.getLoginId());
+        if (status.equals("SUCCESS")) {
+            redirectAttrs.addFlashAttribute("success", messageSource.getMessage("admin.label.hardware.create.success", args, locale));
+        } else {
+            redirectAttrs.addFlashAttribute("error", status);
+        }
+        return "redirect:/hw/" + sptsPkid;
+    }
+
     private static void addIfYes(StringJoiner sj, String flag, String value) {
         if ("Yes".equalsIgnoreCase(flag) && value != null) {
             sj.add(value.trim());
@@ -6578,6 +6638,64 @@ public class ItemController {
         }
 
         return status;
+    }
+
+    private String getHardwareIdList(String mibItemId, String currentHwId) {
+//        String data = "";
+        StringBuilder data = new StringBuilder();
+        ItemHardwareDAO dao2 = new ItemHardwareDAO();
+        List<ItemHardware> item2 = dao2.getItemHardwareByItemId(mibItemId);
+
+        if (item2 == null) {
+            return "NO DATA FOUND";
+        } else {
+            for (ItemHardware hw : item2) {
+                if (hw.getHardwareId() != null && hw.getHardwareId().equals(currentHwId)) {
+                    String hehe = "<div class=\"d-flex align-items-center justify-content-between mb-3\">"
+                    + "<div class=\"d-flex align-items-center\">"
+                    + "<div class=\"icon-box sm rounded-circle bg-info me-4\">"
+                    + "<i class=\"bi bi-bookmark-check\"></i>"
+                    + "</div>"
+                    + "<div>"
+                    + "<h6 class=\"mb-0 fw-bold\">"+hw.getHardwareId()+"</h6>"
+                    + "</div>"
+                    + "</div>"
+                    + "<span class=\"badge bg-info\">"+hw.getStatus()+"</span>"
+                    + "</div>";
+                    data.append(hehe);
+                } // 2. Check if status is Available
+                else if ("Available".equalsIgnoreCase(hw.getStatus())) {
+                    String hehe = "<div class=\"d-flex align-items-center justify-content-between mb-3\">"
+                    + "<div class=\"d-flex align-items-center\">"
+                    + "<div class=\"icon-box sm rounded-circle bg-info me-3\">"
+                    + "<i class=\"bi bi-bookmark-check\"></i>"
+                    + "</div>"
+                    + "<div>"
+                    + "<h6 class=\"mb-0 fw-semibold\">"+hw.getHardwareId()+"</h6>"
+                    + "</div>"
+                    + "</div>"
+                    + "<span class=\"badge bg-success\">"+hw.getStatus()+"</span>"
+                    + "</div>";
+                    data.append(hehe);
+                } // 3. Fallback
+                else {
+                    String hehe = "<div class=\"d-flex align-items-center justify-content-between mb-3\">"
+                    + "<div class=\"d-flex align-items-center\">"
+                    + "<div class=\"icon-box sm rounded-circle bg-secondary me-3\">"
+                    + "<i class=\"bi bi-bookmark\"></i>"
+                    + "</div>"
+                    + "<div>"
+                    + "<h6 class=\"mb-0 fw-semibold\">"+hw.getHardwareId()+"</h6>"
+                    + "</div>"
+                    + "</div>"
+                    + "<span class=\"badge bg-secondary\">"+hw.getStatus()+"</span>"
+                    + "</div>";
+                    data.append(hehe);
+                }
+            }
+        }
+
+        return data.toString();
     }
 
 }
