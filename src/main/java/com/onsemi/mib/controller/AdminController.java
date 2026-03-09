@@ -1226,18 +1226,86 @@ public class AdminController {
         return "admin/bib_config";
     }
 
-    @RequestMapping(value = "/bibActivity/add", method = {RequestMethod.GET, RequestMethod.POST})
+    @RequestMapping(value = "/bibActivity/add/{mibId}", method = {RequestMethod.GET, RequestMethod.POST})
     public String bibActivityAdd(
             Model model,
-            @ModelAttribute UserSession userSession) {
+            @ModelAttribute UserSession userSession,
+            @PathVariable("mibId") String mibId) {
 
         String dut = "";
+
+        ItemDAO itemD = new ItemDAO();
+        Item item = itemD.getHardwareDetail(mibId);
+        model.addAttribute("item", item);
 
         List<ManualTest> itemB1 = new ArrayList<>();
 
         model.addAttribute("dut", dut);
         model.addAttribute("listData", itemB1);
         return "admin/bib_config_add";
+    }
+
+    @RequestMapping(value = "/bibActivity/save", method = {RequestMethod.GET, RequestMethod.POST})
+    public String addActivitySave(
+            Model model,
+            Locale locale,
+            RedirectAttributes redirectAttrs,
+            @ModelAttribute UserSession userSession,
+            @RequestParam(required = false) String mibItemId,
+            @RequestParam(required = false) String sptsPkid,
+            @RequestParam(required = false) String viCheck,
+            @RequestParam(required = false) String bibTestCheck,
+            @RequestParam(required = false) String manualTestCheck,
+            @RequestParam(required = false) String leakageTestCheck,
+            @RequestParam(required = false) String psLeakageTestCheck,
+            @RequestParam(required = false) String winchesterChamberLeakageTest
+    ) {
+
+        ItemActivityConfig itemA = new ItemActivityConfig();
+        itemA.setMibItemId(mibItemId);
+        if ("on".equals(viCheck)) {
+            itemA.setVi("Yes");
+        } else {
+            itemA.setVi("No");
+        }
+        if ("on".equals(bibTestCheck)) {
+            itemA.setBibTest("Yes");
+        } else {
+            itemA.setBibTest("No");
+        }
+        if ("on".equals(manualTestCheck)) {
+            itemA.setManualTest("Yes");
+        } else {
+            itemA.setManualTest("No");
+        }
+        if ("on".equals(leakageTestCheck)) {
+            itemA.setLeakageTest("Yes");
+        } else {
+            itemA.setLeakageTest("No");
+        }
+        if ("on".equals(psLeakageTestCheck)) {
+            itemA.setPsLeakageTest("Yes");
+        } else {
+            itemA.setPsLeakageTest("No");
+        }
+        if ("on".equals(winchesterChamberLeakageTest)) {
+            itemA.setWinchesterChamberLeakageTest("Yes");
+        } else {
+            itemA.setWinchesterChamberLeakageTest("No");
+        }
+        itemA.setFlag("0");
+        itemA.setCreatedBy(userSession.getFullname());
+        itemA.setStatus("New Config");
+
+        ItemActivityConfigDAO itemD = new ItemActivityConfigDAO();
+        QueryResult itemQ = itemD.insertItemActivityConfig(itemA);
+        if (!"0".equals(itemQ.getGeneratedKey())) {
+            redirectAttrs.addFlashAttribute("success", "Activity Configuration Succesfully Added.");
+            return "redirect:/hw/" + sptsPkid;
+        } else {
+            redirectAttrs.addFlashAttribute("error", "Failed to save Activity Configuration. Pls Contact System Admin");
+            return "redirect:/admin/bibActivity/add/" + mibItemId;
+        }
     }
 
     @RequestMapping(value = "/bibActivity/edit/{id}", method = {RequestMethod.GET, RequestMethod.POST})
