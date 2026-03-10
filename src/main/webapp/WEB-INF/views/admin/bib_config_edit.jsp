@@ -573,6 +573,10 @@
                         percentageCell.style.display = 'none';
                         lowerLimitCell.style.display = 'none';
                         upperLimitCell.style.display = 'none';
+                        valueInput.value = 1.0;
+                        percentageInput.value = 0.0;
+                        lowerLimitInput.value = 1.0;
+                        upperLimitInput.value = 1.0;
                         valueCell.colSpan = 4;
                         const span = document.createElement('span');
                         span.className = 'status-text';

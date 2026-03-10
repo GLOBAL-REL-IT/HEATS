@@ -85,16 +85,13 @@
                             </div>
                         </div>
                         <div class="row">
-                            <div class="form-group required col-xl-6 col-sm-12 col-12">
-                                <div class="card mb-4">
-                                    <div class="card-header d-flex justify-content-between align-items-center">
-                                        <h5 class="card-title mb-0">Hardware ID List</h5>
-                                    </div>
-                                    <div class="card-body me-3">
-                                        <div class="status-list d-flex flex-column pe-2 overflow-auto" style="max-height: 400px;">
-                                            ${maklumatList}
-                                        </div>
-                                    </div>
+                            <div class="form-group required col-xl-6 col-sm-12 col-12 bordered">
+                                <div class="card-header d-flex justify-content-between align-items-center">
+                                    <h5 class="card-title mb-0">Hardware ID List</h5>
+                                </div>
+                                <div class="card-body">
+                                    <ul class="list-group list-group-flush overflow-auto" style="max-height: 400px;">
+                                    ${maklumatList}
                                 </div>
                             </div>
                         </div>
@@ -114,7 +111,7 @@
                             </div>
                         </div>
                         <div>
-                            <a href="${contextPath}/hw/${item.sptsPkid}" class="btn btn-dark" role="button" onclick="history.back(); return false;">Back</a>
+                            <a href="${contextPath}/hw/${item.sptsPkid}" class="btn btn-dark" role="button">Back</a>
                             <button type="submit" id="submitButton" class="btn btn-primary" disabled>Submit</button>
                         </div>
                     </form>

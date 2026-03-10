@@ -6550,8 +6550,8 @@ public class ItemController {
         model.addAttribute("item", item);
         model.addAttribute("itemId", itemId);
 
-        String maklumatHwIdList = getHardwareIdList(itemId, itemhw.getHardwareId());
-        model.addAttribute("maklumatList", maklumatHwIdList);
+        String maklumatList = getHardwareIdList(itemId, itemhw.getHardwareId());
+        model.addAttribute("maklumatList", maklumatList);
 
         return "item/verify_hardware_id";
     }
@@ -6643,7 +6643,6 @@ public class ItemController {
     }
 
     private String getHardwareIdList(String mibItemId, String currentHwId) {
-//        String data = "";
         StringBuilder data = new StringBuilder();
         ItemHardwareDAO dao2 = new ItemHardwareDAO();
         List<ItemHardware> item2 = dao2.getItemHardwareByItemId(mibItemId);
@@ -6653,45 +6652,51 @@ public class ItemController {
         } else {
             for (ItemHardware hw : item2) {
                 if (hw.getHardwareId() != null && hw.getHardwareId().equals(currentHwId)) {
-                    String hehe = "<div class=\"d-flex align-items-center justify-content-between mb-3\">"
-                            + "<div class=\"d-flex align-items-center\">"
-                            + "<div class=\"icon-box sm rounded-circle bg-info me-4\">"
-                            + "<i class=\"bi bi-bookmark-check\"></i>"
+                    String hehe = "<li class=\"list-group-item px-0 d-flex justify-content-between align-items-center\">"
+                            + "<div class=\"icon-box sm rounded-circle bg-info\">"
+                            + "<i class=\"bi bi-bookmark-check\">"
                             + "</div>"
-                            + "<div>"
-                            + "<h6 class=\"mb-0 fw-bold\">" + hw.getHardwareId() + "</h6>"
-                            + "</div>"
-                            + "</div>"
-                            + "<span class=\"badge bg-info\">" + hw.getStatus() + "</span>"
-                            + "</div>";
+                            + "<div></i><h6 class=\"mb-1 fw-semibold\">" + hw.getHardwareId() + "</h6>"
+                            + "  <div class=\"progress small\">"
+                            + "    <div class=\"progress-bar bg-info w-100\" role=\"progressbar\" style=\"width: 100%\""
+                            + "      aria-valuenow=\"100\" aria-valuemin=\"0\" aria-valuemax=\"100\""
+                            + "      aria-label=\"Dashboard redesign progress\"></div>"
+                            + "    </div>"
+                            + "  </div>"
+                            + "  <span class=\"badge bg-info rounded-pill\">" + hw.getStatus() + "</span>"
+                            + "</li>";
                     data.append(hehe);
                 } // 2. Check if status is Available
                 else if ("Available".equalsIgnoreCase(hw.getStatus())) {
-                    String hehe = "<div class=\"d-flex align-items-center justify-content-between mb-3\">"
-                            + "<div class=\"d-flex align-items-center\">"
-                            + "<div class=\"icon-box sm rounded-circle bg-info me-3\">"
-                            + "<i class=\"bi bi-bookmark-check\"></i>"
+                    String hehe = "<li class=\"list-group-item d-flex justify-content-between align-items-center\">"
+                            + "<div class=\"icon-box sm rounded-circle bg-success\">"
+                            + "<i class=\"bi bi-bookmark-check\">"
                             + "</div>"
-                            + "<div>"
-                            + "<h6 class=\"mb-0 fw-semibold\">" + hw.getHardwareId() + "</h6>"
-                            + "</div>"
-                            + "</div>"
-                            + "<span class=\"badge bg-success\">" + hw.getStatus() + "</span>"
-                            + "</div>";
+                            + "<div></i><h6 class=\"mb-1\">" + hw.getHardwareId() + "</h6>"
+                            + "  <div class=\"progress small\">"
+                            + "    <div class=\"progress-bar bg-success w-100\" role=\"progressbar\" style=\"width: 100%\""
+                            + "      aria-valuenow=\"100\" aria-valuemin=\"0\" aria-valuemax=\"100\""
+                            + "      aria-label=\"Dashboard redesign progress\"></div>"
+                            + "    </div>"
+                            + "  </div>"
+                            + "  <span class=\"badge bg-success rounded-pill\">&emsp;&emsp;&emsp;" + hw.getStatus() + "&emsp;&emsp;</span>"
+                            + "</li>";
                     data.append(hehe);
                 } // 3. Fallback
                 else {
-                    String hehe = "<div class=\"d-flex align-items-center justify-content-between mb-3\">"
-                            + "<div class=\"d-flex align-items-center\">"
-                            + "<div class=\"icon-box sm rounded-circle bg-secondary me-3\">"
-                            + "<i class=\"bi bi-bookmark\"></i>"
+                    String hehe = "<li class=\"list-group-item d-flex justify-content-between align-items-center\">"
+                            + "<div class=\"icon-box sm rounded-circle bg-secondary\">"
+                            + "<i class=\"bi bi-bookmark\">"
                             + "</div>"
-                            + "<div>"
-                            + "<h6 class=\"mb-0 fw-semibold\">" + hw.getHardwareId() + "</h6>"
-                            + "</div>"
-                            + "</div>"
-                            + "<span class=\"badge bg-secondary\">" + hw.getStatus() + "</span>"
-                            + "</div>";
+                            + "<div></i><h6 class=\"mb-1\">" + hw.getHardwareId() + "</h6>"
+                            + "  <div class=\"progress small\">"
+                            + "    <div class=\"progress-bar bg-secondary w-100\" role=\"progressbar\" style=\"width: 100%\""
+                            + "      aria-valuenow=\"100\" aria-valuemin=\"0\" aria-valuemax=\"100\""
+                            + "      aria-label=\"Dashboard redesign progress\"></div>"
+                            + "    </div>"
+                            + "  </div>"
+                            + "  <span class=\"badge bg-secondary rounded-pill\">" + hw.getStatus() + "</span>"
+                            + "</li>";
                     data.append(hehe);
                 }
             }
