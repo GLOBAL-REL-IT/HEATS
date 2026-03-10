@@ -373,7 +373,7 @@ public class ManualTestDAO {
     }
 
     public Integer getQuantity(String mibItemId) {
-        Integer count = null;
+        Integer count = 0;
         try {
             PreparedStatement ps = conn.prepareStatement(
                     "SELECT COUNT(*) AS count FROM item_activity_config con WHERE con.mib_item_id = '" + mibItemId + "'"
@@ -400,7 +400,7 @@ public class ManualTestDAO {
     }
 
     public Integer getDut(String mibItemId) {
-        Integer count = null;
+        Integer count = 0;
         try {
             PreparedStatement ps = conn.prepareStatement(
                     "SELECT COUNT(*) AS count FROM item_activity_config con WHERE con.mib_item_id = '" + mibItemId + "'"
@@ -462,8 +462,6 @@ public class ManualTestDAO {
 
     public QueryResult insertManualTestBeforeLoading(String itemId, String configId, String qty, String dut, String cpnt, String user, String flag) {
         QueryResult queryResult = new QueryResult();
-        String sql = "";
-        ManualTest test = null;
         try {
             PreparedStatement ps = conn.prepareStatement(
                     "INSERT INTO item_manual_test_before (mib_item_id, config_id, qty, dut, component, created_by, created_date, flag) VALUES (?, ?, ?, ?, ?, ?, NOW(), ?)", Statement.RETURN_GENERATED_KEYS
@@ -498,8 +496,6 @@ public class ManualTestDAO {
 
     public QueryResult insertManualTestBeforeLoadingSub(String itemId, String pkId, String dut, String compType, String compName, String compValue, String percentage, String lower, String upper, String user, String flag) {
         QueryResult queryResult = new QueryResult();
-        String sql = "";
-        ManualTest test = null;
         try {
             PreparedStatement ps = conn.prepareStatement(
                     "INSERT INTO item_manual_test_before_sub (mib_item_id, pk_id, dut, comp_type, comp_name, comp_value, percentage, lower, upper, created_by, created_date, flag) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, NOW(), ?)", Statement.RETURN_GENERATED_KEYS
@@ -538,8 +534,6 @@ public class ManualTestDAO {
 
     public QueryResult insertManualTestAfterLoading(String itemId, String qty, String dut, String cpnt, String user, String flag) {
         QueryResult queryResult = new QueryResult();
-        String sql = "";
-        ManualTest test = null;
         try {
             PreparedStatement ps = conn.prepareStatement(
                     "INSERT INTO item_manual_test_after (mib_item_id, qty, dut, component, created_by, created_date, flag) VALUES (?, ?, ?, ?, ?, NOW(), ?)", Statement.RETURN_GENERATED_KEYS
@@ -573,8 +567,6 @@ public class ManualTestDAO {
 
     public QueryResult insertManualTestAfterLoadingSub(String itemId, String pkId, String dut, String compName, String compValue, String percentage, String lower, String upper, String user, String flag) {
         QueryResult queryResult = new QueryResult();
-        String sql = "";
-        ManualTest test = null;
         try {
             PreparedStatement ps = conn.prepareStatement(
                     "INSERT INTO item_manual_test_after_sub (mib_item_id, pk_id, dut, comp_name, comp_value, percentage, lower, upper, created_by, created_date, flag) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, NOW(), ?)", Statement.RETURN_GENERATED_KEYS
@@ -726,7 +718,7 @@ public class ManualTestDAO {
     }
 
     public Integer getConfigIdByItemId(String mibItemId) {
-        Integer count = null;
+        Integer count = 0;
         try {
             PreparedStatement ps = conn.prepareStatement(
                     "SELECT id FROM item_manual_test_before WHERE mib_item_id = '" + mibItemId + "'"
@@ -753,7 +745,7 @@ public class ManualTestDAO {
     }
 
     public Integer getManualTestCurrentRecordSub(String mibItemId) {
-        Integer count = null;
+        Integer count = 0;
         try {
             PreparedStatement ps = conn.prepareStatement(
                     "SELECT COUNT(*) AS count FROM item_manual_test_before_sub WHERE mib_item_id = '" + mibItemId + "'"

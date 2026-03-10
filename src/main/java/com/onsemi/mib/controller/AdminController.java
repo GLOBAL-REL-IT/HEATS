@@ -1441,7 +1441,7 @@ public class AdminController {
 
             ManualTestDAO test = new ManualTestDAO();
             Integer check1 = test.getManualTestCurrentRecord(itemId);
-
+            
             if ("0".equals(check1)) {
                 LOGGER.info("111");
                 test = new ManualTestDAO();
@@ -1455,19 +1455,28 @@ public class AdminController {
                     }
                 }
             } else {
-                LOGGER.info("2222");
                 test = new ManualTestDAO();
-                Integer configId = test.getConfigIdByItemId(itemId);
-                test = new ManualTestDAO();
-                QueryResult q0 = test.updateItemActivityConfig(String.valueOf(inputQuantity), inputDUT, String.valueOf(saiz), String.valueOf(configId));
+                String configId = test.getConfigIdByItemId(itemId).toString();
+                
+                if ("0".equals(configId)) {
+                    test = new ManualTestDAO();
+                    QueryResult q0 = test.insertManualTestBeforeLoading(itemId, id, String.valueOf(inputQuantity), inputDUT, String.valueOf(saiz), user, flag);
 
+                    if (!"0".equals(q0.getGeneratedKey())) {
+                        configId = q0.getGeneratedKey();
+                    }
+                } else {
+                    test = new ManualTestDAO();
+                    QueryResult q0 = test.updateItemActivityConfig(String.valueOf(inputQuantity), inputDUT, String.valueOf(saiz), String.valueOf(configId));
+                }
+                
                 // FUNCTION TO REMOVE PREVIOUS COMPONENT, AND THEN SAVE THE NEW ONE
                 test = new ManualTestDAO();
-                test.removeCurrentDataBefore(String.valueOf(configId), itemId);
+                test.removeCurrentDataBefore(configId, itemId);
 
                 for (int c1 = 0; c1 < saiz; c1++) {
                     test = new ManualTestDAO();
-                    QueryResult q3 = test.insertManualTestBeforeLoadingSub(itemId, String.valueOf(configId), inputDUT, type.get(c1), compName.get(c1), compValue.get(c1), percentageValue.get(c1), lowerValue.get(c1), upperValue.get(c1), user, flag);
+                    QueryResult q3 = test.insertManualTestBeforeLoadingSub(itemId, configId, inputDUT, type.get(c1), compName.get(c1), compValue.get(c1), percentageValue.get(c1), lowerValue.get(c1), upperValue.get(c1), user, flag);
                 }
             }
         } else {
@@ -1494,12 +1503,9 @@ public class AdminController {
         ItemActivityConfigDAO itemD = new ItemActivityConfigDAO();
         QueryResult itemQ = itemD.updateItemActivityConfig(itemA);
         if (!"0".equals(itemQ.getResult())) {
-//            redirectAttrs.addFlashAttribute("success", "Activity Configuration Succesfully Updated.");
             redirectAttrs.addFlashAttribute("success", messageSource.getMessage("item.label.configuration.bib.success", args, locale));
             return "redirect:/admin/bibActivity";
-//            return "redirect:/hw//item/pending";
         } else {
-//            redirectAttrs.addFlashAttribute("error", "Failed to update Activity Configuration. Pls Contact System Admin");
             redirectAttrs.addFlashAttribute("success", messageSource.getMessage("item.label.configuration.bib.error", args, locale));
             return "redirect:/admin/bibActivity/edit/" + id;
         }
@@ -1557,6 +1563,7 @@ public class AdminController {
             Integer check1 = test.getManualTestCurrentRecord(itemId);
 
             if ("0".equals(check1)) {
+                LOGGER.info("111");
                 test = new ManualTestDAO();
                 QueryResult q0 = test.insertManualTestBeforeLoading(itemId, id, String.valueOf(inputQuantity), inputDUT, String.valueOf(saiz), user, flag);
 
@@ -1569,17 +1576,27 @@ public class AdminController {
                 }
             } else {
                 test = new ManualTestDAO();
-                Integer configId = test.getConfigIdByItemId(itemId);
-                test = new ManualTestDAO();
-                QueryResult q0 = test.updateItemActivityConfig(String.valueOf(inputQuantity), inputDUT, String.valueOf(saiz), String.valueOf(configId));
+                String configId = test.getConfigIdByItemId(itemId).toString();
+                
+                if ("0".equals(configId)) {
+                    test = new ManualTestDAO();
+                    QueryResult q0 = test.insertManualTestBeforeLoading(itemId, id, String.valueOf(inputQuantity), inputDUT, String.valueOf(saiz), user, flag);
 
+                    if (!"0".equals(q0.getGeneratedKey())) {
+                        configId = q0.getGeneratedKey();
+                    }
+                } else {
+                    test = new ManualTestDAO();
+                    QueryResult q0 = test.updateItemActivityConfig(String.valueOf(inputQuantity), inputDUT, String.valueOf(saiz), String.valueOf(configId));
+                }
+                
                 // FUNCTION TO REMOVE PREVIOUS COMPONENT, AND THEN SAVE THE NEW ONE
                 test = new ManualTestDAO();
-                test.removeCurrentDataBefore(String.valueOf(configId), itemId);
+                test.removeCurrentDataBefore(configId, itemId);
 
                 for (int c1 = 0; c1 < saiz; c1++) {
                     test = new ManualTestDAO();
-                    QueryResult q3 = test.insertManualTestBeforeLoadingSub(itemId, String.valueOf(configId), inputDUT, type.get(c1), compName.get(c1), compValue.get(c1), percentageValue.get(c1), lowerValue.get(c1), upperValue.get(c1), user, flag);
+                    QueryResult q3 = test.insertManualTestBeforeLoadingSub(itemId, configId, inputDUT, type.get(c1), compName.get(c1), compValue.get(c1), percentageValue.get(c1), lowerValue.get(c1), upperValue.get(c1), user, flag);
                 }
             }
         } else {
@@ -1606,12 +1623,9 @@ public class AdminController {
         ItemActivityConfigDAO itemD = new ItemActivityConfigDAO();
         QueryResult itemQ = itemD.updateItemActivityConfig(itemA);
         if (!"0".equals(itemQ.getResult())) {
-//            redirectAttrs.addFlashAttribute("success", "Activity Configuration Succesfully Updated.");
             redirectAttrs.addFlashAttribute("success", messageSource.getMessage("item.label.configuration.bib.success", args, locale));
-//            return "redirect:/admin/bibActivity";
             return "redirect:/hw/" + sptsPkid;
         } else {
-//            redirectAttrs.addFlashAttribute("error", "Failed to update Activity Configuration. Pls Contact System Admin");
             redirectAttrs.addFlashAttribute("error", messageSource.getMessage("item.label.configuration.bib.error", args, locale));
             return "redirect:/admin/bibActivity/edit2/" + id;
         }
