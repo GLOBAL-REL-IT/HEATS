@@ -65,7 +65,7 @@ public class ItemHardwareDAO {
         }
         return queryResult;
     }
-    
+
     public QueryResult insertHardwareID(ItemHardware itemhardware) {
         QueryResult queryResult = new QueryResult();
         try {
@@ -194,6 +194,44 @@ public class ItemHardwareDAO {
         return itemhardware;
     }
     
+    public ItemHardware getItemHardwareByHardwareId(String hwId) {
+        String sql = "SELECT * FROM item_hardware WHERE hardware_id = '" + hwId + "'";
+        ItemHardware itemhardware = null;
+        try {
+            PreparedStatement ps = conn.prepareStatement(sql);
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                itemhardware = new ItemHardware();
+                itemhardware.setId(rs.getString("id"));
+                itemhardware.setMibItemId(rs.getString("mib_item_id"));
+                itemhardware.setSptsPkid(rs.getString("spts_pkid"));
+                itemhardware.setHardwareId(rs.getString("hardware_id"));
+                itemhardware.setAlu(rs.getString("alu"));
+                itemhardware.setStatus(rs.getString("status"));
+                itemhardware.setRmsEvent(rs.getString("rms_event"));
+                itemhardware.setShelfTime(rs.getString("shelf_time"));
+                itemhardware.setCreatedBy(rs.getString("created_by"));
+                itemhardware.setCreatedDate(rs.getString("created_date"));
+                itemhardware.setVerifyBy(rs.getString("verify_by"));
+                itemhardware.setVerifyDate(rs.getString("verify_date"));
+                itemhardware.setFlag(rs.getString("flag"));
+            }
+            rs.close();
+            ps.close();
+        } catch (SQLException e) {
+            LOGGER.error(e.getMessage());
+        } finally {
+            if (conn != null) {
+                try {
+                    conn.close();
+                } catch (SQLException e) {
+                    LOGGER.error(e.getMessage());
+                }
+            }
+        }
+        return itemhardware;
+    }
+
     public String getMibItemIdByItemHwId(String itemhardwareId) {
         String sql = "SELECT mib_item_id FROM item_hardware WHERE id = '" + itemhardwareId + "'";
         String mibItemId = "0";
@@ -218,10 +256,10 @@ public class ItemHardwareDAO {
         }
         return mibItemId;
     }
-    
+
     public List<ItemHardware> getItemHardwareByItemId(String itemId) {
         String sql = "SELECT * FROM item_hardware WHERE mib_item_id = '" + itemId + "'";
-        
+
         List<ItemHardware> itemhardwareList = new ArrayList<ItemHardware>();
         try {
             PreparedStatement ps = conn.prepareStatement(sql);
@@ -299,9 +337,9 @@ public class ItemHardwareDAO {
         }
         return itemhardwareList;
     }
-    
+
     public List<ItemHardware> getItemHwListByItemId(String mibItemId) {
-        String sql = "SELECT * FROM item_hardware WHERE mib_item_id = '"+mibItemId+"' ORDER BY id ASC";
+        String sql = "SELECT * FROM item_hardware WHERE mib_item_id = '" + mibItemId + "' ORDER BY id ASC";
         List<ItemHardware> itemhardwareList = new ArrayList<ItemHardware>();
         try {
             PreparedStatement ps = conn.prepareStatement(sql);
@@ -339,11 +377,11 @@ public class ItemHardwareDAO {
         }
         return itemhardwareList;
     }
-    
+
     public String getLatestHardwareID(String mibItemId, String hardwareId) {
         String data = "";
         try {
-            PreparedStatement ps = conn.prepareStatement("SELECT MAX(hardware_id) as data FROM item_hardware WHERE mib_item_id = '"+mibItemId+"' AND hardware_id LIKE '"+hardwareId+"%'");
+            PreparedStatement ps = conn.prepareStatement("SELECT MAX(hardware_id) as data FROM item_hardware WHERE mib_item_id = '" + mibItemId + "' AND hardware_id LIKE '" + hardwareId + "%'");
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
                 data = rs.getString("data");
@@ -364,15 +402,15 @@ public class ItemHardwareDAO {
                 }
             }
         }
-        
+
         return data;
     }
-    
+
     public String checkForExistingData(String mibItemId, String hardwareId) {
         String data = "";
         // KITA NK CARI EXISTING DATA COMBINATION FOR ANOTHER ITEM ID IN THE DATABASE
         try {
-          PreparedStatement ps = conn.prepareStatement("SELECT COUNT(*) AS data FROM item_hardware WHERE mib_item_id != '"+mibItemId+"' AND hardware_id LIKE '"+hardwareId+"%'");
+            PreparedStatement ps = conn.prepareStatement("SELECT COUNT(*) AS data FROM item_hardware WHERE mib_item_id != '" + mibItemId + "' AND hardware_id LIKE '" + hardwareId + "%'");
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
                 data = rs.getString("data");
@@ -392,12 +430,12 @@ public class ItemHardwareDAO {
         }
         return data;
     }
-    
+
     public String getOtherMibId(String mibItemId, String hardwareId) {
         String data = "";
         // KITA NK CARI EXISTING DATA COMBINATION FOR ANOTHER ITEM ID IN THE DATABASE
         try {
-          PreparedStatement ps = conn.prepareStatement("SELECT mib_item_id FROM item_hardware WHERE mib_item_id != '"+mibItemId+"' AND hardware_id LIKE '"+hardwareId+"%'");
+            PreparedStatement ps = conn.prepareStatement("SELECT mib_item_id FROM item_hardware WHERE mib_item_id != '" + mibItemId + "' AND hardware_id LIKE '" + hardwareId + "%'");
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
                 data = rs.getString("mib_item_id");
@@ -417,7 +455,7 @@ public class ItemHardwareDAO {
         }
         return data;
     }
-    
+
     public QueryResult updateSPTSPKID_HardwareId(ItemHardware item) {
         QueryResult queryResult = new QueryResult();
         try {
@@ -442,7 +480,7 @@ public class ItemHardwareDAO {
         }
         return queryResult;
     }
-    
+
     public QueryResult updateHardwareIdStatus(ItemHardware item) {
         QueryResult queryResult = new QueryResult();
         try {
@@ -465,6 +503,33 @@ public class ItemHardwareDAO {
             }
         }
         return queryResult;
+    }
+
+    public Integer getCountAvailableHardwareId(String hwId) {
+        Integer count = null;
+        try {
+            PreparedStatement ps = conn.prepareStatement(
+                    "SELECT COUNT(*) AS count FROM item_hardware inc WHERE inc.hardware_id = '" + hwId + "' AND status = 'Available'"
+            );
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                count = rs.getInt("count");
+            }
+            rs.close();
+
+            ps.close();
+        } catch (SQLException e) {
+            LOGGER.error(e.getMessage());
+        } finally {
+            if (conn != null) {
+                try {
+                    conn.close();
+                } catch (SQLException e) {
+                    LOGGER.error(e.getMessage());
+                }
+            }
+        }
+        return count;
     }
 
 }

@@ -8,6 +8,9 @@ public class RmsBookingHardwareGroup {
 	private String itemId;
 	private String hardwarePkid;
 	private String hardwareId;
+	private String rmsNo;
+	private String event;
+	private String sptsStatus;
 	private String status;
 	private String createdBy;
 	private String createdDate;
@@ -59,6 +62,30 @@ public class RmsBookingHardwareGroup {
 
 	public void setHardwareId(String hardwareId) {
 		this.hardwareId = hardwareId;
+	}
+
+	public String getRmsNo() {
+		return rmsNo;
+	}
+
+	public void setRmsNo(String rmsNo) {
+		this.rmsNo = rmsNo;
+	}
+
+	public String getEvent() {
+		return event;
+	}
+
+	public void setEvent(String event) {
+		this.event = event;
+	}
+
+	public String getSptsStatus() {
+		return sptsStatus;
+	}
+
+	public void setSptsStatus(String sptsStatus) {
+		this.sptsStatus = sptsStatus;
 	}
 
 	public String getStatus() {
