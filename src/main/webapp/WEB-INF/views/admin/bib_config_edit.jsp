@@ -283,7 +283,7 @@
                                                                 <td><input type="text" class="standard-input-read" name="component_name[]" value="<c:out value="${manualList.componentName}"/>" readonly></td>
                                                                 <c:choose>
                                                                     <c:when test="${manualList.componentType == 'Fuse'}">
-                                                                        <td class="status2-text" style="text-align: right;" colspan="4">OPEN / SHORT</td>
+                                                                        <td class="status2-text" style="text-align: center;" colspan="4">OPEN / SHORT</td>
                                                                     </c:when>
                                                                     <c:otherwise>
                                                                         <td><input type="text" class="standard-input-read" name="actual_value[]" value="<c:out value="${manualList.componentValue}"/>" readonly></td>
@@ -328,7 +328,7 @@
                                                                 <td><input type="text" class="standard-input-read" name="component_name[]" value="<c:out value="${manualList.componentName}"/>" readonly></td>
                                                                 <c:choose>
                                                                     <c:when test="${manualList.componentType == 'Fuse'}">
-                                                                        <td class="status2-text" style="text-align: right;" colspan="4">OPEN / SHORT</td>
+                                                                        <td class="status2-text" style="text-align: center;" colspan="4">OPEN / SHORT</td>
                                                                     </c:when>
                                                                     <c:otherwise>
                                                                         <td><input type="text" class="standard-input-read" name="actual_value[]" value="<c:out value="${manualList.componentValue}"/>" readonly></td>

@@ -90,8 +90,8 @@
                                     <div class="card-header d-flex justify-content-between align-items-center">
                                         <h5 class="card-title mb-0">Hardware ID List</h5>
                                     </div>
-                                    <div class="card-body">
-                                        <div class="status-list">
+                                    <div class="card-body me-3">
+                                        <div class="status-list d-flex flex-column pe-2 overflow-auto" style="max-height: 400px;">
                                             ${maklumatList}
                                         </div>
                                     </div>
@@ -114,6 +114,7 @@
                             </div>
                         </div>
                         <div>
+                            <a href="${contextPath}/hw/${item.sptsPkid}" class="btn btn-dark" role="button" onclick="history.back(); return false;">Back</a>
                             <button type="submit" id="submitButton" class="btn btn-primary" disabled>Submit</button>
                         </div>
                     </form>
