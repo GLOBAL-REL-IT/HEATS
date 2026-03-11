@@ -6397,13 +6397,25 @@ public class ItemController {
             @PathVariable("itemType") String itemType) throws IOException {
 
         ItemDAO itemdao = new ItemDAO();
-        Item item = itemdao.getHardwareDetailByPkid(sptsId);
+        Item item = itemdao.getHardwareDetailByPkid(sptsId);                // the function actually search by spts_pkid
         model.addAttribute("item", item);
         model.addAttribute("sptsId", sptsId);
 
         ItemHardwareConfigDAO itemhwdao = new ItemHardwareConfigDAO();
         String subtype = item.getSubType() == null ? "" : item.getSubType();
         ItemHardwareConfig itemconfig = itemhwdao.getConfigItem(item.getItemType(), subtype);
+        
+        ItemHardwareDAO itmhwdao = new ItemHardwareDAO();
+        String totalCreated = itmhwdao.getTotalHardwareCreated(item.getId()).toString();
+        model.addAttribute("totalHwid", totalCreated);
+        
+        LOGGER.info("total quantity >>>> "+item.getTotalQty());
+        LOGGER.info("total da created >>> "+totalCreated);
+        Integer w1 = Integer.parseInt(item.getTotalQty());
+        Integer w2 = Integer.parseInt(totalCreated);
+        Integer baki = w1 - w2;
+        LOGGER.info("total yang masih boleh ::: "+baki);
+        model.addAttribute("limit", baki);
 
         if (itemconfig == null || "".equals(itemconfig)) {
             model.addAttribute("maklumatconfig", "");
@@ -6471,12 +6483,16 @@ public class ItemController {
                     redirectAttrs.addFlashAttribute("error", messageSource.getMessage("admin.label.hardware.create.error", args, locale));
                 }
             } else {
+                // KITA BUAT YANG INI UNTUK CATER SAMADA ADA COMPONENT SELECTED ATAU TIDAK
+                String dataComponent = (component != null && !component.isEmpty()) ? "Yes" : itemconfig.getComponent();
+                
                 StringJoiner sj = new StringJoiner("-");
                 addIfYes(sj, itemconfig.getSupplier(), supplier);
                 addIfYes(sj, itemconfig.getAssemblyNo(), assemblyNo);
                 addIfYes(sj, itemconfig.getRevision(), revision);
                 addIfYes(sj, itemconfig.getMfgDate(), viewMessage);
-                addIfYes(sj, itemconfig.getComponent(), component);
+//                addIfYes(sj, itemconfig.getComponent(), component);
+                addIfYes(sj, dataComponent, component);
                 addIfYes(sj, itemconfig.getEvent(), eventStress);
                 addIfYes(sj, itemconfig.getPartNumber(), partNo);
                 maklumatterakhir = sj.toString();
@@ -6550,8 +6566,11 @@ public class ItemController {
         model.addAttribute("item", item);
         model.addAttribute("itemId", itemId);
 
+        ItemHardwareDAO itmhwdao = new ItemHardwareDAO();
+        String totalCreated = itmhwdao.getTotalHardwareCreated(itemId).toString();
         String maklumatList = getHardwareIdList(itemId, itemhw.getHardwareId());
         model.addAttribute("maklumatList", maklumatList);
+        model.addAttribute("totalHwid", totalCreated);
 
         return "item/verify_hardware_id";
     }
@@ -6575,6 +6594,7 @@ public class ItemController {
 
         ItemHardware itemhw = new ItemHardware();
         itemhw.setId(hwid);
+        itemhw.setVerifyBy(userSession.getLoginId());
 
         ItemHardwareDAO itemhwdao = new ItemHardwareDAO();
         QueryResult qr = itemhwdao.updateHardwareIdStatus(itemhw);
@@ -6607,12 +6627,14 @@ public class ItemController {
         Integer sptsId = Integer.parseInt(itemdao.getSptsPkIdByMibItemId(itempkid));
 
         JSONObject addItemHw = new JSONObject();
-        addItemHw.put("itemPKID", sptsId);        // int
+        addItemHw.put("itemPKID", sptsId);                              // int
         addItemHw.put("hardwareID", hardwareId);
         addItemHw.put("status", hwStatus);
         addItemHw.put("createdBy", user);
-        addItemHw.put("createdDate", dateNow);      // datetime
-        addItemHw.put("flag", "0");
+        addItemHw.put("createdDate", dateNow);                          // datetime
+        addItemHw.put("verifyBy", user);
+        addItemHw.put("verifyDate", dateNow);                           // datetime
+        addItemHw.put("flag", "1");
 
         SPTSResponse sr = SPTSWebService.insertItemHardware(addItemHw);
 

@@ -447,9 +447,10 @@ public class ItemHardwareDAO {
         QueryResult queryResult = new QueryResult();
         try {
             PreparedStatement ps = conn.prepareStatement(
-                    "UPDATE item_hardware SET status = 'Available' WHERE id = ?"
+                    "UPDATE item_hardware SET status = 'Available', flag = '1', verify_date = NOW(), verify_by = ? WHERE id = ?"
             );
-            ps.setString(1, item.getId());
+            ps.setString(1, item.getVerifyBy());
+            ps.setString(2, item.getId());
             queryResult.setResult(ps.executeUpdate());
             ps.close();
         } catch (SQLException e) {
@@ -465,6 +466,32 @@ public class ItemHardwareDAO {
             }
         }
         return queryResult;
+    }
+    
+    public Integer getTotalHardwareCreated(String mibItemId) {
+        Integer count = 0;
+        try {
+            PreparedStatement ps = conn.prepareStatement(
+                    "SELECT COUNT(*) AS count FROM item_hardware WHERE mib_item_id = '" + mibItemId + "'"
+            );
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                count = rs.getInt("count");
+            }
+            rs.close();
+            ps.close();
+        } catch (SQLException e) {
+            LOGGER.error(e.getMessage());
+        } finally {
+            if (conn != null) {
+                try {
+                    conn.close();
+                } catch (SQLException e) {
+                    LOGGER.error(e.getMessage());
+                }
+            }
+        }
+        return count;
     }
 
 }

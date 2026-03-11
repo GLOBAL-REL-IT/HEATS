@@ -34,7 +34,7 @@
         <div class="col-12 ps-2">
             <div class="card mb-4">
                 <div class="card-header">
-                    <h5 class="card-title mb-3"><span style="color:#D97D55"> Hardware ID Creation</span> - [${itemId}]</h5>
+                    <h5 class="card-title mb-3"><span style="color:#D97D55"> Hardware ID Creation</span></h5>
                     <form class="row gx-3 needs-validation" role="form" action="${contextPath}/hw/item/hardware/verify" method="post" novalidate>
                         <div class="row">
                             <div class="form-group required col-xl-2 col-sm-12 col-12">
@@ -70,6 +70,22 @@
                                     <div class="input input-group">
                                         <!--<span class="input-group-text"><i class="bi bi-telephone"></i></span>-->
                                         <input type="text" class="form-control" id="itemName" name="itemName" placeholder="" value="${item.itemName}" readonly required>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group required col-xl-2 col-sm-12 col-12">
+                                <div class="mb-3">
+                                    <label for="totalQty" class="form-label">Total Quantity</label>
+                                    <div class="input input-group">
+                                        <input type="text" class="form-control" id="totalQty" name="totalQty" placeholder="" value="${item.totalQty}" readonly required>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group required col-xl-2 col-sm-12 col-12">
+                                <div class="mb-3">
+                                    <label for="totalHw" class="form-label">Hardware ID Quantity</label>
+                                    <div class="input input-group">
+                                        <input type="text" class="form-control" id="totalHw" name="totalHw" placeholder="" value="${totalHwid}" readonly required>
                                     </div>
                                 </div>
                             </div>

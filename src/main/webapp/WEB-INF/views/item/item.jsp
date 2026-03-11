@@ -4365,6 +4365,7 @@
                                                                 url: '${contextPath}/hw/item/ajaxHtmlSampleHardware',
                                                                 dataSrc: ''
                                                             },
+                                                            order: [[3, 'desc']], 
                                                             columns: [
 //                                                                {data: 'item_id'},
 //                                                                {data: 'item_name'},

@@ -73,12 +73,35 @@
                                                 </div>
                                             </div>
                                         </div>
+                                        <div class="form-group required col-xl-2 col-sm-12 col-12">
+                                            <div class="mb-3">
+                                                <label for="totalQty" class="form-label">Total Quantity</label>
+                                                <div class="input input-group">
+                                                    <input type="text" class="form-control" id="totalQty" name="totalQty" placeholder="" value="${item.totalQty}" readonly required>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="form-group required col-xl-2 col-sm-12 col-12">
+                                            <div class="mb-3">
+                                                <label for="totalHw" class="form-label">Hardware ID Quantity</label>
+                                                <div class="input input-group">
+                                                    <input type="text" class="form-control" id="totalHw" name="totalHw" placeholder="" value="${totalHwid}" readonly required>
+                                                </div>
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
                                 <div class="rounded-3">
                                     <h6 class="fw-semibold mb-3 border-success text-info ps-2">
                                         <i class="bi bi-card-checklist m-2"></i>Hardware ID Information
                                     </h6>
+                                </div>
+                                <div class="p-3 mb-0 rounded-3">
+                                    <div class="form-check form-switch">
+                                        <label id="toggleLabel">
+                                            <input class="form-check-input me-3" type="checkbox" id="toggleInput" onchange="toggleField()"> Mana Component
+                                        </label>
+                                    </div>
                                 </div>
                                 <div class="p-3 mb-4 rounded-3">
                                     <div class="row gx-4">
@@ -113,6 +136,14 @@
                                                     </div>
                                                 </div>
                                             </c:if>
+                                            <div class="col-sm-8 col-12" id="fieldContainer" style="display: none; margin-top: 10px;">
+                                                <div class="mb-3">
+                                                    <label class="form-label" for="component">Component<span class="text-danger"> *</span></label>
+                                                    <div class="input input-group">
+                                                        <input type="text" class="form-control" id="component" name="component" placeholder="Component Value" >
+                                                    </div>
+                                                </div>
+                                            </div>
                                             <c:if test="${hardwareconfig.revision == 'Yes'}">
                                                 <div class="col-sm-8 col-12">
                                                     <div class="mb-3">
@@ -192,7 +223,8 @@
                                                     <div class="mb-3">
                                                         <label class="form-label" for="runningNumber">Running Number<span class="text-danger"> *</span></label>
                                                         <div class="input input-group">
-                                                            <input type="number" class="form-control" id="runningNumber" name="runningNumber" min="1" step="1" placeholder="Key in running number">
+                                                            <input type="hidden" name="limit_kita" value="${limit}">
+                                                            <input type="number" class="form-control" id="runningNumber" name="runningNumber" min="1" step="1" max="${limit}" placeholder="Key in running number" oninput="checkMax(this)">
                                                         </div>
                                                     </div>
                                                 </div>
@@ -266,11 +298,6 @@
 
                 function buildLines( { assembly, mmyy, eventName, count }) {
                     const out = [];
-                    console.log("^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^");
-                    console.log("assembly >>>> " + assembly);
-                    console.log("mmyy >>>> " + mmyy);
-                    console.log("eventName >>>> " + eventName);
-                    console.log("count >>>> " + count);
                     for (let i = 1; i <= count; i++) {
                         out.push(`${assembly}-${mmyy}-${eventName}-${i}`);
                     }
@@ -283,12 +310,6 @@
                     const mmyy = monthToMMYY(yyyyDashMM);   // this is your msgDate
                     const eventName = document.getElementById("eventStress").value.trim();
                     const count = Number(document.getElementById("runningNumber").value);
-                    console.log("SINI DIA BACA SEMAU INPUT");
-                    console.log("assembly >> " + assembly);
-                    console.log("yyyyDashMM >> " + yyyyDashMM);
-                    console.log("mmyy >> " + mmyy);
-                    console.log("eventName >> " + eventName);
-                    console.log("assembly >> " + assembly);
                     return {assembly, mmyy, eventName, count};
                 }
 
@@ -311,14 +332,6 @@
                 const btnDownload = document.getElementById("btnDownload");
                 const mfgMonthEl = document.getElementById("mfgDate");
                 const msgDateEl = document.getElementById("viewMessage");
-
-                console.log("-----------------");
-                console.log("previewEl >>> " + previewEl);
-                console.log("btnCopy >>> " + btnCopy);
-                console.log("btnDownload >>> " + btnDownload);
-                console.log("mfgMonthEl >>> " + mfgMonthEl);
-                console.log("msgDateEl >>> " + msgDateEl);
-                console.log("-----------------");
 
                 function updateMsgDate() {
                     msgDateEl.value = monthToMMYY(mfgMonthEl.value) || "";
@@ -402,6 +415,25 @@
                 updateMsgDate();
                 generate();
             });
+            
+            function checkMax(inputElement) {
+                const maxValue = parseInt(inputElement.max);
+                const currentValue = parseInt(inputElement.value);
+
+                if (currentValue > maxValue) {
+                    alert("Hardware ID quantity balance only " + maxValue);
+                    inputElement.value = maxValue; // Set to max value
+                }
+            }
+            
+            function toggleField() {
+                const checkbox = document.getElementById('toggleInput');
+                const container = document.getElementById('fieldContainer');
+                const label = document.getElementById('toggleLabel');
+                const isChecked = checkbox.checked;
+                container.style.display = isChecked ? 'block' : 'none';
+                label.childNodes[2].nodeValue = isChecked ? ' To Remove Component' : ' To Show Component';
+            }
         </script>
     </s:layout-component>
 </s:layout-render>
