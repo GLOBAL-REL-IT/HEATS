@@ -989,40 +989,49 @@ public class ItemController {
         LOGGER.info("Total data SF: " + countSf);
         LOGGER.info("Total insert SF: " + countSfAdd);
         
-//        JSONObject paramsHwid = new JSONObject();
-//        paramsHwid.put("itemPKID", pkID);
-//        JSONArray getItemHwByParam = SPTSWebService.getHardwareIdByParam(paramsHwid);
-//        LOGGER.info("BERAPA :: "+getItemHwByParam.length());
-//        LOGGER.info("INFO :::: "+getItemHwByParam.toString());
-//        
-//        for (int i = 0; i < getItemHwByParam.length(); i++) {
-//            String mibItemId = "";
-//            String sptsId = "";
-//            String hardwareId = "";
-//            String status = "";
-//            String createdBy = "";
-//            String createdDate = "";
-//            String flag = "";
-//            
-//            String sptsVersion = getItemHwByParam.getJSONObject(i).getString("Version");
-//            sptsId = getItemHwByParam.getJSONObject(i).getString("PKID");
-//            hardwareId = getItemHwByParam.getJSONObject(i).getString("HardwareID");
-//            status = getItemHwByParam.getJSONObject(i).getString("Status");
-//            createdBy = getItemHwByParam.getJSONObject(i).getString("CreatedBy");
-//            createdDate = getItemHwByParam.getJSONObject(i).getString("CreatedDate");
-//            flag = getItemHwByParam.getJSONObject(i).getString("Flag");
-//            LOGGER.info("3333");
-////            String status = getSFItemByParam.getJSONObject(i).getString("Status");
-//            LOGGER.info(">>>>>"+sptsVersion);
-//            LOGGER.info("sptsId         ::: "+sptsId);
-//            LOGGER.info("mibItemId      ::: "+mibItemId);
-//            LOGGER.info("hardwareId     >>>> "+hardwareId);
-//            LOGGER.info("status         ::: "+status);
-//            LOGGER.info("createdBy      ::: "+createdBy);
-//            LOGGER.info("createdDate    ::: "+createdDate);
-//            LOGGER.info("flag           ::: "+flag);
-//        }
-//        LOGGER.info("OK, DA CLOSE SYNC DA");
+        hwD = new ItemDAO();
+        String mibItemId = hwD.getMibItemIdBySptsPkId(pkID);
+        
+        JSONObject paramsHwid = new JSONObject();
+        paramsHwid.put("itemPKID", pkID);
+        JSONArray getItemHwByParam = SPTSWebService.getHardwareIdByParam(paramsHwid);
+        
+        for (int i = 0; i < getItemHwByParam.length(); i++) {
+            Integer sptsId = 0;
+            String hardwareId = "";
+            String status = "";
+            String createdBy = "";
+            String createdDate = "";
+            Integer flag = 0;
+            
+            sptsId = getItemHwByParam.getJSONObject(i).getInt("PKID");
+            hardwareId = getItemHwByParam.getJSONObject(i).getString("HardwareID");
+            status = getItemHwByParam.getJSONObject(i).getString("Status");
+            createdBy = getItemHwByParam.getJSONObject(i).getString("CreatedBy");
+            createdDate = getItemHwByParam.getJSONObject(i).getString("CreatedDate").substring(0, 19);
+            flag = getItemHwByParam.getJSONObject(i).getInt("Flag");
+            
+            ItemHardware itemhardware = new ItemHardware();
+            itemhardware.setMibItemId(mibItemId);
+            itemhardware.setSptsPkid(sptsId.toString());
+            itemhardware.setHardwareId(hardwareId);
+            itemhardware.setStatus(status);
+            itemhardware.setCreatedBy(createdBy);
+            itemhardware.setCreatedDate(createdDate);
+            itemhardware.setFlag(flag.toString());
+            
+            ItemHardwareDAO itemhwdao = new ItemHardwareDAO();
+            ItemHardware itemhw = itemhwdao.getItemHardwareByHardwareId(hardwareId);
+            if (itemhw == null) {
+                itemhwdao = new ItemHardwareDAO();
+                itemhwdao.insertHardwareID(itemhardware);
+            } else {
+                String id = itemhw.getId();
+                itemhardware.setId(id);
+                itemhwdao = new ItemHardwareDAO();
+                itemhwdao.updateItemHardware(itemhardware);
+            }
+        }
 
         return hw;
     }
