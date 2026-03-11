@@ -4,6 +4,7 @@ import com.onsemi.mib.dao.EmailHwReplacementDAO;
 import com.onsemi.mib.dao.EmailVmFailDAO;
 import com.onsemi.mib.dao.HostnameDAO;
 import com.onsemi.mib.dao.ItemDAO;
+import com.onsemi.mib.dao.ItemHardwareDAO;
 import com.onsemi.mib.dao.ParameterDetailsDAO;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
@@ -12,14 +13,17 @@ import java.util.Locale;
 import javax.servlet.http.HttpServletRequest;
 import com.onsemi.mib.dao.RmsBookingDetailDAO;
 import com.onsemi.mib.dao.RmsBookingHardwareDAO;
+import com.onsemi.mib.dao.RmsBookingHardwareGroupDAO;
 import com.onsemi.mib.dao.RmsBookingLogDAO;
 import com.onsemi.mib.model.EmailHwReplacement;
 import com.onsemi.mib.model.EmailVmFail;
 import com.onsemi.mib.model.Hostname;
 import com.onsemi.mib.model.Item;
+import com.onsemi.mib.model.ItemHardware;
 import com.onsemi.mib.model.ParameterDetails;
 import com.onsemi.mib.model.RmsBookingDetail;
 import com.onsemi.mib.model.RmsBookingHardware;
+import com.onsemi.mib.model.RmsBookingHardwareGroup;
 import com.onsemi.mib.model.RmsBookingLog;
 import com.onsemi.mib.model.UserSession;
 import com.onsemi.mib.tools.EmailSender;
@@ -431,11 +435,22 @@ public class RmsBookingDetailController {
                     JSONArray getItemByParam = SPTSWebService.getItemByParam(paramV);
                     for (int x = 0; x < getItemByParam.length(); x++) {
 
-//                        LOGGER.info("2nd step: " + LocalDateTime.now());
                         rmsH.setItemPkid(Integer.toString(getItemByParam.getJSONObject(x).getInt("PKID")));
                         onhandQty = getItemByParam.getJSONObject(x).getInt("OnHandQty");
                         if (onhandQty >= requestQty) {
                             rmsH.setStatus("Available");
+                            if ("Motherboard".equals(rmsH.getItemType())) {
+                                //check status if requested for replacement or not
+                                RmsBookingHardwareDAO rmsBH = new RmsBookingHardwareDAO();
+                                int count = rmsBH.getCountBookingId(Integer.toString(getItemByParamV.getJSONObject(i).getInt("booking_pkid")), Integer.toString(getItemByParamV.getJSONObject(i).getInt("pkid")));
+                                if (count == 1) {
+                                    rmsBH = new RmsBookingHardwareDAO();
+                                    RmsBookingHardware rmsB = rmsBH.getRmsBookingHardwareByPkid(Integer.toString(getItemByParamV.getJSONObject(i).getInt("pkid")));
+                                    rmsH.setSubStatus(rmsB.getSubStatus());
+                                } else {
+                                    rmsH.setSubStatus("Pending HW Registration");
+                                }
+                            }
                         } else {
                             //check status if requested for replacement or not
                             RmsBookingHardwareDAO rmsBH = new RmsBookingHardwareDAO();
@@ -497,6 +512,7 @@ public class RmsBookingDetailController {
                 h.setId(hw.get(i).getId());
                 h.setFlag("99");
                 h.setStatus("Removed");
+                h.setSubStatus(null);
                 h.setModifiedBy("HEATS");
                 rmsH = new RmsBookingHardwareDAO();
                 QueryResult q = rmsH.updateRmsBookingHardwareForFlagAndStatusById(h);
@@ -678,6 +694,8 @@ public class RmsBookingDetailController {
             @PathVariable("itemPkid") String itemPkid,
             @ModelAttribute UserSession userSession) throws IOException {
 
+        model.addAttribute("groupId", bookingId + "/" + itemPkid);
+
         model.addAttribute("userItemSfRecall", userSession.getItemSfRecall());
 
         RmsBookingDetailDAO rmsd = new RmsBookingDetailDAO();
@@ -688,12 +706,101 @@ public class RmsBookingDetailController {
         RmsBookingHardware h = hD.getRmsBookingHardwareByPkid(itemPkid);
         model.addAttribute("motherboardId", h.getItemId());
 
+        if (h.getSubStatus().contains("HW Registration")) {
+            String hwActive = "active";
+            String hwActiveTab = "show active";
+            model.addAttribute("hwActive", hwActive);
+            model.addAttribute("hwActiveTab", hwActiveTab);
+        } else {
+            String hwActive = "";
+            String hwActiveTab = "";
+            model.addAttribute("hwActive", hwActive);
+            model.addAttribute("hwActiveTab", hwActiveTab);
+        }
+        if (h.getSubStatus().contains("VM")) {
+            String vmActive = "active";
+            String vmActiveTab = "show active";
+            model.addAttribute("vmActive", vmActive);
+            model.addAttribute("vmActiveTab", vmActiveTab);
+        } else {
+            String vmActive = "";
+            String vmActiveTab = "";
+            model.addAttribute("vmActive", vmActive);
+            model.addAttribute("vmActiveTab", vmActiveTab);
+        }
+        if (h.getSubStatus().contains("Test")) {
+            String teActive = "active";
+            String teActiveTab = "show active";
+            model.addAttribute("teActive", teActive);
+            model.addAttribute("teActiveTab", teActiveTab);
+        } else {
+            String teActive = "";
+            String teActiveTab = "";
+            model.addAttribute("teActive", teActive);
+            model.addAttribute("teActiveTab", teActiveTab);
+        }
+
         return "rmsbookingDetail/detail_group";
     }
 
     @RequestMapping(value = "/add", method = RequestMethod.GET)
     public String add(Model model) {
         return "rmsbookingDetail/add";
+    }
+
+    @RequestMapping(value = "/registerHwId", method = RequestMethod.POST)
+    public String registerHwId(
+            Model model,
+            Locale locale,
+            RedirectAttributes redirectAttrs,
+            @ModelAttribute UserSession userSession,
+            @RequestParam(required = false) String groupId,
+            @RequestParam(required = false) String bookingPkid,
+            @RequestParam(required = false) String hwId
+    ) {
+
+        //check hardware status first - must be available
+        ItemHardwareDAO itemHwD = new ItemHardwareDAO();
+        int countHwId = itemHwD.getCountAvailableHardwareId(hwId);
+        if (countHwId == 0) {
+            redirectAttrs.addFlashAttribute("error", hwId + " are not available. Pls register with another Hardware ID");
+            return "redirect:/rmsbookingDetail/groupDetail/" + groupId;
+        } else {
+            //check if active in rmsBookingHardwareGroup table (flag != 99)
+            RmsBookingHardwareGroupDAO hwGroupD = new RmsBookingHardwareGroupDAO();
+            int count = hwGroupD.getCountHwWithFlagNE99(hwId);
+            if (count > 0) {
+                redirectAttrs.addFlashAttribute("error", hwId + " already registered. Pls register with another Hardware ID");
+                return "redirect:/rmsbookingDetail/groupDetail/" + groupId;
+            } else {
+                //1st step to check qty requested. only can register if less than requested qty
+                itemHwD = new ItemHardwareDAO();
+                ItemHardware itemHw = itemHwD.getItemHardwareByHardwareId(hwId);
+                ItemDAO itemD = new ItemDAO();
+                Item item = itemD.getHardwareDetail(itemHw.getMibItemId());
+                RmsBookingHardwareDAO rmsBookingHD = new RmsBookingHardwareDAO();
+                int countRmsBookingHw = rmsBookingHD.getCountBookingPkidAndItemPkid(bookingPkid, item.getSptsPkid());
+                if (countRmsBookingHw == 1) {
+                    //2nd step to check qty requested. only can register if less than requested qty
+                    rmsBookingHD = new RmsBookingHardwareDAO();
+                    RmsBookingHardware rmsBookingH = rmsBookingHD.getRmsBookingHardwareByBookingPkidAndItemPKid(bookingPkid, item.getSptsPkid());
+                    int requestedQty = Integer.parseInt(rmsBookingH.getQty());
+
+                    //get total qty register under same itemID and booking id (split from group id)
+                } else {
+                    redirectAttrs.addFlashAttribute("error", hwId + " not available. Pls register with another Hardware ID");
+                    return "redirect:/rmsbookingDetail/groupDetail/" + groupId;
+                }
+
+                RmsBookingHardwareGroup hwGroup = new RmsBookingHardwareGroup();
+                hwGroup.setGroupId(groupId);
+                hwGroup.setHardwareId(hwId);
+                redirectAttrs.addFlashAttribute("success", messageSource.getMessage("general.label.save.success", args, locale));
+                return "redirect:/rmsbookingDetail/groupDetail/" + groupId;
+            }
+
+        }
+
     }
 
     @RequestMapping(value = "/save", method = RequestMethod.POST)

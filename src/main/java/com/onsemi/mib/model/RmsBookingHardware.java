@@ -25,6 +25,16 @@ public class RmsBookingHardware {
     private String recallSfBy;
     private String recallSfDate;
 
+    private String subStatus;
+
+    public String getSubStatus() {
+        return subStatus;
+    }
+
+    public void setSubStatus(String subStatus) {
+        this.subStatus = subStatus;
+    }
+
     public String getRecallSfBy() {
         return recallSfBy;
     }

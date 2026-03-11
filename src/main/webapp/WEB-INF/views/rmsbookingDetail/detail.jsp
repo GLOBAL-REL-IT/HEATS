@@ -214,16 +214,16 @@
                                                 </div>
                                             </div>
                                         </div>
-                                </div>
-                                <div class="row mb-3">
-                                    <div class="col-xl-3 col-sm-12 col-12">
-                                        <div class="mb-1">
-                                            <label for="itemId" class="form-label">Priority Remarks</label>
-                                            <div class="input input-group">
-                                                <textarea class="form-control" rows="5" id="remarks" name="remarks" readonly>${rms.priorityRemarks}</textarea>
+                                    </div>
+                                    <div class="row mb-3">
+                                        <div class="col-xl-3 col-sm-12 col-12">
+                                            <div class="mb-1">
+                                                <label for="itemId" class="form-label">Priority Remarks</label>
+                                                <div class="input input-group">
+                                                    <textarea class="form-control" rows="5" id="remarks" name="remarks" readonly>${rms.priorityRemarks}</textarea>
+                                                </div>
                                             </div>
                                         </div>
-                                    </div>
                                     </c:if>
                                     <c:if test="${rms.priority == '999'}">
                                         <div class="col-xl-1 col-sm-12 col-12">
@@ -234,16 +234,16 @@
                                                 </div>
                                             </div>
                                         </div>
-                                </div>
-                                <div class="row mb-3">
-                                    <div class="col-xl-3 col-sm-12 col-12">
-                                        <div class="mb-1">
-                                            <label for="itemId" class="form-label">Priority Remarks</label>
-                                            <div class="input input-group">
-                                                <textarea class="form-control" rows="5" id="remarks" name="remarks" readonly></textarea>
+                                    </div>
+                                    <div class="row mb-3">
+                                        <div class="col-xl-3 col-sm-12 col-12">
+                                            <div class="mb-1">
+                                                <label for="itemId" class="form-label">Priority Remarks</label>
+                                                <div class="input input-group">
+                                                    <textarea class="form-control" rows="5" id="remarks" name="remarks" readonly></textarea>
+                                                </div>
                                             </div>
                                         </div>
-                                    </div>
                                     </c:if>
                                     <div class="col-xl-3 col-sm-12 col-12">
                                         <div class="mb-1">
@@ -310,10 +310,10 @@
                                                 </tr>
                                             </thead>
                                             <tbody>
-                                            <c:forEach items="${otherList}" var="parameterMaster" varStatus="parameterMasterLoop">
-                                                <tr>
-                                                <c:if test="${parameterMaster.flag == '99'}">
-                                                    <td style="color:red"><strike><c:out value="${parameterMasterLoop.index+1}"/></strike></td>
+                                                <c:forEach items="${otherList}" var="parameterMaster" varStatus="parameterMasterLoop">
+                                                    <tr>
+                                                        <c:if test="${parameterMaster.flag == '99'}">
+                                                            <td style="color:red"><strike><c:out value="${parameterMasterLoop.index+1}"/></strike></td>
                                                     <td style="color:red" id="modal_delete_info_${parameterMaster.id}"><strike><c:out value="${parameterMaster.itemType}"/></strike></td>
                                                     <td style="color:red"><strike><c:out value="${parameterMaster.itemId}"/></strike></td>
                                                     <td style="color:red"><strike><c:out value="${parameterMaster.qty}"/></strike></td>
@@ -328,21 +328,21 @@
                                                     <td><c:out value="${parameterMaster.qty}"/></td>
                                                     <td><c:out value="${parameterMaster.status}"/></td>
                                                     <td align="center">
-                                                    <c:if test="${parameterMaster.status != 'NA'}">
-                                                        <c:if test="${parameterMaster.recall == 'Yes'}">
-                                                            <a modaldeleteid="${parameterMaster.itemPkid}" modaldeleteid2="${parameterMaster.id}" type="button" data-bs-toggle="offcanvas" title="Recall from Storage Factory"
-                                                               data-bs-target="#staticBackdropRecall" aria-controls="staticBackdropRecall" onclick="ajaxStorage(this);">
-                                                                <i class="bi bi-house-up h4"></i>
-                                                            </a>
-                                                        </c:if>
-                                                        <c:if test="${parameterMaster.status.contains('Not Available')}">
-                                                            <a modaldeleteid="${parameterMaster.id}" type="button" data-bs-toggle="offcanvas" title="Email to Planner"
-                                                               data-bs-target="#staticBackdrop" aria-controls="staticBackdrop" onclick="getData(this);">
-                                                                <i class="bi bi-envelope-arrow-up h4"></i>
-                                                            </a>
-                                                        </c:if>
+                                                        <c:if test="${parameterMaster.status != 'NA'}">
+                                                            <c:if test="${parameterMaster.recall == 'Yes'}">
+                                                                <a modaldeleteid="${parameterMaster.itemPkid}" modaldeleteid2="${parameterMaster.id}" type="button" data-bs-toggle="offcanvas" title="Recall from Storage Factory"
+                                                                   data-bs-target="#staticBackdropRecall" aria-controls="staticBackdropRecall" onclick="ajaxStorage(this);">
+                                                                    <i class="bi bi-house-up h4"></i>
+                                                                </a>
+                                                            </c:if>
+                                                            <c:if test="${parameterMaster.status.contains('Not Available')}">
+                                                                <a modaldeleteid="${parameterMaster.id}" type="button" data-bs-toggle="offcanvas" title="Email to Planner"
+                                                                   data-bs-target="#staticBackdrop" aria-controls="staticBackdrop" onclick="getData(this);">
+                                                                    <i class="bi bi-envelope-arrow-up h4"></i>
+                                                                </a>
+                                                            </c:if>
 
-                                                    </c:if>
+                                                        </c:if>
                                                     </td>
                                                 </c:if>
                                                 </tr>
@@ -385,10 +385,10 @@
                                                 </tr>
                                             </thead>
                                             <tbody>
-                                            <c:forEach items="${BibList}" var="parameterMaster" varStatus="parameterMasterLoop">
-                                                <tr>
-                                                <c:if test="${parameterMaster.flag == '99'}">
-                                                    <td style="color:red" style="color:red"><strike><c:out value="${parameterMasterLoop.index+1}"/></strike></td>
+                                                <c:forEach items="${BibList}" var="parameterMaster" varStatus="parameterMasterLoop">
+                                                    <tr>
+                                                        <c:if test="${parameterMaster.flag == '99'}">
+                                                            <td style="color:red" style="color:red"><strike><c:out value="${parameterMasterLoop.index+1}"/></strike></td>
                                                     <td style="color:red" id="modal_delete_info_${parameterMaster.id}"><strike><c:out value="${parameterMaster.itemType}"/></strike></td>
                                                     <td style="color:red"><strike><c:out value="${parameterMaster.itemId}"/></strike></td>
                                                     <td style="color:red"><strike><c:out value="${parameterMaster.status}"/></strike></td>
@@ -399,24 +399,25 @@
                                                     <td><c:out value="${parameterMasterLoop.index+1}"/></td>
                                                     <td id="modal_delete_info_${parameterMaster.id}"><c:out value="${parameterMaster.itemType}"/></td>
                                                     <td><c:out value="${parameterMaster.itemId}"/></td>
-                                                    <td><c:out value="${parameterMaster.status}"/></td>
+                                                    <td><c:out value="${parameterMaster.status} - ${parameterMaster.subStatus}"/></td>
                                                     <td align="center">
-                                                    <c:if test="${parameterMaster.recall == 'Yes'}">
-                                                        <a modaldeleteid="${parameterMaster.itemPkid}" modaldeleteid2="${parameterMaster.id}" type="button" data-bs-toggle="offcanvas" title="Recall from Storage Factory"
-                                                           data-bs-target="#staticBackdropRecall" aria-controls="staticBackdropRecall" onclick="ajaxStorage(this);">
-                                                            <i class="bi bi-house-up h4"></i>
-                                                        </a>
-                                                    </c:if>
-                                                    <c:if test="${parameterMaster.status.contains('Not Available')}">
-                                                        <a modaldeleteid="${parameterMaster.id}" type="button" data-bs-toggle="offcanvas" title="Email to Planner"
-                                                           data-bs-target="#staticBackdrop" aria-controls="staticBackdrop" onclick="getData(this);">
-                                                            <i class="bi bi-envelope-arrow-up h4"></i>
-                                                        </a>
-                                                    </c:if>
-
-                                                    <a href="${contextPath}/rmsbookingDetail/groupDetail/${parameterMaster.bookingPkid}/${parameterMaster.pkid}" class="table-link" title="Manage">
-                                                        <i class="bi bi-box-arrow-in-right h3" style="color:orangered"></i>
-                                                    </a>
+                                                        <c:if test="${parameterMaster.recall == 'Yes'}">
+                                                            <a modaldeleteid="${parameterMaster.itemPkid}" modaldeleteid2="${parameterMaster.id}" type="button" data-bs-toggle="offcanvas" title="Recall from Storage Factory"
+                                                               data-bs-target="#staticBackdropRecall" aria-controls="staticBackdropRecall" onclick="ajaxStorage(this);">
+                                                                <i class="bi bi-house-up h4"></i>
+                                                            </a>
+                                                        </c:if>
+                                                        <c:if test="${parameterMaster.status.contains('Not Available')}">
+                                                            <a modaldeleteid="${parameterMaster.id}" type="button" data-bs-toggle="offcanvas" title="Email to Planner"
+                                                               data-bs-target="#staticBackdrop" aria-controls="staticBackdrop" onclick="getData(this);">
+                                                                <i class="bi bi-envelope-arrow-up h4"></i>
+                                                            </a>
+                                                        </c:if>
+                                                        <c:if test="${parameterMaster.status == 'Available'}">
+                                                            <a href="${contextPath}/rmsbookingDetail/groupDetail/${parameterMaster.bookingPkid}/${parameterMaster.pkid}" class="table-link" title="Manage">
+                                                                <i class="bi bi-box-arrow-in-right h3" style="color:orangered"></i>
+                                                            </a>
+                                                        </c:if>
                                                     </td>
                                                 </c:if>
                                                 </tr>
