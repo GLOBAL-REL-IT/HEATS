@@ -531,6 +531,34 @@ public class ItemHardwareDAO {
         }
         return count;
     }
+    
+    public Integer getTotalHardwareAvailable(String mibItemId) {
+        Integer count = 0;
+        String sql = "SELECT COUNT(*) AS count FROM item_hardware WHERE mib_item_id = '" + mibItemId + "' AND flag = '1'";
+        LOGGER.info("APA BENDA QUERY DIA ::: "+sql);
+        try {
+            PreparedStatement ps = conn.prepareStatement(
+                    "SELECT COUNT(*) AS count FROM item_hardware WHERE mib_item_id = '" + mibItemId + "' AND flag = '1'"
+            );
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                count = rs.getInt("count");
+            }
+            rs.close();
+            ps.close();
+        } catch (SQLException e) {
+            LOGGER.error(e.getMessage());
+        } finally {
+            if (conn != null) {
+                try {
+                    conn.close();
+                } catch (SQLException e) {
+                    LOGGER.error(e.getMessage());
+                }
+            }
+        }
+        return count;
+    }
 
     public Integer getCountAvailableHardwareId(String hwId) {
         Integer count = null;

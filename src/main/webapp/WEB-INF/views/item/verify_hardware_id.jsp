@@ -86,6 +86,7 @@
                                     <label for="totalHw" class="form-label">Hardware ID Quantity</label>
                                     <div class="input input-group">
                                         <input type="text" class="form-control" id="totalHw" name="totalHw" placeholder="" value="${totalHwid}" readonly required>
+                                        <input type="text" class="form-control" id="totalAvail" name="totalAvail" placeholder="" value="${totalAvail}" readonly required>
                                     </div>
                                 </div>
                             </div>
@@ -107,11 +108,20 @@
                                 </div>
                                 <div class="card-body">
                                     <ul class="list-group list-group-flush overflow-auto" style="max-height: 400px;">
-                                    ${maklumatList}
+                                        ${maklumatList}
+                                </div>
+                            </div>
+                            <div class="col-lg-4 col-sm-6 col-12">
+                                <div class="card mb-4">
+                                    <div class="card-header">
+                                        <h5 class="card-title">Hardware ID Summary</h5>
+                                    </div>
+                                    <div class="card-body">
+                                        <div id="basic-donut-graph-monochrome"></div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
-
                         <div class="rounded-3">
                             <h6 class="fw-semibold mb-3 border-success text-info ps-2">
                                 <i class="bi bi-card-checklist m-2"></i>Verify Hardware ID Information
@@ -136,6 +146,7 @@
         </div>
     </s:layout-component>
     <s:layout-component name="page_js">
+        <script src="${contextPath}/resources/vendor/apex/apexcharts.min.js"></script>
         <!--<script src="${contextPath}/resources/vendor/DataTables/customitem/bootstrap.bundle.min.js"></script>-->
     </s:layout-component>
     <s:layout-component name="page_js_inline">
@@ -191,7 +202,45 @@
                     }, 50);
                 });
             });
-
+            
+            var availVal = parseInt(document.getElementById('totalAvail').value) || 0;
+            var createdVal = parseInt(document.getElementById('totalHw').value) || 0;
+            var pendingVal = createdVal - availVal;
+            var total = parseInt(document.getElementById('totalQty').value) || 0;
+            var balanceVal = total - createdVal;
+            
+            var options = {
+                series: [availVal, pendingVal, balanceVal],
+                chart: {
+                    type: 'pie',
+                    height: 350,
+                    toolbar: {show: false}
+                },
+                labels: ['Available', 'Pending Verification', 'Balance'],
+                colors: ['#28C459', '#f06a0a', '#808080'],
+                dataLabels: {
+                    enabled: true,
+                    formatter: function (val, opts) {
+                        return opts.w.config.series[opts.seriesIndex]
+                    }
+                },
+                tooltip: { y: { formatter: function (val) { return val }}},
+                // 3. Label at the bottom
+                annotations: {
+                    texts: [{
+                        x: '50%',
+                        y: '90%',
+                        text: 'TotalQty: '+total,
+                        textAnchor: 'middle',
+                        fontSize: '16px',
+                        fontWeight: 'bold',
+                        fontFamily: 'Arial',
+                        color: '#333'
+                    }]
+                }
+            };
+            var chart = new ApexCharts(document.querySelector("#basic-donut-graph-monochrome"), options);
+            chart.render();
         </script>
     </s:layout-component>
 </s:layout-render>

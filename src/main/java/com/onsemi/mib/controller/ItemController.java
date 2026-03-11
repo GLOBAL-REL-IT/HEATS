@@ -6568,9 +6568,12 @@ public class ItemController {
 
         ItemHardwareDAO itmhwdao = new ItemHardwareDAO();
         String totalCreated = itmhwdao.getTotalHardwareCreated(itemId).toString();
+        itmhwdao = new ItemHardwareDAO();
+        String totalAvail = itmhwdao.getTotalHardwareAvailable(itemId).toString();
         String maklumatList = getHardwareIdList(itemId, itemhw.getHardwareId());
         model.addAttribute("maklumatList", maklumatList);
         model.addAttribute("totalHwid", totalCreated);
+        model.addAttribute("totalAvail", totalAvail);
 
         return "item/verify_hardware_id";
     }
