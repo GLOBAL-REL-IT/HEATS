@@ -99,7 +99,7 @@
                                 <div class="p-3 mb-0 rounded-3">
                                     <div class="form-check form-switch">
                                         <label id="toggleLabel">
-                                            <input class="form-check-input me-3" type="checkbox" id="toggleInput" onchange="toggleField()"> Mana Component
+                                            <input class="form-check-input me-3" type="checkbox" id="toggleInput" onchange="toggleField()"> Component Value
                                         </label>
                                     </div>
                                 </div>
@@ -432,7 +432,7 @@
                 const label = document.getElementById('toggleLabel');
                 const isChecked = checkbox.checked;
                 container.style.display = isChecked ? 'block' : 'none';
-                label.childNodes[2].nodeValue = isChecked ? ' To Remove Component' : ' To Show Component';
+//                label.childNodes[2].nodeValue = isChecked ? ' To Remove Component' : ' To Show Component';
             }
         </script>
     </s:layout-component>

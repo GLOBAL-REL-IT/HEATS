@@ -160,7 +160,7 @@
             document.addEventListener('DOMContentLoaded', (event) => {
                 const inputElement = document.getElementById('scanInput');
                 const messageElement = document.getElementById('message');
-                const requiredLength = 15;
+                const requiredLength = 5;
                 const timeLimit = 1000; // 1 second in milliseconds
                 const myButton = document.getElementById("submitButton");
 

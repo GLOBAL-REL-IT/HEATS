@@ -993,19 +993,34 @@ public class ItemController {
 //        paramsHwid.put("itemPKID", pkID);
 //        JSONArray getItemHwByParam = SPTSWebService.getHardwareIdByParam(paramsHwid);
 //        LOGGER.info("BERAPA :: "+getItemHwByParam.length());
+//        LOGGER.info("INFO :::: "+getItemHwByParam.toString());
+//        
 //        for (int i = 0; i < getItemHwByParam.length(); i++) {
-//            LOGGER.info("NK DAPATKAN ITEM APA DEKAT SINI ::: "+getItemHwByParam.length());
-//            LOGGER.info("hehee"+getItemHwByParam.toString());
-//            String aa = getItemHwByParam.toString();
-////            String hehe = Integer.toString(getItemHwByParam.getJSONObject(i).getInt("PKID"));
+//            String mibItemId = "";
+//            String sptsId = "";
+//            String hardwareId = "";
+//            String status = "";
+//            String createdBy = "";
+//            String createdDate = "";
+//            String flag = "";
+//            
 //            String sptsVersion = getItemHwByParam.getJSONObject(i).getString("Version");
-//            String hardwareId = getItemHwByParam.getJSONObject(i).getString("HardwareID");
-//            String hehe = getItemHwByParam.getJSONObject(i).getString("Status");
+//            sptsId = getItemHwByParam.getJSONObject(i).getString("PKID");
+//            hardwareId = getItemHwByParam.getJSONObject(i).getString("HardwareID");
+//            status = getItemHwByParam.getJSONObject(i).getString("Status");
+//            createdBy = getItemHwByParam.getJSONObject(i).getString("CreatedBy");
+//            createdDate = getItemHwByParam.getJSONObject(i).getString("CreatedDate");
+//            flag = getItemHwByParam.getJSONObject(i).getString("Flag");
 //            LOGGER.info("3333");
 ////            String status = getSFItemByParam.getJSONObject(i).getString("Status");
 //            LOGGER.info(">>>>>"+sptsVersion);
-//            LOGGER.info("hehehe >>>> "+hardwareId);
-//            LOGGER.info("apa dia ::: "+hehe);
+//            LOGGER.info("sptsId         ::: "+sptsId);
+//            LOGGER.info("mibItemId      ::: "+mibItemId);
+//            LOGGER.info("hardwareId     >>>> "+hardwareId);
+//            LOGGER.info("status         ::: "+status);
+//            LOGGER.info("createdBy      ::: "+createdBy);
+//            LOGGER.info("createdDate    ::: "+createdDate);
+//            LOGGER.info("flag           ::: "+flag);
 //        }
 //        LOGGER.info("OK, DA CLOSE SYNC DA");
 
@@ -6494,7 +6509,7 @@ public class ItemController {
                     itemhardware.setHardwareId(sameItemId);
                     dao2 = new ItemHardwareDAO();
                     QueryResult q = dao2.insertHardwareID(itemhardware);
-
+                    redirectAttrs.addFlashAttribute("success", messageSource.getMessage("admin.label.hardware.create.success", args, locale));
                     // INSERT INTO SPTS - LEPAS VERIFY BARU BUAT
                 } else {
                     redirectAttrs.addFlashAttribute("error", messageSource.getMessage("admin.label.hardware.create.error", args, locale));
