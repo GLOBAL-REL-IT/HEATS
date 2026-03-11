@@ -988,6 +988,26 @@ public class ItemController {
         }
         LOGGER.info("Total data SF: " + countSf);
         LOGGER.info("Total insert SF: " + countSfAdd);
+        
+//        JSONObject paramsHwid = new JSONObject();
+//        paramsHwid.put("itemPKID", pkID);
+//        JSONArray getItemHwByParam = SPTSWebService.getHardwareIdByParam(paramsHwid);
+//        LOGGER.info("BERAPA :: "+getItemHwByParam.length());
+//        for (int i = 0; i < getItemHwByParam.length(); i++) {
+//            LOGGER.info("NK DAPATKAN ITEM APA DEKAT SINI ::: "+getItemHwByParam.length());
+//            LOGGER.info("hehee"+getItemHwByParam.toString());
+//            String aa = getItemHwByParam.toString();
+////            String hehe = Integer.toString(getItemHwByParam.getJSONObject(i).getInt("PKID"));
+//            String sptsVersion = getItemHwByParam.getJSONObject(i).getString("Version");
+//            String hardwareId = getItemHwByParam.getJSONObject(i).getString("HardwareID");
+//            String hehe = getItemHwByParam.getJSONObject(i).getString("Status");
+//            LOGGER.info("3333");
+////            String status = getSFItemByParam.getJSONObject(i).getString("Status");
+//            LOGGER.info(">>>>>"+sptsVersion);
+//            LOGGER.info("hehehe >>>> "+hardwareId);
+//            LOGGER.info("apa dia ::: "+hehe);
+//        }
+//        LOGGER.info("OK, DA CLOSE SYNC DA");
 
         return hw;
     }
@@ -6409,12 +6429,9 @@ public class ItemController {
         String totalCreated = itmhwdao.getTotalHardwareCreated(item.getId()).toString();
         model.addAttribute("totalHwid", totalCreated);
         
-        LOGGER.info("total quantity >>>> "+item.getTotalQty());
-        LOGGER.info("total da created >>> "+totalCreated);
         Integer w1 = Integer.parseInt(item.getTotalQty());
         Integer w2 = Integer.parseInt(totalCreated);
         Integer baki = w1 - w2;
-        LOGGER.info("total yang masih boleh ::: "+baki);
         model.addAttribute("limit", baki);
 
         if (itemconfig == null || "".equals(itemconfig)) {
@@ -6473,12 +6490,12 @@ public class ItemController {
             if (itemconfig.getSameItemId().equals("Yes")) {
                 ItemHardwareDAO dao2 = new ItemHardwareDAO();
                 List<ItemHardware> item2 = dao2.getItemHardwareByItemId(mibItemId);
-                if (item2 == null) {
+                if (item2.size() == 0) {
                     itemhardware.setHardwareId(sameItemId);
                     dao2 = new ItemHardwareDAO();
                     QueryResult q = dao2.insertHardwareID(itemhardware);
 
-                    // INSERT INTO SPTS
+                    // INSERT INTO SPTS - LEPAS VERIFY BARU BUAT
                 } else {
                     redirectAttrs.addFlashAttribute("error", messageSource.getMessage("admin.label.hardware.create.error", args, locale));
                 }
@@ -6566,6 +6583,7 @@ public class ItemController {
         model.addAttribute("item", item);
         model.addAttribute("itemId", itemId);
 
+        // FUNCTION UNTUK DAPATKAN MAKLUMAT QUANTITY - TOTAL, AVAIL, PENDING VERIFICATION
         ItemHardwareDAO itmhwdao = new ItemHardwareDAO();
         String totalCreated = itmhwdao.getTotalHardwareCreated(itemId).toString();
         itmhwdao = new ItemHardwareDAO();
@@ -6574,6 +6592,17 @@ public class ItemController {
         model.addAttribute("maklumatList", maklumatList);
         model.addAttribute("totalHwid", totalCreated);
         model.addAttribute("totalAvail", totalAvail);
+        
+        // HANTAR KE JSP HANYA UNTUK TENTUKAN NK KELUAR KAN PIE CHART ATAU TIDAK
+        ItemHardwareConfigDAO itemhwdao2 = new ItemHardwareConfigDAO();
+        String subtype = item.getSubType() == null ? "" : item.getSubType();
+        ItemHardwareConfig itemconfig = itemhwdao2.getConfigItem(item.getItemType(), subtype);
+        if (itemconfig == null || "".equals(itemconfig)) {
+            model.addAttribute("checkView", "No");
+        } else {
+            String check = itemconfig.getSameItemId();
+            model.addAttribute("checkView", check);
+        } 
 
         return "item/verify_hardware_id";
     }

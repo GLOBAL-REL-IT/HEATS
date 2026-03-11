@@ -86,7 +86,7 @@
                                     <label for="totalHw" class="form-label">Hardware ID Quantity</label>
                                     <div class="input input-group">
                                         <input type="text" class="form-control" id="totalHw" name="totalHw" placeholder="" value="${totalHwid}" readonly required>
-                                        <input type="text" class="form-control" id="totalAvail" name="totalAvail" placeholder="" value="${totalAvail}" readonly required>
+                                        <input type="hidden" class="form-control" id="totalAvail" name="totalAvail" placeholder="" value="${totalAvail}" readonly required>
                                     </div>
                                 </div>
                             </div>
@@ -101,27 +101,29 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="row">
-                            <div class="form-group required col-xl-6 col-sm-12 col-12 bordered">
-                                <div class="card-header d-flex justify-content-between align-items-center">
-                                    <h5 class="card-title mb-0">Hardware ID List</h5>
-                                </div>
-                                <div class="card-body">
-                                    <ul class="list-group list-group-flush overflow-auto" style="max-height: 400px;">
-                                        ${maklumatList}
-                                </div>
-                            </div>
-                            <div class="col-lg-4 col-sm-6 col-12">
-                                <div class="card mb-4">
-                                    <div class="card-header">
-                                        <h5 class="card-title">Hardware ID Summary</h5>
+                        <c:if test="${checkView == 'No'}">
+                            <div class="row">
+                                <div class="form-group required col-xl-6 col-sm-12 col-12 bordered">
+                                    <div class="card-header d-flex justify-content-between align-items-center">
+                                        <h5 class="card-title mb-0">Hardware ID List</h5>
                                     </div>
                                     <div class="card-body">
-                                        <div id="basic-donut-graph-monochrome"></div>
+                                        <ul class="list-group list-group-flush overflow-auto" style="max-height: 400px;">
+                                            ${maklumatList}
+                                    </div>
+                                </div>
+                                <div class="col-lg-4 col-sm-6 col-12">
+                                    <div class="card mb-4">
+                                        <div class="card-header">
+                                            <h5 class="card-title">Hardware ID Summary</h5>
+                                        </div>
+                                        <div class="card-body">
+                                            <div id="basic-donut-graph-monochrome"></div>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
-                        </div>
+                        </c:if>
                         <div class="rounded-3">
                             <h6 class="fw-semibold mb-3 border-success text-info ps-2">
                                 <i class="bi bi-card-checklist m-2"></i>Verify Hardware ID Information
@@ -228,7 +230,7 @@
                 // 3. Label at the bottom
                 annotations: {
                     texts: [{
-                        x: '50%',
+                        x: '80%',
                         y: '90%',
                         text: 'TotalQty: '+total,
                         textAnchor: 'middle',
