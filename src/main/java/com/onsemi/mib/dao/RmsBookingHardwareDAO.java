@@ -249,7 +249,7 @@ public class RmsBookingHardwareDAO {
     }
 
     public RmsBookingHardware getRmsBookingHardwareByBookingPkidAndItemPKid(String bookingPkid, String itemPkid) {
-        String sql = "SELECT * FROM rms_booking_hardware WHERE booking_pkid = '" + bookingPkid + "' AND item_pkid = '" + itemPkid + "'";
+        String sql = "SELECT * FROM rms_booking_hardware WHERE booking_pkid = '" + bookingPkid + "' AND item_pkid = '" + itemPkid + "' AND status = 'Available'";
         RmsBookingHardware rmsbookingHardware = null;
         try {
             PreparedStatement ps = conn.prepareStatement(sql);
@@ -560,6 +560,33 @@ public class RmsBookingHardwareDAO {
         return queryResult;
     }
 
+    public QueryResult updateRmsBookingHardwareSubStatusByPkidAndBookingPkid(RmsBookingHardware rmsbookingHardware) {
+        QueryResult queryResult = new QueryResult();
+        try {
+            PreparedStatement ps = conn.prepareStatement(
+                    "UPDATE rms_booking_hardware SET sub_status = ? WHERE booking_pkid = ? AND pkid = ?"
+            );
+
+            ps.setString(1, rmsbookingHardware.getSubStatus());
+            ps.setString(2, rmsbookingHardware.getBookingPkid());
+            ps.setString(3, rmsbookingHardware.getPkid());
+            queryResult.setResult(ps.executeUpdate());
+            ps.close();
+        } catch (SQLException e) {
+            queryResult.setErrorMessage(e.getMessage());
+            LOGGER.error(e.getMessage());
+        } finally {
+            if (conn != null) {
+                try {
+                    conn.close();
+                } catch (SQLException e) {
+                    LOGGER.error(e.getMessage());
+                }
+            }
+        }
+        return queryResult;
+    }
+
     public Integer getCountBookingId(String bookingId, String pkid) {
         Integer count = null;
         try {
@@ -618,7 +645,34 @@ public class RmsBookingHardwareDAO {
         Integer count = null;
         try {
             PreparedStatement ps = conn.prepareStatement(
-                    "SELECT COUNT(*) AS count FROM rms_booking_hardware inc WHERE inc.booking_pkid = '" + bookingPkid + "' AND inc.item_pkid = '" + itemPkid + "'"
+                    "SELECT COUNT(*) AS count FROM rms_booking_hardware inc WHERE inc.booking_pkid = '" + bookingPkid + "' AND inc.item_pkid = '" + itemPkid + "' AND inc.status = 'Available'"
+            );
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                count = rs.getInt("count");
+            }
+            rs.close();
+
+            ps.close();
+        } catch (SQLException e) {
+            LOGGER.error(e.getMessage());
+        } finally {
+            if (conn != null) {
+                try {
+                    conn.close();
+                } catch (SQLException e) {
+                    LOGGER.error(e.getMessage());
+                }
+            }
+        }
+        return count;
+    }
+
+    public Integer getCountBookingPkidAndPkidForMotherboard(String bookingPkid, String pkid) {
+        Integer count = null;
+        try {
+            PreparedStatement ps = conn.prepareStatement(
+                    "SELECT COUNT(*) AS count FROM rms_booking_hardware inc WHERE inc.booking_pkid = '" + bookingPkid + "' AND inc.pkid = '" + pkid + "' AND inc.item_type = 'Motherboard'"
             );
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {

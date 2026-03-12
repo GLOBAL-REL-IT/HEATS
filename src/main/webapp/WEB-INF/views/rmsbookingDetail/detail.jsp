@@ -399,7 +399,12 @@
                                                     <td><c:out value="${parameterMasterLoop.index+1}"/></td>
                                                     <td id="modal_delete_info_${parameterMaster.id}"><c:out value="${parameterMaster.itemType}"/></td>
                                                     <td><c:out value="${parameterMaster.itemId}"/></td>
-                                                    <td><c:out value="${parameterMaster.status} - ${parameterMaster.subStatus}"/></td>
+                                                    <c:if test="${not empty parameterMaster.subStatus}">
+                                                        <td><c:out value="${parameterMaster.status} - ${parameterMaster.subStatus}"/></td>  
+                                                    </c:if>
+                                                    <c:if test="${empty parameterMaster.subStatus}">
+                                                        <td><c:out value="${parameterMaster.status}"/></td>  
+                                                    </c:if>
                                                     <td align="center">
                                                         <c:if test="${parameterMaster.recall == 'Yes'}">
                                                             <a modaldeleteid="${parameterMaster.itemPkid}" modaldeleteid2="${parameterMaster.id}" type="button" data-bs-toggle="offcanvas" title="Recall from Storage Factory"

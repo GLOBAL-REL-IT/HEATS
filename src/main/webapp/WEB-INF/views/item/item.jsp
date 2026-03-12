@@ -4302,6 +4302,7 @@
                                                                 $("#remarks").val(data.remarks);
                                                                 $("#itemUsage").val(data.itemUsage);
                                                                 $("#hwconfig").val(data.activityId);
+                                                                $("#activityConfigId").val(data.activityConfigId);
                                                                 $("#configMibItemId").val(data.configMibItemId);
                                                                 $("#stressType").val(data.stressType).trigger('change');
 

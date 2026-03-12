@@ -2,122 +2,132 @@ package com.onsemi.mib.model;
 
 public class RmsBookingHardwareGroup {
 
-	private String id;
-	private String groupId;
-	private String itemPkid;
-	private String itemId;
-	private String hardwarePkid;
-	private String hardwareId;
-	private String rmsNo;
-	private String event;
-	private String sptsStatus;
-	private String status;
-	private String createdBy;
-	private String createdDate;
-	private String flag;
+    private String id;
+    private String groupId;
+    private String itemPkid;
+    private String itemId;
+    private String hardwarePkid;
+    private String hardwareId;
+    private String rmsNo;
+    private String event;
+    private String sptsStatus;
+    private String status;
+    private String createdBy;
+    private String createdDate;
+    private String flag;
 
-	public String getId() {
-		return id;
-	}
+    private String itemType;
 
-	public void setId(String id) {
-		this.id = id;
-	}
+    public String getItemType() {
+        return itemType;
+    }
 
-	public String getGroupId() {
-		return groupId;
-	}
+    public void setItemType(String itemType) {
+        this.itemType = itemType;
+    }
 
-	public void setGroupId(String groupId) {
-		this.groupId = groupId;
-	}
+    public String getId() {
+        return id;
+    }
 
-	public String getItemPkid() {
-		return itemPkid;
-	}
+    public void setId(String id) {
+        this.id = id;
+    }
 
-	public void setItemPkid(String itemPkid) {
-		this.itemPkid = itemPkid;
-	}
+    public String getGroupId() {
+        return groupId;
+    }
 
-	public String getItemId() {
-		return itemId;
-	}
+    public void setGroupId(String groupId) {
+        this.groupId = groupId;
+    }
 
-	public void setItemId(String itemId) {
-		this.itemId = itemId;
-	}
+    public String getItemPkid() {
+        return itemPkid;
+    }
 
-	public String getHardwarePkid() {
-		return hardwarePkid;
-	}
+    public void setItemPkid(String itemPkid) {
+        this.itemPkid = itemPkid;
+    }
 
-	public void setHardwarePkid(String hardwarePkid) {
-		this.hardwarePkid = hardwarePkid;
-	}
+    public String getItemId() {
+        return itemId;
+    }
 
-	public String getHardwareId() {
-		return hardwareId;
-	}
+    public void setItemId(String itemId) {
+        this.itemId = itemId;
+    }
 
-	public void setHardwareId(String hardwareId) {
-		this.hardwareId = hardwareId;
-	}
+    public String getHardwarePkid() {
+        return hardwarePkid;
+    }
 
-	public String getRmsNo() {
-		return rmsNo;
-	}
+    public void setHardwarePkid(String hardwarePkid) {
+        this.hardwarePkid = hardwarePkid;
+    }
 
-	public void setRmsNo(String rmsNo) {
-		this.rmsNo = rmsNo;
-	}
+    public String getHardwareId() {
+        return hardwareId;
+    }
 
-	public String getEvent() {
-		return event;
-	}
+    public void setHardwareId(String hardwareId) {
+        this.hardwareId = hardwareId;
+    }
 
-	public void setEvent(String event) {
-		this.event = event;
-	}
+    public String getRmsNo() {
+        return rmsNo;
+    }
 
-	public String getSptsStatus() {
-		return sptsStatus;
-	}
+    public void setRmsNo(String rmsNo) {
+        this.rmsNo = rmsNo;
+    }
 
-	public void setSptsStatus(String sptsStatus) {
-		this.sptsStatus = sptsStatus;
-	}
+    public String getEvent() {
+        return event;
+    }
 
-	public String getStatus() {
-		return status;
-	}
+    public void setEvent(String event) {
+        this.event = event;
+    }
 
-	public void setStatus(String status) {
-		this.status = status;
-	}
+    public String getSptsStatus() {
+        return sptsStatus;
+    }
 
-	public String getCreatedBy() {
-		return createdBy;
-	}
+    public void setSptsStatus(String sptsStatus) {
+        this.sptsStatus = sptsStatus;
+    }
 
-	public void setCreatedBy(String createdBy) {
-		this.createdBy = createdBy;
-	}
+    public String getStatus() {
+        return status;
+    }
 
-	public String getCreatedDate() {
-		return createdDate;
-	}
+    public void setStatus(String status) {
+        this.status = status;
+    }
 
-	public void setCreatedDate(String createdDate) {
-		this.createdDate = createdDate;
-	}
+    public String getCreatedBy() {
+        return createdBy;
+    }
 
-	public String getFlag() {
-		return flag;
-	}
+    public void setCreatedBy(String createdBy) {
+        this.createdBy = createdBy;
+    }
 
-	public void setFlag(String flag) {
-		this.flag = flag;
-	}
+    public String getCreatedDate() {
+        return createdDate;
+    }
+
+    public void setCreatedDate(String createdDate) {
+        this.createdDate = createdDate;
+    }
+
+    public String getFlag() {
+        return flag;
+    }
+
+    public void setFlag(String flag) {
+        this.flag = flag;
+    }
 
 }
