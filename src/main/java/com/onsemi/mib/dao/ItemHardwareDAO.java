@@ -535,7 +535,7 @@ public class ItemHardwareDAO {
     public Integer getTotalHardwareAvailable(String mibItemId) {
         Integer count = 0;
         String sql = "SELECT COUNT(*) AS count FROM item_hardware WHERE mib_item_id = '" + mibItemId + "' AND flag = '1'";
-        LOGGER.info("APA BENDA QUERY DIA ::: "+sql);
+        LOGGER.info("APA BENDA QUERY DIA ::: " + sql);
         try {
             PreparedStatement ps = conn.prepareStatement(
                     "SELECT COUNT(*) AS count FROM item_hardware WHERE mib_item_id = '" + mibItemId + "' AND flag = '1'"
@@ -585,6 +585,78 @@ public class ItemHardwareDAO {
             }
         }
         return count;
+    }
+
+    public String getSptsIdByHwId(String hardwareId) {
+        String data = "";
+        try {
+            PreparedStatement ps = conn.prepareStatement("SELECT IFNULL(spts_pkid, 0) AS sptsId FROM item_hardware WHERE id = '" + hardwareId + "'");
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                data = rs.getString("sptsId");
+            }
+            rs.close();
+            ps.close();
+        } catch (SQLException e) {
+            LOGGER.error(e.getMessage());
+        } finally {
+            if (conn != null) {
+                try {
+                    conn.close();
+                } catch (SQLException e) {
+                    LOGGER.error(e.getMessage());
+                }
+            }
+        }
+        return data;
+    }
+
+    public String getMibItemIdByHwId(String hardwareId) {
+        String data = "";
+        try {
+            PreparedStatement ps = conn.prepareStatement("SELECT mib_item_id FROM item_hardware WHERE id = '" + hardwareId + "'");
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                data = rs.getString("mib_item_id");
+            }
+            rs.close();
+            ps.close();
+        } catch (SQLException e) {
+            LOGGER.error(e.getMessage());
+        } finally {
+            if (conn != null) {
+                try {
+                    conn.close();
+                } catch (SQLException e) {
+                    LOGGER.error(e.getMessage());
+                }
+            }
+        }
+        return data;
+    }
+
+    public String getHardwareIdByHwId(String hwid) {
+        String data = "";
+        try {
+            PreparedStatement ps = conn.prepareStatement("SELECT hardware_id FROM item_hardware WHERE id = '" + hwid + "'");
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                data = rs.getString("hardware_id");
+            }
+            rs.close();
+            ps.close();
+        } catch (SQLException e) {
+            LOGGER.error(e.getMessage());
+        } finally {
+            if (conn != null) {
+                try {
+                    conn.close();
+                } catch (SQLException e) {
+                    LOGGER.error(e.getMessage());
+                }
+            }
+        }
+        return data;
     }
 
 }

@@ -4788,11 +4788,7 @@ public class ItemController {
         String implementationCost = "";
         String manpowerValue = "";
         String manpowerUnit = "";
-
-        JSONObject params2 = new JSONObject();
-        String date1 = expirationDate.substring(0, 10);
-        String time = expirationDate.substring(11, 19);
-        String completeDateTime = date1 + "T" + time;
+        String completeDateTime = "";
 
         JSONObject addItem = new JSONObject();
         addItem.put("itemID", itemId);
@@ -4832,7 +4828,16 @@ public class ItemController {
         addItem.put("subType", subType);
         addItem.put("assemblyID", assemblyId);
         addItem.put("remarks", remarks);
-        addItem.put("expirationDate", completeDateTime);
+        
+        if (expirationDate == null || "".equals(expirationDate)) {
+            
+        } else {
+            String date1 = expirationDate.substring(0, 10);
+            String time = expirationDate.substring(11, 19);
+            completeDateTime = date1 + "T" + time;
+            addItem.put("expirationDate", completeDateTime);
+        }
+        
 //        addItem.put("downtimeValue", downtimeValue);
 //        addItem.put("downtimeUnit", downtimeUnit);
 //        addItem.put("implementationCost", implementationCost);
@@ -6653,7 +6658,7 @@ public class ItemController {
         itemhw.setVerifyBy(userSession.getLoginId());
 
         ItemHardwareDAO itemhwdao = new ItemHardwareDAO();
-        QueryResult qr = itemhwdao.updateHardwareIdStatus(itemhw);
+        itemhwdao.updateHardwareIdStatus(itemhw);
 
         String status = insertItemHardwareIntoSpts(hwid, mibId, hardwareId, hwidStatus, userSession.getLoginId());
         if (status.equals("SUCCESS")) {
@@ -6662,6 +6667,56 @@ public class ItemController {
             redirectAttrs.addFlashAttribute("error", status);
         }
         return "redirect:/hw/" + sptsPkid;
+    }
+    
+    @RequestMapping(value = "/item/hardware/delete/{hwid}", method = {RequestMethod.GET, RequestMethod.POST})
+    public String deleteHardwareId(
+            Model model,
+            Locale locale,
+            RedirectAttributes redirectAttrs,
+            @ModelAttribute UserSession userSession,
+            @PathVariable("hwid") String hwid) throws IOException {
+        
+        ItemHardwareDAO itemhwdao = new ItemHardwareDAO();
+        String sptsPkid = itemhwdao.getSptsIdByHwId(hwid);
+        itemhwdao = new ItemHardwareDAO();
+        String mibItemId = itemhwdao.getMibItemIdByHwId(hwid);
+        
+        itemhwdao = new ItemHardwareDAO();
+        itemhwdao.deleteItemHardware(hwid);
+        
+        // THIS FUNCTION TO MAKE SURE THE REDIRECT PAGE POINT TO THE CORRECT SELECTED ITEM ID
+        if ("0".equals(sptsPkid)) {
+            // DO NOTHING HERE?
+        } else {
+            // DELETE DATA IN SPTS DATABASE - TIME HANTAR DATA NI, PARAMS DIA KENA IKUT DLM API
+            JSONObject params = new JSONObject();
+            params.put("pkid", sptsPkid);
+            JSONArray getItemByPKID = SPTSWebService.getHardwareIdByPKID(params);
+            
+            // DAPAQTKAN DATA UNTUK HARDWARE ID DI SPTS DATABASE
+            String sptsVersion = "";
+            Integer pkid = 0;
+            for (int i = 0; i < getItemByPKID.length(); i++) {
+                // TAPI MASA DEKAT SINI, KENA DAPATKAN DATA DARI DLM RESULT DIA RETURN
+                sptsVersion = getItemByPKID.getJSONObject(i).getString("Version").toUpperCase();
+                pkid = getItemByPKID.getJSONObject(i).getInt("PKID");
+            }
+            
+            if ("0".equals(pkid)) {
+                // DO NOTHING HERE
+                redirectAttrs.addFlashAttribute("error", messageSource.getMessage("item.label.hardware.deletespts.error", args, locale));
+            } else {
+                JSONObject param = new JSONObject();
+                param.put("pkid", pkid);
+                param.put("version", sptsVersion);
+                SPTSResponse deleteEqpt = SPTSWebService.deleteHardwareIdByPKID(param);
+                redirectAttrs.addFlashAttribute("success", messageSource.getMessage("item.label.hardware.deletespts.success", args, locale));
+            }
+        }
+        ItemDAO itemdao = new ItemDAO();
+        String sptsId = itemdao.getSptsPkIdByMibItemId(mibItemId);
+        return "redirect:/hw/" + sptsId;
     }
 
     private static void addIfYes(StringJoiner sj, String flag, String value) {
@@ -6678,7 +6733,6 @@ public class ItemController {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern(pattern);
         String dateNow = formatter.format(instance);
 
-        Integer itemPKID = Integer.parseInt(itempkid);
         ItemDAO itemdao = new ItemDAO();
         Integer sptsId = Integer.parseInt(itemdao.getSptsPkIdByMibItemId(itempkid));
 
@@ -6705,8 +6759,7 @@ public class ItemController {
             status = "FAILED";
             LinkedHashMap<String, String> itemhmap;
             ObjectMapper mapper = new ObjectMapper();
-            itemhmap = mapper.readValue(addItemHw.toString(), new TypeReference<LinkedHashMap<String, String>>() {
-            });
+            itemhmap = mapper.readValue(addItemHw.toString(), new TypeReference<LinkedHashMap<String, String>>() { });
             String errorMessage;
             if (sr.getErrorDetail().equals("")) {
                 errorMessage = sr.getErrorCode() + " - " + sr.getErrorMessage();

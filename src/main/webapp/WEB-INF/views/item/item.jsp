@@ -4387,10 +4387,12 @@
 //                                                                            return `<button class="btn btn-secondary edit-btn">Verify</button> 
 //                                                                                    <button class="btn btn-info edit-btn" onclick="viewRow(`+row.id+`)">Log</button>`;
                                                                         if (row.status === 'Available') {
-                                                                            return `<button class="btn btn-info edit-btn" onclick="viewRow(`+row.id+`)">Log</button>`;
+                                                                            return `<button class="btn btn-info edit-btn" onclick="viewRow(`+row.id+`)">Log</button>
+                                                                                    <button class="btn btn-light edit-btn" onclick="deleteRow(`+row.id+`)"><i class="bi bi-trash h5" style="color:red"></i></button>`;
                                                                         } else {
                                                                             return `<button class="btn btn-success edit-btn" onclick="verifyRow(`+row.id+`)">Verify</button> 
-                                                                                    <button class="btn btn-info edit-btn" onclick="viewRow(`+row.id+`)">Log</button>`;
+                                                                                    <button class="btn btn-info edit-btn" onclick="viewRow(`+row.id+`)">Log</button>
+                                                                                    <button class="btn btn-light edit-btn" onclick="deleteRow(`+row.id+`)"><i class="bi bi-trash h5" style="color:red"></i></button>`;
                                                                         }
                                                                     }
                                                                 }
@@ -4406,6 +4408,13 @@
                                                     
                                                     function viewRow(itemPKID) {
                                                         var Url = "${contextPath}/hw/item/deleteHardwareId/" + itemPKID;
+                                                        window.location.href = Url;
+                                                        // Add your delete logic here (e.g., confirmation dialog, API call)
+                                                    }
+                                                    
+                                                    function deleteRow(itemPKID) {
+                                                        alert("DELETE ITEM PKID : "+itemPKID);
+                                                        var Url = "${contextPath}/hw/item/hardware/delete/" + itemPKID;
                                                         window.location.href = Url;
                                                         // Add your delete logic here (e.g., confirmation dialog, API call)
                                                     }

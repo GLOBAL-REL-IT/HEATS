@@ -115,7 +115,7 @@
                                 <div class="col-lg-4 col-sm-6 col-12">
                                     <div class="card mb-4">
                                         <div class="card-header">
-                                            <h5 class="card-title">Hardware ID Summary</h5>
+                                            <h5 class="card-title">Hardware ID Registration Summary</h5>
                                         </div>
                                         <div class="card-body">
                                             <div id="basic-donut-graph-monochrome"></div>
@@ -214,11 +214,11 @@
             var options = {
                 series: [availVal, pendingVal, balanceVal],
                 chart: {
-                    type: 'pie',
+                    type: 'donut',
                     height: 350,
                     toolbar: {show: false}
                 },
-                labels: ['Available', 'Pending Verification', 'Balance'],
+                labels: ['Available', 'Pending Verification', 'Unregistered Hardware ID'],
                 colors: ['#28C459', '#f06a0a', '#808080'],
                 dataLabels: {
                     enabled: true,
@@ -227,19 +227,39 @@
                     }
                 },
                 tooltip: { y: { formatter: function (val) { return val }}},
-                // 3. Label at the bottom
-                annotations: {
-                    texts: [{
-                        x: '80%',
-                        y: '90%',
-                        text: 'TotalQty: '+total,
-                        textAnchor: 'middle',
-                        fontSize: '16px',
-                        fontWeight: 'bold',
-                        fontFamily: 'Arial',
-                        color: '#333'
-                    }]
-                }
+                plotOptions: {
+                    pie: {
+                      donut: {
+                        size: '50%', // Adjust thickness
+                        background: '#5B65AB', // Fills the middle with blue
+                        labels: {
+                          show: true,
+                          name: {
+                            show: true,
+                            color: '#ffffff', // Label text color (white for contrast)
+                            offsetY: -10
+                          },
+                          value: {
+                            show: true,
+                            color: '#ffffff', // Value text color
+                            offsetY: 10,
+                            formatter: function (val) {
+                              return val;
+                            }
+                          },
+                          total: {
+                            show: true,
+                            label: 'Total Qty', // Your custom label
+                            color: '#ffffff',   // Total text color
+                            formatter: function (w) {
+                              // Sums the series to get total quantity
+                              return w.globals.seriesTotals.reduce((a, b) => a + b, 0);
+                            }
+                          }
+                        }
+                      }
+                    }
+                },
             };
             var chart = new ApexCharts(document.querySelector("#basic-donut-graph-monochrome"), options);
             chart.render();
