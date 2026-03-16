@@ -1378,6 +1378,19 @@ public class AdminController {
         ManualTest itemA1 = itemA.getComponentConfigBefore(id);
         if (itemA1 == null) {
             // DO NOTHING HERE?
+            itemA = new ManualTestDAO();
+            ManualTest itemA2 = itemA.getComponentConfig(id);
+            if (itemA2 == null) {
+                // BARU DO NOTHING
+            } else {
+                ItemActivityConfigDAO itemactdao = new ItemActivityConfigDAO();
+                String mibItemId = itemactdao.getItemIdByConfigId(id);
+                ManualTestDAO itemB = new ManualTestDAO();
+                List<ManualTest> itemB2 = itemB.getAllComponentConfig(mibItemId);
+
+                model.addAttribute("dut", itemA2.getDut());
+                model.addAttribute("listData", itemB2);
+            }
         } else {
             String dut = itemA1.getDut();
 
@@ -1443,7 +1456,6 @@ public class AdminController {
             Integer check1 = test.getManualTestCurrentRecord(itemId);
             
             if ("0".equals(check1)) {
-                LOGGER.info("111");
                 test = new ManualTestDAO();
                 QueryResult q0 = test.insertManualTestBeforeLoading(itemId, id, String.valueOf(inputQuantity), inputDUT, String.valueOf(saiz), user, flag);
 
@@ -1726,6 +1738,119 @@ public class AdminController {
         ItemHardwareConfigDAO itemdao = new ItemHardwareConfigDAO();
         List<ItemHardwareConfig> itemList = itemdao.getItemHardwareConfigList();
         model.addAttribute("itemList", itemList);
+        
+        JSONObject paramsConfig = new JSONObject();
+        paramsConfig.put("itemPKID", "");                               // LETAK RANDOM SBB NK BACA SEMUA DATA JA - BETTER DONT HAVE TOO MANY CONFIG DATA
+        JSONArray getItemHwConfigByParam = SPTSWebService.getHardwareIdConfigByParam(paramsConfig);
+        
+        for (int i = 0; i < getItemHwConfigByParam.length(); i++) {
+            Integer sptsPKID = 0;
+            String itemType = "";
+            String subType = "";
+            String sameItemId = "";
+            String supplier = "";
+            String assemblyNo = "";
+            String revision = "";
+            String mfgDate = "";
+            String component = "";
+            String event = "";
+            String partNo = "";
+            String shelfTime = "";
+            String alu = "";
+            Integer flag = 0;
+            String createdBy = "";
+            String createdDate = "";
+            
+            sptsPKID = getItemHwConfigByParam.getJSONObject(i).getInt("PKID");
+            if (sptsPKID == 0) {
+                // CREATE NOTHING HERE
+            } else {
+                itemType = getItemHwConfigByParam.getJSONObject(i).getString("ItemType");
+//                subType = getItemHwConfigByParam.getJSONObject(i).getString("SubType");
+                sameItemId = getItemHwConfigByParam.getJSONObject(i).getString("SameItemID");
+                supplier = getItemHwConfigByParam.getJSONObject(i).getString("Supplier");
+                assemblyNo = getItemHwConfigByParam.getJSONObject(i).getString("AssemblyNo");
+                revision = getItemHwConfigByParam.getJSONObject(i).getString("Revision");
+                mfgDate = getItemHwConfigByParam.getJSONObject(i).getString("MfgDate");
+                component = getItemHwConfigByParam.getJSONObject(i).getString("Component");
+                event = getItemHwConfigByParam.getJSONObject(i).getString("Event");
+                partNo = getItemHwConfigByParam.getJSONObject(i).getString("PartNumber");
+                shelfTime = getItemHwConfigByParam.getJSONObject(i).getString("ShelfTime");
+                alu = getItemHwConfigByParam.getJSONObject(i).getString("ALU");
+//                flag = getItemHwConfigByParam.getJSONObject(i).getInt("Flag");
+//                createdBy = getItemHwConfigByParam.getJSONObject(i).getString("CreatedBy");
+//                createdDate = getItemHwConfigByParam.getJSONObject(i).getString("CreatedDate");
+                
+                if (getItemHwConfigByParam.getJSONObject(i).has("SubType")) {
+                    subType = getItemHwConfigByParam.getJSONObject(i).getString("SubType");
+                }
+                subType = Strings.nullToEmpty(subType);                     // CONVERT NULL DATA TO EMPTY STRING
+                
+                itemdao = new ItemHardwareConfigDAO();
+                ItemHardwareConfig itemconfig = itemdao.getConfigItem(itemType, subType);
+
+                ItemHardwareConfig a = new ItemHardwareConfig();
+                a.setSptsPkid(sptsPKID.toString());
+                a.setItemType(itemType);
+                if (getItemHwConfigByParam.getJSONObject(i).has("SubType")) {
+                    Object assembly = getItemHwConfigByParam.getJSONObject(i).get("SubType");
+                    if (assembly instanceof String) {
+                        a.setSubType(Strings.nullToEmpty(getItemHwConfigByParam.getJSONObject(i).getString("SubType")));
+                    } else {
+                        a.setSubType(Integer.toString(getItemHwConfigByParam.getJSONObject(i).getInt("SubType")));
+                    }
+                }
+                a.setSameItemId(sameItemId);
+                a.setSupplier(supplier);
+                a.setAssemblyNo(assemblyNo);
+                a.setRevision(revision);
+                a.setMfgDate(mfgDate);
+                a.setComponent(component);
+                a.setEvent(event);
+                a.setPartNumber(partNo);
+                a.setAlu(alu);
+                a.setShelfTime(shelfTime);
+                if (getItemHwConfigByParam.getJSONObject(i).has("CreatedBy")) {
+                    Object data = getItemHwConfigByParam.getJSONObject(i).get("CreatedBy");
+                    if (data instanceof String) {
+                        a.setCreatedBy(getItemHwConfigByParam.getJSONObject(i).getString("CreatedBy"));
+                    }
+                }
+                if (getItemHwConfigByParam.getJSONObject(i).has("CreatedDate")) {
+                    Object data = getItemHwConfigByParam.getJSONObject(i).get("CreatedDate");
+                    if (data instanceof String) {
+                        createdDate = getItemHwConfigByParam.getJSONObject(i).getString("CreatedDate");
+                        String tarikh = createdDate.substring(0, 10);
+                        String masa = createdDate.substring(11, 19);
+                        createdDate = tarikh + " " + masa;
+                        a.setCreatedDate(createdDate);
+                    }
+                }
+                if (getItemHwConfigByParam.getJSONObject(i).has("Flag")) {
+                    Object data = getItemHwConfigByParam.getJSONObject(i).get("Flag");
+                    if (data instanceof String) {
+                        a.setFlag(getItemHwConfigByParam.getJSONObject(i).getString("Flag"));
+                    } else {
+                        a.setFlag(Integer.toString(getItemHwConfigByParam.getJSONObject(i).getInt("Flag")));
+                    }
+                }
+                
+                if (itemconfig == null) {
+                    itemdao = new ItemHardwareConfigDAO();
+                    QueryResult queryResult = itemdao.insertItemHardwareConfig(a);
+                } else {
+                    String pattern = "yyyy-MM-dd'T'HH:mm:ss";
+                    LocalDateTime instance = LocalDateTime.now();
+                    DateTimeFormatter formatter = DateTimeFormatter.ofPattern(pattern);
+                    String dateNow = formatter.format(instance);
+                    
+                    a.setUpdatedBy("SPTS");
+                    a.setUpdatedDate(dateNow);
+                    itemdao = new ItemHardwareConfigDAO();
+                    itemdao.updateItemHardwareConfig(a);
+                }
+             }
+        }
 
         return "admin/hw_id_list";
     }
@@ -1899,6 +2024,8 @@ public class AdminController {
         partnumber = onToYesNo(partnumber);
         alu = onToYesNo(alu);
         shelf = onToYesNo(shelf);
+        
+        subType = Strings.nullToEmpty(subType);
 
         ItemHardwareConfig itemupdate = new ItemHardwareConfig();
         itemupdate.setId(id);

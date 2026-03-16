@@ -284,7 +284,11 @@
                                                                 <td><input type="text" class="standard-input-read" name="component_name[]" value="<c:out value="${manualList.componentName}"/>" readonly></td>
                                                                 <c:choose>
                                                                     <c:when test="${manualList.componentType == 'Fuse'}">
-                                                                        <td class="status2-text" style="text-align: right;" colspan="4">OPEN / SHORT</td>
+                                                                        <td class="status2-text" style="text-align: center;" colspan="4">OPEN / SHORT</td>
+                                                                        <input type="hidden" class="standard-input-read" name="actual_value[]" value="<c:out value="1"/>" readonly>
+                                                                        <input type="hidden" class="standard-input-read" name="percentage[]" value="<c:out value="0"/>" readonly>
+                                                                        <input type="hidden" class="standard-input-read" name="lower[]" value="<c:out value="0"/>" readonly>
+                                                                        <input type="hidden" class="standard-input-read" name="upper[]" value="<c:out value="1"/>" readonly>
                                                                     </c:when>
                                                                     <c:otherwise>
                                                                         <td><input type="text" class="standard-input-read" name="actual_value[]" value="<c:out value="${manualList.componentValue}"/>" readonly></td>
@@ -564,6 +568,10 @@
                         percentageCell.style.display = 'none';
                         lowerLimitCell.style.display = 'none';
                         upperLimitCell.style.display = 'none';
+                        valueInput.value = 1.0;
+                        percentageInput.value = 0.0;
+                        lowerLimitInput.value = 0.0;
+                        upperLimitInput.value = 1.0;
                         valueCell.colSpan = 4;
                         const span = document.createElement('span');
                         span.className = 'status-text';
