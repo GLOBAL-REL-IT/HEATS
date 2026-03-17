@@ -1,7 +1,6 @@
 package com.onsemi.mib.controller;
 
 import com.onsemi.mib.dao.EmailHwReplacementDAO;
-import com.onsemi.mib.dao.EmailVmFailDAO;
 import com.onsemi.mib.dao.HostnameDAO;
 import com.onsemi.mib.dao.ItemDAO;
 import com.onsemi.mib.dao.ItemHardwareDAO;
@@ -12,18 +11,21 @@ import java.util.List;
 import java.util.Locale;
 import javax.servlet.http.HttpServletRequest;
 import com.onsemi.mib.dao.RmsBookingDetailDAO;
+import com.onsemi.mib.dao.RmsBookingDetailHwReplacementDAO;
 import com.onsemi.mib.dao.RmsBookingHardwareDAO;
 import com.onsemi.mib.dao.RmsBookingHardwareGroupDAO;
+import com.onsemi.mib.dao.RmsBookingHardwareGroupLogDAO;
 import com.onsemi.mib.dao.RmsBookingLogDAO;
 import com.onsemi.mib.model.EmailHwReplacement;
-import com.onsemi.mib.model.EmailVmFail;
 import com.onsemi.mib.model.Hostname;
 import com.onsemi.mib.model.Item;
 import com.onsemi.mib.model.ItemHardware;
 import com.onsemi.mib.model.ParameterDetails;
 import com.onsemi.mib.model.RmsBookingDetail;
+import com.onsemi.mib.model.RmsBookingDetailHwReplacement;
 import com.onsemi.mib.model.RmsBookingHardware;
 import com.onsemi.mib.model.RmsBookingHardwareGroup;
+import com.onsemi.mib.model.RmsBookingHardwareGroupLog;
 import com.onsemi.mib.model.RmsBookingLog;
 import com.onsemi.mib.model.UserSession;
 import com.onsemi.mib.tools.EmailSender;
@@ -206,12 +208,19 @@ public class RmsBookingDetailController {
             long daysBetween = ChronoUnit.DAYS.between(dateBefore, dateAfter);
 
             eqpt.setDaysToEventStart(Long.toString(daysBetween));
-            eqpt.setStatus("New");
-            eqpt.setFlag("0");
+            if (eqpt.getFolFilename() == null || "".equals(eqpt.getFolFilename()) || "null".equals(eqpt.getFolFilename())) { //only display rms with no bib test file yet
+
+                eqpt.setStatus("New");
+                eqpt.setFlag("0");
+            } else { // no need to display rms with bib test file.
+
+            }
+
             eqpt.setPriority("999"); // default
 
             //only check for Life Test
             if (!event.contains("TC") && !event.contains("HTSL") && !event.contains("THS") && !event.contains("UHAST") && !event.contains("AC")) {
+
                 //check need to insert or update
                 RmsBookingDetailDAO rmsD = new RmsBookingDetailDAO();
                 int countBookingId = rmsD.getCountBookingId(pkid);
@@ -236,6 +245,32 @@ public class RmsBookingDetailController {
                         rmsD = new RmsBookingDetailDAO();
                         QueryResult q = rmsD.updateRmsBookingDetailFromCBMSByPkid(eqpt);
                         countUpdate += q.getResult();
+
+                        String fol = eqpt.getFolFilename();
+                        if (fol != null) {
+                            fol = fol.trim();
+                            if (!fol.isEmpty() && !"null".equalsIgnoreCase(fol)) {
+                                // change status to removed and flag 99 if rms already has bib test file
+//                                LOGGER.info("eqpt.getFolFilename(): " + eqpt.getFolFilename());
+
+                                RmsBookingDetail eqpt2 = new RmsBookingDetail();
+                                eqpt2.setBookingPkid(pkid);
+                                eqpt2.setStatus("Removed");
+                                eqpt2.setFlag("99");
+                                RmsBookingDetailDAO rmsBookingDetailD = new RmsBookingDetailDAO();
+                                QueryResult q2 = rmsBookingDetailD.updateRmsBookingDetailForFlagAndStatus(eqpt2);
+                                countUpdate += q2.getResult();
+
+                                //update log
+                                RmsBookingLog log = new RmsBookingLog();
+                                log.setBookingId(pkid);
+                                log.setDetail("Removed from Active List");
+                                log.setCreatedBy(userSession.getFullname());
+                                RmsBookingLogDAO logD = new RmsBookingLogDAO();
+                                QueryResult logQ = logD.insertRmsBookingLog(log);
+                            }
+                        }
+
                     }
 
                 }
@@ -252,7 +287,7 @@ public class RmsBookingDetailController {
         for (int i = 0; i < rms.size(); i++) {
 
             if (!list.contains(rms.get(i).getBookingPkid())) {
-                LOGGER.info("BookingPkid: " + rms.get(i).getBookingPkid());
+//                LOGGER.info("BookingPkid: " + rms.get(i).getBookingPkid());
                 //change flag to 99 and status = 'Remove'
                 RmsBookingDetail rmsDetail = new RmsBookingDetail();
                 rmsDetail.setBookingPkid(rms.get(i).getBookingPkid());
@@ -273,15 +308,21 @@ public class RmsBookingDetailController {
 
         RmsBookingDetailDAO rmsD = new RmsBookingDetailDAO();
         List<RmsBookingDetail> booking = rmsD.getRmsBookingDetailListFlagZero();
-        model.addAttribute("booking", booking);
+
+        model.addAttribute(
+                "booking", booking);
 
         rmsD = new RmsBookingDetailDAO();
         int countBooking = rmsD.getCountBookingFlagZero();
-        model.addAttribute("countBooking", countBooking);
+
+        model.addAttribute(
+                "countBooking", countBooking);
 
         ParameterDetailsDAO pD = new ParameterDetailsDAO();
         List<ParameterDetails> priorityList = pD.getGroupParameterDetailListForPriorityBooking("", "019");
-        model.addAttribute("priorityList", priorityList);
+
+        model.addAttribute(
+                "priorityList", priorityList);
 
         return "rmsbookingDetail/rmsbookingDetail";
     }
@@ -532,6 +573,23 @@ public class RmsBookingDetailController {
         List<RmsBookingHardware> otherList = rmsHD.getRmsBookingHardwareListForOtherHwByBookingPkid(Integer.toString(bookingPkid));
         model.addAttribute("otherList", otherList);
 
+        //get all hw detail for request replacement form
+        rmsHD = new RmsBookingHardwareDAO();
+        List<RmsBookingHardware> hwList = rmsHD.getRmsBookingHardwareListByBookingPkidWithFlagZeroForHwReplacement(Integer.toString(bookingPkid));
+        model.addAttribute("hwList", hwList);
+
+        RmsBookingDetailHwReplacementDAO hwReplaceD = new RmsBookingDetailHwReplacementDAO();
+        List<RmsBookingDetailHwReplacement> listHwReplace = hwReplaceD.getRmsBookingDetailHwReplacementListByBookingPkid(Integer.toString(bookingPkid));
+        model.addAttribute("listHwReplace", listHwReplace);
+
+        hwReplaceD = new RmsBookingDetailHwReplacementDAO();
+        int countHwReplace = hwReplaceD.getCountBookingId(Integer.toString(bookingPkid));
+        model.addAttribute("countHwReplace", countHwReplace);
+
+        hwReplaceD = new RmsBookingDetailHwReplacementDAO();
+        int countHwReplaceFlagZero = hwReplaceD.getCountFlagZero();
+        model.addAttribute("countHwReplaceFlagZero", countHwReplaceFlagZero);
+
         //get booking remarks
         rmsHD = new RmsBookingHardwareDAO();
         int countRemarks = rmsHD.getCountHwWithRemarksByBookingPkid(Integer.toString(bookingPkid));
@@ -544,6 +602,176 @@ public class RmsBookingDetailController {
         }
 
         return "rmsbookingDetail/detail";
+    }
+
+    @RequestMapping(value = "/addHwReplacement", method = RequestMethod.POST)
+    public String addHwReplacement(
+            Model model,
+            Locale locale,
+            RedirectAttributes redirectAttrs,
+            @ModelAttribute UserSession userSession,
+            @RequestParam(required = false) String id3,
+            @RequestParam(required = false) String hwReplacement,
+            @RequestParam(required = false) String remarks
+    ) {
+        RmsBookingHardwareDAO rmsBD = new RmsBookingHardwareDAO();
+        RmsBookingHardware bookH = rmsBD.getRmsBookingHardwareByPkid(hwReplacement);
+
+        RmsBookingDetailHwReplacement replace = new RmsBookingDetailHwReplacement();
+        replace.setBookingPkid(bookH.getBookingPkid());
+        replace.setBookingHwPkid(hwReplacement);
+        replace.setItemPkid(bookH.getItemPkid());
+        replace.setItemId(bookH.getItemId());
+        replace.setRemarks(remarks);
+        replace.setCreatedBy(userSession.getFullname());
+        replace.setFlag("0");
+        RmsBookingDetailHwReplacementDAO replaceD = new RmsBookingDetailHwReplacementDAO();
+        QueryResult queryResult = replaceD.insertRmsBookingDetailHwReplacement(replace);
+
+        if (queryResult.getResult() == 1) {
+
+            redirectAttrs.addFlashAttribute("success", "Item succesfully added into the list");
+        } else {
+            redirectAttrs.addFlashAttribute("error", "Failed to add item into the list. pls contact system admin.");
+        }
+        return "redirect:/rmsbookingDetail/detail/" + id3 + "?saved=1";
+    }
+
+    @RequestMapping(value = "/deleteHwReplacement/{id}/{bookingDetailId}", method = RequestMethod.GET)
+    public String deleteHwId(
+            Model model,
+            Locale locale,
+            RedirectAttributes redirectAttrs,
+            @PathVariable("id") String id,
+            @PathVariable("bookingDetailId") String bookingDetailId
+    ) {
+
+        RmsBookingDetailHwReplacementDAO hwD = new RmsBookingDetailHwReplacementDAO();
+        RmsBookingDetailHwReplacement hw = hwD.getRmsBookingDetailHwReplacement(id);
+
+        hwD = new RmsBookingDetailHwReplacementDAO();
+        QueryResult queryResult = hwD.deleteRmsBookingDetailHwReplacement(id);
+
+        if (queryResult.getResult() == 1) {
+            redirectAttrs.addFlashAttribute("success", hw.getItemId() + " is successfully deleted.");
+        } else {
+            redirectAttrs.addFlashAttribute("error", "Failed to delete " + hw.getItemId() + ". Pls contact system admin.");
+        }
+        return "redirect:/rmsbookingDetail/detail/" + bookingDetailId + "?saved=1";
+    }
+
+    @RequestMapping(value = "/sendEmailReplacementByGroup/{bookingPkid}", method = {RequestMethod.GET, RequestMethod.POST})
+    public String sendEmailReplacementByGroup(
+            Model model,
+            Locale locale,
+            RedirectAttributes redirectAttrs,
+            @ModelAttribute UserSession userSession,
+            @PathVariable("bookingPkid") String bookingPkid
+    ) {
+
+        RmsBookingDetailDAO rmsD = new RmsBookingDetailDAO();
+        RmsBookingDetail rms = rmsD.getRmsBookingDetailByBookingPkid(bookingPkid);
+
+        RmsBookingDetailHwReplacementDAO replaceD = new RmsBookingDetailHwReplacementDAO();
+        List<RmsBookingDetailHwReplacement> replace = replaceD.getRmsBookingDetailHwReplacementListByBookingPkid(bookingPkid);
+
+        String text = "";
+
+        //update rmsBookingHardware table
+        for (int i = 0; i < replace.size(); i++) {
+
+            int index = i + 1;
+            text = text + "<tr align = \"center\">";
+            text = text + "<td>" + index + "</td>";
+            text = text + "<td>" + replace.get(i).getItemType() + "</td>";
+            text = text + "<td>" + replace.get(i).getItemId() + "</td>"; //
+            text = text + "<td>" + replace.get(i).getQty() + "</td>"; //
+            text = text + "<td>" + replace.get(i).getCreatedBy() + "</td>"; //
+            text = text + "<td>" + replace.get(i).getRemarks() + "</td>"; //
+            text = text + "</tr>";
+
+            //update flag
+            RmsBookingDetailHwReplacement replace2 = new RmsBookingDetailHwReplacement();
+            replace2.setFlag("1");
+            replace2.setId(replace.get(i).getId());
+            replaceD = new RmsBookingDetailHwReplacementDAO();
+            QueryResult queryResult = replaceD.updateRmsBookingDetailHwReplacementFlag(replace2);
+
+//            LOGGER.info("replace.get(i).getBookingHwId(): " + replace.get(i).getBookingHwId());
+            RmsBookingHardware h = new RmsBookingHardware();
+            h.setRequestReplacementRemarks(replace.get(i).getRemarks());
+            h.setStatus("Request for Replacement");
+            h.setRequestReplacementBy(userSession.getFullname());
+            h.setId(replace.get(i).getBookingHwId());
+            RmsBookingHardwareDAO hD = new RmsBookingHardwareDAO();
+            QueryResult q = hD.updateRmsBookingHardwareForRequestReplacement(h);
+
+            if (q.getResult().equals("0")) {
+                redirectAttrs.addFlashAttribute("error", "Failed to update bookingHwId: " + replace.get(i).getBookingHwId() + ". Pls contact system admin.");
+                return "redirect:/rmsbookingDetail/detail/" + rms.getId();
+            }
+        }
+        //send email
+        EmailHwReplacementDAO userDao = new EmailHwReplacementDAO();
+        List<EmailHwReplacement> userRecipientsList = userDao.getEmailHwReplacementList();
+
+        String[] to = new String[userRecipientsList.size()];
+        for (int x = 0; x < userRecipientsList.size(); x++) {
+            to[x] = userRecipientsList.get(x).getEmail();
+        }
+
+        //get current date and time
+        LocalDateTime instance = LocalDateTime.now();
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm");
+        String formattedString = formatter.format(instance); //15-02-2022 12:43
+
+        //gethostname
+        HostnameDAO hostnameD = new HostnameDAO();
+        Hostname host = hostnameD.getHostnameFlagZero();
+        String hostname = host.getHostname();
+
+        //send INFORMATION email
+        LOGGER.info("######################### START EMAIL TO PIC ########################### ");
+        EmailSender emailSender = new EmailSender();
+        emailSender.htmlEmailTable(
+                servletContext,
+                "", //user name requestor
+                to, //to
+                //                        emailTo,
+                "HW Prep for Loading - Request for HW replacement", //subject
+                "<br />"
+                + "Please be informed that the hardware below has been requested for replacement"
+                + "<br /> "
+                + "<br /> "
+                + "RMS No: " + rms.getRmsNo()
+                + "<br /> "
+                + "RMS Event: " + rms.getEvent()
+                + "<br /> "
+                + "Requested Date: " + formattedString
+                + "<br /> "
+                + "<br /> "
+                + "Please click <a href=\"http://" + hostname + "/HEATS/rmsbookingDetail/detail/" + rms.getId() + " \">HERE</a> for more detail."
+                + "<br /> "
+                + "<br /> "
+                + "<style>table, th, td {border: 1px solid black; border-collapse: collapse;} th {background-color: #f06a0a;color: white;}</style>"
+                + "<table style=\"width:100%\">" //tbl
+                + "<tr>"
+                + "<th>No.</th> "
+                + "<th>Item Type</th> "
+                + "<th>Item ID</th>"
+                + "<th>Qty</th>"
+                + "<th>Requested By</th>"
+                + "<th>Remarks</th>"
+                + "</tr>"
+                //                + table(bookingPkid)
+                + text
+                + "</table>"
+                + "<br /> "
+                + "<br />Thank you." //msg
+        );
+        redirectAttrs.addFlashAttribute("success", "Email sent to planner.");
+        return "redirect:/rmsbookingDetail/detail/" + rms.getId();
+
     }
 
     @RequestMapping(value = "/emailBody", method = {RequestMethod.GET, RequestMethod.POST})
@@ -651,6 +879,23 @@ public class RmsBookingDetailController {
         }
     }
 
+    @RequestMapping(value = "/emailBodyByBookingkid", method = {RequestMethod.GET, RequestMethod.POST})
+    @ResponseBody
+    public List<RmsBookingHardware> emailBodyByBookingkid(
+            @ModelAttribute UserSession userSession,
+            Model model,
+            HttpServletRequest request,
+            @RequestParam(required = false) String bookingPkid
+    ) throws IOException {
+
+//        LOGGER.info("id: " + id);
+        RmsBookingHardwareDAO rmsHD = new RmsBookingHardwareDAO();
+        List<RmsBookingHardware> rms = rmsHD.getRmsBookingHardwareListByBookingPkidWithFlagZeroForHwReplacement(bookingPkid);
+//        LOGGER.info("itemId: " + rms.getItemId());
+
+        return rms;
+    }
+
     @RequestMapping(value = "/retrieveSF/{invId}/{pkid}/{id}/{rmsBookingId}", method = {RequestMethod.GET, RequestMethod.POST})
     public String retrieveSF(
             Model model,
@@ -752,11 +997,6 @@ public class RmsBookingDetailController {
         return "rmsbookingDetail/detail_group";
     }
 
-    @RequestMapping(value = "/add", method = RequestMethod.GET)
-    public String add(Model model) {
-        return "rmsbookingDetail/add";
-    }
-
     @RequestMapping(value = "/registerHwId", method = RequestMethod.POST)
     public String registerHwId(
             Model model,
@@ -839,6 +1079,53 @@ public class RmsBookingDetailController {
                         hwGroupD = new RmsBookingHardwareGroupDAO();
                         QueryResult q = hwGroupD.insertRmsBookingHardwareGroup(hwGroup);
                         if (q.getResult() > 0) {
+
+                            //update lc_qty/pc_qty at rmsbookinghardware table
+                            String lcQty = "";
+                            String pcQty = "";
+
+                            String[] MbBookingHwPkid = groupId.split("/");
+                            String mbBookingPkid = MbBookingHwPkid[1];
+
+                            rmsBookingHD = new RmsBookingHardwareDAO();
+                            int countBookingHwPkid = rmsBookingHD.getCountBookingPkidAndPkidForMotherboard(bookingPkid, mbBookingPkid);
+                            if (countBookingHwPkid == 1) {
+                                rmsBookingHD = new RmsBookingHardwareDAO();
+                                RmsBookingHardware MbDetail = rmsBookingHD.getRmsBookingHardwareByBookingPkidAndPkid(bookingPkid, mbBookingPkid);
+
+                                if (MbDetail.getLcQty() == null || "".equals(MbDetail.getLcQty())) {
+                                    lcQty = "0";
+                                } else {
+                                    lcQty = MbDetail.getLcQty();
+                                }
+                                if (MbDetail.getPcQty() == null || "".equals(MbDetail.getPcQty())) {
+                                    pcQty = "0";
+                                } else {
+                                    pcQty = MbDetail.getPcQty();
+                                }
+                                if ("Load Card".equals(rmsBookingH.getItemType())) {
+                                    lcQty = String.valueOf(Integer.parseInt(lcQty) + 1);
+                                } else if ("Program Card".equals(rmsBookingH.getItemType())) {
+                                    pcQty = String.valueOf(Integer.parseInt(pcQty) + 1);
+                                }
+
+                                RmsBookingHardware hw = new RmsBookingHardware();
+                                hw.setLcQty(lcQty);
+                                hw.setPcQty(pcQty);
+                                hw.setBookingPkid(bookingPkid);
+                                hw.setPkid(mbBookingPkid);
+                                rmsBookingHD = new RmsBookingHardwareDAO();
+                                QueryResult qHw = rmsBookingHD.updateRmsBookingHardwareLcQtyAndPcQtyByBookingPkidAndPkid(hw);
+                            }
+
+                            //add log
+                            RmsBookingHardwareGroupLog log = new RmsBookingHardwareGroupLog();
+                            log.setGroupId(groupId);
+                            log.setDetail("Register Item ID: " + item.getItemId());
+                            log.setCreatedBy(userSession.getFullname());
+                            RmsBookingHardwareGroupLogDAO logD = new RmsBookingHardwareGroupLogDAO();
+                            QueryResult logQ = logD.insertRmsBookingHardwareGroupLog(log);
+
                             redirectAttrs.addFlashAttribute("success", hwId + " is successfully registered.");
                             return "redirect:/rmsbookingDetail/groupDetail/" + groupId;
                         } else {
@@ -860,6 +1147,7 @@ public class RmsBookingDetailController {
     public String deleteHwId(
             Model model,
             Locale locale,
+            @ModelAttribute UserSession userSession,
             RedirectAttributes redirectAttrs,
             @PathVariable("id") String id
     ) {
@@ -870,6 +1158,58 @@ public class RmsBookingDetailController {
         QueryResult queryResult = hwD.deleteRmsBookingHardwareGroup(id);
 
         if (queryResult.getResult() == 1) {
+
+            String[] groupId = hw.getGroupId().split("/");
+            String bookingPkid = groupId[0];
+            String mbBookingPkid = groupId[1];
+
+            //update lc_qty/pc_qty at rmsbookinghardware table
+            String lcQty = "";
+            String pcQty = "";
+
+            RmsBookingHardwareDAO rmsBookingHD = new RmsBookingHardwareDAO();
+            int countBookingHwPkid = rmsBookingHD.getCountBookingPkidAndPkidForMotherboard(bookingPkid, mbBookingPkid);
+            if (countBookingHwPkid == 1) {
+                rmsBookingHD = new RmsBookingHardwareDAO();
+                RmsBookingHardware MbDetail = rmsBookingHD.getRmsBookingHardwareByBookingPkidAndPkid(bookingPkid, mbBookingPkid);
+
+                if (MbDetail.getLcQty() == null || "".equals(MbDetail.getLcQty())) {
+                    lcQty = "0";
+                } else {
+                    lcQty = MbDetail.getLcQty();
+                }
+                if (MbDetail.getPcQty() == null || "".equals(MbDetail.getPcQty())) {
+                    pcQty = "0";
+                } else {
+                    pcQty = MbDetail.getPcQty();
+                }
+
+                rmsBookingHD = new RmsBookingHardwareDAO();
+                RmsBookingHardware hardware = rmsBookingHD.getRmsBookingHardwareByBookingPkidAndItemPKid(bookingPkid, hw.getItemPkid());
+
+                if ("Load Card".equals(hardware.getItemType())) {
+                    lcQty = String.valueOf(Integer.parseInt(lcQty) - 1);
+                } else if ("Program Card".equals(hardware.getItemType())) {
+                    pcQty = String.valueOf(Integer.parseInt(pcQty) - 1);
+                }
+
+                RmsBookingHardware hw1 = new RmsBookingHardware();
+                hw1.setLcQty(lcQty);
+                hw1.setPcQty(pcQty);
+                hw1.setBookingPkid(bookingPkid);
+                hw1.setPkid(mbBookingPkid);
+                rmsBookingHD = new RmsBookingHardwareDAO();
+                QueryResult qHw = rmsBookingHD.updateRmsBookingHardwareLcQtyAndPcQtyByBookingPkidAndPkid(hw1);
+            }
+
+            //add log
+            RmsBookingHardwareGroupLog log = new RmsBookingHardwareGroupLog();
+            log.setGroupId(hw.getGroupId());
+            log.setDetail("Removed Item ID: " + hw.getItemId());
+            log.setCreatedBy(userSession.getFullname());
+            RmsBookingHardwareGroupLogDAO logD = new RmsBookingHardwareGroupLogDAO();
+            QueryResult logQ = logD.insertRmsBookingHardwareGroupLog(log);
+
             redirectAttrs.addFlashAttribute("success", hw.getHardwareId() + " is successfully deleted.");
         } else {
             redirectAttrs.addFlashAttribute("error", "Failed to delete " + hw.getHardwareId() + ". Pls contact system admin.");
@@ -882,6 +1222,7 @@ public class RmsBookingDetailController {
             Model model,
             Locale locale,
             RedirectAttributes redirectAttrs,
+            @ModelAttribute UserSession userSession,
             @PathVariable("bookingPkid") String bookingPkid,
             @PathVariable("pkid") String pkid
     ) {
@@ -898,6 +1239,17 @@ public class RmsBookingDetailController {
             booking = new RmsBookingHardwareDAO();
             QueryResult q = booking.updateRmsBookingHardwareSubStatusByPkidAndBookingPkid(bookHardware);
             if (q.getResult() == 1) {
+
+                String groupId = bookingPkid + "/" + pkid;
+
+                //add log
+                RmsBookingHardwareGroupLog log = new RmsBookingHardwareGroupLog();
+                log.setGroupId(groupId);
+                log.setDetail("Finalized");
+                log.setCreatedBy(userSession.getFullname());
+                RmsBookingHardwareGroupLogDAO logD = new RmsBookingHardwareGroupLogDAO();
+                QueryResult logQ = logD.insertRmsBookingHardwareGroupLog(log);
+
                 redirectAttrs.addFlashAttribute("success", "Finalization successful. Proceed to the next step (VM) when ready.");
                 return "redirect:/rmsbookingDetail/groupDetail/" + bookingPkid + "/" + pkid;
             } else {
@@ -917,6 +1269,7 @@ public class RmsBookingDetailController {
             Model model,
             Locale locale,
             RedirectAttributes redirectAttrs,
+            @ModelAttribute UserSession userSession,
             @PathVariable("bookingPkid") String bookingPkid,
             @PathVariable("pkid") String pkid
     ) {
@@ -933,6 +1286,17 @@ public class RmsBookingDetailController {
             booking = new RmsBookingHardwareDAO();
             QueryResult q = booking.updateRmsBookingHardwareSubStatusByPkidAndBookingPkid(bookHardware);
             if (q.getResult() == 1) {
+
+                String groupId = bookingPkid + "/" + pkid;
+
+                //add log
+                RmsBookingHardwareGroupLog log = new RmsBookingHardwareGroupLog();
+                log.setGroupId(groupId);
+                log.setDetail("Revert Finalization");
+                log.setCreatedBy(userSession.getFullname());
+                RmsBookingHardwareGroupLogDAO logD = new RmsBookingHardwareGroupLogDAO();
+                QueryResult logQ = logD.insertRmsBookingHardwareGroupLog(log);
+
                 redirectAttrs.addFlashAttribute("success", "Undo successful. This item group is now open for modifications.");
                 return "redirect:/rmsbookingDetail/groupDetail/" + bookingPkid + "/" + pkid;
             } else {

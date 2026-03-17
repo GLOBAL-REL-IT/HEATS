@@ -256,7 +256,7 @@
                                                                         style="width: 100%" readonly>
                                                                     <option></option>
                                                                     <c:forEach items="${listSubType}" var="invInner">
-                                                                        <option value="${invInner.subType}">${invInner.subType}</option>
+                                                                        <option value="${invInner.subType}" ${invInner.selected}>${invInner.subType}</option>
                                                                     </c:forEach>
                                                                 </select>
                                                             </div>
@@ -662,7 +662,7 @@
                                                                         style="width: 100%" readonly>
                                                                     <option></option>
                                                                     <c:forEach items="${listSubType}" var="invInner">
-                                                                        <option value="${invInner.subType}">${invInner.subType}</option>
+                                                                        <option value="${invInner.subType}" ${invInner.selected}>${invInner.subType}</option>
                                                                     </c:forEach>
                                                                 </select>
                                                             </div>
@@ -1071,7 +1071,7 @@
                                                                         style="width: 100%" readonly>
                                                                     <option></option>
                                                                     <c:forEach items="${listSubType}" var="invInner">
-                                                                        <option value="${invInner.subType}">${invInner.subType}</option>
+                                                                        <option value="${invInner.subType}" ${invInner.selected}>${invInner.subType}</option>
                                                                     </c:forEach>
                                                                 </select>
                                                             </div>
@@ -1482,7 +1482,7 @@
                                                                         style="width: 100%" readonly>
                                                                     <option></option>
                                                                     <c:forEach items="${listSubType}" var="invInner">
-                                                                        <option value="${invInner.subType}">${invInner.subType}</option>
+                                                                        <option value="${invInner.subType}" ${invInner.selected}>${invInner.subType}</option>
                                                                     </c:forEach>
                                                                 </select>
                                                             </div>
@@ -1893,7 +1893,7 @@
                                                                         style="width: 100%" readonly>
                                                                     <option></option>
                                                                     <c:forEach items="${listSubType}" var="invInner">
-                                                                        <option value="${invInner.subType}">${invInner.subType}</option>
+                                                                        <option value="${invInner.subType}" ${invInner.selected}>${invInner.subType}</option>
                                                                     </c:forEach>
                                                                 </select>
                                                             </div>
@@ -2290,7 +2290,7 @@
                                                                         style="width: 100%" readonly>
                                                                     <option></option>
                                                                     <c:forEach items="${listSubType}" var="invInner">
-                                                                        <option value="${invInner.subType}">${invInner.subType}</option>
+                                                                        <option value="${invInner.subType}" ${invInner.selected}>${invInner.subType}</option>
                                                                     </c:forEach>
                                                                 </select>
                                                             </div>
@@ -2687,7 +2687,7 @@
                                                                         style="width: 100%" readonly>
                                                                     <option></option>
                                                                     <c:forEach items="${listSubType}" var="invInner">
-                                                                        <option value="${invInner.subType}">${invInner.subType}</option>
+                                                                        <option value="${invInner.subType}" ${invInner.selected}>${invInner.subType}</option>
                                                                     </c:forEach>
                                                                 </select>
                                                             </div>
@@ -3096,7 +3096,7 @@
                                                                         style="width: 100%" readonly>
                                                                     <option></option>
                                                                     <c:forEach items="${listSubType}" var="invInner">
-                                                                        <option value="${invInner.subType}">${invInner.subType}</option>
+                                                                        <option value="${invInner.subType}" ${invInner.selected}>${invInner.subType}</option>
                                                                     </c:forEach>
                                                                 </select>
                                                             </div>
@@ -3497,7 +3497,7 @@
                                                                         style="width: 100%" readonly>
                                                                     <option></option>
                                                                     <c:forEach items="${listSubType}" var="invInner">
-                                                                        <option value="${invInner.subType}">${invInner.subType}</option>
+                                                                        <option value="${invInner.subType}" ${invInner.selected}>${invInner.subType}</option>
                                                                     </c:forEach>
                                                                 </select>
                                                             </div>

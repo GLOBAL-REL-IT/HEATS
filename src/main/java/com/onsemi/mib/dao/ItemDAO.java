@@ -1489,8 +1489,8 @@ public class ItemDAO {
         return hardwaredetailList;
     }
 
-    public List<Item> getItemSubType() {
-        String sql = "SELECT DISTINCT(it.sub_type) AS sub_type FROM item it WHERE it.sub_type <> '' ORDER BY it.sub_type ASC";
+    public List<Item> getItemSubType(String subType) {
+        String sql = "SELECT DISTINCT(it.sub_type) AS sub_type, IF(it.sub_type=\"" + subType + "\",\"selected=''\",\"\") AS selected FROM item it WHERE it.sub_type <> '' ORDER BY it.sub_type ASC";
         List<Item> hardwaredetailList = new ArrayList<Item>();
         try {
             PreparedStatement ps = conn.prepareStatement(sql);
@@ -1499,6 +1499,7 @@ public class ItemDAO {
             while (rs.next()) {
                 hardwaredetail = new Item();
                 hardwaredetail.setSubType(rs.getString("sub_type"));
+                hardwaredetail.setSelected(rs.getString("selected"));
                 hardwaredetailList.add(hardwaredetail);
             }
             rs.close();

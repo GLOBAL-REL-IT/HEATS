@@ -42,21 +42,6 @@
                 color: #FFFFFF; /* White text for contrast */
             }
 
-            /*            .img3 {
-                            width: 55px;  Sets a fixed width 
-                            height: 18px;  Sets a fixed height 
-                        }
-            
-                        .app-footer2 {
-                            position: fixed;
-                            bottom: 0;
-                            right: 0;
-                            font-size: 0.7rem;
-                            margin: 0;
-                            padding: 15px 20px 0 20px;
-                            display: flex;
-                            justify-content: flex-end;
-                        }*/
         </style>
     </s:layout-component>
     <s:layout-component name="page_header">

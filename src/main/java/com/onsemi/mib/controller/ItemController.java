@@ -170,7 +170,7 @@ public class ItemController {
         model.addAttribute("listStressType", listStressType);
 
         itemD = new ItemDAO();
-        List<Item> listSubType = itemD.getItemSubType();
+        List<Item> listSubType = itemD.getItemSubType("");
         model.addAttribute("listSubType", listSubType);
 
         model.addAttribute("userItemAdd", userSession.getItemAdd());
@@ -263,7 +263,7 @@ public class ItemController {
         model.addAttribute("listStressType", listStressType);
 
         itemD = new ItemDAO();
-        List<Item> listSubType = itemD.getItemSubType();
+        List<Item> listSubType = itemD.getItemSubType(item.getSubType());
         model.addAttribute("listSubType", listSubType);
 
         model.addAttribute("userItemAdd", userSession.getItemAdd());
@@ -2331,7 +2331,7 @@ public class ItemController {
         model.addAttribute("listStressType", listStressType);
 
         itemD = new ItemDAO();
-        List<Item> listSubType = itemD.getItemSubType();
+        List<Item> listSubType = itemD.getItemSubType("");
         model.addAttribute("listSubType", listSubType);
 
         if (itemType == null || "".equals(itemType)) {
@@ -3507,7 +3507,7 @@ public class ItemController {
         model.addAttribute("listStressType", listStressType);
 
         itemD = new ItemDAO();
-        List<Item> listSubType = itemD.getItemSubType();
+        List<Item> listSubType = itemD.getItemSubType(item.getSubType());
         model.addAttribute("listSubType", listSubType);
 
         return "item/item_add2";
@@ -6005,7 +6005,7 @@ public class ItemController {
         model.addAttribute("listStatus", listStatus);
 
         itemD = new ItemDAO();
-        List<Item> listSubType = itemD.getItemSubType();
+        List<Item> listSubType = itemD.getItemSubType("");
         model.addAttribute("listSubType", listSubType);
 
         if (itemType != null) {

@@ -231,6 +231,8 @@ public class RmsBookingHardwareDAO {
                 rmsbookingHardware.setCreatedBy(rs.getString("created_by"));
                 rmsbookingHardware.setModifiedDate(rs.getString("modified_date"));
                 rmsbookingHardware.setModifiedBy(rs.getString("modified_by"));
+                rmsbookingHardware.setLcQty(rs.getString("lc_qty"));
+                rmsbookingHardware.setPcQty(rs.getString("pc_qty"));
             }
             rs.close();
             ps.close();
@@ -271,6 +273,50 @@ public class RmsBookingHardwareDAO {
                 rmsbookingHardware.setCreatedBy(rs.getString("created_by"));
                 rmsbookingHardware.setModifiedDate(rs.getString("modified_date"));
                 rmsbookingHardware.setModifiedBy(rs.getString("modified_by"));
+                rmsbookingHardware.setLcQty(rs.getString("lc_qty"));
+                rmsbookingHardware.setPcQty(rs.getString("pc_qty"));
+            }
+            rs.close();
+            ps.close();
+        } catch (SQLException e) {
+            LOGGER.error(e.getMessage());
+        } finally {
+            if (conn != null) {
+                try {
+                    conn.close();
+                } catch (SQLException e) {
+                    LOGGER.error(e.getMessage());
+                }
+            }
+        }
+        return rmsbookingHardware;
+    }
+
+    public RmsBookingHardware getRmsBookingHardwareByBookingPkidAndPkid(String bookingPkid, String pkid) {
+        String sql = "SELECT * FROM rms_booking_hardware WHERE booking_pkid = '" + bookingPkid + "' AND pkid = '" + pkid + "' AND item_type = 'Motherboard'";
+        RmsBookingHardware rmsbookingHardware = null;
+        try {
+            PreparedStatement ps = conn.prepareStatement(sql);
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                rmsbookingHardware = new RmsBookingHardware();
+                rmsbookingHardware.setId(rs.getString("id"));
+                rmsbookingHardware.setBookingPkid(rs.getString("booking_pkid"));
+                rmsbookingHardware.setPkid(rs.getString("pkid"));
+                rmsbookingHardware.setItemType(rs.getString("item_type"));
+                rmsbookingHardware.setItemId(rs.getString("item_id"));
+                rmsbookingHardware.setItemPkid(rs.getString("item_pkid"));
+                rmsbookingHardware.setQty(rs.getString("qty"));
+                rmsbookingHardware.setReadiness(rs.getString("readiness"));
+                rmsbookingHardware.setStatus(rs.getString("status"));
+                rmsbookingHardware.setRecall(rs.getString("recall"));
+                rmsbookingHardware.setFlag(rs.getString("flag"));
+                rmsbookingHardware.setCreatedDate(rs.getString("created_date"));
+                rmsbookingHardware.setCreatedBy(rs.getString("created_by"));
+                rmsbookingHardware.setModifiedDate(rs.getString("modified_date"));
+                rmsbookingHardware.setModifiedBy(rs.getString("modified_by"));
+                rmsbookingHardware.setLcQty(rs.getString("lc_qty"));
+                rmsbookingHardware.setPcQty(rs.getString("pc_qty"));
             }
             rs.close();
             ps.close();
@@ -312,6 +358,8 @@ public class RmsBookingHardwareDAO {
                 rmsbookingHardware.setModifiedDate(rs.getString("modified_date"));
                 rmsbookingHardware.setModifiedBy(rs.getString("modified_by"));
                 rmsbookingHardware.setSubStatus(rs.getString("sub_status"));
+                rmsbookingHardware.setLcQty(rs.getString("lc_qty"));
+                rmsbookingHardware.setPcQty(rs.getString("pc_qty"));
             }
             rs.close();
             ps.close();
@@ -379,6 +427,8 @@ public class RmsBookingHardwareDAO {
                 rmsbookingHardware.setCreatedBy(rs.getString("created_by"));
                 rmsbookingHardware.setModifiedDate(rs.getString("modified_date"));
                 rmsbookingHardware.setModifiedBy(rs.getString("modified_by"));
+                rmsbookingHardware.setLcQty(rs.getString("lc_qty"));
+                rmsbookingHardware.setPcQty(rs.getString("pc_qty"));
                 rmsbookingHardwareList.add(rmsbookingHardware);
             }
             rs.close();
@@ -421,6 +471,56 @@ public class RmsBookingHardwareDAO {
                 rmsbookingHardware.setCreatedBy(rs.getString("created_by"));
                 rmsbookingHardware.setModifiedDate(rs.getString("modified_date"));
                 rmsbookingHardware.setModifiedBy(rs.getString("modified_by"));
+                rmsbookingHardware.setLcQty(rs.getString("lc_qty"));
+                rmsbookingHardware.setPcQty(rs.getString("pc_qty"));
+                rmsbookingHardwareList.add(rmsbookingHardware);
+            }
+            rs.close();
+            ps.close();
+        } catch (SQLException e) {
+            LOGGER.error(e.getMessage());
+        } finally {
+            if (conn != null) {
+                try {
+                    conn.close();
+                } catch (SQLException e) {
+                    LOGGER.error(e.getMessage());
+                }
+            }
+        }
+        return rmsbookingHardwareList;
+    }
+
+    public List<RmsBookingHardware> getRmsBookingHardwareListByBookingPkidWithFlagZeroForHwReplacement(String bookingPkid) {
+        String sql = "SELECT ha.* "
+                + "FROM rms_booking_hardware ha "
+                + "LEFT JOIN rms_booking_detail_hw_replacement re ON ha.pkid = re.booking_hw_pkid "
+                + "WHERE ha.booking_pkid = '" + bookingPkid + "' AND ha.flag = '0' AND ha.item_type IN ('Motherboard', 'Load Card', 'Program Card') "
+                + "AND ha.status LIKE 'Not Available%' AND re.booking_hw_pkid IS NULL";
+        List<RmsBookingHardware> rmsbookingHardwareList = new ArrayList<RmsBookingHardware>();
+        try {
+            PreparedStatement ps = conn.prepareStatement(sql);
+            RmsBookingHardware rmsbookingHardware;
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                rmsbookingHardware = new RmsBookingHardware();
+                rmsbookingHardware.setId(rs.getString("id"));
+                rmsbookingHardware.setBookingPkid(rs.getString("booking_pkid"));
+                rmsbookingHardware.setPkid(rs.getString("pkid"));
+                rmsbookingHardware.setItemType(rs.getString("item_type"));
+                rmsbookingHardware.setItemId(rs.getString("item_id"));
+                rmsbookingHardware.setItemPkid(rs.getString("item_pkid"));
+                rmsbookingHardware.setQty(rs.getString("qty"));
+                rmsbookingHardware.setReadiness(rs.getString("readiness"));
+                rmsbookingHardware.setStatus(rs.getString("status"));
+                rmsbookingHardware.setRecall(rs.getString("recall"));
+                rmsbookingHardware.setFlag(rs.getString("flag"));
+                rmsbookingHardware.setCreatedDate(rs.getString("created_date"));
+                rmsbookingHardware.setCreatedBy(rs.getString("created_by"));
+                rmsbookingHardware.setModifiedDate(rs.getString("modified_date"));
+                rmsbookingHardware.setModifiedBy(rs.getString("modified_by"));
+                rmsbookingHardware.setLcQty(rs.getString("lc_qty"));
+                rmsbookingHardware.setPcQty(rs.getString("pc_qty"));
                 rmsbookingHardwareList.add(rmsbookingHardware);
             }
             rs.close();
@@ -440,7 +540,7 @@ public class RmsBookingHardwareDAO {
     }
 
     public List<RmsBookingHardware> getRmsBookingHardwareListForMotherboardByBookingPkid(String bookingPkid) {
-        String sql = "SELECT ha.* FROM rms_booking_hardware ha WHERE ha.booking_pkid = '" + bookingPkid + "' AND ha.item_type = 'Motherboard' ORDER BY ha.flag, ha.item_id ";
+        String sql = "SELECT ha.*,IFNULL(lc_qty,'0') AS lcQty, IFNULL(pc_qty,'0') AS pcQty FROM rms_booking_hardware ha WHERE ha.booking_pkid = '" + bookingPkid + "' AND ha.item_type = 'Motherboard' ORDER BY ha.flag, ha.item_id ";
         List<RmsBookingHardware> rmsbookingHardwareList = new ArrayList<RmsBookingHardware>();
         try {
             PreparedStatement ps = conn.prepareStatement(sql);
@@ -464,6 +564,8 @@ public class RmsBookingHardwareDAO {
                 rmsbookingHardware.setModifiedDate(rs.getString("modified_date"));
                 rmsbookingHardware.setModifiedBy(rs.getString("modified_by"));
                 rmsbookingHardware.setSubStatus(rs.getString("sub_status"));
+                rmsbookingHardware.setLcQty(rs.getString("lcQty"));
+                rmsbookingHardware.setPcQty(rs.getString("pcQty"));
                 rmsbookingHardwareList.add(rmsbookingHardware);
             }
             rs.close();
@@ -506,6 +608,8 @@ public class RmsBookingHardwareDAO {
                 rmsbookingHardware.setCreatedBy(rs.getString("created_by"));
                 rmsbookingHardware.setModifiedDate(rs.getString("modified_date"));
                 rmsbookingHardware.setModifiedBy(rs.getString("modified_by"));
+                rmsbookingHardware.setLcQty(rs.getString("lc_qty"));
+                rmsbookingHardware.setPcQty(rs.getString("pc_qty"));
                 rmsbookingHardwareList.add(rmsbookingHardware);
             }
             rs.close();
@@ -570,6 +674,34 @@ public class RmsBookingHardwareDAO {
             ps.setString(1, rmsbookingHardware.getSubStatus());
             ps.setString(2, rmsbookingHardware.getBookingPkid());
             ps.setString(3, rmsbookingHardware.getPkid());
+            queryResult.setResult(ps.executeUpdate());
+            ps.close();
+        } catch (SQLException e) {
+            queryResult.setErrorMessage(e.getMessage());
+            LOGGER.error(e.getMessage());
+        } finally {
+            if (conn != null) {
+                try {
+                    conn.close();
+                } catch (SQLException e) {
+                    LOGGER.error(e.getMessage());
+                }
+            }
+        }
+        return queryResult;
+    }
+
+    public QueryResult updateRmsBookingHardwareLcQtyAndPcQtyByBookingPkidAndPkid(RmsBookingHardware rmsbookingHardware) {
+        QueryResult queryResult = new QueryResult();
+        try {
+            PreparedStatement ps = conn.prepareStatement(
+                    "UPDATE rms_booking_hardware SET lc_qty = ?, pc_qty = ? WHERE booking_pkid = ? AND pkid = ?"
+            );
+
+            ps.setString(1, rmsbookingHardware.getLcQty());
+            ps.setString(2, rmsbookingHardware.getPcQty());
+            ps.setString(3, rmsbookingHardware.getBookingPkid());
+            ps.setString(4, rmsbookingHardware.getPkid());
             queryResult.setResult(ps.executeUpdate());
             ps.close();
         } catch (SQLException e) {

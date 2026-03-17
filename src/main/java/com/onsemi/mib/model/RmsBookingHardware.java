@@ -26,6 +26,24 @@ public class RmsBookingHardware {
     private String recallSfDate;
 
     private String subStatus;
+    private String lcQty;
+    private String pcQty;
+
+    public String getLcQty() {
+        return lcQty;
+    }
+
+    public void setLcQty(String lcQty) {
+        this.lcQty = lcQty;
+    }
+
+    public String getPcQty() {
+        return pcQty;
+    }
+
+    public void setPcQty(String pcQty) {
+        this.pcQty = pcQty;
+    }
 
     public String getSubStatus() {
         return subStatus;
