@@ -1003,6 +1003,8 @@ public class ItemController {
             String createdBy = "";
             String createdDate = "";
             Integer flag = 0;
+            String verifyBy = "";
+            String verifyDate = "";
             
             sptsId = getItemHwByParam.getJSONObject(i).getInt("PKID");
             hardwareId = getItemHwByParam.getJSONObject(i).getString("HardwareID");
@@ -1010,6 +1012,18 @@ public class ItemController {
             createdBy = getItemHwByParam.getJSONObject(i).getString("CreatedBy");
             createdDate = getItemHwByParam.getJSONObject(i).getString("CreatedDate").substring(0, 19);
             flag = getItemHwByParam.getJSONObject(i).getInt("Flag");
+            if (getItemHwByParam.getJSONObject(i).has("VerifyBy")) {
+                verifyBy = getItemHwByParam.getJSONObject(i).getString("VerifyBy");
+            }
+            if (getItemHwByParam.getJSONObject(i).has("VerifyDate")) {
+                Object data = getItemHwByParam.getJSONObject(i).get("VerifyDate");
+                if (data instanceof String) {
+                    verifyDate = getItemHwByParam.getJSONObject(i).getString("VerifyDate");
+                    String tarikh = createdDate.substring(0, 10);
+                    String masa = createdDate.substring(11, 19);
+                    verifyDate = tarikh + " " + masa;
+                }
+            }
             
             ItemHardware itemhardware = new ItemHardware();
             itemhardware.setMibItemId(mibItemId);
@@ -1028,6 +1042,10 @@ public class ItemController {
             } else {
                 String id = itemhw.getId();
                 itemhardware.setId(id);
+                itemhardware.setVerifyBy(Strings.nullToEmpty(verifyBy));
+                if (verifyDate != "") {
+                    itemhardware.setVerifyDate(verifyDate);
+                }
                 itemhwdao = new ItemHardwareDAO();
                 itemhwdao.updateItemHardware(itemhardware);
             }
