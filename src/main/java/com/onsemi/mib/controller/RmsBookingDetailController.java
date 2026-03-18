@@ -1,9 +1,13 @@
 package com.onsemi.mib.controller;
 
 import com.onsemi.mib.dao.EmailHwReplacementDAO;
+import com.onsemi.mib.dao.EmailVmFailDAO;
 import com.onsemi.mib.dao.HostnameDAO;
 import com.onsemi.mib.dao.ItemDAO;
 import com.onsemi.mib.dao.ItemHardwareDAO;
+import com.onsemi.mib.dao.ItemLogDAO;
+import com.onsemi.mib.dao.ItemMaverickDAO;
+import com.onsemi.mib.dao.ItemVisualInspectionDAO;
 import com.onsemi.mib.dao.ParameterDetailsDAO;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
@@ -16,10 +20,16 @@ import com.onsemi.mib.dao.RmsBookingHardwareDAO;
 import com.onsemi.mib.dao.RmsBookingHardwareGroupDAO;
 import com.onsemi.mib.dao.RmsBookingHardwareGroupLogDAO;
 import com.onsemi.mib.dao.RmsBookingLogDAO;
+import com.onsemi.mib.dao.RmsBookingMaverickDAO;
+import com.onsemi.mib.dao.RmsBookingVisualInspectionDAO;
 import com.onsemi.mib.model.EmailHwReplacement;
+import com.onsemi.mib.model.EmailVmFail;
 import com.onsemi.mib.model.Hostname;
 import com.onsemi.mib.model.Item;
 import com.onsemi.mib.model.ItemHardware;
+import com.onsemi.mib.model.ItemLog;
+import com.onsemi.mib.model.ItemMaverick;
+import com.onsemi.mib.model.ItemVisualInspection;
 import com.onsemi.mib.model.ParameterDetails;
 import com.onsemi.mib.model.RmsBookingDetail;
 import com.onsemi.mib.model.RmsBookingDetailHwReplacement;
@@ -27,12 +37,20 @@ import com.onsemi.mib.model.RmsBookingHardware;
 import com.onsemi.mib.model.RmsBookingHardwareGroup;
 import com.onsemi.mib.model.RmsBookingHardwareGroupLog;
 import com.onsemi.mib.model.RmsBookingLog;
+import com.onsemi.mib.model.RmsBookingMaverick;
+import com.onsemi.mib.model.RmsBookingVisualInspection;
 import com.onsemi.mib.model.UserSession;
 import com.onsemi.mib.tools.EmailSender;
 import com.onsemi.mib.tools.HimsRetrieve;
 import com.onsemi.mib.tools.QueryResult;
 import com.onsemi.mib.tools.SPTSWebService;
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.OutputStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.sql.SQLException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -40,6 +58,7 @@ import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import javax.servlet.ServletContext;
+import javax.servlet.http.HttpServletResponse;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.slf4j.Logger;
@@ -55,6 +74,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.SessionAttributes;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
@@ -71,6 +91,10 @@ public class RmsBookingDetailController {
 
     @Autowired
     ServletContext servletContext;
+
+    private static final String UPLOADED_FOLDER = "\\\\mysed-rel-app05\\f$\\HEATS\\VI-Attachment\\Before_Loading\\"; //server
+
+    private static final int BUFFER_SIZE = 4096;
 
     @RequestMapping(value = "", method = RequestMethod.GET)
     public String rmsbookingDetail(
@@ -960,6 +984,71 @@ public class RmsBookingDetailController {
         List<RmsBookingHardwareGroup> hwGroupList = h2D.getRmsBookingHardwareGroupListByGroupId(groupId);
         model.addAttribute("hwGroupList", hwGroupList);
 
+        //vm tab
+        RmsBookingVisualInspection itemVm = new RmsBookingVisualInspection();
+
+        RmsBookingVisualInspectionDAO vmD = new RmsBookingVisualInspectionDAO();
+        int count = vmD.getCountByGroupIdWithModuleBeforeLoading(groupId);
+        if (count == 1) {
+            vmD = new RmsBookingVisualInspectionDAO();
+            itemVm = vmD.getRmsBookingVisualInspectionByGroupId(groupId);
+        }
+        model.addAttribute("itemVm", itemVm);
+
+        LOGGER.info("itemVm.getPcbReject(): " + itemVm.getPcbReject());
+
+        ParameterDetailsDAO pD = new ParameterDetailsDAO();
+        List<ParameterDetails> BibPassFail = pD.getGroupParameterDetailList("", "016");
+        model.addAttribute("BibPassFail", BibPassFail);
+
+        pD = new ParameterDetailsDAO();
+        List<ParameterDetails> pcbReject = pD.getGroupParameterDetailList(itemVm.getPcbReject(), "003");
+        model.addAttribute("pcbReject", pcbReject);
+
+        pD = new ParameterDetailsDAO();
+        List<ParameterDetails> handleReject = pD.getGroupParameterDetailList(itemVm.getHandleReject(), "004");
+        model.addAttribute("handleReject", handleReject);
+
+        pD = new ParameterDetailsDAO();
+        List<ParameterDetails> metalFrameReject = pD.getGroupParameterDetailList(itemVm.getMetalFrameReject(), "005");
+        model.addAttribute("metalFrameReject", metalFrameReject);
+
+        pD = new ParameterDetailsDAO();
+        List<ParameterDetails> hardwareFasternersReject = pD.getGroupParameterDetailList(itemVm.getHardwareFasternersReject(), "006");
+        model.addAttribute("hardwareFasternersReject", hardwareFasternersReject);
+
+        pD = new ParameterDetailsDAO();
+        List<ParameterDetails> clipHolderReject = pD.getGroupParameterDetailList(itemVm.getClipHolderReject(), "007");
+        model.addAttribute("clipHolderReject", clipHolderReject);
+
+        pD = new ParameterDetailsDAO();
+        List<ParameterDetails> pcbEdgeFingerReject = pD.getGroupParameterDetailList(itemVm.getPcbEdgeFingerReject(), "008");
+        model.addAttribute("pcbEdgeFingerReject", pcbEdgeFingerReject);
+
+        pD = new ParameterDetailsDAO();
+        List<ParameterDetails> connectorReject = pD.getGroupParameterDetailList(itemVm.getConnectorReject(), "009");
+        model.addAttribute("connectorReject", connectorReject);
+
+        pD = new ParameterDetailsDAO();
+        List<ParameterDetails> dutSocketsReject = pD.getGroupParameterDetailList(itemVm.getDutSocketsReject(), "010");
+        model.addAttribute("dutSocketsReject", dutSocketsReject);
+
+        pD = new ParameterDetailsDAO();
+        List<ParameterDetails> edgeMbBananaReject = pD.getGroupParameterDetailList(itemVm.getEdgeMbBananaReject(), "011");
+        model.addAttribute("edgeMbBananaReject", edgeMbBananaReject);
+
+        pD = new ParameterDetailsDAO();
+        List<ParameterDetails> electComponentReject = pD.getGroupParameterDetailList(itemVm.getElectComponentReject(), "012");
+        model.addAttribute("electComponentReject", electComponentReject);
+
+        pD = new ParameterDetailsDAO();
+        List<ParameterDetails> solderJointReject = pD.getGroupParameterDetailList(itemVm.getSolderJointReject(), "014");
+        model.addAttribute("solderJointReject", solderJointReject);
+
+        pD = new ParameterDetailsDAO();
+        List<ParameterDetails> winConnectorReject = pD.getGroupParameterDetailList(itemVm.getWinConnectorReject(), "015");
+        model.addAttribute("winConnectorReject", winConnectorReject);
+
         if (h.getSubStatus().contains("HW Registration")) {
             String hwActive = "active";
             String hwActiveTab = "show active";
@@ -971,7 +1060,7 @@ public class RmsBookingDetailController {
             model.addAttribute("hwActive", hwActive);
             model.addAttribute("hwActiveTab", hwActiveTab);
         }
-        if (h.getSubStatus().contains("VM")) {
+        if (h.getSubStatus().contains("VM") || h.getSubStatus().contains("Visual Inspection")) {
             String vmActive = "active";
             String vmActiveTab = "show active";
             model.addAttribute("vmActive", vmActive);
@@ -1308,6 +1397,579 @@ public class RmsBookingDetailController {
             redirectAttrs.addFlashAttribute("error", "Failed to undo the finalization. Pls contact system admin.");
             return "redirect:/rmsbookingDetail/groupDetail/" + bookingPkid + "/" + pkid;
         }
+
+    }
+
+    @RequestMapping(value = "/vm/save", method = {RequestMethod.GET, RequestMethod.POST})
+    public String itemVmSave(
+            Model model,
+            Locale locale,
+            RedirectAttributes redirectAttrs,
+            @ModelAttribute UserSession userSession,
+            @RequestParam(required = false) String groupId,
+            @RequestParam(required = false) String itemStatus,
+            @RequestParam(required = false) String pcb,
+            @RequestParam(required = false) String pcbReject,
+            @RequestParam(required = false) String handle,
+            @RequestParam(required = false) String handleReject,
+            @RequestParam(required = false) String metalFrame,
+            @RequestParam(required = false) String metalFrameReject,
+            @RequestParam(required = false) String hardwareFasterners,
+            @RequestParam(required = false) String hardwareFasternersReject,
+            @RequestParam(required = false) String clipHolder,
+            @RequestParam(required = false) String clipHolderReject,
+            @RequestParam(required = false) String pcbEdgeFinger,
+            @RequestParam(required = false) String pcbEdgeFingerReject,
+            @RequestParam(required = false) String connector,
+            @RequestParam(required = false) String connectorReject,
+            @RequestParam(required = false) String dutSockets,
+            @RequestParam(required = false) String dutSocketsReject,
+            @RequestParam(required = false) String edgeMbBanana,
+            @RequestParam(required = false) String edgeMbBananaReject,
+            @RequestParam(required = false) String electComponent,
+            @RequestParam(required = false) String electComponentReject,
+            @RequestParam(required = false) String solderJoint,
+            @RequestParam(required = false) String solderJointReject,
+            @RequestParam(required = false) String winConnector,
+            @RequestParam(required = false) String winConnectorReject,
+            @RequestParam(required = false) String remarks,
+            @RequestParam(required = false) String pcbRejectQty,
+            @RequestParam(required = false) MultipartFile pcbRejectUpload,
+            @RequestParam(required = false) String handleRejectQty,
+            @RequestParam(required = false) MultipartFile handleRejectUpload,
+            @RequestParam(required = false) String metalFrameRejectQty,
+            @RequestParam(required = false) MultipartFile metalFrameRejectUpload,
+            @RequestParam(required = false) String hardwareFasternersRejectQty,
+            @RequestParam(required = false) MultipartFile hardwareFasternersRejectUpload,
+            @RequestParam(required = false) String clipHolderRejectQty,
+            @RequestParam(required = false) MultipartFile clipHolderRejectUpload,
+            @RequestParam(required = false) String pcbEdgeFingerRejectQty,
+            @RequestParam(required = false) MultipartFile pcbEdgeFingerRejectUpload,
+            @RequestParam(required = false) String connectorRejectQty,
+            @RequestParam(required = false) MultipartFile connectorRejectUpload,
+            @RequestParam(required = false) String dutSocketsRejectQty,
+            @RequestParam(required = false) MultipartFile dutSocketsRejectUpload,
+            @RequestParam(required = false) String edgeMbBananaRejectQty,
+            @RequestParam(required = false) MultipartFile edgeMbBananaRejectUpload,
+            @RequestParam(required = false) String electComponentRejectQty,
+            @RequestParam(required = false) MultipartFile electComponentRejectUpload,
+            @RequestParam(required = false) String solderJointRejectQty,
+            @RequestParam(required = false) MultipartFile solderJointRejectUpload,
+            @RequestParam(required = false) String winConnectorRejectQty,
+            @RequestParam(required = false) MultipartFile winConnectorRejectUpload
+    ) throws IOException {
+
+        String finalStatus = "";
+        String stringPathPcb = "";
+        String stringPathHandle = "";
+        String stringPathmetalFrame = "";
+        String stringPathHardwareFasterners = "";
+        String stringPathclipHolder = "";
+        String stringPathPcbEdgeFinger = "";
+        String stringPathConnector = "";
+        String stringPathDutSockets = "";
+        String stringPathEdgeMbBanana = "";
+        String stringPathElectComponent = "";
+        String stringPathSolderJoint = "";
+        String stringPathWinConnector = "";
+        String emailBodyFail = "";
+
+//        if (null == itemStatus) {
+//            itemVm.setModule("Before Loading");
+//        } else {
+//            switch (itemStatus) {
+//                case "Pending Visual Inspection":
+//                    itemVm.setModule("Item Registration");
+//                    break;
+//                case "Pending Visual Inspection (from Maverick)":
+//                    itemVm.setModule("Item Registration (2nd Visual Inspection");
+//                    break;
+//                default:
+//                    itemVm.setModule("Item Registration");
+//                    break;
+//            }
+//        }
+        RmsBookingVisualInspection itemVm = new RmsBookingVisualInspection();
+        itemVm.setGroupId(groupId);
+        itemVm.setModule("Before Loading");
+        itemVm.setPcb(pcb);
+        itemVm.setPcbReject(pcbReject);
+        itemVm.setHandle(handle);
+        itemVm.setHandleReject(handleReject);
+        itemVm.setMetalFrame(metalFrame);
+        itemVm.setMetalFrameReject(metalFrameReject);
+        itemVm.setHardwareFasterners(hardwareFasterners);
+        itemVm.setHardwareFasternersReject(hardwareFasternersReject);
+        itemVm.setClipHolder(clipHolder);
+        itemVm.setClipHolderReject(clipHolderReject);
+        itemVm.setPcbEdgeFinger(pcbEdgeFinger);
+        itemVm.setPcbEdgeFingerReject(pcbEdgeFingerReject);
+        itemVm.setConnector(connector);
+        itemVm.setConnectorReject(connectorReject);
+        itemVm.setDutSockets(dutSockets);
+        itemVm.setDutSocketsReject(dutSocketsReject);
+        itemVm.setEdgeMbBanana(edgeMbBanana);
+        itemVm.setEdgeMbBananaReject(edgeMbBananaReject);
+        itemVm.setElectComponent(electComponent);
+        itemVm.setElectComponentReject(electComponentReject);
+        itemVm.setSolderJoint(solderJoint);
+        itemVm.setSolderJointReject(solderJointReject);
+        itemVm.setWinConnector(winConnector);
+        itemVm.setWinConnectorReject(winConnectorReject);
+        itemVm.setRemarks(remarks);
+
+        if ("Pass".equals(pcb) || "NA".equals(pcb)) {
+            itemVm.setPcbRejectQty("0");
+        } else {
+            itemVm.setPcbRejectQty(pcbRejectQty);
+            emailBodyFail = "PCB Fail : " + pcbReject + "<br /> ";
+        }
+        if ("Pass".equals(handle) || "NA".equals(handle)) {
+            itemVm.setHandleRejectQty("0");
+        } else {
+            itemVm.setHandleRejectQty(handleRejectQty);
+            emailBodyFail += "Handle Fail : " + handleReject + "<br /> ";
+        }
+        if ("Pass".equals(metalFrame) || "NA".equals(metalFrame)) {
+            itemVm.setMetalFrameRejectQty("0");
+        } else {
+            itemVm.setMetalFrameRejectQty(metalFrameRejectQty);
+            emailBodyFail += "MetalFrame Fail : " + metalFrameReject + "<br /> ";
+        }
+        if ("Pass".equals(hardwareFasterners) || "NA".equals(hardwareFasterners)) {
+            itemVm.setHardwareFasternersRejectQty("0");
+        } else {
+            itemVm.setHardwareFasternersRejectQty(hardwareFasternersRejectQty);
+            emailBodyFail += "Hardware Fasterner Fail : " + hardwareFasternersReject + "<br /> ";
+        }
+        if ("Pass".equals(clipHolder) || "NA".equals(clipHolder)) {
+            itemVm.setClipHolderRejectQty("0");
+        } else {
+            itemVm.setClipHolderRejectQty(clipHolderRejectQty);
+            emailBodyFail += "Clip Holder Fail : " + clipHolderReject + "<br /> ";
+        }
+        if ("Pass".equals(pcbEdgeFinger) || "NA".equals(pcbEdgeFinger)) {
+            itemVm.setPcbEdgeFingerRejectQty("0");
+        } else {
+            itemVm.setPcbEdgeFingerRejectQty(pcbEdgeFingerRejectQty);
+            emailBodyFail += "PCB Edge Finger Fail : " + pcbEdgeFingerReject + "<br /> ";
+        }
+        if ("Pass".equals(connector) || "NA".equals(connector)) {
+            itemVm.setConnectorRejectQty("0");
+        } else {
+            itemVm.setConnectorRejectQty(connectorRejectQty);
+            emailBodyFail += "Connector Fail : " + connectorReject + "<br /> ";
+        }
+        if ("Pass".equals(dutSockets) || "NA".equals(dutSockets)) {
+            itemVm.setDutSocketsRejectQty("0");
+        } else {
+            itemVm.setDutSocketsRejectQty(dutSocketsRejectQty);
+            emailBodyFail += "DUT Socket Fail : " + dutSocketsReject + "<br /> ";
+        }
+        if ("Pass".equals(edgeMbBanana) || "NA".equals(edgeMbBanana)) {
+            itemVm.setEdgeMbBananaRejectQty("0");
+        } else {
+            itemVm.setEdgeMbBananaRejectQty(edgeMbBananaRejectQty);
+            emailBodyFail += "Edge MB Banana Fail : " + edgeMbBananaReject + "<br /> ";
+        }
+        if ("Pass".equals(electComponent) || "NA".equals(electComponent)) {
+            itemVm.setElectComponentRejectQty("0");
+        } else {
+            itemVm.setElectComponentRejectQty(electComponentRejectQty);
+            emailBodyFail += "Elect Component Fail : " + electComponentReject + "<br /> ";
+        }
+        if ("Pass".equals(solderJoint) || "NA".equals(solderJoint)) {
+            itemVm.setSolderJointRejectQty("0");
+        } else {
+            itemVm.setSolderJointRejectQty(solderJointRejectQty);
+            emailBodyFail += "Solder Joint Fail : " + solderJointReject + "<br /> ";
+        }
+        if ("Pass".equals(winConnector) || "NA".equals(winConnector)) {
+            itemVm.setWinConnectorRejectQty("0");
+        } else {
+            itemVm.setWinConnectorRejectQty(winConnectorRejectQty);
+            emailBodyFail += "Win Connector Fail : " + winConnectorReject + "<br /> ";
+        }
+
+        if ("Fail".equals(pcb) || "Fail".equals(handle) || "Fail".equals(metalFrame) || "Fail".equals(hardwareFasterners) || "Fail".equals(clipHolder) || "Fail".equals(pcbEdgeFinger) || "Fail".equals(connector)
+                || "Fail".equals(dutSockets) || "Fail".equals(edgeMbBanana) || "Fail".equals(electComponent) || "Fail".equals(solderJoint) || "Fail".equals(winConnector)) {
+            finalStatus = "Fail";
+            itemVm.setFlag("99");
+        } else {
+            finalStatus = "Pass";
+            itemVm.setFlag("0");
+        }
+        itemVm.setFinalStatus(finalStatus);
+        itemVm.setCreatedBy(userSession.getFullname());
+
+        RmsBookingVisualInspectionDAO itemVmD = new RmsBookingVisualInspectionDAO();
+        QueryResult q = itemVmD.insertRmsBookingVisualInspection(itemVm);
+        if (!"0".equals(q.getGeneratedKey())) {
+
+            itemVm = new RmsBookingVisualInspection();
+            LOGGER.info("pcbRejectUpload: " + pcbRejectUpload);
+
+            //check if user upload any attachment
+//            if (!pcbRejectUpload.isEmpty()) {
+            if (pcbRejectUpload != null) {
+                try {
+                    // Get the file and save it somewhere
+                    byte[] bytesPcb = pcbRejectUpload.getBytes();
+                    Path pathPcb = Paths.get(UPLOADED_FOLDER + q.getGeneratedKey() + "_pcb_" + pcbRejectUpload.getOriginalFilename());
+                    Files.write(pathPcb, bytesPcb);
+                    stringPathPcb = pathPcb.toString();
+                    LOGGER.info("pathPcb : " + pathPcb);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                itemVm.setPcbRejectUpload(stringPathPcb);
+            }
+            if (handleRejectUpload != null) {
+                try {
+                    // Get the file and save it somewhere
+                    byte[] bytesHandle = handleRejectUpload.getBytes();
+                    Path pathHandle = Paths.get(UPLOADED_FOLDER + q.getGeneratedKey() + "_handle_" + handleRejectUpload.getOriginalFilename());
+                    Files.write(pathHandle, bytesHandle);
+                    stringPathHandle = pathHandle.toString();
+                    LOGGER.info("pathHandle : " + pathHandle);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                itemVm.setHandleRejectUpload(stringPathHandle);
+            }
+            if (metalFrameRejectUpload != null) {
+                try {
+                    // Get the file and save it somewhere
+                    byte[] bytesMetalFrame = metalFrameRejectUpload.getBytes();
+                    Path pathMetalFrame = Paths.get(UPLOADED_FOLDER + q.getGeneratedKey() + "_metalFrame_" + metalFrameRejectUpload.getOriginalFilename());
+                    Files.write(pathMetalFrame, bytesMetalFrame);
+                    stringPathmetalFrame = pathMetalFrame.toString();
+                    LOGGER.info("pathMetalFrame : " + pathMetalFrame);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                itemVm.setMetalFrameRejectUpload(stringPathmetalFrame);
+            }
+            if (hardwareFasternersRejectUpload != null) {
+                try {
+                    // Get the file and save it somewhere
+                    byte[] bytesHardwareFasterners = hardwareFasternersRejectUpload.getBytes();
+                    Path pathHardwareFasterners = Paths.get(UPLOADED_FOLDER + q.getGeneratedKey() + "_hardwareFasteners_" + hardwareFasternersRejectUpload.getOriginalFilename());
+                    Files.write(pathHardwareFasterners, bytesHardwareFasterners);
+                    stringPathHardwareFasterners = pathHardwareFasterners.toString();
+                    LOGGER.info("pathHardwareFasterners : " + pathHardwareFasterners);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                itemVm.setHardwareFasternersRejectUpload(stringPathHardwareFasterners);
+            }
+            if (clipHolderRejectUpload != null) {
+                try {
+                    // Get the file and save it somewhere
+                    byte[] bytesClipHolder = clipHolderRejectUpload.getBytes();
+                    Path pathClipHolder = Paths.get(UPLOADED_FOLDER + q.getGeneratedKey() + "_clipHolder_" + clipHolderRejectUpload.getOriginalFilename());
+                    Files.write(pathClipHolder, bytesClipHolder);
+                    stringPathclipHolder = pathClipHolder.toString();
+                    LOGGER.info("pathClipHolder : " + pathClipHolder);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                itemVm.setClipHolderRejectUpload(stringPathclipHolder);
+            }
+
+            if (pcbEdgeFingerRejectUpload != null) {
+                try {
+                    // Get the file and save it somewhere
+                    byte[] bytesPcbEdgeFinger = pcbEdgeFingerRejectUpload.getBytes();
+                    Path pathPcbEdgeFinger = Paths.get(UPLOADED_FOLDER + q.getGeneratedKey() + "_pcbEdgeFinger_" + pcbEdgeFingerRejectUpload.getOriginalFilename());
+                    Files.write(pathPcbEdgeFinger, bytesPcbEdgeFinger);
+                    stringPathPcbEdgeFinger = pathPcbEdgeFinger.toString();
+                    LOGGER.info("pathPcbEdgeFinger : " + pathPcbEdgeFinger);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                itemVm.setPcbEdgeFingerRejectUpload(stringPathPcbEdgeFinger);
+            }
+            if (connectorRejectUpload != null) {
+                try {
+                    // Get the file and save it somewhere
+                    byte[] bytesConnector = connectorRejectUpload.getBytes();
+                    Path pathConnector = Paths.get(UPLOADED_FOLDER + q.getGeneratedKey() + "_connector_" + connectorRejectUpload.getOriginalFilename());
+                    Files.write(pathConnector, bytesConnector);
+                    stringPathConnector = pathConnector.toString();
+                    LOGGER.info("pathConnector : " + pathConnector);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                itemVm.setConnectorRejectUpload(stringPathConnector);
+            }
+            if (dutSocketsRejectUpload != null) {
+                try {
+                    // Get the file and save it somewhere
+                    byte[] bytesDutSockets = dutSocketsRejectUpload.getBytes();
+                    Path pathDutSockets = Paths.get(UPLOADED_FOLDER + q.getGeneratedKey() + "_dutSockets_" + dutSocketsRejectUpload.getOriginalFilename());
+                    Files.write(pathDutSockets, bytesDutSockets);
+                    stringPathDutSockets = pathDutSockets.toString();
+                    LOGGER.info("pathDutSockets : " + pathDutSockets);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                itemVm.setDutSocketsRejectUpload(stringPathDutSockets);
+            }
+            if (edgeMbBananaRejectUpload != null) {
+                try {
+                    // Get the file and save it somewhere
+                    byte[] bytesEdgeMbBanana = edgeMbBananaRejectUpload.getBytes();
+                    Path pathEdgeMbBanana = Paths.get(UPLOADED_FOLDER + q.getGeneratedKey() + "_edgeMbBanana_" + edgeMbBananaRejectUpload.getOriginalFilename());
+                    Files.write(pathEdgeMbBanana, bytesEdgeMbBanana);
+                    stringPathEdgeMbBanana = pathEdgeMbBanana.toString();
+                    LOGGER.info("pathEdgeMbBanana : " + pathEdgeMbBanana);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                itemVm.setEdgeMbBananaRejectUpload(stringPathEdgeMbBanana);
+            }
+            if (electComponentRejectUpload != null) {
+                try {
+                    // Get the file and save it somewhere
+                    byte[] bytesElectComponent = electComponentRejectUpload.getBytes();
+                    Path pathElectComponent = Paths.get(UPLOADED_FOLDER + q.getGeneratedKey() + "_electComponent_" + electComponentRejectUpload.getOriginalFilename());
+                    Files.write(pathElectComponent, bytesElectComponent);
+                    stringPathElectComponent = pathElectComponent.toString();
+                    LOGGER.info("pathElectComponent : " + pathElectComponent);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                itemVm.setElectComponentRejectUpload(stringPathElectComponent);
+            }
+            if (solderJointRejectUpload != null) {
+                try {
+                    // Get the file and save it somewhere
+                    byte[] bytesSolderJoint = solderJointRejectUpload.getBytes();
+                    Path pathSolderJoint = Paths.get(UPLOADED_FOLDER + q.getGeneratedKey() + "_solderJoint_" + solderJointRejectUpload.getOriginalFilename());
+                    Files.write(pathSolderJoint, bytesSolderJoint);
+                    stringPathSolderJoint = pathSolderJoint.toString();
+                    LOGGER.info("pathSolderJoint : " + pathSolderJoint);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                itemVm.setSolderJointRejectUpload(stringPathSolderJoint);
+            }
+
+            if (winConnectorRejectUpload != null) {
+                try {
+                    // Get the file and save it somewhere
+                    byte[] bytesWinConnector = winConnectorRejectUpload.getBytes();
+                    Path pathWinConnector = Paths.get(UPLOADED_FOLDER + q.getGeneratedKey() + "_winConnector_" + winConnectorRejectUpload.getOriginalFilename());
+                    Files.write(pathWinConnector, bytesWinConnector);
+                    stringPathWinConnector = pathWinConnector.toString();
+                    LOGGER.info("pathWinConnector : " + pathWinConnector);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                itemVm.setWinConnectorRejectUpload(stringPathWinConnector);
+            }
+            itemVm.setId(q.getGeneratedKey());
+            itemVmD = new RmsBookingVisualInspectionDAO();
+            QueryResult q3 = itemVmD.updateItemVisualInspectionForAttachment(itemVm);
+
+            //update Item DB
+            String[] groupIdSplit = groupId.split("/");
+            String bookingPkid = groupIdSplit[0];
+            String mbBookingPkid = groupIdSplit[1];
+
+            RmsBookingHardwareDAO rmsBookingHD = new RmsBookingHardwareDAO();
+            int countBookingHwPkid = rmsBookingHD.getCountBookingPkidAndPkidForMotherboard(bookingPkid, mbBookingPkid);
+            if (countBookingHwPkid == 1) {
+                rmsBookingHD = new RmsBookingHardwareDAO();
+                RmsBookingHardware MbDetail = rmsBookingHD.getRmsBookingHardwareByBookingPkidAndPkid(bookingPkid, mbBookingPkid);
+
+                RmsBookingHardware hwBook = new RmsBookingHardware();
+                hwBook.setId(MbDetail.getId());
+                if ("Fail".equals(finalStatus)) {
+                    hwBook.setSubStatus("Failed Visual Inspection (Waiting Maverick CA)");
+                } else {
+                    hwBook.setSubStatus("Pending Functional Test");
+                }
+                rmsBookingHD = new RmsBookingHardwareDAO();
+                QueryResult qHwBook = rmsBookingHD.updateRmsBookingHardwareSubStatusById(hwBook);
+            }
+
+            //add log
+            RmsBookingHardwareGroupLog log = new RmsBookingHardwareGroupLog();
+            log.setGroupId(groupId);
+            log.setDetail("VM Completed (" + finalStatus + ")");
+            log.setCreatedBy(userSession.getFullname());
+            RmsBookingHardwareGroupLogDAO logD = new RmsBookingHardwareGroupLogDAO();
+            QueryResult logQ = logD.insertRmsBookingHardwareGroupLog(log);
+
+            if ("Fail".equals(finalStatus)) {
+
+                //save to maverick table
+                RmsBookingMaverick maverick = new RmsBookingMaverick();
+                maverick.setGroupId(groupId);
+                maverick.setModule("Before Loading");
+                maverick.setSubmodule("Visual Inspection");
+                maverick.setStatus("Failed Visual Inspection");
+                maverick.setFlag("0");
+                maverick.setCreatedBy(userSession.getFullname());
+                RmsBookingMaverickDAO maverickD = new RmsBookingMaverickDAO();
+                QueryResult maverickAdd = maverickD.insertRmsBookingMaverick(maverick);
+
+                EmailVmFailDAO userDao = new EmailVmFailDAO();
+                List<EmailVmFail> userRecipientsList = userDao.getEmailVmFailList();
+
+                String[] to = new String[userRecipientsList.size()];
+                for (int i = 0; i < userRecipientsList.size(); i++) {
+                    to[i] = userRecipientsList.get(i).getEmail();
+                }
+
+                //get current date and time
+                LocalDateTime instance = LocalDateTime.now();
+                DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm");
+                String formattedString = formatter.format(instance); //15-02-2022 12:43
+
+                //gethostname
+                HostnameDAO hostnameD = new HostnameDAO();
+                Hostname h = hostnameD.getHostnameFlagZero();
+                String hostname = h.getHostname();
+
+                RmsBookingDetailDAO rmsBookingD = new RmsBookingDetailDAO();
+                RmsBookingDetail rmsBooking = rmsBookingD.getRmsBookingDetailByBookingPkid(bookingPkid);
+
+                rmsBookingHD = new RmsBookingHardwareDAO();
+                RmsBookingHardware MbDetail = rmsBookingHD.getRmsBookingHardwareByBookingPkidAndPkid(bookingPkid, mbBookingPkid);
+
+                //send INFORMATION email
+                LOGGER.info("######################### START EMAIL TO PIC ########################### ");
+                EmailSender emailSender = new EmailSender();
+                emailSender.htmlEmailTable(
+                        servletContext,
+                        "", //user name requestor
+                        to, //to
+                        //                        emailTo,
+                        "Item Registration - Failed Visual Inspection", //subject
+                        "<br />"
+                        + "Please be informed that the item below failed the visual inspection."
+                        + "<br /> "
+                        + "<br /> "
+                        + "RMS No: " + rmsBooking.getRmsNo()
+                        + "<br /> "
+                        + "Event: " + rmsBooking.getEvent()
+                        + "<br /> "
+                        + "Motherboard ID: " + MbDetail.getItemId()
+                        + "<br /> "
+                        + "Inspection Date: " + formattedString
+                        + "<br /> "
+                        + "<br /> "
+                        + "Detail: <br />" + emailBodyFail
+                        + "<br /> "
+                        + "Please click <a href=\"http://" + hostname + "/HEATS/rmsbookingDetail/groupDetail/" + groupId + " \">HERE</a> for more detail."
+                        + "<br /> "
+                        + "<br />Thank you." //msg
+                );
+
+                redirectAttrs.addFlashAttribute("error", "Visual Inspection Fail. Pls go to Maverick Module for Corrective Action.");
+                return "redirect:/rmsbookingDetail/groupDetail/" + groupId;
+            } else {
+                redirectAttrs.addFlashAttribute("success", "Visual Inspection Pass.");
+                return "redirect:/rmsbookingDetail/groupDetail/" + groupId;
+            }
+
+        } else {
+            redirectAttrs.addFlashAttribute("error", "Failed to save Visual Inspection. Pls Contact System Admin");
+            return "redirect:/rmsbookingDetail/groupDetail/" + groupId;
+        }
+    }
+
+    @RequestMapping(value = "/vm/downloadAttach/{id}/{type}", method = RequestMethod.GET)
+    public void downloadAttachment(HttpServletRequest request,
+            @PathVariable("type") String type,
+            @PathVariable("id") String id,
+            HttpServletResponse response) throws IOException {
+
+        RmsBookingVisualInspectionDAO vmD = new RmsBookingVisualInspectionDAO();
+        RmsBookingVisualInspection item = vmD.getRmsBookingVisualInspection(id);
+
+        String attachment = "";
+        switch (type) {
+            case "pcb":
+                attachment = item.getPcbRejectUpload();
+                break;
+            case "handle":
+                attachment = item.getHandleRejectUpload();
+                break;
+            case "metalFrame":
+                attachment = item.getMetalFrameRejectUpload();
+                break;
+            case "hardwareFasterners":
+                attachment = item.getHardwareFasternersRejectUpload();
+                break;
+            case "clipHolder":
+                attachment = item.getClipHolderRejectUpload();
+                break;
+            case "pcbEdgeFinger":
+                attachment = item.getPcbEdgeFingerRejectUpload();
+                break;
+            case "connector":
+                attachment = item.getConnectorRejectUpload();
+                break;
+            case "dutSockets":
+                attachment = item.getDutSocketsRejectUpload();
+                break;
+            case "edgeMbBanana":
+                attachment = item.getEdgeMbBananaRejectUpload();
+                break;
+            case "electComponent":
+                attachment = item.getElectComponentRejectUpload();
+                break;
+            case "solderJoint":
+                attachment = item.getSolderJointRejectUpload();
+                break;
+            case "winConnector":
+                attachment = item.getWinConnectorRejectUpload();
+                break;
+            default:
+                attachment = "";
+                break;
+        }
+
+        // construct the complete absolute path of the file
+        String fullPath = attachment;
+        File downloadFile = new File(fullPath);
+        FileInputStream inputStream = new FileInputStream(downloadFile);
+
+        // get MIME type of the file
+        String mimeType = servletContext.getMimeType(fullPath);
+        if (mimeType == null) {
+            // set to binary type if MIME mapping not found
+            mimeType = "application/octet-stream";
+        }
+        System.out.println("MIME type: " + mimeType);
+
+        // set content attributes for the response
+        response.setContentType(mimeType);
+        response.setContentLength((int) downloadFile.length());
+
+        // set headers for the response
+        String headerKey = "Content-Disposition";
+        String headerValue = String.format("attachment; filename=\"%s\"",
+                downloadFile.getName());
+        response.setHeader(headerKey, headerValue);
+
+        // get output stream of the response
+        OutputStream outStream = response.getOutputStream();
+
+        byte[] buffer = new byte[BUFFER_SIZE];
+        int bytesRead = -1;
+
+        // write bytes read from the input stream into the output stream
+        while ((bytesRead = inputStream.read(buffer)) != -1) {
+            outStream.write(buffer, 0, bytesRead);
+        }
+
+        inputStream.close();
+        outStream.close();
 
     }
 

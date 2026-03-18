@@ -405,7 +405,7 @@
                                     </div> 
                                     <div class="tab-pane fade ${vmActiveTab}" id="twoAAA" role="tabpanel">
                                         <div class="row gx-4">
-                                            <form class="row gx-3 needs-validation" role="form" action="${contextPath}/hw/item/vm/save" method="post" enctype="multipart/form-data" novalidate>
+                                            <form class="row gx-3 needs-validation" role="form" action="${contextPath}/rmsbookingDetail/vm/save" method="post" enctype="multipart/form-data" novalidate>
                                                 <div class="col-sm-6 col-12">
                                                     <div class="card mb-2">
                                                         <div class="card-body">
@@ -415,8 +415,8 @@
                                                                     <label class="form-label" for="pcb">PCB</label>
                                                                     <div class="m-0">
                                                                         <div class="form-check form-check-inline">
-                                                                            <input type="hidden" class="form-control" id="mibItemId" name="mibItemId" placeholder="" value="${item.id}">
-                                                                            <input type="hidden" class="form-control" id="viId" name="viId" placeholder="" value="${itemVm.id}">
+                                                                            <input type="hidden" class="form-control" id="groupId" name="groupId" placeholder="" value="${groupId}">
+                                                                            <input type="hidden" class="form-control" id="bookingPkid" name="bookingPkid" placeholder="" value="${rms.bookingPkid}">
                                                                             <input class="form-check-input" type="radio" name="pcb" id="pcb1"
                                                                                    value="Pass" <c:if test="${itemVm.pcb == 'Pass'}">checked</c:if> required>
                                                                                    <label class="form-check-label" for="inlineRadio1">Pass</label>
@@ -468,7 +468,7 @@
                                                             <div class="row gx-4">
                                                                 <div class="col-xl-2 col-sm-12 col-12">
                                                                     <div class="mb-2">
-                                                                        <a class="form-label" href="${contextPath}/hw/item/vm/downloadAttach/${itemVm.id}/pcb" id="pcbAttach" name="pcbAttach"> Download Attachment</a>
+                                                                        <a class="form-label" href="${contextPath}/rmsbookingDetail/vm/downloadAttach/${itemVm.id}/pcb" id="pcbAttach" name="pcbAttach"> Download Attachment</a>
                                                                     </div>
                                                                 </div>
                                                             </div>
@@ -534,7 +534,7 @@
                                                             <div class="row gx-4">
                                                                 <div class="col-xl-2 col-sm-12 col-12">
                                                                     <div class="mb-2">
-                                                                        <a class="form-label" href="${contextPath}/hw/item/vm/downloadAttach/${itemVm.id}/handle" id="handleAttach" name="handleAttach"> Download Attachment</a>
+                                                                        <a class="form-label" href="${contextPath}/rmsbookingDetail/vm/downloadAttach/${itemVm.id}/handle" id="handleAttach" name="handleAttach"> Download Attachment</a>
                                                                     </div>
                                                                 </div>
                                                             </div>
@@ -601,7 +601,7 @@
                                                             <div class="row gx-4">
                                                                 <div class="col-xl-2 col-sm-12 col-12">
                                                                     <div class="mb-2">
-                                                                        <a class="form-label" href="${contextPath}/hw/item/vm/downloadAttach/${itemVm.id}/metalFrame" id="metalFrameAttach" name="metalFrameAttach"> Download Attachment</a>
+                                                                        <a class="form-label" href="${contextPath}/rmsbookingDetail/vm/downloadAttach/${itemVm.id}/metalFrame" id="metalFrameAttach" name="metalFrameAttach"> Download Attachment</a>
                                                                     </div>
                                                                 </div>
                                                             </div>
@@ -668,7 +668,7 @@
                                                             <div class="row gx-4">
                                                                 <div class="col-xl-2 col-sm-12 col-12">
                                                                     <div class="mb-2">
-                                                                        <a class="form-label" href="${contextPath}/hw/item/vm/downloadAttach/${itemVm.id}/hardwareFasterners" id="hardwareFasternersAttach" name="hardwareFasternersAttach"> Download Attachment</a>
+                                                                        <a class="form-label" href="${contextPath}/rmsbookingDetail/vm/downloadAttach/${itemVm.id}/hardwareFasterners" id="hardwareFasternersAttach" name="hardwareFasternersAttach"> Download Attachment</a>
                                                                     </div>
                                                                 </div>
                                                             </div>
@@ -735,7 +735,7 @@
                                                             <div class="row gx-4">
                                                                 <div class="col-xl-2 col-sm-12 col-12">
                                                                     <div class="mb-2">
-                                                                        <a class="form-label" href="${contextPath}/hw/item/vm/downloadAttach/${itemVm.id}/clipHolder" id="clipHolderAttach" name="clipHolderAttach"> Download Attachment</a>
+                                                                        <a class="form-label" href="${contextPath}/rmsbookingDetail/vm/downloadAttach/${itemVm.id}/clipHolder" id="clipHolderAttach" name="clipHolderAttach"> Download Attachment</a>
                                                                     </div>
                                                                 </div>
                                                             </div>
@@ -802,7 +802,7 @@
                                                             <div class="row gx-4">
                                                                 <div class="col-xl-2 col-sm-12 col-12">
                                                                     <div class="mb-2">
-                                                                        <a class="form-label" href="${contextPath}/hw/item/vm/downloadAttach/${itemVm.id}/pcbEdgeFinger" id="pcbEdgeFingerAttach" name="pcbEdgeFingerAttach"> Download Attachment</a>
+                                                                        <a class="form-label" href="${contextPath}/rmsbookingDetail/vm/downloadAttach/${itemVm.id}/pcbEdgeFinger" id="pcbEdgeFingerAttach" name="pcbEdgeFingerAttach"> Download Attachment</a>
                                                                     </div>
                                                                 </div>
                                                             </div>
@@ -871,7 +871,7 @@
                                                             <div class="row gx-4">
                                                                 <div class="col-xl-2 col-sm-12 col-12">
                                                                     <div class="mb-2">
-                                                                        <a class="form-label" href="${contextPath}/hw/item/vm/downloadAttach/${itemVm.id}/connector" id="connectorAttach" name="connectorAttach"> Download Attachment</a>
+                                                                        <a class="form-label" href="${contextPath}/rmsbookingDetail/vm/downloadAttach/${itemVm.id}/connector" id="connectorAttach" name="connectorAttach"> Download Attachment</a>
                                                                     </div>
                                                                 </div>
                                                             </div>
@@ -939,7 +939,7 @@
                                                             <div class="row gx-4">
                                                                 <div class="col-xl-2 col-sm-12 col-12">
                                                                     <div class="mb-2">
-                                                                        <a class="form-label" href="${contextPath}/hw/item/vm/downloadAttach/${itemVm.id}/dutSockets" id="dutSocketsAttach" name="dutSocketsAttach"> Download Attachment</a>
+                                                                        <a class="form-label" href="${contextPath}/rmsbookingDetail/vm/downloadAttach/${itemVm.id}/dutSockets" id="dutSocketsAttach" name="dutSocketsAttach"> Download Attachment</a>
                                                                     </div>
                                                                 </div>
                                                             </div>
@@ -1007,7 +1007,7 @@
                                                             <div class="row gx-4">
                                                                 <div class="col-xl-2 col-sm-12 col-12">
                                                                     <div class="mb-2">
-                                                                        <a class="form-label" href="${contextPath}/hw/item/vm/downloadAttach/${itemVm.id}/edgeMbBanana" id="edgeMbBananaAttach" name="edgeMbBananaAttach"> Download Attachment</a>
+                                                                        <a class="form-label" href="${contextPath}/rmsbookingDetail/vm/downloadAttach/${itemVm.id}/edgeMbBanana" id="edgeMbBananaAttach" name="edgeMbBananaAttach"> Download Attachment</a>
                                                                     </div>
                                                                 </div>
                                                             </div>
@@ -1075,7 +1075,7 @@
                                                             <div class="row gx-4">
                                                                 <div class="col-xl-2 col-sm-12 col-12">
                                                                     <div class="mb-2">
-                                                                        <a class="form-label" href="${contextPath}/hw/item/vm/downloadAttach/${itemVm.id}/electComponent" id="electComponentAttach" name="electComponentAttach"> Download Attachment</a>
+                                                                        <a class="form-label" href="${contextPath}/rmsbookingDetail/vm/downloadAttach/${itemVm.id}/electComponent" id="electComponentAttach" name="electComponentAttach"> Download Attachment</a>
                                                                     </div>
                                                                 </div>
                                                             </div>
@@ -1143,7 +1143,7 @@
                                                             <div class="row gx-4">
                                                                 <div class="col-xl-2 col-sm-12 col-12">
                                                                     <div class="mb-2">
-                                                                        <a class="form-label" href="${contextPath}/hw/item/vm/downloadAttach/${itemVm.id}/solderJoint" id="solderJointAttach" name="solderJointAttach"> Download Attachment</a>
+                                                                        <a class="form-label" href="${contextPath}/rmsbookingDetail/vm/downloadAttach/${itemVm.id}/solderJoint" id="solderJointAttach" name="solderJointAttach"> Download Attachment</a>
                                                                     </div>
                                                                 </div>
                                                             </div>
@@ -1211,7 +1211,7 @@
                                                             <div class="row gx-4">
                                                                 <div class="col-xl-2 col-sm-12 col-12">
                                                                     <div class="mb-2">
-                                                                        <a class="form-label" href="${contextPath}/hw/item/vm/downloadAttach/${itemVm.id}/winConnector" id="winConnectorAttach" name="winConnectorAttach"> Download Attachment</a>
+                                                                        <a class="form-label" href="${contextPath}/rmsbookingDetail/vm/downloadAttach/${itemVm.id}/winConnector" id="winConnectorAttach" name="winConnectorAttach"> Download Attachment</a>
                                                                     </div>
                                                                 </div>
                                                             </div>
