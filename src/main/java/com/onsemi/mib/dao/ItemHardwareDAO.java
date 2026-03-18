@@ -97,6 +97,38 @@ public class ItemHardwareDAO {
         return queryResult;
     }
 
+    public QueryResult insertHardwareIDFromSpts(ItemHardware itemhardware) {
+        QueryResult queryResult = new QueryResult();
+        try {
+            PreparedStatement ps = conn.prepareStatement("INSERT INTO item_hardware (mib_item_id, hardware_id, status, created_by, created_date, flag, spts_pkid) VALUES (?,?,?,?,NOW(),?,?)", Statement.RETURN_GENERATED_KEYS);
+            ps.setString(1, itemhardware.getMibItemId());
+            ps.setString(2, itemhardware.getHardwareId());
+            ps.setString(3, itemhardware.getStatus());
+            ps.setString(4, itemhardware.getCreatedBy());
+            ps.setString(5, itemhardware.getFlag());
+            ps.setString(6, itemhardware.getSptsPkid());
+            queryResult.setResult(ps.executeUpdate());
+            ResultSet rs = ps.getGeneratedKeys();
+            if (rs.next()) {
+                queryResult.setGeneratedKey(Integer.toString(rs.getInt(1)));
+            }
+            rs.close();
+            ps.close();
+        } catch (SQLException e) {
+            queryResult.setErrorMessage(e.getMessage());
+            LOGGER.error(e.getMessage());
+        } finally {
+            if (conn != null) {
+                try {
+                    conn.close();
+                } catch (SQLException e) {
+                    LOGGER.error(e.getMessage());
+                }
+            }
+        }
+        return queryResult;
+    }
+
     public QueryResult updateItemHardware(ItemHardware itemhardware) {
         QueryResult queryResult = new QueryResult();
         try {

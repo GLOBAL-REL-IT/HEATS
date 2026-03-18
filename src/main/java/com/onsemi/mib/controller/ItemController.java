@@ -1024,7 +1024,7 @@ public class ItemController {
             ItemHardware itemhw = itemhwdao.getItemHardwareByHardwareId(hardwareId);
             if (itemhw == null) {
                 itemhwdao = new ItemHardwareDAO();
-                itemhwdao.insertHardwareID(itemhardware);
+                itemhwdao.insertHardwareIDFromSpts(itemhardware);
             } else {
                 String id = itemhw.getId();
                 itemhardware.setId(id);
