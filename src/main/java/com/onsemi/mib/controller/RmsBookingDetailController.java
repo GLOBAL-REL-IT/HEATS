@@ -1,5 +1,6 @@
 package com.onsemi.mib.controller;
 
+import com.google.gson.Gson;
 import com.onsemi.mib.dao.EmailHwReplacementDAO;
 import com.onsemi.mib.dao.EmailVmFailDAO;
 import com.onsemi.mib.dao.HostnameDAO;
@@ -57,6 +58,7 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
+import java.util.Arrays;
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletResponse;
 import org.json.JSONArray;
@@ -994,9 +996,83 @@ public class RmsBookingDetailController {
             itemVm = vmD.getRmsBookingVisualInspectionByGroupId(groupId);
         }
         model.addAttribute("itemVm", itemVm);
+        
+        LOGGER.info("itemVm.getClipHolderHardwareId(): " + itemVm.getClipHolderHardwareId());
 
-        LOGGER.info("itemVm.getPcbReject(): " + itemVm.getPcbReject());
+        if (itemVm.getPcbHardwareId() != null && !"".equals(itemVm.getPcbHardwareId())) {
+            String[] pcbHardwareIdList = itemVm.getPcbHardwareId().split(",");
+            model.addAttribute("valueJsonPcb", new Gson().toJson(pcbHardwareIdList));
+        } else {
+            model.addAttribute("valueJsonPcb", new Gson().toJson(itemVm.getPcbHardwareId()));
+        }
+        if (itemVm.getHandleHardwareId() != null && !"".equals(itemVm.getHandleHardwareId())) {
+            String[] handleHardwareIdList = itemVm.getHandleHardwareId().split(",");
+            model.addAttribute("valueJsonHandle", new Gson().toJson(handleHardwareIdList));
+        } else {
+            model.addAttribute("valueJsonHandle", new Gson().toJson(itemVm.getHandleHardwareId()));
+        }
+        if (itemVm.getMetalFrameHardwareId() != null && !"".equals(itemVm.getMetalFrameHardwareId())) {
+            String[] metalFrameHardwareIdList = itemVm.getMetalFrameHardwareId().split(",");
+            model.addAttribute("valueJsonMetalFrame", new Gson().toJson(metalFrameHardwareIdList));
+        } else {
+            model.addAttribute("valueJsonMetalFrame", new Gson().toJson(itemVm.getMetalFrameHardwareId()));
+        }
+        if (itemVm.getHardwareFasternersHardwareId() != null && !"".equals(itemVm.getHardwareFasternersHardwareId())) {
+            String[] hardwareFasternersHardwareIdList = itemVm.getHardwareFasternersHardwareId().split(",");
+            model.addAttribute("valueJsonHardwareFasterners", new Gson().toJson(hardwareFasternersHardwareIdList));
+        } else {
+            model.addAttribute("valueJsonHardwareFasterners", new Gson().toJson(itemVm.getHardwareFasternersHardwareId()));
+        }
+        if (itemVm.getClipHolderHardwareId() != null && !"".equals(itemVm.getClipHolderHardwareId())) {
+            String[] clipHolderHardwareIdList = itemVm.getClipHolderHardwareId().split(",");
+            model.addAttribute("valueJsonClipHolder", new Gson().toJson(clipHolderHardwareIdList));
+        } else {
+            model.addAttribute("valueJsonClipHolder", new Gson().toJson(itemVm.getClipHolderHardwareId()));
+        }
+        if (itemVm.getPcbEdgeFingerHardwareId() != null && !"".equals(itemVm.getPcbEdgeFingerHardwareId())) {
+            String[] pcbEdgeFingerHardwareIdList = itemVm.getPcbEdgeFingerHardwareId().split(",");
+            model.addAttribute("valueJsonPcbEdgeFinger", new Gson().toJson(pcbEdgeFingerHardwareIdList));
+        } else {
+            model.addAttribute("valueJsonPcbEdgeFinger", new Gson().toJson(itemVm.getPcbEdgeFingerHardwareId()));
+        }
+        if (itemVm.getConnectorHardwareId() != null && !"".equals(itemVm.getConnectorHardwareId())) {
+            String[] connectorHardwareIdList = itemVm.getConnectorHardwareId().split(",");
+            model.addAttribute("valueJsonConnector", new Gson().toJson(connectorHardwareIdList));
+        } else {
+            model.addAttribute("valueJsonConnector", new Gson().toJson(itemVm.getConnectorHardwareId()));
+        }
+        if (itemVm.getDutSocketsHardwareId() != null && !"".equals(itemVm.getDutSocketsHardwareId())) {
+            String[] dutSocketsHardwareIdList = itemVm.getDutSocketsHardwareId().split(",");
+            model.addAttribute("valueJsonDutSockets", new Gson().toJson(dutSocketsHardwareIdList));
+        } else {
+            model.addAttribute("valueJsonDutSockets", new Gson().toJson(itemVm.getDutSocketsHardwareId()));
+        }
+        if (itemVm.getEdgeMbBananaHardwareId() != null && !"".equals(itemVm.getEdgeMbBananaHardwareId())) {
+            String[] edgeMbBananaHardwareIdList = itemVm.getEdgeMbBananaHardwareId().split(",");
+            model.addAttribute("valueJsonEdgeMbBanana", new Gson().toJson(edgeMbBananaHardwareIdList));
+        } else {
+            model.addAttribute("valueJsonEdgeMbBanana", new Gson().toJson(itemVm.getEdgeMbBananaHardwareId()));
+        }
+        if (itemVm.getElectComponentHardwareId() != null && !"".equals(itemVm.getElectComponentHardwareId())) {
+            String[] electComponentHardwareIdList = itemVm.getElectComponentHardwareId().split(",");
+            model.addAttribute("valueJsonElectComponent", new Gson().toJson(electComponentHardwareIdList));
+        } else {
+            model.addAttribute("valueJsonElectComponent", new Gson().toJson(itemVm.getElectComponentHardwareId()));
+        }
+        if (itemVm.getSolderJointHardwareId() != null && !"".equals(itemVm.getSolderJointHardwareId())) {
+            String[] solderJointHardwareIdList = itemVm.getSolderJointHardwareId().split(",");
+            model.addAttribute("valueJsonSolderJoint", new Gson().toJson(solderJointHardwareIdList));
+        } else {
+            model.addAttribute("valueJsonSolderJoint", new Gson().toJson(itemVm.getSolderJointHardwareId()));
+        }
+        if (itemVm.getWinConnectorHardwareId() != null && !"".equals(itemVm.getWinConnectorHardwareId())) {
+            String[] winConnectorHardwareIdList = itemVm.getWinConnectorHardwareId().split(",");
+            model.addAttribute("valueJsonWinConnector", new Gson().toJson(winConnectorHardwareIdList));
+        } else {
+            model.addAttribute("valueJsonWinConnector", new Gson().toJson(itemVm.getWinConnectorHardwareId()));
+        }
 
+//        LOGGER.info("itemVm.getPcbReject(): " + itemVm.getPcbReject());
         ParameterDetailsDAO pD = new ParameterDetailsDAO();
         List<ParameterDetails> BibPassFail = pD.getGroupParameterDetailList("", "016");
         model.addAttribute("BibPassFail", BibPassFail);
@@ -1409,6 +1485,18 @@ public class RmsBookingDetailController {
             @RequestParam(required = false) String groupId,
             @RequestParam(required = false) String itemStatus,
             @RequestParam(required = false) String pcb,
+            @RequestParam(required = false) String pcbHardwareId,
+            @RequestParam(required = false) String handleHardwareId,
+            @RequestParam(required = false) String metalFrameHardwareId,
+            @RequestParam(required = false) String hardwareFasternersHardwareId,
+            @RequestParam(required = false) String clipHolderHardwareId,
+            @RequestParam(required = false) String pcbEdgeFingerHardwareId,
+            @RequestParam(required = false) String connectorHardwareId,
+            @RequestParam(required = false) String dutSocketsHardwareId,
+            @RequestParam(required = false) String edgeMbBananaHardwareId,
+            @RequestParam(required = false) String electComponentHardwareId,
+            @RequestParam(required = false) String solderJointHardwareId,
+            @RequestParam(required = false) String winConnectorHardwareId,
             @RequestParam(required = false) String pcbReject,
             @RequestParam(required = false) String handle,
             @RequestParam(required = false) String handleReject,
@@ -1489,10 +1577,24 @@ public class RmsBookingDetailController {
 //                    break;
 //            }
 //        }
+        LOGGER.info("pcbHardwareId[]: " + pcbHardwareId);
+//        LOGGER.info("Arrays.toString(pcbHardwareId): " + Arrays.toString(pcbHardwareId));
         RmsBookingVisualInspection itemVm = new RmsBookingVisualInspection();
         itemVm.setGroupId(groupId);
         itemVm.setModule("Before Loading");
         itemVm.setPcb(pcb);
+        itemVm.setPcbHardwareId(pcbHardwareId);
+        itemVm.setHandleHardwareId(handleHardwareId);
+        itemVm.setMetalFrameHardwareId(metalFrameHardwareId);
+        itemVm.setHardwareFasternersHardwareId(hardwareFasternersHardwareId);
+        itemVm.setClipHolderHardwareId(clipHolderHardwareId);
+        itemVm.setPcbEdgeFingerHardwareId(pcbEdgeFingerHardwareId);
+        itemVm.setConnectorHardwareId(connectorHardwareId);
+        itemVm.setDutSocketsHardwareId(dutSocketsHardwareId);
+        itemVm.setEdgeMbBananaHardwareId(edgeMbBananaHardwareId);
+        itemVm.setElectComponentHardwareId(electComponentHardwareId);
+        itemVm.setSolderJointHardwareId(solderJointHardwareId);
+        itemVm.setWinConnectorHardwareId(winConnectorHardwareId);
         itemVm.setPcbReject(pcbReject);
         itemVm.setHandle(handle);
         itemVm.setHandleReject(handleReject);

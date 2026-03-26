@@ -215,16 +215,16 @@
                                                 </div>
                                             </div>
                                         </div>
-                                    </div>
-                                    <div class="row mb-3">
-                                        <div class="col-xl-3 col-sm-12 col-12">
-                                            <div class="mb-1">
-                                                <label for="itemId" class="form-label">Priority Remarks</label>
-                                                <div class="input input-group">
-                                                    <textarea class="form-control" rows="5" id="remarks" name="remarks" readonly>${rms.priorityRemarks}</textarea>
-                                                </div>
+                                </div>
+                                <div class="row mb-3">
+                                    <div class="col-xl-3 col-sm-12 col-12">
+                                        <div class="mb-1">
+                                            <label for="itemId" class="form-label">Priority Remarks</label>
+                                            <div class="input input-group">
+                                                <textarea class="form-control" rows="5" id="remarks" name="remarks" readonly>${rms.priorityRemarks}</textarea>
                                             </div>
                                         </div>
+                                    </div>
                                     </c:if>
                                     <c:if test="${rms.priority == '999'}">
                                         <div class="col-xl-1 col-sm-12 col-12">
@@ -235,16 +235,16 @@
                                                 </div>
                                             </div>
                                         </div>
-                                    </div>
-                                    <div class="row mb-3">
-                                        <div class="col-xl-3 col-sm-12 col-12">
-                                            <div class="mb-1">
-                                                <label for="itemId" class="form-label">Priority Remarks</label>
-                                                <div class="input input-group">
-                                                    <textarea class="form-control" rows="5" id="remarks" name="remarks" readonly></textarea>
-                                                </div>
+                                </div>
+                                <div class="row mb-3">
+                                    <div class="col-xl-3 col-sm-12 col-12">
+                                        <div class="mb-1">
+                                            <label for="itemId" class="form-label">Priority Remarks</label>
+                                            <div class="input input-group">
+                                                <textarea class="form-control" rows="5" id="remarks" name="remarks" readonly></textarea>
                                             </div>
                                         </div>
+                                    </div>
                                     </c:if>
                                     <div class="col-xl-3 col-sm-12 col-12">
                                         <div class="mb-1">
@@ -373,24 +373,24 @@
                                                                         </tr>
                                                                     </thead>
                                                                     <tbody>
-                                                                        <c:forEach items="${hwGroupList}" var="parameterMaster" varStatus="parameterMasterLoop">
-                                                                            <tr>
-                                                                                <td><c:out value="${parameterMasterLoop.index+1}"/></td>
-                                                                                <td id="modal_delete_info_${parameterMaster.id}"><c:out value="${parameterMaster.hardwareId}"/></td>
-                                                                                <td><c:out value="${parameterMaster.itemType}"/></td>
-                                                                                <td><c:out value="${parameterMaster.itemId}"/></td>
-                                                                                <td><c:out value="${parameterMaster.createdBy}"/></td>
-                                                                                <td><c:out value="${parameterMaster.createdDate}"/></td>
-                                                                                <td align="center">
-                                                                                    <c:if test="${subStatus == 'Pending HW Registration'}">
-                                                                                        <a modaldeleteid="${parameterMaster.id}" type ="button" title="Delete" data-bs-toggle="modal" data-bs-target="#delete_modal" class="table-link danger group_delete" onclick="modalDelete(this);">
-                                                                                            <i class="bi bi-trash h3" style="color:red"></i>
-                                                                                        </a> 
-                                                                                    </c:if>
+                                                                    <c:forEach items="${hwGroupList}" var="parameterMaster" varStatus="parameterMasterLoop">
+                                                                        <tr>
+                                                                            <td><c:out value="${parameterMasterLoop.index+1}"/></td>
+                                                                        <td id="modal_delete_info_${parameterMaster.id}"><c:out value="${parameterMaster.hardwareId}"/></td>
+                                                                        <td><c:out value="${parameterMaster.itemType}"/></td>
+                                                                        <td><c:out value="${parameterMaster.itemId}"/></td>
+                                                                        <td><c:out value="${parameterMaster.createdBy}"/></td>
+                                                                        <td><c:out value="${parameterMaster.createdDate}"/></td>
+                                                                        <td align="center">
+                                                                        <c:if test="${subStatus == 'Pending HW Registration'}">
+                                                                            <a modaldeleteid="${parameterMaster.id}" type ="button" title="Delete" data-bs-toggle="modal" data-bs-target="#delete_modal" class="table-link danger group_delete" onclick="modalDelete(this);">
+                                                                                <i class="bi bi-trash h3" style="color:red"></i>
+                                                                            </a> 
+                                                                        </c:if>
 
-                                                                                </td>
-                                                                            </tr>
-                                                                        </c:forEach>
+                                                                        </td>
+                                                                        </tr>
+                                                                    </c:forEach>
                                                                     </tbody>
                                                                 </table>
                                                             </div>
@@ -409,7 +409,6 @@
                                                 <div class="col-sm-6 col-12">
                                                     <div class="card mb-2">
                                                         <div class="card-body">
-
                                                             <div class="col-xl-6 col-sm-8 col-12">
                                                                 <div class="mb-2">
                                                                     <label class="form-label" for="pcb">PCB</label>
@@ -419,33 +418,45 @@
                                                                             <input type="hidden" class="form-control" id="bookingPkid" name="bookingPkid" placeholder="" value="${rms.bookingPkid}">
                                                                             <input class="form-check-input" type="radio" name="pcb" id="pcb1"
                                                                                    value="Pass" <c:if test="${itemVm.pcb == 'Pass'}">checked</c:if> required>
-                                                                                   <label class="form-check-label" for="inlineRadio1">Pass</label>
-                                                                            </div>
-                                                                            <div class="form-check form-check-inline">
-                                                                                <input class="form-check-input" type="radio" name="pcb" id="pcb2"
-                                                                                       value="Fail" <c:if test="${itemVm.pcb == 'Fail'}">checked</c:if> >
-                                                                                <label class="form-check-label" for="inlineRadio2">Fail</label>
-                                                                            </div>
-                                                                            <div class="form-check form-check-inline">
-                                                                                <input class="form-check-input" type="radio" name="pcb" id="pcb3"
-                                                                                       value="NA" <c:if test="${itemVm.pcb == 'NA'}">checked</c:if> >
-                                                                                <label class="form-check-label" for="inlineRadio3">NA</label>
-                                                                            </div>
+                                                                            <label class="form-check-label" for="inlineRadio1">Pass</label>
+                                                                        </div>
+                                                                        <div class="form-check form-check-inline">
+                                                                            <input class="form-check-input" type="radio" name="pcb" id="pcb2"
+                                                                                   value="Fail" <c:if test="${itemVm.pcb == 'Fail'}">checked</c:if> >
+                                                                            <label class="form-check-label" for="inlineRadio2">Fail</label>
+                                                                        </div>
+                                                                        <div class="form-check form-check-inline">
+                                                                            <input class="form-check-input" type="radio" name="pcb" id="pcb3"
+                                                                                   value="NA" <c:if test="${itemVm.pcb == 'NA'}">checked</c:if> >
+                                                                            <label class="form-check-label" for="inlineRadio3">NA</label>
                                                                         </div>
                                                                     </div>
                                                                 </div>
-                                                                <div class="row gx-4">
-                                                                    <div class="col-xl-2 col-sm-12 col-12">
-                                                                        <div class="mb-2">
-                                                                            <label for="pcbRejectQty" class="form-label">Reject Qty</label>
-                                                                            <div class="input input-group">
-                                                                                <input type="number" class="form-control" id="pcbRejectQty" name="pcbRejectQty" placeholder="" value="${itemVm.pcbRejectQty}">
+                                                            </div>
+                                                            <div class="col-xl-12 col-sm-12 col-12">
+                                                                <div class="mb-2">
+                                                                    <label for="pcbHardwareId" class="form-label">Reject Hardware ID</label>
+                                                                    <div class="input input-group">
+                                                                        <select class="js-example-basic-multiple" id="pcbHardwareId" name="pcbHardwareId" multiple="multiple" title="" data-live-search="true" style="width: 100%">
+                                                                            <c:forEach items="${hwGroupList}" var="invInner">
+                                                                                <option value="${invInner.hardwareId}">${invInner.hardwareId}</option>
+                                                                            </c:forEach>
+                                                                        </select>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                            <div class="row gx-4">
+                                                                <div class="col-xl-2 col-sm-12 col-12">
+                                                                    <div class="mb-2">
+                                                                        <label for="pcbRejectQty" class="form-label">Reject Qty</label>
+                                                                        <div class="input input-group">
+                                                                            <input type="number" class="form-control" id="pcbRejectQty" name="pcbRejectQty" placeholder="" value="${itemVm.pcbRejectQty}">
                                                                         </div>
                                                                     </div>
                                                                 </div>
                                                                 <div class="col-xl-4 col-sm-12 col-12">
                                                                     <div class="mb-2">
-                                                                        <label for="metalFrameReject" class="form-label">Reject Criteria</label>
+                                                                        <label for="pcbReject" class="form-label">Reject Criteria</label>
                                                                         <div class="input input-group">
                                                                             <select class="form-control" id="pcbReject" name="pcbReject" title="Select Item Usage" data-live-search="true" style="width: 100%">
                                                                                 <option></option>
@@ -485,27 +496,39 @@
                                                                         <div class="form-check form-check-inline">
                                                                             <input class="form-check-input" type="radio" name="handle" id="handle1"
                                                                                    value="Pass" <c:if test="${itemVm.handle == 'Pass'}">checked</c:if> required>
-                                                                                   <label class="form-check-label" for="handle1">Pass</label>
-                                                                            </div>
-                                                                            <div class="form-check form-check-inline">
-                                                                                <input class="form-check-input" type="radio" name="handle" id="handle2"
-                                                                                       value="Fail" <c:if test="${itemVm.handle == 'Fail'}">checked</c:if> >
-                                                                                <label class="form-check-label" for="handle2">Fail</label>
-                                                                            </div>
-                                                                            <div class="form-check form-check-inline">
-                                                                                <input class="form-check-input" type="radio" name="handle" id="handle3"
-                                                                                       value="NA" <c:if test="${itemVm.handle == 'NA'}">checked</c:if> >
-                                                                                <label class="form-check-label" for="handle3">NA</label>
-                                                                            </div>
+                                                                            <label class="form-check-label" for="handle1">Pass</label>
+                                                                        </div>
+                                                                        <div class="form-check form-check-inline">
+                                                                            <input class="form-check-input" type="radio" name="handle" id="handle2"
+                                                                                   value="Fail" <c:if test="${itemVm.handle == 'Fail'}">checked</c:if> >
+                                                                            <label class="form-check-label" for="handle2">Fail</label>
+                                                                        </div>
+                                                                        <div class="form-check form-check-inline">
+                                                                            <input class="form-check-input" type="radio" name="handle" id="handle3"
+                                                                                   value="NA" <c:if test="${itemVm.handle == 'NA'}">checked</c:if> >
+                                                                            <label class="form-check-label" for="handle3">NA</label>
                                                                         </div>
                                                                     </div>
                                                                 </div>
-                                                                <div class="row gx-4">
-                                                                    <div class="col-xl-2 col-sm-12 col-12">
-                                                                        <div class="mb-2">
-                                                                            <label for="handleRejectQty" class="form-label">Reject Qty</label>
-                                                                            <div class="input input-group">
-                                                                                <input type="number" class="form-control" id="handleRejectQty" name="handleRejectQty" placeholder="" value="${itemVm.handleRejectQty}">
+                                                            </div>
+                                                            <div class="col-xl-12 col-sm-12 col-12">
+                                                                <div class="mb-2">
+                                                                    <label for="handleHardwareId" class="form-label">Reject Hardware ID</label>
+                                                                    <div class="input input-group">
+                                                                        <select class="js-example-basic-multiple" id="handleHardwareId" name="handleHardwareId" multiple="multiple" title="" data-live-search="true" style="width: 100%">
+                                                                            <c:forEach items="${hwGroupList}" var="invInner">
+                                                                                <option value="${invInner.hardwareId}">${invInner.hardwareId}</option>
+                                                                            </c:forEach>
+                                                                        </select>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                            <div class="row gx-4">
+                                                                <div class="col-xl-2 col-sm-12 col-12">
+                                                                    <div class="mb-2">
+                                                                        <label for="handleRejectQty" class="form-label">Reject Qty</label>
+                                                                        <div class="input input-group">
+                                                                            <input type="number" class="form-control" id="handleRejectQty" name="handleRejectQty" placeholder="" value="${itemVm.handleRejectQty}">
                                                                         </div>
                                                                     </div>
                                                                 </div>
@@ -551,27 +574,39 @@
                                                                         <div class="form-check form-check-inline">
                                                                             <input class="form-check-input" type="radio" name="metalFrame" id="metalFrame1"
                                                                                    value="Pass" <c:if test="${itemVm.metalFrame == 'Pass'}">checked</c:if> required>
-                                                                                   <label class="form-check-label" for="metalFrame1">Pass</label>
-                                                                            </div>
-                                                                            <div class="form-check form-check-inline">
-                                                                                <input class="form-check-input" type="radio" name="metalFrame" id="metalFrame2"
-                                                                                       value="Fail" <c:if test="${itemVm.metalFrame == 'Fail'}">checked</c:if> >
-                                                                                <label class="form-check-label" for="metalFrame2">Fail</label>
-                                                                            </div>
-                                                                            <div class="form-check form-check-inline">
-                                                                                <input class="form-check-input" type="radio" name="metalFrame" id="metalFrame3"
-                                                                                       value="NA" <c:if test="${itemVm.metalFrame == 'NA'}">checked</c:if> >
-                                                                                <label class="form-check-label" for="metalFrame">NA</label>
-                                                                            </div>
+                                                                            <label class="form-check-label" for="metalFrame1">Pass</label>
+                                                                        </div>
+                                                                        <div class="form-check form-check-inline">
+                                                                            <input class="form-check-input" type="radio" name="metalFrame" id="metalFrame2"
+                                                                                   value="Fail" <c:if test="${itemVm.metalFrame == 'Fail'}">checked</c:if> >
+                                                                            <label class="form-check-label" for="metalFrame2">Fail</label>
+                                                                        </div>
+                                                                        <div class="form-check form-check-inline">
+                                                                            <input class="form-check-input" type="radio" name="metalFrame" id="metalFrame3"
+                                                                                   value="NA" <c:if test="${itemVm.metalFrame == 'NA'}">checked</c:if> >
+                                                                            <label class="form-check-label" for="metalFrame">NA</label>
                                                                         </div>
                                                                     </div>
                                                                 </div>
-                                                                <div class="row gx-4">
-                                                                    <div class="col-xl-2 col-sm-12 col-12">
-                                                                        <div class="mb-2">
-                                                                            <label for="metalFrameRejectQty" class="form-label">Reject Qty</label>
-                                                                            <div class="input input-group">
-                                                                                <input type="number" class="form-control" id="metalFrameRejectQty" name="metalFrameRejectQty" placeholder="" value="${itemVm.metalFrameRejectQty}">
+                                                            </div>
+                                                            <div class="col-xl-12 col-sm-12 col-12">
+                                                                <div class="mb-2">
+                                                                    <label for="metalFrameHardwareId" class="form-label">Reject Hardware ID</label>
+                                                                    <div class="input input-group">
+                                                                        <select class="js-example-basic-multiple" id="metalFrameHardwareId" name="metalFrameHardwareId" multiple="multiple" title="" data-live-search="true" style="width: 100%">
+                                                                            <c:forEach items="${hwGroupList}" var="invInner">
+                                                                                <option value="${invInner.hardwareId}">${invInner.hardwareId}</option>
+                                                                            </c:forEach>
+                                                                        </select>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                            <div class="row gx-4">
+                                                                <div class="col-xl-2 col-sm-12 col-12">
+                                                                    <div class="mb-2">
+                                                                        <label for="metalFrameRejectQty" class="form-label">Reject Qty</label>
+                                                                        <div class="input input-group">
+                                                                            <input type="number" class="form-control" id="metalFrameRejectQty" name="metalFrameRejectQty" placeholder="" value="${itemVm.metalFrameRejectQty}">
                                                                         </div>
                                                                     </div>
                                                                 </div>
@@ -618,27 +653,39 @@
                                                                         <div class="form-check form-check-inline">
                                                                             <input class="form-check-input" type="radio" name="hardwareFasterners" id="hardwareFasterners1"
                                                                                    value="Pass" <c:if test="${itemVm.hardwareFasterners == 'Pass'}">checked</c:if> required>
-                                                                                   <label class="form-check-label" for="hardwareFasterners1">Pass</label>
-                                                                            </div>
-                                                                            <div class="form-check form-check-inline">
-                                                                                <input class="form-check-input" type="radio" name="hardwareFasterners" id="hardwareFasterners2"
-                                                                                       value="Fail" <c:if test="${itemVm.hardwareFasterners == 'Fail'}">checked</c:if> >
-                                                                                <label class="form-check-label" for="hardwareFasterners2">Fail</label>
-                                                                            </div>
-                                                                            <div class="form-check form-check-inline">
-                                                                                <input class="form-check-input" type="radio" name="hardwareFasterners" id="hardwareFasterners3"
-                                                                                       value="NA" <c:if test="${itemVm.hardwareFasterners == 'NA'}">checked</c:if> >
-                                                                                <label class="form-check-label" for="hardwareFasterners3">NA</label>
-                                                                            </div>
+                                                                            <label class="form-check-label" for="hardwareFasterners1">Pass</label>
+                                                                        </div>
+                                                                        <div class="form-check form-check-inline">
+                                                                            <input class="form-check-input" type="radio" name="hardwareFasterners" id="hardwareFasterners2"
+                                                                                   value="Fail" <c:if test="${itemVm.hardwareFasterners == 'Fail'}">checked</c:if> >
+                                                                            <label class="form-check-label" for="hardwareFasterners2">Fail</label>
+                                                                        </div>
+                                                                        <div class="form-check form-check-inline">
+                                                                            <input class="form-check-input" type="radio" name="hardwareFasterners" id="hardwareFasterners3"
+                                                                                   value="NA" <c:if test="${itemVm.hardwareFasterners == 'NA'}">checked</c:if> >
+                                                                            <label class="form-check-label" for="hardwareFasterners3">NA</label>
                                                                         </div>
                                                                     </div>
                                                                 </div>
-                                                                <div class="row gx-4">
-                                                                    <div class="col-xl-2 col-sm-12 col-12">
-                                                                        <div class="mb-2">
-                                                                            <label for="hardwareFasternersRejectQty" class="form-label">Reject Qty</label>
-                                                                            <div class="input input-group">
-                                                                                <input type="number" class="form-control" id="hardwareFasternersRejectQty" name="hardwareFasternersRejectQty" placeholder="" value="${itemVm.hardwareFasternersRejectQty}">
+                                                            </div>
+                                                            <div class="col-xl-12 col-sm-12 col-12">
+                                                                <div class="mb-2">
+                                                                    <label for="hardwareFasternersHardwareId" class="form-label">Reject Hardware ID</label>
+                                                                    <div class="input input-group">
+                                                                        <select class="js-example-basic-multiple" id="hardwareFasternersHardwareId" name="hardwareFasternersHardwareId" multiple="multiple" title="" data-live-search="true" style="width: 100%">
+                                                                            <c:forEach items="${hwGroupList}" var="invInner">
+                                                                                <option value="${invInner.hardwareId}">${invInner.hardwareId}</option>
+                                                                            </c:forEach>
+                                                                        </select>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                            <div class="row gx-4">
+                                                                <div class="col-xl-2 col-sm-12 col-12">
+                                                                    <div class="mb-2">
+                                                                        <label for="hardwareFasternersRejectQty" class="form-label">Reject Qty</label>
+                                                                        <div class="input input-group">
+                                                                            <input type="number" class="form-control" id="hardwareFasternersRejectQty" name="hardwareFasternersRejectQty" placeholder="" value="${itemVm.hardwareFasternersRejectQty}">
                                                                         </div>
                                                                     </div>
                                                                 </div>
@@ -685,27 +732,39 @@
                                                                         <div class="form-check form-check-inline">
                                                                             <input class="form-check-input" type="radio" name="clipHolder" id="clipHolder1"
                                                                                    value="Pass" <c:if test="${itemVm.clipHolder == 'Pass'}">checked</c:if> required>
-                                                                                   <label class="form-check-label" for="clipHolder1">Pass</label>
-                                                                            </div>
-                                                                            <div class="form-check form-check-inline">
-                                                                                <input class="form-check-input" type="radio" name="clipHolder" id="clipHolder2"
-                                                                                       value="Fail" <c:if test="${itemVm.clipHolder == 'Fail'}">checked</c:if> >
-                                                                                <label class="form-check-label" for="clipHolder2">Fail</label>
-                                                                            </div>
-                                                                            <div class="form-check form-check-inline">
-                                                                                <input class="form-check-input" type="radio" name="clipHolder" id="clipHolder3"
-                                                                                       value="NA" <c:if test="${itemVm.clipHolder == 'NA'}">checked</c:if> >
-                                                                                <label class="form-check-label" for="clipHolder3">NA</label>
-                                                                            </div>
+                                                                            <label class="form-check-label" for="clipHolder1">Pass</label>
+                                                                        </div>
+                                                                        <div class="form-check form-check-inline">
+                                                                            <input class="form-check-input" type="radio" name="clipHolder" id="clipHolder2"
+                                                                                   value="Fail" <c:if test="${itemVm.clipHolder == 'Fail'}">checked</c:if> >
+                                                                            <label class="form-check-label" for="clipHolder2">Fail</label>
+                                                                        </div>
+                                                                        <div class="form-check form-check-inline">
+                                                                            <input class="form-check-input" type="radio" name="clipHolder" id="clipHolder3"
+                                                                                   value="NA" <c:if test="${itemVm.clipHolder == 'NA'}">checked</c:if> >
+                                                                            <label class="form-check-label" for="clipHolder3">NA</label>
                                                                         </div>
                                                                     </div>
                                                                 </div>
-                                                                <div class="row gx-4">
-                                                                    <div class="col-xl-2 col-sm-12 col-12">
-                                                                        <div class="mb-2">
-                                                                            <label for="clipHolderRejectQty" class="form-label">Reject Qty</label>
-                                                                            <div class="input input-group">
-                                                                                <input type="number" class="form-control" id="clipHolderRejectQty" name="clipHolderRejectQty" placeholder="" value="${itemVm.clipHolderRejectQty}">
+                                                            </div>
+                                                            <div class="col-xl-12 col-sm-12 col-12">
+                                                                <div class="mb-2">
+                                                                    <label for="clipHolderHardwareId" class="form-label">Reject Hardware ID</label>
+                                                                    <div class="input input-group">
+                                                                        <select class="js-example-basic-multiple" id="clipHolderHardwareId" name="clipHolderHardwareId" multiple="multiple" title="" data-live-search="true" style="width: 100%">
+                                                                            <c:forEach items="${hwGroupList}" var="invInner">
+                                                                                <option value="${invInner.hardwareId}">${invInner.hardwareId}</option>
+                                                                            </c:forEach>
+                                                                        </select>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                            <div class="row gx-4">
+                                                                <div class="col-xl-2 col-sm-12 col-12">
+                                                                    <div class="mb-2">
+                                                                        <label for="clipHolderRejectQty" class="form-label">Reject Qty</label>
+                                                                        <div class="input input-group">
+                                                                            <input type="number" class="form-control" id="clipHolderRejectQty" name="clipHolderRejectQty" placeholder="" value="${itemVm.clipHolderRejectQty}">
                                                                         </div>
                                                                     </div>
                                                                 </div>
@@ -752,27 +811,39 @@
                                                                         <div class="form-check form-check-inline">
                                                                             <input class="form-check-input" type="radio" name="pcbEdgeFinger" id="pcbEdgeFinger1"
                                                                                    value="Pass" <c:if test="${itemVm.pcbEdgeFinger == 'Pass'}">checked</c:if> required>
-                                                                                   <label class="form-check-label" for="pcbEdgeFinger1">Pass</label>
-                                                                            </div>
-                                                                            <div class="form-check form-check-inline">
-                                                                                <input class="form-check-input" type="radio" name="pcbEdgeFinger" id="pcbEdgeFinger2"
-                                                                                       value="Fail" <c:if test="${itemVm.pcbEdgeFinger == 'Fail'}">checked</c:if> >
-                                                                                <label class="form-check-label" for="pcbEdgeFinger2">Fail</label>
-                                                                            </div>
-                                                                            <div class="form-check form-check-inline">
-                                                                                <input class="form-check-input" type="radio" name="pcbEdgeFinger" id="pcbEdgeFinger3"
-                                                                                       value="NA" <c:if test="${itemVm.pcbEdgeFinger == 'NA'}">checked</c:if> >
-                                                                                <label class="form-check-label" for="pcbEdgeFinger3">NA</label>
-                                                                            </div>
+                                                                            <label class="form-check-label" for="pcbEdgeFinger1">Pass</label>
+                                                                        </div>
+                                                                        <div class="form-check form-check-inline">
+                                                                            <input class="form-check-input" type="radio" name="pcbEdgeFinger" id="pcbEdgeFinger2"
+                                                                                   value="Fail" <c:if test="${itemVm.pcbEdgeFinger == 'Fail'}">checked</c:if> >
+                                                                            <label class="form-check-label" for="pcbEdgeFinger2">Fail</label>
+                                                                        </div>
+                                                                        <div class="form-check form-check-inline">
+                                                                            <input class="form-check-input" type="radio" name="pcbEdgeFinger" id="pcbEdgeFinger3"
+                                                                                   value="NA" <c:if test="${itemVm.pcbEdgeFinger == 'NA'}">checked</c:if> >
+                                                                            <label class="form-check-label" for="pcbEdgeFinger3">NA</label>
                                                                         </div>
                                                                     </div>
                                                                 </div>
-                                                                <div class="row gx-4">
-                                                                    <div class="col-xl-2 col-sm-12 col-12">
-                                                                        <div class="mb-2">
-                                                                            <label for="pcbEdgeFingerRejectQty" class="form-label">Reject Qty</label>
-                                                                            <div class="input input-group">
-                                                                                <input type="number" class="form-control" id="pcbEdgeFingerRejectQty" name="pcbEdgeFingerRejectQty" placeholder="" value="${itemVm.pcbEdgeFingerRejectQty}">
+                                                            </div>
+                                                            <div class="col-xl-12 col-sm-12 col-12">
+                                                                <div class="mb-2">
+                                                                    <label for="pcbEdgeFingerHardwareId" class="form-label">Reject Hardware ID</label>
+                                                                    <div class="input input-group">
+                                                                        <select class="js-example-basic-multiple" id="pcbEdgeFingerHardwareId" name="pcbEdgeFingerHardwareId" multiple="multiple" title="" data-live-search="true" style="width: 100%">
+                                                                            <c:forEach items="${hwGroupList}" var="invInner">
+                                                                                <option value="${invInner.hardwareId}">${invInner.hardwareId}</option>
+                                                                            </c:forEach>
+                                                                        </select>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                            <div class="row gx-4">
+                                                                <div class="col-xl-2 col-sm-12 col-12">
+                                                                    <div class="mb-2">
+                                                                        <label for="pcbEdgeFingerRejectQty" class="form-label">Reject Qty</label>
+                                                                        <div class="input input-group">
+                                                                            <input type="number" class="form-control" id="pcbEdgeFingerRejectQty" name="pcbEdgeFingerRejectQty" placeholder="" value="${itemVm.pcbEdgeFingerRejectQty}">
                                                                         </div>
                                                                     </div>
                                                                 </div>
@@ -820,28 +891,40 @@
                                                                         <div class="form-check form-check-inline">
                                                                             <input class="form-check-input" type="radio" name="connector" id="connector1"
                                                                                    value="Pass" <c:if test="${itemVm.connector == 'Pass'}">checked</c:if> required>
-                                                                                   <label class="form-check-label" for="connector1">Pass</label>
-                                                                            </div>
-                                                                            <div class="form-check form-check-inline">
-                                                                                <input class="form-check-input" type="radio" name="connector" id="connector2"
-                                                                                       value="Fail" <c:if test="${itemVm.connector == 'Fail'}">checked</c:if> >
-                                                                                <label class="form-check-label" for="connector2">Fail</label>
-                                                                            </div>
-                                                                            <div class="form-check form-check-inline">
-                                                                                <input class="form-check-input" type="radio" name="connector" id="connector3"
-                                                                                       value="NA" <c:if test="${itemVm.connector == 'NA'}">checked</c:if> >
-                                                                                <label class="form-check-label" for="connector3">NA</label>
-                                                                            </div>
+                                                                            <label class="form-check-label" for="connector1">Pass</label>
+                                                                        </div>
+                                                                        <div class="form-check form-check-inline">
+                                                                            <input class="form-check-input" type="radio" name="connector" id="connector2"
+                                                                                   value="Fail" <c:if test="${itemVm.connector == 'Fail'}">checked</c:if> >
+                                                                            <label class="form-check-label" for="connector2">Fail</label>
+                                                                        </div>
+                                                                        <div class="form-check form-check-inline">
+                                                                            <input class="form-check-input" type="radio" name="connector" id="connector3"
+                                                                                   value="NA" <c:if test="${itemVm.connector == 'NA'}">checked</c:if> >
+                                                                            <label class="form-check-label" for="connector3">NA</label>
                                                                         </div>
                                                                     </div>
                                                                 </div>
-                                                                <div class="row gx-4">
-                                                                    <div class="col-xl-2 col-sm-12 col-12">
-                                                                        <div class="mb-2">
-                                                                            <label for="connectorRejectQty" class="form-label">Reject Qty</label>
-                                                                            <div class="input input-group">
-                                                                                <!--<span class="input-group-text"><i class="bi bi-person"></i></span>-->
-                                                                                <input type="number" class="form-control" id="connectorRejectQty" name="connectorRejectQty" placeholder="" value="${itemVm.connectorRejectQty}">
+                                                            </div>
+                                                            <div class="col-xl-12 col-sm-12 col-12">
+                                                                <div class="mb-2">
+                                                                    <label for="connectorHardwareId" class="form-label">Reject Hardware ID</label>
+                                                                    <div class="input input-group">
+                                                                        <select class="js-example-basic-multiple" id="connectorHardwareId" name="connectorHardwareId" multiple="multiple" title="" data-live-search="true" style="width: 100%">
+                                                                            <c:forEach items="${hwGroupList}" var="invInner">
+                                                                                <option value="${invInner.hardwareId}">${invInner.hardwareId}</option>
+                                                                            </c:forEach>
+                                                                        </select>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                            <div class="row gx-4">
+                                                                <div class="col-xl-2 col-sm-12 col-12">
+                                                                    <div class="mb-2">
+                                                                        <label for="connectorRejectQty" class="form-label">Reject Qty</label>
+                                                                        <div class="input input-group">
+                                                                            <!--<span class="input-group-text"><i class="bi bi-person"></i></span>-->
+                                                                            <input type="number" class="form-control" id="connectorRejectQty" name="connectorRejectQty" placeholder="" value="${itemVm.connectorRejectQty}">
                                                                         </div>
                                                                     </div>
                                                                 </div>
@@ -889,27 +972,39 @@
                                                                         <div class="form-check form-check-inline">
                                                                             <input class="form-check-input" type="radio" name="dutSockets" id="dutSockets1"
                                                                                    value="Pass" <c:if test="${itemVm.dutSockets == 'Pass'}">checked</c:if> required>
-                                                                                   <label class="form-check-label" for="dutSockets1">Pass</label>
-                                                                            </div>
-                                                                            <div class="form-check form-check-inline">
-                                                                                <input class="form-check-input" type="radio" name="dutSockets" id="dutSockets2"
-                                                                                       value="Fail" <c:if test="${itemVm.dutSockets == 'Fail'}">checked</c:if> >
-                                                                                <label class="form-check-label" for="dutSockets2">Fail</label>
-                                                                            </div>
-                                                                            <div class="form-check form-check-inline">
-                                                                                <input class="form-check-input" type="radio" name="dutSockets" id="dutSockets3"
-                                                                                       value="NA" <c:if test="${itemVm.dutSockets == 'NA'}">checked</c:if> >
-                                                                                <label class="form-check-label" for="dutSockets3">NA</label>
-                                                                            </div>
+                                                                            <label class="form-check-label" for="dutSockets1">Pass</label>
+                                                                        </div>
+                                                                        <div class="form-check form-check-inline">
+                                                                            <input class="form-check-input" type="radio" name="dutSockets" id="dutSockets2"
+                                                                                   value="Fail" <c:if test="${itemVm.dutSockets == 'Fail'}">checked</c:if> >
+                                                                            <label class="form-check-label" for="dutSockets2">Fail</label>
+                                                                        </div>
+                                                                        <div class="form-check form-check-inline">
+                                                                            <input class="form-check-input" type="radio" name="dutSockets" id="dutSockets3"
+                                                                                   value="NA" <c:if test="${itemVm.dutSockets == 'NA'}">checked</c:if> >
+                                                                            <label class="form-check-label" for="dutSockets3">NA</label>
                                                                         </div>
                                                                     </div>
                                                                 </div>
-                                                                <div class="row gx-4">
-                                                                    <div class="col-xl-2 col-sm-12 col-12">
-                                                                        <div class="mb-2">
-                                                                            <label for="dutSocketsRejectQty" class="form-label">Reject Qty</label>
-                                                                            <div class="input input-group">
-                                                                                <input type="number" class="form-control" id="dutSocketsRejectQty" name="dutSocketsRejectQty" placeholder="" value="${itemVm.dutSocketsRejectQty}">
+                                                            </div>
+                                                            <div class="col-xl-12 col-sm-12 col-12">
+                                                                <div class="mb-2">
+                                                                    <label for="dutSocketsHardwareId" class="form-label">Reject Hardware ID</label>
+                                                                    <div class="input input-group">
+                                                                        <select class="js-example-basic-multiple" id="dutSocketsHardwareId" name="dutSocketsHardwareId" multiple="multiple" title="" data-live-search="true" style="width: 100%">
+                                                                            <c:forEach items="${hwGroupList}" var="invInner">
+                                                                                <option value="${invInner.hardwareId}">${invInner.hardwareId}</option>
+                                                                            </c:forEach>
+                                                                        </select>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                            <div class="row gx-4">
+                                                                <div class="col-xl-2 col-sm-12 col-12">
+                                                                    <div class="mb-2">
+                                                                        <label for="dutSocketsRejectQty" class="form-label">Reject Qty</label>
+                                                                        <div class="input input-group">
+                                                                            <input type="number" class="form-control" id="dutSocketsRejectQty" name="dutSocketsRejectQty" placeholder="" value="${itemVm.dutSocketsRejectQty}">
                                                                         </div>
                                                                     </div>
                                                                 </div>
@@ -957,27 +1052,39 @@
                                                                         <div class="form-check form-check-inline">
                                                                             <input class="form-check-input" type="radio" name="edgeMbBanana" id="edgeMbBanana1"
                                                                                    value="Pass" <c:if test="${itemVm.edgeMbBanana == 'Pass'}">checked</c:if> required>
-                                                                                   <label class="form-check-label" for="edgeMbBanana1">Pass</label>
-                                                                            </div>
-                                                                            <div class="form-check form-check-inline">
-                                                                                <input class="form-check-input" type="radio" name="edgeMbBanana" id="edgeMbBanana2"
-                                                                                       value="Fail" <c:if test="${itemVm.edgeMbBanana == 'Fail'}">checked</c:if> >
-                                                                                <label class="form-check-label" for="edgeMbBanana2">Fail</label>
-                                                                            </div>
-                                                                            <div class="form-check form-check-inline">
-                                                                                <input class="form-check-input" type="radio" name="edgeMbBanana" id="edgeMbBanana3"
-                                                                                       value="NA" <c:if test="${itemVm.edgeMbBanana == 'NA'}">checked</c:if> >
-                                                                                <label class="form-check-label" for="edgeMbBanana3">NA</label>
-                                                                            </div>
+                                                                            <label class="form-check-label" for="edgeMbBanana1">Pass</label>
+                                                                        </div>
+                                                                        <div class="form-check form-check-inline">
+                                                                            <input class="form-check-input" type="radio" name="edgeMbBanana" id="edgeMbBanana2"
+                                                                                   value="Fail" <c:if test="${itemVm.edgeMbBanana == 'Fail'}">checked</c:if> >
+                                                                            <label class="form-check-label" for="edgeMbBanana2">Fail</label>
+                                                                        </div>
+                                                                        <div class="form-check form-check-inline">
+                                                                            <input class="form-check-input" type="radio" name="edgeMbBanana" id="edgeMbBanana3"
+                                                                                   value="NA" <c:if test="${itemVm.edgeMbBanana == 'NA'}">checked</c:if> >
+                                                                            <label class="form-check-label" for="edgeMbBanana3">NA</label>
                                                                         </div>
                                                                     </div>
                                                                 </div>
-                                                                <div class="row gx-4">
-                                                                    <div class="col-xl-2 col-sm-12 col-12">
-                                                                        <div class="mb-2">
-                                                                            <label for="edgeMbBananaRejectQty" class="form-label">Reject Qty</label>
-                                                                            <div class="input input-group">
-                                                                                <input type="number" class="form-control" id="edgeMbBananaRejectQty" name="edgeMbBananaRejectQty" placeholder="" value="${itemVm.edgeMbBananaRejectQty}">
+                                                            </div>
+                                                            <div class="col-xl-12 col-sm-12 col-12">
+                                                                <div class="mb-2">
+                                                                    <label for="edgeMbBananaHardwareId" class="form-label">Reject Hardware ID</label>
+                                                                    <div class="input input-group">
+                                                                        <select class="js-example-basic-multiple" id="edgeMbBananaHardwareId" name="edgeMbBananaHardwareId" multiple="multiple" title="" data-live-search="true" style="width: 100%">
+                                                                            <c:forEach items="${hwGroupList}" var="invInner">
+                                                                                <option value="${invInner.hardwareId}">${invInner.hardwareId}</option>
+                                                                            </c:forEach>
+                                                                        </select>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                            <div class="row gx-4">
+                                                                <div class="col-xl-2 col-sm-12 col-12">
+                                                                    <div class="mb-2">
+                                                                        <label for="edgeMbBananaRejectQty" class="form-label">Reject Qty</label>
+                                                                        <div class="input input-group">
+                                                                            <input type="number" class="form-control" id="edgeMbBananaRejectQty" name="edgeMbBananaRejectQty" placeholder="" value="${itemVm.edgeMbBananaRejectQty}">
                                                                         </div>
                                                                     </div>
                                                                 </div>
@@ -1025,27 +1132,39 @@
                                                                         <div class="form-check form-check-inline">
                                                                             <input class="form-check-input" type="radio" name="electComponent" id="electComponent1"
                                                                                    value="Pass" <c:if test="${itemVm.electComponent == 'Pass'}">checked</c:if> required>
-                                                                                   <label class="form-check-label" for="electComponent1">Pass</label>
-                                                                            </div>
-                                                                            <div class="form-check form-check-inline">
-                                                                                <input class="form-check-input" type="radio" name="electComponent" id="electComponent2"
-                                                                                       value="Fail" <c:if test="${itemVm.electComponent == 'Fail'}">checked</c:if> >
-                                                                                <label class="form-check-label" for="electComponent2">Fail</label>
-                                                                            </div>
-                                                                            <div class="form-check form-check-inline">
-                                                                                <input class="form-check-input" type="radio" name="electComponent" id="electComponent3"
-                                                                                       value="NA" <c:if test="${itemVm.electComponent == 'NA'}">checked</c:if> >
-                                                                                <label class="form-check-label" for="electComponent3">NA</label>
-                                                                            </div>
+                                                                            <label class="form-check-label" for="electComponent1">Pass</label>
+                                                                        </div>
+                                                                        <div class="form-check form-check-inline">
+                                                                            <input class="form-check-input" type="radio" name="electComponent" id="electComponent2"
+                                                                                   value="Fail" <c:if test="${itemVm.electComponent == 'Fail'}">checked</c:if> >
+                                                                            <label class="form-check-label" for="electComponent2">Fail</label>
+                                                                        </div>
+                                                                        <div class="form-check form-check-inline">
+                                                                            <input class="form-check-input" type="radio" name="electComponent" id="electComponent3"
+                                                                                   value="NA" <c:if test="${itemVm.electComponent == 'NA'}">checked</c:if> >
+                                                                            <label class="form-check-label" for="electComponent3">NA</label>
                                                                         </div>
                                                                     </div>
                                                                 </div>
-                                                                <div class="row gx-4">
-                                                                    <div class="col-xl-2 col-sm-12 col-12">
-                                                                        <div class="mb-2">
-                                                                            <label for="electComponentRejectQty" class="form-label">Reject Qty</label>
-                                                                            <div class="input input-group">
-                                                                                <input type="number" class="form-control" id="electComponentRejectQty" name="electComponentRejectQty" placeholder="" value="${itemVm.electComponentRejectQty}">
+                                                            </div>
+                                                            <div class="col-xl-12 col-sm-12 col-12">
+                                                                <div class="mb-2">
+                                                                    <label for="electComponentHardwareId" class="form-label">Reject Hardware ID</label>
+                                                                    <div class="input input-group">
+                                                                        <select class="js-example-basic-multiple" id="electComponentHardwareId" name="electComponentHardwareId" multiple="multiple" title="" data-live-search="true" style="width: 100%">
+                                                                            <c:forEach items="${hwGroupList}" var="invInner">
+                                                                                <option value="${invInner.hardwareId}">${invInner.hardwareId}</option>
+                                                                            </c:forEach>
+                                                                        </select>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                            <div class="row gx-4">
+                                                                <div class="col-xl-2 col-sm-12 col-12">
+                                                                    <div class="mb-2">
+                                                                        <label for="electComponentRejectQty" class="form-label">Reject Qty</label>
+                                                                        <div class="input input-group">
+                                                                            <input type="number" class="form-control" id="electComponentRejectQty" name="electComponentRejectQty" placeholder="" value="${itemVm.electComponentRejectQty}">
                                                                         </div>
                                                                     </div>
                                                                 </div>
@@ -1093,27 +1212,39 @@
                                                                         <div class="form-check form-check-inline">
                                                                             <input class="form-check-input" type="radio" name="solderJoint" id="solderJoint1"
                                                                                    value="Pass" <c:if test="${itemVm.solderJoint == 'Pass'}">checked</c:if> required>
-                                                                                   <label class="form-check-label" for="solderJoint1">Pass</label>
-                                                                            </div>
-                                                                            <div class="form-check form-check-inline">
-                                                                                <input class="form-check-input" type="radio" name="solderJoint" id="solderJoint2"
-                                                                                       value="Fail" <c:if test="${itemVm.solderJoint == 'Fail'}">checked</c:if> >
-                                                                                <label class="form-check-label" for="solderJoint2">Fail</label>
-                                                                            </div>
-                                                                            <div class="form-check form-check-inline">
-                                                                                <input class="form-check-input" type="radio" name="solderJoint" id="solderJoint3"
-                                                                                       value="NA" <c:if test="${itemVm.solderJoint == 'NA'}">checked</c:if> >
-                                                                                <label class="form-check-label" for="solderJoint3">NA</label>
-                                                                            </div>
+                                                                            <label class="form-check-label" for="solderJoint1">Pass</label>
+                                                                        </div>
+                                                                        <div class="form-check form-check-inline">
+                                                                            <input class="form-check-input" type="radio" name="solderJoint" id="solderJoint2"
+                                                                                   value="Fail" <c:if test="${itemVm.solderJoint == 'Fail'}">checked</c:if> >
+                                                                            <label class="form-check-label" for="solderJoint2">Fail</label>
+                                                                        </div>
+                                                                        <div class="form-check form-check-inline">
+                                                                            <input class="form-check-input" type="radio" name="solderJoint" id="solderJoint3"
+                                                                                   value="NA" <c:if test="${itemVm.solderJoint == 'NA'}">checked</c:if> >
+                                                                            <label class="form-check-label" for="solderJoint3">NA</label>
                                                                         </div>
                                                                     </div>
                                                                 </div>
-                                                                <div class="row gx-4">
-                                                                    <div class="col-xl-2 col-sm-12 col-12">
-                                                                        <div class="mb-2">
-                                                                            <label for="solderJointRejectQty" class="form-label">Reject Qty</label>
-                                                                            <div class="input input-group">
-                                                                                <input type="number" class="form-control" id="solderJointRejectQty" name="solderJointRejectQty" placeholder="" value="${itemVm.solderJointRejectQty}">
+                                                            </div>
+                                                            <div class="col-xl-12 col-sm-12 col-12">
+                                                                <div class="mb-2">
+                                                                    <label for="solderJointHardwareId" class="form-label">Reject Hardware ID</label>
+                                                                    <div class="input input-group">
+                                                                        <select class="js-example-basic-multiple" id="solderJointHardwareId" name="solderJointHardwareId" multiple="multiple" title="" data-live-search="true" style="width: 100%">
+                                                                            <c:forEach items="${hwGroupList}" var="invInner">
+                                                                                <option value="${invInner.hardwareId}">${invInner.hardwareId}</option>
+                                                                            </c:forEach>
+                                                                        </select>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                            <div class="row gx-4">
+                                                                <div class="col-xl-2 col-sm-12 col-12">
+                                                                    <div class="mb-2">
+                                                                        <label for="solderJointRejectQty" class="form-label">Reject Qty</label>
+                                                                        <div class="input input-group">
+                                                                            <input type="number" class="form-control" id="solderJointRejectQty" name="solderJointRejectQty" placeholder="" value="${itemVm.solderJointRejectQty}">
                                                                         </div>
                                                                     </div>
                                                                 </div>
@@ -1161,27 +1292,39 @@
                                                                         <div class="form-check form-check-inline">
                                                                             <input class="form-check-input" type="radio" name="winConnector" id="winConnector1"
                                                                                    value="Pass" <c:if test="${itemVm.winConnector == 'Pass'}">checked</c:if> required>
-                                                                                   <label class="form-check-label" for="winConnector1">Pass</label>
-                                                                            </div>
-                                                                            <div class="form-check form-check-inline">
-                                                                                <input class="form-check-input" type="radio" name="winConnector" id="winConnector2"
-                                                                                       value="Fail" <c:if test="${itemVm.winConnector == 'Fail'}">checked</c:if> >
-                                                                                <label class="form-check-label" for="winConnector2">Fail</label>
-                                                                            </div>
-                                                                            <div class="form-check form-check-inline">
-                                                                                <input class="form-check-input" type="radio" name="winConnector" id="winConnector3"
-                                                                                       value="NA" <c:if test="${itemVm.winConnector == 'NA'}">checked</c:if> >
-                                                                                <label class="form-check-label" for="winConnector3">NA</label>
-                                                                            </div>
+                                                                            <label class="form-check-label" for="winConnector1">Pass</label>
+                                                                        </div>
+                                                                        <div class="form-check form-check-inline">
+                                                                            <input class="form-check-input" type="radio" name="winConnector" id="winConnector2"
+                                                                                   value="Fail" <c:if test="${itemVm.winConnector == 'Fail'}">checked</c:if> >
+                                                                            <label class="form-check-label" for="winConnector2">Fail</label>
+                                                                        </div>
+                                                                        <div class="form-check form-check-inline">
+                                                                            <input class="form-check-input" type="radio" name="winConnector" id="winConnector3"
+                                                                                   value="NA" <c:if test="${itemVm.winConnector == 'NA'}">checked</c:if> >
+                                                                            <label class="form-check-label" for="winConnector3">NA</label>
                                                                         </div>
                                                                     </div>
                                                                 </div>
-                                                                <div class="row gx-4">
-                                                                    <div class="col-xl-2 col-sm-12 col-12">
-                                                                        <div class="mb-2">
-                                                                            <label for="winConnectorRejectQty" class="form-label">Reject Qty</label>
-                                                                            <div class="input input-group">
-                                                                                <input type="number" class="form-control" id="winConnectorRejectQty" name="winConnectorRejectQty" placeholder="" value="${itemVm.winConnectorRejectQty}">
+                                                            </div>
+                                                            <div class="col-xl-12 col-sm-12 col-12">
+                                                                <div class="mb-2">
+                                                                    <label for="winConnectorHardwareId" class="form-label">Reject Hardware ID</label>
+                                                                    <div class="input input-group">
+                                                                        <select class="js-example-basic-multiple" id="winConnectorHardwareId" name="winConnectorHardwareId" multiple="multiple" title="" data-live-search="true" style="width: 100%">
+                                                                            <c:forEach items="${hwGroupList}" var="invInner">
+                                                                                <option value="${invInner.hardwareId}">${invInner.hardwareId}</option>
+                                                                            </c:forEach>
+                                                                        </select>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                            <div class="row gx-4">
+                                                                <div class="col-xl-2 col-sm-12 col-12">
+                                                                    <div class="mb-2">
+                                                                        <label for="winConnectorRejectQty" class="form-label">Reject Qty</label>
+                                                                        <div class="input input-group">
+                                                                            <input type="number" class="form-control" id="winConnectorRejectQty" name="winConnectorRejectQty" placeholder="" value="${itemVm.winConnectorRejectQty}">
                                                                         </div>
                                                                     </div>
                                                                 </div>
@@ -1590,6 +1733,43 @@
 
                                                                                 $(document).ready(function () {
 
+                                                                                    $('.js-example-basic-multiple').select2();
+                                                                                    var valueJsonPcb = ${valueJsonPcb};
+                                                                                    $('#pcbHardwareId').val(valueJsonPcb).trigger('change');
+                                                                                    
+                                                                                     var valueJsonHandle = ${valueJsonHandle};
+                                                                                    $('#handleHardwareId').val(valueJsonHandle).trigger('change');
+                                                                                    
+                                                                                     var valueJsonMetalFrame = ${valueJsonMetalFrame};
+                                                                                    $('#metalFrameHardwareId').val(valueJsonMetalFrame).trigger('change');
+                                                                                    
+                                                                                     var valueJsonHardwareFasterners = ${valueJsonHardwareFasterners};
+                                                                                    $('#hardwareFasternersHardwareId').val(valueJsonHardwareFasterners).trigger('change');
+                                                                                    
+                                                                                     var valueJsonClipHolder = ${valueJsonClipHolder};
+                                                                                    $('#clipHolderHardwareId').val(valueJsonClipHolder).trigger('change');
+                                                                                    
+                                                                                     var valueJsonPcbEdgeFinger = ${valueJsonPcbEdgeFinger};
+                                                                                    $('#pcbEdgeFingerHardwareId').val(valueJsonPcbEdgeFinger).trigger('change');
+                                                                                    
+                                                                                     var valueJsonConnector = ${valueJsonConnector};
+                                                                                    $('#connectorHardwareId').val(valueJsonConnector).trigger('change');
+                                                                                    
+                                                                                     var valueJsonDutSockets = ${valueJsonDutSockets};
+                                                                                    $('#dutSocketsHardwareId').val(valueJsonDutSockets).trigger('change');
+                                                                                    
+                                                                                     var valueJsonEdgeMbBanana = ${valueJsonEdgeMbBanana};
+                                                                                    $('#edgeMbBananaHardwareId').val(valueJsonEdgeMbBanana).trigger('change');
+                                                                                    
+                                                                                     var valueJsonElectComponent = ${valueJsonElectComponent};
+                                                                                    $('#electComponentHardwareId').val(valueJsonElectComponent).trigger('change');
+                                                                                    
+                                                                                     var valueJsonSolderJoint = ${valueJsonSolderJoint};
+                                                                                    $('#solderJointHardwareId').val(valueJsonSolderJoint).trigger('change');
+                                                                                    
+                                                                                     var valueJsonWinConnector = ${valueJsonWinConnector};
+                                                                                    $('#winConnectorHardwareId').val(valueJsonWinConnector).trigger('change');
+
                                                                                     var element2 = $('#viId');
                                                                                     if (element2.val()) {
                                                                                         $("#submitVm").attr("disabled", true);
@@ -1627,7 +1807,7 @@
                                                                                     $("#confirmation_modal .modal-body").html(deleteMsg);
                                                                                     $("#modal_button").attr("href", deleteUrl);
                                                                                 }
-                                                                                
+
                                                                                 function modalUndoFinalize(e) {
                                                                                     var groupId = $(e).attr("modaldeleteid");
                                                                                     var deleteUrl = "${contextPath}/rmsbookingDetail/undoFinalize/" + groupId;
@@ -1668,6 +1848,7 @@
                                                                                 const pcbRejectQty = document.getElementById('pcbRejectQty');
                                                                                 const pcbRejectUpload = document.getElementById('pcbRejectUpload');
                                                                                 const pcbAttach = document.getElementById('pcbAttach');
+                                                                                const pcbHardwareId = document.getElementById('pcbHardwareId');
 
                                                                                 const handlePass = document.getElementById('handle1');
                                                                                 const handleNa = document.getElementById('handle3');
@@ -1676,6 +1857,7 @@
                                                                                 const handleRejectQty = document.getElementById('handleRejectQty');
                                                                                 const handleRejectUpload = document.getElementById('handleRejectUpload');
                                                                                 const handleAttach = document.getElementById('handleAttach');
+                                                                                const handleHardwareId = document.getElementById('handleHardwareId');
 
                                                                                 const metalFramePass = document.getElementById('metalFrame1');
                                                                                 const metalFrameNa = document.getElementById('metalFrame3');
@@ -1684,6 +1866,7 @@
                                                                                 const metalFrameRejectQty = document.getElementById('metalFrameRejectQty');
                                                                                 const metalFrameRejectUpload = document.getElementById('metalFrameRejectUpload');
                                                                                 const metalFrameAttach = document.getElementById('metalFrameAttach');
+                                                                                const metalFrameHardwareId = document.getElementById('metalFrameHardwareId');
 
                                                                                 const hardwareFasternersPass = document.getElementById('hardwareFasterners1');
                                                                                 const hardwareFasternersNa = document.getElementById('hardwareFasterners3');
@@ -1692,6 +1875,7 @@
                                                                                 const hardwareFasternersRejectQty = document.getElementById('hardwareFasternersRejectQty');
                                                                                 const hardwareFasternersRejectUpload = document.getElementById('hardwareFasternersRejectUpload');
                                                                                 const hardwareFasternersAttach = document.getElementById('hardwareFasternersAttach');
+                                                                                const hardwareFasternersHardwareId = document.getElementById('hardwareFasternersHardwareId');
 
                                                                                 const clipHolderPass = document.getElementById('clipHolder1');
                                                                                 const clipHolderNa = document.getElementById('clipHolder3');
@@ -1700,6 +1884,7 @@
                                                                                 const clipHolderRejectQty = document.getElementById('clipHolderRejectQty');
                                                                                 const clipHolderRejectUpload = document.getElementById('clipHolderRejectUpload');
                                                                                 const clipHolderAttach = document.getElementById('clipHolderAttach');
+                                                                                const clipHolderHardwareId = document.getElementById('clipHolderHardwareId');
 
                                                                                 const pcbEdgeFingerPass = document.getElementById('pcbEdgeFinger1');
                                                                                 const pcbEdgeFingerNa = document.getElementById('pcbEdgeFinger3');
@@ -1708,6 +1893,7 @@
                                                                                 const pcbEdgeFingerRejectQty = document.getElementById('pcbEdgeFingerRejectQty');
                                                                                 const pcbEdgeFingerRejectUpload = document.getElementById('pcbEdgeFingerRejectUpload');
                                                                                 const pcbEdgeFingerAttach = document.getElementById('pcbEdgeFingerAttach');
+                                                                                const pcbEdgeFingerHardwareId = document.getElementById('pcbEdgeFingerHardwareId');
 
                                                                                 const connectorPass = document.getElementById('connector1');
                                                                                 const connectorNa = document.getElementById('connector3');
@@ -1716,6 +1902,7 @@
                                                                                 const connectorRejectQty = document.getElementById('connectorRejectQty');
                                                                                 const connectorRejectUpload = document.getElementById('connectorRejectUpload');
                                                                                 const connectorAttach = document.getElementById('connectorAttach');
+                                                                                const connectorHardwareId = document.getElementById('connectorHardwareId');
 
                                                                                 const dutSocketsPass = document.getElementById('dutSockets1');
                                                                                 const dutSocketsNa = document.getElementById('dutSockets3');
@@ -1724,6 +1911,7 @@
                                                                                 const dutSocketsRejectQty = document.getElementById('dutSocketsRejectQty');
                                                                                 const dutSocketsRejectUpload = document.getElementById('dutSocketsRejectUpload');
                                                                                 const dutSocketsAttach = document.getElementById('dutSocketsAttach');
+                                                                                const dutSocketsHardwareId = document.getElementById('dutSocketsHardwareId');
 
                                                                                 const edgeMbBananaPass = document.getElementById('edgeMbBanana1');
                                                                                 const edgeMbBananaNa = document.getElementById('edgeMbBanana3');
@@ -1732,6 +1920,7 @@
                                                                                 const edgeMbBananaRejectQty = document.getElementById('edgeMbBananaRejectQty');
                                                                                 const edgeMbBananaRejectUpload = document.getElementById('edgeMbBananaRejectUpload');
                                                                                 const edgeMbBananaAttach = document.getElementById('edgeMbBananaAttach');
+                                                                                const edgeMbBananaHardwareId = document.getElementById('edgeMbBananaHardwareId');
 
                                                                                 const electComponentPass = document.getElementById('electComponent1');
                                                                                 const electComponentNa = document.getElementById('electComponent3');
@@ -1740,6 +1929,7 @@
                                                                                 const electComponentRejectQty = document.getElementById('electComponentRejectQty');
                                                                                 const electComponentRejectUpload = document.getElementById('electComponentRejectUpload');
                                                                                 const electComponentAttach = document.getElementById('electComponentAttach');
+                                                                                const electComponentHardwareId = document.getElementById('electComponentHardwareId');
 
                                                                                 const solderJointPass = document.getElementById('solderJoint1');
                                                                                 const solderJointNa = document.getElementById('solderJoint3');
@@ -1748,6 +1938,7 @@
                                                                                 const solderJointRejectQty = document.getElementById('solderJointRejectQty');
                                                                                 const solderJointRejectUpload = document.getElementById('solderJointRejectUpload');
                                                                                 const solderJointAttach = document.getElementById('solderJointAttach');
+                                                                                const solderJointHardwareId = document.getElementById('solderJointHardwareId');
 
                                                                                 const winConnectorPass = document.getElementById('winConnector1');
                                                                                 const winConnectorNa = document.getElementById('winConnector3');
@@ -1756,6 +1947,7 @@
                                                                                 const winConnectorRejectQty = document.getElementById('winConnectorRejectQty');
                                                                                 const winConnectorRejectUpload = document.getElementById('winConnectorRejectUpload');
                                                                                 const winConnectorAttach = document.getElementById('winConnectorAttach');
+                                                                                const winConnectorHardwareId = document.getElementById('winConnectorHardwareId');
 
                                                                                 function handleRadioChange() {
                                                                                     if (pcbFail.checked) {
@@ -1764,8 +1956,12 @@
 
                                                                                         pcbRejectQty.disabled = false;
                                                                                         pcbRejectQty.required = true;
+                                                                                        
                                                                                         pcbRejectUpload.disabled = false;
                                                                                         pcbRejectUpload.required = true;
+                                                                                        
+                                                                                        pcbHardwareId.disabled = false;
+                                                                                        pcbHardwareId.required = true;
                                                                                     } else {
                                                                                         pcbRejectCriteria.disabled = true;  // enable button otherwise (e.g., if 'Pass' is checked)
                                                                                         pcbRejectCriteria.required = false;
@@ -1774,9 +1970,14 @@
                                                                                         pcbRejectQty.disabled = true;
                                                                                         pcbRejectQty.required = false;
                                                                                         pcbRejectQty.value = '';
+                                                                                        
                                                                                         pcbRejectUpload.disabled = true;
                                                                                         pcbRejectUpload.required = false;
                                                                                         pcbRejectUpload.value = '';
+                                                                                        
+                                                                                        pcbHardwareId.disabled = true;
+                                                                                        pcbHardwareId.required = false;
+                                                                                        pcbHardwareId.value = '';
                                                                                     }
                                                                                     if (handleFail.checked) {
                                                                                         handleRejectCriteria.disabled = false; // disable button if 'Fail' is checked
@@ -1784,8 +1985,12 @@
 
                                                                                         handleRejectQty.disabled = false;
                                                                                         handleRejectQty.required = true;
+                                                                                        
                                                                                         handleRejectUpload.disabled = false;
                                                                                         handleRejectUpload.required = true;
+                                                                                        
+                                                                                        handleHardwareId.disabled = false;
+                                                                                        handleHardwareId.required = true;
                                                                                     } else {
                                                                                         handleRejectCriteria.disabled = true;  // enable button otherwise (e.g., if 'Pass' is checked)
                                                                                         handleRejectCriteria.required = false;
@@ -1794,9 +1999,14 @@
                                                                                         handleRejectQty.disabled = true;
                                                                                         handleRejectQty.required = false;
                                                                                         handleRejectQty.value = '';
+                                                                                        
                                                                                         handleRejectUpload.disabled = true;
                                                                                         handleRejectUpload.required = false;
                                                                                         handleRejectUpload.value = '';
+                                                                                        
+                                                                                        handleHardwareId.disabled = true;
+                                                                                        handleHardwareId.required = false;
+                                                                                        handleHardwareId.value = '';
                                                                                     }
                                                                                     if (metalFrameFail.checked) {
                                                                                         metalFrameRejectCriteria.disabled = false; // disable button if 'Fail' is checked
@@ -1804,8 +2014,12 @@
 
                                                                                         metalFrameRejectQty.disabled = false;
                                                                                         metalFrameRejectQty.required = true;
+                                                                                        
                                                                                         metalFrameRejectUpload.disabled = false;
                                                                                         metalFrameRejectUpload.required = true;
+                                                                                        
+                                                                                        metalFrameHardwareId.disabled = false;
+                                                                                        metalFrameHardwareId.required = true;
                                                                                     } else {
                                                                                         metalFrameRejectCriteria.disabled = true;  // enable button otherwise (e.g., if 'Pass' is checked)
                                                                                         metalFrameRejectCriteria.required = false;
@@ -1814,9 +2028,14 @@
                                                                                         metalFrameRejectQty.disabled = true;
                                                                                         metalFrameRejectQty.required = false;
                                                                                         metalFrameRejectQty.value = '';
+                                                                                        
                                                                                         metalFrameRejectUpload.disabled = true;
                                                                                         metalFrameRejectUpload.required = false;
                                                                                         metalFrameRejectUpload.value = '';
+                                                                                        
+                                                                                        metalFrameHardwareId.disabled = true;
+                                                                                        metalFrameHardwareId.required = false;
+                                                                                        metalFrameHardwareId.value = '';
                                                                                     }
                                                                                     if (hardwareFasternersFail.checked) {
                                                                                         hardwareFasternersRejectCriteria.disabled = false; // disable button if 'Fail' is checked
@@ -1824,8 +2043,12 @@
 
                                                                                         hardwareFasternersRejectQty.disabled = false;
                                                                                         hardwareFasternersRejectQty.required = true;
+                                                                                        
                                                                                         hardwareFasternersRejectUpload.disabled = false;
                                                                                         hardwareFasternersRejectUpload.required = true;
+                                                                                        
+                                                                                        hardwareFasternersHardwareId.disabled = false;
+                                                                                        hardwareFasternersHardwareId.required = true;
                                                                                     } else {
                                                                                         hardwareFasternersRejectCriteria.disabled = true;  // enable button otherwise (e.g., if 'Pass' is checked)
                                                                                         hardwareFasternersRejectCriteria.required = false;
@@ -1834,9 +2057,14 @@
                                                                                         hardwareFasternersRejectQty.disabled = true;
                                                                                         hardwareFasternersRejectQty.required = false;
                                                                                         hardwareFasternersRejectQty.value = '';
+                                                                                        
                                                                                         hardwareFasternersRejectUpload.disabled = true;
                                                                                         hardwareFasternersRejectUpload.required = false;
                                                                                         hardwareFasternersRejectUpload.value = '';
+                                                                                        
+                                                                                        hardwareFasternersHardwareId.disabled = true;
+                                                                                        hardwareFasternersHardwareId.required = false;
+                                                                                        hardwareFasternersHardwareId.value = '';
                                                                                     }
                                                                                     if (clipHolderFail.checked) {
                                                                                         clipHolderRejectCriteria.disabled = false; // disable button if 'Fail' is checked
@@ -1844,8 +2072,12 @@
 
                                                                                         clipHolderRejectQty.disabled = false;
                                                                                         clipHolderRejectQty.required = true;
+                                                                                        
                                                                                         clipHolderRejectUpload.disabled = false;
                                                                                         clipHolderRejectUpload.required = true;
+                                                                                        
+                                                                                        clipHolderHardwareId.disabled = false;
+                                                                                        clipHolderHardwareId.required = true;
                                                                                     } else {
                                                                                         clipHolderRejectCriteria.disabled = true;  // enable button otherwise (e.g., if 'Pass' is checked)
                                                                                         clipHolderRejectCriteria.required = false;
@@ -1854,9 +2086,14 @@
                                                                                         clipHolderRejectQty.disabled = true;
                                                                                         clipHolderRejectQty.required = false;
                                                                                         clipHolderRejectQty.value = '';
+                                                                                        
                                                                                         clipHolderRejectUpload.disabled = true;
                                                                                         clipHolderRejectUpload.required = false;
                                                                                         clipHolderRejectUpload.value = '';
+                                                                                        
+                                                                                        clipHolderHardwareId.disabled = true;
+                                                                                        clipHolderHardwareId.required = false;
+                                                                                        clipHolderHardwareId.value = '';
                                                                                     }
                                                                                     if (pcbEdgeFingerFail.checked) {
                                                                                         pcbEdgeFingerRejectCriteria.disabled = false; // disable button if 'Fail' is checked
@@ -1864,8 +2101,12 @@
 
                                                                                         pcbEdgeFingerRejectQty.disabled = false;
                                                                                         pcbEdgeFingerRejectQty.required = true;
+                                                                                        
                                                                                         pcbEdgeFingerRejectUpload.disabled = false;
                                                                                         pcbEdgeFingerRejectUpload.required = true;
+                                                                                        
+                                                                                        pcbEdgeFingerHardwareId.disabled = false;
+                                                                                        pcbEdgeFingerHardwareId.required = true;
                                                                                     } else {
                                                                                         pcbEdgeFingerRejectCriteria.disabled = true;  // enable button otherwise (e.g., if 'Pass' is checked)
                                                                                         pcbEdgeFingerRejectCriteria.required = false;
@@ -1874,9 +2115,14 @@
                                                                                         pcbEdgeFingerRejectQty.disabled = true;
                                                                                         pcbEdgeFingerRejectQty.required = false;
                                                                                         pcbEdgeFingerRejectQty.value = '';
+                                                                                        
                                                                                         pcbEdgeFingerRejectUpload.disabled = true;
                                                                                         pcbEdgeFingerRejectUpload.required = false;
                                                                                         pcbEdgeFingerRejectUpload.value = '';
+                                                                                        
+                                                                                        pcbEdgeFingerHardwareId.disabled = true;
+                                                                                        pcbEdgeFingerHardwareId.required = false;
+                                                                                        pcbEdgeFingerHardwareId.value = '';
                                                                                     }
                                                                                     if (connectorFail.checked) {
                                                                                         connectorRejectCriteria.disabled = false; // disable button if 'Fail' is checked
@@ -1884,8 +2130,12 @@
 
                                                                                         connectorRejectQty.disabled = false;
                                                                                         connectorRejectQty.required = true;
+                                                                                        
                                                                                         connectorRejectUpload.disabled = false;
                                                                                         connectorRejectUpload.required = true;
+                                                                                        
+                                                                                        connectorHardwareId.disabled = false;
+                                                                                        connectorHardwareId.required = true;
                                                                                     } else {
                                                                                         connectorRejectCriteria.disabled = true;  // enable button otherwise (e.g., if 'Pass' is checked)
                                                                                         connectorRejectCriteria.required = false;
@@ -1894,9 +2144,14 @@
                                                                                         connectorRejectQty.disabled = true;
                                                                                         connectorRejectQty.required = false;
                                                                                         connectorRejectQty.value = '';
+                                                                                        
                                                                                         connectorRejectUpload.disabled = true;
                                                                                         connectorRejectUpload.required = false;
                                                                                         connectorRejectUpload.value = '';
+                                                                                        
+                                                                                        connectorHardwareId.disabled = true;
+                                                                                        connectorHardwareId.required = false;
+                                                                                        connectorHardwareId.value = '';
                                                                                     }
                                                                                     if (dutSocketsFail.checked) {
                                                                                         dutSocketsRejectCriteria.disabled = false; // disable button if 'Fail' is checked
@@ -1904,8 +2159,12 @@
 
                                                                                         dutSocketsRejectQty.disabled = false;
                                                                                         dutSocketsRejectQty.required = true;
+                                                                                        
                                                                                         dutSocketsRejectUpload.disabled = false;
                                                                                         dutSocketsRejectUpload.required = true;
+                                                                                        
+                                                                                        dutSocketsHardwareId.disabled = false;
+                                                                                        dutSocketsHardwareId.required = true;
                                                                                     } else {
                                                                                         dutSocketsRejectCriteria.disabled = true;  // enable button otherwise (e.g., if 'Pass' is checked)
                                                                                         dutSocketsRejectCriteria.required = false;
@@ -1914,9 +2173,14 @@
                                                                                         dutSocketsRejectQty.disabled = true;
                                                                                         dutSocketsRejectQty.required = false;
                                                                                         dutSocketsRejectQty.value = '';
+                                                                                        
                                                                                         dutSocketsRejectUpload.disabled = true;
                                                                                         dutSocketsRejectUpload.required = false;
                                                                                         dutSocketsRejectUpload.value = '';
+                                                                                        
+                                                                                        dutSocketsHardwareId.disabled = true;
+                                                                                        dutSocketsHardwareId.required = false;
+                                                                                        dutSocketsHardwareId.value = '';
                                                                                     }
                                                                                     if (edgeMbBananaFail.checked) {
                                                                                         edgeMbBananaRejectCriteria.disabled = false; // disable button if 'Fail' is checked
@@ -1924,8 +2188,12 @@
 
                                                                                         edgeMbBananaRejectQty.disabled = false;
                                                                                         edgeMbBananaRejectQty.required = true;
+                                                                                        
                                                                                         edgeMbBananaRejectUpload.disabled = false;
                                                                                         edgeMbBananaRejectUpload.required = true;
+                                                                                        
+                                                                                        edgeMbBananaHardwareId.disabled = false;
+                                                                                        edgeMbBananaHardwareId.required = true;
                                                                                     } else {
                                                                                         edgeMbBananaRejectCriteria.disabled = true;  // enable button otherwise (e.g., if 'Pass' is checked)
                                                                                         edgeMbBananaRejectCriteria.required = false;
@@ -1934,9 +2202,14 @@
                                                                                         edgeMbBananaRejectQty.disabled = true;
                                                                                         edgeMbBananaRejectQty.required = false;
                                                                                         edgeMbBananaRejectQty.value = '';
+                                                                                        
                                                                                         edgeMbBananaRejectUpload.disabled = true;
                                                                                         edgeMbBananaRejectUpload.required = false;
                                                                                         edgeMbBananaRejectUpload.value = '';
+                                                                                        
+                                                                                        edgeMbBananaHardwareId.disabled = true;
+                                                                                        edgeMbBananaHardwareId.required = false;
+                                                                                        edgeMbBananaHardwareId.value = '';
                                                                                     }
                                                                                     if (electComponentFail.checked) {
                                                                                         electComponentRejectCriteria.disabled = false; // disable button if 'Fail' is checked
@@ -1944,8 +2217,12 @@
 
                                                                                         electComponentRejectQty.disabled = false;
                                                                                         electComponentRejectQty.required = true;
+                                                                                        
                                                                                         electComponentRejectUpload.disabled = false;
                                                                                         electComponentRejectUpload.required = true;
+                                                                                        
+                                                                                         electComponentHardwareId.disabled = false;
+                                                                                        electComponentHardwareId.required = true;
                                                                                     } else {
                                                                                         electComponentRejectCriteria.disabled = true;  // enable button otherwise (e.g., if 'Pass' is checked)
                                                                                         electComponentRejectCriteria.required = false;
@@ -1954,9 +2231,14 @@
                                                                                         electComponentRejectQty.disabled = true;
                                                                                         electComponentRejectQty.required = false;
                                                                                         electComponentRejectQty.value = '';
+                                                                                        
                                                                                         electComponentRejectUpload.disabled = true;
                                                                                         electComponentRejectUpload.required = false;
                                                                                         electComponentRejectUpload.value = '';
+                                                                                        
+                                                                                        electComponentHardwareId.disabled = true;
+                                                                                        electComponentHardwareId.required = false;
+                                                                                        electComponentHardwareId.value = '';
                                                                                     }
                                                                                     if (solderJointFail.checked) {
                                                                                         solderJointRejectCriteria.disabled = false; // disable button if 'Fail' is checked
@@ -1964,8 +2246,12 @@
 
                                                                                         solderJointRejectQty.disabled = false;
                                                                                         solderJointRejectQty.required = true;
+                                                                                        
                                                                                         solderJointRejectUpload.disabled = false;
                                                                                         solderJointRejectUpload.required = true;
+                                                                                        
+                                                                                        solderJointHardwareId.disabled = false;
+                                                                                        solderJointHardwareId.required = true;
                                                                                     } else {
                                                                                         solderJointRejectCriteria.disabled = true;  // enable button otherwise (e.g., if 'Pass' is checked)
                                                                                         solderJointRejectCriteria.required = false;
@@ -1974,9 +2260,14 @@
                                                                                         solderJointRejectQty.disabled = true;
                                                                                         solderJointRejectQty.required = false;
                                                                                         solderJointRejectQty.value = '';
+                                                                                        
                                                                                         solderJointRejectUpload.disabled = true;
                                                                                         solderJointRejectUpload.required = false;
                                                                                         solderJointRejectUpload.value = '';
+                                                                                        
+                                                                                        solderJointHardwareId.disabled = true;
+                                                                                        solderJointHardwareId.required = false;
+                                                                                        solderJointHardwareId.value = '';
                                                                                     }
                                                                                     if (winConnectorFail.checked) {
                                                                                         winConnectorRejectCriteria.disabled = false; // disable button if 'Fail' is checked
@@ -1984,8 +2275,12 @@
 
                                                                                         winConnectorRejectQty.disabled = false;
                                                                                         winConnectorRejectQty.required = true;
+                                                                                        
                                                                                         winConnectorRejectUpload.disabled = false;
                                                                                         winConnectorRejectUpload.required = true;
+                                                                                        
+                                                                                        winConnectorHardwareId.disabled = false;
+                                                                                        winConnectorHardwareId.required = true;
                                                                                     } else {
                                                                                         winConnectorRejectCriteria.disabled = true;  // enable button otherwise (e.g., if 'Pass' is checked)
                                                                                         winConnectorRejectCriteria.required = false;
@@ -1994,9 +2289,14 @@
                                                                                         winConnectorRejectQty.disabled = true;
                                                                                         winConnectorRejectQty.required = false;
                                                                                         winConnectorRejectQty.value = '';
+                                                                                        
                                                                                         winConnectorRejectUpload.disabled = true;
                                                                                         winConnectorRejectUpload.required = false;
                                                                                         winConnectorRejectUpload.value = '';
+                                                                                        
+                                                                                        winConnectorHardwareId.disabled = true;
+                                                                                        winConnectorHardwareId.required = false;
+                                                                                        winConnectorHardwareId.value = '';
                                                                                     }
                                                                                 }
 

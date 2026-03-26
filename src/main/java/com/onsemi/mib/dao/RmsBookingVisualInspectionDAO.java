@@ -31,7 +31,16 @@ public class RmsBookingVisualInspectionDAO {
         QueryResult queryResult = new QueryResult();
         try {
             PreparedStatement ps = conn.prepareStatement(
-                    "INSERT INTO rms_booking_visual_inspection (group_id, module, pcb, pcb_reject, pcb_reject_upload, pcb_reject_qty, handle, handle_reject, handle_reject_upload, handle_reject_qty, metal_frame, metal_frame_reject, metal_frame_reject_upload, metal_frame_reject_qty, hardware_fasterners, hardware_fasterners_reject, hardware_fasterners_reject_upload, hardware_fasterners_reject_qty, clip_holder, clip_holder_reject, clip_holder_reject_upload, clip_holder_reject_qty, pcb_edge_finger, pcb_edge_finger_reject, pcb_edge_finger_reject_upload, pcb_edge_finger_reject_qty, connector, connector_reject, connector_reject_upload, connector_reject_qty, dut_sockets, dut_sockets_reject, dut_sockets_reject_upload, dut_sockets_reject_qty, edge_mb_banana, edge_mb_banana_reject, edge_mb_banana_reject_upload, edge_mb_banana_reject_qty, elect_component, elect_component_reject, elect_component_reject_upload, elect_component_reject_qty, solder_joint, solder_joint_reject, solder_joint_reject_upload, solder_joint_reject_qty, win_connector, win_connector_reject, win_connector_reject_upload, win_connector_reject_qty, remarks, final_status, created_by, created_date, flag) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,NOW(),?)", Statement.RETURN_GENERATED_KEYS
+                    "INSERT INTO rms_booking_visual_inspection (group_id, module, pcb, pcb_reject, pcb_reject_upload, pcb_reject_qty, handle, handle_reject, "
+                    + "handle_reject_upload, handle_reject_qty, metal_frame, metal_frame_reject, metal_frame_reject_upload, metal_frame_reject_qty, "
+                    + "hardware_fasterners, hardware_fasterners_reject, hardware_fasterners_reject_upload, hardware_fasterners_reject_qty, clip_holder, "
+                    + "clip_holder_reject, clip_holder_reject_upload, clip_holder_reject_qty, pcb_edge_finger, pcb_edge_finger_reject, pcb_edge_finger_reject_upload, "
+                    + "pcb_edge_finger_reject_qty, connector, connector_reject, connector_reject_upload, connector_reject_qty, dut_sockets, dut_sockets_reject, "
+                    + "dut_sockets_reject_upload, dut_sockets_reject_qty, edge_mb_banana, edge_mb_banana_reject, edge_mb_banana_reject_upload, edge_mb_banana_reject_qty, "
+                    + "elect_component, elect_component_reject, elect_component_reject_upload, elect_component_reject_qty, solder_joint, solder_joint_reject, "
+                    + "solder_joint_reject_upload, solder_joint_reject_qty, win_connector, win_connector_reject, win_connector_reject_upload, win_connector_reject_qty, "
+                    + "remarks, final_status, created_by, created_date, flag, pcb_hardware_id,handle_hardware_id,metal_frame_hardware_id,hardware_fasterners_hardware_id,clip_holder_hardware_id,"
+                    + "pcb_edge_finger_hardware_id,connector_hardware_id,dut_sockets_hardware_id,edge_mb_banana_hardware_id,elect_component_hardware_id,solder_joint_hardware_id,win_connector_hardware_id) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,NOW(),?,?,?,?,?,?,?,?,?,?,?,?,?)", Statement.RETURN_GENERATED_KEYS
             );
             ps.setString(1, rmsbookingVisualInspection.getGroupId());
             ps.setString(2, rmsbookingVisualInspection.getModule());
@@ -86,8 +95,19 @@ public class RmsBookingVisualInspectionDAO {
             ps.setString(51, rmsbookingVisualInspection.getRemarks());
             ps.setString(52, rmsbookingVisualInspection.getFinalStatus());
             ps.setString(53, rmsbookingVisualInspection.getCreatedBy());
-//            ps.setString(54, rmsbookingVisualInspection.getCreatedDate());
             ps.setString(54, rmsbookingVisualInspection.getFlag());
+            ps.setString(55, rmsbookingVisualInspection.getPcbHardwareId());
+            ps.setString(56, rmsbookingVisualInspection.getHandleHardwareId());
+            ps.setString(57, rmsbookingVisualInspection.getMetalFrameHardwareId());
+            ps.setString(58, rmsbookingVisualInspection.getHardwareFasternersHardwareId());
+            ps.setString(59, rmsbookingVisualInspection.getClipHolderHardwareId());
+            ps.setString(60, rmsbookingVisualInspection.getPcbEdgeFingerHardwareId());
+            ps.setString(61, rmsbookingVisualInspection.getConnectorHardwareId());
+            ps.setString(62, rmsbookingVisualInspection.getDutSocketsHardwareId());
+            ps.setString(63, rmsbookingVisualInspection.getEdgeMbBananaHardwareId());
+            ps.setString(64, rmsbookingVisualInspection.getElectComponentHardwareId());
+            ps.setString(65, rmsbookingVisualInspection.getSolderJointHardwareId());
+            ps.setString(66, rmsbookingVisualInspection.getWinConnectorHardwareId());
             queryResult.setResult(ps.executeUpdate());
             ResultSet rs = ps.getGeneratedKeys();
             if (rs.next()) {
@@ -394,6 +414,19 @@ public class RmsBookingVisualInspectionDAO {
                 rmsbookingVisualInspection.setCreatedBy(rs.getString("created_by"));
                 rmsbookingVisualInspection.setCreatedDate(rs.getString("created_date"));
                 rmsbookingVisualInspection.setFlag(rs.getString("flag"));
+                rmsbookingVisualInspection.setPcbHardwareId(rs.getString("pcb_hardware_id"));
+                rmsbookingVisualInspection.setHandleHardwareId(rs.getString("handle_hardware_id"));
+                rmsbookingVisualInspection.setMetalFrameHardwareId(rs.getString("metal_frame_hardware_id"));
+                rmsbookingVisualInspection.setHardwareFasternersHardwareId(rs.getString("hardware_fasterners_hardware_id"));
+                rmsbookingVisualInspection.setClipHolderHardwareId(rs.getString("clip_holder_hardware_id"));
+                rmsbookingVisualInspection.setPcbEdgeFingerHardwareId(rs.getString("pcb_edge_finger_hardware_id"));
+                rmsbookingVisualInspection.setConnectorHardwareId(rs.getString("connector_hardware_id"));
+                rmsbookingVisualInspection.setDutSocketsHardwareId(rs.getString("dut_sockets_hardware_id"));
+                rmsbookingVisualInspection.setEdgeMbBananaHardwareId(rs.getString("edge_mb_banana_hardware_id"));
+                rmsbookingVisualInspection.setElectComponentHardwareId(rs.getString("elect_component_hardware_id"));
+                rmsbookingVisualInspection.setSolderJointHardwareId(rs.getString("solder_joint_hardware_id"));
+                rmsbookingVisualInspection.setWinConnectorHardwareId(rs.getString("win_connector_hardware_id"));
+
             }
             rs.close();
             ps.close();

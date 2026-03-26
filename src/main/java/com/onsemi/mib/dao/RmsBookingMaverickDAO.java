@@ -46,7 +46,6 @@ public class RmsBookingMaverickDAO {
             ps.setString(12, rmsbookingMaverick.getStatus());
             ps.setString(13, rmsbookingMaverick.getFlag());
             ps.setString(14, rmsbookingMaverick.getCreatedBy());
-            ps.setString(15, rmsbookingMaverick.getCreatedDate());
             queryResult.setResult(ps.executeUpdate());
             ResultSet rs = ps.getGeneratedKeys();
             if (rs.next()) {
