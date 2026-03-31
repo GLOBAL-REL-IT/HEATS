@@ -226,14 +226,16 @@ public class RmsBookingDetailController {
                     eqpt.setNoCurrentFtp(Boolean.toString(getRMSBooking.getJSONObject(i).getBoolean("NoCurrentFTP")));
                 }
             }
+            if (getRMSBooking.getJSONObject(i).has("EventStartDate")) {
+                LocalDate dateBefore = LocalDate.parse(getRMSBooking.getJSONObject(i).getString("ActStartDate").substring(0, 10));
+                LocalDate dateAfter = LocalDate.parse(getRMSBooking.getJSONObject(i).getString("EventStartDate").substring(0, 10));
 
-            LocalDate dateBefore = LocalDate.parse(getRMSBooking.getJSONObject(i).getString("ActStartDate").substring(0, 10));
-            LocalDate dateAfter = LocalDate.parse(getRMSBooking.getJSONObject(i).getString("EventStartDate").substring(0, 10));
+                // Calculate the number of days between the two dates
+                long daysBetween = ChronoUnit.DAYS.between(dateBefore, dateAfter);
 
-            // Calculate the number of days between the two dates
-            long daysBetween = ChronoUnit.DAYS.between(dateBefore, dateAfter);
+                eqpt.setDaysToEventStart(Long.toString(daysBetween));
+            }
 
-            eqpt.setDaysToEventStart(Long.toString(daysBetween));
             if (eqpt.getFolFilename() == null || "".equals(eqpt.getFolFilename()) || "null".equals(eqpt.getFolFilename())) { //only display rms with no bib test file yet
 
                 eqpt.setStatus("New");
@@ -996,7 +998,7 @@ public class RmsBookingDetailController {
             itemVm = vmD.getRmsBookingVisualInspectionByGroupId(groupId);
         }
         model.addAttribute("itemVm", itemVm);
-        
+
         LOGGER.info("itemVm.getClipHolderHardwareId(): " + itemVm.getClipHolderHardwareId());
 
         if (itemVm.getPcbHardwareId() != null && !"".equals(itemVm.getPcbHardwareId())) {

@@ -265,14 +265,14 @@ public class HomeController {
                         eqpt.setNoCurrentFtp(Boolean.toString(getRMSBooking.getJSONObject(i).getBoolean("NoCurrentFTP")));
                     }
                 }
+                if (getRMSBooking.getJSONObject(i).has("EventStartDate")) {
+                    LocalDate dateBefore = LocalDate.parse(getRMSBooking.getJSONObject(i).getString("ActStartDate").substring(0, 10));
+                    LocalDate dateAfter = LocalDate.parse(getRMSBooking.getJSONObject(i).getString("EventStartDate").substring(0, 10));
+                    // Calculate the number of days between the two dates
+                    long daysBetween = ChronoUnit.DAYS.between(dateBefore, dateAfter);
+                    eqpt.setDaysToEventStart(Long.toString(daysBetween));
+                }
 
-                LocalDate dateBefore = LocalDate.parse(getRMSBooking.getJSONObject(i).getString("ActStartDate").substring(0, 10));
-                LocalDate dateAfter = LocalDate.parse(getRMSBooking.getJSONObject(i).getString("EventStartDate").substring(0, 10));
-
-                // Calculate the number of days between the two dates
-                long daysBetween = ChronoUnit.DAYS.between(dateBefore, dateAfter);
-
-                eqpt.setDaysToEventStart(Long.toString(daysBetween));
                 eqpt.setStatus("New");
                 eqpt.setFlag("0");
                 eqpt.setPriority("999"); // default
