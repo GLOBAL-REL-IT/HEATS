@@ -970,9 +970,7 @@ public class RmsBookingDetailController {
             @ModelAttribute UserSession userSession) throws IOException {
 
         String groupId = bookingId + "/" + itemPkid;
-
         model.addAttribute("groupId", groupId);
-
         model.addAttribute("userItemSfRecall", userSession.getItemSfRecall());
 
         RmsBookingDetailDAO rmsd = new RmsBookingDetailDAO();
@@ -987,6 +985,17 @@ public class RmsBookingDetailController {
         RmsBookingHardwareGroupDAO h2D = new RmsBookingHardwareGroupDAO();
         List<RmsBookingHardwareGroup> hwGroupList = h2D.getRmsBookingHardwareGroupListByGroupId(groupId);
         model.addAttribute("hwGroupList", hwGroupList);
+        
+        //get booking remarks
+        RmsBookingHardwareDAO rmsHD = new RmsBookingHardwareDAO();
+        int countRemarks = rmsHD.getCountHwWithRemarksByBookingPkid(bookingId);
+        if (countRemarks == 0) {
+            model.addAttribute("rmsRemarks", "");
+        } else {
+            rmsHD = new RmsBookingHardwareDAO();
+            RmsBookingHardware rmsRemarks = rmsHD.getRmsBookingHardwareRemarksByBookingPkid(bookingId);
+            model.addAttribute("rmsRemarks", rmsRemarks.getItemId());
+        }
 
         //vm tab
         RmsBookingVisualInspection itemVm = new RmsBookingVisualInspection();

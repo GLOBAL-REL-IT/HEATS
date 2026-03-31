@@ -2,15 +2,10 @@
 <%@include file="/WEB-INF/base/taglibs.jsp" %>
 <s:layout-render name="/WEB-INF/base/base.jsp">
     <s:layout-component name="page_css">
-        <!-- Data Tables -->
         <link rel="stylesheet" href="${contextPath}/resources/statflow/vendor/datatables/dataTables.bs5.css">
         <link rel="stylesheet" href="${contextPath}/resources/statflow/vendor/datatables/dataTables.bs5-custom.css">
         <link rel="stylesheet" href="${contextPath}/resources/statflow/vendor/datatables/buttons/dataTables.bs5-custom.css">
-        <!-- Bootstrap Select CSS -->
         <link rel="stylesheet" href="${contextPath}/resources/statflow/vendor/bs-select/bs-select.css">
-
-<!--        <link rel="stylesheet" href="${contextPath}/resources/vendor/DataTables/customitem/dataTables.dataTables.css"/>
-<link rel="stylesheet" href="${contextPath}/resources/vendor/DataTables/customitem/bootstrap.min.css"/>-->
     </s:layout-component>
     <s:layout-component name="page_css_inline">
         <style>
@@ -28,55 +23,43 @@
                 float:none;
                 text-align:right;
             }
-
             .input {
-                /*max-width: 190px;*/
-                /*padding: 0.875rem;*/
-                /*font-size: 1rem;*/
                 border: 1.5px solid #000;
                 border-radius: 0.5rem;
                 box-shadow: 2.5px 3px 0 #000;
                 outline: none;
                 transition: ease 0.25s;
             }
-
             .input:focus {
                 box-shadow: 5.5px 7px 0 black;
             }
-
             .no-border {
                 border: 0;
-                box-shadow: none;  /*You may want to include this as bootstrap applies these styles too */
+                box-shadow: none;
             }
-
             span.tab-space {
                 padding-left:20em;
             }
-
             .move-left {
                 width: auto;
                 box-shadow: none;
             }
-
             .form-group.required .form-label:after {
                 content:"*";
                 color:red;
             }
-
             .img3 {
-                width: 55px; /* Sets a fixed width */
-                height: 18px; /* Sets a fixed height */
+                width: 55px;
+                height: 18px;
             }
-
             .pending thead th {
-                background-color: #f06a0a; /* Light blue */
-                color: #FFFFFF; /* White text for contrast */
+                background-color: #f06a0a;
+                color: #FFFFFF;
             }
             div.dt-container {
                 width: 900px;
                 margin: 0 auto;
             }
-
             .offcanvas.offcanvas-start-recall {
                 top: 0;
                 left: 0;
@@ -86,7 +69,6 @@
                 transition: transform 0.2s ease-in-out;
                 ;
             }
-
             .offcanvas.offcanvas-start-EmailReplacement {
                 top: 0;
                 left: 0;
@@ -96,9 +78,6 @@
                 transition: transform 0.2s ease-in-out;
                 ;
             }
-
-
-            /* Make the second line subtler */
             .select2-option-line2 {
                 color: #6c757d;
                 font-size: .9em;
@@ -108,29 +87,42 @@
             .semi-bold {
                 font-weight: 500;
             }
-
         </style>
     </s:layout-component>
     <s:layout-component name="page_container">
-        <!-- Content wrapper start -->
         <div class="content-wrapper">
 
-            <!-- Row start -->
             <div class="row gx-4">
                 <nav class="navbar bg-body-tertiary">
                     <div class="container-fluid justify-content-start">
-                        <a href="${contextPath}/rmsbookingDetail" class="btn btn-outline-warning me-2" role="button">
-                            <i class='bi bi-arrow-bar-left'></i>&nbsp;&nbsp;Back</a>
+                        <a href="${contextPath}/rmsbookingDetail" class="btn btn-outline-warning me-2" role="button"><i class='bi bi-arrow-bar-left'></i>&nbsp;&nbsp;Back</a>
                     </div>
                 </nav>
                 <div class="col-sm-12 col-12">
-                    <!-- Card start -->
                     <div class="card mb-4">
                         <div class="card-header">
-                            <h5 class="card-title">HW Prep For Loading Module - <span style="color:#D97D55">Detail</span></h5>
+                            <h5 class="card-title d-flex justify-content-between align-items-center">
+                                <div>
+                                    HW Prep For Loading Module - <span style="color:#D97D55">Detail</span>
+                                </div>
+                                <c:choose>
+                                    <c:when test="${not empty rms.priority && rms.priority != '999'}">
+                                        <span class="text-danger">
+                                            Priority: 
+                                            <c:set var="priorityStr" value="${rms.priority.toString()}" />
+                                            <c:forEach var="i" begin="0" end="${fn:length(priorityStr) - 1}">
+                                                <c:set var="digit" value="${fn:substring(priorityStr, i, i + 1)}" />
+                                                <i class="bi bi-${digit}-square fs-4"></i>
+                                            </c:forEach>
+                                        </span>
+                                    </c:when>
+                                    <c:otherwise>
+                                        <span class="text-secondary">No Priority Set</span>
+                                    </c:otherwise>
+                                </c:choose>
+                            </h5>
                         </div>
                         <div class="card-body">
-                            <!-- Row start -->
                             <form class="row g-3 align-items-center" role="form" action="${contextPath}/xde apa pon" method="post">
                                 <div class="row mb-3">
                                     <div class="col-xl-2 col-sm-12 col-12">
@@ -216,7 +208,7 @@
                                         </div>
                                     </div>
                                     <c:if test="${rms.priority != '999'}">
-                                        <div class="col-xl-1 col-sm-12 col-12">
+                                        <div class="col-xl-1 col-sm-12 col-12 visually-hidden">
                                             <div class="mb-1">
                                                 <label for="itemId" class="form-label">Priority</label>
                                                 <div class="input input-group">
@@ -236,7 +228,7 @@
                                         </div>
                                     </c:if>
                                     <c:if test="${rms.priority == '999'}">
-                                        <div class="col-xl-1 col-sm-12 col-12">
+                                        <div class="col-xl-1 col-sm-12 col-12 visually-hidden">
                                             <div class="mb-1">
                                                 <label for="itemId" class="form-label">Priority</label>
                                                 <div class="input input-group">
@@ -273,7 +265,6 @@
                                     </div>
                                 </div>
 
-
                                 <!-- Form actions start -->
                                 <div class="col-md-12">
                                     <a type="button" data-bs-toggle="offcanvas" title="Request for HW Replacement"
@@ -281,25 +272,18 @@
                                         <i class="bi bi-envelope-arrow-up">&nbsp;&nbsp;Request for HW Replacement</i>
                                     </a>
                                 </div>
-                                <!-- Form actions end -->
                             </form>
-                            <!-- Row end -->
-
                         </div>
                     </div>
-                    <!-- Card end -->
                 </div>
             </div>
             <!-- Row end -->
 
             <!-- Row start -->
             <div class="row gx-4">
-
-
                 <div class="col-sm-6 col-12">
                     <div class="card mb-4">
                         <div class="card-body">
-
                             <!-- Row start -->
                             <div class="row gx-3">
                                 <!-- Personal Information Section -->
@@ -351,15 +335,6 @@
                                                             <td><c:out value="${parameterMaster.status}"/></td>
                                                         </c:otherwise>
                                                     </c:choose>
-                                                    <%--<c:if test="${parameterMaster.status == 'Available'}">--%>
-                                                        <!--<td style="color:green;" class="semi-bold"><c:out value="${parameterMaster.status}"/></td>-->
-                                                    <%--</c:if>--%>
-                                                    <%--<c:if test="${fn:contains(parameterMaster.status, 'Not Available')}">--%>
-                                                    <!--<td style="color:red;" class="semi-bold"><c:out value="${parameterMaster.status}"/></td>-->
-                                                    <%--</c:if>--%>
-                                                    <%--<c:if test="${parameterMaster.status == 'NA'}">--%>
-                                                    <!--<td><c:out value="${parameterMaster.status}"/></td>-->
-                                                    <%--</c:if>--%>
                                                     <td align="center">
                                                         <c:if test="${parameterMaster.status != 'NA'}">
                                                             <c:if test="${parameterMaster.recall == 'Yes'}">
@@ -368,13 +343,6 @@
                                                                     <i class="bi bi-house-up h4"></i>
                                                                 </a>
                                                             </c:if>
-                                                            <%--<c:if test="${parameterMaster.status.contains('Not Available')}">--%>
-                                                                <!--<a modaldeleteid="${parameterMaster.id}" type="button" data-bs-toggle="offcanvas" title="Email to Planner"-->
-                                                            <!--data-bs-target="#staticBackdrop" aria-controls="staticBackdrop" onclick="getData(this);">-->
-                                                            <!--<i class="bi bi-envelope-arrow-up h4"></i>-->
-                                                            <!--</a>-->
-                                                            <%--</c:if>--%>
-
                                                         </c:if>
                                                     </td>
                                                 </c:if>
@@ -409,7 +377,6 @@
                                         <table id="customButtons1" class="table custom-table pending">
                                             <thead>
                                                 <tr>
-                                                    <!--<th class="col-12">Site</th>-->
                                                     <th>No</th>
                                                     <th>Item Type</th>
                                                     <th>Item ID</th>
@@ -424,99 +391,73 @@
                                                     <tr>
                                                         <c:if test="${parameterMaster.flag == '99'}">
                                                             <td style="color:red" style="color:red"><strike><c:out value="${parameterMasterLoop.index+1}"/></strike></td>
-                                                    <td style="color:red" id="modal_delete_info_${parameterMaster.id}"><strike><c:out value="${parameterMaster.itemType}"/></strike></td>
-                                                    <td style="color:red"><strike><c:out value="${parameterMaster.itemId}"/></strike></td>
-                                                    <td style="color:red"><strike><c:out value="${parameterMaster.lcQty}"/></strike></td>
-                                                    <td style="color:red"><strike><c:out value="${parameterMaster.pcQty}"/></strike></td>
-                                                    <td style="color:red"><strike><c:out value="${parameterMaster.status}"/></strike></td>
-                                                    <td align="center">
-                                                    </td>
-                                                </c:if>
-                                                <c:if test="${parameterMaster.flag != '99'}">
-                                                    <td><c:out value="${parameterMasterLoop.index+1}"/></td>
-                                                    <td id="modal_delete_info_${parameterMaster.id}"><c:out value="${parameterMaster.itemType}"/></td>
-                                                    <td><c:out value="${parameterMaster.itemId}"/></td>
-                                                    <td><c:out value="${parameterMaster.lcQty}"/></td>
-                                                    <td><c:out value="${parameterMaster.pcQty}"/></td>
-                                                    <c:if test="${not empty parameterMaster.subStatus}">
-                                                        <c:set var="String" value="${parameterMaster.status}"/>
-                                                        <c:choose>
-                                                            <c:when test="${String eq 'Available'}">
-                                                                <td style="color:green" class="semi-bold"><c:out value="${parameterMaster.status} - ${parameterMaster.subStatus}"/></td> 
-                                                            </c:when>
-                                                            <c:when test="${(fn:contains(String, 'Not Available'))}">
-                                                                <td style="color:red;" class="semi-bold"><c:out value="${parameterMaster.status} - ${parameterMaster.subStatus}"/></td>  
-                                                            </c:when>
-                                                            <c:otherwise>
-                                                                <td><c:out value="${parameterMaster.status}"/></td> 
-                                                            </c:otherwise>
-                                                        </c:choose>
-
-                                                        <%--<c:if test="${parameterMaster.status == 'Available'}">--%>
-                                                            <!--<td style="color:green" class="semi-bold"><c:out value="${parameterMaster.status} - ${parameterMaster.subStatus}"/></td>-->  
-                                                        <%--</c:if>--%>
-                                                        <%--<c:if test="${parameterMaster.status != 'Available'}">--%>
-                                                            <!--<td style="color:red;" class="semi-bold"><c:out value="${parameterMaster.status} - ${parameterMaster.subStatus}"/></td>-->  
-                                                        <%--</c:if>--%>
+                                                        <td style="color:red" id="modal_delete_info_${parameterMaster.id}"><strike><c:out value="${parameterMaster.itemType}"/></strike></td>
+                                                        <td style="color:red"><strike><c:out value="${parameterMaster.itemId}"/></strike></td>
+                                                        <td style="color:red"><strike><c:out value="${parameterMaster.lcQty}"/></strike></td>
+                                                        <td style="color:red"><strike><c:out value="${parameterMaster.pcQty}"/></strike></td>
+                                                        <td style="color:red"><strike><c:out value="${parameterMaster.status}"/></strike></td>
+                                                        <td align="center">
+                                                        </td>
                                                     </c:if>
-                                                    <c:if test="${empty parameterMaster.subStatus}">
-                                                        <c:set var="String" value="${parameterMaster.status}"/>
-                                                        <c:choose>
-                                                            <c:when test="${String eq 'Available'}">
-                                                                <td style="color:green" class="semi-bold"><c:out value="${parameterMaster.status}"/></td>  
-                                                            </c:when>
-                                                            <c:when test="${(fn:contains(String, 'Not Available'))}">
-                                                                <td style="color:red" class="semi-bold"><c:out value="${parameterMaster.status}"/></td>  
-                                                            </c:when>
-                                                            <c:otherwise>
-                                                                <td><c:out value="${parameterMaster.status}"/></td>
-                                                            </c:otherwise>
-                                                        </c:choose>
-                                                        <%--<c:if test="${parameterMaster.status == 'Available'}">--%>
-                                                            <!--<td style="color:green" class="semi-bold"><c:out value="${parameterMaster.status}"/></td>-->  
-                                                        <%--</c:if>--%>
-                                                        <%--<c:if test="${fn:contains(parameterMaster.status, 'Not Available')}">--%>
-                                                        <!--<td style="color:red;" class="semi-bold"><c:out value="${parameterMaster.status}"/></td>-->  
-                                                        <%--</c:if>--%>
-                                                        <%--<c:if test="${parameterMaster.status == 'NA'}">--%>
-                                                    <!--<td><c:out value="${parameterMaster.status}"/></td>-->
-                                                        <%--</c:if>--%>
+                                                    <c:if test="${parameterMaster.flag != '99'}">
+                                                        <td><c:out value="${parameterMasterLoop.index+1}"/></td>
+                                                        <td id="modal_delete_info_${parameterMaster.id}"><c:out value="${parameterMaster.itemType}"/></td>
+                                                        <td><c:out value="${parameterMaster.itemId}"/></td>
+                                                        <td><c:out value="${parameterMaster.lcQty}"/></td>
+                                                        <td><c:out value="${parameterMaster.pcQty}"/></td>
+                                                        <c:if test="${not empty parameterMaster.subStatus}">
+                                                            <c:set var="String" value="${parameterMaster.status}"/>
+                                                            <c:choose>
+                                                                <c:when test="${String eq 'Available'}">
+                                                                    <td style="color:green" class="semi-bold"><c:out value="${parameterMaster.status} - ${parameterMaster.subStatus}"/></td> 
+                                                                </c:when>
+                                                                <c:when test="${(fn:contains(String, 'Not Available'))}">
+                                                                    <td style="color:red;" class="semi-bold"><c:out value="${parameterMaster.status} - ${parameterMaster.subStatus}"/></td>  
+                                                                </c:when>
+                                                                <c:otherwise>
+                                                                    <td><c:out value="${parameterMaster.status}"/></td> 
+                                                                </c:otherwise>
+                                                            </c:choose>
+                                                        </c:if>
+                                                        <c:if test="${empty parameterMaster.subStatus}">
+                                                            <c:set var="String" value="${parameterMaster.status}"/>
+                                                            <c:choose>
+                                                                <c:when test="${String eq 'Available'}">
+                                                                    <td style="color:green" class="semi-bold"><c:out value="${parameterMaster.status}"/></td>  
+                                                                </c:when>
+                                                                <c:when test="${(fn:contains(String, 'Not Available'))}">
+                                                                    <td style="color:red" class="semi-bold"><c:out value="${parameterMaster.status}"/></td>  
+                                                                </c:when>
+                                                                <c:otherwise>
+                                                                    <td><c:out value="${parameterMaster.status}"/></td>
+                                                                </c:otherwise>
+                                                            </c:choose>
+                                                        </c:if>
+                                                        <td align="center">
+                                                            <c:if test="${parameterMaster.recall == 'Yes'}">
+                                                                <a modaldeleteid="${parameterMaster.itemPkid}" modaldeleteid2="${parameterMaster.id}" type="button" data-bs-toggle="offcanvas" title="Recall from Storage Factory"
+                                                                   data-bs-target="#staticBackdropRecall" aria-controls="staticBackdropRecall" onclick="ajaxStorage(this);">
+                                                                    <i class="bi bi-house-up h4"></i>
+                                                                </a>
+                                                            </c:if>
+                                                            <c:if test="${parameterMaster.status == 'Available'}">
+                                                                <a href="${contextPath}/rmsbookingDetail/groupDetail/${parameterMaster.bookingPkid}/${parameterMaster.pkid}" class="table-link" title="Manage">
+                                                                    <i class="bi bi-box-arrow-in-right h3" style="color:orangered"></i>
+                                                                </a>
+                                                            </c:if>
+                                                        </td>
                                                     </c:if>
-                                                    <td align="center">
-                                                        <c:if test="${parameterMaster.recall == 'Yes'}">
-                                                            <a modaldeleteid="${parameterMaster.itemPkid}" modaldeleteid2="${parameterMaster.id}" type="button" data-bs-toggle="offcanvas" title="Recall from Storage Factory"
-                                                               data-bs-target="#staticBackdropRecall" aria-controls="staticBackdropRecall" onclick="ajaxStorage(this);">
-                                                                <i class="bi bi-house-up h4"></i>
-                                                            </a>
-                                                        </c:if>
-                                                        <%--<c:if test="${parameterMaster.status.contains('Not Available')}">--%>
-                                                            <!--<a modaldeleteid="${parameterMaster.id}" type="button" data-bs-toggle="offcanvas" title="Email to Planner"-->
-                                                        <!--data-bs-target="#staticBackdrop" aria-controls="staticBackdrop" onclick="getData(this);">-->
-                                                        <!--<i class="bi bi-envelope-arrow-up h4"></i>-->
-                                                        <!--</a>-->
-                                                        <%--</c:if>--%>
-                                                        <c:if test="${parameterMaster.status == 'Available'}">
-                                                            <a href="${contextPath}/rmsbookingDetail/groupDetail/${parameterMaster.bookingPkid}/${parameterMaster.pkid}" class="table-link" title="Manage">
-                                                                <i class="bi bi-box-arrow-in-right h3" style="color:orangered"></i>
-                                                            </a>
-                                                        </c:if>
-                                                    </td>
-                                                </c:if>
-                                                </tr>
-                                            </c:forEach>
+                                                    </tr>
+                                                </c:forEach>
                                             </tbody>
                                         </table>
                                     </div>
                                 </div>
                             </div>
-                            <!-- Row end -->
                         </div>
                     </div>
-                    <!-- Card end -->
                 </div>
             </div>
-            <!-- Row end -->
-
         </div>
         <!-- Content wrapper end -->
 
@@ -571,8 +512,8 @@
                             <div class="col-md-12">
                                 <button type="submit" id="submit" id="submit" class="btn btn-primary float-end">Send Email</button>
                             </div>
-
                             <!-- Form actions end -->
+
                         </form>
                     </div>
                 </div>
@@ -595,7 +536,6 @@
                                     <th class="col-2">Shelf</th>
                                     <th class="col-1">Qty</th>
                                     <th class="col-1">Inventory Date</th>
-                                    <!--<th class="col-2">Movement Type</th>-->
                                     <th class="col-1">Action</th>
                                 </tr>
                             </thead>
@@ -630,7 +570,6 @@
                                             </select>
                                         </div>
                                     </div>
-
                                 </div>
                             </div>
                             <div class="row mb-3">
@@ -647,8 +586,8 @@
                             <div class="col-md-12">
                                 <button type="submit" id="submit" id="submit" class="btn btn-primary float-end">Add</button>
                             </div>
-
                             <!-- Form actions end -->
+
                         </form>
                     </div>
                     <div class="row mb-3">
@@ -692,9 +631,9 @@
                         <c:if test="${countHwReplace != '0'}">
                             <c:if test="${countHwReplaceFlagZero != '0'}">
                                 <a type ="button" title="Send Email" data-bs-toggle="modal" data-bs-target="#confirmation_modal" class="btn btn-outline-warning me-2 float-end" role="button" onclick="sendEmail();">
-                                    <i class='bi bi-envelope-arrow-up'></i>&nbsp;&nbsp;Send Email to Planner</a>
-                                </c:if>
+                                <i class='bi bi-envelope-arrow-up'></i>&nbsp;&nbsp;Send Email to Planner</a>
                             </c:if>
+                        </c:if>
                     </div>
                 </div>
             </div>
@@ -710,8 +649,6 @@
         <!-- Data Tables -->
         <script src="${contextPath}/resources/statflow/vendor/datatables/dataTables.min.js"></script>
         <script src="${contextPath}/resources/statflow/vendor/datatables/dataTables.bootstrap.min.js"></script>
-
-        <!-- Custom Data tables -->
         <script src="${contextPath}/resources/statflow/vendor/datatables/custom/custom-datatables.js"></script>
 
         <!-- DataTable Buttons -->
@@ -730,146 +667,138 @@
     </s:layout-component>
     <s:layout-component name="page_js_inline">
         <script>
-                                    $(document).ready(function () {
-                                        $('.js-example-basic-single').select2();
-                                    });
+            $(document).ready(function () {
+                $('.js-example-basic-single').select2();
+            });
 
+            document.addEventListener('DOMContentLoaded', function () {
+                const url = new URL(window.location.href);
+                if (url.searchParams.get('saved') === '1') {
+                    const el = document.getElementById('staticBackdropEmailReplacement');
+                    if (el)
+                        bootstrap.Offcanvas.getOrCreateInstance(el).show();
+                    // Clean the URL so F5 or navigation won’t auto-open again
+                    url.searchParams.delete('saved');
+                    window.history.replaceState({}, '', url);
+                }
+            });
 
-                                    document.addEventListener('DOMContentLoaded', function () {
-                                        const url = new URL(window.location.href);
-                                        if (url.searchParams.get('saved') === '1') {
-                                            const el = document.getElementById('staticBackdropEmailReplacement');
-                                            if (el)
-                                                bootstrap.Offcanvas.getOrCreateInstance(el).show();
+            function modalDelete(e) {
+                var bookingDetailId = $("#id").val();
+                var deleteId = $(e).attr("modaldeleteid");
+                var deleteInfo = $("#modal_delete_info_" + deleteId).html();
+                var deleteUrl = "${contextPath}/rmsbookingDetail/deleteHwReplacement/" + deleteId + "/" + bookingDetailId;
+                var deleteMsg = "<f:message key='general.label.delete.confirmation'><f:param value='" + deleteInfo + "'/></f:message>";
+                $("#delete_modal .modal-body").html(deleteMsg);
+                $("#modal_delete_button").attr("href", deleteUrl);
+            }
 
-                                            // Clean the URL so F5 or navigation won’t auto-open again
-                                            url.searchParams.delete('saved');
-                                            window.history.replaceState({}, '', url);
-                                        }
-                                    });
+            function sendEmail() {
+                var bookingPkid = $("#bookingPkid").val();
+                var deleteUrl = "${contextPath}/rmsbookingDetail/sendEmailReplacementByGroup/" + bookingPkid;
+                var deleteMsg = "Are you sure want to send email to Planner for HW replacement?";
+                $("#confirmation_modal .modal-body").html(deleteMsg);
+                $("#modal_button").attr("href", deleteUrl);
+            }
 
-                                    function modalDelete(e) {
-                                        var bookingDetailId = $("#id").val();
-                                        var deleteId = $(e).attr("modaldeleteid");
-                                        var deleteInfo = $("#modal_delete_info_" + deleteId).html();
-                                        var deleteUrl = "${contextPath}/rmsbookingDetail/deleteHwReplacement/" + deleteId + "/" + bookingDetailId;
-                                        var deleteMsg = "<f:message key='general.label.delete.confirmation'><f:param value='" + deleteInfo + "'/></f:message>";
-                                        $("#delete_modal .modal-body").html(deleteMsg);
-                                        $("#modal_delete_button").attr("href", deleteUrl);
-                                    }
+            function getData(e) {
+                var id = $(e).attr("modaldeleteid");
+                $.ajax({
+                    url: '${contextPath}/rmsbookingDetail/emailBody', // Replace with your controller URL
+                    type: 'GET',
+                    data: {id: id},
+                    dataType: 'json',
+                    success: function (data) {
+                        // Populate form fields with received data
+                        $("#itemId2").val(data.itemId);
+                        $("#id2").val(data.id);
+                        $("#itemType").val(data.itemType);
+                    },
+                    error: function (jqXHR, textStatus, errorThrown) {
+                        console.error("Error loading data: " + textStatus, errorThrown);
+                    }
+                });
+            }
 
-                                    function sendEmail() {
-                                        var bookingPkid = $("#bookingPkid").val();
-                                        var deleteUrl = "${contextPath}/rmsbookingDetail/sendEmailReplacementByGroup/" + bookingPkid;
-                                        var deleteMsg = "Are you sure want to send email to Planner for HW replacement?";
-                                        $("#confirmation_modal .modal-body").html(deleteMsg);
-                                        $("#modal_button").attr("href", deleteUrl);
-                                    }
+            $(document).ready(function () {
+                $('.js-example-basic-single').select2();
+            });
 
-                                    function getData(e) {
-                                        var id = $(e).attr("modaldeleteid");
-                                        $.ajax({
-                                            url: '${contextPath}/rmsbookingDetail/emailBody', // Replace with your controller URL
-                                            type: 'GET',
-                                            data: {id: id},
-                                            dataType: 'json',
-                                            success: function (data) {
-                                                // Populate form fields with received data
-                                                $("#itemId2").val(data.itemId);
-                                                $("#id2").val(data.id);
-                                                $("#itemType").val(data.itemType);
-                                            },
-                                            error: function (jqXHR, textStatus, errorThrown) {
-                                                console.error("Error loading data: " + textStatus, errorThrown);
-                                            }
-                                        });
-                                    }
+            $(function () {
+                $("#customButtons1").DataTable({
+                    lengthMenu: [
+                        [10, 25, 50],
+                        [10, 25, 50, "All"],
+                    ],
+                    language: {
+                        lengthMenu: "Display _MENU_ Records Per Page",
+                        info: "Showing Page _PAGE_ of _PAGES_",
+                    },
+                    dom: "Blfrtip",
+                    buttons: ["copy", "csv", "pdf", "print"],
+                });
+            });
 
-                                    $(document).ready(function () {
-                                        $('.js-example-basic-single').select2();
-                                    });
+            $(function () {
+                $("#customButtons2").DataTable({
+                    lengthMenu: [
+                        [10, 25, 50],
+                        [10, 25, 50, "All"],
+                    ],
+                    language: {
+                        lengthMenu: "Display _MENU_ Records Per Page",
+                        info: "Showing Page _PAGE_ of _PAGES_",
+                    },
+                    dom: "Blfrtip",
+                    buttons: ["copy", "csv", "pdf", "print"],
+                });
+            });
 
-                                    $(function () {
-                                        $("#customButtons1").DataTable({
-                                            lengthMenu: [
-                                                [10, 25, 50],
-                                                [10, 25, 50, "All"],
-                                            ],
-                                            language: {
-                                                lengthMenu: "Display _MENU_ Records Per Page",
-                                                info: "Showing Page _PAGE_ of _PAGES_",
-                                            },
-                                            dom: "Blfrtip",
-                                            buttons: ["copy", "csv", "pdf", "print"],
-                                        });
-                                    });
+            function ajaxStorage(e) {
+                var itemPKID = $(e).attr("modaldeleteid");
+                var id = $(e).attr("modaldeleteid2");
+                $('#listStorage').DataTable().destroy();
+                new DataTable('#listStorage', {
+                    ajax: {
+                        data: {itemPKID: itemPKID},
+                        url: '${contextPath}/hw/item/ajaxStorage',
+                        dataSrc: ''
+                    },
+                    columns: [
+                        {"data": "itemId"},
+                        {"data": "boxNo"},
+                        {"data": "rack"},
+                        {"data": "shelf"},
+                        {"data": "qty"},
+                        {"data": "movementDateTime"},
+                        {
+                            data: "invId", // This column won't directly map to a data field
+                            render: function (data, type, row) {
+                                return '<c:if test="${userItemSfRecall == 'Yes'}"><button class="btn btn-primary edit-btn" data-inv="' + data + '" data-pkid="' + itemPKID + '" data-id="' + id + '" data-bs-toggle="modal" data-bs-target="#confirmation_modal">Recall</button></c:if>';
+                            }
+                        }
+                    ]
+                });
+            }
 
-                                    $(function () {
-                                        $("#customButtons2").DataTable({
-                                            lengthMenu: [
-                                                [10, 25, 50],
-                                                [10, 25, 50, "All"],
-                                            ],
-                                            language: {
-                                                lengthMenu: "Display _MENU_ Records Per Page",
-                                                info: "Showing Page _PAGE_ of _PAGES_",
-                                            },
-                                            dom: "Blfrtip",
-                                            buttons: ["copy", "csv", "pdf", "print"],
-                                        });
-                                    });
-
-                                    function ajaxStorage(e) {
-                                        var itemPKID = $(e).attr("modaldeleteid");
-                                        var id = $(e).attr("modaldeleteid2");
-                                        $('#listStorage').DataTable().destroy();
-                                        new DataTable('#listStorage', {
-                                            ajax: {
-                                                data: {itemPKID: itemPKID},
-                                                url: '${contextPath}/hw/item/ajaxStorage',
-                                                dataSrc: ''
-                                            },
-                                            columns: [
-                                                {"data": "itemId"},
-                                                {"data": "boxNo"},
-                                                {"data": "rack"},
-                                                {"data": "shelf"},
-                                                {"data": "qty"},
-                                                {"data": "movementDateTime"},
-                                                //                                                           {"data": "movementType"},
-                                                {
-                                                    data: "invId", // This column won't directly map to a data field
-                                                    render: function (data, type, row) {
-                                                        return '<c:if test="${userItemSfRecall == 'Yes'}"><button class="btn btn-primary edit-btn" data-inv="' + data + '" data-pkid="' + itemPKID + '" data-id="' + id + '" data-bs-toggle="modal" data-bs-target="#confirmation_modal">Recall</button></c:if>';
-                                                        // 'row' contains the entire data object for the current row
-
-                                                    }
-                                                }
-                                            ],
-                                            //                                                        processing: true,
-                                        });
-                                    }
-
-                                    $('#listStorage tbody').on('click', '.edit-btn', function () {
-                                        var rowInv = $(this).data('inv'); // Get the 'data-id' attribute
-                                        var rowPkid = $(this).data('pkid'); // Get the 'data-id' attribute
-                                        var rowId = $(this).data('id'); // Get the 'data-id' attribute
-                                        var rmsBookingId = $("#id").val();
-                                        // Perform further actions, e.g., open a modal for editing
-                                        if (rowId) {
-//                                                                       alert(rowInv + " | " + rowPkid + " | "+ rowId + " | "+ rmsBookingId);
-                                            var deleteUrl = "${contextPath}/rmsbookingDetail/retrieveSF/" + rowInv + "/" + rowPkid + "/" + rowId + "/" + rmsBookingId;
-                                            var deleteMsg = "Are you sure want to retrieve this item from Storage Factory?";
-                                            $("#confirmation_modal .modal-body").html(deleteMsg);
-                                            $("#modal_button").attr("href", deleteUrl);
-                                        } else {
-                                            var deleteUrl = "";
-                                            var deleteMsg = "No Item Selected.";
-                                            $("#confirmation_modal .modal-body").html(deleteMsg);
-                                            $("#modal_button").attr("href", deleteUrl);
-                                        }
-
-                                    });
+            $('#listStorage tbody').on('click', '.edit-btn', function () {
+                var rowInv = $(this).data('inv'); // Get the 'data-id' attribute
+                var rowPkid = $(this).data('pkid'); // Get the 'data-id' attribute
+                var rowId = $(this).data('id'); // Get the 'data-id' attribute
+                var rmsBookingId = $("#id").val();
+                // Perform further actions, e.g., open a modal for editing
+                if (rowId) {
+                    var deleteUrl = "${contextPath}/rmsbookingDetail/retrieveSF/" + rowInv + "/" + rowPkid + "/" + rowId + "/" + rmsBookingId;
+                    var deleteMsg = "Are you sure want to retrieve this item from Storage Factory?";
+                    $("#confirmation_modal .modal-body").html(deleteMsg);
+                    $("#modal_button").attr("href", deleteUrl);
+                } else {
+                    var deleteUrl = "";
+                    var deleteMsg = "No Item Selected.";
+                    $("#confirmation_modal .modal-body").html(deleteMsg);
+                    $("#modal_button").attr("href", deleteUrl);
+                }
+            });
         </script>
     </s:layout-component>
 </s:layout-render>

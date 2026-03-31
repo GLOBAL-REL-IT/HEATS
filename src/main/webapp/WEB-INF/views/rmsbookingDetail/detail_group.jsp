@@ -2,15 +2,10 @@
 <%@include file="/WEB-INF/base/taglibs.jsp" %>
 <s:layout-render name="/WEB-INF/base/base.jsp">
     <s:layout-component name="page_css">
-        <!-- Data Tables -->
         <link rel="stylesheet" href="${contextPath}/resources/statflow/vendor/datatables/dataTables.bs5.css">
         <link rel="stylesheet" href="${contextPath}/resources/statflow/vendor/datatables/dataTables.bs5-custom.css">
         <link rel="stylesheet" href="${contextPath}/resources/statflow/vendor/datatables/buttons/dataTables.bs5-custom.css">
-        <!-- Bootstrap Select CSS -->
         <link rel="stylesheet" href="${contextPath}/resources/statflow/vendor/bs-select/bs-select.css">
-
-<!--        <link rel="stylesheet" href="${contextPath}/resources/vendor/DataTables/customitem/dataTables.dataTables.css"/>
-<link rel="stylesheet" href="${contextPath}/resources/vendor/DataTables/customitem/bootstrap.min.css"/>-->
     </s:layout-component>
     <s:layout-component name="page_css_inline">
         <style>
@@ -98,14 +93,12 @@
                 transition: transform 0.2s ease-in-out;
                 ;
             }
-
         </style>
     </s:layout-component>
     <s:layout-component name="page_container">
         <!-- Content wrapper start -->
         <div class="content-wrapper">
 
-            <!-- Row start -->
             <div class="row gx-4">
                 <nav class="navbar bg-body-tertiary">
                     <div class="container-fluid justify-content-start">
@@ -114,13 +107,30 @@
                     </div>
                 </nav>
                 <div class="col-sm-12 col-12">
-                    <!-- Card start -->
                     <div class="card mb-4">
                         <div class="card-header">
-                            <h5 class="card-title">HW Prep For Loading Module - <span style="color:#D97D55">Detail (${motherboardId})</span></h5>
+                            <h5 class="card-title d-flex justify-content-between align-items-center">
+                                <div>
+                                    HW Prep For Loading Module - <span style="color:#D97D55">Detail (${motherboardId})</span>
+                                </div>
+                                <c:choose>
+                                    <c:when test="${not empty rms.priority && rms.priority != '999'}">
+                                        <span class="text-danger">
+                                            Priority: 
+                                            <c:set var="priorityStr" value="${rms.priority.toString()}" />
+                                            <c:forEach var="i" begin="0" end="${fn:length(priorityStr) - 1}">
+                                                <c:set var="digit" value="${fn:substring(priorityStr, i, i + 1)}" />
+                                                <i class="bi bi-${digit}-square fs-4"></i>
+                                            </c:forEach>
+                                        </span>
+                                    </c:when>
+                                    <c:otherwise>
+                                        <span class="text-secondary">No Priority Set</span>
+                                    </c:otherwise>
+                                </c:choose>
+                            </h5>
                         </div>
                         <div class="card-body">
-                            <!-- Row start -->
                             <form class="row g-3 align-items-center" role="form" action="${contextPath}/xde apa pon" method="post">
                                 <div class="row mb-3">
                                     <div class="col-xl-2 col-sm-12 col-12">
@@ -207,7 +217,7 @@
                                         </div>
                                     </div>
                                     <c:if test="${rms.priority != '999'}">
-                                        <div class="col-xl-1 col-sm-12 col-12">
+                                        <div class="col-xl-1 col-sm-12 col-12 visually-hidden">
                                             <div class="mb-1">
                                                 <label for="itemId" class="form-label">Priority</label>
                                                 <div class="input input-group">
@@ -215,19 +225,19 @@
                                                 </div>
                                             </div>
                                         </div>
-                                </div>
-                                <div class="row mb-3">
-                                    <div class="col-xl-3 col-sm-12 col-12">
-                                        <div class="mb-1">
-                                            <label for="itemId" class="form-label">Priority Remarks</label>
-                                            <div class="input input-group">
-                                                <textarea class="form-control" rows="5" id="remarks" name="remarks" readonly>${rms.priorityRemarks}</textarea>
+                                    </div>
+                                    <div class="row mb-3">
+                                        <div class="col-xl-3 col-sm-12 col-12">
+                                            <div class="mb-1">
+                                                <label for="itemId" class="form-label">Priority Remarks</label>
+                                                <div class="input input-group">
+                                                    <textarea class="form-control" rows="5" id="remarks" name="remarks" readonly>${rms.priorityRemarks}</textarea>
+                                                </div>
                                             </div>
                                         </div>
-                                    </div>
                                     </c:if>
                                     <c:if test="${rms.priority == '999'}">
-                                        <div class="col-xl-1 col-sm-12 col-12">
+                                        <div class="col-xl-1 col-sm-12 col-12 visually-hidden">
                                             <div class="mb-1">
                                                 <label for="itemId" class="form-label">Priority</label>
                                                 <div class="input input-group">
@@ -235,18 +245,18 @@
                                                 </div>
                                             </div>
                                         </div>
-                                </div>
-                                <div class="row mb-3">
-                                    <div class="col-xl-3 col-sm-12 col-12">
-                                        <div class="mb-1">
-                                            <label for="itemId" class="form-label">Priority Remarks</label>
-                                            <div class="input input-group">
-                                                <textarea class="form-control" rows="5" id="remarks" name="remarks" readonly></textarea>
+                                    </div>
+                                    <div class="row mb-3">
+                                        <div class="col-xl-3 col-sm-12 col-12">
+                                            <div class="mb-1">
+                                                <label for="itemId" class="form-label">Priority Remarks</label>
+                                                <div class="input input-group">
+                                                    <textarea class="form-control" rows="5" id="remarks" name="remarks" readonly></textarea>
+                                                </div>
                                             </div>
                                         </div>
-                                    </div>
                                     </c:if>
-                                    <div class="col-xl-3 col-sm-12 col-12">
+                                    <div class="col-xl-3 col-sm-12 col-12 visually-hidden">
                                         <div class="mb-1">
                                             <label for="itemId" class="form-label">FOL filename</label>
                                             <div class="input input-group">
@@ -264,11 +274,8 @@
                                     </div>
                                 </div>
                             </form>
-                            <!-- Row end -->
-
                         </div>
                     </div>
-                    <!-- Card end -->
                 </div>
             </div>
             <!-- Row end -->
@@ -295,9 +302,6 @@
                                 </ul>
                                 <div class="tab-content" id="customTabContent">
                                     <div class="tab-pane fade ${hwActiveTab}" id="oneAAA" role="tabpanel">
-                                        <!--differentiate form attribute based on item type-->
-                                        <!--<div class="initial" id="initial">-->
-                                        <!--<br>-->
                                         <!-- Row start -->
                                         <div class="col-12">
                                             <div class="card mb-4">
@@ -373,35 +377,31 @@
                                                                         </tr>
                                                                     </thead>
                                                                     <tbody>
-                                                                    <c:forEach items="${hwGroupList}" var="parameterMaster" varStatus="parameterMasterLoop">
-                                                                        <tr>
-                                                                            <td><c:out value="${parameterMasterLoop.index+1}"/></td>
-                                                                        <td id="modal_delete_info_${parameterMaster.id}"><c:out value="${parameterMaster.hardwareId}"/></td>
-                                                                        <td><c:out value="${parameterMaster.itemType}"/></td>
-                                                                        <td><c:out value="${parameterMaster.itemId}"/></td>
-                                                                        <td><c:out value="${parameterMaster.createdBy}"/></td>
-                                                                        <td><c:out value="${parameterMaster.createdDate}"/></td>
-                                                                        <td align="center">
-                                                                        <c:if test="${subStatus == 'Pending HW Registration'}">
-                                                                            <a modaldeleteid="${parameterMaster.id}" type ="button" title="Delete" data-bs-toggle="modal" data-bs-target="#delete_modal" class="table-link danger group_delete" onclick="modalDelete(this);">
-                                                                                <i class="bi bi-trash h3" style="color:red"></i>
-                                                                            </a> 
-                                                                        </c:if>
-
-                                                                        </td>
-                                                                        </tr>
-                                                                    </c:forEach>
+                                                                        <c:forEach items="${hwGroupList}" var="parameterMaster" varStatus="parameterMasterLoop">
+                                                                            <tr>
+                                                                                <td><c:out value="${parameterMasterLoop.index+1}"/></td>
+                                                                                <td id="modal_delete_info_${parameterMaster.id}"><c:out value="${parameterMaster.hardwareId}"/></td>
+                                                                                <td><c:out value="${parameterMaster.itemType}"/></td>
+                                                                                <td><c:out value="${parameterMaster.itemId}"/></td>
+                                                                                <td><c:out value="${parameterMaster.createdBy}"/></td>
+                                                                                <td><c:out value="${parameterMaster.createdDate}"/></td>
+                                                                                <td align="center">
+                                                                                    <c:if test="${subStatus == 'Pending HW Registration'}">
+                                                                                        <a modaldeleteid="${parameterMaster.id}" type ="button" title="Delete" data-bs-toggle="modal" data-bs-target="#delete_modal" class="table-link danger group_delete" onclick="modalDelete(this);">
+                                                                                            <i class="bi bi-trash h3" style="color:red"></i>
+                                                                                        </a> 
+                                                                                    </c:if>
+                                                                                </td>
+                                                                            </tr>
+                                                                        </c:forEach>
                                                                     </tbody>
                                                                 </table>
                                                             </div>
                                                         </div>
                                                     </div>
-                                                    <!-- Row end -->
                                                 </div>
                                             </div>
-                                            <!-- Card end -->
                                         </div>
-                                        <!--</div>-->
                                     </div> 
                                     <div class="tab-pane fade ${vmActiveTab}" id="twoAAA" role="tabpanel">
                                         <div class="row gx-4">
@@ -418,26 +418,26 @@
                                                                             <input type="hidden" class="form-control" id="bookingPkid" name="bookingPkid" placeholder="" value="${rms.bookingPkid}">
                                                                             <input class="form-check-input" type="radio" name="pcb" id="pcb1"
                                                                                    value="Pass" <c:if test="${itemVm.pcb == 'Pass'}">checked</c:if> required>
-                                                                            <label class="form-check-label" for="inlineRadio1">Pass</label>
-                                                                        </div>
-                                                                        <div class="form-check form-check-inline">
-                                                                            <input class="form-check-input" type="radio" name="pcb" id="pcb2"
-                                                                                   value="Fail" <c:if test="${itemVm.pcb == 'Fail'}">checked</c:if> >
-                                                                            <label class="form-check-label" for="inlineRadio2">Fail</label>
-                                                                        </div>
-                                                                        <div class="form-check form-check-inline">
-                                                                            <input class="form-check-input" type="radio" name="pcb" id="pcb3"
-                                                                                   value="NA" <c:if test="${itemVm.pcb == 'NA'}">checked</c:if> >
-                                                                            <label class="form-check-label" for="inlineRadio3">NA</label>
+                                                                                   <label class="form-check-label" for="inlineRadio1">Pass</label>
+                                                                            </div>
+                                                                            <div class="form-check form-check-inline">
+                                                                                <input class="form-check-input" type="radio" name="pcb" id="pcb2"
+                                                                                       value="Fail" <c:if test="${itemVm.pcb == 'Fail'}">checked</c:if> >
+                                                                                <label class="form-check-label" for="inlineRadio2">Fail</label>
+                                                                            </div>
+                                                                            <div class="form-check form-check-inline">
+                                                                                <input class="form-check-input" type="radio" name="pcb" id="pcb3"
+                                                                                       value="NA" <c:if test="${itemVm.pcb == 'NA'}">checked</c:if> >
+                                                                                <label class="form-check-label" for="inlineRadio3">NA</label>
+                                                                            </div>
                                                                         </div>
                                                                     </div>
                                                                 </div>
-                                                            </div>
-                                                            <div class="col-xl-12 col-sm-12 col-12">
-                                                                <div class="mb-2">
-                                                                    <label for="pcbHardwareId" class="form-label">Reject Hardware ID</label>
-                                                                    <div class="input input-group">
-                                                                        <select class="js-example-basic-multiple" id="pcbHardwareId" name="pcbHardwareId" multiple="multiple" title="" data-live-search="true" style="width: 100%">
+                                                                <div class="col-xl-12 col-sm-12 col-12">
+                                                                    <div class="mb-2">
+                                                                        <label for="pcbHardwareId" class="form-label">Reject Hardware ID</label>
+                                                                        <div class="input input-group">
+                                                                            <select class="js-example-basic-multiple" id="pcbHardwareId" name="pcbHardwareId" multiple="multiple" title="" data-live-search="true" style="width: 100%">
                                                                             <c:forEach items="${hwGroupList}" var="invInner">
                                                                                 <option value="${invInner.hardwareId}">${invInner.hardwareId}</option>
                                                                             </c:forEach>
@@ -496,26 +496,26 @@
                                                                         <div class="form-check form-check-inline">
                                                                             <input class="form-check-input" type="radio" name="handle" id="handle1"
                                                                                    value="Pass" <c:if test="${itemVm.handle == 'Pass'}">checked</c:if> required>
-                                                                            <label class="form-check-label" for="handle1">Pass</label>
-                                                                        </div>
-                                                                        <div class="form-check form-check-inline">
-                                                                            <input class="form-check-input" type="radio" name="handle" id="handle2"
-                                                                                   value="Fail" <c:if test="${itemVm.handle == 'Fail'}">checked</c:if> >
-                                                                            <label class="form-check-label" for="handle2">Fail</label>
-                                                                        </div>
-                                                                        <div class="form-check form-check-inline">
-                                                                            <input class="form-check-input" type="radio" name="handle" id="handle3"
-                                                                                   value="NA" <c:if test="${itemVm.handle == 'NA'}">checked</c:if> >
-                                                                            <label class="form-check-label" for="handle3">NA</label>
+                                                                                   <label class="form-check-label" for="handle1">Pass</label>
+                                                                            </div>
+                                                                            <div class="form-check form-check-inline">
+                                                                                <input class="form-check-input" type="radio" name="handle" id="handle2"
+                                                                                       value="Fail" <c:if test="${itemVm.handle == 'Fail'}">checked</c:if> >
+                                                                                <label class="form-check-label" for="handle2">Fail</label>
+                                                                            </div>
+                                                                            <div class="form-check form-check-inline">
+                                                                                <input class="form-check-input" type="radio" name="handle" id="handle3"
+                                                                                       value="NA" <c:if test="${itemVm.handle == 'NA'}">checked</c:if> >
+                                                                                <label class="form-check-label" for="handle3">NA</label>
+                                                                            </div>
                                                                         </div>
                                                                     </div>
                                                                 </div>
-                                                            </div>
-                                                            <div class="col-xl-12 col-sm-12 col-12">
-                                                                <div class="mb-2">
-                                                                    <label for="handleHardwareId" class="form-label">Reject Hardware ID</label>
-                                                                    <div class="input input-group">
-                                                                        <select class="js-example-basic-multiple" id="handleHardwareId" name="handleHardwareId" multiple="multiple" title="" data-live-search="true" style="width: 100%">
+                                                                <div class="col-xl-12 col-sm-12 col-12">
+                                                                    <div class="mb-2">
+                                                                        <label for="handleHardwareId" class="form-label">Reject Hardware ID</label>
+                                                                        <div class="input input-group">
+                                                                            <select class="js-example-basic-multiple" id="handleHardwareId" name="handleHardwareId" multiple="multiple" title="" data-live-search="true" style="width: 100%">
                                                                             <c:forEach items="${hwGroupList}" var="invInner">
                                                                                 <option value="${invInner.hardwareId}">${invInner.hardwareId}</option>
                                                                             </c:forEach>
@@ -574,26 +574,26 @@
                                                                         <div class="form-check form-check-inline">
                                                                             <input class="form-check-input" type="radio" name="metalFrame" id="metalFrame1"
                                                                                    value="Pass" <c:if test="${itemVm.metalFrame == 'Pass'}">checked</c:if> required>
-                                                                            <label class="form-check-label" for="metalFrame1">Pass</label>
-                                                                        </div>
-                                                                        <div class="form-check form-check-inline">
-                                                                            <input class="form-check-input" type="radio" name="metalFrame" id="metalFrame2"
-                                                                                   value="Fail" <c:if test="${itemVm.metalFrame == 'Fail'}">checked</c:if> >
-                                                                            <label class="form-check-label" for="metalFrame2">Fail</label>
-                                                                        </div>
-                                                                        <div class="form-check form-check-inline">
-                                                                            <input class="form-check-input" type="radio" name="metalFrame" id="metalFrame3"
-                                                                                   value="NA" <c:if test="${itemVm.metalFrame == 'NA'}">checked</c:if> >
-                                                                            <label class="form-check-label" for="metalFrame">NA</label>
+                                                                                   <label class="form-check-label" for="metalFrame1">Pass</label>
+                                                                            </div>
+                                                                            <div class="form-check form-check-inline">
+                                                                                <input class="form-check-input" type="radio" name="metalFrame" id="metalFrame2"
+                                                                                       value="Fail" <c:if test="${itemVm.metalFrame == 'Fail'}">checked</c:if> >
+                                                                                <label class="form-check-label" for="metalFrame2">Fail</label>
+                                                                            </div>
+                                                                            <div class="form-check form-check-inline">
+                                                                                <input class="form-check-input" type="radio" name="metalFrame" id="metalFrame3"
+                                                                                       value="NA" <c:if test="${itemVm.metalFrame == 'NA'}">checked</c:if> >
+                                                                                <label class="form-check-label" for="metalFrame">NA</label>
+                                                                            </div>
                                                                         </div>
                                                                     </div>
                                                                 </div>
-                                                            </div>
-                                                            <div class="col-xl-12 col-sm-12 col-12">
-                                                                <div class="mb-2">
-                                                                    <label for="metalFrameHardwareId" class="form-label">Reject Hardware ID</label>
-                                                                    <div class="input input-group">
-                                                                        <select class="js-example-basic-multiple" id="metalFrameHardwareId" name="metalFrameHardwareId" multiple="multiple" title="" data-live-search="true" style="width: 100%">
+                                                                <div class="col-xl-12 col-sm-12 col-12">
+                                                                    <div class="mb-2">
+                                                                        <label for="metalFrameHardwareId" class="form-label">Reject Hardware ID</label>
+                                                                        <div class="input input-group">
+                                                                            <select class="js-example-basic-multiple" id="metalFrameHardwareId" name="metalFrameHardwareId" multiple="multiple" title="" data-live-search="true" style="width: 100%">
                                                                             <c:forEach items="${hwGroupList}" var="invInner">
                                                                                 <option value="${invInner.hardwareId}">${invInner.hardwareId}</option>
                                                                             </c:forEach>
@@ -653,26 +653,26 @@
                                                                         <div class="form-check form-check-inline">
                                                                             <input class="form-check-input" type="radio" name="hardwareFasterners" id="hardwareFasterners1"
                                                                                    value="Pass" <c:if test="${itemVm.hardwareFasterners == 'Pass'}">checked</c:if> required>
-                                                                            <label class="form-check-label" for="hardwareFasterners1">Pass</label>
-                                                                        </div>
-                                                                        <div class="form-check form-check-inline">
-                                                                            <input class="form-check-input" type="radio" name="hardwareFasterners" id="hardwareFasterners2"
-                                                                                   value="Fail" <c:if test="${itemVm.hardwareFasterners == 'Fail'}">checked</c:if> >
-                                                                            <label class="form-check-label" for="hardwareFasterners2">Fail</label>
-                                                                        </div>
-                                                                        <div class="form-check form-check-inline">
-                                                                            <input class="form-check-input" type="radio" name="hardwareFasterners" id="hardwareFasterners3"
-                                                                                   value="NA" <c:if test="${itemVm.hardwareFasterners == 'NA'}">checked</c:if> >
-                                                                            <label class="form-check-label" for="hardwareFasterners3">NA</label>
+                                                                                   <label class="form-check-label" for="hardwareFasterners1">Pass</label>
+                                                                            </div>
+                                                                            <div class="form-check form-check-inline">
+                                                                                <input class="form-check-input" type="radio" name="hardwareFasterners" id="hardwareFasterners2"
+                                                                                       value="Fail" <c:if test="${itemVm.hardwareFasterners == 'Fail'}">checked</c:if> >
+                                                                                <label class="form-check-label" for="hardwareFasterners2">Fail</label>
+                                                                            </div>
+                                                                            <div class="form-check form-check-inline">
+                                                                                <input class="form-check-input" type="radio" name="hardwareFasterners" id="hardwareFasterners3"
+                                                                                       value="NA" <c:if test="${itemVm.hardwareFasterners == 'NA'}">checked</c:if> >
+                                                                                <label class="form-check-label" for="hardwareFasterners3">NA</label>
+                                                                            </div>
                                                                         </div>
                                                                     </div>
                                                                 </div>
-                                                            </div>
-                                                            <div class="col-xl-12 col-sm-12 col-12">
-                                                                <div class="mb-2">
-                                                                    <label for="hardwareFasternersHardwareId" class="form-label">Reject Hardware ID</label>
-                                                                    <div class="input input-group">
-                                                                        <select class="js-example-basic-multiple" id="hardwareFasternersHardwareId" name="hardwareFasternersHardwareId" multiple="multiple" title="" data-live-search="true" style="width: 100%">
+                                                                <div class="col-xl-12 col-sm-12 col-12">
+                                                                    <div class="mb-2">
+                                                                        <label for="hardwareFasternersHardwareId" class="form-label">Reject Hardware ID</label>
+                                                                        <div class="input input-group">
+                                                                            <select class="js-example-basic-multiple" id="hardwareFasternersHardwareId" name="hardwareFasternersHardwareId" multiple="multiple" title="" data-live-search="true" style="width: 100%">
                                                                             <c:forEach items="${hwGroupList}" var="invInner">
                                                                                 <option value="${invInner.hardwareId}">${invInner.hardwareId}</option>
                                                                             </c:forEach>
@@ -732,26 +732,26 @@
                                                                         <div class="form-check form-check-inline">
                                                                             <input class="form-check-input" type="radio" name="clipHolder" id="clipHolder1"
                                                                                    value="Pass" <c:if test="${itemVm.clipHolder == 'Pass'}">checked</c:if> required>
-                                                                            <label class="form-check-label" for="clipHolder1">Pass</label>
-                                                                        </div>
-                                                                        <div class="form-check form-check-inline">
-                                                                            <input class="form-check-input" type="radio" name="clipHolder" id="clipHolder2"
-                                                                                   value="Fail" <c:if test="${itemVm.clipHolder == 'Fail'}">checked</c:if> >
-                                                                            <label class="form-check-label" for="clipHolder2">Fail</label>
-                                                                        </div>
-                                                                        <div class="form-check form-check-inline">
-                                                                            <input class="form-check-input" type="radio" name="clipHolder" id="clipHolder3"
-                                                                                   value="NA" <c:if test="${itemVm.clipHolder == 'NA'}">checked</c:if> >
-                                                                            <label class="form-check-label" for="clipHolder3">NA</label>
+                                                                                   <label class="form-check-label" for="clipHolder1">Pass</label>
+                                                                            </div>
+                                                                            <div class="form-check form-check-inline">
+                                                                                <input class="form-check-input" type="radio" name="clipHolder" id="clipHolder2"
+                                                                                       value="Fail" <c:if test="${itemVm.clipHolder == 'Fail'}">checked</c:if> >
+                                                                                <label class="form-check-label" for="clipHolder2">Fail</label>
+                                                                            </div>
+                                                                            <div class="form-check form-check-inline">
+                                                                                <input class="form-check-input" type="radio" name="clipHolder" id="clipHolder3"
+                                                                                       value="NA" <c:if test="${itemVm.clipHolder == 'NA'}">checked</c:if> >
+                                                                                <label class="form-check-label" for="clipHolder3">NA</label>
+                                                                            </div>
                                                                         </div>
                                                                     </div>
                                                                 </div>
-                                                            </div>
-                                                            <div class="col-xl-12 col-sm-12 col-12">
-                                                                <div class="mb-2">
-                                                                    <label for="clipHolderHardwareId" class="form-label">Reject Hardware ID</label>
-                                                                    <div class="input input-group">
-                                                                        <select class="js-example-basic-multiple" id="clipHolderHardwareId" name="clipHolderHardwareId" multiple="multiple" title="" data-live-search="true" style="width: 100%">
+                                                                <div class="col-xl-12 col-sm-12 col-12">
+                                                                    <div class="mb-2">
+                                                                        <label for="clipHolderHardwareId" class="form-label">Reject Hardware ID</label>
+                                                                        <div class="input input-group">
+                                                                            <select class="js-example-basic-multiple" id="clipHolderHardwareId" name="clipHolderHardwareId" multiple="multiple" title="" data-live-search="true" style="width: 100%">
                                                                             <c:forEach items="${hwGroupList}" var="invInner">
                                                                                 <option value="${invInner.hardwareId}">${invInner.hardwareId}</option>
                                                                             </c:forEach>
@@ -811,26 +811,26 @@
                                                                         <div class="form-check form-check-inline">
                                                                             <input class="form-check-input" type="radio" name="pcbEdgeFinger" id="pcbEdgeFinger1"
                                                                                    value="Pass" <c:if test="${itemVm.pcbEdgeFinger == 'Pass'}">checked</c:if> required>
-                                                                            <label class="form-check-label" for="pcbEdgeFinger1">Pass</label>
-                                                                        </div>
-                                                                        <div class="form-check form-check-inline">
-                                                                            <input class="form-check-input" type="radio" name="pcbEdgeFinger" id="pcbEdgeFinger2"
-                                                                                   value="Fail" <c:if test="${itemVm.pcbEdgeFinger == 'Fail'}">checked</c:if> >
-                                                                            <label class="form-check-label" for="pcbEdgeFinger2">Fail</label>
-                                                                        </div>
-                                                                        <div class="form-check form-check-inline">
-                                                                            <input class="form-check-input" type="radio" name="pcbEdgeFinger" id="pcbEdgeFinger3"
-                                                                                   value="NA" <c:if test="${itemVm.pcbEdgeFinger == 'NA'}">checked</c:if> >
-                                                                            <label class="form-check-label" for="pcbEdgeFinger3">NA</label>
+                                                                                   <label class="form-check-label" for="pcbEdgeFinger1">Pass</label>
+                                                                            </div>
+                                                                            <div class="form-check form-check-inline">
+                                                                                <input class="form-check-input" type="radio" name="pcbEdgeFinger" id="pcbEdgeFinger2"
+                                                                                       value="Fail" <c:if test="${itemVm.pcbEdgeFinger == 'Fail'}">checked</c:if> >
+                                                                                <label class="form-check-label" for="pcbEdgeFinger2">Fail</label>
+                                                                            </div>
+                                                                            <div class="form-check form-check-inline">
+                                                                                <input class="form-check-input" type="radio" name="pcbEdgeFinger" id="pcbEdgeFinger3"
+                                                                                       value="NA" <c:if test="${itemVm.pcbEdgeFinger == 'NA'}">checked</c:if> >
+                                                                                <label class="form-check-label" for="pcbEdgeFinger3">NA</label>
+                                                                            </div>
                                                                         </div>
                                                                     </div>
                                                                 </div>
-                                                            </div>
-                                                            <div class="col-xl-12 col-sm-12 col-12">
-                                                                <div class="mb-2">
-                                                                    <label for="pcbEdgeFingerHardwareId" class="form-label">Reject Hardware ID</label>
-                                                                    <div class="input input-group">
-                                                                        <select class="js-example-basic-multiple" id="pcbEdgeFingerHardwareId" name="pcbEdgeFingerHardwareId" multiple="multiple" title="" data-live-search="true" style="width: 100%">
+                                                                <div class="col-xl-12 col-sm-12 col-12">
+                                                                    <div class="mb-2">
+                                                                        <label for="pcbEdgeFingerHardwareId" class="form-label">Reject Hardware ID</label>
+                                                                        <div class="input input-group">
+                                                                            <select class="js-example-basic-multiple" id="pcbEdgeFingerHardwareId" name="pcbEdgeFingerHardwareId" multiple="multiple" title="" data-live-search="true" style="width: 100%">
                                                                             <c:forEach items="${hwGroupList}" var="invInner">
                                                                                 <option value="${invInner.hardwareId}">${invInner.hardwareId}</option>
                                                                             </c:forEach>
@@ -891,26 +891,26 @@
                                                                         <div class="form-check form-check-inline">
                                                                             <input class="form-check-input" type="radio" name="connector" id="connector1"
                                                                                    value="Pass" <c:if test="${itemVm.connector == 'Pass'}">checked</c:if> required>
-                                                                            <label class="form-check-label" for="connector1">Pass</label>
-                                                                        </div>
-                                                                        <div class="form-check form-check-inline">
-                                                                            <input class="form-check-input" type="radio" name="connector" id="connector2"
-                                                                                   value="Fail" <c:if test="${itemVm.connector == 'Fail'}">checked</c:if> >
-                                                                            <label class="form-check-label" for="connector2">Fail</label>
-                                                                        </div>
-                                                                        <div class="form-check form-check-inline">
-                                                                            <input class="form-check-input" type="radio" name="connector" id="connector3"
-                                                                                   value="NA" <c:if test="${itemVm.connector == 'NA'}">checked</c:if> >
-                                                                            <label class="form-check-label" for="connector3">NA</label>
+                                                                                   <label class="form-check-label" for="connector1">Pass</label>
+                                                                            </div>
+                                                                            <div class="form-check form-check-inline">
+                                                                                <input class="form-check-input" type="radio" name="connector" id="connector2"
+                                                                                       value="Fail" <c:if test="${itemVm.connector == 'Fail'}">checked</c:if> >
+                                                                                <label class="form-check-label" for="connector2">Fail</label>
+                                                                            </div>
+                                                                            <div class="form-check form-check-inline">
+                                                                                <input class="form-check-input" type="radio" name="connector" id="connector3"
+                                                                                       value="NA" <c:if test="${itemVm.connector == 'NA'}">checked</c:if> >
+                                                                                <label class="form-check-label" for="connector3">NA</label>
+                                                                            </div>
                                                                         </div>
                                                                     </div>
                                                                 </div>
-                                                            </div>
-                                                            <div class="col-xl-12 col-sm-12 col-12">
-                                                                <div class="mb-2">
-                                                                    <label for="connectorHardwareId" class="form-label">Reject Hardware ID</label>
-                                                                    <div class="input input-group">
-                                                                        <select class="js-example-basic-multiple" id="connectorHardwareId" name="connectorHardwareId" multiple="multiple" title="" data-live-search="true" style="width: 100%">
+                                                                <div class="col-xl-12 col-sm-12 col-12">
+                                                                    <div class="mb-2">
+                                                                        <label for="connectorHardwareId" class="form-label">Reject Hardware ID</label>
+                                                                        <div class="input input-group">
+                                                                            <select class="js-example-basic-multiple" id="connectorHardwareId" name="connectorHardwareId" multiple="multiple" title="" data-live-search="true" style="width: 100%">
                                                                             <c:forEach items="${hwGroupList}" var="invInner">
                                                                                 <option value="${invInner.hardwareId}">${invInner.hardwareId}</option>
                                                                             </c:forEach>
@@ -972,26 +972,26 @@
                                                                         <div class="form-check form-check-inline">
                                                                             <input class="form-check-input" type="radio" name="dutSockets" id="dutSockets1"
                                                                                    value="Pass" <c:if test="${itemVm.dutSockets == 'Pass'}">checked</c:if> required>
-                                                                            <label class="form-check-label" for="dutSockets1">Pass</label>
-                                                                        </div>
-                                                                        <div class="form-check form-check-inline">
-                                                                            <input class="form-check-input" type="radio" name="dutSockets" id="dutSockets2"
-                                                                                   value="Fail" <c:if test="${itemVm.dutSockets == 'Fail'}">checked</c:if> >
-                                                                            <label class="form-check-label" for="dutSockets2">Fail</label>
-                                                                        </div>
-                                                                        <div class="form-check form-check-inline">
-                                                                            <input class="form-check-input" type="radio" name="dutSockets" id="dutSockets3"
-                                                                                   value="NA" <c:if test="${itemVm.dutSockets == 'NA'}">checked</c:if> >
-                                                                            <label class="form-check-label" for="dutSockets3">NA</label>
+                                                                                   <label class="form-check-label" for="dutSockets1">Pass</label>
+                                                                            </div>
+                                                                            <div class="form-check form-check-inline">
+                                                                                <input class="form-check-input" type="radio" name="dutSockets" id="dutSockets2"
+                                                                                       value="Fail" <c:if test="${itemVm.dutSockets == 'Fail'}">checked</c:if> >
+                                                                                <label class="form-check-label" for="dutSockets2">Fail</label>
+                                                                            </div>
+                                                                            <div class="form-check form-check-inline">
+                                                                                <input class="form-check-input" type="radio" name="dutSockets" id="dutSockets3"
+                                                                                       value="NA" <c:if test="${itemVm.dutSockets == 'NA'}">checked</c:if> >
+                                                                                <label class="form-check-label" for="dutSockets3">NA</label>
+                                                                            </div>
                                                                         </div>
                                                                     </div>
                                                                 </div>
-                                                            </div>
-                                                            <div class="col-xl-12 col-sm-12 col-12">
-                                                                <div class="mb-2">
-                                                                    <label for="dutSocketsHardwareId" class="form-label">Reject Hardware ID</label>
-                                                                    <div class="input input-group">
-                                                                        <select class="js-example-basic-multiple" id="dutSocketsHardwareId" name="dutSocketsHardwareId" multiple="multiple" title="" data-live-search="true" style="width: 100%">
+                                                                <div class="col-xl-12 col-sm-12 col-12">
+                                                                    <div class="mb-2">
+                                                                        <label for="dutSocketsHardwareId" class="form-label">Reject Hardware ID</label>
+                                                                        <div class="input input-group">
+                                                                            <select class="js-example-basic-multiple" id="dutSocketsHardwareId" name="dutSocketsHardwareId" multiple="multiple" title="" data-live-search="true" style="width: 100%">
                                                                             <c:forEach items="${hwGroupList}" var="invInner">
                                                                                 <option value="${invInner.hardwareId}">${invInner.hardwareId}</option>
                                                                             </c:forEach>
@@ -1052,26 +1052,26 @@
                                                                         <div class="form-check form-check-inline">
                                                                             <input class="form-check-input" type="radio" name="edgeMbBanana" id="edgeMbBanana1"
                                                                                    value="Pass" <c:if test="${itemVm.edgeMbBanana == 'Pass'}">checked</c:if> required>
-                                                                            <label class="form-check-label" for="edgeMbBanana1">Pass</label>
-                                                                        </div>
-                                                                        <div class="form-check form-check-inline">
-                                                                            <input class="form-check-input" type="radio" name="edgeMbBanana" id="edgeMbBanana2"
-                                                                                   value="Fail" <c:if test="${itemVm.edgeMbBanana == 'Fail'}">checked</c:if> >
-                                                                            <label class="form-check-label" for="edgeMbBanana2">Fail</label>
-                                                                        </div>
-                                                                        <div class="form-check form-check-inline">
-                                                                            <input class="form-check-input" type="radio" name="edgeMbBanana" id="edgeMbBanana3"
-                                                                                   value="NA" <c:if test="${itemVm.edgeMbBanana == 'NA'}">checked</c:if> >
-                                                                            <label class="form-check-label" for="edgeMbBanana3">NA</label>
+                                                                                   <label class="form-check-label" for="edgeMbBanana1">Pass</label>
+                                                                            </div>
+                                                                            <div class="form-check form-check-inline">
+                                                                                <input class="form-check-input" type="radio" name="edgeMbBanana" id="edgeMbBanana2"
+                                                                                       value="Fail" <c:if test="${itemVm.edgeMbBanana == 'Fail'}">checked</c:if> >
+                                                                                <label class="form-check-label" for="edgeMbBanana2">Fail</label>
+                                                                            </div>
+                                                                            <div class="form-check form-check-inline">
+                                                                                <input class="form-check-input" type="radio" name="edgeMbBanana" id="edgeMbBanana3"
+                                                                                       value="NA" <c:if test="${itemVm.edgeMbBanana == 'NA'}">checked</c:if> >
+                                                                                <label class="form-check-label" for="edgeMbBanana3">NA</label>
+                                                                            </div>
                                                                         </div>
                                                                     </div>
                                                                 </div>
-                                                            </div>
-                                                            <div class="col-xl-12 col-sm-12 col-12">
-                                                                <div class="mb-2">
-                                                                    <label for="edgeMbBananaHardwareId" class="form-label">Reject Hardware ID</label>
-                                                                    <div class="input input-group">
-                                                                        <select class="js-example-basic-multiple" id="edgeMbBananaHardwareId" name="edgeMbBananaHardwareId" multiple="multiple" title="" data-live-search="true" style="width: 100%">
+                                                                <div class="col-xl-12 col-sm-12 col-12">
+                                                                    <div class="mb-2">
+                                                                        <label for="edgeMbBananaHardwareId" class="form-label">Reject Hardware ID</label>
+                                                                        <div class="input input-group">
+                                                                            <select class="js-example-basic-multiple" id="edgeMbBananaHardwareId" name="edgeMbBananaHardwareId" multiple="multiple" title="" data-live-search="true" style="width: 100%">
                                                                             <c:forEach items="${hwGroupList}" var="invInner">
                                                                                 <option value="${invInner.hardwareId}">${invInner.hardwareId}</option>
                                                                             </c:forEach>
@@ -1132,26 +1132,26 @@
                                                                         <div class="form-check form-check-inline">
                                                                             <input class="form-check-input" type="radio" name="electComponent" id="electComponent1"
                                                                                    value="Pass" <c:if test="${itemVm.electComponent == 'Pass'}">checked</c:if> required>
-                                                                            <label class="form-check-label" for="electComponent1">Pass</label>
-                                                                        </div>
-                                                                        <div class="form-check form-check-inline">
-                                                                            <input class="form-check-input" type="radio" name="electComponent" id="electComponent2"
-                                                                                   value="Fail" <c:if test="${itemVm.electComponent == 'Fail'}">checked</c:if> >
-                                                                            <label class="form-check-label" for="electComponent2">Fail</label>
-                                                                        </div>
-                                                                        <div class="form-check form-check-inline">
-                                                                            <input class="form-check-input" type="radio" name="electComponent" id="electComponent3"
-                                                                                   value="NA" <c:if test="${itemVm.electComponent == 'NA'}">checked</c:if> >
-                                                                            <label class="form-check-label" for="electComponent3">NA</label>
+                                                                                   <label class="form-check-label" for="electComponent1">Pass</label>
+                                                                            </div>
+                                                                            <div class="form-check form-check-inline">
+                                                                                <input class="form-check-input" type="radio" name="electComponent" id="electComponent2"
+                                                                                       value="Fail" <c:if test="${itemVm.electComponent == 'Fail'}">checked</c:if> >
+                                                                                <label class="form-check-label" for="electComponent2">Fail</label>
+                                                                            </div>
+                                                                            <div class="form-check form-check-inline">
+                                                                                <input class="form-check-input" type="radio" name="electComponent" id="electComponent3"
+                                                                                       value="NA" <c:if test="${itemVm.electComponent == 'NA'}">checked</c:if> >
+                                                                                <label class="form-check-label" for="electComponent3">NA</label>
+                                                                            </div>
                                                                         </div>
                                                                     </div>
                                                                 </div>
-                                                            </div>
-                                                            <div class="col-xl-12 col-sm-12 col-12">
-                                                                <div class="mb-2">
-                                                                    <label for="electComponentHardwareId" class="form-label">Reject Hardware ID</label>
-                                                                    <div class="input input-group">
-                                                                        <select class="js-example-basic-multiple" id="electComponentHardwareId" name="electComponentHardwareId" multiple="multiple" title="" data-live-search="true" style="width: 100%">
+                                                                <div class="col-xl-12 col-sm-12 col-12">
+                                                                    <div class="mb-2">
+                                                                        <label for="electComponentHardwareId" class="form-label">Reject Hardware ID</label>
+                                                                        <div class="input input-group">
+                                                                            <select class="js-example-basic-multiple" id="electComponentHardwareId" name="electComponentHardwareId" multiple="multiple" title="" data-live-search="true" style="width: 100%">
                                                                             <c:forEach items="${hwGroupList}" var="invInner">
                                                                                 <option value="${invInner.hardwareId}">${invInner.hardwareId}</option>
                                                                             </c:forEach>
@@ -1212,26 +1212,26 @@
                                                                         <div class="form-check form-check-inline">
                                                                             <input class="form-check-input" type="radio" name="solderJoint" id="solderJoint1"
                                                                                    value="Pass" <c:if test="${itemVm.solderJoint == 'Pass'}">checked</c:if> required>
-                                                                            <label class="form-check-label" for="solderJoint1">Pass</label>
-                                                                        </div>
-                                                                        <div class="form-check form-check-inline">
-                                                                            <input class="form-check-input" type="radio" name="solderJoint" id="solderJoint2"
-                                                                                   value="Fail" <c:if test="${itemVm.solderJoint == 'Fail'}">checked</c:if> >
-                                                                            <label class="form-check-label" for="solderJoint2">Fail</label>
-                                                                        </div>
-                                                                        <div class="form-check form-check-inline">
-                                                                            <input class="form-check-input" type="radio" name="solderJoint" id="solderJoint3"
-                                                                                   value="NA" <c:if test="${itemVm.solderJoint == 'NA'}">checked</c:if> >
-                                                                            <label class="form-check-label" for="solderJoint3">NA</label>
+                                                                                   <label class="form-check-label" for="solderJoint1">Pass</label>
+                                                                            </div>
+                                                                            <div class="form-check form-check-inline">
+                                                                                <input class="form-check-input" type="radio" name="solderJoint" id="solderJoint2"
+                                                                                       value="Fail" <c:if test="${itemVm.solderJoint == 'Fail'}">checked</c:if> >
+                                                                                <label class="form-check-label" for="solderJoint2">Fail</label>
+                                                                            </div>
+                                                                            <div class="form-check form-check-inline">
+                                                                                <input class="form-check-input" type="radio" name="solderJoint" id="solderJoint3"
+                                                                                       value="NA" <c:if test="${itemVm.solderJoint == 'NA'}">checked</c:if> >
+                                                                                <label class="form-check-label" for="solderJoint3">NA</label>
+                                                                            </div>
                                                                         </div>
                                                                     </div>
                                                                 </div>
-                                                            </div>
-                                                            <div class="col-xl-12 col-sm-12 col-12">
-                                                                <div class="mb-2">
-                                                                    <label for="solderJointHardwareId" class="form-label">Reject Hardware ID</label>
-                                                                    <div class="input input-group">
-                                                                        <select class="js-example-basic-multiple" id="solderJointHardwareId" name="solderJointHardwareId" multiple="multiple" title="" data-live-search="true" style="width: 100%">
+                                                                <div class="col-xl-12 col-sm-12 col-12">
+                                                                    <div class="mb-2">
+                                                                        <label for="solderJointHardwareId" class="form-label">Reject Hardware ID</label>
+                                                                        <div class="input input-group">
+                                                                            <select class="js-example-basic-multiple" id="solderJointHardwareId" name="solderJointHardwareId" multiple="multiple" title="" data-live-search="true" style="width: 100%">
                                                                             <c:forEach items="${hwGroupList}" var="invInner">
                                                                                 <option value="${invInner.hardwareId}">${invInner.hardwareId}</option>
                                                                             </c:forEach>
@@ -1292,26 +1292,26 @@
                                                                         <div class="form-check form-check-inline">
                                                                             <input class="form-check-input" type="radio" name="winConnector" id="winConnector1"
                                                                                    value="Pass" <c:if test="${itemVm.winConnector == 'Pass'}">checked</c:if> required>
-                                                                            <label class="form-check-label" for="winConnector1">Pass</label>
-                                                                        </div>
-                                                                        <div class="form-check form-check-inline">
-                                                                            <input class="form-check-input" type="radio" name="winConnector" id="winConnector2"
-                                                                                   value="Fail" <c:if test="${itemVm.winConnector == 'Fail'}">checked</c:if> >
-                                                                            <label class="form-check-label" for="winConnector2">Fail</label>
-                                                                        </div>
-                                                                        <div class="form-check form-check-inline">
-                                                                            <input class="form-check-input" type="radio" name="winConnector" id="winConnector3"
-                                                                                   value="NA" <c:if test="${itemVm.winConnector == 'NA'}">checked</c:if> >
-                                                                            <label class="form-check-label" for="winConnector3">NA</label>
+                                                                                   <label class="form-check-label" for="winConnector1">Pass</label>
+                                                                            </div>
+                                                                            <div class="form-check form-check-inline">
+                                                                                <input class="form-check-input" type="radio" name="winConnector" id="winConnector2"
+                                                                                       value="Fail" <c:if test="${itemVm.winConnector == 'Fail'}">checked</c:if> >
+                                                                                <label class="form-check-label" for="winConnector2">Fail</label>
+                                                                            </div>
+                                                                            <div class="form-check form-check-inline">
+                                                                                <input class="form-check-input" type="radio" name="winConnector" id="winConnector3"
+                                                                                       value="NA" <c:if test="${itemVm.winConnector == 'NA'}">checked</c:if> >
+                                                                                <label class="form-check-label" for="winConnector3">NA</label>
+                                                                            </div>
                                                                         </div>
                                                                     </div>
                                                                 </div>
-                                                            </div>
-                                                            <div class="col-xl-12 col-sm-12 col-12">
-                                                                <div class="mb-2">
-                                                                    <label for="winConnectorHardwareId" class="form-label">Reject Hardware ID</label>
-                                                                    <div class="input input-group">
-                                                                        <select class="js-example-basic-multiple" id="winConnectorHardwareId" name="winConnectorHardwareId" multiple="multiple" title="" data-live-search="true" style="width: 100%">
+                                                                <div class="col-xl-12 col-sm-12 col-12">
+                                                                    <div class="mb-2">
+                                                                        <label for="winConnectorHardwareId" class="form-label">Reject Hardware ID</label>
+                                                                        <div class="input input-group">
+                                                                            <select class="js-example-basic-multiple" id="winConnectorHardwareId" name="winConnectorHardwareId" multiple="multiple" title="" data-live-search="true" style="width: 100%">
                                                                             <c:forEach items="${hwGroupList}" var="invInner">
                                                                                 <option value="${invInner.hardwareId}">${invInner.hardwareId}</option>
                                                                             </c:forEach>
@@ -1371,10 +1371,9 @@
                                                         <button type="submit" id="submitVm" name="submitVm" class="btn btn-primary float-end disabled">Save</button>
                                                     </c:if>
                                                 </div>
-                                                <!-- Form actions end -->
                                             </form>
                                         </div>
-                                        <!-- Row end -->
+                                                                    
                                     </div>
                                     <div class="tab-pane fade ${teActiveTab}" id="threeAAA" role="tabpanel">
                                         <div class="row gx-4">
@@ -1669,29 +1668,21 @@
                                                                     </div>
                                                                 </c:if>
                                                             </div>
-
                                                         </div>
                                                     </div>
-                                                    <div class="col-md-12">
+<!--                                                    <div class="col-md-12">
                                                         <a href="${contextPath}/hw/item/pending" class="btn btn-dark float-start">Back</a>
-                                                    </div>
+                                                    </div>-->
                                                 </div>
                                             </div>
                                         </div>
-                                        <!-- Row end -->
                                     </div>
-                                    <!--end dive for third tab-->
                                 </div>
-                                <!--end div for tab content-->
                             </div>
-                            <!--end div for tab container-->
                         </div>
                     </div>
                 </div>
-
             </div>
-            <!-- Row end -->
-
         </div>
         <!-- Content wrapper end -->
 
@@ -1709,8 +1700,6 @@
         <!-- Data Tables -->
         <script src="${contextPath}/resources/statflow/vendor/datatables/dataTables.min.js"></script>
         <script src="${contextPath}/resources/statflow/vendor/datatables/dataTables.bootstrap.min.js"></script>
-
-        <!-- Custom Data tables -->
         <script src="${contextPath}/resources/statflow/vendor/datatables/custom/custom-datatables.js"></script>
 
         <!-- DataTable Buttons -->
@@ -1731,731 +1720,731 @@
         <script>
 
 
-                                                                                $(document).ready(function () {
+                                                                                            $(document).ready(function () {
 
-                                                                                    $('.js-example-basic-multiple').select2();
-                                                                                    var valueJsonPcb = ${valueJsonPcb};
-                                                                                    $('#pcbHardwareId').val(valueJsonPcb).trigger('change');
-                                                                                    
-                                                                                     var valueJsonHandle = ${valueJsonHandle};
-                                                                                    $('#handleHardwareId').val(valueJsonHandle).trigger('change');
-                                                                                    
-                                                                                     var valueJsonMetalFrame = ${valueJsonMetalFrame};
-                                                                                    $('#metalFrameHardwareId').val(valueJsonMetalFrame).trigger('change');
-                                                                                    
-                                                                                     var valueJsonHardwareFasterners = ${valueJsonHardwareFasterners};
-                                                                                    $('#hardwareFasternersHardwareId').val(valueJsonHardwareFasterners).trigger('change');
-                                                                                    
-                                                                                     var valueJsonClipHolder = ${valueJsonClipHolder};
-                                                                                    $('#clipHolderHardwareId').val(valueJsonClipHolder).trigger('change');
-                                                                                    
-                                                                                     var valueJsonPcbEdgeFinger = ${valueJsonPcbEdgeFinger};
-                                                                                    $('#pcbEdgeFingerHardwareId').val(valueJsonPcbEdgeFinger).trigger('change');
-                                                                                    
-                                                                                     var valueJsonConnector = ${valueJsonConnector};
-                                                                                    $('#connectorHardwareId').val(valueJsonConnector).trigger('change');
-                                                                                    
-                                                                                     var valueJsonDutSockets = ${valueJsonDutSockets};
-                                                                                    $('#dutSocketsHardwareId').val(valueJsonDutSockets).trigger('change');
-                                                                                    
-                                                                                     var valueJsonEdgeMbBanana = ${valueJsonEdgeMbBanana};
-                                                                                    $('#edgeMbBananaHardwareId').val(valueJsonEdgeMbBanana).trigger('change');
-                                                                                    
-                                                                                     var valueJsonElectComponent = ${valueJsonElectComponent};
-                                                                                    $('#electComponentHardwareId').val(valueJsonElectComponent).trigger('change');
-                                                                                    
-                                                                                     var valueJsonSolderJoint = ${valueJsonSolderJoint};
-                                                                                    $('#solderJointHardwareId').val(valueJsonSolderJoint).trigger('change');
-                                                                                    
-                                                                                     var valueJsonWinConnector = ${valueJsonWinConnector};
-                                                                                    $('#winConnectorHardwareId').val(valueJsonWinConnector).trigger('change');
+                                                                                                $('.js-example-basic-multiple').select2();
+                                                                                                var valueJsonPcb = ${valueJsonPcb};
+                                                                                                $('#pcbHardwareId').val(valueJsonPcb).trigger('change');
 
-                                                                                    var element2 = $('#viId');
-                                                                                    if (element2.val()) {
-                                                                                        $("#submitVm").attr("disabled", true);
-                                                                                    }
-                                                                                });
+                                                                                                var valueJsonHandle = ${valueJsonHandle};
+                                                                                                $('#handleHardwareId').val(valueJsonHandle).trigger('change');
 
-                                                                                $(function () {
-                                                                                    $("#customButtons1").DataTable({
-                                                                                        lengthMenu: [
-                                                                                            [10, 25, 50],
-                                                                                            [10, 25, 50, "All"],
-                                                                                        ],
-                                                                                        language: {
-                                                                                            lengthMenu: "Display _MENU_ Records Per Page",
-                                                                                            info: "Showing Page _PAGE_ of _PAGES_",
-                                                                                        },
-                                                                                        dom: "Blfrtip",
-                                                                                        buttons: ["copy", "csv", "pdf", "print"],
-                                                                                    });
-                                                                                });
+                                                                                                var valueJsonMetalFrame = ${valueJsonMetalFrame};
+                                                                                                $('#metalFrameHardwareId').val(valueJsonMetalFrame).trigger('change');
 
-                                                                                function modalDelete(e) {
-                                                                                    var deleteId = $(e).attr("modaldeleteid");
-                                                                                    var deleteInfo = $("#modal_delete_info_" + deleteId).html();
-                                                                                    var deleteUrl = "${contextPath}/rmsbookingDetail/deleteHwId/" + deleteId;
-                                                                                    var deleteMsg = "<f:message key='general.label.delete.confirmation'><f:param value='" + deleteInfo + "'/></f:message>";
-                                                                                    $("#delete_modal .modal-body").html(deleteMsg);
-                                                                                    $("#modal_delete_button").attr("href", deleteUrl);
-                                                                                }
+                                                                                                var valueJsonHardwareFasterners = ${valueJsonHardwareFasterners};
+                                                                                                $('#hardwareFasternersHardwareId').val(valueJsonHardwareFasterners).trigger('change');
 
-                                                                                function modalFinalize(e) {
-                                                                                    var groupId = $(e).attr("modaldeleteid");
-                                                                                    var deleteUrl = "${contextPath}/rmsbookingDetail/finalize/" + groupId;
-                                                                                    var deleteMsg = "Do you confirm that all information is complete and ready to finalize?";
-                                                                                    $("#confirmation_modal .modal-body").html(deleteMsg);
-                                                                                    $("#modal_button").attr("href", deleteUrl);
-                                                                                }
+                                                                                                var valueJsonClipHolder = ${valueJsonClipHolder};
+                                                                                                $('#clipHolderHardwareId').val(valueJsonClipHolder).trigger('change');
 
-                                                                                function modalUndoFinalize(e) {
-                                                                                    var groupId = $(e).attr("modaldeleteid");
-                                                                                    var deleteUrl = "${contextPath}/rmsbookingDetail/undoFinalize/" + groupId;
-                                                                                    var deleteMsg = "Do you confirm to undo the finalization?";
-                                                                                    $("#confirmation_modal .modal-body").html(deleteMsg);
-                                                                                    $("#modal_button").attr("href", deleteUrl);
-                                                                                }
+                                                                                                var valueJsonPcbEdgeFinger = ${valueJsonPcbEdgeFinger};
+                                                                                                $('#pcbEdgeFingerHardwareId').val(valueJsonPcbEdgeFinger).trigger('change');
+
+                                                                                                var valueJsonConnector = ${valueJsonConnector};
+                                                                                                $('#connectorHardwareId').val(valueJsonConnector).trigger('change');
+
+                                                                                                var valueJsonDutSockets = ${valueJsonDutSockets};
+                                                                                                $('#dutSocketsHardwareId').val(valueJsonDutSockets).trigger('change');
+
+                                                                                                var valueJsonEdgeMbBanana = ${valueJsonEdgeMbBanana};
+                                                                                                $('#edgeMbBananaHardwareId').val(valueJsonEdgeMbBanana).trigger('change');
+
+                                                                                                var valueJsonElectComponent = ${valueJsonElectComponent};
+                                                                                                $('#electComponentHardwareId').val(valueJsonElectComponent).trigger('change');
+
+                                                                                                var valueJsonSolderJoint = ${valueJsonSolderJoint};
+                                                                                                $('#solderJointHardwareId').val(valueJsonSolderJoint).trigger('change');
+
+                                                                                                var valueJsonWinConnector = ${valueJsonWinConnector};
+                                                                                                $('#winConnectorHardwareId').val(valueJsonWinConnector).trigger('change');
+
+                                                                                                var element2 = $('#viId');
+                                                                                                if (element2.val()) {
+                                                                                                    $("#submitVm").attr("disabled", true);
+                                                                                                }
+                                                                                            });
+
+                                                                                            $(function () {
+                                                                                                $("#customButtons1").DataTable({
+                                                                                                    lengthMenu: [
+                                                                                                        [10, 25, 50],
+                                                                                                        [10, 25, 50, "All"],
+                                                                                                    ],
+                                                                                                    language: {
+                                                                                                        lengthMenu: "Display _MENU_ Records Per Page",
+                                                                                                        info: "Showing Page _PAGE_ of _PAGES_",
+                                                                                                    },
+                                                                                                    dom: "Blfrtip",
+                                                                                                    buttons: ["copy", "csv", "pdf", "print"],
+                                                                                                });
+                                                                                            });
+
+                                                                                            function modalDelete(e) {
+                                                                                                var deleteId = $(e).attr("modaldeleteid");
+                                                                                                var deleteInfo = $("#modal_delete_info_" + deleteId).html();
+                                                                                                var deleteUrl = "${contextPath}/rmsbookingDetail/deleteHwId/" + deleteId;
+                                                                                                var deleteMsg = "<f:message key='general.label.delete.confirmation'><f:param value='" + deleteInfo + "'/></f:message>";
+                                                                                                $("#delete_modal .modal-body").html(deleteMsg);
+                                                                                                $("#modal_delete_button").attr("href", deleteUrl);
+                                                                                            }
+
+                                                                                            function modalFinalize(e) {
+                                                                                                var groupId = $(e).attr("modaldeleteid");
+                                                                                                var deleteUrl = "${contextPath}/rmsbookingDetail/finalize/" + groupId;
+                                                                                                var deleteMsg = "Do you confirm that all information is complete and ready to finalize?";
+                                                                                                $("#confirmation_modal .modal-body").html(deleteMsg);
+                                                                                                $("#modal_button").attr("href", deleteUrl);
+                                                                                            }
+
+                                                                                            function modalUndoFinalize(e) {
+                                                                                                var groupId = $(e).attr("modaldeleteid");
+                                                                                                var deleteUrl = "${contextPath}/rmsbookingDetail/undoFinalize/" + groupId;
+                                                                                                var deleteMsg = "Do you confirm to undo the finalization?";
+                                                                                                $("#confirmation_modal .modal-body").html(deleteMsg);
+                                                                                                $("#modal_button").attr("href", deleteUrl);
+                                                                                            }
 
 
-                                                                                // Fetch all the forms we want to apply custom Bootstrap validation styles to
-                                                                                const forms = document.querySelectorAll('.needs-validation');
+                                                                                            // Fetch all the forms we want to apply custom Bootstrap validation styles to
+                                                                                            const forms = document.querySelectorAll('.needs-validation');
 
-                                                                                // Loop over them and prevent submission
-                                                                                Array.prototype.slice.call(forms).forEach((form) => {
-                                                                                    form.addEventListener('submit', (event) => {
-                                                                                        if (!form.checkValidity()) {
-                                                                                            event.preventDefault();
-                                                                                            event.stopPropagation();
-                                                                                        }
-                                                                                        form.classList.add('was-validated');
-                                                                                    }, false);
-                                                                                });
+                                                                                            // Loop over them and prevent submission
+                                                                                            Array.prototype.slice.call(forms).forEach((form) => {
+                                                                                                form.addEventListener('submit', (event) => {
+                                                                                                    if (!form.checkValidity()) {
+                                                                                                        event.preventDefault();
+                                                                                                        event.stopPropagation();
+                                                                                                    }
+                                                                                                    form.classList.add('was-validated');
+                                                                                                }, false);
+                                                                                            });
 
-                                                                                $(".js-example-basic-single").select2({
-                                                                                    placeholder: "Choose one",
-                                                                                    allowClear: true
-                                                                                });
+                                                                                            $(".js-example-basic-single").select2({
+                                                                                                placeholder: "Choose one",
+                                                                                                allowClear: true
+                                                                                            });
 
-                                                                                $(".js-example-tags").select2({
-                                                                                    tags: true
-                                                                                });
-                                                                                // Get references to the elements
+                                                                                            $(".js-example-tags").select2({
+                                                                                                tags: true
+                                                                                            });
+                                                                                            // Get references to the elements
 
-                                                                                const pcbPass = document.getElementById('pcb1');
-                                                                                const pcbNa = document.getElementById('pcb3');
-                                                                                const pcbFail = document.getElementById('pcb2');
-                                                                                const pcbRejectCriteria = document.getElementById('pcbReject');
-                                                                                const pcbRejectQty = document.getElementById('pcbRejectQty');
-                                                                                const pcbRejectUpload = document.getElementById('pcbRejectUpload');
-                                                                                const pcbAttach = document.getElementById('pcbAttach');
-                                                                                const pcbHardwareId = document.getElementById('pcbHardwareId');
+                                                                                            const pcbPass = document.getElementById('pcb1');
+                                                                                            const pcbNa = document.getElementById('pcb3');
+                                                                                            const pcbFail = document.getElementById('pcb2');
+                                                                                            const pcbRejectCriteria = document.getElementById('pcbReject');
+                                                                                            const pcbRejectQty = document.getElementById('pcbRejectQty');
+                                                                                            const pcbRejectUpload = document.getElementById('pcbRejectUpload');
+                                                                                            const pcbAttach = document.getElementById('pcbAttach');
+                                                                                            const pcbHardwareId = document.getElementById('pcbHardwareId');
 
-                                                                                const handlePass = document.getElementById('handle1');
-                                                                                const handleNa = document.getElementById('handle3');
-                                                                                const handleFail = document.getElementById('handle2');
-                                                                                const handleRejectCriteria = document.getElementById('handleReject');
-                                                                                const handleRejectQty = document.getElementById('handleRejectQty');
-                                                                                const handleRejectUpload = document.getElementById('handleRejectUpload');
-                                                                                const handleAttach = document.getElementById('handleAttach');
-                                                                                const handleHardwareId = document.getElementById('handleHardwareId');
+                                                                                            const handlePass = document.getElementById('handle1');
+                                                                                            const handleNa = document.getElementById('handle3');
+                                                                                            const handleFail = document.getElementById('handle2');
+                                                                                            const handleRejectCriteria = document.getElementById('handleReject');
+                                                                                            const handleRejectQty = document.getElementById('handleRejectQty');
+                                                                                            const handleRejectUpload = document.getElementById('handleRejectUpload');
+                                                                                            const handleAttach = document.getElementById('handleAttach');
+                                                                                            const handleHardwareId = document.getElementById('handleHardwareId');
 
-                                                                                const metalFramePass = document.getElementById('metalFrame1');
-                                                                                const metalFrameNa = document.getElementById('metalFrame3');
-                                                                                const metalFrameFail = document.getElementById('metalFrame2');
-                                                                                const metalFrameRejectCriteria = document.getElementById('metalFrameReject');
-                                                                                const metalFrameRejectQty = document.getElementById('metalFrameRejectQty');
-                                                                                const metalFrameRejectUpload = document.getElementById('metalFrameRejectUpload');
-                                                                                const metalFrameAttach = document.getElementById('metalFrameAttach');
-                                                                                const metalFrameHardwareId = document.getElementById('metalFrameHardwareId');
+                                                                                            const metalFramePass = document.getElementById('metalFrame1');
+                                                                                            const metalFrameNa = document.getElementById('metalFrame3');
+                                                                                            const metalFrameFail = document.getElementById('metalFrame2');
+                                                                                            const metalFrameRejectCriteria = document.getElementById('metalFrameReject');
+                                                                                            const metalFrameRejectQty = document.getElementById('metalFrameRejectQty');
+                                                                                            const metalFrameRejectUpload = document.getElementById('metalFrameRejectUpload');
+                                                                                            const metalFrameAttach = document.getElementById('metalFrameAttach');
+                                                                                            const metalFrameHardwareId = document.getElementById('metalFrameHardwareId');
 
-                                                                                const hardwareFasternersPass = document.getElementById('hardwareFasterners1');
-                                                                                const hardwareFasternersNa = document.getElementById('hardwareFasterners3');
-                                                                                const hardwareFasternersFail = document.getElementById('hardwareFasterners2');
-                                                                                const hardwareFasternersRejectCriteria = document.getElementById('hardwareFasternersReject');
-                                                                                const hardwareFasternersRejectQty = document.getElementById('hardwareFasternersRejectQty');
-                                                                                const hardwareFasternersRejectUpload = document.getElementById('hardwareFasternersRejectUpload');
-                                                                                const hardwareFasternersAttach = document.getElementById('hardwareFasternersAttach');
-                                                                                const hardwareFasternersHardwareId = document.getElementById('hardwareFasternersHardwareId');
+                                                                                            const hardwareFasternersPass = document.getElementById('hardwareFasterners1');
+                                                                                            const hardwareFasternersNa = document.getElementById('hardwareFasterners3');
+                                                                                            const hardwareFasternersFail = document.getElementById('hardwareFasterners2');
+                                                                                            const hardwareFasternersRejectCriteria = document.getElementById('hardwareFasternersReject');
+                                                                                            const hardwareFasternersRejectQty = document.getElementById('hardwareFasternersRejectQty');
+                                                                                            const hardwareFasternersRejectUpload = document.getElementById('hardwareFasternersRejectUpload');
+                                                                                            const hardwareFasternersAttach = document.getElementById('hardwareFasternersAttach');
+                                                                                            const hardwareFasternersHardwareId = document.getElementById('hardwareFasternersHardwareId');
 
-                                                                                const clipHolderPass = document.getElementById('clipHolder1');
-                                                                                const clipHolderNa = document.getElementById('clipHolder3');
-                                                                                const clipHolderFail = document.getElementById('clipHolder2');
-                                                                                const clipHolderRejectCriteria = document.getElementById('clipHolderReject');
-                                                                                const clipHolderRejectQty = document.getElementById('clipHolderRejectQty');
-                                                                                const clipHolderRejectUpload = document.getElementById('clipHolderRejectUpload');
-                                                                                const clipHolderAttach = document.getElementById('clipHolderAttach');
-                                                                                const clipHolderHardwareId = document.getElementById('clipHolderHardwareId');
+                                                                                            const clipHolderPass = document.getElementById('clipHolder1');
+                                                                                            const clipHolderNa = document.getElementById('clipHolder3');
+                                                                                            const clipHolderFail = document.getElementById('clipHolder2');
+                                                                                            const clipHolderRejectCriteria = document.getElementById('clipHolderReject');
+                                                                                            const clipHolderRejectQty = document.getElementById('clipHolderRejectQty');
+                                                                                            const clipHolderRejectUpload = document.getElementById('clipHolderRejectUpload');
+                                                                                            const clipHolderAttach = document.getElementById('clipHolderAttach');
+                                                                                            const clipHolderHardwareId = document.getElementById('clipHolderHardwareId');
 
-                                                                                const pcbEdgeFingerPass = document.getElementById('pcbEdgeFinger1');
-                                                                                const pcbEdgeFingerNa = document.getElementById('pcbEdgeFinger3');
-                                                                                const pcbEdgeFingerFail = document.getElementById('pcbEdgeFinger2');
-                                                                                const pcbEdgeFingerRejectCriteria = document.getElementById('pcbEdgeFingerReject');
-                                                                                const pcbEdgeFingerRejectQty = document.getElementById('pcbEdgeFingerRejectQty');
-                                                                                const pcbEdgeFingerRejectUpload = document.getElementById('pcbEdgeFingerRejectUpload');
-                                                                                const pcbEdgeFingerAttach = document.getElementById('pcbEdgeFingerAttach');
-                                                                                const pcbEdgeFingerHardwareId = document.getElementById('pcbEdgeFingerHardwareId');
+                                                                                            const pcbEdgeFingerPass = document.getElementById('pcbEdgeFinger1');
+                                                                                            const pcbEdgeFingerNa = document.getElementById('pcbEdgeFinger3');
+                                                                                            const pcbEdgeFingerFail = document.getElementById('pcbEdgeFinger2');
+                                                                                            const pcbEdgeFingerRejectCriteria = document.getElementById('pcbEdgeFingerReject');
+                                                                                            const pcbEdgeFingerRejectQty = document.getElementById('pcbEdgeFingerRejectQty');
+                                                                                            const pcbEdgeFingerRejectUpload = document.getElementById('pcbEdgeFingerRejectUpload');
+                                                                                            const pcbEdgeFingerAttach = document.getElementById('pcbEdgeFingerAttach');
+                                                                                            const pcbEdgeFingerHardwareId = document.getElementById('pcbEdgeFingerHardwareId');
 
-                                                                                const connectorPass = document.getElementById('connector1');
-                                                                                const connectorNa = document.getElementById('connector3');
-                                                                                const connectorFail = document.getElementById('connector2');
-                                                                                const connectorRejectCriteria = document.getElementById('connectorReject');
-                                                                                const connectorRejectQty = document.getElementById('connectorRejectQty');
-                                                                                const connectorRejectUpload = document.getElementById('connectorRejectUpload');
-                                                                                const connectorAttach = document.getElementById('connectorAttach');
-                                                                                const connectorHardwareId = document.getElementById('connectorHardwareId');
+                                                                                            const connectorPass = document.getElementById('connector1');
+                                                                                            const connectorNa = document.getElementById('connector3');
+                                                                                            const connectorFail = document.getElementById('connector2');
+                                                                                            const connectorRejectCriteria = document.getElementById('connectorReject');
+                                                                                            const connectorRejectQty = document.getElementById('connectorRejectQty');
+                                                                                            const connectorRejectUpload = document.getElementById('connectorRejectUpload');
+                                                                                            const connectorAttach = document.getElementById('connectorAttach');
+                                                                                            const connectorHardwareId = document.getElementById('connectorHardwareId');
 
-                                                                                const dutSocketsPass = document.getElementById('dutSockets1');
-                                                                                const dutSocketsNa = document.getElementById('dutSockets3');
-                                                                                const dutSocketsFail = document.getElementById('dutSockets2');
-                                                                                const dutSocketsRejectCriteria = document.getElementById('dutSocketsReject');
-                                                                                const dutSocketsRejectQty = document.getElementById('dutSocketsRejectQty');
-                                                                                const dutSocketsRejectUpload = document.getElementById('dutSocketsRejectUpload');
-                                                                                const dutSocketsAttach = document.getElementById('dutSocketsAttach');
-                                                                                const dutSocketsHardwareId = document.getElementById('dutSocketsHardwareId');
+                                                                                            const dutSocketsPass = document.getElementById('dutSockets1');
+                                                                                            const dutSocketsNa = document.getElementById('dutSockets3');
+                                                                                            const dutSocketsFail = document.getElementById('dutSockets2');
+                                                                                            const dutSocketsRejectCriteria = document.getElementById('dutSocketsReject');
+                                                                                            const dutSocketsRejectQty = document.getElementById('dutSocketsRejectQty');
+                                                                                            const dutSocketsRejectUpload = document.getElementById('dutSocketsRejectUpload');
+                                                                                            const dutSocketsAttach = document.getElementById('dutSocketsAttach');
+                                                                                            const dutSocketsHardwareId = document.getElementById('dutSocketsHardwareId');
 
-                                                                                const edgeMbBananaPass = document.getElementById('edgeMbBanana1');
-                                                                                const edgeMbBananaNa = document.getElementById('edgeMbBanana3');
-                                                                                const edgeMbBananaFail = document.getElementById('edgeMbBanana2');
-                                                                                const edgeMbBananaRejectCriteria = document.getElementById('edgeMbBananaReject');
-                                                                                const edgeMbBananaRejectQty = document.getElementById('edgeMbBananaRejectQty');
-                                                                                const edgeMbBananaRejectUpload = document.getElementById('edgeMbBananaRejectUpload');
-                                                                                const edgeMbBananaAttach = document.getElementById('edgeMbBananaAttach');
-                                                                                const edgeMbBananaHardwareId = document.getElementById('edgeMbBananaHardwareId');
+                                                                                            const edgeMbBananaPass = document.getElementById('edgeMbBanana1');
+                                                                                            const edgeMbBananaNa = document.getElementById('edgeMbBanana3');
+                                                                                            const edgeMbBananaFail = document.getElementById('edgeMbBanana2');
+                                                                                            const edgeMbBananaRejectCriteria = document.getElementById('edgeMbBananaReject');
+                                                                                            const edgeMbBananaRejectQty = document.getElementById('edgeMbBananaRejectQty');
+                                                                                            const edgeMbBananaRejectUpload = document.getElementById('edgeMbBananaRejectUpload');
+                                                                                            const edgeMbBananaAttach = document.getElementById('edgeMbBananaAttach');
+                                                                                            const edgeMbBananaHardwareId = document.getElementById('edgeMbBananaHardwareId');
 
-                                                                                const electComponentPass = document.getElementById('electComponent1');
-                                                                                const electComponentNa = document.getElementById('electComponent3');
-                                                                                const electComponentFail = document.getElementById('electComponent2');
-                                                                                const electComponentRejectCriteria = document.getElementById('electComponentReject');
-                                                                                const electComponentRejectQty = document.getElementById('electComponentRejectQty');
-                                                                                const electComponentRejectUpload = document.getElementById('electComponentRejectUpload');
-                                                                                const electComponentAttach = document.getElementById('electComponentAttach');
-                                                                                const electComponentHardwareId = document.getElementById('electComponentHardwareId');
+                                                                                            const electComponentPass = document.getElementById('electComponent1');
+                                                                                            const electComponentNa = document.getElementById('electComponent3');
+                                                                                            const electComponentFail = document.getElementById('electComponent2');
+                                                                                            const electComponentRejectCriteria = document.getElementById('electComponentReject');
+                                                                                            const electComponentRejectQty = document.getElementById('electComponentRejectQty');
+                                                                                            const electComponentRejectUpload = document.getElementById('electComponentRejectUpload');
+                                                                                            const electComponentAttach = document.getElementById('electComponentAttach');
+                                                                                            const electComponentHardwareId = document.getElementById('electComponentHardwareId');
 
-                                                                                const solderJointPass = document.getElementById('solderJoint1');
-                                                                                const solderJointNa = document.getElementById('solderJoint3');
-                                                                                const solderJointFail = document.getElementById('solderJoint2');
-                                                                                const solderJointRejectCriteria = document.getElementById('solderJointReject');
-                                                                                const solderJointRejectQty = document.getElementById('solderJointRejectQty');
-                                                                                const solderJointRejectUpload = document.getElementById('solderJointRejectUpload');
-                                                                                const solderJointAttach = document.getElementById('solderJointAttach');
-                                                                                const solderJointHardwareId = document.getElementById('solderJointHardwareId');
+                                                                                            const solderJointPass = document.getElementById('solderJoint1');
+                                                                                            const solderJointNa = document.getElementById('solderJoint3');
+                                                                                            const solderJointFail = document.getElementById('solderJoint2');
+                                                                                            const solderJointRejectCriteria = document.getElementById('solderJointReject');
+                                                                                            const solderJointRejectQty = document.getElementById('solderJointRejectQty');
+                                                                                            const solderJointRejectUpload = document.getElementById('solderJointRejectUpload');
+                                                                                            const solderJointAttach = document.getElementById('solderJointAttach');
+                                                                                            const solderJointHardwareId = document.getElementById('solderJointHardwareId');
 
-                                                                                const winConnectorPass = document.getElementById('winConnector1');
-                                                                                const winConnectorNa = document.getElementById('winConnector3');
-                                                                                const winConnectorFail = document.getElementById('winConnector2');
-                                                                                const winConnectorRejectCriteria = document.getElementById('winConnectorReject');
-                                                                                const winConnectorRejectQty = document.getElementById('winConnectorRejectQty');
-                                                                                const winConnectorRejectUpload = document.getElementById('winConnectorRejectUpload');
-                                                                                const winConnectorAttach = document.getElementById('winConnectorAttach');
-                                                                                const winConnectorHardwareId = document.getElementById('winConnectorHardwareId');
+                                                                                            const winConnectorPass = document.getElementById('winConnector1');
+                                                                                            const winConnectorNa = document.getElementById('winConnector3');
+                                                                                            const winConnectorFail = document.getElementById('winConnector2');
+                                                                                            const winConnectorRejectCriteria = document.getElementById('winConnectorReject');
+                                                                                            const winConnectorRejectQty = document.getElementById('winConnectorRejectQty');
+                                                                                            const winConnectorRejectUpload = document.getElementById('winConnectorRejectUpload');
+                                                                                            const winConnectorAttach = document.getElementById('winConnectorAttach');
+                                                                                            const winConnectorHardwareId = document.getElementById('winConnectorHardwareId');
 
-                                                                                function handleRadioChange() {
-                                                                                    if (pcbFail.checked) {
-                                                                                        pcbRejectCriteria.disabled = false; // disable button if 'Fail' is checked
-                                                                                        pcbRejectCriteria.required = true;
+                                                                                            function handleRadioChange() {
+                                                                                                if (pcbFail.checked) {
+                                                                                                    pcbRejectCriteria.disabled = false; // disable button if 'Fail' is checked
+                                                                                                    pcbRejectCriteria.required = true;
 
-                                                                                        pcbRejectQty.disabled = false;
-                                                                                        pcbRejectQty.required = true;
-                                                                                        
-                                                                                        pcbRejectUpload.disabled = false;
-                                                                                        pcbRejectUpload.required = true;
-                                                                                        
-                                                                                        pcbHardwareId.disabled = false;
-                                                                                        pcbHardwareId.required = true;
-                                                                                    } else {
-                                                                                        pcbRejectCriteria.disabled = true;  // enable button otherwise (e.g., if 'Pass' is checked)
-                                                                                        pcbRejectCriteria.required = false;
-                                                                                        pcbRejectCriteria.value = '';
+                                                                                                    pcbRejectQty.disabled = false;
+                                                                                                    pcbRejectQty.required = true;
 
-                                                                                        pcbRejectQty.disabled = true;
-                                                                                        pcbRejectQty.required = false;
-                                                                                        pcbRejectQty.value = '';
-                                                                                        
-                                                                                        pcbRejectUpload.disabled = true;
-                                                                                        pcbRejectUpload.required = false;
-                                                                                        pcbRejectUpload.value = '';
-                                                                                        
-                                                                                        pcbHardwareId.disabled = true;
-                                                                                        pcbHardwareId.required = false;
-                                                                                        pcbHardwareId.value = '';
-                                                                                    }
-                                                                                    if (handleFail.checked) {
-                                                                                        handleRejectCriteria.disabled = false; // disable button if 'Fail' is checked
-                                                                                        handleRejectCriteria.required = true;
+                                                                                                    pcbRejectUpload.disabled = false;
+                                                                                                    pcbRejectUpload.required = true;
 
-                                                                                        handleRejectQty.disabled = false;
-                                                                                        handleRejectQty.required = true;
-                                                                                        
-                                                                                        handleRejectUpload.disabled = false;
-                                                                                        handleRejectUpload.required = true;
-                                                                                        
-                                                                                        handleHardwareId.disabled = false;
-                                                                                        handleHardwareId.required = true;
-                                                                                    } else {
-                                                                                        handleRejectCriteria.disabled = true;  // enable button otherwise (e.g., if 'Pass' is checked)
-                                                                                        handleRejectCriteria.required = false;
-                                                                                        handleRejectCriteria.value = '';
+                                                                                                    pcbHardwareId.disabled = false;
+                                                                                                    pcbHardwareId.required = true;
+                                                                                                } else {
+                                                                                                    pcbRejectCriteria.disabled = true;  // enable button otherwise (e.g., if 'Pass' is checked)
+                                                                                                    pcbRejectCriteria.required = false;
+                                                                                                    pcbRejectCriteria.value = '';
 
-                                                                                        handleRejectQty.disabled = true;
-                                                                                        handleRejectQty.required = false;
-                                                                                        handleRejectQty.value = '';
-                                                                                        
-                                                                                        handleRejectUpload.disabled = true;
-                                                                                        handleRejectUpload.required = false;
-                                                                                        handleRejectUpload.value = '';
-                                                                                        
-                                                                                        handleHardwareId.disabled = true;
-                                                                                        handleHardwareId.required = false;
-                                                                                        handleHardwareId.value = '';
-                                                                                    }
-                                                                                    if (metalFrameFail.checked) {
-                                                                                        metalFrameRejectCriteria.disabled = false; // disable button if 'Fail' is checked
-                                                                                        metalFrameRejectCriteria.required = true;
+                                                                                                    pcbRejectQty.disabled = true;
+                                                                                                    pcbRejectQty.required = false;
+                                                                                                    pcbRejectQty.value = '';
 
-                                                                                        metalFrameRejectQty.disabled = false;
-                                                                                        metalFrameRejectQty.required = true;
-                                                                                        
-                                                                                        metalFrameRejectUpload.disabled = false;
-                                                                                        metalFrameRejectUpload.required = true;
-                                                                                        
-                                                                                        metalFrameHardwareId.disabled = false;
-                                                                                        metalFrameHardwareId.required = true;
-                                                                                    } else {
-                                                                                        metalFrameRejectCriteria.disabled = true;  // enable button otherwise (e.g., if 'Pass' is checked)
-                                                                                        metalFrameRejectCriteria.required = false;
-                                                                                        metalFrameRejectCriteria.value = '';
+                                                                                                    pcbRejectUpload.disabled = true;
+                                                                                                    pcbRejectUpload.required = false;
+                                                                                                    pcbRejectUpload.value = '';
 
-                                                                                        metalFrameRejectQty.disabled = true;
-                                                                                        metalFrameRejectQty.required = false;
-                                                                                        metalFrameRejectQty.value = '';
-                                                                                        
-                                                                                        metalFrameRejectUpload.disabled = true;
-                                                                                        metalFrameRejectUpload.required = false;
-                                                                                        metalFrameRejectUpload.value = '';
-                                                                                        
-                                                                                        metalFrameHardwareId.disabled = true;
-                                                                                        metalFrameHardwareId.required = false;
-                                                                                        metalFrameHardwareId.value = '';
-                                                                                    }
-                                                                                    if (hardwareFasternersFail.checked) {
-                                                                                        hardwareFasternersRejectCriteria.disabled = false; // disable button if 'Fail' is checked
-                                                                                        hardwareFasternersRejectCriteria.required = true;
+                                                                                                    pcbHardwareId.disabled = true;
+                                                                                                    pcbHardwareId.required = false;
+                                                                                                    pcbHardwareId.value = '';
+                                                                                                }
+                                                                                                if (handleFail.checked) {
+                                                                                                    handleRejectCriteria.disabled = false; // disable button if 'Fail' is checked
+                                                                                                    handleRejectCriteria.required = true;
 
-                                                                                        hardwareFasternersRejectQty.disabled = false;
-                                                                                        hardwareFasternersRejectQty.required = true;
-                                                                                        
-                                                                                        hardwareFasternersRejectUpload.disabled = false;
-                                                                                        hardwareFasternersRejectUpload.required = true;
-                                                                                        
-                                                                                        hardwareFasternersHardwareId.disabled = false;
-                                                                                        hardwareFasternersHardwareId.required = true;
-                                                                                    } else {
-                                                                                        hardwareFasternersRejectCriteria.disabled = true;  // enable button otherwise (e.g., if 'Pass' is checked)
-                                                                                        hardwareFasternersRejectCriteria.required = false;
-                                                                                        hardwareFasternersRejectCriteria.value = '';
+                                                                                                    handleRejectQty.disabled = false;
+                                                                                                    handleRejectQty.required = true;
 
-                                                                                        hardwareFasternersRejectQty.disabled = true;
-                                                                                        hardwareFasternersRejectQty.required = false;
-                                                                                        hardwareFasternersRejectQty.value = '';
-                                                                                        
-                                                                                        hardwareFasternersRejectUpload.disabled = true;
-                                                                                        hardwareFasternersRejectUpload.required = false;
-                                                                                        hardwareFasternersRejectUpload.value = '';
-                                                                                        
-                                                                                        hardwareFasternersHardwareId.disabled = true;
-                                                                                        hardwareFasternersHardwareId.required = false;
-                                                                                        hardwareFasternersHardwareId.value = '';
-                                                                                    }
-                                                                                    if (clipHolderFail.checked) {
-                                                                                        clipHolderRejectCriteria.disabled = false; // disable button if 'Fail' is checked
-                                                                                        clipHolderRejectCriteria.required = true;
+                                                                                                    handleRejectUpload.disabled = false;
+                                                                                                    handleRejectUpload.required = true;
 
-                                                                                        clipHolderRejectQty.disabled = false;
-                                                                                        clipHolderRejectQty.required = true;
-                                                                                        
-                                                                                        clipHolderRejectUpload.disabled = false;
-                                                                                        clipHolderRejectUpload.required = true;
-                                                                                        
-                                                                                        clipHolderHardwareId.disabled = false;
-                                                                                        clipHolderHardwareId.required = true;
-                                                                                    } else {
-                                                                                        clipHolderRejectCriteria.disabled = true;  // enable button otherwise (e.g., if 'Pass' is checked)
-                                                                                        clipHolderRejectCriteria.required = false;
-                                                                                        clipHolderRejectCriteria.value = '';
+                                                                                                    handleHardwareId.disabled = false;
+                                                                                                    handleHardwareId.required = true;
+                                                                                                } else {
+                                                                                                    handleRejectCriteria.disabled = true;  // enable button otherwise (e.g., if 'Pass' is checked)
+                                                                                                    handleRejectCriteria.required = false;
+                                                                                                    handleRejectCriteria.value = '';
 
-                                                                                        clipHolderRejectQty.disabled = true;
-                                                                                        clipHolderRejectQty.required = false;
-                                                                                        clipHolderRejectQty.value = '';
-                                                                                        
-                                                                                        clipHolderRejectUpload.disabled = true;
-                                                                                        clipHolderRejectUpload.required = false;
-                                                                                        clipHolderRejectUpload.value = '';
-                                                                                        
-                                                                                        clipHolderHardwareId.disabled = true;
-                                                                                        clipHolderHardwareId.required = false;
-                                                                                        clipHolderHardwareId.value = '';
-                                                                                    }
-                                                                                    if (pcbEdgeFingerFail.checked) {
-                                                                                        pcbEdgeFingerRejectCriteria.disabled = false; // disable button if 'Fail' is checked
-                                                                                        pcbEdgeFingerRejectCriteria.required = true;
+                                                                                                    handleRejectQty.disabled = true;
+                                                                                                    handleRejectQty.required = false;
+                                                                                                    handleRejectQty.value = '';
 
-                                                                                        pcbEdgeFingerRejectQty.disabled = false;
-                                                                                        pcbEdgeFingerRejectQty.required = true;
-                                                                                        
-                                                                                        pcbEdgeFingerRejectUpload.disabled = false;
-                                                                                        pcbEdgeFingerRejectUpload.required = true;
-                                                                                        
-                                                                                        pcbEdgeFingerHardwareId.disabled = false;
-                                                                                        pcbEdgeFingerHardwareId.required = true;
-                                                                                    } else {
-                                                                                        pcbEdgeFingerRejectCriteria.disabled = true;  // enable button otherwise (e.g., if 'Pass' is checked)
-                                                                                        pcbEdgeFingerRejectCriteria.required = false;
-                                                                                        pcbEdgeFingerRejectCriteria.value = '';
+                                                                                                    handleRejectUpload.disabled = true;
+                                                                                                    handleRejectUpload.required = false;
+                                                                                                    handleRejectUpload.value = '';
 
-                                                                                        pcbEdgeFingerRejectQty.disabled = true;
-                                                                                        pcbEdgeFingerRejectQty.required = false;
-                                                                                        pcbEdgeFingerRejectQty.value = '';
-                                                                                        
-                                                                                        pcbEdgeFingerRejectUpload.disabled = true;
-                                                                                        pcbEdgeFingerRejectUpload.required = false;
-                                                                                        pcbEdgeFingerRejectUpload.value = '';
-                                                                                        
-                                                                                        pcbEdgeFingerHardwareId.disabled = true;
-                                                                                        pcbEdgeFingerHardwareId.required = false;
-                                                                                        pcbEdgeFingerHardwareId.value = '';
-                                                                                    }
-                                                                                    if (connectorFail.checked) {
-                                                                                        connectorRejectCriteria.disabled = false; // disable button if 'Fail' is checked
-                                                                                        connectorRejectCriteria.required = true;
+                                                                                                    handleHardwareId.disabled = true;
+                                                                                                    handleHardwareId.required = false;
+                                                                                                    handleHardwareId.value = '';
+                                                                                                }
+                                                                                                if (metalFrameFail.checked) {
+                                                                                                    metalFrameRejectCriteria.disabled = false; // disable button if 'Fail' is checked
+                                                                                                    metalFrameRejectCriteria.required = true;
 
-                                                                                        connectorRejectQty.disabled = false;
-                                                                                        connectorRejectQty.required = true;
-                                                                                        
-                                                                                        connectorRejectUpload.disabled = false;
-                                                                                        connectorRejectUpload.required = true;
-                                                                                        
-                                                                                        connectorHardwareId.disabled = false;
-                                                                                        connectorHardwareId.required = true;
-                                                                                    } else {
-                                                                                        connectorRejectCriteria.disabled = true;  // enable button otherwise (e.g., if 'Pass' is checked)
-                                                                                        connectorRejectCriteria.required = false;
-                                                                                        connectorRejectCriteria.value = '';
+                                                                                                    metalFrameRejectQty.disabled = false;
+                                                                                                    metalFrameRejectQty.required = true;
 
-                                                                                        connectorRejectQty.disabled = true;
-                                                                                        connectorRejectQty.required = false;
-                                                                                        connectorRejectQty.value = '';
-                                                                                        
-                                                                                        connectorRejectUpload.disabled = true;
-                                                                                        connectorRejectUpload.required = false;
-                                                                                        connectorRejectUpload.value = '';
-                                                                                        
-                                                                                        connectorHardwareId.disabled = true;
-                                                                                        connectorHardwareId.required = false;
-                                                                                        connectorHardwareId.value = '';
-                                                                                    }
-                                                                                    if (dutSocketsFail.checked) {
-                                                                                        dutSocketsRejectCriteria.disabled = false; // disable button if 'Fail' is checked
-                                                                                        dutSocketsRejectCriteria.required = true;
+                                                                                                    metalFrameRejectUpload.disabled = false;
+                                                                                                    metalFrameRejectUpload.required = true;
 
-                                                                                        dutSocketsRejectQty.disabled = false;
-                                                                                        dutSocketsRejectQty.required = true;
-                                                                                        
-                                                                                        dutSocketsRejectUpload.disabled = false;
-                                                                                        dutSocketsRejectUpload.required = true;
-                                                                                        
-                                                                                        dutSocketsHardwareId.disabled = false;
-                                                                                        dutSocketsHardwareId.required = true;
-                                                                                    } else {
-                                                                                        dutSocketsRejectCriteria.disabled = true;  // enable button otherwise (e.g., if 'Pass' is checked)
-                                                                                        dutSocketsRejectCriteria.required = false;
-                                                                                        dutSocketsRejectCriteria.value = '';
+                                                                                                    metalFrameHardwareId.disabled = false;
+                                                                                                    metalFrameHardwareId.required = true;
+                                                                                                } else {
+                                                                                                    metalFrameRejectCriteria.disabled = true;  // enable button otherwise (e.g., if 'Pass' is checked)
+                                                                                                    metalFrameRejectCriteria.required = false;
+                                                                                                    metalFrameRejectCriteria.value = '';
 
-                                                                                        dutSocketsRejectQty.disabled = true;
-                                                                                        dutSocketsRejectQty.required = false;
-                                                                                        dutSocketsRejectQty.value = '';
-                                                                                        
-                                                                                        dutSocketsRejectUpload.disabled = true;
-                                                                                        dutSocketsRejectUpload.required = false;
-                                                                                        dutSocketsRejectUpload.value = '';
-                                                                                        
-                                                                                        dutSocketsHardwareId.disabled = true;
-                                                                                        dutSocketsHardwareId.required = false;
-                                                                                        dutSocketsHardwareId.value = '';
-                                                                                    }
-                                                                                    if (edgeMbBananaFail.checked) {
-                                                                                        edgeMbBananaRejectCriteria.disabled = false; // disable button if 'Fail' is checked
-                                                                                        edgeMbBananaRejectCriteria.required = true;
+                                                                                                    metalFrameRejectQty.disabled = true;
+                                                                                                    metalFrameRejectQty.required = false;
+                                                                                                    metalFrameRejectQty.value = '';
 
-                                                                                        edgeMbBananaRejectQty.disabled = false;
-                                                                                        edgeMbBananaRejectQty.required = true;
-                                                                                        
-                                                                                        edgeMbBananaRejectUpload.disabled = false;
-                                                                                        edgeMbBananaRejectUpload.required = true;
-                                                                                        
-                                                                                        edgeMbBananaHardwareId.disabled = false;
-                                                                                        edgeMbBananaHardwareId.required = true;
-                                                                                    } else {
-                                                                                        edgeMbBananaRejectCriteria.disabled = true;  // enable button otherwise (e.g., if 'Pass' is checked)
-                                                                                        edgeMbBananaRejectCriteria.required = false;
-                                                                                        edgeMbBananaRejectCriteria.value = '';
+                                                                                                    metalFrameRejectUpload.disabled = true;
+                                                                                                    metalFrameRejectUpload.required = false;
+                                                                                                    metalFrameRejectUpload.value = '';
 
-                                                                                        edgeMbBananaRejectQty.disabled = true;
-                                                                                        edgeMbBananaRejectQty.required = false;
-                                                                                        edgeMbBananaRejectQty.value = '';
-                                                                                        
-                                                                                        edgeMbBananaRejectUpload.disabled = true;
-                                                                                        edgeMbBananaRejectUpload.required = false;
-                                                                                        edgeMbBananaRejectUpload.value = '';
-                                                                                        
-                                                                                        edgeMbBananaHardwareId.disabled = true;
-                                                                                        edgeMbBananaHardwareId.required = false;
-                                                                                        edgeMbBananaHardwareId.value = '';
-                                                                                    }
-                                                                                    if (electComponentFail.checked) {
-                                                                                        electComponentRejectCriteria.disabled = false; // disable button if 'Fail' is checked
-                                                                                        electComponentRejectCriteria.required = true;
+                                                                                                    metalFrameHardwareId.disabled = true;
+                                                                                                    metalFrameHardwareId.required = false;
+                                                                                                    metalFrameHardwareId.value = '';
+                                                                                                }
+                                                                                                if (hardwareFasternersFail.checked) {
+                                                                                                    hardwareFasternersRejectCriteria.disabled = false; // disable button if 'Fail' is checked
+                                                                                                    hardwareFasternersRejectCriteria.required = true;
 
-                                                                                        electComponentRejectQty.disabled = false;
-                                                                                        electComponentRejectQty.required = true;
-                                                                                        
-                                                                                        electComponentRejectUpload.disabled = false;
-                                                                                        electComponentRejectUpload.required = true;
-                                                                                        
-                                                                                         electComponentHardwareId.disabled = false;
-                                                                                        electComponentHardwareId.required = true;
-                                                                                    } else {
-                                                                                        electComponentRejectCriteria.disabled = true;  // enable button otherwise (e.g., if 'Pass' is checked)
-                                                                                        electComponentRejectCriteria.required = false;
-                                                                                        electComponentRejectCriteria.value = '';
+                                                                                                    hardwareFasternersRejectQty.disabled = false;
+                                                                                                    hardwareFasternersRejectQty.required = true;
 
-                                                                                        electComponentRejectQty.disabled = true;
-                                                                                        electComponentRejectQty.required = false;
-                                                                                        electComponentRejectQty.value = '';
-                                                                                        
-                                                                                        electComponentRejectUpload.disabled = true;
-                                                                                        electComponentRejectUpload.required = false;
-                                                                                        electComponentRejectUpload.value = '';
-                                                                                        
-                                                                                        electComponentHardwareId.disabled = true;
-                                                                                        electComponentHardwareId.required = false;
-                                                                                        electComponentHardwareId.value = '';
-                                                                                    }
-                                                                                    if (solderJointFail.checked) {
-                                                                                        solderJointRejectCriteria.disabled = false; // disable button if 'Fail' is checked
-                                                                                        solderJointRejectCriteria.required = true;
+                                                                                                    hardwareFasternersRejectUpload.disabled = false;
+                                                                                                    hardwareFasternersRejectUpload.required = true;
 
-                                                                                        solderJointRejectQty.disabled = false;
-                                                                                        solderJointRejectQty.required = true;
-                                                                                        
-                                                                                        solderJointRejectUpload.disabled = false;
-                                                                                        solderJointRejectUpload.required = true;
-                                                                                        
-                                                                                        solderJointHardwareId.disabled = false;
-                                                                                        solderJointHardwareId.required = true;
-                                                                                    } else {
-                                                                                        solderJointRejectCriteria.disabled = true;  // enable button otherwise (e.g., if 'Pass' is checked)
-                                                                                        solderJointRejectCriteria.required = false;
-                                                                                        solderJointRejectCriteria.value = '';
+                                                                                                    hardwareFasternersHardwareId.disabled = false;
+                                                                                                    hardwareFasternersHardwareId.required = true;
+                                                                                                } else {
+                                                                                                    hardwareFasternersRejectCriteria.disabled = true;  // enable button otherwise (e.g., if 'Pass' is checked)
+                                                                                                    hardwareFasternersRejectCriteria.required = false;
+                                                                                                    hardwareFasternersRejectCriteria.value = '';
 
-                                                                                        solderJointRejectQty.disabled = true;
-                                                                                        solderJointRejectQty.required = false;
-                                                                                        solderJointRejectQty.value = '';
-                                                                                        
-                                                                                        solderJointRejectUpload.disabled = true;
-                                                                                        solderJointRejectUpload.required = false;
-                                                                                        solderJointRejectUpload.value = '';
-                                                                                        
-                                                                                        solderJointHardwareId.disabled = true;
-                                                                                        solderJointHardwareId.required = false;
-                                                                                        solderJointHardwareId.value = '';
-                                                                                    }
-                                                                                    if (winConnectorFail.checked) {
-                                                                                        winConnectorRejectCriteria.disabled = false; // disable button if 'Fail' is checked
-                                                                                        winConnectorRejectCriteria.required = true;
+                                                                                                    hardwareFasternersRejectQty.disabled = true;
+                                                                                                    hardwareFasternersRejectQty.required = false;
+                                                                                                    hardwareFasternersRejectQty.value = '';
 
-                                                                                        winConnectorRejectQty.disabled = false;
-                                                                                        winConnectorRejectQty.required = true;
-                                                                                        
-                                                                                        winConnectorRejectUpload.disabled = false;
-                                                                                        winConnectorRejectUpload.required = true;
-                                                                                        
-                                                                                        winConnectorHardwareId.disabled = false;
-                                                                                        winConnectorHardwareId.required = true;
-                                                                                    } else {
-                                                                                        winConnectorRejectCriteria.disabled = true;  // enable button otherwise (e.g., if 'Pass' is checked)
-                                                                                        winConnectorRejectCriteria.required = false;
-                                                                                        winConnectorRejectCriteria.value = '';
+                                                                                                    hardwareFasternersRejectUpload.disabled = true;
+                                                                                                    hardwareFasternersRejectUpload.required = false;
+                                                                                                    hardwareFasternersRejectUpload.value = '';
 
-                                                                                        winConnectorRejectQty.disabled = true;
-                                                                                        winConnectorRejectQty.required = false;
-                                                                                        winConnectorRejectQty.value = '';
-                                                                                        
-                                                                                        winConnectorRejectUpload.disabled = true;
-                                                                                        winConnectorRejectUpload.required = false;
-                                                                                        winConnectorRejectUpload.value = '';
-                                                                                        
-                                                                                        winConnectorHardwareId.disabled = true;
-                                                                                        winConnectorHardwareId.required = false;
-                                                                                        winConnectorHardwareId.value = '';
-                                                                                    }
-                                                                                }
+                                                                                                    hardwareFasternersHardwareId.disabled = true;
+                                                                                                    hardwareFasternersHardwareId.required = false;
+                                                                                                    hardwareFasternersHardwareId.value = '';
+                                                                                                }
+                                                                                                if (clipHolderFail.checked) {
+                                                                                                    clipHolderRejectCriteria.disabled = false; // disable button if 'Fail' is checked
+                                                                                                    clipHolderRejectCriteria.required = true;
 
-                                                                                pcbPass.addEventListener('change', handleRadioChange);
-                                                                                pcbNa.addEventListener('change', handleRadioChange);
-                                                                                pcbFail.addEventListener('change', handleRadioChange);
+                                                                                                    clipHolderRejectQty.disabled = false;
+                                                                                                    clipHolderRejectQty.required = true;
 
-                                                                                handlePass.addEventListener('change', handleRadioChange);
-                                                                                handleNa.addEventListener('change', handleRadioChange);
-                                                                                handleFail.addEventListener('change', handleRadioChange);
+                                                                                                    clipHolderRejectUpload.disabled = false;
+                                                                                                    clipHolderRejectUpload.required = true;
 
-                                                                                metalFramePass.addEventListener('change', handleRadioChange);
-                                                                                metalFrameNa.addEventListener('change', handleRadioChange);
-                                                                                metalFrameFail.addEventListener('change', handleRadioChange);
+                                                                                                    clipHolderHardwareId.disabled = false;
+                                                                                                    clipHolderHardwareId.required = true;
+                                                                                                } else {
+                                                                                                    clipHolderRejectCriteria.disabled = true;  // enable button otherwise (e.g., if 'Pass' is checked)
+                                                                                                    clipHolderRejectCriteria.required = false;
+                                                                                                    clipHolderRejectCriteria.value = '';
 
-                                                                                hardwareFasternersPass.addEventListener('change', handleRadioChange);
-                                                                                hardwareFasternersNa.addEventListener('change', handleRadioChange);
-                                                                                hardwareFasternersFail.addEventListener('change', handleRadioChange);
+                                                                                                    clipHolderRejectQty.disabled = true;
+                                                                                                    clipHolderRejectQty.required = false;
+                                                                                                    clipHolderRejectQty.value = '';
 
-                                                                                clipHolderPass.addEventListener('change', handleRadioChange);
-                                                                                clipHolderNa.addEventListener('change', handleRadioChange);
-                                                                                clipHolderFail.addEventListener('change', handleRadioChange);
+                                                                                                    clipHolderRejectUpload.disabled = true;
+                                                                                                    clipHolderRejectUpload.required = false;
+                                                                                                    clipHolderRejectUpload.value = '';
 
-                                                                                pcbEdgeFingerPass.addEventListener('change', handleRadioChange);
-                                                                                pcbEdgeFingerNa.addEventListener('change', handleRadioChange);
-                                                                                pcbEdgeFingerFail.addEventListener('change', handleRadioChange);
+                                                                                                    clipHolderHardwareId.disabled = true;
+                                                                                                    clipHolderHardwareId.required = false;
+                                                                                                    clipHolderHardwareId.value = '';
+                                                                                                }
+                                                                                                if (pcbEdgeFingerFail.checked) {
+                                                                                                    pcbEdgeFingerRejectCriteria.disabled = false; // disable button if 'Fail' is checked
+                                                                                                    pcbEdgeFingerRejectCriteria.required = true;
 
-                                                                                edgeMbBananaPass.addEventListener('change', handleRadioChange);
-                                                                                edgeMbBananaNa.addEventListener('change', handleRadioChange);
-                                                                                edgeMbBananaFail.addEventListener('change', handleRadioChange);
+                                                                                                    pcbEdgeFingerRejectQty.disabled = false;
+                                                                                                    pcbEdgeFingerRejectQty.required = true;
 
-                                                                                dutSocketsPass.addEventListener('change', handleRadioChange);
-                                                                                dutSocketsNa.addEventListener('change', handleRadioChange);
-                                                                                dutSocketsFail.addEventListener('change', handleRadioChange);
+                                                                                                    pcbEdgeFingerRejectUpload.disabled = false;
+                                                                                                    pcbEdgeFingerRejectUpload.required = true;
 
-                                                                                electComponentPass.addEventListener('change', handleRadioChange);
-                                                                                electComponentNa.addEventListener('change', handleRadioChange);
-                                                                                electComponentFail.addEventListener('change', handleRadioChange);
+                                                                                                    pcbEdgeFingerHardwareId.disabled = false;
+                                                                                                    pcbEdgeFingerHardwareId.required = true;
+                                                                                                } else {
+                                                                                                    pcbEdgeFingerRejectCriteria.disabled = true;  // enable button otherwise (e.g., if 'Pass' is checked)
+                                                                                                    pcbEdgeFingerRejectCriteria.required = false;
+                                                                                                    pcbEdgeFingerRejectCriteria.value = '';
 
-                                                                                connectorPass.addEventListener('change', handleRadioChange);
-                                                                                connectorNa.addEventListener('change', handleRadioChange);
-                                                                                connectorFail.addEventListener('change', handleRadioChange);
+                                                                                                    pcbEdgeFingerRejectQty.disabled = true;
+                                                                                                    pcbEdgeFingerRejectQty.required = false;
+                                                                                                    pcbEdgeFingerRejectQty.value = '';
 
-                                                                                solderJointPass.addEventListener('change', handleRadioChange);
-                                                                                solderJointNa.addEventListener('change', handleRadioChange);
-                                                                                solderJointFail.addEventListener('change', handleRadioChange);
+                                                                                                    pcbEdgeFingerRejectUpload.disabled = true;
+                                                                                                    pcbEdgeFingerRejectUpload.required = false;
+                                                                                                    pcbEdgeFingerRejectUpload.value = '';
 
-                                                                                winConnectorPass.addEventListener('change', handleRadioChange);
-                                                                                winConnectorNa.addEventListener('change', handleRadioChange);
-                                                                                winConnectorFail.addEventListener('change', handleRadioChange);
+                                                                                                    pcbEdgeFingerHardwareId.disabled = true;
+                                                                                                    pcbEdgeFingerHardwareId.required = false;
+                                                                                                    pcbEdgeFingerHardwareId.value = '';
+                                                                                                }
+                                                                                                if (connectorFail.checked) {
+                                                                                                    connectorRejectCriteria.disabled = false; // disable button if 'Fail' is checked
+                                                                                                    connectorRejectCriteria.required = true;
 
-                                                                                if (pcbFail.checked) {
-                                                                                    pcbRejectCriteria.disabled = false;
-                                                                                    pcbRejectQty.disabled = false;
-                                                                                    pcbRejectUpload.disabled = false;
-                                                                                    pcbAttach.hidden = false;
-                                                                                } else {
-                                                                                    pcbAttach.hidden = true;
-                                                                                    handleRadioChange(); // Set initial state based on default checked radio
-                                                                                }
-                                                                                if (handleFail.checked) {
-                                                                                    handleRejectCriteria.disabled = false;
-                                                                                    handleRejectQty.disabled = false;
-                                                                                    handleRejectUpload.disabled = false;
-                                                                                    handleAttach.hidden = false;
-                                                                                } else {
-                                                                                    handleAttach.hidden = true;
-                                                                                    handleRadioChange(); // Set initial state based on default checked radio
-                                                                                }
-                                                                                if (metalFrameFail.checked) {
-                                                                                    metalFrameRejectCriteria.disabled = false;
-                                                                                    metalFrameRejectQty.disabled = false;
-                                                                                    metalFrameRejectUpload.disabled = false;
-                                                                                    metalFrameAttach.hidden = false;
-                                                                                } else {
-                                                                                    metalFrameAttach.hidden = true;
-                                                                                    handleRadioChange(); // Set initial state based on default checked radio
-                                                                                }
-                                                                                if (hardwareFasternersFail.checked) {
-                                                                                    hardwareFasternersRejectCriteria.disabled = false;
-                                                                                    hardwareFasternersRejectQty.disabled = false;
-                                                                                    hardwareFasternersRejectUpload.disabled = false;
-                                                                                    hardwareFasternersAttach.hidden = false;
-                                                                                } else {
-                                                                                    hardwareFasternersAttach.hidden = true;
-                                                                                    handleRadioChange(); // Set initial state based on default checked radio
-                                                                                }
-                                                                                if (clipHolderFail.checked) {
-                                                                                    clipHolderRejectCriteria.disabled = false;
-                                                                                    clipHolderRejectQty.disabled = false;
-                                                                                    clipHolderRejectUpload.disabled = false;
-                                                                                    clipHolderAttach.hidden = false;
-                                                                                } else {
-                                                                                    clipHolderAttach.hidden = true;
-                                                                                    handleRadioChange(); // Set initial state based on default checked radio
-                                                                                }
-                                                                                if (pcbEdgeFingerFail.checked) {
-                                                                                    pcbEdgeFingerRejectCriteria.disabled = false;
-                                                                                    pcbEdgeFingerRejectQty.disabled = false;
-                                                                                    pcbEdgeFingerRejectUpload.disabled = false;
-                                                                                    pcbEdgeFingerAttach.hidden = false;
-                                                                                } else {
-                                                                                    pcbEdgeFingerAttach.hidden = true;
-                                                                                    handleRadioChange(); // Set initial state based on default checked radio
-                                                                                }
-                                                                                if (connectorFail.checked) {
-                                                                                    connectorRejectCriteria.disabled = false;
-                                                                                    connectorRejectQty.disabled = false;
-                                                                                    connectorRejectUpload.disabled = false;
-                                                                                    connectorAttach.hidden = false;
-                                                                                } else {
-                                                                                    connectorAttach.hidden = true;
-                                                                                    handleRadioChange(); // Set initial state based on default checked radio
-                                                                                }
-                                                                                if (dutSocketsFail.checked) {
-                                                                                    dutSocketsRejectCriteria.disabled = false;
-                                                                                    dutSocketsRejectQty.disabled = false;
-                                                                                    dutSocketsRejectUpload.disabled = false;
-                                                                                    dutSocketsAttach.hidden = false;
-                                                                                } else {
-                                                                                    dutSocketsAttach.hidden = true;
-                                                                                    handleRadioChange(); // Set initial state based on default checked radio
-                                                                                }
-                                                                                if (edgeMbBananaFail.checked) {
-                                                                                    edgeMbBananaRejectCriteria.disabled = false;
-                                                                                    edgeMbBananaRejectQty.disabled = false;
-                                                                                    edgeMbBananaRejectUpload.disabled = false;
-                                                                                    edgeMbBananaAttach.hidden = false;
-                                                                                } else {
-                                                                                    edgeMbBananaAttach.hidden = true;
-                                                                                    handleRadioChange(); // Set initial state based on default checked radio
-                                                                                }
-                                                                                if (electComponentFail.checked) {
-                                                                                    electComponentRejectCriteria.disabled = false;
-                                                                                    electComponentRejectQty.disabled = false;
-                                                                                    electComponentRejectUpload.disabled = false;
-                                                                                    electComponentAttach.hidden = false;
-                                                                                } else {
-                                                                                    electComponentAttach.hidden = true;
-                                                                                    handleRadioChange(); // Set initial state based on default checked radio
-                                                                                }
-                                                                                if (solderJointFail.checked) {
-                                                                                    solderJointRejectCriteria.disabled = false;
-                                                                                    solderJointRejectQty.disabled = false;
-                                                                                    solderJointRejectUpload.disabled = false;
-                                                                                    solderJointAttach.hidden = false;
-                                                                                } else {
-                                                                                    solderJointAttach.hidden = true;
-                                                                                    handleRadioChange(); // Set initial state based on default checked radio
-                                                                                }
-                                                                                if (winConnectorFail.checked) {
-                                                                                    winConnectorRejectCriteria.disabled = false;
-                                                                                    winConnectorRejectQty.disabled = false;
-                                                                                    winConnectorRejectUpload.disabled = false;
-                                                                                    winConnectorAttach.hidden = false;
-                                                                                } else {
-                                                                                    winConnectorAttach.hidden = true;
-                                                                                    handleRadioChange(); // Set initial state based on default checked radio
-                                                                                }
+                                                                                                    connectorRejectQty.disabled = false;
+                                                                                                    connectorRejectQty.required = true;
+
+                                                                                                    connectorRejectUpload.disabled = false;
+                                                                                                    connectorRejectUpload.required = true;
+
+                                                                                                    connectorHardwareId.disabled = false;
+                                                                                                    connectorHardwareId.required = true;
+                                                                                                } else {
+                                                                                                    connectorRejectCriteria.disabled = true;  // enable button otherwise (e.g., if 'Pass' is checked)
+                                                                                                    connectorRejectCriteria.required = false;
+                                                                                                    connectorRejectCriteria.value = '';
+
+                                                                                                    connectorRejectQty.disabled = true;
+                                                                                                    connectorRejectQty.required = false;
+                                                                                                    connectorRejectQty.value = '';
+
+                                                                                                    connectorRejectUpload.disabled = true;
+                                                                                                    connectorRejectUpload.required = false;
+                                                                                                    connectorRejectUpload.value = '';
+
+                                                                                                    connectorHardwareId.disabled = true;
+                                                                                                    connectorHardwareId.required = false;
+                                                                                                    connectorHardwareId.value = '';
+                                                                                                }
+                                                                                                if (dutSocketsFail.checked) {
+                                                                                                    dutSocketsRejectCriteria.disabled = false; // disable button if 'Fail' is checked
+                                                                                                    dutSocketsRejectCriteria.required = true;
+
+                                                                                                    dutSocketsRejectQty.disabled = false;
+                                                                                                    dutSocketsRejectQty.required = true;
+
+                                                                                                    dutSocketsRejectUpload.disabled = false;
+                                                                                                    dutSocketsRejectUpload.required = true;
+
+                                                                                                    dutSocketsHardwareId.disabled = false;
+                                                                                                    dutSocketsHardwareId.required = true;
+                                                                                                } else {
+                                                                                                    dutSocketsRejectCriteria.disabled = true;  // enable button otherwise (e.g., if 'Pass' is checked)
+                                                                                                    dutSocketsRejectCriteria.required = false;
+                                                                                                    dutSocketsRejectCriteria.value = '';
+
+                                                                                                    dutSocketsRejectQty.disabled = true;
+                                                                                                    dutSocketsRejectQty.required = false;
+                                                                                                    dutSocketsRejectQty.value = '';
+
+                                                                                                    dutSocketsRejectUpload.disabled = true;
+                                                                                                    dutSocketsRejectUpload.required = false;
+                                                                                                    dutSocketsRejectUpload.value = '';
+
+                                                                                                    dutSocketsHardwareId.disabled = true;
+                                                                                                    dutSocketsHardwareId.required = false;
+                                                                                                    dutSocketsHardwareId.value = '';
+                                                                                                }
+                                                                                                if (edgeMbBananaFail.checked) {
+                                                                                                    edgeMbBananaRejectCriteria.disabled = false; // disable button if 'Fail' is checked
+                                                                                                    edgeMbBananaRejectCriteria.required = true;
+
+                                                                                                    edgeMbBananaRejectQty.disabled = false;
+                                                                                                    edgeMbBananaRejectQty.required = true;
+
+                                                                                                    edgeMbBananaRejectUpload.disabled = false;
+                                                                                                    edgeMbBananaRejectUpload.required = true;
+
+                                                                                                    edgeMbBananaHardwareId.disabled = false;
+                                                                                                    edgeMbBananaHardwareId.required = true;
+                                                                                                } else {
+                                                                                                    edgeMbBananaRejectCriteria.disabled = true;  // enable button otherwise (e.g., if 'Pass' is checked)
+                                                                                                    edgeMbBananaRejectCriteria.required = false;
+                                                                                                    edgeMbBananaRejectCriteria.value = '';
+
+                                                                                                    edgeMbBananaRejectQty.disabled = true;
+                                                                                                    edgeMbBananaRejectQty.required = false;
+                                                                                                    edgeMbBananaRejectQty.value = '';
+
+                                                                                                    edgeMbBananaRejectUpload.disabled = true;
+                                                                                                    edgeMbBananaRejectUpload.required = false;
+                                                                                                    edgeMbBananaRejectUpload.value = '';
+
+                                                                                                    edgeMbBananaHardwareId.disabled = true;
+                                                                                                    edgeMbBananaHardwareId.required = false;
+                                                                                                    edgeMbBananaHardwareId.value = '';
+                                                                                                }
+                                                                                                if (electComponentFail.checked) {
+                                                                                                    electComponentRejectCriteria.disabled = false; // disable button if 'Fail' is checked
+                                                                                                    electComponentRejectCriteria.required = true;
+
+                                                                                                    electComponentRejectQty.disabled = false;
+                                                                                                    electComponentRejectQty.required = true;
+
+                                                                                                    electComponentRejectUpload.disabled = false;
+                                                                                                    electComponentRejectUpload.required = true;
+
+                                                                                                    electComponentHardwareId.disabled = false;
+                                                                                                    electComponentHardwareId.required = true;
+                                                                                                } else {
+                                                                                                    electComponentRejectCriteria.disabled = true;  // enable button otherwise (e.g., if 'Pass' is checked)
+                                                                                                    electComponentRejectCriteria.required = false;
+                                                                                                    electComponentRejectCriteria.value = '';
+
+                                                                                                    electComponentRejectQty.disabled = true;
+                                                                                                    electComponentRejectQty.required = false;
+                                                                                                    electComponentRejectQty.value = '';
+
+                                                                                                    electComponentRejectUpload.disabled = true;
+                                                                                                    electComponentRejectUpload.required = false;
+                                                                                                    electComponentRejectUpload.value = '';
+
+                                                                                                    electComponentHardwareId.disabled = true;
+                                                                                                    electComponentHardwareId.required = false;
+                                                                                                    electComponentHardwareId.value = '';
+                                                                                                }
+                                                                                                if (solderJointFail.checked) {
+                                                                                                    solderJointRejectCriteria.disabled = false; // disable button if 'Fail' is checked
+                                                                                                    solderJointRejectCriteria.required = true;
+
+                                                                                                    solderJointRejectQty.disabled = false;
+                                                                                                    solderJointRejectQty.required = true;
+
+                                                                                                    solderJointRejectUpload.disabled = false;
+                                                                                                    solderJointRejectUpload.required = true;
+
+                                                                                                    solderJointHardwareId.disabled = false;
+                                                                                                    solderJointHardwareId.required = true;
+                                                                                                } else {
+                                                                                                    solderJointRejectCriteria.disabled = true;  // enable button otherwise (e.g., if 'Pass' is checked)
+                                                                                                    solderJointRejectCriteria.required = false;
+                                                                                                    solderJointRejectCriteria.value = '';
+
+                                                                                                    solderJointRejectQty.disabled = true;
+                                                                                                    solderJointRejectQty.required = false;
+                                                                                                    solderJointRejectQty.value = '';
+
+                                                                                                    solderJointRejectUpload.disabled = true;
+                                                                                                    solderJointRejectUpload.required = false;
+                                                                                                    solderJointRejectUpload.value = '';
+
+                                                                                                    solderJointHardwareId.disabled = true;
+                                                                                                    solderJointHardwareId.required = false;
+                                                                                                    solderJointHardwareId.value = '';
+                                                                                                }
+                                                                                                if (winConnectorFail.checked) {
+                                                                                                    winConnectorRejectCriteria.disabled = false; // disable button if 'Fail' is checked
+                                                                                                    winConnectorRejectCriteria.required = true;
+
+                                                                                                    winConnectorRejectQty.disabled = false;
+                                                                                                    winConnectorRejectQty.required = true;
+
+                                                                                                    winConnectorRejectUpload.disabled = false;
+                                                                                                    winConnectorRejectUpload.required = true;
+
+                                                                                                    winConnectorHardwareId.disabled = false;
+                                                                                                    winConnectorHardwareId.required = true;
+                                                                                                } else {
+                                                                                                    winConnectorRejectCriteria.disabled = true;  // enable button otherwise (e.g., if 'Pass' is checked)
+                                                                                                    winConnectorRejectCriteria.required = false;
+                                                                                                    winConnectorRejectCriteria.value = '';
+
+                                                                                                    winConnectorRejectQty.disabled = true;
+                                                                                                    winConnectorRejectQty.required = false;
+                                                                                                    winConnectorRejectQty.value = '';
+
+                                                                                                    winConnectorRejectUpload.disabled = true;
+                                                                                                    winConnectorRejectUpload.required = false;
+                                                                                                    winConnectorRejectUpload.value = '';
+
+                                                                                                    winConnectorHardwareId.disabled = true;
+                                                                                                    winConnectorHardwareId.required = false;
+                                                                                                    winConnectorHardwareId.value = '';
+                                                                                                }
+                                                                                            }
+
+                                                                                            pcbPass.addEventListener('change', handleRadioChange);
+                                                                                            pcbNa.addEventListener('change', handleRadioChange);
+                                                                                            pcbFail.addEventListener('change', handleRadioChange);
+
+                                                                                            handlePass.addEventListener('change', handleRadioChange);
+                                                                                            handleNa.addEventListener('change', handleRadioChange);
+                                                                                            handleFail.addEventListener('change', handleRadioChange);
+
+                                                                                            metalFramePass.addEventListener('change', handleRadioChange);
+                                                                                            metalFrameNa.addEventListener('change', handleRadioChange);
+                                                                                            metalFrameFail.addEventListener('change', handleRadioChange);
+
+                                                                                            hardwareFasternersPass.addEventListener('change', handleRadioChange);
+                                                                                            hardwareFasternersNa.addEventListener('change', handleRadioChange);
+                                                                                            hardwareFasternersFail.addEventListener('change', handleRadioChange);
+
+                                                                                            clipHolderPass.addEventListener('change', handleRadioChange);
+                                                                                            clipHolderNa.addEventListener('change', handleRadioChange);
+                                                                                            clipHolderFail.addEventListener('change', handleRadioChange);
+
+                                                                                            pcbEdgeFingerPass.addEventListener('change', handleRadioChange);
+                                                                                            pcbEdgeFingerNa.addEventListener('change', handleRadioChange);
+                                                                                            pcbEdgeFingerFail.addEventListener('change', handleRadioChange);
+
+                                                                                            edgeMbBananaPass.addEventListener('change', handleRadioChange);
+                                                                                            edgeMbBananaNa.addEventListener('change', handleRadioChange);
+                                                                                            edgeMbBananaFail.addEventListener('change', handleRadioChange);
+
+                                                                                            dutSocketsPass.addEventListener('change', handleRadioChange);
+                                                                                            dutSocketsNa.addEventListener('change', handleRadioChange);
+                                                                                            dutSocketsFail.addEventListener('change', handleRadioChange);
+
+                                                                                            electComponentPass.addEventListener('change', handleRadioChange);
+                                                                                            electComponentNa.addEventListener('change', handleRadioChange);
+                                                                                            electComponentFail.addEventListener('change', handleRadioChange);
+
+                                                                                            connectorPass.addEventListener('change', handleRadioChange);
+                                                                                            connectorNa.addEventListener('change', handleRadioChange);
+                                                                                            connectorFail.addEventListener('change', handleRadioChange);
+
+                                                                                            solderJointPass.addEventListener('change', handleRadioChange);
+                                                                                            solderJointNa.addEventListener('change', handleRadioChange);
+                                                                                            solderJointFail.addEventListener('change', handleRadioChange);
+
+                                                                                            winConnectorPass.addEventListener('change', handleRadioChange);
+                                                                                            winConnectorNa.addEventListener('change', handleRadioChange);
+                                                                                            winConnectorFail.addEventListener('change', handleRadioChange);
+
+                                                                                            if (pcbFail.checked) {
+                                                                                                pcbRejectCriteria.disabled = false;
+                                                                                                pcbRejectQty.disabled = false;
+                                                                                                pcbRejectUpload.disabled = false;
+                                                                                                pcbAttach.hidden = false;
+                                                                                            } else {
+                                                                                                pcbAttach.hidden = true;
+                                                                                                handleRadioChange(); // Set initial state based on default checked radio
+                                                                                            }
+                                                                                            if (handleFail.checked) {
+                                                                                                handleRejectCriteria.disabled = false;
+                                                                                                handleRejectQty.disabled = false;
+                                                                                                handleRejectUpload.disabled = false;
+                                                                                                handleAttach.hidden = false;
+                                                                                            } else {
+                                                                                                handleAttach.hidden = true;
+                                                                                                handleRadioChange(); // Set initial state based on default checked radio
+                                                                                            }
+                                                                                            if (metalFrameFail.checked) {
+                                                                                                metalFrameRejectCriteria.disabled = false;
+                                                                                                metalFrameRejectQty.disabled = false;
+                                                                                                metalFrameRejectUpload.disabled = false;
+                                                                                                metalFrameAttach.hidden = false;
+                                                                                            } else {
+                                                                                                metalFrameAttach.hidden = true;
+                                                                                                handleRadioChange(); // Set initial state based on default checked radio
+                                                                                            }
+                                                                                            if (hardwareFasternersFail.checked) {
+                                                                                                hardwareFasternersRejectCriteria.disabled = false;
+                                                                                                hardwareFasternersRejectQty.disabled = false;
+                                                                                                hardwareFasternersRejectUpload.disabled = false;
+                                                                                                hardwareFasternersAttach.hidden = false;
+                                                                                            } else {
+                                                                                                hardwareFasternersAttach.hidden = true;
+                                                                                                handleRadioChange(); // Set initial state based on default checked radio
+                                                                                            }
+                                                                                            if (clipHolderFail.checked) {
+                                                                                                clipHolderRejectCriteria.disabled = false;
+                                                                                                clipHolderRejectQty.disabled = false;
+                                                                                                clipHolderRejectUpload.disabled = false;
+                                                                                                clipHolderAttach.hidden = false;
+                                                                                            } else {
+                                                                                                clipHolderAttach.hidden = true;
+                                                                                                handleRadioChange(); // Set initial state based on default checked radio
+                                                                                            }
+                                                                                            if (pcbEdgeFingerFail.checked) {
+                                                                                                pcbEdgeFingerRejectCriteria.disabled = false;
+                                                                                                pcbEdgeFingerRejectQty.disabled = false;
+                                                                                                pcbEdgeFingerRejectUpload.disabled = false;
+                                                                                                pcbEdgeFingerAttach.hidden = false;
+                                                                                            } else {
+                                                                                                pcbEdgeFingerAttach.hidden = true;
+                                                                                                handleRadioChange(); // Set initial state based on default checked radio
+                                                                                            }
+                                                                                            if (connectorFail.checked) {
+                                                                                                connectorRejectCriteria.disabled = false;
+                                                                                                connectorRejectQty.disabled = false;
+                                                                                                connectorRejectUpload.disabled = false;
+                                                                                                connectorAttach.hidden = false;
+                                                                                            } else {
+                                                                                                connectorAttach.hidden = true;
+                                                                                                handleRadioChange(); // Set initial state based on default checked radio
+                                                                                            }
+                                                                                            if (dutSocketsFail.checked) {
+                                                                                                dutSocketsRejectCriteria.disabled = false;
+                                                                                                dutSocketsRejectQty.disabled = false;
+                                                                                                dutSocketsRejectUpload.disabled = false;
+                                                                                                dutSocketsAttach.hidden = false;
+                                                                                            } else {
+                                                                                                dutSocketsAttach.hidden = true;
+                                                                                                handleRadioChange(); // Set initial state based on default checked radio
+                                                                                            }
+                                                                                            if (edgeMbBananaFail.checked) {
+                                                                                                edgeMbBananaRejectCriteria.disabled = false;
+                                                                                                edgeMbBananaRejectQty.disabled = false;
+                                                                                                edgeMbBananaRejectUpload.disabled = false;
+                                                                                                edgeMbBananaAttach.hidden = false;
+                                                                                            } else {
+                                                                                                edgeMbBananaAttach.hidden = true;
+                                                                                                handleRadioChange(); // Set initial state based on default checked radio
+                                                                                            }
+                                                                                            if (electComponentFail.checked) {
+                                                                                                electComponentRejectCriteria.disabled = false;
+                                                                                                electComponentRejectQty.disabled = false;
+                                                                                                electComponentRejectUpload.disabled = false;
+                                                                                                electComponentAttach.hidden = false;
+                                                                                            } else {
+                                                                                                electComponentAttach.hidden = true;
+                                                                                                handleRadioChange(); // Set initial state based on default checked radio
+                                                                                            }
+                                                                                            if (solderJointFail.checked) {
+                                                                                                solderJointRejectCriteria.disabled = false;
+                                                                                                solderJointRejectQty.disabled = false;
+                                                                                                solderJointRejectUpload.disabled = false;
+                                                                                                solderJointAttach.hidden = false;
+                                                                                            } else {
+                                                                                                solderJointAttach.hidden = true;
+                                                                                                handleRadioChange(); // Set initial state based on default checked radio
+                                                                                            }
+                                                                                            if (winConnectorFail.checked) {
+                                                                                                winConnectorRejectCriteria.disabled = false;
+                                                                                                winConnectorRejectQty.disabled = false;
+                                                                                                winConnectorRejectUpload.disabled = false;
+                                                                                                winConnectorAttach.hidden = false;
+                                                                                            } else {
+                                                                                                winConnectorAttach.hidden = true;
+                                                                                                handleRadioChange(); // Set initial state based on default checked radio
+                                                                                            }
         </script>
     </s:layout-component>
 </s:layout-render>
