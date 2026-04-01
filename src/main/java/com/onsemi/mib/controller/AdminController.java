@@ -2206,6 +2206,7 @@ public class AdminController {
         String status = "SUCCESS";
         JSONObject updateHardware = new JSONObject();
         updateHardware.put("pkid", sptsId);
+        updateHardware.put("mibHardwareID", id);
         updateHardware.put("version", version);
         updateHardware.put("itemType", itemType);
         updateHardware.put("subType", subType);

@@ -6753,15 +6753,17 @@ public class ItemController {
 
         ItemDAO itemdao = new ItemDAO();
         Integer sptsId = Integer.parseInt(itemdao.getSptsPkIdByMibItemId(itempkid));
-
+        
         JSONObject addItemHw = new JSONObject();
         addItemHw.put("itemPKID", sptsId);                              // int
+        addItemHw.put("mibHardwareID", id);
         addItemHw.put("hardwareID", hardwareId);
         addItemHw.put("status", hwStatus);
         addItemHw.put("createdBy", user);
         addItemHw.put("createdDate", dateNow);                          // datetime
         addItemHw.put("verifyBy", user);
         addItemHw.put("verifyDate", dateNow);                           // datetime
+        addItemHw.put("hardwareStatus", "1");
         addItemHw.put("flag", "1");
 
         SPTSResponse sr = SPTSWebService.insertItemHardware(addItemHw);
