@@ -6,9 +6,6 @@ import com.onsemi.mib.dao.EmailVmFailDAO;
 import com.onsemi.mib.dao.HostnameDAO;
 import com.onsemi.mib.dao.ItemDAO;
 import com.onsemi.mib.dao.ItemHardwareDAO;
-import com.onsemi.mib.dao.ItemLogDAO;
-import com.onsemi.mib.dao.ItemMaverickDAO;
-import com.onsemi.mib.dao.ItemVisualInspectionDAO;
 import com.onsemi.mib.dao.ParameterDetailsDAO;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
@@ -28,9 +25,6 @@ import com.onsemi.mib.model.EmailVmFail;
 import com.onsemi.mib.model.Hostname;
 import com.onsemi.mib.model.Item;
 import com.onsemi.mib.model.ItemHardware;
-import com.onsemi.mib.model.ItemLog;
-import com.onsemi.mib.model.ItemMaverick;
-import com.onsemi.mib.model.ItemVisualInspection;
 import com.onsemi.mib.model.ParameterDetails;
 import com.onsemi.mib.model.RmsBookingDetail;
 import com.onsemi.mib.model.RmsBookingDetailHwReplacement;
@@ -58,7 +52,6 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
-import java.util.Arrays;
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletResponse;
 import org.json.JSONArray;
@@ -985,7 +978,7 @@ public class RmsBookingDetailController {
         RmsBookingHardwareGroupDAO h2D = new RmsBookingHardwareGroupDAO();
         List<RmsBookingHardwareGroup> hwGroupList = h2D.getRmsBookingHardwareGroupListByGroupId(groupId);
         model.addAttribute("hwGroupList", hwGroupList);
-        
+
         //get booking remarks
         RmsBookingHardwareDAO rmsHD = new RmsBookingHardwareDAO();
         int countRemarks = rmsHD.getCountHwWithRemarksByBookingPkid(bookingId);
@@ -1082,6 +1075,30 @@ public class RmsBookingDetailController {
         } else {
             model.addAttribute("valueJsonWinConnector", new Gson().toJson(itemVm.getWinConnectorHardwareId()));
         }
+        if (itemVm.getTeflonConnectorHardwareId() != null && !"".equals(itemVm.getTeflonConnectorHardwareId())) {
+            String[] teflonConnectorHardwareIdList = itemVm.getTeflonConnectorHardwareId().split(",");
+            model.addAttribute("valueJsonTeflonConnector", new Gson().toJson(teflonConnectorHardwareIdList));
+        } else {
+            model.addAttribute("valueJsonTeflonConnector", new Gson().toJson(itemVm.getTeflonConnectorHardwareId()));
+        }
+        if (itemVm.getPogoReceptaclesPinHardwareId() != null && !"".equals(itemVm.getPogoReceptaclesPinHardwareId())) {
+            String[] pogoReceptaclesPinHardwareIdList = itemVm.getPogoReceptaclesPinHardwareId().split(",");
+            model.addAttribute("valueJsonPogoReceptaclesPin", new Gson().toJson(pogoReceptaclesPinHardwareIdList));
+        } else {
+            model.addAttribute("valueJsonPogoReceptaclesPin", new Gson().toJson(itemVm.getPogoReceptaclesPinHardwareId()));
+        }
+        if (itemVm.getCableWiredCopperWireHardwareId() != null && !"".equals(itemVm.getCableWiredCopperWireHardwareId())) {
+            String[] cableWiredCopperWireHardwareIdList = itemVm.getCableWiredCopperWireHardwareId().split(",");
+            model.addAttribute("valueJsonCableWiredCopperWire", new Gson().toJson(cableWiredCopperWireHardwareIdList));
+        } else {
+            model.addAttribute("valueJsonCableWiredCopperWire", new Gson().toJson(itemVm.getCableWiredCopperWireHardwareId()));
+        }
+        if (itemVm.getLabelIdentificationHardwareId() != null && !"".equals(itemVm.getLabelIdentificationHardwareId())) {
+            String[] labelIdentificationHardwareIdList = itemVm.getLabelIdentificationHardwareId().split(",");
+            model.addAttribute("valueJsonLabelIdentification", new Gson().toJson(labelIdentificationHardwareIdList));
+        } else {
+            model.addAttribute("valueJsonLabelIdentification", new Gson().toJson(itemVm.getLabelIdentificationHardwareId()));
+        }
 
 //        LOGGER.info("itemVm.getPcbReject(): " + itemVm.getPcbReject());
         ParameterDetailsDAO pD = new ParameterDetailsDAO();
@@ -1135,6 +1152,22 @@ public class RmsBookingDetailController {
         pD = new ParameterDetailsDAO();
         List<ParameterDetails> winConnectorReject = pD.getGroupParameterDetailList(itemVm.getWinConnectorReject(), "015");
         model.addAttribute("winConnectorReject", winConnectorReject);
+
+        pD = new ParameterDetailsDAO();
+        List<ParameterDetails> teflonConnectorReject = pD.getGroupParameterDetailList(itemVm.getTeflonConnectorReject(), "020");
+        model.addAttribute("teflonConnectorReject", teflonConnectorReject);
+
+        pD = new ParameterDetailsDAO();
+        List<ParameterDetails> pogoReceptaclesPinReject = pD.getGroupParameterDetailList(itemVm.getPogoReceptaclesPinReject(), "021");
+        model.addAttribute("pogoReceptaclesPinReject", pogoReceptaclesPinReject);
+
+        pD = new ParameterDetailsDAO();
+        List<ParameterDetails> cableWiredCopperWireReject = pD.getGroupParameterDetailList(itemVm.getCableWiredCopperWireReject(), "022");
+        model.addAttribute("cableWiredCopperWireReject", cableWiredCopperWireReject);
+
+        pD = new ParameterDetailsDAO();
+        List<ParameterDetails> labelIdentificationReject = pD.getGroupParameterDetailList(itemVm.getLabelIdentificationReject(), "023");
+        model.addAttribute("labelIdentificationReject", labelIdentificationReject);
 
         if (h.getSubStatus().contains("HW Registration")) {
             String hwActive = "active";
@@ -1508,6 +1541,10 @@ public class RmsBookingDetailController {
             @RequestParam(required = false) String electComponentHardwareId,
             @RequestParam(required = false) String solderJointHardwareId,
             @RequestParam(required = false) String winConnectorHardwareId,
+            @RequestParam(required = false) String teflonConnectorHardwareId,
+            @RequestParam(required = false) String pogoReceptaclesPinHardwareId,
+            @RequestParam(required = false) String cableWiredCopperWireHardwareId,
+            @RequestParam(required = false) String labelIdentificationHardwareId,
             @RequestParam(required = false) String pcbReject,
             @RequestParam(required = false) String handle,
             @RequestParam(required = false) String handleReject,
@@ -1531,6 +1568,14 @@ public class RmsBookingDetailController {
             @RequestParam(required = false) String solderJointReject,
             @RequestParam(required = false) String winConnector,
             @RequestParam(required = false) String winConnectorReject,
+            @RequestParam(required = false) String teflonConnector,
+            @RequestParam(required = false) String teflonConnectorReject,
+            @RequestParam(required = false) String pogoReceptaclesPin,
+            @RequestParam(required = false) String pogoReceptaclesPinReject,
+            @RequestParam(required = false) String cableWiredCopperWire,
+            @RequestParam(required = false) String cableWiredCopperWireReject,
+            @RequestParam(required = false) String labelIdentification,
+            @RequestParam(required = false) String labelIdentificationReject,
             @RequestParam(required = false) String remarks,
             @RequestParam(required = false) String pcbRejectQty,
             @RequestParam(required = false) MultipartFile pcbRejectUpload,
@@ -1555,7 +1600,15 @@ public class RmsBookingDetailController {
             @RequestParam(required = false) String solderJointRejectQty,
             @RequestParam(required = false) MultipartFile solderJointRejectUpload,
             @RequestParam(required = false) String winConnectorRejectQty,
-            @RequestParam(required = false) MultipartFile winConnectorRejectUpload
+            @RequestParam(required = false) MultipartFile winConnectorRejectUpload,
+            @RequestParam(required = false) String teflonConnectorRejectQty,
+            @RequestParam(required = false) MultipartFile teflonConnectorRejectUpload,
+            @RequestParam(required = false) String pogoReceptaclesPinRejectQty,
+            @RequestParam(required = false) MultipartFile pogoReceptaclesPinRejectUpload,
+            @RequestParam(required = false) String cableWiredCopperWireRejectQty,
+            @RequestParam(required = false) MultipartFile cableWiredCopperWireRejectUpload,
+            @RequestParam(required = false) String labelIdentificationRejectQty,
+            @RequestParam(required = false) MultipartFile labelIdentificationRejectUpload
     ) throws IOException {
 
         String finalStatus = "";
@@ -1571,6 +1624,10 @@ public class RmsBookingDetailController {
         String stringPathElectComponent = "";
         String stringPathSolderJoint = "";
         String stringPathWinConnector = "";
+        String stringPathTeflonConnector = "";
+        String stringPathPogoReceptaclesPin = "";
+        String stringPathCableWiredCopperWire = "";
+        String stringPathLabelIdentification = "";
         String emailBodyFail = "";
 
 //        if (null == itemStatus) {
@@ -1606,6 +1663,10 @@ public class RmsBookingDetailController {
         itemVm.setElectComponentHardwareId(electComponentHardwareId);
         itemVm.setSolderJointHardwareId(solderJointHardwareId);
         itemVm.setWinConnectorHardwareId(winConnectorHardwareId);
+        itemVm.setTeflonConnectorHardwareId(teflonConnectorHardwareId);
+        itemVm.setPogoReceptaclesPinHardwareId(pogoReceptaclesPinHardwareId);
+        itemVm.setCableWiredCopperWireHardwareId(cableWiredCopperWireHardwareId);
+        itemVm.setLabelIdentificationHardwareId(labelIdentificationHardwareId);
         itemVm.setPcbReject(pcbReject);
         itemVm.setHandle(handle);
         itemVm.setHandleReject(handleReject);
@@ -1629,6 +1690,14 @@ public class RmsBookingDetailController {
         itemVm.setSolderJointReject(solderJointReject);
         itemVm.setWinConnector(winConnector);
         itemVm.setWinConnectorReject(winConnectorReject);
+        itemVm.setTeflonConnector(teflonConnector);
+        itemVm.setTeflonConnectorReject(teflonConnectorReject);
+        itemVm.setPogoReceptaclesPin(pogoReceptaclesPin);
+        itemVm.setPogoReceptaclesPinReject(pogoReceptaclesPinReject);
+        itemVm.setCableWiredCopperWire(cableWiredCopperWire);
+        itemVm.setCableWiredCopperWireReject(cableWiredCopperWireReject);
+        itemVm.setLabelIdentification(labelIdentification);
+        itemVm.setLabelIdentificationReject(labelIdentificationReject);
         itemVm.setRemarks(remarks);
 
         if ("Pass".equals(pcb) || "NA".equals(pcb)) {
@@ -1703,9 +1772,34 @@ public class RmsBookingDetailController {
             itemVm.setWinConnectorRejectQty(winConnectorRejectQty);
             emailBodyFail += "Win Connector Fail : " + winConnectorReject + "<br /> ";
         }
+        if ("Pass".equals(teflonConnector) || "NA".equals(teflonConnector)) {
+            itemVm.setTeflonConnectorRejectQty("0");
+        } else {
+            itemVm.setTeflonConnectorRejectQty(teflonConnectorRejectQty);
+            emailBodyFail += "Teflon Connector Fail : " + teflonConnectorReject + "<br /> ";
+        }
+        if ("Pass".equals(pogoReceptaclesPin) || "NA".equals(pogoReceptaclesPin)) {
+            itemVm.setPogoReceptaclesPinRejectQty("0");
+        } else {
+            itemVm.setPogoReceptaclesPinRejectQty(pogoReceptaclesPinRejectQty);
+            emailBodyFail += "Pogo / Receptacles Pin Fail : " + pogoReceptaclesPinReject + "<br /> ";
+        }
+        if ("Pass".equals(cableWiredCopperWire) || "NA".equals(cableWiredCopperWire)) {
+            itemVm.setCableWiredCopperWireRejectQty("0");
+        } else {
+            itemVm.setCableWiredCopperWireRejectQty(cableWiredCopperWireRejectQty);
+            emailBodyFail += "Cable/Wired/Copper Wire Fail : " + cableWiredCopperWireReject + "<br /> ";
+        }
+        if ("Pass".equals(labelIdentification) || "NA".equals(labelIdentification)) {
+            itemVm.setLabelIdentificationRejectQty("0");
+        } else {
+            itemVm.setLabelIdentificationRejectQty(labelIdentificationRejectQty);
+            emailBodyFail += "Label & Identification Fail : " + labelIdentificationReject + "<br /> ";
+        }
 
         if ("Fail".equals(pcb) || "Fail".equals(handle) || "Fail".equals(metalFrame) || "Fail".equals(hardwareFasterners) || "Fail".equals(clipHolder) || "Fail".equals(pcbEdgeFinger) || "Fail".equals(connector)
-                || "Fail".equals(dutSockets) || "Fail".equals(edgeMbBanana) || "Fail".equals(electComponent) || "Fail".equals(solderJoint) || "Fail".equals(winConnector)) {
+                || "Fail".equals(dutSockets) || "Fail".equals(edgeMbBanana) || "Fail".equals(electComponent) || "Fail".equals(solderJoint) || "Fail".equals(winConnector)
+                || "Fail".equals(teflonConnector) || "Fail".equals(pogoReceptaclesPin) || "Fail".equals(cableWiredCopperWire) || "Fail".equals(labelIdentification)) {
             finalStatus = "Fail";
             itemVm.setFlag("99");
         } else {
@@ -1882,6 +1976,58 @@ public class RmsBookingDetailController {
                 }
                 itemVm.setWinConnectorRejectUpload(stringPathWinConnector);
             }
+            if (teflonConnectorRejectUpload != null) {
+                try {
+                    // Get the file and save it somewhere
+                    byte[] bytesTeflonConnector = teflonConnectorRejectUpload.getBytes();
+                    Path pathTeflonConnector = Paths.get(UPLOADED_FOLDER + q.getGeneratedKey() + "_teflonConnector_" + teflonConnectorRejectUpload.getOriginalFilename());
+                    Files.write(pathTeflonConnector, bytesTeflonConnector);
+                    stringPathTeflonConnector = pathTeflonConnector.toString();
+                    LOGGER.info("pathTeflonConnector : " + pathTeflonConnector);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                itemVm.setTeflonConnectorRejectUpload(stringPathTeflonConnector);
+            }
+            if (pogoReceptaclesPinRejectUpload != null) {
+                try {
+                    // Get the file and save it somewhere
+                    byte[] bytesPogoConnector = pogoReceptaclesPinRejectUpload.getBytes();
+                    Path pathPogoConnector = Paths.get(UPLOADED_FOLDER + q.getGeneratedKey() + "_pogoReceptaclesPin_" + pogoReceptaclesPinRejectUpload.getOriginalFilename());
+                    Files.write(pathPogoConnector, bytesPogoConnector);
+                    stringPathPogoReceptaclesPin = pathPogoConnector.toString();
+                    LOGGER.info("pathPogoConnector : " + pathPogoConnector);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                itemVm.setPogoReceptaclesPinRejectUpload(stringPathPogoReceptaclesPin);
+            }
+            if (cableWiredCopperWireRejectUpload != null) {
+                try {
+                    // Get the file and save it somewhere
+                    byte[] bytesCableConnector = cableWiredCopperWireRejectUpload.getBytes();
+                    Path pathCableConnector = Paths.get(UPLOADED_FOLDER + q.getGeneratedKey() + "_cableWiredCopperWire_" + cableWiredCopperWireRejectUpload.getOriginalFilename());
+                    Files.write(pathCableConnector, bytesCableConnector);
+                    stringPathCableWiredCopperWire = pathCableConnector.toString();
+                    LOGGER.info("pathCableConnector : " + pathCableConnector);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                itemVm.setCableWiredCopperWireRejectUpload(stringPathCableWiredCopperWire);
+            }
+            if (labelIdentificationRejectUpload != null) {
+                try {
+                    // Get the file and save it somewhere
+                    byte[] bytesLabelConnector = labelIdentificationRejectUpload.getBytes();
+                    Path pathLabelConnector = Paths.get(UPLOADED_FOLDER + q.getGeneratedKey() + "_labelIdentification_" + labelIdentificationRejectUpload.getOriginalFilename());
+                    Files.write(pathLabelConnector, bytesLabelConnector);
+                    stringPathLabelIdentification = pathLabelConnector.toString();
+                    LOGGER.info("pathLabelConnector : " + pathLabelConnector);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                itemVm.setLabelIdentificationRejectUpload(stringPathLabelIdentification);
+            }
             itemVm.setId(q.getGeneratedKey());
             itemVmD = new RmsBookingVisualInspectionDAO();
             QueryResult q3 = itemVmD.updateItemVisualInspectionForAttachment(itemVm);
@@ -2041,6 +2187,18 @@ public class RmsBookingDetailController {
                 break;
             case "winConnector":
                 attachment = item.getWinConnectorRejectUpload();
+                break;
+            case "teflonConnector":
+                attachment = item.getTeflonConnectorRejectUpload();
+                break;
+            case "pogoReceptaclesPin":
+                attachment = item.getPogoReceptaclesPinRejectUpload();
+                break;
+            case "cableWiredCopperWire":
+                attachment = item.getCableWiredCopperWireRejectUpload();
+                break;
+            case "labelIdentification":
+                attachment = item.getLabelIdentificationRejectUpload();
                 break;
             default:
                 attachment = "";

@@ -988,14 +988,14 @@ public class ItemController {
         }
         LOGGER.info("Total data SF: " + countSf);
         LOGGER.info("Total insert SF: " + countSfAdd);
-        
+
         hwD = new ItemDAO();
         String mibItemId = hwD.getMibItemIdBySptsPkId(pkID);
-        
+
         JSONObject paramsHwid = new JSONObject();
         paramsHwid.put("itemPKID", pkID);
         JSONArray getItemHwByParam = SPTSWebService.getHardwareIdByParam(paramsHwid);
-        
+
         for (int i = 0; i < getItemHwByParam.length(); i++) {
             Integer sptsId = 0;
             String hardwareId = "";
@@ -1005,7 +1005,7 @@ public class ItemController {
             Integer flag = 0;
             String verifyBy = "";
             String verifyDate = "";
-            
+
             sptsId = getItemHwByParam.getJSONObject(i).getInt("PKID");
             hardwareId = getItemHwByParam.getJSONObject(i).getString("HardwareID");
             status = getItemHwByParam.getJSONObject(i).getString("Status");
@@ -1024,7 +1024,7 @@ public class ItemController {
                     verifyDate = tarikh + " " + masa;
                 }
             }
-            
+
             ItemHardware itemhardware = new ItemHardware();
             itemhardware.setMibItemId(mibItemId);
             itemhardware.setSptsPkid(sptsId.toString());
@@ -1033,7 +1033,7 @@ public class ItemController {
             itemhardware.setCreatedBy(createdBy);
             itemhardware.setCreatedDate(createdDate);
             itemhardware.setFlag(flag.toString());
-            
+
             ItemHardwareDAO itemhwdao = new ItemHardwareDAO();
             ItemHardware itemhw = itemhwdao.getItemHardwareByHardwareId(hardwareId);
             if (itemhw == null) {
@@ -3374,6 +3374,22 @@ public class ItemController {
         List<ParameterDetails> winConnectorReject = pD.getGroupParameterDetailList(itemVm.getWinConnectorReject(), "015");
         model.addAttribute("winConnectorReject", winConnectorReject);
 
+        pD = new ParameterDetailsDAO();
+        List<ParameterDetails> teflonConnectorReject = pD.getGroupParameterDetailList(itemVm.getTeflonConnectorReject(), "020");
+        model.addAttribute("teflonConnectorReject", teflonConnectorReject);
+
+        pD = new ParameterDetailsDAO();
+        List<ParameterDetails> pogoReceptaclesPinReject = pD.getGroupParameterDetailList(itemVm.getPogoReceptaclesPinReject(), "021");
+        model.addAttribute("pogoReceptaclesPinReject", pogoReceptaclesPinReject);
+
+        pD = new ParameterDetailsDAO();
+        List<ParameterDetails> cableWiredCopperWireReject = pD.getGroupParameterDetailList(itemVm.getCableWiredCopperWireReject(), "022");
+        model.addAttribute("cableWiredCopperWireReject", cableWiredCopperWireReject);
+
+        pD = new ParameterDetailsDAO();
+        List<ParameterDetails> labelIdentificationReject = pD.getGroupParameterDetailList(itemVm.getLabelIdentificationReject(), "023");
+        model.addAttribute("labelIdentificationReject", labelIdentificationReject);
+
         if (item.getStatus().contains("Good")) {
             String hwActive = "active";
             String hwActiveTab = "show active";
@@ -3915,6 +3931,14 @@ public class ItemController {
             @RequestParam(required = false) String solderJointReject,
             @RequestParam(required = false) String winConnector,
             @RequestParam(required = false) String winConnectorReject,
+            @RequestParam(required = false) String teflonConnector,
+            @RequestParam(required = false) String teflonConnectorReject,
+            @RequestParam(required = false) String pogoReceptaclesPin,
+            @RequestParam(required = false) String pogoReceptaclesPinReject,
+            @RequestParam(required = false) String cableWiredCopperWire,
+            @RequestParam(required = false) String cableWiredCopperWireReject,
+            @RequestParam(required = false) String labelIdentification,
+            @RequestParam(required = false) String labelIdentificationReject,
             @RequestParam(required = false) String remarks,
             @RequestParam(required = false) String pcbRejectQty,
             @RequestParam(required = false) MultipartFile pcbRejectUpload,
@@ -3939,7 +3963,15 @@ public class ItemController {
             @RequestParam(required = false) String solderJointRejectQty,
             @RequestParam(required = false) MultipartFile solderJointRejectUpload,
             @RequestParam(required = false) String winConnectorRejectQty,
-            @RequestParam(required = false) MultipartFile winConnectorRejectUpload
+            @RequestParam(required = false) MultipartFile winConnectorRejectUpload,
+            @RequestParam(required = false) String teflonConnectorRejectQty,
+            @RequestParam(required = false) MultipartFile teflonConnectorRejectUpload,
+            @RequestParam(required = false) String pogoReceptaclesPinRejectQty,
+            @RequestParam(required = false) MultipartFile pogoReceptaclesPinRejectUpload,
+            @RequestParam(required = false) String cableWiredCopperWireRejectQty,
+            @RequestParam(required = false) MultipartFile cableWiredCopperWireRejectUpload,
+            @RequestParam(required = false) String labelIdentificationRejectQty,
+            @RequestParam(required = false) MultipartFile labelIdentificationRejectUpload
     ) throws IOException {
 
         String finalStatus = "";
@@ -3955,6 +3987,10 @@ public class ItemController {
         String stringPathElectComponent = "";
         String stringPathSolderJoint = "";
         String stringPathWinConnector = "";
+        String stringPathTeflonConnector = "";
+        String stringPathPogoReceptaclesPin = "";
+        String stringPathCableWiredCopperWire = "";
+        String stringPathLabelIdentification = "";
         String emailBodyFail = "";
 
         ItemVisualInspection itemVm = new ItemVisualInspection();
@@ -3999,6 +4035,14 @@ public class ItemController {
         itemVm.setSolderJointReject(solderJointReject);
         itemVm.setWinConnector(winConnector);
         itemVm.setWinConnectorReject(winConnectorReject);
+        itemVm.setTeflonConnector(teflonConnector);
+        itemVm.setTeflonConnectorReject(teflonConnectorReject);
+        itemVm.setPogoReceptaclesPin(pogoReceptaclesPin);
+        itemVm.setPogoReceptaclesPinReject(pogoReceptaclesPinReject);
+        itemVm.setCableWiredCopperWire(cableWiredCopperWire);
+        itemVm.setCableWiredCopperWireReject(cableWiredCopperWireReject);
+        itemVm.setLabelIdentification(labelIdentification);
+        itemVm.setLabelIdentificationReject(labelIdentificationReject);
         itemVm.setRemarks(remarks);
 
         if ("Pass".equals(pcb) || "NA".equals(pcb)) {
@@ -4073,9 +4117,34 @@ public class ItemController {
             itemVm.setWinConnectorRejectQty(winConnectorRejectQty);
             emailBodyFail += "Win Connector Fail : " + winConnectorReject + "<br /> ";
         }
+        if ("Pass".equals(teflonConnector) || "NA".equals(teflonConnector)) {
+            itemVm.setTeflonConnectorRejectQty("0");
+        } else {
+            itemVm.setTeflonConnectorRejectQty(teflonConnectorRejectQty);
+            emailBodyFail += "Teflon Connector Fail : " + teflonConnectorReject + "<br /> ";
+        }
+        if ("Pass".equals(pogoReceptaclesPin) || "NA".equals(pogoReceptaclesPin)) {
+            itemVm.setPogoReceptaclesPinRejectQty("0");
+        } else {
+            itemVm.setPogoReceptaclesPinRejectQty(pogoReceptaclesPinRejectQty);
+            emailBodyFail += "Pogo / Receptacles Pin Fail : " + pogoReceptaclesPinReject + "<br /> ";
+        }
+        if ("Pass".equals(cableWiredCopperWire) || "NA".equals(cableWiredCopperWire)) {
+            itemVm.setCableWiredCopperWireRejectQty("0");
+        } else {
+            itemVm.setCableWiredCopperWireRejectQty(cableWiredCopperWireRejectQty);
+            emailBodyFail += "Cable/Wired/Copper Wire Fail : " + cableWiredCopperWireReject + "<br /> ";
+        }
+        if ("Pass".equals(labelIdentification) || "NA".equals(labelIdentification)) {
+            itemVm.setLabelIdentificationRejectQty("0");
+        } else {
+            itemVm.setLabelIdentificationRejectQty(labelIdentificationRejectQty);
+            emailBodyFail += "Label & Identification Fail : " + labelIdentificationReject + "<br /> ";
+        }
 
         if ("Fail".equals(pcb) || "Fail".equals(handle) || "Fail".equals(metalFrame) || "Fail".equals(hardwareFasterners) || "Fail".equals(clipHolder) || "Fail".equals(pcbEdgeFinger) || "Fail".equals(connector)
-                || "Fail".equals(dutSockets) || "Fail".equals(edgeMbBanana) || "Fail".equals(electComponent) || "Fail".equals(solderJoint) || "Fail".equals(winConnector)) {
+                || "Fail".equals(dutSockets) || "Fail".equals(edgeMbBanana) || "Fail".equals(electComponent) || "Fail".equals(solderJoint) || "Fail".equals(winConnector) 
+                || "Fail".equals(teflonConnector) || "Fail".equals(pogoReceptaclesPin) || "Fail".equals(cableWiredCopperWire) || "Fail".equals(labelIdentification)) {
             finalStatus = "Fail";
             itemVm.setFlag("99");
         } else {
@@ -4090,7 +4159,6 @@ public class ItemController {
         if (!"0".equals(q.getGeneratedKey())) {
 
             itemVm = new ItemVisualInspection();
-            LOGGER.info("pcbRejectUpload: " + pcbRejectUpload);
 
             //check if user upload any attachment
 //            if (!pcbRejectUpload.isEmpty()) {
@@ -4251,6 +4319,58 @@ public class ItemController {
                     e.printStackTrace();
                 }
                 itemVm.setWinConnectorRejectUpload(stringPathWinConnector);
+            }
+            if (teflonConnectorRejectUpload != null) {
+                try {
+                    // Get the file and save it somewhere
+                    byte[] bytesTeflonConnector = teflonConnectorRejectUpload.getBytes();
+                    Path pathTeflonConnector = Paths.get(UPLOADED_FOLDER + q.getGeneratedKey() + "_teflonConnector_" + teflonConnectorRejectUpload.getOriginalFilename());
+                    Files.write(pathTeflonConnector, bytesTeflonConnector);
+                    stringPathTeflonConnector = pathTeflonConnector.toString();
+                    LOGGER.info("pathTeflonConnector : " + pathTeflonConnector);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                itemVm.setTeflonConnectorRejectUpload(stringPathTeflonConnector);
+            }
+            if (pogoReceptaclesPinRejectUpload != null) {
+                try {
+                    // Get the file and save it somewhere
+                    byte[] bytesPogoConnector = pogoReceptaclesPinRejectUpload.getBytes();
+                    Path pathPogoConnector = Paths.get(UPLOADED_FOLDER + q.getGeneratedKey() + "_pogoReceptaclesPin_" + pogoReceptaclesPinRejectUpload.getOriginalFilename());
+                    Files.write(pathPogoConnector, bytesPogoConnector);
+                    stringPathPogoReceptaclesPin = pathPogoConnector.toString();
+                    LOGGER.info("pathPogoConnector : " + pathPogoConnector);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                itemVm.setPogoReceptaclesPinRejectUpload(stringPathPogoReceptaclesPin);
+            }
+            if (cableWiredCopperWireRejectUpload != null) {
+                try {
+                    // Get the file and save it somewhere
+                    byte[] bytesCableConnector = cableWiredCopperWireRejectUpload.getBytes();
+                    Path pathCableConnector = Paths.get(UPLOADED_FOLDER + q.getGeneratedKey() + "_cableWiredCopperWire_" + cableWiredCopperWireRejectUpload.getOriginalFilename());
+                    Files.write(pathCableConnector, bytesCableConnector);
+                    stringPathCableWiredCopperWire = pathCableConnector.toString();
+                    LOGGER.info("pathCableConnector : " + pathCableConnector);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                itemVm.setCableWiredCopperWireRejectUpload(stringPathCableWiredCopperWire);
+            }
+            if (labelIdentificationRejectUpload != null) {
+                try {
+                    // Get the file and save it somewhere
+                    byte[] bytesLabelConnector = labelIdentificationRejectUpload.getBytes();
+                    Path pathLabelConnector = Paths.get(UPLOADED_FOLDER + q.getGeneratedKey() + "_labelIdentification_" + labelIdentificationRejectUpload.getOriginalFilename());
+                    Files.write(pathLabelConnector, bytesLabelConnector);
+                    stringPathLabelIdentification = pathLabelConnector.toString();
+                    LOGGER.info("pathLabelConnector : " + pathLabelConnector);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                itemVm.setLabelIdentificationRejectUpload(stringPathLabelIdentification);
             }
             itemVm.setId(q.getGeneratedKey());
             itemVmD = new ItemVisualInspectionDAO();
@@ -4846,16 +4966,16 @@ public class ItemController {
         addItem.put("subType", subType);
         addItem.put("assemblyID", assemblyId);
         addItem.put("remarks", remarks);
-        
+
         if (expirationDate == null || "".equals(expirationDate)) {
-            
+
         } else {
             String date1 = expirationDate.substring(0, 10);
             String time = expirationDate.substring(11, 19);
             completeDateTime = date1 + "T" + time;
             addItem.put("expirationDate", completeDateTime);
         }
-        
+
 //        addItem.put("downtimeValue", downtimeValue);
 //        addItem.put("downtimeUnit", downtimeUnit);
 //        addItem.put("implementationCost", implementationCost);
@@ -4976,6 +5096,18 @@ public class ItemController {
                 break;
             case "winConnector":
                 attachment = item.getWinConnectorRejectUpload();
+                break;
+            case "teflonConnector":
+                attachment = item.getTeflonConnectorRejectUpload();
+                break;
+            case "pogoReceptaclesPin":
+                attachment = item.getPogoReceptaclesPinRejectUpload();
+                break;
+            case "cableWiredCopperWire":
+                attachment = item.getCableWiredCopperWireRejectUpload();
+                break;
+            case "labelIdentification":
+                attachment = item.getLabelIdentificationRejectUpload();
                 break;
             default:
                 attachment = "";
@@ -6471,11 +6603,11 @@ public class ItemController {
         ItemHardwareConfigDAO itemhwdao = new ItemHardwareConfigDAO();
         String subtype = item.getSubType() == null ? "" : item.getSubType();
         ItemHardwareConfig itemconfig = itemhwdao.getConfigItem(item.getItemType(), subtype);
-        
+
         ItemHardwareDAO itmhwdao = new ItemHardwareDAO();
         String totalCreated = itmhwdao.getTotalHardwareCreated(item.getId()).toString();
         model.addAttribute("totalHwid", totalCreated);
-        
+
         Integer w1 = Integer.parseInt(item.getTotalQty());
         Integer w2 = Integer.parseInt(totalCreated);
         Integer baki = w1 - w2;
@@ -6549,7 +6681,7 @@ public class ItemController {
             } else {
                 // KITA BUAT YANG INI UNTUK CATER SAMADA ADA COMPONENT SELECTED ATAU TIDAK
                 String dataComponent = (component != null && !component.isEmpty()) ? "Yes" : itemconfig.getComponent();
-                
+
                 StringJoiner sj = new StringJoiner("-");
                 addIfYes(sj, itemconfig.getSupplier(), supplier);
                 addIfYes(sj, itemconfig.getAssemblyNo(), assemblyNo);
@@ -6639,7 +6771,7 @@ public class ItemController {
         model.addAttribute("maklumatList", maklumatList);
         model.addAttribute("totalHwid", totalCreated);
         model.addAttribute("totalAvail", totalAvail);
-        
+
         // HANTAR KE JSP HANYA UNTUK TENTUKAN NK KELUAR KAN PIE CHART ATAU TIDAK
         ItemHardwareConfigDAO itemhwdao2 = new ItemHardwareConfigDAO();
         String subtype = item.getSubType() == null ? "" : item.getSubType();
@@ -6649,7 +6781,7 @@ public class ItemController {
         } else {
             String check = itemconfig.getSameItemId();
             model.addAttribute("checkView", check);
-        } 
+        }
 
         return "item/verify_hardware_id";
     }
@@ -6686,7 +6818,7 @@ public class ItemController {
         }
         return "redirect:/hw/" + sptsPkid;
     }
-    
+
     @RequestMapping(value = "/item/hardware/delete/{hwid}", method = {RequestMethod.GET, RequestMethod.POST})
     public String deleteHardwareId(
             Model model,
@@ -6694,15 +6826,15 @@ public class ItemController {
             RedirectAttributes redirectAttrs,
             @ModelAttribute UserSession userSession,
             @PathVariable("hwid") String hwid) throws IOException {
-        
+
         ItemHardwareDAO itemhwdao = new ItemHardwareDAO();
         String sptsPkid = itemhwdao.getSptsIdByHwId(hwid);
         itemhwdao = new ItemHardwareDAO();
         String mibItemId = itemhwdao.getMibItemIdByHwId(hwid);
-        
+
         itemhwdao = new ItemHardwareDAO();
         itemhwdao.deleteItemHardware(hwid);
-        
+
         // THIS FUNCTION TO MAKE SURE THE REDIRECT PAGE POINT TO THE CORRECT SELECTED ITEM ID
         if ("0".equals(sptsPkid)) {
             // DO NOTHING HERE?
@@ -6711,7 +6843,7 @@ public class ItemController {
             JSONObject params = new JSONObject();
             params.put("pkid", sptsPkid);
             JSONArray getItemByPKID = SPTSWebService.getHardwareIdByPKID(params);
-            
+
             // DAPAQTKAN DATA UNTUK HARDWARE ID DI SPTS DATABASE
             String sptsVersion = "";
             Integer pkid = 0;
@@ -6720,7 +6852,7 @@ public class ItemController {
                 sptsVersion = getItemByPKID.getJSONObject(i).getString("Version").toUpperCase();
                 pkid = getItemByPKID.getJSONObject(i).getInt("PKID");
             }
-            
+
             if ("0".equals(pkid)) {
                 // DO NOTHING HERE
                 redirectAttrs.addFlashAttribute("error", messageSource.getMessage("item.label.hardware.deletespts.error", args, locale));
@@ -6779,7 +6911,8 @@ public class ItemController {
             status = "FAILED";
             LinkedHashMap<String, String> itemhmap;
             ObjectMapper mapper = new ObjectMapper();
-            itemhmap = mapper.readValue(addItemHw.toString(), new TypeReference<LinkedHashMap<String, String>>() { });
+            itemhmap = mapper.readValue(addItemHw.toString(), new TypeReference<LinkedHashMap<String, String>>() {
+            });
             String errorMessage;
             if (sr.getErrorDetail().equals("")) {
                 errorMessage = sr.getErrorCode() + " - " + sr.getErrorMessage();

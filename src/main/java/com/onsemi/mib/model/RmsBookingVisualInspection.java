@@ -71,6 +71,30 @@ public class RmsBookingVisualInspection {
     private String electComponentHardwareId;
     private String solderJointHardwareId;
     private String winConnectorHardwareId;
+    
+    private String teflonConnector;
+    private String teflonConnectorHardwareId;
+    private String teflonConnectorReject;
+    private String teflonConnectorRejectUpload;
+    private String teflonConnectorRejectQty;
+
+    private String pogoReceptaclesPin;
+    private String pogoReceptaclesPinHardwareId;
+    private String pogoReceptaclesPinReject;
+    private String pogoReceptaclesPinRejectUpload;
+    private String pogoReceptaclesPinRejectQty;
+
+    private String cableWiredCopperWire;
+    private String cableWiredCopperWireHardwareId;
+    private String cableWiredCopperWireReject;
+    private String cableWiredCopperWireRejectUpload;
+    private String cableWiredCopperWireRejectQty;
+
+    private String labelIdentification;
+    private String labelIdentificationHardwareId;
+    private String labelIdentificationReject;
+    private String labelIdentificationRejectUpload;
+    private String labelIdentificationRejectQty;
 
     public String getPcbHardwareId() {
         return pcbHardwareId;
@@ -615,5 +639,167 @@ public class RmsBookingVisualInspection {
     public void setFlag(String flag) {
         this.flag = flag;
     }
+
+    public String getTeflonConnector() {
+        return teflonConnector;
+    }
+
+    public void setTeflonConnector(String teflonConnector) {
+        this.teflonConnector = teflonConnector;
+    }
+
+    public String getTeflonConnectorHardwareId() {
+        return teflonConnectorHardwareId;
+    }
+
+    public void setTeflonConnectorHardwareId(String teflonConnectorHardwareId) {
+        this.teflonConnectorHardwareId = teflonConnectorHardwareId;
+    }
+
+    public String getTeflonConnectorReject() {
+        return teflonConnectorReject;
+    }
+
+    public void setTeflonConnectorReject(String teflonConnectorReject) {
+        this.teflonConnectorReject = teflonConnectorReject;
+    }
+
+    public String getTeflonConnectorRejectUpload() {
+        return teflonConnectorRejectUpload;
+    }
+
+    public void setTeflonConnectorRejectUpload(String teflonConnectorRejectUpload) {
+        this.teflonConnectorRejectUpload = teflonConnectorRejectUpload;
+    }
+
+    public String getTeflonConnectorRejectQty() {
+        return teflonConnectorRejectQty;
+    }
+
+    public void setTeflonConnectorRejectQty(String teflonConnectorRejectQty) {
+        this.teflonConnectorRejectQty = teflonConnectorRejectQty;
+    }
+
+    public String getPogoReceptaclesPin() {
+        return pogoReceptaclesPin;
+    }
+
+    public void setPogoReceptaclesPin(String pogoReceptaclesPin) {
+        this.pogoReceptaclesPin = pogoReceptaclesPin;
+    }
+
+    public String getPogoReceptaclesPinHardwareId() {
+        return pogoReceptaclesPinHardwareId;
+    }
+
+    public void setPogoReceptaclesPinHardwareId(String pogoReceptaclesPinHardwareId) {
+        this.pogoReceptaclesPinHardwareId = pogoReceptaclesPinHardwareId;
+    }
+
+    public String getPogoReceptaclesPinReject() {
+        return pogoReceptaclesPinReject;
+    }
+
+    public void setPogoReceptaclesPinReject(String pogoReceptaclesPinReject) {
+        this.pogoReceptaclesPinReject = pogoReceptaclesPinReject;
+    }
+
+    public String getPogoReceptaclesPinRejectUpload() {
+        return pogoReceptaclesPinRejectUpload;
+    }
+
+    public void setPogoReceptaclesPinRejectUpload(String pogoReceptaclesPinRejectUpload) {
+        this.pogoReceptaclesPinRejectUpload = pogoReceptaclesPinRejectUpload;
+    }
+
+    public String getPogoReceptaclesPinRejectQty() {
+        return pogoReceptaclesPinRejectQty;
+    }
+
+    public void setPogoReceptaclesPinRejectQty(String pogoReceptaclesPinRejectQty) {
+        this.pogoReceptaclesPinRejectQty = pogoReceptaclesPinRejectQty;
+    }
+
+    public String getCableWiredCopperWire() {
+        return cableWiredCopperWire;
+    }
+
+    public void setCableWiredCopperWire(String cableWiredCopperWire) {
+        this.cableWiredCopperWire = cableWiredCopperWire;
+    }
+
+    public String getCableWiredCopperWireHardwareId() {
+        return cableWiredCopperWireHardwareId;
+    }
+
+    public void setCableWiredCopperWireHardwareId(String cableWiredCopperWireHardwareId) {
+        this.cableWiredCopperWireHardwareId = cableWiredCopperWireHardwareId;
+    }
+
+    public String getCableWiredCopperWireReject() {
+        return cableWiredCopperWireReject;
+    }
+
+    public void setCableWiredCopperWireReject(String cableWiredCopperWireReject) {
+        this.cableWiredCopperWireReject = cableWiredCopperWireReject;
+    }
+
+    public String getCableWiredCopperWireRejectUpload() {
+        return cableWiredCopperWireRejectUpload;
+    }
+
+    public void setCableWiredCopperWireRejectUpload(String cableWiredCopperWireRejectUpload) {
+        this.cableWiredCopperWireRejectUpload = cableWiredCopperWireRejectUpload;
+    }
+
+    public String getCableWiredCopperWireRejectQty() {
+        return cableWiredCopperWireRejectQty;
+    }
+
+    public void setCableWiredCopperWireRejectQty(String cableWiredCopperWireRejectQty) {
+        this.cableWiredCopperWireRejectQty = cableWiredCopperWireRejectQty;
+    }
+
+    public String getLabelIdentification() {
+        return labelIdentification;
+    }
+
+    public void setLabelIdentification(String labelIdentification) {
+        this.labelIdentification = labelIdentification;
+    }
+
+    public String getLabelIdentificationHardwareId() {
+        return labelIdentificationHardwareId;
+    }
+
+    public void setLabelIdentificationHardwareId(String labelIdentificationHardwareId) {
+        this.labelIdentificationHardwareId = labelIdentificationHardwareId;
+    }
+
+    public String getLabelIdentificationReject() {
+        return labelIdentificationReject;
+    }
+
+    public void setLabelIdentificationReject(String labelIdentificationReject) {
+        this.labelIdentificationReject = labelIdentificationReject;
+    }
+
+    public String getLabelIdentificationRejectUpload() {
+        return labelIdentificationRejectUpload;
+    }
+
+    public void setLabelIdentificationRejectUpload(String labelIdentificationRejectUpload) {
+        this.labelIdentificationRejectUpload = labelIdentificationRejectUpload;
+    }
+
+    public String getLabelIdentificationRejectQty() {
+        return labelIdentificationRejectQty;
+    }
+
+    public void setLabelIdentificationRejectQty(String labelIdentificationRejectQty) {
+        this.labelIdentificationRejectQty = labelIdentificationRejectQty;
+    }
+    
+    
 
 }

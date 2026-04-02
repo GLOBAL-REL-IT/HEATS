@@ -1361,6 +1361,327 @@
                                                         </div>
                                                     </div>
                                                 </div>
+                                                <div class="col-sm-6 col-12">
+                                                    <div class="card mb-2">
+                                                        <div class="card-body">
+
+                                                            <div class="col-xl-6 col-sm-8 col-12">
+                                                                <div class="mb-2">
+                                                                    <label class="form-label" for="teflonConnector">Teflon Connector</label>
+                                                                    <div class="m-0">
+                                                                        <div class="form-check form-check-inline">
+                                                                            <input class="form-check-input" type="radio" name="teflonConnector" id="teflonConnector1"
+                                                                                   value="Pass" <c:if test="${itemVm.teflonConnector == 'Pass'}">checked</c:if> required>
+                                                                                   <label class="form-check-label" for="teflonConnector1">Pass</label>
+                                                                            </div>
+                                                                            <div class="form-check form-check-inline">
+                                                                                <input class="form-check-input" type="radio" name="teflonConnector" id="teflonConnector2"
+                                                                                       value="Fail" <c:if test="${itemVm.teflonConnector == 'Fail'}">checked</c:if> >
+                                                                                <label class="form-check-label" for="teflonConnector2">Fail</label>
+                                                                            </div>
+                                                                            <div class="form-check form-check-inline">
+                                                                                <input class="form-check-input" type="radio" name="teflonConnector" id="teflonConnector3"
+                                                                                       value="NA" <c:if test="${itemVm.teflonConnector == 'NA'}">checked</c:if> >
+                                                                                <label class="form-check-label" for="teflonConnector3">NA</label>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="col-xl-12 col-sm-12 col-12">
+                                                                    <div class="mb-2">
+                                                                        <label for="teflonConnectorHardwareId" class="form-label">Reject Hardware ID</label>
+                                                                        <div class="input input-group">
+                                                                            <select class="js-example-basic-multiple" id="teflonConnectorHardwareId" name="teflonConnectorHardwareId" multiple="multiple" title="" data-live-search="true" style="width: 100%">
+                                                                            <c:forEach items="${hwGroupList}" var="invInner">
+                                                                                <option value="${invInner.hardwareId}">${invInner.hardwareId}</option>
+                                                                            </c:forEach>
+                                                                        </select>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                            <div class="row gx-4">
+                                                                <div class="col-xl-2 col-sm-12 col-12">
+                                                                    <div class="mb-2">
+                                                                        <label for="teflonConnectorRejectQty" class="form-label">Reject Qty</label>
+                                                                        <div class="input input-group">
+                                                                            <input type="number" class="form-control" id="teflonConnectorRejectQty" name="teflonConnectorRejectQty" placeholder="" value="${itemVm.teflonConnectorRejectQty}">
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="col-xl-4 col-sm-12 col-12">
+                                                                    <div class="mb-2">
+                                                                        <label for="teflonConnectorReject" class="form-label">Reject Criteria</label>
+                                                                        <div class="input input-group">
+                                                                            <select class="form-control" id="teflonConnectorReject" name="teflonConnectorReject"
+                                                                                    title="Select Item Usage" data-live-search="true" style="width: 100%">
+                                                                                <option></option>
+                                                                                <c:forEach items="${teflonConnectorReject}" var="invInner">
+                                                                                    <option value="${invInner.name}" ${invInner.selected}>${invInner.name}</option>
+                                                                                </c:forEach>
+                                                                            </select>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="form-group col-xl-6 col-sm-12 col-12">
+                                                                    <div class="mb-2">
+                                                                        <label for="teflonConnectorRejectUpload" class="form-label">Upload</label>
+                                                                        <div class="input input-group">
+                                                                            <input class="form-control" type="file" id="teflonConnectorRejectUpload" name="teflonConnectorRejectUpload">
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                            <div class="row gx-4">
+                                                                <div class="col-xl-2 col-sm-12 col-12">
+                                                                    <div class="mb-2">
+                                                                        <a class="form-label" href="${contextPath}/rmsbookingDetail/vm/downloadAttach/${itemVm.id}/teflonConnector" id="teflonConnectorAttach" name="teflonConnectorAttach"> Download Attachment</a>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-sm-6 col-12">
+                                                    <div class="card mb-2">
+                                                        <div class="card-body">
+
+                                                            <div class="col-xl-6 col-sm-8 col-12">
+                                                                <div class="mb-2">
+                                                                    <label class="form-label" for="pogoReceptaclesPin">Pogo / Receptacles Pin</label>
+                                                                    <div class="m-0">
+                                                                        <div class="form-check form-check-inline">
+                                                                            <input class="form-check-input" type="radio" name="pogoReceptaclesPin" id="pogoReceptaclesPin1"
+                                                                                   value="Pass" <c:if test="${itemVm.pogoReceptaclesPin == 'Pass'}">checked</c:if> required>
+                                                                                   <label class="form-check-label" for="pogoReceptaclesPin1">Pass</label>
+                                                                            </div>
+                                                                            <div class="form-check form-check-inline">
+                                                                                <input class="form-check-input" type="radio" name="pogoReceptaclesPin" id="pogoReceptaclesPin2"
+                                                                                       value="Fail" <c:if test="${itemVm.pogoReceptaclesPin == 'Fail'}">checked</c:if> >
+                                                                                <label class="form-check-label" for="pogoReceptaclesPin2">Fail</label>
+                                                                            </div>
+                                                                            <div class="form-check form-check-inline">
+                                                                                <input class="form-check-input" type="radio" name="pogoReceptaclesPin" id="pogoReceptaclesPin3"
+                                                                                       value="NA" <c:if test="${itemVm.pogoReceptaclesPin == 'NA'}">checked</c:if> >
+                                                                                <label class="form-check-label" for="pogoReceptaclesPin3">NA</label>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="col-xl-12 col-sm-12 col-12">
+                                                                    <div class="mb-2">
+                                                                        <label for="pogoReceptaclesPinHardwareId" class="form-label">Reject Hardware ID</label>
+                                                                        <div class="input input-group">
+                                                                            <select class="js-example-basic-multiple" id="pogoReceptaclesPinHardwareId" name="pogoReceptaclesPinHardwareId" multiple="multiple" title="" data-live-search="true" style="width: 100%">
+                                                                            <c:forEach items="${hwGroupList}" var="invInner">
+                                                                                <option value="${invInner.hardwareId}">${invInner.hardwareId}</option>
+                                                                            </c:forEach>
+                                                                        </select>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                            <div class="row gx-4">
+                                                                <div class="col-xl-2 col-sm-12 col-12">
+                                                                    <div class="mb-2">
+                                                                        <label for="pogoReceptaclesPinRejectQty" class="form-label">Reject Qty</label>
+                                                                        <div class="input input-group">
+                                                                            <input type="number" class="form-control" id="pogoReceptaclesPinRejectQty" name="pogoReceptaclesPinRejectQty" placeholder="" value="${itemVm.pogoReceptaclesPinRejectQty}">
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="col-xl-4 col-sm-12 col-12">
+                                                                    <div class="mb-2">
+                                                                        <label for="pogoReceptaclesPinReject" class="form-label">Reject Criteria</label>
+                                                                        <div class="input input-group">
+                                                                            <select class="form-control" id="pogoReceptaclesPinReject" name="pogoReceptaclesPinReject"
+                                                                                    title="Select Item Usage" data-live-search="true" style="width: 100%">
+                                                                                <option></option>
+                                                                                <c:forEach items="${pogoReceptaclesPinReject}" var="invInner">
+                                                                                    <option value="${invInner.name}" ${invInner.selected}>${invInner.name}</option>
+                                                                                </c:forEach>
+                                                                            </select>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="form-group col-xl-6 col-sm-12 col-12">
+                                                                    <div class="mb-2">
+                                                                        <label for="pogoReceptaclesPinRejectUpload" class="form-label">Upload</label>
+                                                                        <div class="input input-group">
+                                                                            <input class="form-control" type="file" id="pogoReceptaclesPinRejectUpload" name="pogoReceptaclesPinRejectUpload">
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                            <div class="row gx-4">
+                                                                <div class="col-xl-2 col-sm-12 col-12">
+                                                                    <div class="mb-2">
+                                                                        <a class="form-label" href="${contextPath}/rmsbookingDetail/vm/downloadAttach/${itemVm.id}/pogoReceptaclesPin" id="pogoReceptaclesPinAttach" name="pogoReceptaclesPinAttach"> Download Attachment</a>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                                <div class="col-sm-6 col-12">
+                                                    <div class="card mb-2">
+                                                        <div class="card-body">
+
+                                                            <div class="col-xl-6 col-sm-8 col-12">
+                                                                <div class="mb-2">
+                                                                    <label class="form-label" for="cableWiredCopperWire">Cable/Wired/Copper Wire</label>
+                                                                    <div class="m-0">
+                                                                        <div class="form-check form-check-inline">
+                                                                            <input class="form-check-input" type="radio" name="cableWiredCopperWire" id="cableWiredCopperWire1"
+                                                                                   value="Pass" <c:if test="${itemVm.cableWiredCopperWire == 'Pass'}">checked</c:if> required>
+                                                                                   <label class="form-check-label" for="cableWiredCopperWire1">Pass</label>
+                                                                            </div>
+                                                                            <div class="form-check form-check-inline">
+                                                                                <input class="form-check-input" type="radio" name="cableWiredCopperWire" id="cableWiredCopperWire2"
+                                                                                       value="Fail" <c:if test="${itemVm.cableWiredCopperWire == 'Fail'}">checked</c:if> >
+                                                                                <label class="form-check-label" for="cableWiredCopperWire2">Fail</label>
+                                                                            </div>
+                                                                            <div class="form-check form-check-inline">
+                                                                                <input class="form-check-input" type="radio" name="cableWiredCopperWire" id="cableWiredCopperWire3"
+                                                                                       value="NA" <c:if test="${itemVm.cableWiredCopperWire == 'NA'}">checked</c:if> >
+                                                                                <label class="form-check-label" for="cableWiredCopperWire3">NA</label>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="col-xl-12 col-sm-12 col-12">
+                                                                    <div class="mb-2">
+                                                                        <label for="cableWiredCopperWireHardwareId" class="form-label">Reject Hardware ID</label>
+                                                                        <div class="input input-group">
+                                                                            <select class="js-example-basic-multiple" id="cableWiredCopperWireHardwareId" name="cableWiredCopperWireHardwareId" multiple="multiple" title="" data-live-search="true" style="width: 100%">
+                                                                            <c:forEach items="${hwGroupList}" var="invInner">
+                                                                                <option value="${invInner.hardwareId}">${invInner.hardwareId}</option>
+                                                                            </c:forEach>
+                                                                        </select>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                            <div class="row gx-4">
+                                                                <div class="col-xl-2 col-sm-12 col-12">
+                                                                    <div class="mb-2">
+                                                                        <label for="cableWiredCopperWireRejectQty" class="form-label">Reject Qty</label>
+                                                                        <div class="input input-group">
+                                                                            <input type="number" class="form-control" id="cableWiredCopperWireRejectQty" name="cableWiredCopperWireRejectQty" placeholder="" value="${itemVm.cableWiredCopperWireRejectQty}">
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="col-xl-4 col-sm-12 col-12">
+                                                                    <div class="mb-2">
+                                                                        <label for="cableWiredCopperWireReject" class="form-label">Reject Criteria</label>
+                                                                        <div class="input input-group">
+                                                                            <select class="form-control" id="cableWiredCopperWireReject" name="cableWiredCopperWireReject"
+                                                                                    title="Select Item Usage" data-live-search="true" style="width: 100%">
+                                                                                <option></option>
+                                                                                <c:forEach items="${cableWiredCopperWireReject}" var="invInner">
+                                                                                    <option value="${invInner.name}" ${invInner.selected}>${invInner.name}</option>
+                                                                                </c:forEach>
+                                                                            </select>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="form-group col-xl-6 col-sm-12 col-12">
+                                                                    <div class="mb-2">
+                                                                        <label for="cableWiredCopperWireRejectUpload" class="form-label">Upload</label>
+                                                                        <div class="input input-group">
+                                                                            <input class="form-control" type="file" id="cableWiredCopperWireRejectUpload" name="cableWiredCopperWireRejectUpload">
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                            <div class="row gx-4">
+                                                                <div class="col-xl-2 col-sm-12 col-12">
+                                                                    <div class="mb-2">
+                                                                        <a class="form-label" href="${contextPath}/rmsbookingDetail/vm/downloadAttach/${itemVm.id}/cableWiredCopperWire" id="cableWiredCopperWireAttach" name="cableWiredCopperWireAttach"> Download Attachment</a>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-sm-6 col-12">
+                                                    <div class="card mb-2">
+                                                        <div class="card-body">
+
+                                                            <div class="col-xl-6 col-sm-8 col-12">
+                                                                <div class="mb-2">
+                                                                    <label class="form-label" for="labelIdentification">Label & Identification</label>
+                                                                    <div class="m-0">
+                                                                        <div class="form-check form-check-inline">
+                                                                            <input class="form-check-input" type="radio" name="labelIdentification" id="labelIdentification1"
+                                                                                   value="Pass" <c:if test="${itemVm.labelIdentification == 'Pass'}">checked</c:if> required>
+                                                                                   <label class="form-check-label" for="labelIdentification1">Pass</label>
+                                                                            </div>
+                                                                            <div class="form-check form-check-inline">
+                                                                                <input class="form-check-input" type="radio" name="labelIdentification" id="labelIdentification2"
+                                                                                       value="Fail" <c:if test="${itemVm.labelIdentification == 'Fail'}">checked</c:if> >
+                                                                                <label class="form-check-label" for="labelIdentification2">Fail</label>
+                                                                            </div>
+                                                                            <div class="form-check form-check-inline">
+                                                                                <input class="form-check-input" type="radio" name="labelIdentification" id="labelIdentification3"
+                                                                                       value="NA" <c:if test="${itemVm.labelIdentification == 'NA'}">checked</c:if> >
+                                                                                <label class="form-check-label" for="labelIdentification3">NA</label>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="col-xl-12 col-sm-12 col-12">
+                                                                    <div class="mb-2">
+                                                                        <label for="labelIdentificationHardwareId" class="form-label">Reject Hardware ID</label>
+                                                                        <div class="input input-group">
+                                                                            <select class="js-example-basic-multiple" id="labelIdentificationHardwareId" name="labelIdentificationHardwareId" multiple="multiple" title="" data-live-search="true" style="width: 100%">
+                                                                            <c:forEach items="${hwGroupList}" var="invInner">
+                                                                                <option value="${invInner.hardwareId}">${invInner.hardwareId}</option>
+                                                                            </c:forEach>
+                                                                        </select>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                            <div class="row gx-4">
+                                                                <div class="col-xl-2 col-sm-12 col-12">
+                                                                    <div class="mb-2">
+                                                                        <label for="labelIdentificationRejectQty" class="form-label">Reject Qty</label>
+                                                                        <div class="input input-group">
+                                                                            <input type="number" class="form-control" id="labelIdentificationRejectQty" name="labelIdentificationRejectQty" placeholder="" value="${itemVm.labelIdentificationRejectQty}">
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="col-xl-4 col-sm-12 col-12">
+                                                                    <div class="mb-2">
+                                                                        <label for="labelIdentificationReject" class="form-label">Reject Criteria</label>
+                                                                        <div class="input input-group">
+                                                                            <select class="form-control" id="labelIdentificationReject" name="labelIdentificationReject"
+                                                                                    title="Select Item Usage" data-live-search="true" style="width: 100%">
+                                                                                <option></option>
+                                                                                <c:forEach items="${labelIdentificationReject}" var="invInner">
+                                                                                    <option value="${invInner.name}" ${invInner.selected}>${invInner.name}</option>
+                                                                                </c:forEach>
+                                                                            </select>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="form-group col-xl-6 col-sm-12 col-12">
+                                                                    <div class="mb-2">
+                                                                        <label for="labelIdentificationRejectUpload" class="form-label">Upload</label>
+                                                                        <div class="input input-group">
+                                                                            <input class="form-control" type="file" id="labelIdentificationRejectUpload" name="labelIdentificationRejectUpload">
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                            <div class="row gx-4">
+                                                                <div class="col-xl-2 col-sm-12 col-12">
+                                                                    <div class="mb-2">
+                                                                        <a class="form-label" href="${contextPath}/rmsbookingDetail/vm/downloadAttach/${itemVm.id}/labelIdentification" id="labelIdentificationAttach" name="labelIdentificationAttach"> Download Attachment</a>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
 
                                                 <!-- Form actions start -->
                                                 <div class="col-md-12">
@@ -1373,7 +1694,7 @@
                                                 </div>
                                             </form>
                                         </div>
-                                                                    
+
                                     </div>
                                     <div class="tab-pane fade ${teActiveTab}" id="threeAAA" role="tabpanel">
                                         <div class="row gx-4">
@@ -1670,9 +1991,9 @@
                                                             </div>
                                                         </div>
                                                     </div>
-<!--                                                    <div class="col-md-12">
-                                                        <a href="${contextPath}/hw/item/pending" class="btn btn-dark float-start">Back</a>
-                                                    </div>-->
+                                                    <!--                                                    <div class="col-md-12">
+                                                                                                            <a href="${contextPath}/hw/item/pending" class="btn btn-dark float-start">Back</a>
+                                                                                                        </div>-->
                                                 </div>
                                             </div>
                                         </div>
@@ -1758,6 +2079,18 @@
 
                                                                                                 var valueJsonWinConnector = ${valueJsonWinConnector};
                                                                                                 $('#winConnectorHardwareId').val(valueJsonWinConnector).trigger('change');
+
+                                                                                                var valueJsonTeflonConnector = ${valueJsonTeflonConnector};
+                                                                                                $('#teflonConnectorHardwareId').val(valueJsonTeflonConnector).trigger('change');
+
+                                                                                                var valueJsonPogoReceptaclesPin = ${valueJsonPogoReceptaclesPin};
+                                                                                                $('#pogoReceptaclesPinHardwareId').val(valueJsonPogoReceptaclesPin).trigger('change');
+
+                                                                                                var valueJsonCableWiredCopperWire = ${valueJsonCableWiredCopperWire};
+                                                                                                $('#cableWiredCopperWireHardwareId').val(valueJsonCableWiredCopperWire).trigger('change');
+
+                                                                                                var valueJsonLabelIdentification = ${valueJsonLabelIdentification};
+                                                                                                $('#labelIdentificationHardwareId').val(valueJsonLabelIdentification).trigger('change');
 
                                                                                                 var element2 = $('#viId');
                                                                                                 if (element2.val()) {
@@ -1937,6 +2270,42 @@
                                                                                             const winConnectorRejectUpload = document.getElementById('winConnectorRejectUpload');
                                                                                             const winConnectorAttach = document.getElementById('winConnectorAttach');
                                                                                             const winConnectorHardwareId = document.getElementById('winConnectorHardwareId');
+
+                                                                                            const teflonConnectorPass = document.getElementById('teflonConnector1');
+                                                                                            const teflonConnectorNa = document.getElementById('teflonConnector3');
+                                                                                            const teflonConnectorFail = document.getElementById('teflonConnector2');
+                                                                                            const teflonConnectorRejectCriteria = document.getElementById('teflonConnectorReject');
+                                                                                            const teflonConnectorRejectQty = document.getElementById('teflonConnectorRejectQty');
+                                                                                            const teflonConnectorRejectUpload = document.getElementById('teflonConnectorRejectUpload');
+                                                                                            const teflonConnectorAttach = document.getElementById('teflonConnectorAttach');
+                                                                                            const teflonConnectorHardwareId = document.getElementById('teflonConnectorHardwareId');
+
+                                                                                            const pogoReceptaclesPinPass = document.getElementById('pogoReceptaclesPin1');
+                                                                                            const pogoReceptaclesPinNa = document.getElementById('pogoReceptaclesPin3');
+                                                                                            const pogoReceptaclesPinFail = document.getElementById('pogoReceptaclesPin2');
+                                                                                            const pogoReceptaclesPinRejectCriteria = document.getElementById('pogoReceptaclesPinReject');
+                                                                                            const pogoReceptaclesPinRejectQty = document.getElementById('pogoReceptaclesPinRejectQty');
+                                                                                            const pogoReceptaclesPinRejectUpload = document.getElementById('pogoReceptaclesPinRejectUpload');
+                                                                                            const pogoReceptaclesPinAttach = document.getElementById('pogoReceptaclesPinAttach');
+                                                                                            const pogoReceptaclesPinHardwareId = document.getElementById('pogoReceptaclesPinHardwareId');
+
+                                                                                            const cableWiredCopperWirePass = document.getElementById('cableWiredCopperWire1');
+                                                                                            const cableWiredCopperWireNa = document.getElementById('cableWiredCopperWire3');
+                                                                                            const cableWiredCopperWireFail = document.getElementById('cableWiredCopperWire2');
+                                                                                            const cableWiredCopperWireRejectCriteria = document.getElementById('cableWiredCopperWireReject');
+                                                                                            const cableWiredCopperWireRejectQty = document.getElementById('cableWiredCopperWireRejectQty');
+                                                                                            const cableWiredCopperWireRejectUpload = document.getElementById('cableWiredCopperWireRejectUpload');
+                                                                                            const cableWiredCopperWireAttach = document.getElementById('cableWiredCopperWireAttach');
+                                                                                            const cableWiredCopperWireHardwareId = document.getElementById('cableWiredCopperWireHardwareId');
+
+                                                                                            const labelIdentificationPass = document.getElementById('labelIdentification1');
+                                                                                            const labelIdentificationNa = document.getElementById('labelIdentification3');
+                                                                                            const labelIdentificationFail = document.getElementById('labelIdentification2');
+                                                                                            const labelIdentificationRejectCriteria = document.getElementById('labelIdentificationReject');
+                                                                                            const labelIdentificationRejectQty = document.getElementById('labelIdentificationRejectQty');
+                                                                                            const labelIdentificationRejectUpload = document.getElementById('labelIdentificationRejectUpload');
+                                                                                            const labelIdentificationAttach = document.getElementById('labelIdentificationAttach');
+                                                                                            const labelIdentificationHardwareId = document.getElementById('labelIdentificationHardwareId');
 
                                                                                             function handleRadioChange() {
                                                                                                 if (pcbFail.checked) {
@@ -2287,6 +2656,122 @@
                                                                                                     winConnectorHardwareId.required = false;
                                                                                                     winConnectorHardwareId.value = '';
                                                                                                 }
+                                                                                                if (teflonConnectorFail.checked) {
+                                                                                                    teflonConnectorRejectCriteria.disabled = false; // disable button if 'Fail' is checked
+                                                                                                    teflonConnectorRejectCriteria.required = true;
+
+                                                                                                    teflonConnectorRejectQty.disabled = false;
+                                                                                                    teflonConnectorRejectQty.required = true;
+
+                                                                                                    teflonConnectorRejectUpload.disabled = false;
+                                                                                                    teflonConnectorRejectUpload.required = true;
+
+                                                                                                    teflonConnectorHardwareId.disabled = false;
+                                                                                                    teflonConnectorHardwareId.required = true;
+                                                                                                } else {
+                                                                                                    teflonConnectorRejectCriteria.disabled = true;  // enable button otherwise (e.g., if 'Pass' is checked)
+                                                                                                    teflonConnectorRejectCriteria.required = false;
+                                                                                                    teflonConnectorRejectCriteria.value = '';
+
+                                                                                                    teflonConnectorRejectQty.disabled = true;
+                                                                                                    teflonConnectorRejectQty.required = false;
+                                                                                                    teflonConnectorRejectQty.value = '';
+
+                                                                                                    teflonConnectorRejectUpload.disabled = true;
+                                                                                                    teflonConnectorRejectUpload.required = false;
+                                                                                                    teflonConnectorRejectUpload.value = '';
+
+                                                                                                    teflonConnectorHardwareId.disabled = true;
+                                                                                                    teflonConnectorHardwareId.required = false;
+                                                                                                    teflonConnectorHardwareId.value = '';
+                                                                                                }
+                                                                                                if (pogoReceptaclesPinFail.checked) {
+                                                                                                    pogoReceptaclesPinRejectCriteria.disabled = false; // disable button if 'Fail' is checked
+                                                                                                    pogoReceptaclesPinRejectCriteria.required = true;
+
+                                                                                                    pogoReceptaclesPinRejectQty.disabled = false;
+                                                                                                    pogoReceptaclesPinRejectQty.required = true;
+
+                                                                                                    pogoReceptaclesPinRejectUpload.disabled = false;
+                                                                                                    pogoReceptaclesPinRejectUpload.required = true;
+
+                                                                                                    pogoReceptaclesPinHardwareId.disabled = false;
+                                                                                                    pogoReceptaclesPinHardwareId.required = true;
+                                                                                                } else {
+                                                                                                    pogoReceptaclesPinRejectCriteria.disabled = true;  // enable button otherwise (e.g., if 'Pass' is checked)
+                                                                                                    pogoReceptaclesPinRejectCriteria.required = false;
+                                                                                                    pogoReceptaclesPinRejectCriteria.value = '';
+
+                                                                                                    pogoReceptaclesPinRejectQty.disabled = true;
+                                                                                                    pogoReceptaclesPinRejectQty.required = false;
+                                                                                                    pogoReceptaclesPinRejectQty.value = '';
+
+                                                                                                    pogoReceptaclesPinRejectUpload.disabled = true;
+                                                                                                    pogoReceptaclesPinRejectUpload.required = false;
+                                                                                                    pogoReceptaclesPinRejectUpload.value = '';
+
+                                                                                                    pogoReceptaclesPinHardwareId.disabled = true;
+                                                                                                    pogoReceptaclesPinHardwareId.required = false;
+                                                                                                    pogoReceptaclesPinHardwareId.value = '';
+                                                                                                }
+                                                                                                if (cableWiredCopperWireFail.checked) {
+                                                                                                    cableWiredCopperWireRejectCriteria.disabled = false; // disable button if 'Fail' is checked
+                                                                                                    cableWiredCopperWireRejectCriteria.required = true;
+
+                                                                                                    cableWiredCopperWireRejectQty.disabled = false;
+                                                                                                    cableWiredCopperWireRejectQty.required = true;
+
+                                                                                                    cableWiredCopperWireRejectUpload.disabled = false;
+                                                                                                    cableWiredCopperWireRejectUpload.required = true;
+
+                                                                                                    cableWiredCopperWireHardwareId.disabled = false;
+                                                                                                    cableWiredCopperWireHardwareId.required = true;
+                                                                                                } else {
+                                                                                                    cableWiredCopperWireRejectCriteria.disabled = true;  // enable button otherwise (e.g., if 'Pass' is checked)
+                                                                                                    cableWiredCopperWireRejectCriteria.required = false;
+                                                                                                    cableWiredCopperWireRejectCriteria.value = '';
+
+                                                                                                    cableWiredCopperWireRejectQty.disabled = true;
+                                                                                                    cableWiredCopperWireRejectQty.required = false;
+                                                                                                    cableWiredCopperWireRejectQty.value = '';
+
+                                                                                                    cableWiredCopperWireRejectUpload.disabled = true;
+                                                                                                    cableWiredCopperWireRejectUpload.required = false;
+                                                                                                    cableWiredCopperWireRejectUpload.value = '';
+
+                                                                                                    cableWiredCopperWireHardwareId.disabled = true;
+                                                                                                    cableWiredCopperWireHardwareId.required = false;
+                                                                                                    cableWiredCopperWireHardwareId.value = '';
+                                                                                                }
+                                                                                                if (labelIdentificationFail.checked) {
+                                                                                                    labelIdentificationRejectCriteria.disabled = false; // disable button if 'Fail' is checked
+                                                                                                    labelIdentificationRejectCriteria.required = true;
+
+                                                                                                    labelIdentificationRejectQty.disabled = false;
+                                                                                                    labelIdentificationRejectQty.required = true;
+
+                                                                                                    labelIdentificationRejectUpload.disabled = false;
+                                                                                                    labelIdentificationRejectUpload.required = true;
+
+                                                                                                    labelIdentificationHardwareId.disabled = false;
+                                                                                                    labelIdentificationHardwareId.required = true;
+                                                                                                } else {
+                                                                                                    labelIdentificationRejectCriteria.disabled = true;  // enable button otherwise (e.g., if 'Pass' is checked)
+                                                                                                    labelIdentificationRejectCriteria.required = false;
+                                                                                                    labelIdentificationRejectCriteria.value = '';
+
+                                                                                                    labelIdentificationRejectQty.disabled = true;
+                                                                                                    labelIdentificationRejectQty.required = false;
+                                                                                                    labelIdentificationRejectQty.value = '';
+
+                                                                                                    labelIdentificationRejectUpload.disabled = true;
+                                                                                                    labelIdentificationRejectUpload.required = false;
+                                                                                                    labelIdentificationRejectUpload.value = '';
+
+                                                                                                    labelIdentificationHardwareId.disabled = true;
+                                                                                                    labelIdentificationHardwareId.required = false;
+                                                                                                    labelIdentificationHardwareId.value = '';
+                                                                                                }
                                                                                             }
 
                                                                                             pcbPass.addEventListener('change', handleRadioChange);
@@ -2336,6 +2821,22 @@
                                                                                             winConnectorPass.addEventListener('change', handleRadioChange);
                                                                                             winConnectorNa.addEventListener('change', handleRadioChange);
                                                                                             winConnectorFail.addEventListener('change', handleRadioChange);
+
+                                                                                            teflonConnectorPass.addEventListener('change', handleRadioChange);
+                                                                                            teflonConnectorNa.addEventListener('change', handleRadioChange);
+                                                                                            teflonConnectorFail.addEventListener('change', handleRadioChange);
+
+                                                                                            pogoReceptaclesPinPass.addEventListener('change', handleRadioChange);
+                                                                                            pogoReceptaclesPinNa.addEventListener('change', handleRadioChange);
+                                                                                            pogoReceptaclesPinFail.addEventListener('change', handleRadioChange);
+
+                                                                                            cableWiredCopperWirePass.addEventListener('change', handleRadioChange);
+                                                                                            cableWiredCopperWireNa.addEventListener('change', handleRadioChange);
+                                                                                            cableWiredCopperWireFail.addEventListener('change', handleRadioChange);
+
+                                                                                            labelIdentificationPass.addEventListener('change', handleRadioChange);
+                                                                                            labelIdentificationNa.addEventListener('change', handleRadioChange);
+                                                                                            labelIdentificationFail.addEventListener('change', handleRadioChange);
 
                                                                                             if (pcbFail.checked) {
                                                                                                 pcbRejectCriteria.disabled = false;
@@ -2443,6 +2944,42 @@
                                                                                                 winConnectorAttach.hidden = false;
                                                                                             } else {
                                                                                                 winConnectorAttach.hidden = true;
+                                                                                                handleRadioChange(); // Set initial state based on default checked radio
+                                                                                            }
+                                                                                            if (teflonConnectorFail.checked) {
+                                                                                                teflonConnectorRejectCriteria.disabled = false;
+                                                                                                teflonConnectorRejectQty.disabled = false;
+                                                                                                teflonConnectorRejectUpload.disabled = false;
+                                                                                                teflonConnectorAttach.hidden = false;
+                                                                                            } else {
+                                                                                                teflonConnectorAttach.hidden = true;
+                                                                                                handleRadioChange(); // Set initial state based on default checked radio
+                                                                                            }
+                                                                                            if (pogoReceptaclesPinFail.checked) {
+                                                                                                pogoReceptaclesPinRejectCriteria.disabled = false;
+                                                                                                pogoReceptaclesPinRejectQty.disabled = false;
+                                                                                                pogoReceptaclesPinRejectUpload.disabled = false;
+                                                                                                pogoReceptaclesPinAttach.hidden = false;
+                                                                                            } else {
+                                                                                                pogoReceptaclesPinAttach.hidden = true;
+                                                                                                handleRadioChange(); // Set initial state based on default checked radio
+                                                                                            }
+                                                                                            if (cableWiredCopperWireFail.checked) {
+                                                                                                cableWiredCopperWireRejectCriteria.disabled = false;
+                                                                                                cableWiredCopperWireRejectQty.disabled = false;
+                                                                                                cableWiredCopperWireRejectUpload.disabled = false;
+                                                                                                cableWiredCopperWireAttach.hidden = false;
+                                                                                            } else {
+                                                                                                cableWiredCopperWireAttach.hidden = true;
+                                                                                                handleRadioChange(); // Set initial state based on default checked radio
+                                                                                            }
+                                                                                            if (labelIdentificationFail.checked) {
+                                                                                                labelIdentificationRejectCriteria.disabled = false;
+                                                                                                labelIdentificationRejectQty.disabled = false;
+                                                                                                labelIdentificationRejectUpload.disabled = false;
+                                                                                                labelIdentificationAttach.hidden = false;
+                                                                                            } else {
+                                                                                                labelIdentificationAttach.hidden = true;
                                                                                                 handleRadioChange(); // Set initial state based on default checked radio
                                                                                             }
         </script>

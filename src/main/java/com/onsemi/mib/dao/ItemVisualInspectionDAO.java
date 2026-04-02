@@ -34,8 +34,10 @@ public class ItemVisualInspectionDAO {
                     + "clip_holder, clip_holder_reject, pcb_edge_finger, pcb_edge_finger_reject, connector, connector_reject, dut_sockets, dut_sockets_reject, edge_mb_banana, edge_mb_banana_reject, "
                     + "elect_component, elect_component_reject, solder_joint, solder_joint_reject, win_connector, win_connector_reject, remarks, final_status, created_by, created_date, flag,"
                     + "pcb_reject_qty, handle_reject_qty, metal_frame_reject_qty, hardware_fasterners_reject_qty, clip_holder_reject_qty, pcb_edge_finger_reject_qty, connector_reject_qty,"
-                    + "dut_sockets_reject_qty, edge_mb_banana_reject_qty, elect_component_reject_qty, solder_joint_reject_qty, win_connector_reject_qty) "
-                    + "VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)", Statement.RETURN_GENERATED_KEYS
+                    + "dut_sockets_reject_qty, edge_mb_banana_reject_qty, elect_component_reject_qty, solder_joint_reject_qty, win_connector_reject_qty,"
+                    + "teflon_connector,teflon_connector_reject,teflon_connector_reject_qty,pogo_receptacles_pin,pogo_receptacles_pin_reject,pogo_receptacles_pin_reject_qty,"
+                    + "cable_wired_copper_wire,cable_wired_copper_wire_reject, cable_wired_copper_wire_reject_qty,label_identification, label_identification_reject,label_identification_reject_qty) "
+                    + "VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,NOW(),?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)", Statement.RETURN_GENERATED_KEYS
             );
             ps.setString(1, itemvisualInspection.getMibItemId());
             ps.setString(2, itemvisualInspection.getModule());
@@ -66,21 +68,34 @@ public class ItemVisualInspectionDAO {
             ps.setString(27, itemvisualInspection.getRemarks());
             ps.setString(28, itemvisualInspection.getFinalStatus());
             ps.setString(29, itemvisualInspection.getCreatedBy());
-            ps.setString(30, itemvisualInspection.getCreatedDate());
-            ps.setString(31, itemvisualInspection.getFlag());
+//            ps.setString(30, itemvisualInspection.getCreatedDate());
+            ps.setString(30, itemvisualInspection.getFlag());
 
-            ps.setString(32, itemvisualInspection.getPcbRejectQty());
-            ps.setString(33, itemvisualInspection.getHandleRejectQty());
-            ps.setString(34, itemvisualInspection.getMetalFrameRejectQty());
-            ps.setString(35, itemvisualInspection.getHardwareFasternersRejectQty());
-            ps.setString(36, itemvisualInspection.getClipHolderRejectQty());
-            ps.setString(37, itemvisualInspection.getPcbEdgeFingerRejectQty());
-            ps.setString(38, itemvisualInspection.getConnectorRejectQty());
-            ps.setString(39, itemvisualInspection.getDutSocketsRejectQty());
-            ps.setString(40, itemvisualInspection.getEdgeMbBananaRejectQty());
-            ps.setString(41, itemvisualInspection.getElectComponentRejectQty());
-            ps.setString(42, itemvisualInspection.getSolderJointRejectQty());
-            ps.setString(43, itemvisualInspection.getWinConnectorRejectQty());
+            ps.setString(31, itemvisualInspection.getPcbRejectQty());
+            ps.setString(32, itemvisualInspection.getHandleRejectQty());
+            ps.setString(33, itemvisualInspection.getMetalFrameRejectQty());
+            ps.setString(34, itemvisualInspection.getHardwareFasternersRejectQty());
+            ps.setString(35, itemvisualInspection.getClipHolderRejectQty());
+            ps.setString(36, itemvisualInspection.getPcbEdgeFingerRejectQty());
+            ps.setString(37, itemvisualInspection.getConnectorRejectQty());
+            ps.setString(38, itemvisualInspection.getDutSocketsRejectQty());
+            ps.setString(39, itemvisualInspection.getEdgeMbBananaRejectQty());
+            ps.setString(40, itemvisualInspection.getElectComponentRejectQty());
+            ps.setString(41, itemvisualInspection.getSolderJointRejectQty());
+            ps.setString(42, itemvisualInspection.getWinConnectorRejectQty());
+
+            ps.setString(43, itemvisualInspection.getTeflonConnector());
+            ps.setString(44, itemvisualInspection.getTeflonConnectorReject());
+            ps.setString(45, itemvisualInspection.getTeflonConnectorRejectQty());
+            ps.setString(46, itemvisualInspection.getPogoReceptaclesPin());
+            ps.setString(47, itemvisualInspection.getPogoReceptaclesPinReject());
+            ps.setString(48, itemvisualInspection.getPogoReceptaclesPinRejectQty());
+            ps.setString(49, itemvisualInspection.getCableWiredCopperWire());
+            ps.setString(50, itemvisualInspection.getCableWiredCopperWireReject());
+            ps.setString(51, itemvisualInspection.getCableWiredCopperWireRejectQty());
+            ps.setString(52, itemvisualInspection.getLabelIdentification());
+            ps.setString(53, itemvisualInspection.getLabelIdentificationReject());
+            ps.setString(54, itemvisualInspection.getLabelIdentificationRejectQty());
 
             queryResult.setResult(ps.executeUpdate());
             ResultSet rs = ps.getGeneratedKeys();
@@ -164,7 +179,8 @@ public class ItemVisualInspectionDAO {
         try {
             PreparedStatement ps = conn.prepareStatement(
                     "UPDATE item_visual_inspection SET pcb_reject_upload = ?, handle_reject_upload = ?, metal_frame_reject_upload = ?, hardware_fasterners_reject_upload = ?, clip_holder_reject_upload = ?, pcb_edge_finger_reject_upload = ?, "
-                    + "connector_reject_upload = ?, dut_sockets_reject_upload = ?, edge_mb_banana_reject_upload = ?, elect_component_reject_upload = ?, solder_joint_reject_upload = ?, win_connector_reject_upload = ? WHERE id = ?"
+                    + "connector_reject_upload = ?, dut_sockets_reject_upload = ?, edge_mb_banana_reject_upload = ?, elect_component_reject_upload = ?, solder_joint_reject_upload = ?, win_connector_reject_upload = ?,"
+                    + "teflon_connector_reject_upload = ?, pogo_receptacles_pin_reject_upload = ?, cable_wired_copper_wire_reject_upload = ?, label_identification_reject_upload = ? WHERE id = ?"
             );
             ps.setString(1, itemvisualInspection.getPcbRejectUpload());
             ps.setString(2, itemvisualInspection.getHandleRejectUpload());
@@ -178,7 +194,11 @@ public class ItemVisualInspectionDAO {
             ps.setString(10, itemvisualInspection.getElectComponentRejectUpload());
             ps.setString(11, itemvisualInspection.getSolderJointRejectUpload());
             ps.setString(12, itemvisualInspection.getWinConnectorRejectUpload());
-            ps.setString(13, itemvisualInspection.getId());
+            ps.setString(13, itemvisualInspection.getTeflonConnectorRejectUpload());
+            ps.setString(14, itemvisualInspection.getPogoReceptaclesPinRejectUpload());
+            ps.setString(15, itemvisualInspection.getCableWiredCopperWireRejectUpload());
+            ps.setString(16, itemvisualInspection.getLabelIdentificationRejectUpload());
+            ps.setString(17, itemvisualInspection.getId());
             queryResult.setResult(ps.executeUpdate());
             ps.close();
         } catch (SQLException e) {
@@ -283,6 +303,23 @@ public class ItemVisualInspectionDAO {
                 itemvisualInspection.setCreatedBy(rs.getString("created_by"));
                 itemvisualInspection.setCreatedDate(rs.getString("created_date"));
                 itemvisualInspection.setFlag(rs.getString("flag"));
+
+                itemvisualInspection.setTeflonConnector(rs.getString("teflon_connector"));
+                itemvisualInspection.setTeflonConnectorReject(rs.getString("teflon_connector_reject"));
+                itemvisualInspection.setTeflonConnectorRejectQty(rs.getString("teflon_connector_reject_qty"));
+                itemvisualInspection.setTeflonConnectorRejectUpload(rs.getString("teflon_connector_reject_upload"));
+                itemvisualInspection.setPogoReceptaclesPin(rs.getString("pogo_receptacles_pin"));
+                itemvisualInspection.setPogoReceptaclesPinReject(rs.getString("pogo_receptacles_pin_reject"));
+                itemvisualInspection.setPogoReceptaclesPinRejectQty(rs.getString("pogo_receptacles_pin_reject_qty"));
+                itemvisualInspection.setPogoReceptaclesPinRejectUpload(rs.getString("pogo_receptacles_pin_reject_upload"));
+                itemvisualInspection.setCableWiredCopperWire(rs.getString("cable_wired_copper_wire"));
+                itemvisualInspection.setCableWiredCopperWireReject(rs.getString("cable_wired_copper_wire_reject"));
+                itemvisualInspection.setCableWiredCopperWireRejectQty(rs.getString("cable_wired_copper_wire_reject_qty"));
+                itemvisualInspection.setCableWiredCopperWireRejectUpload(rs.getString("cable_wired_copper_wire_reject_upload"));
+                itemvisualInspection.setLabelIdentification(rs.getString("label_identification"));
+                itemvisualInspection.setLabelIdentificationReject(rs.getString("label_identification_reject"));
+                itemvisualInspection.setLabelIdentificationRejectQty(rs.getString("label_identification_reject_qty"));
+                itemvisualInspection.setLabelIdentificationRejectUpload(rs.getString("label_identification_reject_upload"));
             }
             rs.close();
             ps.close();
@@ -364,6 +401,23 @@ public class ItemVisualInspectionDAO {
                 itemvisualInspection.setCreatedBy(rs.getString("created_by"));
                 itemvisualInspection.setCreatedDate(rs.getString("created_date"));
                 itemvisualInspection.setFlag(rs.getString("flag"));
+
+                itemvisualInspection.setTeflonConnector(rs.getString("teflon_connector"));
+                itemvisualInspection.setTeflonConnectorReject(rs.getString("teflon_connector_reject"));
+                itemvisualInspection.setTeflonConnectorRejectQty(rs.getString("teflon_connector_reject_qty"));
+                itemvisualInspection.setTeflonConnectorRejectUpload(rs.getString("teflon_connector_reject_upload"));
+                itemvisualInspection.setPogoReceptaclesPin(rs.getString("pogo_receptacles_pin"));
+                itemvisualInspection.setPogoReceptaclesPinReject(rs.getString("pogo_receptacles_pin_reject"));
+                itemvisualInspection.setPogoReceptaclesPinRejectQty(rs.getString("pogo_receptacles_pin_reject_qty"));
+                itemvisualInspection.setPogoReceptaclesPinRejectUpload(rs.getString("pogo_receptacles_pin_reject_upload"));
+                itemvisualInspection.setCableWiredCopperWire(rs.getString("cable_wired_copper_wire"));
+                itemvisualInspection.setCableWiredCopperWireReject(rs.getString("cable_wired_copper_wire_reject"));
+                itemvisualInspection.setCableWiredCopperWireRejectQty(rs.getString("cable_wired_copper_wire_reject_qty"));
+                itemvisualInspection.setCableWiredCopperWireRejectUpload(rs.getString("cable_wired_copper_wire_reject_upload"));
+                itemvisualInspection.setLabelIdentification(rs.getString("label_identification"));
+                itemvisualInspection.setLabelIdentificationReject(rs.getString("label_identification_reject"));
+                itemvisualInspection.setLabelIdentificationRejectQty(rs.getString("label_identification_reject_qty"));
+                itemvisualInspection.setLabelIdentificationRejectUpload(rs.getString("label_identification_reject_upload"));
             }
             rs.close();
             ps.close();
@@ -422,6 +476,22 @@ public class ItemVisualInspectionDAO {
                 itemvisualInspection.setCreatedBy(rs.getString("created_by"));
                 itemvisualInspection.setCreatedDate(rs.getString("created_date"));
                 itemvisualInspection.setFlag(rs.getString("flag"));
+                itemvisualInspection.setTeflonConnector(rs.getString("teflon_connector"));
+                itemvisualInspection.setTeflonConnectorReject(rs.getString("teflon_connector_reject"));
+                itemvisualInspection.setTeflonConnectorRejectQty(rs.getString("teflon_connector_reject_qty"));
+                itemvisualInspection.setTeflonConnectorRejectUpload(rs.getString("teflon_connector_reject_upload"));
+                itemvisualInspection.setPogoReceptaclesPin(rs.getString("pogo_receptacles_pin"));
+                itemvisualInspection.setPogoReceptaclesPinReject(rs.getString("pogo_receptacles_pin_reject"));
+                itemvisualInspection.setPogoReceptaclesPinRejectQty(rs.getString("pogo_receptacles_pin_reject_qty"));
+                itemvisualInspection.setPogoReceptaclesPinRejectUpload(rs.getString("pogo_receptacles_pin_reject_upload"));
+                itemvisualInspection.setCableWiredCopperWire(rs.getString("cable_wired_copper_wire"));
+                itemvisualInspection.setCableWiredCopperWireReject(rs.getString("cable_wired_copper_wire_reject"));
+                itemvisualInspection.setCableWiredCopperWireRejectQty(rs.getString("cable_wired_copper_wire_reject_qty"));
+                itemvisualInspection.setCableWiredCopperWireRejectUpload(rs.getString("cable_wired_copper_wire_reject_upload"));
+                itemvisualInspection.setLabelIdentification(rs.getString("label_identification"));
+                itemvisualInspection.setLabelIdentificationReject(rs.getString("label_identification_reject"));
+                itemvisualInspection.setLabelIdentificationRejectQty(rs.getString("label_identification_reject_qty"));
+                itemvisualInspection.setLabelIdentificationRejectUpload(rs.getString("label_identification_reject_upload"));
                 itemvisualInspectionList.add(itemvisualInspection);
             }
             rs.close();
