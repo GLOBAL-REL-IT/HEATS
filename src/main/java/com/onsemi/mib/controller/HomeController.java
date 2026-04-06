@@ -303,6 +303,31 @@ public class HomeController {
                             rmsD = new RmsBookingDetailDAO();
                             QueryResult q = rmsD.updateRmsBookingDetailFromCBMSByPkid(eqpt);
                             countUpdate += q.getResult();
+
+                            String fol = eqpt.getFolFilename(); //new 6.4.2026
+                            if (fol != null) {
+                                fol = fol.trim();
+                                if (!fol.isEmpty() && !"null".equalsIgnoreCase(fol)) {
+                                    // change status to removed and flag 99 if rms already has bib test file
+//                                LOGGER.info("eqpt.getFolFilename(): " + eqpt.getFolFilename());
+
+                                    RmsBookingDetail eqpt2 = new RmsBookingDetail();
+                                    eqpt2.setBookingPkid(pkid);
+                                    eqpt2.setStatus("Removed");
+                                    eqpt2.setFlag("99");
+                                    RmsBookingDetailDAO rmsBookingDetailD = new RmsBookingDetailDAO();
+                                    QueryResult q2 = rmsBookingDetailD.updateRmsBookingDetailForFlagAndStatus(eqpt2);
+                                    countUpdate += q2.getResult();
+
+                                    //update log
+                                    RmsBookingLog log = new RmsBookingLog();
+                                    log.setBookingId(pkid);
+                                    log.setDetail("Removed from Active List");
+                                    log.setCreatedBy(userSession.getFullname());
+                                    RmsBookingLogDAO logD = new RmsBookingLogDAO();
+                                    QueryResult logQ = logD.insertRmsBookingLog(log);
+                                }
+                            }
                         }
 
                     }
