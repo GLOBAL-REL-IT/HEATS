@@ -4,6 +4,7 @@ import com.google.gson.Gson;
 import com.onsemi.mib.dao.EmailHwReplacementDAO;
 import com.onsemi.mib.dao.EmailVmFailDAO;
 import com.onsemi.mib.dao.HostnameDAO;
+import com.onsemi.mib.dao.ItemActivityConfigDAO;
 import com.onsemi.mib.dao.ItemDAO;
 import com.onsemi.mib.dao.ItemHardwareDAO;
 import com.onsemi.mib.dao.ParameterDetailsDAO;
@@ -24,6 +25,7 @@ import com.onsemi.mib.model.EmailHwReplacement;
 import com.onsemi.mib.model.EmailVmFail;
 import com.onsemi.mib.model.Hostname;
 import com.onsemi.mib.model.Item;
+import com.onsemi.mib.model.ItemActivityConfig;
 import com.onsemi.mib.model.ItemHardware;
 import com.onsemi.mib.model.ParameterDetails;
 import com.onsemi.mib.model.RmsBookingDetail;
@@ -960,8 +962,15 @@ public class RmsBookingDetailController {
     public String groupDetail(Model model,
             @PathVariable("bookingId") String bookingId,
             @PathVariable("itemPkid") String itemPkid,
+            RedirectAttributes redirectAttrs,
             @ModelAttribute UserSession userSession) throws IOException {
 
+        String currentStatus = "";
+        String leakTest = "";
+        String manTest = "";
+        String bibTest = "";
+        String psTest = "";
+        String winTest = "";
         String groupId = bookingId + "/" + itemPkid;
         model.addAttribute("groupId", groupId);
         model.addAttribute("userItemSfRecall", userSession.getItemSfRecall());
@@ -990,6 +999,99 @@ public class RmsBookingDetailController {
             model.addAttribute("rmsRemarks", rmsRemarks.getItemId());
         }
 
+        currentStatus = h.getSubStatus();
+
+        if (currentStatus.equalsIgnoreCase("Pending Functional Test")) {
+            // CHECK AND UPDATE THE FIRST TEST
+//            currentStatus = checkStatusFTestBeforeLoading(bookingId, itemPkid);
+            
+            String itemIdMB = "";
+            String mbSptsPkid = "";
+            String itemIdLC = "";
+            
+            RmsBookingHardwareDAO bookdao = new RmsBookingHardwareDAO();
+            Integer checkMb = bookdao.checkMotherboardData(bookingId);
+            bookdao = new RmsBookingHardwareDAO();
+            Integer checkLc = bookdao.checkCardData(bookingId);
+            
+            if (checkMb == 0) {
+                redirectAttrs.addFlashAttribute("error", "No motherboard configured");
+            } else {
+                // SINI ADA MB
+                bookdao = new RmsBookingHardwareDAO();
+                mbSptsPkid = bookdao.getSptsPkidForItemIdMb(bookingId, itemPkid);
+                ItemDAO itemdao = new ItemDAO();
+                itemIdMB = itemdao.getMibItemIdBySptsPkId(mbSptsPkid);
+                ItemActivityConfigDAO itemactdao = new ItemActivityConfigDAO();
+                ItemActivityConfig itemactmb = itemactdao.getItemActivityByItemId(itemIdMB);
+                if (itemactmb != null) {
+                    leakTest = itemactmb.getLeakageTest();
+                    psTest = itemactmb.getPsLeakageTest();
+                    winTest = itemactmb.getWinchesterChamberLeakageTest();
+                    model.addAttribute("configMotherboard", "");
+                } else {
+                    model.addAttribute("configMotherboard", "TRIGGERERROR");
+                    redirectAttrs.addFlashAttribute("error", "No motherboard configuration configured");
+                }
+                
+                if (checkLc == 0) {
+                    // SINI TAKDE LC
+                    redirectAttrs.addFlashAttribute("error", "No load card configured");
+                } else {
+                    // SINI DUA2 ADA
+                    bookdao = new RmsBookingHardwareDAO();
+                    itemIdLC = bookdao.getSptsPkidForItemIdLC(bookingId);
+                    itemactdao = new ItemActivityConfigDAO();
+                    ItemActivityConfig itemactlc = itemactdao.getItemActivityByItemId(itemIdLC);
+                    
+                    if (itemactlc != null) {
+                        bibTest = itemactlc.getBibTest();
+                        manTest = itemactlc.getManualTest();
+                    } else {
+                        redirectAttrs.addFlashAttribute("error", "No load card configuration configured");
+                    }
+                }
+                model.addAttribute("itemIdMB", itemIdMB);
+                model.addAttribute("itemIdLC", itemIdLC);
+            }
+            
+            if (leakTest.contains("Yes")) {
+                currentStatus = "Pending Functional Test - Leakage Test";
+            } else if (manTest.contains("Yes")) {
+                currentStatus = "Pending Functional Test - Manual Test";
+            } else if (bibTest.contains("Yes")) {
+                currentStatus = "Pending Functional Test - BIB Test";
+            } else if (psTest.contains("Yes")) {
+                currentStatus = "Pending Functional Test - Power Supply Leakage Test";
+            } else if (winTest.contains("Yes")) {
+                currentStatus = "Pending Functional Test - Winchester Chamber Leakage Test";
+            }
+        } else {
+            // DO NOTHING HERE
+        }
+        
+        model.addAttribute("leakCheck", leakTest);
+        model.addAttribute("manCheck", manTest);
+        model.addAttribute("bibCheck", bibTest);
+        model.addAttribute("psCheck", psTest);
+        model.addAttribute("winCheck", winTest);
+        
+        ParameterDetailsDAO pDx = new ParameterDetailsDAO();
+        List<ParameterDetails> bibResultData = pDx.getGroupParameterDetailList("", "016");
+        model.addAttribute("bibResultData", bibResultData);
+        
+        pDx = new ParameterDetailsDAO();
+        List<ParameterDetails> leakResultData = pDx.getGroupParameterDetailList("", "016");
+        model.addAttribute("leakResultData", leakResultData);
+        
+        pDx = new ParameterDetailsDAO();
+        List<ParameterDetails> psResultData = pDx.getGroupParameterDetailList("", "016");
+        model.addAttribute("psResultData", psResultData);
+
+        pDx = new ParameterDetailsDAO();
+        List<ParameterDetails> winResultData = pDx.getGroupParameterDetailList("", "016");
+        model.addAttribute("winResultData", winResultData);
+
         //vm tab
         RmsBookingVisualInspection itemVm = new RmsBookingVisualInspection();
 
@@ -1000,8 +1102,6 @@ public class RmsBookingDetailController {
             itemVm = vmD.getRmsBookingVisualInspectionByGroupId(groupId);
         }
         model.addAttribute("itemVm", itemVm);
-
-        LOGGER.info("itemVm.getClipHolderHardwareId(): " + itemVm.getClipHolderHardwareId());
 
         if (itemVm.getPcbHardwareId() != null && !"".equals(itemVm.getPcbHardwareId())) {
             String[] pcbHardwareIdList = itemVm.getPcbHardwareId().split(",");
@@ -1169,7 +1269,7 @@ public class RmsBookingDetailController {
         List<ParameterDetails> labelIdentificationReject = pD.getGroupParameterDetailList(itemVm.getLabelIdentificationReject(), "023");
         model.addAttribute("labelIdentificationReject", labelIdentificationReject);
 
-        if (h.getSubStatus().contains("HW Registration")) {
+        if (currentStatus.contains("HW Registration")) {
             String hwActive = "active";
             String hwActiveTab = "show active";
             model.addAttribute("hwActive", hwActive);
@@ -1180,7 +1280,7 @@ public class RmsBookingDetailController {
             model.addAttribute("hwActive", hwActive);
             model.addAttribute("hwActiveTab", hwActiveTab);
         }
-        if (h.getSubStatus().contains("VM") || h.getSubStatus().contains("Visual Inspection")) {
+        if (currentStatus.contains("VM") || currentStatus.contains("Visual Inspection")) {
             String vmActive = "active";
             String vmActiveTab = "show active";
             model.addAttribute("vmActive", vmActive);
@@ -1191,17 +1291,41 @@ public class RmsBookingDetailController {
             model.addAttribute("vmActive", vmActive);
             model.addAttribute("vmActiveTab", vmActiveTab);
         }
-        if (h.getSubStatus().contains("Test")) {
-            String teActive = "active";
-            String teActiveTab = "show active";
-            model.addAttribute("teActive", teActive);
-            model.addAttribute("teActiveTab", teActiveTab);
+//        if (h.getSubStatus().contains("Test")) {
+//            String teActive = "active";
+//            String teActiveTab = "show active";
+//            model.addAttribute("teActive", teActive);
+//            model.addAttribute("teActiveTab", teActiveTab);
+//        } else {
+//            String teActive = "";
+//            String teActiveTab = "";
+//            model.addAttribute("teActive", teActive);
+//            model.addAttribute("teActiveTab", teActiveTab);
+//        }
+
+        String teActive = "";
+        String teActiveTab = "";
+        if (currentStatus.contains("Test")) {
+            teActive = "active";
+            teActiveTab = "show active";
+            if (currentStatus.contains("Leakage Test")) {
+                if (currentStatus.contains("Power Supply")) {
+                    model.addAttribute("psshow", teActiveTab);
+                } else if (currentStatus.contains("Winchester")) {
+                    model.addAttribute("winshow", teActiveTab);
+                } else {
+                    model.addAttribute("leakshow", teActiveTab);
+                }
+            } else if (currentStatus.contains("Manual")) {
+                model.addAttribute("manshow", teActiveTab);
+            } else if (currentStatus.contains("BIB")) {
+                model.addAttribute("bibshow", teActiveTab);
+            }
         } else {
-            String teActive = "";
-            String teActiveTab = "";
-            model.addAttribute("teActive", teActive);
-            model.addAttribute("teActiveTab", teActiveTab);
+            // DO NOTHING HERE
         }
+        model.addAttribute("teActive", teActive);
+        model.addAttribute("teActiveTab", teActiveTab);
 
         return "rmsbookingDetail/detail_group";
     }
@@ -2439,4 +2563,86 @@ public class RmsBookingDetailController {
         RmsBookingDetail rmsbookingDetail = rmsbookingDetailDAO.getRmsBookingDetail(rmsbookingDetailId);
         return new ModelAndView("rmsbookingDetailPdf", "rmsbookingDetail", rmsbookingDetail);
     }
+
+    private String checkStatusFTestBeforeLoading(String bookingId, String pkId) {
+        String data = "";
+        String leakTest = "No";
+        String mnTest = "No";
+        String bibTest = "No";
+        String psTest = "No";
+        String winTest = "No";
+        RmsBookingHardwareDAO bookdao = new RmsBookingHardwareDAO();
+        Integer checkMb = bookdao.checkMotherboardData(bookingId);
+        bookdao = new RmsBookingHardwareDAO();
+        Integer checkLc = bookdao.checkCardData(bookingId);
+
+        if (checkMb == 0) {
+            // DO NOTHING HERE
+            data = "NO MB DATA FOUND";
+        } else {
+            bookdao = new RmsBookingHardwareDAO();
+            String itemIdMb = bookdao.getSptsPkidForItemIdMb(bookingId, pkId);
+            ItemActivityConfigDAO itemactdao = new ItemActivityConfigDAO();
+            ItemActivityConfig itemactmb = itemactdao.getItemActivityByItemId(itemIdMb);
+            if (itemactmb != null) {
+                leakTest = itemactmb.getLeakageTest();
+                psTest = itemactmb.getPsLeakageTest();
+                winTest = itemactmb.getWinchesterChamberLeakageTest();
+            } else {
+                data = "ERROR CONFIG MOTHERBOARD";
+                return data;
+            }
+            
+            if (checkLc == 0) {
+                data = "NO LC DATA FOUND";
+                return data;
+            } else {
+                bookdao = new RmsBookingHardwareDAO();
+                String itemId = bookdao.getSptsPkidForItemIdLC(bookingId);
+                itemactdao = new ItemActivityConfigDAO();
+                ItemActivityConfig itemact = itemactdao.getItemActivityByItemId(itemId);
+                if (itemact != null) {
+                    bibTest = itemact.getBibTest();
+                    mnTest = itemact.getManualTest();
+                } else {
+                    data = "ERROR CONFIG LOAD CARD";
+                    return data;
+                }
+
+                if (leakTest.equals("Yes")) {
+                    data = "Pending Functional Test - Leakage Test";
+                } else if (mnTest.equals("Yes")) {
+                    data = "Pending Functional Test - Manual Test";
+                } else if (bibTest.equals("Yes")) {
+                    data = "Pending Functional Test - BIB Test";
+                } else if (psTest.equals("Yes")) {
+                    data = "Pending Functional Test - Power Supply Leakage Test";
+                } else if (winTest.equals("Yes")) {
+                    data = "Pending Functional Test - Winchester Chamber Leakage Test";
+                }
+
+                // SINI KITA UPDATE THE LATEST DATA TO CORRECT FUNCTIONAL TEST
+            }
+        }
+
+        return data;
+    }
+    
+    // FUNCTION NK DAPATKAN SEMUA MAKLUMAT TEST CONFIG
+    private ItemActivityConfig getMaklumatTest(String itemId) {
+        ItemActivityConfig item = new ItemActivityConfig();
+        ItemActivityConfigDAO itemactdao = new ItemActivityConfigDAO();
+        ItemActivityConfig itemact = itemactdao.getItemActivityByItemId(itemId);
+        if (itemact == null) {
+            
+        } else {
+            item.setLeakageTest(itemact.getLeakageTest());
+            item.setManualTest(itemact.getManualTest());
+            item.setBibTest(itemact.getBibTest());
+            item.setPsLeakageTest(itemact.getPsLeakageTest());
+            item.setWinchesterChamberLeakageTest(itemact.getWinchesterChamberLeakageTest());
+        }
+        return item;
+    }
+
 }

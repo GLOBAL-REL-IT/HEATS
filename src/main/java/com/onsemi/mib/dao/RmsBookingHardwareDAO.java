@@ -852,4 +852,134 @@ public class RmsBookingHardwareDAO {
         }
         return count;
     }
+
+    public Integer checkMotherboardData(String bookingId) {
+        Integer count = 0;
+        String sql = "SELECT COUNT(*) as count FROM rms_booking_hardware WHERE booking_pkid = '" + bookingId + "' AND item_type = 'Motherboard'";
+//        LOGGER.info("QUERY KITA CHECK DEKAT SINI >> checkMotherboardData ::::: " + sql);
+        try {
+            PreparedStatement ps = conn.prepareStatement(sql);
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                count = rs.getInt("count");
+            }
+            rs.close();
+            ps.close();
+        } catch (SQLException e) {
+            LOGGER.error(e.getMessage());
+        } finally {
+            if (conn != null) {
+                try {
+                    conn.close();
+                } catch (SQLException e) {
+                    LOGGER.error(e.getMessage());
+                }
+            }
+        }
+        return count;
+    }
+
+    public Integer checkCardData(String bookingId) {
+        Integer count = 0;
+        String sql = "SELECT COUNT(*) as count FROM rms_booking_hardware WHERE booking_pkid = '" + bookingId + "' AND item_type != 'Motherboard' AND qty != 0";
+//        LOGGER.info("QUERY KITA CHECK DEKAT SINI >> checkCardData ::::: " + sql);
+        try {
+            PreparedStatement ps = conn.prepareStatement(sql);
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                count = rs.getInt("count");
+            }
+            rs.close();
+            ps.close();
+        } catch (SQLException e) {
+            LOGGER.error(e.getMessage());
+        } finally {
+            if (conn != null) {
+                try {
+                    conn.close();
+                } catch (SQLException e) {
+                    LOGGER.error(e.getMessage());
+                }
+            }
+        }
+        return count;
+    }
+    
+    public String getSptsPkidForItemIdLC(String bookingId) {
+        String data = "";
+        String sql = "SELECT * FROM item WHERE spts_pkid = (SELECT item_pkid FROM rms_booking_hardware WHERE booking_pkid = '" + bookingId + "' AND item_type = 'Load Card' AND qty != 0 LIMIT 1)";
+//        LOGGER.info("QUERY KITA CHECK DEKAT SINI >> getSptsPkidForItemIdLC Load Card ::::: " + sql);
+        try {
+            PreparedStatement ps = conn.prepareStatement(sql);
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                data = rs.getString("id");
+            }
+            rs.close();
+            ps.close();
+        } catch (SQLException e) {
+            LOGGER.error(e.getMessage());
+        } finally {
+            if (conn != null) {
+                try {
+                    conn.close();
+                } catch (SQLException e) {
+                    LOGGER.error(e.getMessage());
+                }
+            }
+        }
+        return data;
+    }
+    
+    public String getSptsPkidForItemIdMb(String bookingId, String pkId) {
+        String data = "";
+        String sql = "SELECT item_pkid FROM rms_booking_hardware WHERE booking_pkid = '"+bookingId+"' AND item_type = 'Motherboard' AND pkid = '"+pkId+"'";
+//        LOGGER.info("QUERY KITA CHECK DEKAT SINI >> getSptsPkidForItemIdMb MOTHERBOARD ::::: " + sql);
+        try {
+            PreparedStatement ps = conn.prepareStatement(sql);
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                data = rs.getString("item_pkid");
+            }
+            rs.close();
+            ps.close();
+        } catch (SQLException e) {
+            LOGGER.error(e.getMessage());
+        } finally {
+            if (conn != null) {
+                try {
+                    conn.close();
+                } catch (SQLException e) {
+                    LOGGER.error(e.getMessage());
+                }
+            }
+        }
+        return data;
+    }
+    
+    public QueryResult updateRmsBookingHardwareFunctionalTestStatus(String status, String bookId) {
+        QueryResult queryResult = new QueryResult();
+        try {
+            PreparedStatement ps = conn.prepareStatement(
+                    "UPDATE rms_booking_hardware SET status = ? WHERE id = ?"
+            );
+            ps.setString(1, status);
+            ps.setString(2, bookId);
+            queryResult.setResult(ps.executeUpdate());
+            ps.close();
+        } catch (SQLException e) {
+            queryResult.setErrorMessage(e.getMessage());
+            LOGGER.error(e.getMessage());
+        } finally {
+            if (conn != null) {
+                try {
+                    conn.close();
+                } catch (SQLException e) {
+                    LOGGER.error(e.getMessage());
+                }
+            }
+        }
+        return queryResult;
+    }
+
 }
