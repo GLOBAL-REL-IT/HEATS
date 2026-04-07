@@ -95,7 +95,7 @@
             <div class="row gx-4">
                 <nav class="navbar bg-body-tertiary">
                     <div class="container-fluid justify-content-start">
-                        <a href="${contextPath}/rmsbookingDetail" class="btn btn-outline-warning me-2" role="button"><i class='bi bi-arrow-bar-left'></i>&nbsp;&nbsp;Back</a>
+                        <a href="${contextPath}/rmsbookingDetail/rmsReleased" class="btn btn-outline-warning me-2" role="button"><i class='bi bi-arrow-bar-left'></i>&nbsp;&nbsp;Back</a>
                     </div>
                 </nav>
                 <div class="col-sm-12 col-12">
@@ -103,7 +103,7 @@
                         <div class="card-header">
                             <h5 class="card-title d-flex justify-content-between align-items-center">
                                 <div>
-                                    HW Prep For Loading Module - <span style="color:#D97D55">Detail</span>
+                                    RMS Released to Production - <span style="color:#D97D55">Detail</span>
                                 </div>
                                 <c:choose>
                                     <c:when test="${not empty rms.priority && rms.priority != '999'}">
@@ -271,13 +271,13 @@
                                 </div>-->
                                 <div class="col-md-12">
                                     <a type="button" data-bs-toggle="offcanvas" title="Release to Production"
-                                       data-bs-target="#staticBackdropEmailReplacement" aria-controls="staticBackdropEmailReplacement" class="btn btn-success float-start">
-                                        <i class="bi bi-check-circle-fill">&nbsp;&nbsp;Release to Production</i>
+                                       data-bs-target="#staticBackdropEmailReplacement" aria-controls="staticBackdropEmailReplacement" class="btn btn-danger float-start">
+                                        <i class="bi bi-check-circle-fill">&nbsp;&nbsp;Recall from Production</i>
                                     </a>
-                                    <a type="button" data-bs-toggle="offcanvas" title="Request for HW Replacement"
+<!--                                    <a type="button" data-bs-toggle="offcanvas" title="Request for HW Replacement"
                                        data-bs-target="#staticBackdropEmailReplacement" aria-controls="staticBackdropEmailReplacement" class="btn btn-primary float-end">
                                         <i class="bi bi-envelope-arrow-up">&nbsp;&nbsp;Request for HW Replacement</i>
-                                    </a>
+                                    </a>-->
                                 </div>
                             </form>
                         </div>
@@ -343,14 +343,6 @@
                                                         </c:otherwise>
                                                     </c:choose>
                                                     <td align="center">
-                                                        <c:if test="${parameterMaster.status != 'NA'}">
-                                                            <c:if test="${parameterMaster.recall == 'Yes'}">
-                                                                <a modaldeleteid="${parameterMaster.itemPkid}" modaldeleteid2="${parameterMaster.id}" type="button" data-bs-toggle="offcanvas" title="Recall from Storage Factory"
-                                                                   data-bs-target="#staticBackdropRecall" aria-controls="staticBackdropRecall" onclick="ajaxStorage(this);">
-                                                                    <i class="bi bi-house-up h4"></i>
-                                                                </a>
-                                                            </c:if>
-                                                        </c:if>
                                                     </td>
                                                 </c:if>
                                                 </tr>
@@ -441,14 +433,8 @@
                                                             </c:choose>
                                                         </c:if>
                                                         <td align="center">
-                                                            <c:if test="${parameterMaster.recall == 'Yes'}">
-                                                                <a modaldeleteid="${parameterMaster.itemPkid}" modaldeleteid2="${parameterMaster.id}" type="button" data-bs-toggle="offcanvas" title="Recall from Storage Factory"
-                                                                   data-bs-target="#staticBackdropRecall" aria-controls="staticBackdropRecall" onclick="ajaxStorage(this);">
-                                                                    <i class="bi bi-house-up h4"></i>
-                                                                </a>
-                                                            </c:if>
                                                             <c:if test="${parameterMaster.status == 'Available'}">
-                                                                <a href="${contextPath}/rmsbookingDetail/groupDetail/${parameterMaster.bookingPkid}/${parameterMaster.pkid}" class="table-link" title="Manage">
+                                                                <a href="${contextPath}/rmsbookingDetail/rmsReleased/groupDetail/${parameterMaster.bookingPkid}/${parameterMaster.pkid}" class="table-link" title="Manage">
                                                                     <i class="bi bi-box-arrow-in-right h3" style="color:orangered"></i>
                                                                 </a>
                                                             </c:if>
@@ -472,178 +458,6 @@
         <div class="app-footer">
             <img class="img3" src="${contextPath}/resources/onsemi logo.webp" alt="onsemi">
             <span>© HEATs 2025</span>
-        </div>
-        <div class="offcanvas-placeholder">
-            <!-- Toggle static offcanvas for email replacement--> 
-            <div class="offcanvas offcanvas-start" data-bs-backdrop="static" tabindex="-1" id="staticBackdrop"
-                 aria-labelledby="staticBackdropLabel">
-                <div class="offcanvas-header">
-                    <h5 class="offcanvas-title" id="staticBackdropLabel">Send Email for HW Replacement</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
-                </div>
-                <div class="offcanvas-body">
-                    <div>
-                        <form class="row g-3 align-items-center" role="form" action="${contextPath}/rmsbookingDetail/sendEmailReplacement" method="post">
-                            <div class="row mb-3">
-                                <div class="col-xl-12 col-sm-12 col-12">
-                                    <div class="mb-1">
-                                        <label for="itemId" class="form-label">Item Type</label>
-                                        <div class="input input-group">
-                                            <input type="text" class="form-control" id="itemType" name="itemType" placeholder="" value="" disabled>
-                                            <input type="hidden" class="form-control" id="id2" name="id2" placeholder="" value="">
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="row mb-3">
-                                <div class="col-xl-12 col-sm-12 col-12">
-                                    <div class="mb-1">
-                                        <label for="itemId" class="form-label">Item ID</label>
-                                        <div class="input input-group">
-                                            <input type="text" class="form-control" id="itemId2" name="itemId2" placeholder="" value="" disabled>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="row mb-3">
-                                <div class="col-xl-12 col-sm-12 col-12">
-                                    <div class="mb-1">
-                                        <label for="itemId" class="form-label">Remarks</label>
-                                        <div class="input input-group">
-                                            <textarea class="form-control" rows="5" id="remarks" name="remarks"></textarea>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <!-- Form actions start -->
-                            <div class="col-md-12">
-                                <button type="submit" id="submit" id="submit" class="btn btn-primary float-end">Send Email</button>
-                            </div>
-                            <!-- Form actions end -->
-
-                        </form>
-                    </div>
-                </div>
-            </div>
-            <!-- Toggle static offcanvas for recall from storage factory--> 
-            <div class="offcanvas offcanvas-start-recall" data-bs-backdrop="static" tabindex="-1" id="staticBackdropRecall"
-                 aria-labelledby="staticBackdropLabel">
-                <div class="offcanvas-header">
-                    <h5 class="offcanvas-title" id="staticBackdropLabel">Recall from Storage Factory</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
-                </div>
-                <div class="offcanvas-body">
-                    <div class="table-responsive">
-                        <table id="listStorage" class="table custom-table pending">
-                            <thead>
-                                <tr>
-                                    <th class="col-3">Item ID</th>
-                                    <th class="col-1">Box No</th>
-                                    <th class="col-1">Rack</th>
-                                    <th class="col-2">Shelf</th>
-                                    <th class="col-1">Qty</th>
-                                    <th class="col-1">Inventory Date</th>
-                                    <th class="col-1">Action</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-            </div>
-            <div class="offcanvas offcanvas-start-EmailReplacement" data-bs-backdrop="static" tabindex="-1" id="staticBackdropEmailReplacement"
-                 aria-labelledby="staticBackdropLabel">
-                <div class="offcanvas-header">
-                    <h5 class="offcanvas-title" id="staticBackdropLabel">Send Email for HW Replacement</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
-                </div>
-                <div class="offcanvas-body">
-                    <div class="row mb-3">
-                        <form class="row g-3 align-items-center" role="form" action="${contextPath}/rmsbookingDetail/addHwReplacement" method="post">
-                            <div class="row mb-3">
-                                <div class="col-xl-12 col-sm-12 col-12">
-                                    <div class="mb-1">
-                                        <label for="itemId" class="form-label">Item ID *</label>
-                                        <div class="input input-group">
-                                            <input type="hidden" class="form-control" id="id3" name="id3" placeholder="" value="${rms.id}">
-                                            <select class="js-example-basic-single" id="hwReplacement" name="hwReplacement" style="width: 100%" required>
-                                                <option></option>
-                                                <c:forEach items="${hwList}" var="invInner">
-                                                    <option value="${invInner.pkid}">
-                                                        ${invInner.itemId} (${invInner.status})
-                                                    </option>
-                                                </c:forEach>
-                                            </select>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="row mb-3">
-                                <div class="col-xl-12 col-sm-12 col-12">
-                                    <div class="mb-1">
-                                        <label for="itemId" class="form-label">Remarks</label>
-                                        <div class="input input-group">
-                                            <textarea class="form-control" rows="5" id="remarks" name="remarks"></textarea>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <!-- Form actions start -->
-                            <div class="col-md-12">
-                                <button type="submit" id="submit" id="submit" class="btn btn-primary float-end">Add</button>
-                            </div>
-                            <!-- Form actions end -->
-
-                        </form>
-                    </div>
-                    <div class="row mb-3">
-                        <div class="table-responsive">
-                            <table id="listStorage" class="table custom-table pending">
-                                <thead>
-                                    <tr>
-                                        <th class="col-1">No</th>
-                                        <th class="col-1">Item Type</th>
-                                        <th class="col-3">item Id</th>
-                                        <th class="col-1">Qty</th>
-                                        <th class="col-2">Status</th>
-                                        <th class="col-3">Remarks</th>
-                                        <th class="col-1">Action</th>
-                                    </tr>
-                                </thead>
-                                <c:forEach items="${listHwReplace}" var="parameterMaster" varStatus="parameterMasterLoop">
-                                    <tr>
-                                        <td><c:out value="${parameterMasterLoop.index+1}"/></td>
-                                        <td><c:out value="${parameterMaster.itemType}"/></td>
-                                        <td id="modal_delete_info_${parameterMaster.id}"><c:out value="${parameterMaster.itemId}"/></td>
-                                        <td><c:out value="${parameterMaster.qty}"/></td>
-                                        <td><c:out value="${parameterMaster.status}"/></td>
-                                        <td><c:out value="${parameterMaster.remarks}"/></td>
-                                        <td align="center">
-                                            <c:if test="${parameterMaster.flag == '0'}">
-                                                <a modaldeleteid="${parameterMaster.id}" type ="button" title="Delete" data-bs-toggle="modal" data-bs-target="#delete_modal" class="table-link danger group_delete" onclick="modalDelete(this);">
-                                                    <i class="bi bi-trash h3" style="color:red"></i></a> 
-                                                </c:if>
-                                                <c:if test="${parameterMaster.flag != '0'}">
-                                                <a type ="button" title="Delete" class="table-link danger group_delete disabled">
-                                                    <i class="bi bi-trash h3" style="color:gray"></i></a> 
-                                                </c:if>
-                                        </td>
-                                    </tr>
-                                </c:forEach>
-                            </table>
-                        </div>
-                    </div>
-                    <div class="col-md-12">
-                        <c:if test="${countHwReplace != '0'}">
-                            <c:if test="${countHwReplaceFlagZero != '0'}">
-                                <a type ="button" title="Send Email" data-bs-toggle="modal" data-bs-target="#confirmation_modal" class="btn btn-outline-warning me-2 float-end" role="button" onclick="sendEmail();">
-                                <i class='bi bi-envelope-arrow-up'></i>&nbsp;&nbsp;Send Email to Planner</a>
-                            </c:if>
-                        </c:if>
-                    </div>
-                </div>
-            </div>
         </div>
 
         <!--</div>-->
@@ -690,43 +504,6 @@
                 }
             });
 
-            function modalDelete(e) {
-                var bookingDetailId = $("#id").val();
-                var deleteId = $(e).attr("modaldeleteid");
-                var deleteInfo = $("#modal_delete_info_" + deleteId).html();
-                var deleteUrl = "${contextPath}/rmsbookingDetail/deleteHwReplacement/" + deleteId + "/" + bookingDetailId;
-                var deleteMsg = "<f:message key='general.label.delete.confirmation'><f:param value='" + deleteInfo + "'/></f:message>";
-                $("#delete_modal .modal-body").html(deleteMsg);
-                $("#modal_delete_button").attr("href", deleteUrl);
-            }
-
-            function sendEmail() {
-                var bookingPkid = $("#bookingPkid").val();
-                var deleteUrl = "${contextPath}/rmsbookingDetail/sendEmailReplacementByGroup/" + bookingPkid;
-                var deleteMsg = "Are you sure want to send email to Planner for HW replacement?";
-                $("#confirmation_modal .modal-body").html(deleteMsg);
-                $("#modal_button").attr("href", deleteUrl);
-            }
-
-            function getData(e) {
-                var id = $(e).attr("modaldeleteid");
-                $.ajax({
-                    url: '${contextPath}/rmsbookingDetail/emailBody', // Replace with your controller URL
-                    type: 'GET',
-                    data: {id: id},
-                    dataType: 'json',
-                    success: function (data) {
-                        // Populate form fields with received data
-                        $("#itemId2").val(data.itemId);
-                        $("#id2").val(data.id);
-                        $("#itemType").val(data.itemType);
-                    },
-                    error: function (jqXHR, textStatus, errorThrown) {
-                        console.error("Error loading data: " + textStatus, errorThrown);
-                    }
-                });
-            }
-
             $(document).ready(function () {
                 $('.js-example-basic-single').select2();
             });
@@ -745,7 +522,6 @@
                     buttons: ["copy", "csv", "pdf", "print"],
                 });
             });
-
             $(function () {
                 $("#customButtons2").DataTable({
                     lengthMenu: [
@@ -761,51 +537,6 @@
                 });
             });
 
-            function ajaxStorage(e) {
-                var itemPKID = $(e).attr("modaldeleteid");
-                var id = $(e).attr("modaldeleteid2");
-                $('#listStorage').DataTable().destroy();
-                new DataTable('#listStorage', {
-                    ajax: {
-                        data: {itemPKID: itemPKID},
-                        url: '${contextPath}/hw/item/ajaxStorage',
-                        dataSrc: ''
-                    },
-                    columns: [
-                        {"data": "itemId"},
-                        {"data": "boxNo"},
-                        {"data": "rack"},
-                        {"data": "shelf"},
-                        {"data": "qty"},
-                        {"data": "movementDateTime"},
-                        {
-                            data: "invId", // This column won't directly map to a data field
-                            render: function (data, type, row) {
-                                return '<c:if test="${userItemSfRecall == 'Yes'}"><button class="btn btn-primary edit-btn" data-inv="' + data + '" data-pkid="' + itemPKID + '" data-id="' + id + '" data-bs-toggle="modal" data-bs-target="#confirmation_modal">Recall</button></c:if>';
-                            }
-                        }
-                    ]
-                });
-            }
-
-            $('#listStorage tbody').on('click', '.edit-btn', function () {
-                var rowInv = $(this).data('inv'); // Get the 'data-id' attribute
-                var rowPkid = $(this).data('pkid'); // Get the 'data-id' attribute
-                var rowId = $(this).data('id'); // Get the 'data-id' attribute
-                var rmsBookingId = $("#id").val();
-                // Perform further actions, e.g., open a modal for editing
-                if (rowId) {
-                    var deleteUrl = "${contextPath}/rmsbookingDetail/retrieveSF/" + rowInv + "/" + rowPkid + "/" + rowId + "/" + rmsBookingId;
-                    var deleteMsg = "Are you sure want to retrieve this item from Storage Factory?";
-                    $("#confirmation_modal .modal-body").html(deleteMsg);
-                    $("#modal_button").attr("href", deleteUrl);
-                } else {
-                    var deleteUrl = "";
-                    var deleteMsg = "No Item Selected.";
-                    $("#confirmation_modal .modal-body").html(deleteMsg);
-                    $("#modal_button").attr("href", deleteUrl);
-                }
-            });
         </script>
     </s:layout-component>
 </s:layout-render>

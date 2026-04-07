@@ -78,6 +78,11 @@
         <!-- Content wrapper start -->
         <div class="content-wrapper">
             <div class="row gx-4">
+                <nav class="navbar bg-body-tertiary">
+                    <div class="container-fluid justify-content-start">
+                        <a href="${contextPath}/rmsbookingDetail/rmsReleased" class="btn btn-success me-2" role="button"><i class='bi bi-arrow-bar-right'></i>&nbsp;&nbsp;RMS Released to Production</a>
+                    </div>
+                </nav>
                 <div class="col-sm-12 col-12">
                     <div class="card mb-4">
                         <div class="card-header">

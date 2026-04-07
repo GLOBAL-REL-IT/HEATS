@@ -185,6 +185,57 @@
                     </div>
                     <!-- Card end -->
                 </div>
+                        <div class="col-12">
+                    <!-- Card start -->
+                    <div class="card mb-4">
+                        <div class="card-header">
+                            <h5 class="card-title">RMS <span style="color:#D97D55">Released to Production</span> <span class="h6" style="color:red">(${countBookingReleased})</span></h5>
+                        </div>
+                        <div class="card-body">
+                            <div class="table-responsive">
+                                <table id="scrollVerticalReleasedLoading" class="table pending custom-table">
+                                    <thead>
+                                        <tr>
+                                            <th>No</th>
+                                            <th>RMS No</th>
+                                            <th>Event</th>
+                                            <th>Actual Start Date</th>
+                                            <th>Device</th>
+                                            <th>Package</th>
+                                            <th>Est Event Start Date</th>
+                                            <th>RMS Status</th>
+                                            <th>Event Begin Status</th>
+                                            <th>Days to Event Start</th>
+                                            <th>Manage</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                <c:forEach items="${bookingReleased}" var="parameterMaster" varStatus="parameterMasterLoop">
+                                    <tr>
+                                    <td><c:out value="${parameterMasterLoop.index+1}"/></td>
+                                    <td id="modal_delete_info_countItemPending}"><c:out value="${parameterMaster.rmsNo}"/></td>
+                                    <td><c:out value="${parameterMaster.event}"/></td>
+                                    <td><c:out value="${parameterMaster.actStartDate}"/></td>
+                                    <td><c:out value="${parameterMaster.device}"/></td>
+                                    <td><c:out value="${parameterMaster.packages}"/></td>
+                                    <td><c:out value="${parameterMaster.eventStartDate}"/></td>
+                                    <td><c:out value="${parameterMaster.rmsStatus}"/></td>
+                                    <td><c:out value="${parameterMaster.eventBeginStatus}"/></td>
+                                    <td><c:out value="${parameterMaster.daysToEventStart}"/></td>
+                                    <td align="center">
+                                            <a href="${contextPath}/rmsbookingDetail/rmsReleased/detail/${parameterMaster.id}" class="table-link" title="Manage">
+                                                <i class="bi bi-box-arrow-in-right h3"></i>
+                                            </a>
+                                    </td>
+                                    </tr>
+                                </c:forEach>
+                                </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Card end -->
+                </div>
                 <div class="col-12">
                     <!-- Card start -->
                     <div class="card mb-4">
@@ -514,6 +565,15 @@
             //RMS Return from Loading
             $(function () {
                 $("#scrollVerticalFromLoading").DataTable({
+                    scrollY: "200px",
+                    scrollCollapse: false,
+                    paging: false,
+                    bInfo: false,
+                });
+            });
+            
+            $(function () {
+                $("#scrollVerticalReleasedLoading").DataTable({
                     scrollY: "200px",
                     scrollCollapse: false,
                     paging: false,

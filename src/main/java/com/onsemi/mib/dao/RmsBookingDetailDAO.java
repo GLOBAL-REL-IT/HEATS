@@ -440,6 +440,58 @@ public class RmsBookingDetailDAO {
         return rmsbookingDetailList;
     }
 
+    public List<RmsBookingDetail> getRmsBookingDetailListReleased() {
+        String sql = "SELECT *, DATE_FORMAT(act_start_date,'%d-%M-%Y') AS actStartDate, DATE_FORMAT(event_start_date,'%d-%M-%Y') AS eventStartDate FROM rms_booking_detail WHERE flag = '0' AND status = 'Released to Production' ORDER BY priority, act_start_date ASC";
+        List<RmsBookingDetail> rmsbookingDetailList = new ArrayList<RmsBookingDetail>();
+        try {
+            PreparedStatement ps = conn.prepareStatement(sql);
+            RmsBookingDetail rmsbookingDetail;
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                rmsbookingDetail = new RmsBookingDetail();
+                rmsbookingDetail.setId(rs.getString("id"));
+                rmsbookingDetail.setBookingPkid(rs.getString("booking_pkid"));
+                rmsbookingDetail.setRmsNo(rs.getString("rms_no"));
+                rmsbookingDetail.setEvent(rs.getString("event"));
+                rmsbookingDetail.setDevice(rs.getString("device"));
+                rmsbookingDetail.setPackages(rs.getString("packages"));
+                rmsbookingDetail.setEventStartDate(rs.getString("eventStartDate"));
+                rmsbookingDetail.setRmsStatus(rs.getString("rms_status"));
+                rmsbookingDetail.setEventBeginStatus(rs.getString("event_begin_status"));
+                rmsbookingDetail.setEventEndStatus(rs.getString("event_end_status"));
+                rmsbookingDetail.setNoCurrentFtp(rs.getString("no_current_ftp"));
+                rmsbookingDetail.setEquipmentLocation(rs.getString("equipment_location"));
+                rmsbookingDetail.setEstStartDate(rs.getString("est_start_date"));
+                rmsbookingDetail.setActStartDate(rs.getString("actStartDate"));
+                rmsbookingDetail.setFolFilename(rs.getString("fol_filename"));
+                rmsbookingDetail.setTotalBooking(rs.getString("total_booking"));
+                rmsbookingDetail.setCreatedDate(rs.getString("created_date"));
+                rmsbookingDetail.setModifiedDate(rs.getString("modified_date"));
+                rmsbookingDetail.setStatus(rs.getString("status"));
+                rmsbookingDetail.setPriority(rs.getString("priority"));
+                rmsbookingDetail.setPriorityRemarks(rs.getString("priority_remarks"));
+                rmsbookingDetail.setPriorityBy(rs.getString("priority_by"));
+                rmsbookingDetail.setPriorityDate(rs.getString("priority_date"));
+                rmsbookingDetail.setFlag(rs.getString("flag"));
+                rmsbookingDetail.setDaysToEventStart(rs.getString("days_to_event_start"));
+                rmsbookingDetailList.add(rmsbookingDetail);
+            }
+            rs.close();
+            ps.close();
+        } catch (SQLException e) {
+            LOGGER.error(e.getMessage());
+        } finally {
+            if (conn != null) {
+                try {
+                    conn.close();
+                } catch (SQLException e) {
+                    LOGGER.error(e.getMessage());
+                }
+            }
+        }
+        return rmsbookingDetailList;
+    }
+
     public Integer getCountBookingId(String bookingId) {
         Integer count = null;
         try {
@@ -499,6 +551,33 @@ public class RmsBookingDetailDAO {
         try {
             PreparedStatement ps = conn.prepareStatement(
                     "SELECT COUNT(*) AS count FROM rms_booking_detail inc WHERE inc.flag = '0'"
+            );
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                count = rs.getInt("count");
+            }
+            rs.close();
+
+            ps.close();
+        } catch (SQLException e) {
+            LOGGER.error(e.getMessage());
+        } finally {
+            if (conn != null) {
+                try {
+                    conn.close();
+                } catch (SQLException e) {
+                    LOGGER.error(e.getMessage());
+                }
+            }
+        }
+        return count;
+    }
+
+    public Integer getCountBookingReleasedProduction() {
+        Integer count = null;
+        try {
+            PreparedStatement ps = conn.prepareStatement(
+                    "SELECT COUNT(*) AS count FROM rms_booking_detail inc WHERE inc.flag = '0' And status = 'Released to Production' "
             );
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {

@@ -1004,16 +1004,16 @@ public class RmsBookingDetailController {
         if (currentStatus.equalsIgnoreCase("Pending Functional Test")) {
             // CHECK AND UPDATE THE FIRST TEST
 //            currentStatus = checkStatusFTestBeforeLoading(bookingId, itemPkid);
-            
+
             String itemIdMB = "";
             String mbSptsPkid = "";
             String itemIdLC = "";
-            
+
             RmsBookingHardwareDAO bookdao = new RmsBookingHardwareDAO();
             Integer checkMb = bookdao.checkMotherboardData(bookingId);
             bookdao = new RmsBookingHardwareDAO();
             Integer checkLc = bookdao.checkCardData(bookingId);
-            
+
             if (checkMb == 0) {
                 redirectAttrs.addFlashAttribute("error", "No motherboard configured");
             } else {
@@ -1033,7 +1033,7 @@ public class RmsBookingDetailController {
                     model.addAttribute("configMotherboard", "TRIGGERERROR");
                     redirectAttrs.addFlashAttribute("error", "No motherboard configuration configured");
                 }
-                
+
                 if (checkLc == 0) {
                     // SINI TAKDE LC
                     redirectAttrs.addFlashAttribute("error", "No load card configured");
@@ -1043,7 +1043,7 @@ public class RmsBookingDetailController {
                     itemIdLC = bookdao.getSptsPkidForItemIdLC(bookingId);
                     itemactdao = new ItemActivityConfigDAO();
                     ItemActivityConfig itemactlc = itemactdao.getItemActivityByItemId(itemIdLC);
-                    
+
                     if (itemactlc != null) {
                         bibTest = itemactlc.getBibTest();
                         manTest = itemactlc.getManualTest();
@@ -1054,7 +1054,7 @@ public class RmsBookingDetailController {
                 model.addAttribute("itemIdMB", itemIdMB);
                 model.addAttribute("itemIdLC", itemIdLC);
             }
-            
+
             if (leakTest.contains("Yes")) {
                 currentStatus = "Pending Functional Test - Leakage Test";
             } else if (manTest.contains("Yes")) {
@@ -1069,21 +1069,21 @@ public class RmsBookingDetailController {
         } else {
             // DO NOTHING HERE
         }
-        
+
         model.addAttribute("leakCheck", leakTest);
         model.addAttribute("manCheck", manTest);
         model.addAttribute("bibCheck", bibTest);
         model.addAttribute("psCheck", psTest);
         model.addAttribute("winCheck", winTest);
-        
+
         ParameterDetailsDAO pDx = new ParameterDetailsDAO();
         List<ParameterDetails> bibResultData = pDx.getGroupParameterDetailList("", "016");
         model.addAttribute("bibResultData", bibResultData);
-        
+
         pDx = new ParameterDetailsDAO();
         List<ParameterDetails> leakResultData = pDx.getGroupParameterDetailList("", "016");
         model.addAttribute("leakResultData", leakResultData);
-        
+
         pDx = new ParameterDetailsDAO();
         List<ParameterDetails> psResultData = pDx.getGroupParameterDetailList("", "016");
         model.addAttribute("psResultData", psResultData);
@@ -2592,7 +2592,7 @@ public class RmsBookingDetailController {
                 data = "ERROR CONFIG MOTHERBOARD";
                 return data;
             }
-            
+
             if (checkLc == 0) {
                 data = "NO LC DATA FOUND";
                 return data;
@@ -2627,14 +2627,14 @@ public class RmsBookingDetailController {
 
         return data;
     }
-    
+
     // FUNCTION NK DAPATKAN SEMUA MAKLUMAT TEST CONFIG
     private ItemActivityConfig getMaklumatTest(String itemId) {
         ItemActivityConfig item = new ItemActivityConfig();
         ItemActivityConfigDAO itemactdao = new ItemActivityConfigDAO();
         ItemActivityConfig itemact = itemactdao.getItemActivityByItemId(itemId);
         if (itemact == null) {
-            
+
         } else {
             item.setLeakageTest(itemact.getLeakageTest());
             item.setManualTest(itemact.getManualTest());
@@ -2643,6 +2643,594 @@ public class RmsBookingDetailController {
             item.setWinchesterChamberLeakageTest(itemact.getWinchesterChamberLeakageTest());
         }
         return item;
+    }
+
+    //function for hw released
+    @RequestMapping(value = "/rmsReleased", method = RequestMethod.GET)
+    public String rmsReleased(
+            Model model,
+            @ModelAttribute UserSession userSession
+    ) throws IOException {
+
+        RmsBookingDetailDAO rmsD = new RmsBookingDetailDAO();
+        List<RmsBookingDetail> booking = rmsD.getRmsBookingDetailListReleased();
+
+        model.addAttribute("booking", booking);
+
+        rmsD = new RmsBookingDetailDAO();
+        int countBooking = rmsD.getCountBookingReleasedProduction();
+
+        model.addAttribute("countBooking", countBooking);
+
+        return "rmsbookingDetail/rms_released";
+    }
+    
+    @RequestMapping(value = "/rmsReleased/detail/{id}", method = RequestMethod.GET)
+    public String rmsReleasedDetail(Model model,
+            @PathVariable("id") String id,
+            @ModelAttribute UserSession userSession) throws IOException {
+
+        model.addAttribute("userItemSfRecall", userSession.getItemSfRecall());
+
+        //to cross check with existing hardware booked
+        List<String> list = new ArrayList<>();
+
+        RmsBookingDetailDAO rmsd = new RmsBookingDetailDAO();
+        RmsBookingDetail rms = rmsd.getRmsBookingDetail(id);
+        model.addAttribute("rms", rms);
+
+        int onhandQty = 0;
+        int requestQty = 0;
+
+        //add hardware detail from spts
+        int bookingPkid = Integer.parseInt(rms.getBookingPkid());
+        JSONArray getItemByParamV = SPTSWebService.getBookingDetailByPKID(bookingPkid);
+        for (int i = 0; i < getItemByParamV.length(); i++) {
+
+//            LOGGER.info("1st step: " + LocalDateTime.now());
+            list.add(Integer.toString(getItemByParamV.getJSONObject(i).getInt("pkid")));
+
+            String itemType = "";
+            if (getItemByParamV.getJSONObject(i).getString("field_name").contains("Motherboard")) {
+                itemType = "Motherboard";
+            } else if (getItemByParamV.getJSONObject(i).getString("field_name").contains("Tester")) {
+                itemType = "Tester";
+            } else if (getItemByParamV.getJSONObject(i).getString("field_name").contains("Remarks")) {
+                itemType = "Remarks";
+            } else if (getItemByParamV.getJSONObject(i).getString("field_name").contains("PowerSupply")) {
+                itemType = "Power Supply";
+            } else if (getItemByParamV.getJSONObject(i).getString("field_name").contains("ProgramCard")) {
+                itemType = "Program Card";
+            } else if (getItemByParamV.getJSONObject(i).getString("field_name").contains("LoadCard")) {
+                itemType = "Load Card";
+            } else if (getItemByParamV.getJSONObject(i).getString("field_name").contains("DUTCard")) {
+                itemType = "DUT Card";
+            } else if (getItemByParamV.getJSONObject(i).getString("field_name").contains("Solder")) {
+                itemType = "Solder Type";
+            } else {
+                itemType = "";
+            }
+
+            RmsBookingHardware rmsH = new RmsBookingHardware();
+            rmsH.setBookingPkid(Integer.toString(getItemByParamV.getJSONObject(i).getInt("booking_pkid")));
+            rmsH.setPkid(Integer.toString(getItemByParamV.getJSONObject(i).getInt("pkid")));
+            rmsH.setItemType(itemType);
+            if (getItemByParamV.getJSONObject(i).has("field_value")) {
+                Object assembly = getItemByParamV.getJSONObject(i).get("field_value");
+                if (assembly instanceof String) {
+                    rmsH.setItemId(getItemByParamV.getJSONObject(i).getString("field_value"));
+                } else {
+                    rmsH.setItemId(Integer.toString(getItemByParamV.getJSONObject(i).getInt("field_value")));
+                }
+            }
+            if (getItemByParamV.getJSONObject(i).has("field_quantity")) {
+                rmsH.setQty(Integer.toString(getItemByParamV.getJSONObject(i).getInt("field_quantity")));
+                requestQty = getItemByParamV.getJSONObject(i).getInt("field_quantity");
+            } else {
+                requestQty = 0;
+            }
+            rmsH.setReadiness(Boolean.toString(getItemByParamV.getJSONObject(i).getBoolean("field_readiness")));
+            rmsH.setFlag("0");
+            rmsH.setCreatedBy(userSession.getFullname());
+            rmsH.setModifiedBy(userSession.getFullname());
+
+            //get itempkid and check qty if available or not (for bib and bibcard only)
+//            LOGGER.info("rmsH.getItemType(): " + rmsH.getItemType());
+//            LOGGER.info("rmsH.getItemId(): " + rmsH.getItemId());
+            if ("Motherboard".equals(rmsH.getItemType()) || "Load Card".equals(rmsH.getItemType()) || "Program Card".equals(rmsH.getItemType())) {
+                if (!"NA".equals(rmsH.getItemId())) {
+
+                    JSONObject paramV = new JSONObject();
+                    paramV.put("itemID", rmsH.getItemId());
+                    JSONArray getItemByParam = SPTSWebService.getItemByParam(paramV);
+                    for (int x = 0; x < getItemByParam.length(); x++) {
+
+                        rmsH.setItemPkid(Integer.toString(getItemByParam.getJSONObject(x).getInt("PKID")));
+                        onhandQty = getItemByParam.getJSONObject(x).getInt("OnHandQty");
+                        if (onhandQty >= requestQty) {
+                            rmsH.setStatus("Available");
+                            if ("Motherboard".equals(rmsH.getItemType())) {
+                                //check status if requested for replacement or not
+                                RmsBookingHardwareDAO rmsBH = new RmsBookingHardwareDAO();
+                                int count = rmsBH.getCountBookingId(Integer.toString(getItemByParamV.getJSONObject(i).getInt("booking_pkid")), Integer.toString(getItemByParamV.getJSONObject(i).getInt("pkid")));
+//                                LOGGER.info("countbookingwithbookingpkidandpkid: " + count);
+                                if (count == 1) {
+                                    rmsBH = new RmsBookingHardwareDAO();
+                                    RmsBookingHardware rmsB = rmsBH.getRmsBookingHardwareByPkid(Integer.toString(getItemByParamV.getJSONObject(i).getInt("pkid")));
+//                                    LOGGER.info("rmsB.getSubStatus(): " + rmsB.getSubStatus());
+                                    rmsH.setSubStatus(rmsB.getSubStatus());
+                                } else {
+                                    rmsH.setSubStatus("Pending HW Registration");
+                                }
+                            }
+                        } else {
+                            //check status if requested for replacement or not
+                            RmsBookingHardwareDAO rmsBH = new RmsBookingHardwareDAO();
+                            int count = rmsBH.getCountBookingId(Integer.toString(getItemByParamV.getJSONObject(i).getInt("booking_pkid")), Integer.toString(getItemByParamV.getJSONObject(i).getInt("pkid")));
+                            if (count == 1) {
+                                rmsBH = new RmsBookingHardwareDAO();
+                                RmsBookingHardware rmsB = rmsBH.getRmsBookingHardwareByPkid(Integer.toString(getItemByParamV.getJSONObject(i).getInt("pkid")));
+                                if (rmsB.getStatus().contains("Request for Replacement") || rmsB.getStatus().contains("Recall from Storage Factory")) {
+                                    rmsH.setStatus(rmsB.getStatus());
+                                } else {
+                                    rmsH.setStatus("Not Available - " + getItemByParam.getJSONObject(x).getString("StatusName"));
+                                }
+                            } else {
+                                rmsH.setStatus("Not Available - " + getItemByParam.getJSONObject(x).getString("StatusName"));
+                            }
+                        }
+                        if (getItemByParam.getJSONObject(x).has("StorageFactoryQty")) {
+//                            LOGGER.info("StorageFactoryQty: " + getItemByParam.getJSONObject(x).getInt("StorageFactoryQty"));
+                            if (getItemByParam.getJSONObject(x).getInt("StorageFactoryQty") > 0) {
+                                rmsH.setRecall("Yes");
+                            } else {
+                                rmsH.setRecall("No");
+                            }
+                        } else {
+                            rmsH.setRecall("No");
+                        }
+
+                    }
+                } else {
+                    rmsH.setItemPkid("0");
+                    rmsH.setStatus("NA");
+                    rmsH.setRecall("No");
+                }
+            } else {
+                rmsH.setItemPkid("0");
+                rmsH.setStatus("NA");
+                rmsH.setRecall("No");
+            }
+
+            RmsBookingHardwareDAO rmsHD = new RmsBookingHardwareDAO();
+            int count = rmsHD.getCountBookingId(Integer.toString(getItemByParamV.getJSONObject(i).getInt("booking_pkid")), Integer.toString(getItemByParamV.getJSONObject(i).getInt("pkid")));
+            if (count == 0) { //add new record
+                rmsHD = new RmsBookingHardwareDAO();
+                QueryResult q = rmsHD.insertRmsBookingHardware(rmsH);
+            } else if (count == 1) { //update existing hardware
+                rmsHD = new RmsBookingHardwareDAO();
+                QueryResult q = rmsHD.updateRmsBookingHardwareByPkidAndBookingPkid(rmsH);
+            }
+
+//            System.out.println(getItemByParamV.getJSONObject(i));
+        }
+        //update inactive/replaced hardware 
+        RmsBookingHardwareDAO rmsH = new RmsBookingHardwareDAO();
+        List<RmsBookingHardware> hw = rmsH.getRmsBookingHardwareListByBookingPkidWithFlagZero(Integer.toString(bookingPkid));
+        for (int i = 0; i < hw.size(); i++) {
+            if (!list.contains(hw.get(i).getPkid())) {
+
+                RmsBookingHardware h = new RmsBookingHardware();
+                h.setId(hw.get(i).getId());
+                h.setFlag("99");
+                h.setStatus("Removed");
+                h.setSubStatus(null);
+                h.setModifiedBy("HEATS");
+                rmsH = new RmsBookingHardwareDAO();
+                QueryResult q = rmsH.updateRmsBookingHardwareForFlagAndStatusById(h);
+                LOGGER.info("pkid removed: " + hw.get(i).getPkid());
+            }
+        }
+
+        //get motherboard detail
+        RmsBookingHardwareDAO rmsHD = new RmsBookingHardwareDAO();
+        List<RmsBookingHardware> BibList = rmsHD.getRmsBookingHardwareListForMotherboardByBookingPkid(Integer.toString(bookingPkid));
+        model.addAttribute("BibList", BibList);
+
+        //get other hw detail
+        rmsHD = new RmsBookingHardwareDAO();
+        List<RmsBookingHardware> otherList = rmsHD.getRmsBookingHardwareListForOtherHwByBookingPkid(Integer.toString(bookingPkid));
+        model.addAttribute("otherList", otherList);
+
+        //get all hw detail for request replacement form
+        rmsHD = new RmsBookingHardwareDAO();
+        List<RmsBookingHardware> hwList = rmsHD.getRmsBookingHardwareListByBookingPkidWithFlagZeroForHwReplacement(Integer.toString(bookingPkid));
+        model.addAttribute("hwList", hwList);
+
+        RmsBookingDetailHwReplacementDAO hwReplaceD = new RmsBookingDetailHwReplacementDAO();
+        List<RmsBookingDetailHwReplacement> listHwReplace = hwReplaceD.getRmsBookingDetailHwReplacementListByBookingPkid(Integer.toString(bookingPkid));
+        model.addAttribute("listHwReplace", listHwReplace);
+
+        hwReplaceD = new RmsBookingDetailHwReplacementDAO();
+        int countHwReplace = hwReplaceD.getCountBookingId(Integer.toString(bookingPkid));
+        model.addAttribute("countHwReplace", countHwReplace);
+
+        hwReplaceD = new RmsBookingDetailHwReplacementDAO();
+        int countHwReplaceFlagZero = hwReplaceD.getCountFlagZero();
+        model.addAttribute("countHwReplaceFlagZero", countHwReplaceFlagZero);
+
+        //get booking remarks
+        rmsHD = new RmsBookingHardwareDAO();
+        int countRemarks = rmsHD.getCountHwWithRemarksByBookingPkid(Integer.toString(bookingPkid));
+        if (countRemarks == 0) {
+            model.addAttribute("rmsRemarks", "");
+        } else {
+            rmsHD = new RmsBookingHardwareDAO();
+            RmsBookingHardware rmsRemarks = rmsHD.getRmsBookingHardwareRemarksByBookingPkid(Integer.toString(bookingPkid));
+            model.addAttribute("rmsRemarks", rmsRemarks.getItemId());
+        }
+
+        return "rmsbookingDetail/detail_released";
+    }
+    
+    @RequestMapping(value = "/rmsReleased/groupDetail/{bookingId}/{itemPkid}", method = RequestMethod.GET)
+    public String rmsReleasedGroupDetail(Model model,
+            @PathVariable("bookingId") String bookingId,
+            @PathVariable("itemPkid") String itemPkid,
+            RedirectAttributes redirectAttrs,
+            @ModelAttribute UserSession userSession) throws IOException {
+
+        String currentStatus = "";
+        String leakTest = "";
+        String manTest = "";
+        String bibTest = "";
+        String psTest = "";
+        String winTest = "";
+        String groupId = bookingId + "/" + itemPkid;
+        model.addAttribute("groupId", groupId);
+        model.addAttribute("userItemSfRecall", userSession.getItemSfRecall());
+
+        RmsBookingDetailDAO rmsd = new RmsBookingDetailDAO();
+        RmsBookingDetail rms = rmsd.getRmsBookingDetailByBookingPkid(bookingId);
+        model.addAttribute("rms", rms);
+
+        RmsBookingHardwareDAO hD = new RmsBookingHardwareDAO();
+        RmsBookingHardware h = hD.getRmsBookingHardwareByPkid(itemPkid);
+        model.addAttribute("motherboardId", h.getItemId());
+        model.addAttribute("subStatus", h.getSubStatus());
+
+        RmsBookingHardwareGroupDAO h2D = new RmsBookingHardwareGroupDAO();
+        List<RmsBookingHardwareGroup> hwGroupList = h2D.getRmsBookingHardwareGroupListByGroupId(groupId);
+        model.addAttribute("hwGroupList", hwGroupList);
+
+        //get booking remarks
+        RmsBookingHardwareDAO rmsHD = new RmsBookingHardwareDAO();
+        int countRemarks = rmsHD.getCountHwWithRemarksByBookingPkid(bookingId);
+        if (countRemarks == 0) {
+            model.addAttribute("rmsRemarks", "");
+        } else {
+            rmsHD = new RmsBookingHardwareDAO();
+            RmsBookingHardware rmsRemarks = rmsHD.getRmsBookingHardwareRemarksByBookingPkid(bookingId);
+            model.addAttribute("rmsRemarks", rmsRemarks.getItemId());
+        }
+
+        currentStatus = h.getSubStatus();
+
+        if (currentStatus.equalsIgnoreCase("Pending Functional Test")) {
+            // CHECK AND UPDATE THE FIRST TEST
+//            currentStatus = checkStatusFTestBeforeLoading(bookingId, itemPkid);
+
+            String itemIdMB = "";
+            String mbSptsPkid = "";
+            String itemIdLC = "";
+
+            RmsBookingHardwareDAO bookdao = new RmsBookingHardwareDAO();
+            Integer checkMb = bookdao.checkMotherboardData(bookingId);
+            bookdao = new RmsBookingHardwareDAO();
+            Integer checkLc = bookdao.checkCardData(bookingId);
+
+            if (checkMb == 0) {
+                redirectAttrs.addFlashAttribute("error", "No motherboard configured");
+            } else {
+                // SINI ADA MB
+                bookdao = new RmsBookingHardwareDAO();
+                mbSptsPkid = bookdao.getSptsPkidForItemIdMb(bookingId, itemPkid);
+                ItemDAO itemdao = new ItemDAO();
+                itemIdMB = itemdao.getMibItemIdBySptsPkId(mbSptsPkid);
+                ItemActivityConfigDAO itemactdao = new ItemActivityConfigDAO();
+                ItemActivityConfig itemactmb = itemactdao.getItemActivityByItemId(itemIdMB);
+                if (itemactmb != null) {
+                    leakTest = itemactmb.getLeakageTest();
+                    psTest = itemactmb.getPsLeakageTest();
+                    winTest = itemactmb.getWinchesterChamberLeakageTest();
+                    model.addAttribute("configMotherboard", "");
+                } else {
+                    model.addAttribute("configMotherboard", "TRIGGERERROR");
+                    redirectAttrs.addFlashAttribute("error", "No motherboard configuration configured");
+                }
+
+                if (checkLc == 0) {
+                    // SINI TAKDE LC
+                    redirectAttrs.addFlashAttribute("error", "No load card configured");
+                } else {
+                    // SINI DUA2 ADA
+                    bookdao = new RmsBookingHardwareDAO();
+                    itemIdLC = bookdao.getSptsPkidForItemIdLC(bookingId);
+                    itemactdao = new ItemActivityConfigDAO();
+                    ItemActivityConfig itemactlc = itemactdao.getItemActivityByItemId(itemIdLC);
+
+                    if (itemactlc != null) {
+                        bibTest = itemactlc.getBibTest();
+                        manTest = itemactlc.getManualTest();
+                    } else {
+                        redirectAttrs.addFlashAttribute("error", "No load card configuration configured");
+                    }
+                }
+                model.addAttribute("itemIdMB", itemIdMB);
+                model.addAttribute("itemIdLC", itemIdLC);
+            }
+
+            if (leakTest.contains("Yes")) {
+                currentStatus = "Pending Functional Test - Leakage Test";
+            } else if (manTest.contains("Yes")) {
+                currentStatus = "Pending Functional Test - Manual Test";
+            } else if (bibTest.contains("Yes")) {
+                currentStatus = "Pending Functional Test - BIB Test";
+            } else if (psTest.contains("Yes")) {
+                currentStatus = "Pending Functional Test - Power Supply Leakage Test";
+            } else if (winTest.contains("Yes")) {
+                currentStatus = "Pending Functional Test - Winchester Chamber Leakage Test";
+            }
+        } else {
+            // DO NOTHING HERE
+        }
+
+        model.addAttribute("leakCheck", leakTest);
+        model.addAttribute("manCheck", manTest);
+        model.addAttribute("bibCheck", bibTest);
+        model.addAttribute("psCheck", psTest);
+        model.addAttribute("winCheck", winTest);
+
+        ParameterDetailsDAO pDx = new ParameterDetailsDAO();
+        List<ParameterDetails> bibResultData = pDx.getGroupParameterDetailList("", "016");
+        model.addAttribute("bibResultData", bibResultData);
+
+        pDx = new ParameterDetailsDAO();
+        List<ParameterDetails> leakResultData = pDx.getGroupParameterDetailList("", "016");
+        model.addAttribute("leakResultData", leakResultData);
+
+        pDx = new ParameterDetailsDAO();
+        List<ParameterDetails> psResultData = pDx.getGroupParameterDetailList("", "016");
+        model.addAttribute("psResultData", psResultData);
+
+        pDx = new ParameterDetailsDAO();
+        List<ParameterDetails> winResultData = pDx.getGroupParameterDetailList("", "016");
+        model.addAttribute("winResultData", winResultData);
+
+        //vm tab
+        RmsBookingVisualInspection itemVm = new RmsBookingVisualInspection();
+
+        RmsBookingVisualInspectionDAO vmD = new RmsBookingVisualInspectionDAO();
+        int count = vmD.getCountByGroupIdWithModuleBeforeLoading(groupId);
+        if (count == 1) {
+            vmD = new RmsBookingVisualInspectionDAO();
+            itemVm = vmD.getRmsBookingVisualInspectionByGroupId(groupId);
+        }
+        model.addAttribute("itemVm", itemVm);
+
+        if (itemVm.getPcbHardwareId() != null && !"".equals(itemVm.getPcbHardwareId())) {
+            String[] pcbHardwareIdList = itemVm.getPcbHardwareId().split(",");
+            model.addAttribute("valueJsonPcb", new Gson().toJson(pcbHardwareIdList));
+        } else {
+            model.addAttribute("valueJsonPcb", new Gson().toJson(itemVm.getPcbHardwareId()));
+        }
+        if (itemVm.getHandleHardwareId() != null && !"".equals(itemVm.getHandleHardwareId())) {
+            String[] handleHardwareIdList = itemVm.getHandleHardwareId().split(",");
+            model.addAttribute("valueJsonHandle", new Gson().toJson(handleHardwareIdList));
+        } else {
+            model.addAttribute("valueJsonHandle", new Gson().toJson(itemVm.getHandleHardwareId()));
+        }
+        if (itemVm.getMetalFrameHardwareId() != null && !"".equals(itemVm.getMetalFrameHardwareId())) {
+            String[] metalFrameHardwareIdList = itemVm.getMetalFrameHardwareId().split(",");
+            model.addAttribute("valueJsonMetalFrame", new Gson().toJson(metalFrameHardwareIdList));
+        } else {
+            model.addAttribute("valueJsonMetalFrame", new Gson().toJson(itemVm.getMetalFrameHardwareId()));
+        }
+        if (itemVm.getHardwareFasternersHardwareId() != null && !"".equals(itemVm.getHardwareFasternersHardwareId())) {
+            String[] hardwareFasternersHardwareIdList = itemVm.getHardwareFasternersHardwareId().split(",");
+            model.addAttribute("valueJsonHardwareFasterners", new Gson().toJson(hardwareFasternersHardwareIdList));
+        } else {
+            model.addAttribute("valueJsonHardwareFasterners", new Gson().toJson(itemVm.getHardwareFasternersHardwareId()));
+        }
+        if (itemVm.getClipHolderHardwareId() != null && !"".equals(itemVm.getClipHolderHardwareId())) {
+            String[] clipHolderHardwareIdList = itemVm.getClipHolderHardwareId().split(",");
+            model.addAttribute("valueJsonClipHolder", new Gson().toJson(clipHolderHardwareIdList));
+        } else {
+            model.addAttribute("valueJsonClipHolder", new Gson().toJson(itemVm.getClipHolderHardwareId()));
+        }
+        if (itemVm.getPcbEdgeFingerHardwareId() != null && !"".equals(itemVm.getPcbEdgeFingerHardwareId())) {
+            String[] pcbEdgeFingerHardwareIdList = itemVm.getPcbEdgeFingerHardwareId().split(",");
+            model.addAttribute("valueJsonPcbEdgeFinger", new Gson().toJson(pcbEdgeFingerHardwareIdList));
+        } else {
+            model.addAttribute("valueJsonPcbEdgeFinger", new Gson().toJson(itemVm.getPcbEdgeFingerHardwareId()));
+        }
+        if (itemVm.getConnectorHardwareId() != null && !"".equals(itemVm.getConnectorHardwareId())) {
+            String[] connectorHardwareIdList = itemVm.getConnectorHardwareId().split(",");
+            model.addAttribute("valueJsonConnector", new Gson().toJson(connectorHardwareIdList));
+        } else {
+            model.addAttribute("valueJsonConnector", new Gson().toJson(itemVm.getConnectorHardwareId()));
+        }
+        if (itemVm.getDutSocketsHardwareId() != null && !"".equals(itemVm.getDutSocketsHardwareId())) {
+            String[] dutSocketsHardwareIdList = itemVm.getDutSocketsHardwareId().split(",");
+            model.addAttribute("valueJsonDutSockets", new Gson().toJson(dutSocketsHardwareIdList));
+        } else {
+            model.addAttribute("valueJsonDutSockets", new Gson().toJson(itemVm.getDutSocketsHardwareId()));
+        }
+        if (itemVm.getEdgeMbBananaHardwareId() != null && !"".equals(itemVm.getEdgeMbBananaHardwareId())) {
+            String[] edgeMbBananaHardwareIdList = itemVm.getEdgeMbBananaHardwareId().split(",");
+            model.addAttribute("valueJsonEdgeMbBanana", new Gson().toJson(edgeMbBananaHardwareIdList));
+        } else {
+            model.addAttribute("valueJsonEdgeMbBanana", new Gson().toJson(itemVm.getEdgeMbBananaHardwareId()));
+        }
+        if (itemVm.getElectComponentHardwareId() != null && !"".equals(itemVm.getElectComponentHardwareId())) {
+            String[] electComponentHardwareIdList = itemVm.getElectComponentHardwareId().split(",");
+            model.addAttribute("valueJsonElectComponent", new Gson().toJson(electComponentHardwareIdList));
+        } else {
+            model.addAttribute("valueJsonElectComponent", new Gson().toJson(itemVm.getElectComponentHardwareId()));
+        }
+        if (itemVm.getSolderJointHardwareId() != null && !"".equals(itemVm.getSolderJointHardwareId())) {
+            String[] solderJointHardwareIdList = itemVm.getSolderJointHardwareId().split(",");
+            model.addAttribute("valueJsonSolderJoint", new Gson().toJson(solderJointHardwareIdList));
+        } else {
+            model.addAttribute("valueJsonSolderJoint", new Gson().toJson(itemVm.getSolderJointHardwareId()));
+        }
+        if (itemVm.getWinConnectorHardwareId() != null && !"".equals(itemVm.getWinConnectorHardwareId())) {
+            String[] winConnectorHardwareIdList = itemVm.getWinConnectorHardwareId().split(",");
+            model.addAttribute("valueJsonWinConnector", new Gson().toJson(winConnectorHardwareIdList));
+        } else {
+            model.addAttribute("valueJsonWinConnector", new Gson().toJson(itemVm.getWinConnectorHardwareId()));
+        }
+        if (itemVm.getTeflonConnectorHardwareId() != null && !"".equals(itemVm.getTeflonConnectorHardwareId())) {
+            String[] teflonConnectorHardwareIdList = itemVm.getTeflonConnectorHardwareId().split(",");
+            model.addAttribute("valueJsonTeflonConnector", new Gson().toJson(teflonConnectorHardwareIdList));
+        } else {
+            model.addAttribute("valueJsonTeflonConnector", new Gson().toJson(itemVm.getTeflonConnectorHardwareId()));
+        }
+        if (itemVm.getPogoReceptaclesPinHardwareId() != null && !"".equals(itemVm.getPogoReceptaclesPinHardwareId())) {
+            String[] pogoReceptaclesPinHardwareIdList = itemVm.getPogoReceptaclesPinHardwareId().split(",");
+            model.addAttribute("valueJsonPogoReceptaclesPin", new Gson().toJson(pogoReceptaclesPinHardwareIdList));
+        } else {
+            model.addAttribute("valueJsonPogoReceptaclesPin", new Gson().toJson(itemVm.getPogoReceptaclesPinHardwareId()));
+        }
+        if (itemVm.getCableWiredCopperWireHardwareId() != null && !"".equals(itemVm.getCableWiredCopperWireHardwareId())) {
+            String[] cableWiredCopperWireHardwareIdList = itemVm.getCableWiredCopperWireHardwareId().split(",");
+            model.addAttribute("valueJsonCableWiredCopperWire", new Gson().toJson(cableWiredCopperWireHardwareIdList));
+        } else {
+            model.addAttribute("valueJsonCableWiredCopperWire", new Gson().toJson(itemVm.getCableWiredCopperWireHardwareId()));
+        }
+        if (itemVm.getLabelIdentificationHardwareId() != null && !"".equals(itemVm.getLabelIdentificationHardwareId())) {
+            String[] labelIdentificationHardwareIdList = itemVm.getLabelIdentificationHardwareId().split(",");
+            model.addAttribute("valueJsonLabelIdentification", new Gson().toJson(labelIdentificationHardwareIdList));
+        } else {
+            model.addAttribute("valueJsonLabelIdentification", new Gson().toJson(itemVm.getLabelIdentificationHardwareId()));
+        }
+
+//        LOGGER.info("itemVm.getPcbReject(): " + itemVm.getPcbReject());
+        ParameterDetailsDAO pD = new ParameterDetailsDAO();
+        List<ParameterDetails> BibPassFail = pD.getGroupParameterDetailList("", "016");
+        model.addAttribute("BibPassFail", BibPassFail);
+
+        pD = new ParameterDetailsDAO();
+        List<ParameterDetails> pcbReject = pD.getGroupParameterDetailList(itemVm.getPcbReject(), "003");
+        model.addAttribute("pcbReject", pcbReject);
+
+        pD = new ParameterDetailsDAO();
+        List<ParameterDetails> handleReject = pD.getGroupParameterDetailList(itemVm.getHandleReject(), "004");
+        model.addAttribute("handleReject", handleReject);
+
+        pD = new ParameterDetailsDAO();
+        List<ParameterDetails> metalFrameReject = pD.getGroupParameterDetailList(itemVm.getMetalFrameReject(), "005");
+        model.addAttribute("metalFrameReject", metalFrameReject);
+
+        pD = new ParameterDetailsDAO();
+        List<ParameterDetails> hardwareFasternersReject = pD.getGroupParameterDetailList(itemVm.getHardwareFasternersReject(), "006");
+        model.addAttribute("hardwareFasternersReject", hardwareFasternersReject);
+
+        pD = new ParameterDetailsDAO();
+        List<ParameterDetails> clipHolderReject = pD.getGroupParameterDetailList(itemVm.getClipHolderReject(), "007");
+        model.addAttribute("clipHolderReject", clipHolderReject);
+
+        pD = new ParameterDetailsDAO();
+        List<ParameterDetails> pcbEdgeFingerReject = pD.getGroupParameterDetailList(itemVm.getPcbEdgeFingerReject(), "008");
+        model.addAttribute("pcbEdgeFingerReject", pcbEdgeFingerReject);
+
+        pD = new ParameterDetailsDAO();
+        List<ParameterDetails> connectorReject = pD.getGroupParameterDetailList(itemVm.getConnectorReject(), "009");
+        model.addAttribute("connectorReject", connectorReject);
+
+        pD = new ParameterDetailsDAO();
+        List<ParameterDetails> dutSocketsReject = pD.getGroupParameterDetailList(itemVm.getDutSocketsReject(), "010");
+        model.addAttribute("dutSocketsReject", dutSocketsReject);
+
+        pD = new ParameterDetailsDAO();
+        List<ParameterDetails> edgeMbBananaReject = pD.getGroupParameterDetailList(itemVm.getEdgeMbBananaReject(), "011");
+        model.addAttribute("edgeMbBananaReject", edgeMbBananaReject);
+
+        pD = new ParameterDetailsDAO();
+        List<ParameterDetails> electComponentReject = pD.getGroupParameterDetailList(itemVm.getElectComponentReject(), "012");
+        model.addAttribute("electComponentReject", electComponentReject);
+
+        pD = new ParameterDetailsDAO();
+        List<ParameterDetails> solderJointReject = pD.getGroupParameterDetailList(itemVm.getSolderJointReject(), "014");
+        model.addAttribute("solderJointReject", solderJointReject);
+
+        pD = new ParameterDetailsDAO();
+        List<ParameterDetails> winConnectorReject = pD.getGroupParameterDetailList(itemVm.getWinConnectorReject(), "015");
+        model.addAttribute("winConnectorReject", winConnectorReject);
+
+        pD = new ParameterDetailsDAO();
+        List<ParameterDetails> teflonConnectorReject = pD.getGroupParameterDetailList(itemVm.getTeflonConnectorReject(), "020");
+        model.addAttribute("teflonConnectorReject", teflonConnectorReject);
+
+        pD = new ParameterDetailsDAO();
+        List<ParameterDetails> pogoReceptaclesPinReject = pD.getGroupParameterDetailList(itemVm.getPogoReceptaclesPinReject(), "021");
+        model.addAttribute("pogoReceptaclesPinReject", pogoReceptaclesPinReject);
+
+        pD = new ParameterDetailsDAO();
+        List<ParameterDetails> cableWiredCopperWireReject = pD.getGroupParameterDetailList(itemVm.getCableWiredCopperWireReject(), "022");
+        model.addAttribute("cableWiredCopperWireReject", cableWiredCopperWireReject);
+
+        pD = new ParameterDetailsDAO();
+        List<ParameterDetails> labelIdentificationReject = pD.getGroupParameterDetailList(itemVm.getLabelIdentificationReject(), "023");
+        model.addAttribute("labelIdentificationReject", labelIdentificationReject);
+
+        if (currentStatus.contains("HW Registration")) {
+            String hwActive = "active";
+            String hwActiveTab = "show active";
+            model.addAttribute("hwActive", hwActive);
+            model.addAttribute("hwActiveTab", hwActiveTab);
+        } else {
+            String hwActive = "";
+            String hwActiveTab = "";
+            model.addAttribute("hwActive", hwActive);
+            model.addAttribute("hwActiveTab", hwActiveTab);
+        }
+        if (currentStatus.contains("VM") || currentStatus.contains("Visual Inspection")) {
+            String vmActive = "active";
+            String vmActiveTab = "show active";
+            model.addAttribute("vmActive", vmActive);
+            model.addAttribute("vmActiveTab", vmActiveTab);
+        } else {
+            String vmActive = "";
+            String vmActiveTab = "";
+            model.addAttribute("vmActive", vmActive);
+            model.addAttribute("vmActiveTab", vmActiveTab);
+        }
+        String teActive = "";
+        String teActiveTab = "";
+        if (currentStatus.contains("Test")) {
+            teActive = "active";
+            teActiveTab = "show active";
+            if (currentStatus.contains("Leakage Test")) {
+                if (currentStatus.contains("Power Supply")) {
+                    model.addAttribute("psshow", teActiveTab);
+                } else if (currentStatus.contains("Winchester")) {
+                    model.addAttribute("winshow", teActiveTab);
+                } else {
+                    model.addAttribute("leakshow", teActiveTab);
+                }
+            } else if (currentStatus.contains("Manual")) {
+                model.addAttribute("manshow", teActiveTab);
+            } else if (currentStatus.contains("BIB")) {
+                model.addAttribute("bibshow", teActiveTab);
+            }
+        } else {
+            // DO NOTHING HERE
+        }
+        model.addAttribute("teActive", teActive);
+        model.addAttribute("teActiveTab", teActiveTab);
+
+        return "rmsbookingDetail/detail_group_released";
     }
 
 }

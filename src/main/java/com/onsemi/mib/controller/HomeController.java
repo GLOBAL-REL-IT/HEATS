@@ -375,6 +375,15 @@ public class HomeController {
             List<ParameterDetails> priorityList = pD.getGroupParameterDetailListForPriorityBooking("", "019");
             model.addAttribute("priorityList", priorityList);
 
+            //rms released to production
+            rmsD = new RmsBookingDetailDAO();
+            List<RmsBookingDetail> bookingReleased = rmsD.getRmsBookingDetailListReleased();
+            model.addAttribute("bookingReleased", bookingReleased);
+
+            rmsD = new RmsBookingDetailDAO();
+            int countBookingReleased = rmsD.getCountBookingReleasedProduction();
+            model.addAttribute("countBookingReleased", countBookingReleased);
+
             List<LDAPUser> ldapUserList = new ArrayList<LDAPUser>();
 
             //save to user table if not registered yet
