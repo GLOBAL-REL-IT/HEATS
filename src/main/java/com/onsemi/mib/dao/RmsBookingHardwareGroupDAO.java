@@ -103,6 +103,32 @@ public class RmsBookingHardwareGroupDAO {
         return queryResult;
     }
 
+    public QueryResult updateRmsBookingHardwareGroupStatusAndFlag(RmsBookingHardwareGroup rmsbookingHardwareGroup) {
+        QueryResult queryResult = new QueryResult();
+        try {
+            PreparedStatement ps = conn.prepareStatement(
+                    "UPDATE rms_booking_hardware_group SET status = ?, flag = ? WHERE id = ?"
+            );
+            ps.setString(1, rmsbookingHardwareGroup.getStatus());
+            ps.setString(2, rmsbookingHardwareGroup.getFlag());
+            ps.setString(3, rmsbookingHardwareGroup.getId());
+            queryResult.setResult(ps.executeUpdate());
+            ps.close();
+        } catch (SQLException e) {
+            queryResult.setErrorMessage(e.getMessage());
+            LOGGER.error(e.getMessage());
+        } finally {
+            if (conn != null) {
+                try {
+                    conn.close();
+                } catch (SQLException e) {
+                    LOGGER.error(e.getMessage());
+                }
+            }
+        }
+        return queryResult;
+    }
+
     public QueryResult deleteRmsBookingHardwareGroup(String rmsbookingHardwareGroupId) {
         QueryResult queryResult = new QueryResult();
         try {
@@ -207,7 +233,7 @@ public class RmsBookingHardwareGroupDAO {
     }
 
     public List<RmsBookingHardwareGroup> getRmsBookingHardwareGroupListByGroupId(String groupId) {
-        String sql = "SELECT *,DATE_FORMAT(g.created_date,'%d-%M-%Y') AS createdDate, i.item_type "
+        String sql = "SELECT g.*,DATE_FORMAT(g.created_date,'%d-%M-%Y') AS createdDate, i.item_type "
                 + "FROM rms_booking_hardware_group g LEFT JOIN item i ON i.spts_pkid = g.item_pkid "
                 + "WHERE g.group_id = '" + groupId + "' "
                 + "ORDER BY g.hardware_id, g.item_id ASC";
@@ -232,6 +258,49 @@ public class RmsBookingHardwareGroupDAO {
                 rmsbookingHardwareGroup.setCreatedDate(rs.getString("createdDate"));
                 rmsbookingHardwareGroup.setFlag(rs.getString("flag"));
                 rmsbookingHardwareGroup.setItemType(rs.getString("i.item_type"));
+                rmsbookingHardwareGroupList.add(rmsbookingHardwareGroup);
+            }
+            rs.close();
+            ps.close();
+        } catch (SQLException e) {
+            LOGGER.error(e.getMessage());
+        } finally {
+            if (conn != null) {
+                try {
+                    conn.close();
+                } catch (SQLException e) {
+                    LOGGER.error(e.getMessage());
+                }
+            }
+        }
+        return rmsbookingHardwareGroupList;
+    }
+
+    public List<RmsBookingHardwareGroup> getRmsBookingHardwareGroupListByBookingPkid(String bookingPkid) {
+        String sql = "SELECT g.*, DATE_FORMAT(g.created_date,'%d-%M-%Y') AS createdDate "
+                + "FROM rms_booking_hardware_group g  "
+                + "WHERE g.group_id LIKE '" + bookingPkid + "/%' AND g.flag = '0' "
+                + "ORDER BY g.hardware_id, g.item_id ASC";
+        List<RmsBookingHardwareGroup> rmsbookingHardwareGroupList = new ArrayList<RmsBookingHardwareGroup>();
+        try {
+            PreparedStatement ps = conn.prepareStatement(sql);
+            RmsBookingHardwareGroup rmsbookingHardwareGroup;
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                rmsbookingHardwareGroup = new RmsBookingHardwareGroup();
+                rmsbookingHardwareGroup.setId(rs.getString("id"));
+                rmsbookingHardwareGroup.setGroupId(rs.getString("group_id"));
+                rmsbookingHardwareGroup.setItemPkid(rs.getString("item_pkid"));
+                rmsbookingHardwareGroup.setItemId(rs.getString("item_id"));
+                rmsbookingHardwareGroup.setHardwarePkid(rs.getString("hardware_pkid"));
+                rmsbookingHardwareGroup.setHardwareId(rs.getString("hardware_id"));
+                rmsbookingHardwareGroup.setRmsNo(rs.getString("rms_no"));
+                rmsbookingHardwareGroup.setEvent(rs.getString("event"));
+                rmsbookingHardwareGroup.setSptsStatus(rs.getString("spts_status"));
+                rmsbookingHardwareGroup.setStatus(rs.getString("status"));
+                rmsbookingHardwareGroup.setCreatedBy(rs.getString("created_by"));
+                rmsbookingHardwareGroup.setCreatedDate(rs.getString("createdDate"));
+                rmsbookingHardwareGroup.setFlag(rs.getString("flag"));
                 rmsbookingHardwareGroupList.add(rmsbookingHardwareGroup);
             }
             rs.close();

@@ -2646,6 +2646,84 @@ public class RmsBookingDetailController {
     }
 
     //function for hw released
+    @RequestMapping(value = "/release/{id}", method = {RequestMethod.GET, RequestMethod.POST})
+    public String release(Model model,
+            HttpServletRequest request,
+            RedirectAttributes redirectAttrs,
+            @ModelAttribute UserSession userSession,
+            @PathVariable("id") String id) {
+
+        LOGGER.info("id: " + id);
+
+        RmsBookingDetailDAO rmsD = new RmsBookingDetailDAO();
+        RmsBookingDetail rms1 = rmsD.getRmsBookingDetail(id);
+
+        //update status
+        RmsBookingDetail rms = new RmsBookingDetail();
+        rms.setId(id);
+        rms.setStatus("Released to Production");
+        rms.setFlag("1");
+        rmsD = new RmsBookingDetailDAO();
+        QueryResult q = rmsD.updateRmsBookingDetailForStatusAndFlag(rms);
+        if (q.getResult() > 0) {
+
+            //update log
+            RmsBookingLog log = new RmsBookingLog();
+            log.setBookingId(id);
+            log.setDetail("Released to Production");
+            log.setCreatedBy(userSession.getFullname());
+            RmsBookingLogDAO logD = new RmsBookingLogDAO();
+            QueryResult logQ = logD.insertRmsBookingLog(log);
+
+            RmsBookingHardwareDAO rmsHD = new RmsBookingHardwareDAO();
+            List<RmsBookingHardware> hardware = rmsHD.getRmsBookingHardwareListByBookingPkidWithFlagZeroAndStatusNotNA(rms1.getBookingPkid());
+
+            for (int i = 0; i < hardware.size(); i++) {
+                LOGGER.info("hardware.get(i).getId(): " + hardware.get(i).getId());
+                RmsBookingHardware hardware1 = new RmsBookingHardware();
+                hardware1.setId(hardware.get(i).getId());
+                hardware1.setFlag("1");
+                hardware1.setModifiedBy(userSession.getFullname());
+                if ("Motherboard".equals(hardware.get(i).getItemType())) {
+                    hardware1.setStatus(hardware.get(i).getStatus());
+                    hardware1.setSubStatus("Released to Production");
+                } else if ("Load Card".equals(hardware.get(i).getItemType()) || "Program Card".equals(hardware.get(i).getItemType())) {
+                    hardware1.setStatus("Released to Production");
+                }
+                rmsHD = new RmsBookingHardwareDAO();
+                QueryResult q2 = rmsHD.updateRmsBookingHardwareForFlagAndStatusById(hardware1);
+
+            }
+
+            RmsBookingHardwareGroupDAO groupD = new RmsBookingHardwareGroupDAO();
+            List<RmsBookingHardwareGroup> group = groupD.getRmsBookingHardwareGroupListByBookingPkid(rms1.getBookingPkid());
+
+            for (int x = 0; x < group.size(); x++) {
+                LOGGER.info("group.get(x).getId(): " + group.get(x).getId());
+                RmsBookingHardwareGroup group1 = new RmsBookingHardwareGroup();
+                group1.setId(group.get(x).getId());
+                group1.setStatus("Released to Production");
+                group1.setFlag("1");
+                groupD = new RmsBookingHardwareGroupDAO();
+                QueryResult q3 = groupD.updateRmsBookingHardwareGroupStatusAndFlag(group1);
+
+                //add log
+                RmsBookingHardwareGroupLog log2 = new RmsBookingHardwareGroupLog();
+                log2.setGroupId(group.get(x).getGroupId());
+                log2.setDetail("Released to Production: " + group.get(x).getHardwareId());
+                log2.setCreatedBy(userSession.getFullname());
+                RmsBookingHardwareGroupLogDAO logD2 = new RmsBookingHardwareGroupLogDAO();
+                QueryResult logQ2 = logD2.insertRmsBookingHardwareGroupLog(log2);
+
+            }
+
+            redirectAttrs.addFlashAttribute("success", "Successfully Release to Production");
+        } else {
+            redirectAttrs.addFlashAttribute("error", "Failed to Release to Production. Pls contact system admin.");
+        }
+        return "redirect:/rmsbookingDetail/detail/" + id;
+    }
+
     @RequestMapping(value = "/rmsReleased", method = RequestMethod.GET)
     public String rmsReleased(
             Model model,
@@ -2664,7 +2742,7 @@ public class RmsBookingDetailController {
 
         return "rmsbookingDetail/rms_released";
     }
-    
+
     @RequestMapping(value = "/rmsReleased/detail/{id}", method = RequestMethod.GET)
     public String rmsReleasedDetail(Model model,
             @PathVariable("id") String id,
@@ -2872,7 +2950,7 @@ public class RmsBookingDetailController {
 
         return "rmsbookingDetail/detail_released";
     }
-    
+
     @RequestMapping(value = "/rmsReleased/groupDetail/{bookingId}/{itemPkid}", method = RequestMethod.GET)
     public String rmsReleasedGroupDetail(Model model,
             @PathVariable("bookingId") String bookingId,

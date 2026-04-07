@@ -186,6 +186,32 @@ public class RmsBookingDetailDAO {
         return queryResult;
     }
 
+    public QueryResult updateRmsBookingDetailForStatusAndFlag(RmsBookingDetail rmsbookingDetail) {
+        QueryResult queryResult = new QueryResult();
+        try {
+            PreparedStatement ps = conn.prepareStatement(
+                    "UPDATE rms_booking_detail SET modified_date = NOW(), status = ?, flag = ? WHERE id = ?"
+            );
+            ps.setString(1, rmsbookingDetail.getStatus());
+            ps.setString(2, rmsbookingDetail.getFlag());
+            ps.setString(3, rmsbookingDetail.getId());
+            queryResult.setResult(ps.executeUpdate());
+            ps.close();
+        } catch (SQLException e) {
+            queryResult.setErrorMessage(e.getMessage());
+            LOGGER.error(e.getMessage());
+        } finally {
+            if (conn != null) {
+                try {
+                    conn.close();
+                } catch (SQLException e) {
+                    LOGGER.error(e.getMessage());
+                }
+            }
+        }
+        return queryResult;
+    }
+
     public QueryResult updateRmsBookingDetailForPriority(RmsBookingDetail rmsbookingDetail) {
         QueryResult queryResult = new QueryResult();
         try {
@@ -389,7 +415,7 @@ public class RmsBookingDetailDAO {
     }
 
     public List<RmsBookingDetail> getRmsBookingDetailListFlagZero() {
-        String sql = "SELECT *, DATE_FORMAT(act_start_date,'%d-%M-%Y') AS actStartDate, DATE_FORMAT(event_start_date,'%d-%M-%Y') AS eventStartDate FROM rms_booking_detail WHERE flag = '0' ORDER BY priority, act_start_date ASC";
+        String sql = "SELECT *, DATE_FORMAT(act_start_date,'%d-%M-%Y') AS actStartDate, DATE_FORMAT(event_start_date,'%d-%M-%Y') AS eventStartDate FROM rms_booking_detail WHERE flag = '0' AND status = 'New' ORDER BY priority, act_start_date ASC";
         List<RmsBookingDetail> rmsbookingDetailList = new ArrayList<RmsBookingDetail>();
         try {
             PreparedStatement ps = conn.prepareStatement(sql);
@@ -441,7 +467,7 @@ public class RmsBookingDetailDAO {
     }
 
     public List<RmsBookingDetail> getRmsBookingDetailListReleased() {
-        String sql = "SELECT *, DATE_FORMAT(act_start_date,'%d-%M-%Y') AS actStartDate, DATE_FORMAT(event_start_date,'%d-%M-%Y') AS eventStartDate FROM rms_booking_detail WHERE flag = '0' AND status = 'Released to Production' ORDER BY priority, act_start_date ASC";
+        String sql = "SELECT *, DATE_FORMAT(act_start_date,'%d-%M-%Y') AS actStartDate, DATE_FORMAT(event_start_date,'%d-%M-%Y') AS eventStartDate FROM rms_booking_detail WHERE flag = '1' AND status = 'Released to Production' ORDER BY priority, act_start_date ASC";
         List<RmsBookingDetail> rmsbookingDetailList = new ArrayList<RmsBookingDetail>();
         try {
             PreparedStatement ps = conn.prepareStatement(sql);

@@ -270,8 +270,7 @@
                                     
                                 </div>-->
                                 <div class="col-md-12">
-                                    <a type="button" data-bs-toggle="offcanvas" title="Release to Production"
-                                       data-bs-target="#staticBackdropEmailReplacement" aria-controls="staticBackdropEmailReplacement" class="btn btn-success float-start">
+                                    <a modaldeleteid="${rms.id}" type ="button" title="Release to Production" data-bs-toggle="modal" data-bs-target="#confirmation_modal" class="btn btn-success float-start" onclick="modalRelease(this);">
                                         <i class="bi bi-check-circle-fill">&nbsp;&nbsp;Release to Production</i>
                                     </a>
                                     <a type="button" data-bs-toggle="offcanvas" title="Request for HW Replacement"
@@ -698,6 +697,14 @@
                 var deleteMsg = "<f:message key='general.label.delete.confirmation'><f:param value='" + deleteInfo + "'/></f:message>";
                 $("#delete_modal .modal-body").html(deleteMsg);
                 $("#modal_delete_button").attr("href", deleteUrl);
+            }
+            
+            function modalRelease(e) {
+                var id = $(e).attr("modaldeleteid");
+                var deleteUrl = "${contextPath}/rmsbookingDetail/release/" + id;
+                var deleteMsg = "Are you sure want to release this RMS_Event to production?";
+                $("#confirmation_modal .modal-body").html(deleteMsg);
+                $("#modal_button").attr("href", deleteUrl);
             }
 
             function sendEmail() {
