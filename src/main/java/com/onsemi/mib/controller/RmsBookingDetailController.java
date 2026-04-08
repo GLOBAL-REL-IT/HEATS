@@ -2721,7 +2721,8 @@ public class RmsBookingDetailController {
         } else {
             redirectAttrs.addFlashAttribute("error", "Failed to Release to Production. Pls contact system admin.");
         }
-        return "redirect:/rmsbookingDetail/detail/" + id;
+        return "redirect:/rmsbookingDetail/rmsReleased/detail/" + id;
+//          return "redirect:/rmsbookingDetail";
     }
 
     @RequestMapping(value = "/rmsReleased", method = RequestMethod.GET)
@@ -2750,165 +2751,12 @@ public class RmsBookingDetailController {
 
         model.addAttribute("userItemSfRecall", userSession.getItemSfRecall());
 
-        //to cross check with existing hardware booked
-        List<String> list = new ArrayList<>();
-
         RmsBookingDetailDAO rmsd = new RmsBookingDetailDAO();
         RmsBookingDetail rms = rmsd.getRmsBookingDetail(id);
         model.addAttribute("rms", rms);
 
-        int onhandQty = 0;
-        int requestQty = 0;
-
         //add hardware detail from spts
         int bookingPkid = Integer.parseInt(rms.getBookingPkid());
-        JSONArray getItemByParamV = SPTSWebService.getBookingDetailByPKID(bookingPkid);
-        for (int i = 0; i < getItemByParamV.length(); i++) {
-
-//            LOGGER.info("1st step: " + LocalDateTime.now());
-            list.add(Integer.toString(getItemByParamV.getJSONObject(i).getInt("pkid")));
-
-            String itemType = "";
-            if (getItemByParamV.getJSONObject(i).getString("field_name").contains("Motherboard")) {
-                itemType = "Motherboard";
-            } else if (getItemByParamV.getJSONObject(i).getString("field_name").contains("Tester")) {
-                itemType = "Tester";
-            } else if (getItemByParamV.getJSONObject(i).getString("field_name").contains("Remarks")) {
-                itemType = "Remarks";
-            } else if (getItemByParamV.getJSONObject(i).getString("field_name").contains("PowerSupply")) {
-                itemType = "Power Supply";
-            } else if (getItemByParamV.getJSONObject(i).getString("field_name").contains("ProgramCard")) {
-                itemType = "Program Card";
-            } else if (getItemByParamV.getJSONObject(i).getString("field_name").contains("LoadCard")) {
-                itemType = "Load Card";
-            } else if (getItemByParamV.getJSONObject(i).getString("field_name").contains("DUTCard")) {
-                itemType = "DUT Card";
-            } else if (getItemByParamV.getJSONObject(i).getString("field_name").contains("Solder")) {
-                itemType = "Solder Type";
-            } else {
-                itemType = "";
-            }
-
-            RmsBookingHardware rmsH = new RmsBookingHardware();
-            rmsH.setBookingPkid(Integer.toString(getItemByParamV.getJSONObject(i).getInt("booking_pkid")));
-            rmsH.setPkid(Integer.toString(getItemByParamV.getJSONObject(i).getInt("pkid")));
-            rmsH.setItemType(itemType);
-            if (getItemByParamV.getJSONObject(i).has("field_value")) {
-                Object assembly = getItemByParamV.getJSONObject(i).get("field_value");
-                if (assembly instanceof String) {
-                    rmsH.setItemId(getItemByParamV.getJSONObject(i).getString("field_value"));
-                } else {
-                    rmsH.setItemId(Integer.toString(getItemByParamV.getJSONObject(i).getInt("field_value")));
-                }
-            }
-            if (getItemByParamV.getJSONObject(i).has("field_quantity")) {
-                rmsH.setQty(Integer.toString(getItemByParamV.getJSONObject(i).getInt("field_quantity")));
-                requestQty = getItemByParamV.getJSONObject(i).getInt("field_quantity");
-            } else {
-                requestQty = 0;
-            }
-            rmsH.setReadiness(Boolean.toString(getItemByParamV.getJSONObject(i).getBoolean("field_readiness")));
-            rmsH.setFlag("0");
-            rmsH.setCreatedBy(userSession.getFullname());
-            rmsH.setModifiedBy(userSession.getFullname());
-
-            //get itempkid and check qty if available or not (for bib and bibcard only)
-//            LOGGER.info("rmsH.getItemType(): " + rmsH.getItemType());
-//            LOGGER.info("rmsH.getItemId(): " + rmsH.getItemId());
-            if ("Motherboard".equals(rmsH.getItemType()) || "Load Card".equals(rmsH.getItemType()) || "Program Card".equals(rmsH.getItemType())) {
-                if (!"NA".equals(rmsH.getItemId())) {
-
-                    JSONObject paramV = new JSONObject();
-                    paramV.put("itemID", rmsH.getItemId());
-                    JSONArray getItemByParam = SPTSWebService.getItemByParam(paramV);
-                    for (int x = 0; x < getItemByParam.length(); x++) {
-
-                        rmsH.setItemPkid(Integer.toString(getItemByParam.getJSONObject(x).getInt("PKID")));
-                        onhandQty = getItemByParam.getJSONObject(x).getInt("OnHandQty");
-                        if (onhandQty >= requestQty) {
-                            rmsH.setStatus("Available");
-                            if ("Motherboard".equals(rmsH.getItemType())) {
-                                //check status if requested for replacement or not
-                                RmsBookingHardwareDAO rmsBH = new RmsBookingHardwareDAO();
-                                int count = rmsBH.getCountBookingId(Integer.toString(getItemByParamV.getJSONObject(i).getInt("booking_pkid")), Integer.toString(getItemByParamV.getJSONObject(i).getInt("pkid")));
-//                                LOGGER.info("countbookingwithbookingpkidandpkid: " + count);
-                                if (count == 1) {
-                                    rmsBH = new RmsBookingHardwareDAO();
-                                    RmsBookingHardware rmsB = rmsBH.getRmsBookingHardwareByPkid(Integer.toString(getItemByParamV.getJSONObject(i).getInt("pkid")));
-//                                    LOGGER.info("rmsB.getSubStatus(): " + rmsB.getSubStatus());
-                                    rmsH.setSubStatus(rmsB.getSubStatus());
-                                } else {
-                                    rmsH.setSubStatus("Pending HW Registration");
-                                }
-                            }
-                        } else {
-                            //check status if requested for replacement or not
-                            RmsBookingHardwareDAO rmsBH = new RmsBookingHardwareDAO();
-                            int count = rmsBH.getCountBookingId(Integer.toString(getItemByParamV.getJSONObject(i).getInt("booking_pkid")), Integer.toString(getItemByParamV.getJSONObject(i).getInt("pkid")));
-                            if (count == 1) {
-                                rmsBH = new RmsBookingHardwareDAO();
-                                RmsBookingHardware rmsB = rmsBH.getRmsBookingHardwareByPkid(Integer.toString(getItemByParamV.getJSONObject(i).getInt("pkid")));
-                                if (rmsB.getStatus().contains("Request for Replacement") || rmsB.getStatus().contains("Recall from Storage Factory")) {
-                                    rmsH.setStatus(rmsB.getStatus());
-                                } else {
-                                    rmsH.setStatus("Not Available - " + getItemByParam.getJSONObject(x).getString("StatusName"));
-                                }
-                            } else {
-                                rmsH.setStatus("Not Available - " + getItemByParam.getJSONObject(x).getString("StatusName"));
-                            }
-                        }
-                        if (getItemByParam.getJSONObject(x).has("StorageFactoryQty")) {
-//                            LOGGER.info("StorageFactoryQty: " + getItemByParam.getJSONObject(x).getInt("StorageFactoryQty"));
-                            if (getItemByParam.getJSONObject(x).getInt("StorageFactoryQty") > 0) {
-                                rmsH.setRecall("Yes");
-                            } else {
-                                rmsH.setRecall("No");
-                            }
-                        } else {
-                            rmsH.setRecall("No");
-                        }
-
-                    }
-                } else {
-                    rmsH.setItemPkid("0");
-                    rmsH.setStatus("NA");
-                    rmsH.setRecall("No");
-                }
-            } else {
-                rmsH.setItemPkid("0");
-                rmsH.setStatus("NA");
-                rmsH.setRecall("No");
-            }
-
-            RmsBookingHardwareDAO rmsHD = new RmsBookingHardwareDAO();
-            int count = rmsHD.getCountBookingId(Integer.toString(getItemByParamV.getJSONObject(i).getInt("booking_pkid")), Integer.toString(getItemByParamV.getJSONObject(i).getInt("pkid")));
-            if (count == 0) { //add new record
-                rmsHD = new RmsBookingHardwareDAO();
-                QueryResult q = rmsHD.insertRmsBookingHardware(rmsH);
-            } else if (count == 1) { //update existing hardware
-                rmsHD = new RmsBookingHardwareDAO();
-                QueryResult q = rmsHD.updateRmsBookingHardwareByPkidAndBookingPkid(rmsH);
-            }
-
-//            System.out.println(getItemByParamV.getJSONObject(i));
-        }
-        //update inactive/replaced hardware 
-        RmsBookingHardwareDAO rmsH = new RmsBookingHardwareDAO();
-        List<RmsBookingHardware> hw = rmsH.getRmsBookingHardwareListByBookingPkidWithFlagZero(Integer.toString(bookingPkid));
-        for (int i = 0; i < hw.size(); i++) {
-            if (!list.contains(hw.get(i).getPkid())) {
-
-                RmsBookingHardware h = new RmsBookingHardware();
-                h.setId(hw.get(i).getId());
-                h.setFlag("99");
-                h.setStatus("Removed");
-                h.setSubStatus(null);
-                h.setModifiedBy("HEATS");
-                rmsH = new RmsBookingHardwareDAO();
-                QueryResult q = rmsH.updateRmsBookingHardwareForFlagAndStatusById(h);
-                LOGGER.info("pkid removed: " + hw.get(i).getPkid());
-            }
-        }
 
         //get motherboard detail
         RmsBookingHardwareDAO rmsHD = new RmsBookingHardwareDAO();

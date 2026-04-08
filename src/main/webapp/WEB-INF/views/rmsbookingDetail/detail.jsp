@@ -266,9 +266,9 @@
                                 </div>
 
                                 <!-- Form actions start -->
-<!--                                <div class="col-md-12">
-                                    
-                                </div>-->
+                                <!--                                <div class="col-md-12">
+                                                                    
+                                                                </div>-->
                                 <div class="col-md-12">
                                     <a modaldeleteid="${rms.id}" type ="button" title="Release to Production" data-bs-toggle="modal" data-bs-target="#confirmation_modal" class="btn btn-success float-start" onclick="modalRelease(this);">
                                         <i class="bi bi-check-circle-fill">&nbsp;&nbsp;Release to Production</i>
@@ -332,13 +332,16 @@
                                                     <c:set var="String" value="${parameterMaster.status}"/>
                                                     <c:choose>
                                                         <c:when test="${String eq 'Available'}">
-                                                            <td style="color:green;" class="semi-bold"><c:out value="${parameterMaster.status}"/></td>
+                                                            <td style="font-size: 1.10rem;" class="semi-bold"><span class="badge bg-success "><c:out value="${parameterMaster.status}"/></span></td>
                                                         </c:when>
-                                                        <c:when test="${(fn:contains(String, 'Not Available'))}">
-                                                            <td style="color:red;" class="semi-bold"><c:out value="${parameterMaster.status}"/></td>
+                                                        <c:when test="${String eq 'Released to Production'}">
+                                                            <td style="font-size: 1.10rem;" class="semi-bold"><span class="badge bg-success "><c:out value="${parameterMaster.status}"/></span></td>
+                                                            </c:when>
+                                                            <c:when test="${(fn:contains(String, 'Not Available'))}">
+                                                            <td style="font-size: 1.10rem;" class="semi-bold"><span class="badge bg-danger "><c:out value="${parameterMaster.status}"/></span></td>
                                                         </c:when>
                                                         <c:otherwise>
-                                                            <td><c:out value="${parameterMaster.status}"/></td>
+                                                            <td style="font-size: 1.10rem;" class="semi-bold"><span class="badge bg-light text-body "><c:out value="${parameterMaster.status}"/></span></td>
                                                         </c:otherwise>
                                                     </c:choose>
                                                     <td align="center">
@@ -397,31 +400,39 @@
                                                     <tr>
                                                         <c:if test="${parameterMaster.flag == '99'}">
                                                             <td style="color:red" style="color:red"><strike><c:out value="${parameterMasterLoop.index+1}"/></strike></td>
-                                                        <td style="color:red" id="modal_delete_info_${parameterMaster.id}"><strike><c:out value="${parameterMaster.itemType}"/></strike></td>
-                                                        <td style="color:red"><strike><c:out value="${parameterMaster.itemId}"/></strike></td>
-                                                        <td style="color:red"><strike><c:out value="${parameterMaster.lcQty}"/></strike></td>
-                                                        <td style="color:red"><strike><c:out value="${parameterMaster.pcQty}"/></strike></td>
-                                                        <td style="color:red"><strike><c:out value="${parameterMaster.status}"/></strike></td>
-                                                        <td align="center">
-                                                        </td>
-                                                    </c:if>
-                                                    <c:if test="${parameterMaster.flag != '99'}">
-                                                        <td><c:out value="${parameterMasterLoop.index+1}"/></td>
-                                                        <td id="modal_delete_info_${parameterMaster.id}"><c:out value="${parameterMaster.itemType}"/></td>
-                                                        <td><c:out value="${parameterMaster.itemId}"/></td>
-                                                        <td><c:out value="${parameterMaster.lcQty}"/></td>
-                                                        <td><c:out value="${parameterMaster.pcQty}"/></td>
-                                                        <c:if test="${not empty parameterMaster.subStatus}">
-                                                            <c:set var="String" value="${parameterMaster.status}"/>
-                                                            <c:choose>
-                                                                <c:when test="${String eq 'Available'}">
-                                                                    <td style="color:green" class="semi-bold"><c:out value="${parameterMaster.status} - ${parameterMaster.subStatus}"/></td> 
+                                                    <td style="color:red" id="modal_delete_info_${parameterMaster.id}"><strike><c:out value="${parameterMaster.itemType}"/></strike></td>
+                                                    <td style="color:red"><strike><c:out value="${parameterMaster.itemId}"/></strike></td>
+                                                    <td style="color:red"><strike><c:out value="${parameterMaster.lcQty}"/></strike></td>
+                                                    <td style="color:red"><strike><c:out value="${parameterMaster.pcQty}"/></strike></td>
+                                                    <td style="color:red"><strike><c:out value="${parameterMaster.status}"/></strike></td>
+                                                    <td align="center">
+                                                    </td>
+                                                </c:if>
+                                                <c:if test="${parameterMaster.flag != '99'}">
+                                                    <td><c:out value="${parameterMasterLoop.index+1}"/></td>
+                                                    <td id="modal_delete_info_${parameterMaster.id}"><c:out value="${parameterMaster.itemType}"/></td>
+                                                    <td><c:out value="${parameterMaster.itemId}"/></td>
+                                                    <td><c:out value="${parameterMaster.lcQty}"/></td>
+                                                    <td><c:out value="${parameterMaster.pcQty}"/></td>
+                                                    <c:if test="${not empty parameterMaster.subStatus}">
+                                                        <c:set var="String" value="${parameterMaster.status}"/>
+                                                        <c:choose>
+                                                            <c:when test="${String eq 'Available'}">
+                                                                <c:set var="subString" value="${parameterMaster.subStatus}"/>
+                                                                <c:choose>
+                                                                    <c:when test="${(fn:contains(subString, 'Fail'))}">
+                                                                        <td style="font-size: 1.10rem;" class="semi-bold"><span class="badge bg-warning"><c:out value="${parameterMaster.status} - ${parameterMaster.subStatus}"/></span></td> 
+                                                                        </c:when>
+                                                                        <c:otherwise>
+                                                                        <td style="font-size: 1.10rem;" class="semi-bold"><span class="badge bg-success"><c:out value="${parameterMaster.status} - ${parameterMaster.subStatus}"/></span></td> 
+                                                                        </c:otherwise>
+                                                                    </c:choose>
                                                                 </c:when>
                                                                 <c:when test="${(fn:contains(String, 'Not Available'))}">
-                                                                    <td style="color:red;" class="semi-bold"><c:out value="${parameterMaster.status} - ${parameterMaster.subStatus}"/></td>  
-                                                                </c:when>
-                                                                <c:otherwise>
-                                                                    <td><c:out value="${parameterMaster.status}"/></td> 
+                                                                <td style="font-size: 1.10rem;" class="semi-bold"><span class="badge bg-danger"><c:out value="${parameterMaster.status} - ${parameterMaster.subStatus}"/></span></td>  
+                                                            </c:when>
+                                                            <c:otherwise>
+                                                                <td style="font-size: 1.10rem;" class="semi-bold" ><span class="badge bg-light text-body"><c:out value="${parameterMaster.status}"/></span></td> 
                                                                 </c:otherwise>
                                                             </c:choose>
                                                         </c:if>
@@ -429,32 +440,33 @@
                                                             <c:set var="String" value="${parameterMaster.status}"/>
                                                             <c:choose>
                                                                 <c:when test="${String eq 'Available'}">
-                                                                    <td style="color:green" class="semi-bold"><c:out value="${parameterMaster.status}"/></td>  
-                                                                </c:when>
-                                                                <c:when test="${(fn:contains(String, 'Not Available'))}">
-                                                                    <td style="color:red" class="semi-bold"><c:out value="${parameterMaster.status}"/></td>  
-                                                                </c:when>
-                                                                <c:otherwise>
-                                                                    <td><c:out value="${parameterMaster.status}"/></td>
-                                                                </c:otherwise>
-                                                            </c:choose>
-                                                        </c:if>
-                                                        <td align="center">
-                                                            <c:if test="${parameterMaster.recall == 'Yes'}">
-                                                                <a modaldeleteid="${parameterMaster.itemPkid}" modaldeleteid2="${parameterMaster.id}" type="button" data-bs-toggle="offcanvas" title="Recall from Storage Factory"
-                                                                   data-bs-target="#staticBackdropRecall" aria-controls="staticBackdropRecall" onclick="ajaxStorage(this);">
-                                                                    <i class="bi bi-house-up h4"></i>
-                                                                </a>
-                                                            </c:if>
-                                                            <c:if test="${parameterMaster.status == 'Available'}">
-                                                                <a href="${contextPath}/rmsbookingDetail/groupDetail/${parameterMaster.bookingPkid}/${parameterMaster.pkid}" class="table-link" title="Manage">
-                                                                    <i class="bi bi-box-arrow-in-right h3" style="color:orangered"></i>
-                                                                </a>
-                                                            </c:if>
-                                                        </td>
+                                                                    <!--<td style="color:green" class="semi-bold"><c:out value="${parameterMaster.status}"/></td>-->  
+                                                                <td style="font-size: 1.10rem;" class="semi-bold"><span class="badge bg-success"><c:out value="${parameterMaster.status}"/></span></td>  
+                                                            </c:when>
+                                                            <c:when test="${(fn:contains(String, 'Not Available'))}">
+                                                                <td style="font-size: 1.10rem;" class="semi-bold"><span class="badge bg-danger"><c:out value="${parameterMaster.status}"/></span></td>  
+                                                            </c:when>
+                                                            <c:otherwise>
+                                                                <td style="font-size: 1.10rem;" class="semi-bold"><span class="badge bg-light text-body"><c:out value="${parameterMaster.status}"/></span></td>
+                                                            </c:otherwise>
+                                                        </c:choose>
                                                     </c:if>
-                                                    </tr>
-                                                </c:forEach>
+                                                    <td align="center">
+                                                        <c:if test="${parameterMaster.recall == 'Yes'}">
+                                                            <a modaldeleteid="${parameterMaster.itemPkid}" modaldeleteid2="${parameterMaster.id}" type="button" data-bs-toggle="offcanvas" title="Recall from Storage Factory"
+                                                               data-bs-target="#staticBackdropRecall" aria-controls="staticBackdropRecall" onclick="ajaxStorage(this);">
+                                                                <i class="bi bi-house-up h4"></i>
+                                                            </a>
+                                                        </c:if>
+                                                        <c:if test="${parameterMaster.status == 'Available'}">
+                                                            <a href="${contextPath}/rmsbookingDetail/groupDetail/${parameterMaster.bookingPkid}/${parameterMaster.pkid}" class="table-link" title="Manage">
+                                                                <i class="bi bi-box-arrow-in-right h3" style="color:orangered"></i>
+                                                            </a>
+                                                        </c:if>
+                                                    </td>
+                                                </c:if>
+                                                </tr>
+                                            </c:forEach>
                                             </tbody>
                                         </table>
                                     </div>
@@ -637,9 +649,9 @@
                         <c:if test="${countHwReplace != '0'}">
                             <c:if test="${countHwReplaceFlagZero != '0'}">
                                 <a type ="button" title="Send Email" data-bs-toggle="modal" data-bs-target="#confirmation_modal" class="btn btn-outline-warning me-2 float-end" role="button" onclick="sendEmail();">
-                                <i class='bi bi-envelope-arrow-up'></i>&nbsp;&nbsp;Send Email to Planner</a>
+                                    <i class='bi bi-envelope-arrow-up'></i>&nbsp;&nbsp;Send Email to Planner</a>
+                                </c:if>
                             </c:if>
-                        </c:if>
                     </div>
                 </div>
             </div>
