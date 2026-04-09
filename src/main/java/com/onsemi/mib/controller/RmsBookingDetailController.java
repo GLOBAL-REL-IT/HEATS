@@ -1067,7 +1067,7 @@ public class RmsBookingDetailController {
             } else if (winTest.contains("Yes")) {
                 currentStatus = "Pending Functional Test - Winchester Chamber Leakage Test";
             } else {
-                currentStatus = "Ready for Production Staging";
+                currentStatus = "Pending Release to Production";
             }
         } else {
             // DO NOTHING HERE
@@ -1385,6 +1385,7 @@ public class RmsBookingDetailController {
         } else {
             // DO NOTHING HERE
         }
+        model.addAttribute("currentStatus", currentStatus);
         model.addAttribute("teActive", teActive);
         model.addAttribute("teActiveTab", teActiveTab);
 
@@ -2658,7 +2659,7 @@ public class RmsBookingDetailController {
         String gotoBib  = "Pending Functional Test - BIB Test";
         String gotoPS   = "Pending Functional Test - Power Supply Leakage Test";
         String gotoWin  = "Pending Functional Test - Winchester Chamber Leakage Test";
-        String goReady  = "Ready for Production Staging";
+        String goReady  = "Pending Release to Production";
         
         String checkLeak = "No";
         String checkManual = "No";
@@ -2870,9 +2871,8 @@ public class RmsBookingDetailController {
                 } else if (winTest.equals("Yes")) {
                     data = "Pending Functional Test - Winchester Chamber Leakage Test";
                 } else {
-                    data = "Ready for Production Staging";
+                    data = "Pending Release to Production";
                 }
-
                 // SINI KITA UPDATE THE LATEST DATA TO CORRECT FUNCTIONAL TEST
             }
         }
@@ -3158,6 +3158,8 @@ public class RmsBookingDetailController {
                 currentStatus = "Pending Functional Test - Power Supply Leakage Test";
             } else if (winTest.contains("Yes")) {
                 currentStatus = "Pending Functional Test - Winchester Chamber Leakage Test";
+            } else {
+                currentStatus = "Pending Release to Production";
             }
         } else {
             // DO NOTHING HERE

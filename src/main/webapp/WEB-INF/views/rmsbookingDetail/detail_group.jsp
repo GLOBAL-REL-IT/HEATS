@@ -1706,13 +1706,14 @@
 <!--                                                                        <p>DEKAT SINI PTT KELUAR DATA MACAM BIASA. :::: ${configMotherboard}</p>
                                                                         <p>${itemIdMB} - DATA MOTHERBOARD</p>
                                                                         <p>${itemIdLC} - DATA LOAD CARD</p>
-                                                                        <p>hehehehe ::: ${configMotherboard}</p>-->
+                                                                        <p>book pkid ::: ${configMotherboard}</p>
+                                                                        <p>current status ::: ${currentStatus}</p>-->
                                                                         
                                                                         <c:if test="${leakCheck eq 'Yes'}">
                                                                             <div class="accordion-item">
                                                                                 <h2 class="accordion-header" id="panelsStayOpen-headingThree">
                                                                                     <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
-                                                                                            data-bs-target="#panelsStayOpen-collapseThree" aria-expanded="false"
+                                                                                            data-bs-target="#panelsStayOpen-collapseThree" aria-expanded="false" id="tabLeak"
                                                                                             aria-controls="panelsStayOpen-collapseThree">
                                                                                         Leakage Test
                                                                                     </button>
@@ -1788,7 +1789,7 @@
                                                                             <div class="accordion-item">
                                                                                 <h2 class="accordion-header" id="panelsStayOpen-headingTwo">
                                                                                     <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
-                                                                                            data-bs-target="#panelsStayOpen-collapseTwo" aria-expanded="false"
+                                                                                            data-bs-target="#panelsStayOpen-collapseTwo" aria-expanded="false" id="tabManual"
                                                                                             aria-controls="panelsStayOpen-collapseTwo">
                                                                                         Manual Test
                                                                                     </button>
@@ -1839,7 +1840,7 @@
                                                                         <c:if test="${bibCheck eq 'Yes'}">
                                                                             <div class="accordion-item">
                                                                                 <h2 class="accordion-header" id="panelsStayOpen-headingOne">
-                                                                                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#panelsStayOpen-collapseOne" aria-expanded="false" aria-controls="panelsStayOpen-collapseOne">
+                                                                                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#panelsStayOpen-collapseOne" aria-expanded="false" aria-controls="panelsStayOpen-collapseOne" id="tabBib">
                                                                                         BIB Test
                                                                                     </button>
                                                                                 </h2>
@@ -1906,7 +1907,7 @@
                                                                             <div class="accordion-item">
                                                                                 <h2 class="accordion-header" id="panelsStayOpen-headingFour">
                                                                                     <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
-                                                                                            data-bs-target="#panelsStayOpen-collapseFour" aria-expanded="false"
+                                                                                            data-bs-target="#panelsStayOpen-collapseFour" aria-expanded="false" id="tabPs"
                                                                                             aria-controls="panelsStayOpen-collapseFour">
                                                                                         Power Supply Leakage Test
                                                                                     </button>
@@ -1982,7 +1983,7 @@
                                                                             <div class="accordion-item">
                                                                                 <h2 class="accordion-header" id="panelsStayOpen-headingFive">
                                                                                     <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
-                                                                                            data-bs-target="#panelsStayOpen-collapseFive" aria-expanded="false"
+                                                                                            data-bs-target="#panelsStayOpen-collapseFive" aria-expanded="false" id="tabWin"
                                                                                             aria-controls="panelsStayOpen-collapseFive">
                                                                                         Winchester Chamber Leakage Test
                                                                                     </button>
@@ -2104,9 +2105,38 @@
     </s:layout-component>
     <s:layout-component name="page_js_inline">
         <script>
-
-
                                                                                             $(document).ready(function () {
+                                                                                                const divBib = document.getElementById('tabLeak');
+                                                                                                const divMan = document.getElementById('tabManual');
+                                                                                                const divLeak = document.getElementById('tabLeak');
+                                                                                                const divPs = document.getElementById('tabPs');
+                                                                                                const divWin = document.getElementById('tabWin');
+                                                                                                
+                                                                                                const checkStatus = "${currentStatus}";
+                                                                                                
+                                                                                                console.log("SINI KITA TENGOK DATA ::: "+checkStatus);
+                                                                                                console.log("hehehehehe >>> "+divBib);
+                                                                                                console.log("hehehehehe >>> "+divMan);
+                                                                                                console.log("hehehehehe >>> "+divLeak);
+                                                                                                console.log("hehehehehe >>> "+divPs);
+                                                                                                console.log("hehehehehe >>> "+divWin);
+                                                                                                
+                                                                                                if (checkStatus === "Pending Functional Test - Leakage Test") {
+                                                                                                    divLeak.classList.remove('collapsed');
+                                                                                                    console.log("OK, dia masuk ISINI");
+                                                                                                } else if (checkStatus === "Pending Functional Test - Manual Test") {
+                                                                                                    divMan.classList.remove('collapsed');
+                                                                                                } else if (checkStatus === "Pending Functional Test - BIB Test") {
+                                                                                                    divBib.classList.remove('collapsed');
+                                                                                                } else if (checkStatus === "Pending Functional Test - Power Supply Leakage Test") {
+                                                                                                    divPs.classList.remove('collapsed');
+                                                                                                } else if (checkStatus === "Pending Functional Test - Winchester Chamber Leakage Test") {
+                                                                                                    divWin.classList.remove('collapsed');
+                                                                                                } else {
+                                                                                                    console.log("TAK MASUK MANA2 KE?");
+                                                                                                }
+                                                                                                
+                                                                                                console.log("heheheh");
 
                                                                                                 $('.js-example-basic-multiple').select2();
                                                                                                 var valueJsonPcb = ${valueJsonPcb};
