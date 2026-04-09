@@ -1699,8 +1699,11 @@
                                                                         <p>${itemIdLC} - DATA LOAD CARD</p>
                                                                         <p>huhuhu ::: ${configMotherboard}</p>-->
                                                                     </c:when>
+                                                                    <c:when test="${configMotherboard == 'HW' || configMotherboard == 'VM'}">
+                                                                        <p>${message}</p>
+                                                                    </c:when>
                                                                     <c:otherwise>
-<!--                                                                        <p>DEKAT SINI PTT KELUAR DATA MACAM BIASA.</p>
+<!--                                                                        <p>DEKAT SINI PTT KELUAR DATA MACAM BIASA. :::: ${configMotherboard}</p>
                                                                         <p>${itemIdMB} - DATA MOTHERBOARD</p>
                                                                         <p>${itemIdLC} - DATA LOAD CARD</p>
                                                                         <p>hehehehe ::: ${configMotherboard}</p>-->
@@ -1717,7 +1720,22 @@
                                                                                 <div id="panelsStayOpen-collapseThree" class="accordion-collapse collapse ${leakshow}"
                                                                                      aria-labelledby="panelsStayOpen-headingThree">
                                                                                     <div class="accordion-body">
-                                                                                        <form class="row gx-3 " role="form" action="${contextPath}/hw/item/save/leakTest" method="post" enctype="multipart/form-data" novalidate>
+                                                                                        <form class="row gx-3 " role="form" action="${contextPath}/rmsbookingDetail/ftest/save/leakTest" method="post" enctype="multipart/form-data" novalidate>
+                                                                                            <input type="hidden" class="form-control" id="bookId" name="bookId" placeholder="" value="${bookId}">
+                                                                                            <input type="hidden" class="form-control" id="motherboardId" name="motherboardId" placeholder="" value="${mibItemId}">
+                                                                                            <div class="col-xl-6 col-sm-12">
+                                                                                                <div class="mb-3">
+                                                                                                    <label for="leakHardware" class="form-label">Reject Hardware ID</label>
+                                                                                                    <div class="input input-group">
+                                                                                                        <select class="js-example-basic-multiple" id="leakHardware" name="leakHardware" multiple="multiple" style="width: 100%">
+                                                                                                            <c:forEach items="${hwGroupList}" var="leakHw">
+                                                                                                                <option value="${leakHw.hardwareId}">${leakHw.hardwareId}</option>
+                                                                                                            </c:forEach>
+                                                                                                        </select>
+                                                                                                    </div>
+                                                                                                </div>
+                                                                                            </div>
+                                                                                            <div class="col-xl-6 col-sm-12">&nbsp;</div>
                                                                                             <div class="col-xl-1 col-sm-12 col-12">
                                                                                                 <div class="mb-3">
                                                                                                     <label for="quantity" class="form-label">Quantity</label>
@@ -1741,7 +1759,7 @@
                                                                                                     </div>
                                                                                                 </div>
                                                                                             </div>
-                                                                                            <div class="form-group col-xl-4 col-sm-12 col-12">
+                                                                                            <div class="form-group col-xl-3 col-sm-12 col-12">
                                                                                                 <div class="mb-3">
                                                                                                     <label for="leakUpload" class="form-label">Upload Result</label>
                                                                                                     <div class="input input-group">
@@ -1778,6 +1796,8 @@
                                                                                 <div id="panelsStayOpen-collapseTwo" class="accordion-collapse collapse ${manshow}" aria-labelledby="panelsStayOpen-headingTwo">
                                                                                     <div class="accordion-body">
                                                                                         <div class="row">
+                                                                                            <input type="hidden" class="form-control" id="bookId" name="bookId" placeholder="" value="${bookId}">
+                                                                                            <input type="hidden" class="form-control" id="motherboardId" name="motherboardId" placeholder="" value="${mibItemId}">
                                                                                             <div class="col-sm-6">
                                                                                                 <label for="status" class="form-label">Status</label>
                                                                                                 <div>
@@ -1785,7 +1805,23 @@
                                                                                                     <input type="hidden" class="form-control" id="mibItemId" name="mibItemId" placeholder="" value="${item.id}">
                                                                                                 </div>
                                                                                             </div>
-                                                                                            <div class="col-sm-4">
+                                                                                            <div class="col-sm-3">
+                                                                                            </div>
+                                                                                            <div class="col-sm-1">
+                                                                                                <label>Quantity</label>
+                                                                                                <c:choose>
+                                                                                                    <c:when test="${not empty manualQty}">
+                                                                                                        <div class="input input-group">
+                                                                                                            <input type="number" class="form-control" name="totalQty" id="totalQty" value="${manualQty}" readonly>
+                                                                                                        </div>
+                                                                                                    </c:when>
+                                                                                                    <c:otherwise>
+                                                                                                        <div class="input input-group">
+                                                                                                            <input type="number" class="form-control" name="totalQty" id="totalQty">
+                                                                                                        </div>
+                                                                                                    </c:otherwise>
+                                                                                                </c:choose>
+                                                                                                
                                                                                             </div>
                                                                                             <div class="col-sm-2">
                                                                                                 <div class="p-3 d-flex justify-content-end">
@@ -1809,8 +1845,10 @@
                                                                                 </h2>
                                                                                 <div id="panelsStayOpen-collapseOne" class="accordion-collapse collapse ${bibshow}" aria-labelledby="panelsStayOpen-headingOne">
                                                                                     <div class="accordion-body">
-                                                                                        <form class="row gx-3 align-items-end" role="form" action="${contextPath}/hw/item/save/bibTest" method="post" enctype="multipart/form-data" novalidate>
-                                                                                            <div class="col-xl-12 col-sm-12">
+                                                                                        <form class="row gx-3 align-items-end" role="form" action="${contextPath}/rmsbookingDetail/ftest/save/bibTest" method="post" enctype="multipart/form-data" novalidate>
+                                                                                            <input type="hidden" class="form-control" id="bookId" name="bookId" placeholder="" value="${bookId}">
+                                                                                            <input type="hidden" class="form-control" id="motherboardId" name="motherboardId" placeholder="" value="${mibItemId}">
+                                                                                            <div class="col-xl-6 col-sm-12">
                                                                                                 <div class="mb-3">
                                                                                                     <label for="bibHardware" class="form-label">Reject Hardware ID</label>
                                                                                                     <div class="input input-group">
@@ -1822,6 +1860,7 @@
                                                                                                     </div>
                                                                                                 </div>
                                                                                             </div>
+                                                                                            <div class="col-xl-6 col-sm-12">&nbsp;</div>
                                                                                             <div class="col-xl-1 col-sm-12">
                                                                                                 <div class="mb-3">
                                                                                                     <label for="quantity" class="form-label">Qty</label>
@@ -1848,11 +1887,6 @@
                                                                                                     </div>
                                                                                                 </div>
                                                                                             </div>
-                                                                                            <div class="col-xl-1 col-sm-12">
-                                                                                                <div class="mb-3">
-                                                                                                    <button type="submit" id="submit" class="btn btn-primary w-100 ${bibbutton}">Save</button>
-                                                                                                </div>
-                                                                                            </div>
                                                                                             <c:if test="${not empty dataTest.bibUpload}">
                                                                                                 <div class="col-xl-2 col-sm-12">
                                                                                                     <div class="mb-3">
@@ -1860,6 +1894,9 @@
                                                                                                     </div>
                                                                                                 </div>
                                                                                             </c:if>
+                                                                                            <div class="col-md-12">
+                                                                                                <button type="submit" id="submit" class="btn btn-primary float-end ${bibbutton}">Save</button>
+                                                                                            </div>
                                                                                         </form>
                                                                                     </div>
                                                                                 </div>
@@ -1877,7 +1914,22 @@
                                                                                 <div id="panelsStayOpen-collapseFour" class="accordion-collapse collapse ${psshow}"
                                                                                      aria-labelledby="panelsStayOpen-headingFour">
                                                                                     <div class="accordion-body">
-                                                                                        <form class="row gx-3 " role="form" action="${contextPath}/hw/item/save/psTest" method="post" enctype="multipart/form-data" novalidate>
+                                                                                        <form class="row gx-3 " role="form" action="${contextPath}/rmsbookingDetail/ftest/save/psTest" method="post" enctype="multipart/form-data" novalidate>
+                                                                                            <input type="hidden" class="form-control" id="bookId" name="bookId" placeholder="" value="${bookId}">
+                                                                                            <input type="hidden" class="form-control" id="motherboardId" name="motherboardId" placeholder="" value="${mibItemId}">
+                                                                                            <div class="col-xl-6 col-sm-12">
+                                                                                                <div class="mb-3">
+                                                                                                    <label for="psHardware" class="form-label">Reject Hardware ID</label>
+                                                                                                    <div class="input input-group">
+                                                                                                        <select class="js-example-basic-multiple" id="psHardware" name="psHardware" multiple="multiple" style="width: 100%">
+                                                                                                            <c:forEach items="${hwGroupList}" var="psHw">
+                                                                                                                <option value="${psHw.hardwareId}">${psHw.hardwareId}</option>
+                                                                                                            </c:forEach>
+                                                                                                        </select>
+                                                                                                    </div>
+                                                                                                </div>
+                                                                                            </div>
+                                                                                            <div class="col-xl-6 col-sm-12">&nbsp;</div>
                                                                                             <div class="col-xl-1 col-sm-12 col-12">
                                                                                                 <div class="mb-3">
                                                                                                     <label for="quantity" class="form-label">Quantity</label>
@@ -1901,7 +1953,7 @@
                                                                                                     </div>
                                                                                                 </div>
                                                                                             </div>
-                                                                                            <div class="form-group col-xl-4 col-sm-12 col-12">
+                                                                                            <div class="form-group col-xl-3 col-sm-12 col-12">
                                                                                                 <div class="mb-3">
                                                                                                     <label for="psUpload" class="form-label">Upload Result</label>
                                                                                                     <div class="input input-group">
@@ -1909,7 +1961,6 @@
                                                                                                     </div>
                                                                                                 </div>
                                                                                             </div>
-
                                                                                             <c:if test="${not empty dataTest.psUpload}">
                                                                                                 <div class="row gx-4">
                                                                                                     <div class="col-xl-2 col-sm-12 col-12">
@@ -1919,11 +1970,9 @@
                                                                                                     </div>
                                                                                                 </div>
                                                                                             </c:if>
-
                                                                                             <div class="col-md-12">
                                                                                                 <button type="submit" id="submit" class="btn btn-primary float-end ${psbutton}">Save</button>
                                                                                             </div>
-
                                                                                         </form>
                                                                                     </div>
                                                                                 </div>
@@ -1941,7 +1990,22 @@
                                                                                 <div id="panelsStayOpen-collapseFive" class="accordion-collapse collapse ${winshow}"
                                                                                      aria-labelledby="panelsStayOpen-headingFive">
                                                                                     <div class="accordion-body">
-                                                                                        <form class="row gx-3 " role="form" action="${contextPath}/hw/item/save/winTest" method="post" enctype="multipart/form-data" novalidate>
+                                                                                        <form class="row gx-3 " role="form" action="${contextPath}/rmsbookingDetail/ftest/save/winTest" method="post" enctype="multipart/form-data" novalidate>
+                                                                                            <input type="hidden" class="form-control" id="bookId" name="bookId" placeholder="" value="${bookId}">
+                                                                                            <input type="hidden" class="form-control" id="motherboardId" name="motherboardId" placeholder="" value="${mibItemId}">
+                                                                                            <div class="col-xl-6 col-sm-12">
+                                                                                                <div class="mb-3">
+                                                                                                    <label for="winHardware" class="form-label">Reject Hardware ID</label>
+                                                                                                    <div class="input input-group">
+                                                                                                        <select class="js-example-basic-multiple" id="winHardware" name="winHardware" multiple="multiple" style="width: 100%">
+                                                                                                            <c:forEach items="${hwGroupList}" var="winHw">
+                                                                                                                <option value="${winHw.hardwareId}">${winHw.hardwareId}</option>
+                                                                                                            </c:forEach>
+                                                                                                        </select>
+                                                                                                    </div>
+                                                                                                </div>
+                                                                                            </div>
+                                                                                            <div class="col-xl-6 col-sm-12">&nbsp;</div>
                                                                                             <div class="col-xl-1 col-sm-12 col-12">
                                                                                                 <div class="mb-3">
                                                                                                     <label for="quantity" class="form-label">Quantity</label>
@@ -1965,7 +2029,7 @@
                                                                                                     </div>
                                                                                                 </div>
                                                                                             </div>
-                                                                                            <div class="form-group col-xl-4 col-sm-12 col-12">
+                                                                                            <div class="form-group col-xl-3 col-sm-12 col-12">
                                                                                                 <div class="mb-3">
                                                                                                     <label for="winUpload" class="form-label">Upload Result</label>
                                                                                                     <div class="input input-group">
@@ -1973,7 +2037,6 @@
                                                                                                     </div>
                                                                                                 </div>
                                                                                             </div>
-
                                                                                             <c:if test="${not empty dataTest.winUpload}">
                                                                                                 <div class="row gx-4">
                                                                                                     <div class="col-xl-2 col-sm-12 col-12">
@@ -1983,7 +2046,6 @@
                                                                                                     </div>
                                                                                                 </div>
                                                                                             </c:if>
-
                                                                                             <div class="col-md-12">
                                                                                                 <button type="submit" id="submit" class="btn btn-primary float-end">Save</button>
                                                                                             </div>
@@ -1992,7 +2054,6 @@
                                                                                 </div>
                                                                             </div>
                                                                         </c:if>
-                                                                        
                                                                     </c:otherwise>
                                                                 </c:choose>
                                                             </div>
@@ -2141,7 +2202,6 @@
                                                                                                 $("#confirmation_modal .modal-body").html(deleteMsg);
                                                                                                 $("#modal_button").attr("href", deleteUrl);
                                                                                             }
-
 
                                                                                             // Fetch all the forms we want to apply custom Bootstrap validation styles to
                                                                                             const forms = document.querySelectorAll('.needs-validation');
@@ -2777,6 +2837,23 @@
                                                                                                     labelIdentificationHardwareId.value = '';
                                                                                                 }
                                                                                             }
+                                                                                            
+                                                                                            
+//                                                                                            const leakCheck = document.getElementById('leakResult');
+//                                                                                            const leakHwid = document.getElementById('leakHardware');
+////                                                                                            const manualCheck = = document.getElementById('labelIdentification2');
+//                                                                                            const bibCheck = = document.getElementById('bibResult');
+//                                                                                            const bibHwid = = document.getElementById('bibHardware');
+//                                                                                            const psCheck = = document.getElementById('labelIdentification2');
+//                                                                                            const psHwid = = document.getElementById('labelIdentification2');
+//                                                                                            const winCheck = = document.getElementById('labelIdentification2');
+//                                                                                            const winHwid = = document.getElementById('labelIdentification2');
+//                                                                                            
+//                                                                                            if (leakCheck.checked) {
+//                                                                                                
+//                                                                                            } else {
+//                                                                                                
+//                                                                                            }
 
                                                                                             pcbPass.addEventListener('change', handleRadioChange);
                                                                                             pcbNa.addEventListener('change', handleRadioChange);

@@ -1000,14 +1000,13 @@ public class RmsBookingDetailController {
         }
 
         currentStatus = h.getSubStatus();
+        String itemIdMB = "";
+        String mbSptsPkid = "";
+        String itemIdLC = "";
 
         if (currentStatus.equalsIgnoreCase("Pending Functional Test")) {
             // CHECK AND UPDATE THE FIRST TEST
 //            currentStatus = checkStatusFTestBeforeLoading(bookingId, itemPkid);
-
-            String itemIdMB = "";
-            String mbSptsPkid = "";
-            String itemIdLC = "";
 
             RmsBookingHardwareDAO bookdao = new RmsBookingHardwareDAO();
             Integer checkMb = bookdao.checkMotherboardData(bookingId);
@@ -1031,6 +1030,8 @@ public class RmsBookingDetailController {
                     model.addAttribute("configMotherboard", "");
                 } else {
                     model.addAttribute("configMotherboard", "TRIGGERERROR");
+                    model.addAttribute("itemIdMB", itemIdMB);
+                    model.addAttribute("itemIdLC", itemIdLC);
                     redirectAttrs.addFlashAttribute("error", "No motherboard configuration configured");
                 }
 
@@ -1065,10 +1066,70 @@ public class RmsBookingDetailController {
                 currentStatus = "Pending Functional Test - Power Supply Leakage Test";
             } else if (winTest.contains("Yes")) {
                 currentStatus = "Pending Functional Test - Winchester Chamber Leakage Test";
+            } else {
+                currentStatus = "Ready for Production Staging";
             }
         } else {
             // DO NOTHING HERE
+            if (currentStatus.equals("Pending HW Registration")) {
+                model.addAttribute("configMotherboard", "HW");
+                model.addAttribute("message", "Please Complete Hardware Registration First");
+            } else if (currentStatus.equals("Pending VM")) {
+                model.addAttribute("configMotherboard", "VM");
+                model.addAttribute("message", "Please Complete Visual Inspection First");
+            } else if (currentStatus.contains("Pending Functional Test")) {
+                RmsBookingHardwareDAO bookdao = new RmsBookingHardwareDAO();
+                Integer checkMb = bookdao.checkMotherboardData(bookingId);
+                bookdao = new RmsBookingHardwareDAO();
+                Integer checkLc = bookdao.checkCardData(bookingId);
+
+                if (checkMb == 0) {
+                    redirectAttrs.addFlashAttribute("error", "No motherboard configured");
+                } else {
+                    // SINI ADA MB
+                    bookdao = new RmsBookingHardwareDAO();
+                    mbSptsPkid = bookdao.getSptsPkidForItemIdMb(bookingId, itemPkid);
+                    ItemDAO itemdao = new ItemDAO();
+                    itemIdMB = itemdao.getMibItemIdBySptsPkId(mbSptsPkid);
+                    ItemActivityConfigDAO itemactdao = new ItemActivityConfigDAO();
+                    ItemActivityConfig itemactmb = itemactdao.getItemActivityByItemId(itemIdMB);
+                    if (itemactmb != null) {
+                        leakTest = itemactmb.getLeakageTest();
+                        psTest = itemactmb.getPsLeakageTest();
+                        winTest = itemactmb.getWinchesterChamberLeakageTest();
+                        model.addAttribute("configMotherboard", "");
+                    } else {
+                        model.addAttribute("configMotherboard", "TRIGGERERROR");
+                        model.addAttribute("itemIdMB", itemIdMB);
+                        model.addAttribute("itemIdLC", itemIdLC);
+                        redirectAttrs.addFlashAttribute("error", "No motherboard configuration configured");
+                    }
+
+                    if (checkLc == 0) {
+                        // SINI TAKDE LC
+                        redirectAttrs.addFlashAttribute("error", "No load card configured");
+                    } else {
+                        // SINI DUA2 ADA
+                        bookdao = new RmsBookingHardwareDAO();
+                        itemIdLC = bookdao.getSptsPkidForItemIdLC(bookingId);
+                        itemactdao = new ItemActivityConfigDAO();
+                        ItemActivityConfig itemactlc = itemactdao.getItemActivityByItemId(itemIdLC);
+
+                        if (itemactlc != null) {
+                            bibTest = itemactlc.getBibTest();
+                            manTest = itemactlc.getManualTest();
+                        } else {
+                            redirectAttrs.addFlashAttribute("error", "No load card configuration configured");
+                        }
+                    }
+                    model.addAttribute("itemIdMB", itemIdMB);
+                    model.addAttribute("itemIdLC", itemIdLC);
+                }
+            }
         }
+
+        model.addAttribute("bookId", bookingId);
+        model.addAttribute("mibItemId", itemPkid);
 
         model.addAttribute("leakCheck", leakTest);
         model.addAttribute("manCheck", manTest);
@@ -2564,6 +2625,195 @@ public class RmsBookingDetailController {
         return new ModelAndView("rmsbookingDetailPdf", "rmsbookingDetail", rmsbookingDetail);
     }
 
+    @RequestMapping(value = "/ftest/save/{jenis}", method = {RequestMethod.GET, RequestMethod.POST})
+    public String bookingFunctionalTest(
+            Model model,
+            Locale locale,
+            RedirectAttributes redirectAttrs,
+            @ModelAttribute UserSession userSession,
+            @PathVariable("jenis") String jenis,
+//            @PathVariable("bookId") String bookId,
+//            @PathVariable("itemPkid") String itemPkid,
+            @RequestParam(required = false) String bookId,
+            @RequestParam(required = false) String motherboardId,
+            @RequestParam(required = false) String itemPkid,
+            @RequestParam(required = false) String mibItemId,
+            @RequestParam(required = false) String totalQty,
+            @RequestParam(required = false) String bibResult,
+            @RequestParam(required = false) MultipartFile bibUpload,
+            @RequestParam(required = false) String leakResult,
+            @RequestParam(required = false) MultipartFile leakUpload,
+            @RequestParam(required = false) String psResult,
+            @RequestParam(required = false) MultipartFile psUpload,
+            @RequestParam(required = false) String winResult,
+            @RequestParam(required = false) MultipartFile winUpload,
+            @RequestParam(required = false) String leakHardware,
+            @RequestParam(required = false) String bibHardware,
+            @RequestParam(required = false) String psHardware,
+            @RequestParam(required = false) String winHardware,
+            HttpServletResponse response
+    ) throws IOException {
+        
+        String gotoMn   = "Pending Functional Test - Manual Test";
+        String gotoBib  = "Pending Functional Test - BIB Test";
+        String gotoPS   = "Pending Functional Test - Power Supply Leakage Test";
+        String gotoWin  = "Pending Functional Test - Winchester Chamber Leakage Test";
+        String goReady  = "Ready for Production Staging";
+        
+        String checkLeak = "No";
+        String checkManual = "No";
+        String checkBib = "No";
+        String checkPs = "No";
+        String checkWin = "No";
+        
+        String itemIdMB = "";
+        String mbSptsPkid = "";
+        String itemIdLC = "";
+        String groupId = bookId + "/" + motherboardId;
+
+        String username = userSession.getFullname();
+        String newStatus = "";
+        String latestResult = "";
+        String target_location = "redirect:/rmsbookingDetail/groupDetail/" + bookId + "/" + motherboardId;
+        
+        RmsBookingHardwareDAO bookdao = new RmsBookingHardwareDAO();
+        Integer checkMb = bookdao.checkMotherboardData(bookId);
+        bookdao = new RmsBookingHardwareDAO();
+        Integer checkLc = bookdao.checkCardData(bookId);
+        
+        if (checkMb == 0) {
+            redirectAttrs.addFlashAttribute("error", "No motherboard configured");
+        } else {
+            bookdao = new RmsBookingHardwareDAO();
+            mbSptsPkid = bookdao.getSptsPkidForItemIdMb(bookId, motherboardId);
+            ItemDAO itemdao = new ItemDAO();
+            itemIdMB = itemdao.getMibItemIdBySptsPkId(mbSptsPkid);
+            ItemActivityConfigDAO itemactdao = new ItemActivityConfigDAO();
+            ItemActivityConfig itemactmb = itemactdao.getItemActivityByItemId(itemIdMB);
+            if (itemactmb != null) {
+//                LOGGER.info("DAPAT MB");
+                checkLeak = itemactmb.getLeakageTest();
+                checkPs = itemactmb.getPsLeakageTest();
+                checkWin = itemactmb.getWinchesterChamberLeakageTest();
+                model.addAttribute("configMotherboard", "");
+            } else {
+                model.addAttribute("configMotherboard", "TRIGGERERROR");
+                model.addAttribute("itemIdMB", itemIdMB);
+                model.addAttribute("itemIdLC", itemIdLC);
+                redirectAttrs.addFlashAttribute("error", "No motherboard configuration configured");
+//                LOGGER.info("SBB MB KOSONG, KITA RESET BALIK SEMUA DEKAT SINI");
+                checkLeak = "No";
+                checkManual = "No";
+                checkBib = "No";
+                checkPs = "No";
+                checkWin = "No";
+            }
+
+            if (checkLc == 0) {
+                // SINI TAKDE LC
+                redirectAttrs.addFlashAttribute("error", "No load card configured");
+            } else {
+                // SINI DUA2 ADA
+                bookdao = new RmsBookingHardwareDAO();
+                itemIdLC = bookdao.getSptsPkidForItemIdLC(bookId);
+                itemactdao = new ItemActivityConfigDAO();
+                ItemActivityConfig itemactlc = itemactdao.getItemActivityByItemId(itemIdLC);
+
+                if (itemactlc != null) {
+                    LOGGER.info("DAPAT LC");
+                    checkBib = itemactlc.getBibTest();
+                    checkManual = itemactlc.getManualTest();
+                } else {
+                    redirectAttrs.addFlashAttribute("error", "No load card configuration configured");
+                }
+            }
+            model.addAttribute("itemIdMB", itemIdMB);
+            model.addAttribute("itemIdLC", itemIdLC);
+        }
+        
+        if (jenis.equals("leakTest")) {
+            if (leakResult.equals("Fail")) {
+                // INSERT MASUK KE MAVERICK
+                // UPDATE rms_booking_hardware status by itemPkidMb
+                // UPDATE rms_booking_hardware_group by hardwareId
+                saveToMaverickFunctionalTest("Leakage", username, groupId, leakHardware);
+            } else {
+                if (checkManual.equals("Yes")) {
+                    newStatus = gotoMn;
+                } else if (checkBib.equals("Yes")) {
+                    newStatus = gotoBib;
+                } else if (checkPs.equals("Yes")) {
+                    newStatus = gotoPS;
+                } else if (checkWin.equals("Yes")) {
+                    newStatus = gotoWin;
+                } else {
+                    newStatus = goReady;
+                }
+                // SINI PASS MACAM BIASA, UPDATE THE STATUS to next Functional Test
+                RmsBookingHardware bookHardware = new RmsBookingHardware();
+                bookHardware.setBookingPkid(bookId);
+                bookHardware.setPkid(motherboardId);
+                bookHardware.setSubStatus(newStatus);
+                RmsBookingHardwareDAO booking = new RmsBookingHardwareDAO();
+//                booking.updateRmsBookingHardwareSubStatusByPkidAndBookingPkid(bookHardware);
+            }
+        } else if (jenis.equals("manTest")) {
+            
+        } else if (jenis.equals("bibTest")) {
+            if (bibResult.equals("Fail")) {
+                saveToMaverickFunctionalTest("BIB", username, groupId, bibHardware);
+            } else {
+                if (checkPs.equals("Yes")) {
+                    newStatus = gotoPS;
+                } else if (checkWin.equals("Yes")) {
+                    newStatus = gotoWin;
+                } else {
+                    newStatus = goReady;
+                }
+                // UPDATE THE STATUS
+                RmsBookingHardware bookHardware = new RmsBookingHardware();
+                bookHardware.setBookingPkid(bookId);
+                bookHardware.setPkid(motherboardId);
+                bookHardware.setSubStatus(newStatus);
+                RmsBookingHardwareDAO booking = new RmsBookingHardwareDAO();
+//                booking.updateRmsBookingHardwareSubStatusByPkidAndBookingPkid(bookHardware);
+            }
+        } else if (jenis.equals("psTest")) {
+            if (psResult.equals("Fail")) {
+                saveToMaverickFunctionalTest("Power", username, groupId, psHardware);
+            } else {
+                if (checkWin.equals("Yes")) {
+                    newStatus = gotoWin;
+                } else {
+                    newStatus = goReady;
+                }
+                //UPDATE LATEST STATUS
+                RmsBookingHardware bookHardware = new RmsBookingHardware();
+                bookHardware.setBookingPkid(bookId);
+                bookHardware.setPkid(motherboardId);
+                bookHardware.setSubStatus(newStatus);
+                RmsBookingHardwareDAO booking = new RmsBookingHardwareDAO();
+//                booking.updateRmsBookingHardwareSubStatusByPkidAndBookingPkid(bookHardware);
+            }
+        } else if (jenis.equals("winTest")) {
+            if (winResult.equals("Fail")) {
+                // MASUK MAVERICK
+                saveToMaverickFunctionalTest("Winchester", username, groupId, winHardware);
+            } else {
+                // UPDATE STATUS
+                newStatus = goReady;
+                // UPDATE LATEST STATUS
+                RmsBookingHardware bookHardware = new RmsBookingHardware();
+                bookHardware.setBookingPkid(bookId);
+                bookHardware.setPkid(motherboardId);
+                bookHardware.setSubStatus(newStatus);
+                RmsBookingHardwareDAO booking = new RmsBookingHardwareDAO();
+//                booking.updateRmsBookingHardwareSubStatusByPkidAndBookingPkid(bookHardware);
+            }
+        }
+        return target_location;
+    }
+
     private String checkStatusFTestBeforeLoading(String bookingId, String pkId) {
         String data = "";
         String leakTest = "No";
@@ -2619,6 +2869,8 @@ public class RmsBookingDetailController {
                     data = "Pending Functional Test - Power Supply Leakage Test";
                 } else if (winTest.equals("Yes")) {
                     data = "Pending Functional Test - Winchester Chamber Leakage Test";
+                } else {
+                    data = "Ready for Production Staging";
                 }
 
                 // SINI KITA UPDATE THE LATEST DATA TO CORRECT FUNCTIONAL TEST
@@ -3157,6 +3409,144 @@ public class RmsBookingDetailController {
         model.addAttribute("teActiveTab", teActiveTab);
 
         return "rmsbookingDetail/detail_group_released";
+    }
+    
+    private String saveToMaverickFunctionalTest(String jenistest, String user, String groupId, String hardwareId) {
+        String data = "";
+        
+        String[] MbBookingHwPkid = groupId.split("/");
+        String bookingPkid = MbBookingHwPkid[0];
+        String mbBookingPkid = MbBookingHwPkid[1];
+        
+        String emailBodyFail = "";
+        
+        if (jenistest.contains("Leakage")) {
+            emailBodyFail = "Failed Functional Test - Leakage Test";
+        } else if (jenistest.contains("Manual")) {
+            emailBodyFail = "Failed Functional Test - Manual Test";
+        } else if (jenistest.contains("BIB")) {
+            emailBodyFail = "Failed Functional Test - BIB Test";
+        } else if (jenistest.contains("Power")) {
+            emailBodyFail = "Failed Functional Test - Power Supply Leakage Test";
+        } else if (jenistest.contains("Winchester")) {
+            emailBodyFail = "Failed Functional Test - Winchester Chamber Leakage Test";
+        }
+        
+        // UPDATE SUB STATUS rms_booking_hardware START
+        RmsBookingHardware bookHardware = new RmsBookingHardware();
+        bookHardware.setBookingPkid(bookingPkid);
+        bookHardware.setPkid(mbBookingPkid);
+        bookHardware.setSubStatus(emailBodyFail);
+        RmsBookingHardwareDAO booking = new RmsBookingHardwareDAO();
+        booking.updateRmsBookingHardwareSubStatusByPkidAndBookingPkid(bookHardware);
+        // UPDATE SUB STATUS rms_booking_hardware END
+        
+        // UPDATE STATUS FOR EACH HARDWARE ID IN rms_booking_hardware_group START
+        if (hardwareId != null && !hardwareId.trim().isEmpty()) {
+            String[] parts = hardwareId.split(",");
+            for (String id : parts) {
+                String hwid = id.trim();
+                RmsBookingHardwareGroupDAO bookgroupdao = new RmsBookingHardwareGroupDAO();
+                bookgroupdao.updateGroupStatus(emailBodyFail, groupId, hwid);
+            }
+        }
+        // UPDATE STATUS FOR EACH HARDWARE ID IN rms_booking_hardware_group END
+        
+        RmsBookingMaverick maverick = new RmsBookingMaverick();
+        maverick.setGroupId(groupId);
+        maverick.setModule("Before Loading");
+        maverick.setSubmodule("Functional Test");
+        maverick.setStatus("Failed Functional Test");
+        maverick.setFlag("0");
+        maverick.setCreatedBy(user);
+        RmsBookingMaverickDAO maverickD = new RmsBookingMaverickDAO();
+        QueryResult maverickAdd = maverickD.insertRmsBookingMaverick(maverick);
+
+        EmailVmFailDAO userDao = new EmailVmFailDAO();
+        List<EmailVmFail> userRecipientsList = userDao.getEmailVmFailList();
+
+        String[] to = new String[userRecipientsList.size()];
+        for (int i = 0; i < userRecipientsList.size(); i++) {
+            to[i] = userRecipientsList.get(i).getEmail();
+        }
+
+        //get current date and time
+        LocalDateTime instance = LocalDateTime.now();
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm");
+        String formattedString = formatter.format(instance); //15-02-2022 12:43
+
+        //gethostname
+        HostnameDAO hostnameD = new HostnameDAO();
+        Hostname h = hostnameD.getHostnameFlagZero();
+        String hostname = h.getHostname();
+
+        RmsBookingDetailDAO rmsBookingD = new RmsBookingDetailDAO();
+        RmsBookingDetail rmsBooking = rmsBookingD.getRmsBookingDetailByBookingPkid(bookingPkid);
+
+        RmsBookingHardwareDAO rmsBookingHD = new RmsBookingHardwareDAO();
+        RmsBookingHardware MbDetail = rmsBookingHD.getRmsBookingHardwareByBookingPkidAndPkid(bookingPkid, mbBookingPkid);
+
+        //send INFORMATION email
+        EmailSender emailSender = new EmailSender();
+        emailSender.htmlEmailTable(
+                servletContext,
+                "", //user name requestor
+                to, //to
+                //                        emailTo,
+                "Failed Visual Inspection", //subject
+                "<br />"
+                + "Please be informed that the item below failed the visual inspection."
+                + "<br /> "
+                + "<br /> "
+                + "RMS No: " + rmsBooking.getRmsNo()
+                + "<br /> "
+                + "Event: " + rmsBooking.getEvent()
+                + "<br /> "
+                + "Motherboard ID: " + MbDetail.getItemId()
+                + "<br /> "
+                + "Inspection Date: " + formattedString
+                + "<br /> "
+                + "Detail: " + emailBodyFail
+                + "<br /> "
+                + "<br /> "
+                + "Please click <a href=\"http://" + hostname + "/HEATS/rmsbookingDetail/groupDetail/" + groupId + " \">HERE</a> for more detail."
+                + "<br /> "
+                + "<br />Thank you." //msg
+        );
+        
+        return data;
+    }
+    
+    public void checkInsertFunctionalTest(String groupId, String username) {
+        
+        
+//        ItemFunctionalTestDAO itemdao = new ItemFunctionalTestDAO();
+//        ItemFunctionalTest item = itemdao.getItemActivityByItemId(itemId);
+//        if (item != null) {
+//
+//        } else {
+//            itemdao = new ItemFunctionalTestDAO();
+//            ItemFunctionalTest itembaru = new ItemFunctionalTest();
+//            itembaru.setMibItemId(itemId);
+//            itembaru.setBibQty("0");
+//            itembaru.setBibStatus("");
+//            itembaru.setBibUpload("");
+//            itembaru.setManStatus("");
+//            itembaru.setLeakQty("0");
+//            itembaru.setLeakStatus("");
+//            itembaru.setLeakUpload("");
+//            itembaru.setPsQty("0");
+//            itembaru.setPsStatus("");
+//            itembaru.setPsUpload("");
+//            itembaru.setWinQty("0");
+//            itembaru.setWinStatus("");
+//            itembaru.setWinUpload("");
+//            itembaru.setRemark("");
+//            itembaru.setFinalStatus("");
+//            itembaru.setCreatedBy(username);
+//            itembaru.setFlag("0");
+//            itemdao.insertItemFunctionalTest(itembaru);
+//        }
     }
 
 }

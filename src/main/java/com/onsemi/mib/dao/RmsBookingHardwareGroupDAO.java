@@ -426,4 +426,30 @@ public class RmsBookingHardwareGroupDAO {
         }
         return count;
     }
+    
+    public QueryResult updateGroupStatus(String status, String groupId, String hardwareId) {
+        QueryResult queryResult = new QueryResult();
+        try {
+            String sql = "UPDATE rms_booking_hardware_group SET status = ? WHERE group_id = ? AND hardware_id = ? ";
+            PreparedStatement ps = conn.prepareStatement(sql);
+            ps.setString(1, status);
+            ps.setString(2, groupId);
+            ps.setString(3, hardwareId);
+            queryResult.setResult(ps.executeUpdate());
+            ps.close();
+        } catch (SQLException e) {
+            queryResult.setErrorMessage(e.getMessage());
+            LOGGER.error(e.getMessage());
+        } finally {
+            if (conn != null) {
+                try {
+                    conn.close();
+                } catch (SQLException e) {
+                    LOGGER.error(e.getMessage());
+                }
+            }
+        }
+        return queryResult;
+    }
+    
 }
