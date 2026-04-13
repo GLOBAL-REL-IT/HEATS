@@ -238,4 +238,30 @@ public class RmsBookingFunctionalTestDAO {
         return queryResult;
     }
     
+    public Integer getCountTestResultByGroupId(String groupId) {
+        Integer count = 0;
+        try {
+            PreparedStatement ps = conn.prepareStatement(
+                    "SELECT COUNT(*) AS count FROM rms_booking_functional_test WHERE group_id = '" + groupId + "' "
+            );
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                count = rs.getInt("count");
+            }
+            rs.close();
+            ps.close();
+        } catch (SQLException e) {
+            LOGGER.error(e.getMessage());
+        } finally {
+            if (conn != null) {
+                try {
+                    conn.close();
+                } catch (SQLException e) {
+                    LOGGER.error(e.getMessage());
+                }
+            }
+        }
+        return count;
+    }
+    
 }

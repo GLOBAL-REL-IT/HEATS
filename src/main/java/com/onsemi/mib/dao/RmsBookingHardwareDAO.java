@@ -706,7 +706,6 @@ public class RmsBookingHardwareDAO {
             PreparedStatement ps = conn.prepareStatement(
                     "UPDATE rms_booking_hardware SET item_type = ?, item_id = ?, item_pkid = ?, qty = ?, readiness = ?, status = ?, recall = ?, flag = ?, modified_date = NOW(), modified_by = ?, sub_status = ? WHERE booking_pkid = ? AND pkid = ?"
             );
-
             ps.setString(1, rmsbookingHardware.getItemType());
             ps.setString(2, rmsbookingHardware.getItemId());
             ps.setString(3, rmsbookingHardware.getItemPkid());
@@ -742,7 +741,6 @@ public class RmsBookingHardwareDAO {
             PreparedStatement ps = conn.prepareStatement(
                     "UPDATE rms_booking_hardware SET sub_status = ? WHERE booking_pkid = ? AND pkid = ?"
             );
-
             ps.setString(1, rmsbookingHardware.getSubStatus());
             ps.setString(2, rmsbookingHardware.getBookingPkid());
             ps.setString(3, rmsbookingHardware.getPkid());
@@ -769,7 +767,6 @@ public class RmsBookingHardwareDAO {
             PreparedStatement ps = conn.prepareStatement(
                     "UPDATE rms_booking_hardware SET sub_status = ? WHERE id = ?"
             );
-
             ps.setString(1, rmsbookingHardware.getSubStatus());
             ps.setString(2, rmsbookingHardware.getId());
             queryResult.setResult(ps.executeUpdate());
@@ -795,7 +792,6 @@ public class RmsBookingHardwareDAO {
             PreparedStatement ps = conn.prepareStatement(
                     "UPDATE rms_booking_hardware SET lc_qty = ?, pc_qty = ? WHERE booking_pkid = ? AND pkid = ?"
             );
-
             ps.setString(1, rmsbookingHardware.getLcQty());
             ps.setString(2, rmsbookingHardware.getPcQty());
             ps.setString(3, rmsbookingHardware.getBookingPkid());
@@ -828,7 +824,6 @@ public class RmsBookingHardwareDAO {
                 count = rs.getInt("count");
             }
             rs.close();
-
             ps.close();
         } catch (SQLException e) {
             LOGGER.error(e.getMessage());
@@ -855,7 +850,6 @@ public class RmsBookingHardwareDAO {
                 count = rs.getInt("count");
             }
             rs.close();
-
             ps.close();
         } catch (SQLException e) {
             LOGGER.error(e.getMessage());
@@ -882,7 +876,6 @@ public class RmsBookingHardwareDAO {
                 count = rs.getInt("count");
             }
             rs.close();
-
             ps.close();
         } catch (SQLException e) {
             LOGGER.error(e.getMessage());
@@ -909,7 +902,6 @@ public class RmsBookingHardwareDAO {
                 count = rs.getInt("count");
             }
             rs.close();
-
             ps.close();
         } catch (SQLException e) {
             LOGGER.error(e.getMessage());
