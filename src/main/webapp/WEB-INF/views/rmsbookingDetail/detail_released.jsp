@@ -270,14 +270,10 @@
                                                                     
                                                                 </div>-->
                                 <div class="col-md-12">
-                                    <a type="button" data-bs-toggle="offcanvas" title="Release to Production"
-                                       data-bs-target="#staticBackdropEmailReplacement" aria-controls="staticBackdropEmailReplacement" class="btn btn-danger float-start">
-                                        <i class="bi bi-check-circle-fill">&nbsp;&nbsp;Recall from Production</i>
+                                    <a type="button" data-bs-toggle="offcanvas" title="Return to MB Room"
+                                       data-bs-target="#staticBackdrop" aria-controls="staticBackdrop" class="btn btn-danger float-start">
+                                        <i class="bi bi-check-circle-fill">&nbsp;&nbsp;Return to MB Room</i>
                                     </a>
-                                    <!--                                    <a type="button" data-bs-toggle="offcanvas" title="Request for HW Replacement"
-                                                                           data-bs-target="#staticBackdropEmailReplacement" aria-controls="staticBackdropEmailReplacement" class="btn btn-primary float-end">
-                                                                            <i class="bi bi-envelope-arrow-up">&nbsp;&nbsp;Request for HW Replacement</i>
-                                                                        </a>-->
                                 </div>
                             </form>
                         </div>
@@ -471,6 +467,36 @@
             <img class="img3" src="${contextPath}/resources/onsemi logo.webp" alt="onsemi">
             <span>© HEATs 2025</span>
         </div>
+        <div class="offcanvas-placeholder">
+
+            <div class="offcanvas offcanvas-start" data-bs-backdrop="static" tabindex="-1" id="staticBackdrop"
+                 aria-labelledby="staticBackdropLabel">
+                <div class="offcanvas-header">
+                    <h5 class="offcanvas-title" id="staticBackdropLabel">Return to MB Room</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+                </div>
+                <div class="offcanvas-body">
+                    <div>
+                        <form class="row g-3 align-items-center" role="form" action="${contextPath}/rmsbookingDetail/recall" method="post">
+                            <div class="row mb-3">
+                                <div class="col-xl-12 col-sm-12 col-12">
+                                    <div class="mb-1">
+                                        <label for="recallRemarks" class="form-label">Remarks</label>
+                                        <div class="input input-group">
+                                            <input type="hidden" class="form-control" id="id" name="id" placeholder="" value="${rms.id}">
+                                            <textarea class="form-control" rows="5" id="recallRemarks" name="recallRemarks"></textarea>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-12">
+                                <button type="submit" id="submit" id="submit" class="btn btn-primary float-end">Save</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
 
         <!--</div>-->
     </s:layout-component>
@@ -500,21 +526,18 @@
     </s:layout-component>
     <s:layout-component name="page_js_inline">
         <script>
-            $(document).ready(function () {
-                $('.js-example-basic-single').select2();
-            });
 
-            document.addEventListener('DOMContentLoaded', function () {
-                const url = new URL(window.location.href);
-                if (url.searchParams.get('saved') === '1') {
-                    const el = document.getElementById('staticBackdropEmailReplacement');
-                    if (el)
-                        bootstrap.Offcanvas.getOrCreateInstance(el).show();
-                    // Clean the URL so F5 or navigation won’t auto-open again
-                    url.searchParams.delete('saved');
-                    window.history.replaceState({}, '', url);
-                }
-            });
+//            document.addEventListener('DOMContentLoaded', function () {
+//                const url = new URL(window.location.href);
+//                if (url.searchParams.get('saved') === '1') {
+//                    const el = document.getElementById('staticBackdropEmailReplacement');
+//                    if (el)
+//                        bootstrap.Offcanvas.getOrCreateInstance(el).show();
+//                    // Clean the URL so F5 or navigation won’t auto-open again
+//                    url.searchParams.delete('saved');
+//                    window.history.replaceState({}, '', url);
+//                }
+//            });
 
             $(document).ready(function () {
                 $('.js-example-basic-single').select2();
@@ -528,7 +551,8 @@
                     ],
                     language: {
                         lengthMenu: "Display _MENU_ Records Per Page",
-                        info: "Showing Page _PAGE_ of _PAGES_",
+//                        info: "Showing Page _PAGE_ of _PAGES_",
+                        info: "Showing _START_ to _END_ of _TOTAL_ total records",
                     },
                     dom: "Blfrtip",
                     buttons: ["copy", "csv", "pdf", "print"],
@@ -542,7 +566,8 @@
                     ],
                     language: {
                         lengthMenu: "Display _MENU_ Records Per Page",
-                        info: "Showing Page _PAGE_ of _PAGES_",
+//                        info: "Showing Page _PAGE_ of _PAGES_",
+                        info: "Showing _START_ to _END_ of _TOTAL_ total records",
                     },
                     dom: "Blfrtip",
                     buttons: ["copy", "csv", "pdf", "print"],

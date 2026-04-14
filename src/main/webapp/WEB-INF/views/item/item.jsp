@@ -4222,7 +4222,10 @@
                                                             scrollY: "680px",
                                                             scrollCollapse: false,
                                                             paging: false,
-                                                            bInfo: false,
+//                                                            bInfo: false,
+                                                            language: {
+                                                                info: "Showing _TOTAL_ total records",
+                                                            },
                                                             dom: 'Bfrtip',
                                                             buttons: ["copy", "csv", "print"],
                                                             columnDefs: [{

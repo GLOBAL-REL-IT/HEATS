@@ -443,7 +443,7 @@
                                             <!--</div>-->
                                             <!--<div class="justify-content-start">-->
                                             <!--<button type="button" class="btn btn-light">Cancel</button>-->
-                                            <a href="${contextPath}/hw" class="btn btn-dark float-start">Back</a>
+                                            <a href="${contextPath}/hw/${item.sptsPkid}" class="btn btn-dark float-start">Back</a>
                                             <!--</div>-->
                                         </div>
                                         <!-- Form actions end -->                    
@@ -567,7 +567,8 @@
                     ],
                     language: {
                         lengthMenu: "Display _MENU_ Records Per Page",
-                        info: "Showing Page _PAGE_ of _PAGES_",
+//                        info: "Showing Page _PAGE_ of _PAGES_",
+                        info: "Showing _START_ to _END_ of _TOTAL_ total records",
                     },
                     dom: "Blfrtip",
                     buttons: ["copy", "csv", "pdf", "print"],

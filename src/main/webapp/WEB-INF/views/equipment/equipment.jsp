@@ -196,20 +196,20 @@
                                                 </tr>
                                             </thead>
                                             <tbody>
-                                            <c:forEach items="${eqptList}" var="request" varStatus="requestLoop">
-                                                <tr>
-                                                    <td><c:out value="${request.relTestGroup}"/></td>
-                                                <td><c:out value="${request.familyName}"/></td>
-                                                <td><c:out value="${request.equipmentId}"/></td>
-                                                <td><c:out value="${request.eqptTypeName}"/></td>
-                                                <td><c:out value="${request.statusName}"/></td>
-                                                <td>
-                                                    <a modaldeleteid="${request.sptsPkid}" class="btn btn-sm me-1" title="Detail" data-toggle="Detail" onclick="modalDelete(this);">
-                                                        <!--Detail-->
-                                                        <i class="bi bi-box-arrow-in-right h3"></i></a>
-                                                </td>
-                                                </tr>
-                                            </c:forEach>
+                                                <c:forEach items="${eqptList}" var="request" varStatus="requestLoop">
+                                                    <tr>
+                                                        <td><c:out value="${request.relTestGroup}"/></td>
+                                                        <td><c:out value="${request.familyName}"/></td>
+                                                        <td><c:out value="${request.equipmentId}"/></td>
+                                                        <td><c:out value="${request.eqptTypeName}"/></td>
+                                                        <td><c:out value="${request.statusName}"/></td>
+                                                        <td>
+                                                            <a modaldeleteid="${request.sptsPkid}" class="btn btn-sm me-1" title="Detail" data-toggle="Detail" onclick="modalDelete(this);">
+                                                                <!--Detail-->
+                                                                <i class="bi bi-box-arrow-in-right h3"></i></a>
+                                                        </td>
+                                                    </tr>
+                                                </c:forEach>
                                             </tbody>
                                         </table>
                                     </div>
@@ -241,14 +241,14 @@
                                                     <c:if test="${userEqptDelete == 'Yes'}"><a onclick="scrapModal();" role="button" title="Scrap" data-bs-toggle="modal" data-bs-target="#delete_modal" class="btn btn-outline-danger me-2">
                                                             <i class="bi bi-trash3" style="color:red"></i>&nbsp;&nbsp;Scrap</a></c:if>
                                                 </div></c:if>
-                                            <!-- Row start -->
-                                            <div class="form-group required col-xl-4 col-sm-12 col-12">
-                                                <div class="mb-3">
-                                                    <!--<div class="mb-3 was-validated">-->
-                                                    <label for="eqptId" class="form-label">Equipment ID</label>
-                                                    <div class="input input-group">
-                                                        <!--<span class="input-group-text"><i class="bi bi-person"></i></span>-->
-                                                        <input type="text" class="input form-control" id="eqptId" name="eqptId" placeholder="" value="${eqpt.equipmentId}" readonly required >
+                                                <!-- Row start -->
+                                                <div class="form-group required col-xl-4 col-sm-12 col-12">
+                                                    <div class="mb-3">
+                                                        <!--<div class="mb-3 was-validated">-->
+                                                        <label for="eqptId" class="form-label">Equipment ID</label>
+                                                        <div class="input input-group">
+                                                            <!--<span class="input-group-text"><i class="bi bi-person"></i></span>-->
+                                                            <input type="text" class="input form-control" id="eqptId" name="eqptId" placeholder="" value="${eqpt.equipmentId}" readonly required >
                                                         <input type="hidden" class="form-control" id="itemPKID" name="itemPKID" placeholder="" value="${eqpt.sptsPkid}" readonly>
                                                         <input type="hidden" class="form-control" id="mibId" name="mibId" placeholder="" value="${eqpt.id}" readonly>
                                                         <!--<div class="valid-feedback">Looks good!</div>-->
@@ -293,30 +293,30 @@
                                                             <option></option>
                                                             <option value="1" <c:if test="${eqpt.equipmentType == '1'}">selected</c:if>>Life</option>
                                                             <option value="2" <c:if test="${eqpt.equipmentType == '2'}">selected</c:if>>Environment</option>
-                                                        </select>
+                                                            </select>
+                                                        </div>
                                                     </div>
                                                 </div>
-                                            </div>
-                                            <div class="form-group required col-xl-4 col-sm-12 col-12">
-                                                <div class="mb-3">
-                                                    <label for="eqptStatus" class="form-label">Equipment Status</label>
-                                                    <div class="input input-group">
-                                                        <select class="input js-example-tags" id="eqptStatus" name="eqptStatus"
-                                                                title="Select Eqpt Status" data-live-search="true" style="width: 100%" disabled>
-                                                            <option></option>
-                                                            <option value="1" <c:if test="${eqpt.currentStatus == '1'}">selected</c:if>>Active</option>
+                                                <div class="form-group required col-xl-4 col-sm-12 col-12">
+                                                    <div class="mb-3">
+                                                        <label for="eqptStatus" class="form-label">Equipment Status</label>
+                                                        <div class="input input-group">
+                                                            <select class="input js-example-tags" id="eqptStatus" name="eqptStatus"
+                                                                    title="Select Eqpt Status" data-live-search="true" style="width: 100%" disabled>
+                                                                <option></option>
+                                                                <option value="1" <c:if test="${eqpt.currentStatus == '1'}">selected</c:if>>Active</option>
                                                             <option value="0" <c:if test="${eqpt.currentStatus == '0'}">selected</c:if>>Inactive</option>
-                                                        </select>
+                                                            </select>
+                                                        </div>
                                                     </div>
                                                 </div>
-                                            </div>
-                                            <div class="col-xl-4 col-sm-12 col-12">
-                                                <div class="mb-3">
-                                                    <label for="eqptManufacturer" class="form-label">Equipment Manufacturer</label>
-                                                    <div class="input input-group">
-                                                        <select class="input js-example-tags" id="eqptManufacturer" name="eqptManufacturer"
-                                                                title="Select Eqpt Manufacturer" data-live-search="true" style="width: 100%" disabled>
-                                                            <option></option>
+                                                <div class="col-xl-4 col-sm-12 col-12">
+                                                    <div class="mb-3">
+                                                        <label for="eqptManufacturer" class="form-label">Equipment Manufacturer</label>
+                                                        <div class="input input-group">
+                                                            <select class="input js-example-tags" id="eqptManufacturer" name="eqptManufacturer"
+                                                                    title="Select Eqpt Manufacturer" data-live-search="true" style="width: 100%" disabled>
+                                                                <option></option>
                                                             <c:forEach items="${eqptManufacturerList}" var="invInner">
                                                                 <option value="${invInner.equipmentManufacturer}" ${invInner.selected}>${invInner.equipmentManufacturer}</option>
                                                             </c:forEach>
@@ -455,407 +455,410 @@
                                                             <option></option>
                                                             <option value="1" <c:if test="${eqpt.cbmsType == '1'}">selected</c:if>>Yes</option>
                                                             <option value="0" <c:if test="${eqpt.cbmsType == '0'}">selected</c:if>>No</option>
-                                                        </select>
+                                                            </select>
+                                                        </div>
                                                     </div>
                                                 </div>
-                                            </div>
-                                            <!-- Additional Information Section -->
-                                            <div class="col-12 mt-2 mb-3">
-                                                <h6 class="fw-semibold mb-3 border-start border-warning ps-2"
-                                                    style="border-left-width: 3px !important;">
-                                                    <i class="bi bi-chat-square-text me-2"></i>Additional Information
-                                                </h6>
-                                            </div>
-                                            <div class="col-12">
-                                                <div class="mb-3">
-                                                    <label for="remarks" class="form-label">Remarks</label>
-                                                    <div class="input input-group">
-                                                        <span class="input input-group-text"><i class="bi bi-pencil"></i></span>
-                                                        <textarea class="input form-control" id="remarks" name="remarks" placeholder="Enter Message"
-                                                                  rows="3" disabled>${eqpt.remarks}</textarea>
+                                                <!-- Additional Information Section -->
+                                                <div class="col-12 mt-2 mb-3">
+                                                    <h6 class="fw-semibold mb-3 border-start border-warning ps-2"
+                                                        style="border-left-width: 3px !important;">
+                                                        <i class="bi bi-chat-square-text me-2"></i>Additional Information
+                                                    </h6>
+                                                </div>
+                                                <div class="col-12">
+                                                    <div class="mb-3">
+                                                        <label for="remarks" class="form-label">Remarks</label>
+                                                        <div class="input input-group">
+                                                            <span class="input input-group-text"><i class="bi bi-pencil"></i></span>
+                                                            <textarea class="input form-control" id="remarks" name="remarks" placeholder="Enter Message"
+                                                                      rows="3" disabled>${eqpt.remarks}</textarea>
                                                     </div>
                                                 </div>
                                             </div>
 
                                             <div class="d-flex justify-content-end gap-2">
                                                 <c:if test="${userEqptEdit == 'Yes'}"><button id="updateButton" type="submit" class="btn btn-primary" disabled>Update</button></c:if>
-                                            </div>
-                                            <!-- Form actions end -->
-                                        </form>
-                                    </div> 
-                                    <!--end div for 1st tab-->
+                                                </div>
+                                                <!-- Form actions end -->
+                                            </form>
+                                        </div> 
+                                        <!--end div for 1st tab-->
+                                    </div>
+                                    <!--end div for tab content-->
                                 </div>
-                                <!--end div for tab content-->
+                                <!--end div for tab container-->
                             </div>
-                            <!--end div for tab container-->
                         </div>
                     </div>
                 </div>
+                <!-- Row end -->
+
             </div>
-            <!-- Row end -->
+            <!-- Content wrapper end -->
 
-        </div>
-        <!-- Content wrapper end -->
-
-        <!-- App Footer start -->
-        <div class="app-footer">
-            <img class="img3" src="${contextPath}/resources/onsemi logo.webp" alt="onsemi">
+            <!-- App Footer start -->
+            <div class="app-footer">
+                <img class="img3" src="${contextPath}/resources/onsemi logo.webp" alt="onsemi">
             <span>© HEATs 2025</span>
         </div>
-        </div>
-    </s:layout-component>
-    <s:layout-component name="page_js">
-        <script src="${contextPath}/resources/vendor/DataTables/customitem/jquery-3.7.1.min.js"></script>
-        <script src="${contextPath}/resources/vendor/DataTables/customitem/bootstrap.bundle.min.js"></script>
-        <script src="${contextPath}/resources/vendor/DataTables/customitem/dataTables.js"></script>
+    </div>
+</s:layout-component>
+<s:layout-component name="page_js">
+    <script src="${contextPath}/resources/vendor/DataTables/customitem/jquery-3.7.1.min.js"></script>
+    <script src="${contextPath}/resources/vendor/DataTables/customitem/bootstrap.bundle.min.js"></script>
+    <script src="${contextPath}/resources/vendor/DataTables/customitem/dataTables.js"></script>
 
-        <!-- Data Tables -->
-        <script src="${contextPath}/resources/statflow/vendor/datatables/dataTables.min.js"></script>
-        <script src="${contextPath}/resources/statflow/vendor/datatables/dataTables.bootstrap.min.js"></script>
+    <!-- Data Tables -->
+    <script src="${contextPath}/resources/statflow/vendor/datatables/dataTables.min.js"></script>
+    <script src="${contextPath}/resources/statflow/vendor/datatables/dataTables.bootstrap.min.js"></script>
 
-        <!-- Custom Data tables -->
-        <script src="${contextPath}/resources/statflow/vendor/datatables/custom/custom-datatables.js"></script>
+    <!-- Custom Data tables -->
+    <script src="${contextPath}/resources/statflow/vendor/datatables/custom/custom-datatables.js"></script>
 
-        <!-- DataTable Buttons -->
-        <script src="${contextPath}/resources/statflow/vendor/datatables/buttons/dataTables.buttons.min.js"></script>
-        <script src="${contextPath}/resources/statflow/vendor/datatables/buttons/jszip.min.js"></script>
-        <script src="${contextPath}/resources/statflow/vendor/datatables/buttons/dataTables.buttons.min.js"></script>
-        <script src="${contextPath}/resources/statflow/vendor/datatables/buttons/pdfmake.min.js"></script>
-        <script src="${contextPath}/resources/statflow/vendor/datatables/buttons/vfs_fonts.js"></script>
-        <script src="${contextPath}/resources/statflow/vendor/datatables/buttons/buttons.html5.min.js"></script>
-        <script src="${contextPath}/resources/statflow/vendor/datatables/buttons/buttons.print.min.js"></script>
-        <script src="${contextPath}/resources/statflow/vendor/datatables/buttons/buttons.colVis.min.js"></script>
+    <!-- DataTable Buttons -->
+    <script src="${contextPath}/resources/statflow/vendor/datatables/buttons/dataTables.buttons.min.js"></script>
+    <script src="${contextPath}/resources/statflow/vendor/datatables/buttons/jszip.min.js"></script>
+    <script src="${contextPath}/resources/statflow/vendor/datatables/buttons/dataTables.buttons.min.js"></script>
+    <script src="${contextPath}/resources/statflow/vendor/datatables/buttons/pdfmake.min.js"></script>
+    <script src="${contextPath}/resources/statflow/vendor/datatables/buttons/vfs_fonts.js"></script>
+    <script src="${contextPath}/resources/statflow/vendor/datatables/buttons/buttons.html5.min.js"></script>
+    <script src="${contextPath}/resources/statflow/vendor/datatables/buttons/buttons.print.min.js"></script>
+    <script src="${contextPath}/resources/statflow/vendor/datatables/buttons/buttons.colVis.min.js"></script>
 
-        <!-- Bootstrap Select JS -->
-        <script src="${contextPath}/resources/statflow/vendor/bs-select/bs-select.min.js"></script>
-        <script src="${contextPath}/resources/statflow/vendor/bs-select/bs-select-custom.js"></script>
-    </s:layout-component>
-    <s:layout-component name="page_js_inline">
-        <script>
+    <!-- Bootstrap Select JS -->
+    <script src="${contextPath}/resources/statflow/vendor/bs-select/bs-select.min.js"></script>
+    <script src="${contextPath}/resources/statflow/vendor/bs-select/bs-select-custom.js"></script>
+</s:layout-component>
+<s:layout-component name="page_js_inline">
+    <script>
 
-                                                                    // Fetch all the forms we want to apply custom Bootstrap validation styles to
-                                                                    const forms = document.querySelectorAll('.needs-validation');
+                                                                // Fetch all the forms we want to apply custom Bootstrap validation styles to
+                                                                const forms = document.querySelectorAll('.needs-validation');
 
-                                                                    // Loop over them and prevent submission
-                                                                    Array.prototype.slice.call(forms).forEach((form) => {
-                                                                        form.addEventListener('submit', (event) => {
-                                                                            if (!form.checkValidity()) {
-                                                                                event.preventDefault();
-                                                                                event.stopPropagation();
+                                                                // Loop over them and prevent submission
+                                                                Array.prototype.slice.call(forms).forEach((form) => {
+                                                                    form.addEventListener('submit', (event) => {
+                                                                        if (!form.checkValidity()) {
+                                                                            event.preventDefault();
+                                                                            event.stopPropagation();
+                                                                        }
+                                                                        form.classList.add('was-validated');
+                                                                    }, false);
+                                                                });
+
+                                                                $(document).ready(function () {
+
+                                                                    //new added 3/2/26 utk redirect page guna sptsid
+
+                                                                    var select = document.getElementById('eqptType');
+                                                                    var slotQtyDiv = document.getElementById('slotQtyDiv');
+                                                                    var rackQtyDiv = document.getElementById('rackQtyDiv');
+                                                                    var zonePerRackDiv = document.getElementById('zonePerRackDiv');
+                                                                    var trayQtyPerRackDiv = document.getElementById('trayQtyPerRackDiv');
+                                                                    var basketQtyPerRackDiv = document.getElementById('basketQtyPerRackDiv');
+                                                                    var trayQtyPerZoneDiv = document.getElementById('trayQtyPerZoneDiv');
+                                                                    var basketQtyPerZoneDiv = document.getElementById('basketQtyPerZoneDiv');
+                                                                    var slotQty = document.getElementById('slotQty');
+                                                                    var rackQty = document.getElementById('rackQty');
+                                                                    var zonePerRack = document.getElementById('zonePerRack');
+                                                                    var trayQtyPerRack = document.getElementById('trayQtyPerRack');
+                                                                    var basketQtyPerRack = document.getElementById('basketQtyPerRack');
+                                                                    var trayQtyPerZone = document.getElementById('trayQtyPerZone');
+                                                                    var basketQtyPerZone = document.getElementById('basketQtyPerZone');
+
+                                                                    if (select.value === "1") {
+                                                                        slotQtyDiv.hidden = false; // Show 
+                                                                        rackQtyDiv.hidden = true;
+                                                                        zonePerRackDiv.hidden = true;
+                                                                        trayQtyPerRackDiv.hidden = true;
+                                                                        basketQtyPerRackDiv.hidden = true;
+                                                                        trayQtyPerZoneDiv.hidden = true;
+                                                                        basketQtyPerZoneDiv.hidden = true;
+
+
+                                                                    } else if (select.value === "2") {
+                                                                        slotQtyDiv.hidden = true; // Hide
+                                                                        rackQtyDiv.hidden = false;
+                                                                        zonePerRackDiv.hidden = false;
+                                                                        trayQtyPerRackDiv.hidden = false;
+                                                                        basketQtyPerRackDiv.hidden = false;
+                                                                        trayQtyPerZoneDiv.hidden = false;
+                                                                        basketQtyPerZoneDiv.hidden = false;
+
+                                                                    } else {
+                                                                        slotQtyDiv.hidden = true; // Hide
+                                                                        rackQtyDiv.hidden = true;
+                                                                        zonePerRackDiv.hidden = true;
+                                                                        trayQtyPerRackDiv.hidden = true;
+                                                                        basketQtyPerRackDiv.hidden = true;
+                                                                        trayQtyPerZoneDiv.hidden = true;
+                                                                        basketQtyPerZoneDiv.hidden = true;
+                                                                    }
+
+                                                                    if (zonePerRack.value === 0) {
+                                                                        trayQtyPerRack.disabled = false;
+                                                                        basketQtyPerRack.disabled = false;
+                                                                        trayQtyPerZone.disabled = true;
+                                                                        basketQtyPerZone.disabled = true;
+                                                                    } else if (zonePerRack.value > 0) {
+                                                                        trayQtyPerRack.disabled = true;
+                                                                        basketQtyPerRack.disabled = true;
+                                                                        trayQtyPerZone.disabled = false;
+                                                                        basketQtyPerZone.disabled = false;
+                                                                    } else {
+                                                                        trayQtyPerRack.disabled = false;
+                                                                        basketQtyPerRack.disabled = false;
+                                                                        trayQtyPerZone.disabled = true;
+                                                                        basketQtyPerZone.disabled = true;
+                                                                    }
+
+
+                                                                    $('.js-example-basic-single').select2();
+                                                                    $(".js-example-tags").select2({
+                                                                        tags: true
+                                                                    });
+                                                                });
+
+                                                                function editDetail() {
+                                                                    $("#eqptId").prop("readonly", false);
+                                                                    $("#familyName").prop("disabled", false);
+                                                                    $("#relTestGroupName").prop("disabled", false);
+                                                                    $("#eqptType").prop("disabled", false);
+                                                                    $("#eqptStatus").prop("disabled", false);
+                                                                    $("#eqptManufacturer").prop("disabled", false);
+                                                                    $("#eqptModel").prop("disabled", false);
+                                                                    $("#eqptTech").prop("disabled", false);
+                                                                    $("#eqptMon").prop("disabled", false);
+                                                                    $("#eqptViMon").prop("disabled", false);
+                                                                    $("#eqptCapability").prop("readonly", false);
+                                                                    $("#slotQty").prop("readonly", false);
+                                                                    $("#rackQty").prop("readonly", false);
+                                                                    $("#zonePerRack").prop("readonly", false);
+                                                                    $("#trayQtyPerRack").prop("readonly", false);
+                                                                    $("#basketQtyPerRack").prop("readonly", false);
+                                                                    $("#trayQtyPerZone").prop("readonly", false);
+                                                                    $("#basketQtyPerZone").prop("readonly", false);
+                                                                    $("#cbmsType").prop("disabled", false);
+                                                                    $("#remarks").prop("disabled", false);
+                                                                    $("#updateButton").prop("disabled", false);
+                                                                    $("#cancelEditButton").prop("hidden", false);
+                                                                    $("#editButton").prop("disabled", true);
+                                                                    $("#editButton").prop("hidden", true);
+                                                                }
+
+                                                                function cancelEditDetail() {
+                                                                    $("#eqptId").prop("readonly", true);
+                                                                    $("#familyName").prop("disabled", true);
+                                                                    $("#relTestGroupName").prop("disabled", true);
+                                                                    $("#eqptType").prop("disabled", true);
+                                                                    $("#eqptStatus").prop("disabled", true);
+                                                                    $("#eqptManufacturer").prop("disabled", true);
+                                                                    $("#eqptModel").prop("disabled", true);
+                                                                    $("#eqptTech").prop("disabled", true);
+                                                                    $("#eqptMon").prop("disabled", true);
+                                                                    $("#eqptViMon").prop("disabled", true);
+                                                                    $("#eqptCapability").prop("readonly", true);
+                                                                    $("#slotQty").prop("readonly", true);
+                                                                    $("#rackQty").prop("readonly", true);
+                                                                    $("#zonePerRack").prop("readonly", true);
+                                                                    $("#trayQtyPerRack").prop("readonly", true);
+                                                                    $("#basketQtyPerRack").prop("readonly", true);
+                                                                    $("#trayQtyPerZone").prop("readonly", true);
+                                                                    $("#basketQtyPerZone").prop("readonly", true);
+                                                                    $("#cbmsType").prop("disabled", true);
+                                                                    $("#remarks").prop("disabled", true);
+                                                                    $("#updateButton").prop("disabled", true);
+                                                                    $("#editButton").prop("disabled", false);
+                                                                    $("#editButton").prop("hidden", false);
+                                                                    $("#cancelEditButton").prop("hidden", true);
+                                                                }
+
+                                                                function scrapModal() {
+                                                                    var itemPKID = $("#itemPKID").val();
+                                                                    var mibId = $("#mibId").val();
+                                                                    var itemId = $("#eqptId").val();
+                                                                    //                                                        var deleteUrl = "${contextPath}/hw/delete/" + deleteId;
+                                                                    if (itemPKID) {
+                                                                        var deleteUrl = "${contextPath}/equipment/delete/" + itemPKID + "/" + mibId;
+                                                                        var deleteMsg = "Are you sure want to scrap " + itemId + "?";
+                                                                        $("#delete_modal .modal-body").html(deleteMsg);
+                                                                        $("#modal_delete_button").attr("href", deleteUrl);
+                                                                    } else {
+                                                                        var deleteUrl = "";
+                                                                        var deleteMsg = "No Eqpt Selected.";
+                                                                        $("#delete_modal .modal-body").html(deleteMsg);
+                                                                        $("#modal_delete_button").attr("href", deleteUrl);
+                                                                    }
+                                                                }
+
+
+                                                                $(function () {
+                                                                    $("#scrollVertical2").DataTable({
+                                                                        scrollY: "680px",
+                                                                        scrollCollapse: false,
+                                                                        paging: false,
+//                                                                            bInfo: false,
+                                                                        language: {
+                                                                            info: "Showing _TOTAL_ total records",
+                                                                        },
+                                                                        dom: 'Bfrtip',
+                                                                        buttons: ["copy", "csv", "print"],
+                                                                        columnDefs: [{
+                                                                                targets: [0, 1, 3, 4], visible: false
+                                                                            }]
+                                                                    });
+                                                                });
+
+                                                                function modalDelete(e) {
+                                                                    var pkId = $(e).attr("modaldeleteid");
+                                                                    $.ajax({
+                                                                        url: '${contextPath}/equipment/detail', // Replace with your controller URL
+                                                                        type: 'GET',
+                                                                        data: {pkID: pkId},
+                                                                        dataType: 'json',
+                                                                        success: function (data) {
+
+                                                                            // Populate form fields with received data
+                                                                            $("#itemPKID").val(data.sptsPkid);
+                                                                            $("#mibId").val(data.id);
+                                                                            $("#eqptId").val(data.equipmentId);
+                                                                            $("#familyName").val(data.familyPkid).trigger('change');
+                                                                            $("#relTestGroupName").val(data.relTestGroupPkid).trigger('change');
+                                                                            $("#eqptType").val(data.equipmentType).trigger('change');
+                                                                            $("#eqptStatus").val(data.currentStatus).trigger('change');
+                                                                            $("#eqptManufacturer").val(data.equipmentManufacturer).trigger('change');
+                                                                            $("#eqptModel").val(data.equipmentModel).trigger('change');
+                                                                            $('#eqptTech').val(data.equipTechPkid).trigger('change');
+                                                                            $("#eqptMon").val(data.equipMonitoringPkid).trigger('change');
+                                                                            $("#eqptViMon").val(data.viMonitoringPkid).trigger('change');
+                                                                            $("#eqptCapability").val(data.equipCapability);
+                                                                            $("#slotQty").val(data.slot);
+                                                                            $("#rackQty").val(data.rackTotal);
+                                                                            $("#zonePerRack").val(data.zonePerRack);
+                                                                            $("#trayQtyPerRack").val(data.trayQtyPerRack);
+                                                                            $("#basketQtyPerRack").val(data.basketQtyPerRack);
+                                                                            $("#trayQtyPerZone").val(data.trayQtyPerZone);
+                                                                            $("#basketQtyPerZone").val(data.basketQtyPerZone);
+                                                                            $("#cbmsType").val(data.cbmsType).trigger('change');
+                                                                            $("#remarks").val(data.remarks);
+
+                                                                            const zonePerRack = document.getElementById('zonePerRack');
+                                                                            const trayQtyPerRack = document.getElementById('trayQtyPerRack');
+                                                                            const basketQtyPerRack = document.getElementById('basketQtyPerRack');
+                                                                            const trayQtyPerZone = document.getElementById('trayQtyPerZone');
+                                                                            const basketQtyPerZone = document.getElementById('basketQtyPerZone');
+
+                                                                            if (zonePerRack.value === 0) {
+                                                                                trayQtyPerRack.disabled = false;
+                                                                                basketQtyPerRack.disabled = false;
+                                                                                trayQtyPerZone.disabled = true;
+                                                                                basketQtyPerZone.disabled = true;
+                                                                            } else if (zonePerRack.value > 0) {
+                                                                                trayQtyPerRack.disabled = true;
+                                                                                basketQtyPerRack.disabled = true;
+                                                                                trayQtyPerZone.disabled = false;
+                                                                                basketQtyPerZone.disabled = false;
+                                                                            } else {
+                                                                                trayQtyPerRack.disabled = false;
+                                                                                basketQtyPerRack.disabled = false;
+                                                                                trayQtyPerZone.disabled = true;
+                                                                                basketQtyPerZone.disabled = true;
                                                                             }
-                                                                            form.classList.add('was-validated');
-                                                                        }, false);
-                                                                    });
 
-                                                                    $(document).ready(function () {
-                                                                        
-                                                                        //new added 3/2/26 utk redirect page guna sptsid
-                                                                        
-                                                                         var select = document.getElementById('eqptType');
-                                                                        var slotQtyDiv = document.getElementById('slotQtyDiv');
-                                                                        var rackQtyDiv = document.getElementById('rackQtyDiv');
-                                                                        var zonePerRackDiv = document.getElementById('zonePerRackDiv');
-                                                                        var trayQtyPerRackDiv = document.getElementById('trayQtyPerRackDiv');
-                                                                        var basketQtyPerRackDiv = document.getElementById('basketQtyPerRackDiv');
-                                                                        var trayQtyPerZoneDiv = document.getElementById('trayQtyPerZoneDiv');
-                                                                        var basketQtyPerZoneDiv = document.getElementById('basketQtyPerZoneDiv');
-                                                                        var slotQty = document.getElementById('slotQty');
-                                                                        var rackQty = document.getElementById('rackQty');
-                                                                        var zonePerRack = document.getElementById('zonePerRack');
-                                                                        var trayQtyPerRack = document.getElementById('trayQtyPerRack');
-                                                                        var basketQtyPerRack = document.getElementById('basketQtyPerRack');
-                                                                        var trayQtyPerZone = document.getElementById('trayQtyPerZone');
-                                                                        var basketQtyPerZone = document.getElementById('basketQtyPerZone');
-
-                                                                        if (select.value === "1") {
-                                                                            slotQtyDiv.hidden = false; // Show 
-                                                                            rackQtyDiv.hidden = true;
-                                                                            zonePerRackDiv.hidden = true;
-                                                                            trayQtyPerRackDiv.hidden = true;
-                                                                            basketQtyPerRackDiv.hidden = true;
-                                                                            trayQtyPerZoneDiv.hidden = true;
-                                                                            basketQtyPerZoneDiv.hidden = true;
-
-
-                                                                        } else if (select.value === "2") {
-                                                                            slotQtyDiv.hidden = true; // Hide
-                                                                            rackQtyDiv.hidden = false;
-                                                                            zonePerRackDiv.hidden = false;
-                                                                            trayQtyPerRackDiv.hidden = false;
-                                                                            basketQtyPerRackDiv.hidden = false;
-                                                                            trayQtyPerZoneDiv.hidden = false;
-                                                                            basketQtyPerZoneDiv.hidden = false;
-
-                                                                        } else {
-                                                                            slotQtyDiv.hidden = true; // Hide
-                                                                            rackQtyDiv.hidden = true;
-                                                                            zonePerRackDiv.hidden = true;
-                                                                            trayQtyPerRackDiv.hidden = true;
-                                                                            basketQtyPerRackDiv.hidden = true;
-                                                                            trayQtyPerZoneDiv.hidden = true;
-                                                                            basketQtyPerZoneDiv.hidden = true;
-                                                                        }
-                                                                        
-                                                                        if (zonePerRack.value === 0) {
-                                                                            trayQtyPerRack.disabled = false;
-                                                                            basketQtyPerRack.disabled = false;
-                                                                            trayQtyPerZone.disabled = true;
-                                                                            basketQtyPerZone.disabled = true;
-                                                                        } else if (zonePerRack.value > 0) {
-                                                                            trayQtyPerRack.disabled = true;
-                                                                            basketQtyPerRack.disabled = true;
-                                                                            trayQtyPerZone.disabled = false;
-                                                                            basketQtyPerZone.disabled = false;
-                                                                        } else {
-                                                                            trayQtyPerRack.disabled = false;
-                                                                            basketQtyPerRack.disabled = false;
-                                                                            trayQtyPerZone.disabled = true;
-                                                                            basketQtyPerZone.disabled = true;
-                                                                        }
-                                                                        
-                                                                        
-                                                                        $('.js-example-basic-single').select2();
-                                                                        $(".js-example-tags").select2({
-                                                                            tags: true
-                                                                        });
-                                                                    });
-
-                                                                    function editDetail() {
-                                                                        $("#eqptId").prop("readonly", false);
-                                                                        $("#familyName").prop("disabled", false);
-                                                                        $("#relTestGroupName").prop("disabled", false);
-                                                                        $("#eqptType").prop("disabled", false);
-                                                                        $("#eqptStatus").prop("disabled", false);
-                                                                        $("#eqptManufacturer").prop("disabled", false);
-                                                                        $("#eqptModel").prop("disabled", false);
-                                                                        $("#eqptTech").prop("disabled", false);
-                                                                        $("#eqptMon").prop("disabled", false);
-                                                                        $("#eqptViMon").prop("disabled", false);
-                                                                        $("#eqptCapability").prop("readonly", false);
-                                                                        $("#slotQty").prop("readonly", false);
-                                                                        $("#rackQty").prop("readonly", false);
-                                                                        $("#zonePerRack").prop("readonly", false);
-                                                                        $("#trayQtyPerRack").prop("readonly", false);
-                                                                        $("#basketQtyPerRack").prop("readonly", false);
-                                                                        $("#trayQtyPerZone").prop("readonly", false);
-                                                                        $("#basketQtyPerZone").prop("readonly", false);
-                                                                        $("#cbmsType").prop("disabled", false);
-                                                                        $("#remarks").prop("disabled", false);
-                                                                        $("#updateButton").prop("disabled", false);
-                                                                        $("#cancelEditButton").prop("hidden", false);
-                                                                        $("#editButton").prop("disabled", true);
-                                                                        $("#editButton").prop("hidden", true);
-                                                                    }
-
-                                                                    function cancelEditDetail() {
-                                                                        $("#eqptId").prop("readonly", true);
-                                                                        $("#familyName").prop("disabled", true);
-                                                                        $("#relTestGroupName").prop("disabled", true);
-                                                                        $("#eqptType").prop("disabled", true);
-                                                                        $("#eqptStatus").prop("disabled", true);
-                                                                        $("#eqptManufacturer").prop("disabled", true);
-                                                                        $("#eqptModel").prop("disabled", true);
-                                                                        $("#eqptTech").prop("disabled", true);
-                                                                        $("#eqptMon").prop("disabled", true);
-                                                                        $("#eqptViMon").prop("disabled", true);
-                                                                        $("#eqptCapability").prop("readonly", true);
-                                                                        $("#slotQty").prop("readonly", true);
-                                                                        $("#rackQty").prop("readonly", true);
-                                                                        $("#zonePerRack").prop("readonly", true);
-                                                                        $("#trayQtyPerRack").prop("readonly", true);
-                                                                        $("#basketQtyPerRack").prop("readonly", true);
-                                                                        $("#trayQtyPerZone").prop("readonly", true);
-                                                                        $("#basketQtyPerZone").prop("readonly", true);
-                                                                        $("#cbmsType").prop("disabled", true);
-                                                                        $("#remarks").prop("disabled", true);
-                                                                        $("#updateButton").prop("disabled", true);
-                                                                        $("#editButton").prop("disabled", false);
-                                                                        $("#editButton").prop("hidden", false);
-                                                                        $("#cancelEditButton").prop("hidden", true);
-                                                                    }
-
-                                                                    function scrapModal() {
-                                                                        var itemPKID = $("#itemPKID").val();
-                                                                        var mibId = $("#mibId").val();
-                                                                        var itemId = $("#eqptId").val();
-                                                                        //                                                        var deleteUrl = "${contextPath}/hw/delete/" + deleteId;
-                                                                        if (itemPKID) {
-                                                                            var deleteUrl = "${contextPath}/equipment/delete/" + itemPKID + "/" + mibId;
-                                                                            var deleteMsg = "Are you sure want to scrap " + itemId + "?";
-                                                                            $("#delete_modal .modal-body").html(deleteMsg);
-                                                                            $("#modal_delete_button").attr("href", deleteUrl);
-                                                                        } else {
-                                                                            var deleteUrl = "";
-                                                                            var deleteMsg = "No Eqpt Selected.";
-                                                                            $("#delete_modal .modal-body").html(deleteMsg);
-                                                                            $("#modal_delete_button").attr("href", deleteUrl);
-                                                                        }
-                                                                    }
-
-
-                                                                    $(function () {
-                                                                        $("#scrollVertical2").DataTable({
-                                                                            scrollY: "680px",
-                                                                            scrollCollapse: false,
-                                                                            paging: false,
-                                                                            bInfo: false,
-                                                                            dom: 'Bfrtip',
-                                                                            buttons: ["copy", "csv", "print"],
-                                                                            columnDefs: [{
-                                                                                    targets: [0, 1, 3, 4], visible: false
-                                                                                }]
-                                                                        });
-                                                                    });
-
-                                                                    function modalDelete(e) {
-                                                                        var pkId = $(e).attr("modaldeleteid");
-                                                                        $.ajax({
-                                                                            url: '${contextPath}/equipment/detail', // Replace with your controller URL
-                                                                            type: 'GET',
-                                                                            data: {pkID: pkId},
-                                                                            dataType: 'json',
-                                                                            success: function (data) {
-
-                                                                                // Populate form fields with received data
-                                                                                $("#itemPKID").val(data.sptsPkid);
-                                                                                $("#mibId").val(data.id);
-                                                                                $("#eqptId").val(data.equipmentId);
-                                                                                $("#familyName").val(data.familyPkid).trigger('change');
-                                                                                $("#relTestGroupName").val(data.relTestGroupPkid).trigger('change');
-                                                                                $("#eqptType").val(data.equipmentType).trigger('change');
-                                                                                $("#eqptStatus").val(data.currentStatus).trigger('change');
-                                                                                $("#eqptManufacturer").val(data.equipmentManufacturer).trigger('change');
-                                                                                $("#eqptModel").val(data.equipmentModel).trigger('change');
-                                                                                $('#eqptTech').val(data.equipTechPkid).trigger('change');
-                                                                                $("#eqptMon").val(data.equipMonitoringPkid).trigger('change');
-                                                                                $("#eqptViMon").val(data.viMonitoringPkid).trigger('change');
-                                                                                $("#eqptCapability").val(data.equipCapability);
-                                                                                $("#slotQty").val(data.slot);
-                                                                                $("#rackQty").val(data.rackTotal);
-                                                                                $("#zonePerRack").val(data.zonePerRack);
-                                                                                $("#trayQtyPerRack").val(data.trayQtyPerRack);
-                                                                                $("#basketQtyPerRack").val(data.basketQtyPerRack);
-                                                                                $("#trayQtyPerZone").val(data.trayQtyPerZone);
-                                                                                $("#basketQtyPerZone").val(data.basketQtyPerZone);
-                                                                                $("#cbmsType").val(data.cbmsType).trigger('change');
-                                                                                $("#remarks").val(data.remarks);
-                                                                                
-                                                                        const zonePerRack = document.getElementById('zonePerRack');
-                                                                        const trayQtyPerRack = document.getElementById('trayQtyPerRack');
-                                                                        const basketQtyPerRack = document.getElementById('basketQtyPerRack');
-                                                                        const trayQtyPerZone = document.getElementById('trayQtyPerZone');
-                                                                        const basketQtyPerZone = document.getElementById('basketQtyPerZone');
-
-                                                                        if (zonePerRack.value === 0) {
-                                                                            trayQtyPerRack.disabled = false;
-                                                                            basketQtyPerRack.disabled = false;
-                                                                            trayQtyPerZone.disabled = true;
-                                                                            basketQtyPerZone.disabled = true;
-                                                                        } else if (zonePerRack.value > 0) {
-                                                                            trayQtyPerRack.disabled = true;
-                                                                            basketQtyPerRack.disabled = true;
-                                                                            trayQtyPerZone.disabled = false;
-                                                                            basketQtyPerZone.disabled = false;
-                                                                        } else {
-                                                                            trayQtyPerRack.disabled = false;
-                                                                            basketQtyPerRack.disabled = false;
-                                                                            trayQtyPerZone.disabled = true;
-                                                                            basketQtyPerZone.disabled = true;
-                                                                        }
-
-                                                                            },
-                                                                            error: function (jqXHR, textStatus, errorThrown) {
-                                                                                console.error("Error loading data: " + textStatus, errorThrown);
-                                                                            }
-                                                                        });
-                                                                        document.querySelector('#tab-oneAAA').click();
-
-                                                                        
-                                                                    }
-
-                                                                    function toggleLinkVisibility() {
-                                                                        var select = document.getElementById('eqptType');
-                                                                        var slotQtyDiv = document.getElementById('slotQtyDiv');
-                                                                        var rackQtyDiv = document.getElementById('rackQtyDiv');
-                                                                        var zonePerRackDiv = document.getElementById('zonePerRackDiv');
-                                                                        var trayQtyPerRackDiv = document.getElementById('trayQtyPerRackDiv');
-                                                                        var basketQtyPerRackDiv = document.getElementById('basketQtyPerRackDiv');
-                                                                        var trayQtyPerZoneDiv = document.getElementById('trayQtyPerZoneDiv');
-                                                                        var basketQtyPerZoneDiv = document.getElementById('basketQtyPerZoneDiv');
-                                                                        var slotQty = document.getElementById('slotQty');
-                                                                        var rackQty = document.getElementById('rackQty');
-                                                                        var zonePerRack = document.getElementById('zonePerRack');
-                                                                        var trayQtyPerRack = document.getElementById('trayQtyPerRack');
-                                                                        var basketQtyPerRack = document.getElementById('basketQtyPerRack');
-                                                                        var trayQtyPerZone = document.getElementById('trayQtyPerZone');
-                                                                        var basketQtyPerZone = document.getElementById('basketQtyPerZone');
-
-                                                                        if (select.value === "1") {
-                                                                            slotQtyDiv.hidden = false; // Show 
-                                                                            rackQtyDiv.hidden = true;
-                                                                            zonePerRackDiv.hidden = true;
-                                                                            trayQtyPerRackDiv.hidden = true;
-                                                                            basketQtyPerRackDiv.hidden = true;
-                                                                            trayQtyPerZoneDiv.hidden = true;
-                                                                            basketQtyPerZoneDiv.hidden = true;
-
-
-                                                                        } else if (select.value === "2") {
-                                                                            slotQtyDiv.hidden = true; // Hide
-                                                                            rackQtyDiv.hidden = false;
-                                                                            zonePerRackDiv.hidden = false;
-                                                                            trayQtyPerRackDiv.hidden = false;
-                                                                            basketQtyPerRackDiv.hidden = false;
-                                                                            trayQtyPerZoneDiv.hidden = false;
-                                                                            basketQtyPerZoneDiv.hidden = false;
-
-                                                                        } else {
-                                                                            slotQtyDiv.hidden = true; // Hide
-                                                                            rackQtyDiv.hidden = true;
-                                                                            zonePerRackDiv.hidden = true;
-                                                                            trayQtyPerRackDiv.hidden = true;
-                                                                            basketQtyPerRackDiv.hidden = true;
-                                                                            trayQtyPerZoneDiv.hidden = true;
-                                                                            basketQtyPerZoneDiv.hidden = true;
-
-                                                                        }
-                                                                    }
-
-                                                                    const zonePerRack = document.getElementById('zonePerRack');
-                                                                    const trayQtyPerRack = document.getElementById('trayQtyPerRack');
-                                                                    const basketQtyPerRack = document.getElementById('basketQtyPerRack');
-                                                                    const trayQtyPerZone = document.getElementById('trayQtyPerZone');
-                                                                    const basketQtyPerZone = document.getElementById('basketQtyPerZone');
-
-                                                                    // Add an event listener for the 'input' event
-                                                                    zonePerRack.addEventListener('input', function () {
-                                                                        if (zonePerRack.value == 0) {
-                                                                            trayQtyPerRack.disabled = false;
-                                                                            basketQtyPerRack.disabled = false;
-                                                                            trayQtyPerZone.disabled = true;
-                                                                            basketQtyPerZone.disabled = true;
-                                                                            
-                                                                            trayQtyPerZone.value = 0;
-                                                                            basketQtyPerZone.value = 0;
-                                                                            
-                                                                        } else if (zonePerRack.value > 0) {
-                                                                            trayQtyPerRack.disabled = true;
-                                                                            basketQtyPerRack.disabled = true;
-                                                                            trayQtyPerZone.disabled = false;
-                                                                            basketQtyPerZone.disabled = false;
-                                                                            
-                                                                            trayQtyPerRack.value = 0;
-                                                                            basketQtyPerRack.value = 0;
-                                                                            
-                                                                        } else {
-                                                                            trayQtyPerRack.disabled = false;
-                                                                            basketQtyPerRack.disabled = false;
-                                                                            trayQtyPerZone.disabled = true;
-                                                                            basketQtyPerZone.disabled = true;
+                                                                        },
+                                                                        error: function (jqXHR, textStatus, errorThrown) {
+                                                                            console.error("Error loading data: " + textStatus, errorThrown);
                                                                         }
                                                                     });
+                                                                    document.querySelector('#tab-oneAAA').click();
 
 
-        </script>
-    </s:layout-component>
+                                                                }
+
+                                                                function toggleLinkVisibility() {
+                                                                    var select = document.getElementById('eqptType');
+                                                                    var slotQtyDiv = document.getElementById('slotQtyDiv');
+                                                                    var rackQtyDiv = document.getElementById('rackQtyDiv');
+                                                                    var zonePerRackDiv = document.getElementById('zonePerRackDiv');
+                                                                    var trayQtyPerRackDiv = document.getElementById('trayQtyPerRackDiv');
+                                                                    var basketQtyPerRackDiv = document.getElementById('basketQtyPerRackDiv');
+                                                                    var trayQtyPerZoneDiv = document.getElementById('trayQtyPerZoneDiv');
+                                                                    var basketQtyPerZoneDiv = document.getElementById('basketQtyPerZoneDiv');
+                                                                    var slotQty = document.getElementById('slotQty');
+                                                                    var rackQty = document.getElementById('rackQty');
+                                                                    var zonePerRack = document.getElementById('zonePerRack');
+                                                                    var trayQtyPerRack = document.getElementById('trayQtyPerRack');
+                                                                    var basketQtyPerRack = document.getElementById('basketQtyPerRack');
+                                                                    var trayQtyPerZone = document.getElementById('trayQtyPerZone');
+                                                                    var basketQtyPerZone = document.getElementById('basketQtyPerZone');
+
+                                                                    if (select.value === "1") {
+                                                                        slotQtyDiv.hidden = false; // Show 
+                                                                        rackQtyDiv.hidden = true;
+                                                                        zonePerRackDiv.hidden = true;
+                                                                        trayQtyPerRackDiv.hidden = true;
+                                                                        basketQtyPerRackDiv.hidden = true;
+                                                                        trayQtyPerZoneDiv.hidden = true;
+                                                                        basketQtyPerZoneDiv.hidden = true;
+
+
+                                                                    } else if (select.value === "2") {
+                                                                        slotQtyDiv.hidden = true; // Hide
+                                                                        rackQtyDiv.hidden = false;
+                                                                        zonePerRackDiv.hidden = false;
+                                                                        trayQtyPerRackDiv.hidden = false;
+                                                                        basketQtyPerRackDiv.hidden = false;
+                                                                        trayQtyPerZoneDiv.hidden = false;
+                                                                        basketQtyPerZoneDiv.hidden = false;
+
+                                                                    } else {
+                                                                        slotQtyDiv.hidden = true; // Hide
+                                                                        rackQtyDiv.hidden = true;
+                                                                        zonePerRackDiv.hidden = true;
+                                                                        trayQtyPerRackDiv.hidden = true;
+                                                                        basketQtyPerRackDiv.hidden = true;
+                                                                        trayQtyPerZoneDiv.hidden = true;
+                                                                        basketQtyPerZoneDiv.hidden = true;
+
+                                                                    }
+                                                                }
+
+                                                                const zonePerRack = document.getElementById('zonePerRack');
+                                                                const trayQtyPerRack = document.getElementById('trayQtyPerRack');
+                                                                const basketQtyPerRack = document.getElementById('basketQtyPerRack');
+                                                                const trayQtyPerZone = document.getElementById('trayQtyPerZone');
+                                                                const basketQtyPerZone = document.getElementById('basketQtyPerZone');
+
+                                                                // Add an event listener for the 'input' event
+                                                                zonePerRack.addEventListener('input', function () {
+                                                                    if (zonePerRack.value == 0) {
+                                                                        trayQtyPerRack.disabled = false;
+                                                                        basketQtyPerRack.disabled = false;
+                                                                        trayQtyPerZone.disabled = true;
+                                                                        basketQtyPerZone.disabled = true;
+
+                                                                        trayQtyPerZone.value = 0;
+                                                                        basketQtyPerZone.value = 0;
+
+                                                                    } else if (zonePerRack.value > 0) {
+                                                                        trayQtyPerRack.disabled = true;
+                                                                        basketQtyPerRack.disabled = true;
+                                                                        trayQtyPerZone.disabled = false;
+                                                                        basketQtyPerZone.disabled = false;
+
+                                                                        trayQtyPerRack.value = 0;
+                                                                        basketQtyPerRack.value = 0;
+
+                                                                    } else {
+                                                                        trayQtyPerRack.disabled = false;
+                                                                        basketQtyPerRack.disabled = false;
+                                                                        trayQtyPerZone.disabled = true;
+                                                                        basketQtyPerZone.disabled = true;
+                                                                    }
+                                                                });
+
+
+    </script>
+</s:layout-component>
 </s:layout-render>

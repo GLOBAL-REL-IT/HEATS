@@ -563,6 +563,50 @@ public class RmsBookingHardwareDAO {
         return rmsbookingHardwareList;
     }
 
+    public List<RmsBookingHardware> getRmsBookingHardwareListByBookingPkidWithFlagOneAndStatusNotNA(String bookingPkid) {
+        String sql = "SELECT ha.* FROM rms_booking_hardware ha WHERE ha.booking_pkid = '" + bookingPkid + "' AND ha.flag = '1' AND status != 'NA'";
+        List<RmsBookingHardware> rmsbookingHardwareList = new ArrayList<RmsBookingHardware>();
+        try {
+            PreparedStatement ps = conn.prepareStatement(sql);
+            RmsBookingHardware rmsbookingHardware;
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                rmsbookingHardware = new RmsBookingHardware();
+                rmsbookingHardware.setId(rs.getString("id"));
+                rmsbookingHardware.setBookingPkid(rs.getString("booking_pkid"));
+                rmsbookingHardware.setPkid(rs.getString("pkid"));
+                rmsbookingHardware.setItemType(rs.getString("item_type"));
+                rmsbookingHardware.setItemId(rs.getString("item_id"));
+                rmsbookingHardware.setItemPkid(rs.getString("item_pkid"));
+                rmsbookingHardware.setQty(rs.getString("qty"));
+                rmsbookingHardware.setReadiness(rs.getString("readiness"));
+                rmsbookingHardware.setStatus(rs.getString("status"));
+                rmsbookingHardware.setRecall(rs.getString("recall"));
+                rmsbookingHardware.setFlag(rs.getString("flag"));
+                rmsbookingHardware.setCreatedDate(rs.getString("created_date"));
+                rmsbookingHardware.setCreatedBy(rs.getString("created_by"));
+                rmsbookingHardware.setModifiedDate(rs.getString("modified_date"));
+                rmsbookingHardware.setModifiedBy(rs.getString("modified_by"));
+                rmsbookingHardware.setLcQty(rs.getString("lc_qty"));
+                rmsbookingHardware.setPcQty(rs.getString("pc_qty"));
+                rmsbookingHardwareList.add(rmsbookingHardware);
+            }
+            rs.close();
+            ps.close();
+        } catch (SQLException e) {
+            LOGGER.error(e.getMessage());
+        } finally {
+            if (conn != null) {
+                try {
+                    conn.close();
+                } catch (SQLException e) {
+                    LOGGER.error(e.getMessage());
+                }
+            }
+        }
+        return rmsbookingHardwareList;
+    }
+
     public List<RmsBookingHardware> getRmsBookingHardwareListByBookingPkidWithFlagZeroForHwReplacement(String bookingPkid) {
         String sql = "SELECT ha.* "
                 + "FROM rms_booking_hardware ha "

@@ -28,6 +28,34 @@ public class RmsBookingDetail {
     private String flag;
     private String daysToEventStart;
 
+    private String returnBy;
+    private String returnDate;
+    private String returnRemarks;
+
+    public String getReturnBy() {
+        return returnBy;
+    }
+
+    public void setReturnBy(String returnBy) {
+        this.returnBy = returnBy;
+    }
+
+    public String getReturnDate() {
+        return returnDate;
+    }
+
+    public void setReturnDate(String returnDate) {
+        this.returnDate = returnDate;
+    }
+
+    public String getReturnRemarks() {
+        return returnRemarks;
+    }
+
+    public void setReturnRemarks(String returnRemarks) {
+        this.returnRemarks = returnRemarks;
+    }
+
     public String getDaysToEventStart() {
         return daysToEventStart;
     }
