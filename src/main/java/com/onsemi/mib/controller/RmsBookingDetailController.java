@@ -92,7 +92,8 @@ public class RmsBookingDetailController {
     ServletContext servletContext;
 
     private static final String UPLOADED_FOLDER = "\\\\mysed-rel-app05\\f$\\HEATS\\VI-Attachment\\Before_Loading\\"; //server
-    private static final String FOLDER_TEST = "\\\\mysed-rel-app05\\f$\\HEATS\\FTBL\\"; //server
+    private static final String FOLDER_TEST_AL = "\\\\mysed-rel-app05\\f$\\HEATS\\FTAL\\"; //server
+    private static final String FOLDER_TEST_BL = "\\\\mysed-rel-app05\\f$\\HEATS\\FTBL\\"; //server
 
     private static final int BUFFER_SIZE = 4096;
 
@@ -1006,6 +1007,12 @@ public class RmsBookingDetailController {
         String itemIdMB = "";
         String mbSptsPkid = "";
         String itemIdLC = "";
+        
+        String statusLeak = "";
+        String statusMan = "";
+        String statusBib = "";
+        String statusPs = "";
+        String statusWin = "";
 
         if (currentStatus.equalsIgnoreCase("Pending Functional Test")) {
             // CHECK AND UPDATE THE FIRST TEST
@@ -1073,6 +1080,7 @@ public class RmsBookingDetailController {
                 currentStatus = "Pending Release to Production";
             }
         } else {
+            LOGGER.info("HEHEHE, KELUAR SINI DA LA>>>>");
             // DO NOTHING HERE
             if (currentStatus.equals("Pending HW Registration")) {
                 model.addAttribute("configMotherboard", "HW");
@@ -1080,7 +1088,7 @@ public class RmsBookingDetailController {
             } else if (currentStatus.equals("Pending VM")) {
                 model.addAttribute("configMotherboard", "VM");
                 model.addAttribute("message", "Please Complete Visual Inspection First");
-            } else if (currentStatus.contains("Pending Functional Test")) {
+            } else if (currentStatus.contains("Pending Functional Test") || currentStatus.contains("Pending Release to Production") || currentStatus.contains("Failed")) {
                 RmsBookingHardwareDAO bookdao = new RmsBookingHardwareDAO();
                 Integer checkMb = bookdao.checkMotherboardData(bookingId);
                 bookdao = new RmsBookingHardwareDAO();
@@ -1128,6 +1136,29 @@ public class RmsBookingDetailController {
                     model.addAttribute("itemIdMB", itemIdMB);
                     model.addAttribute("itemIdLC", itemIdLC);
                 }
+                
+                RmsBookingFunctionalTestDAO ftestdao2 = new RmsBookingFunctionalTestDAO();
+                RmsBookingFunctionalTest testResult = new RmsBookingFunctionalTest();
+                testResult = ftestdao2.getFuncTestResult(groupId);
+                model.addAttribute("testResult", testResult);
+                
+                if (testResult == null) {
+                    // NOTHING TO UPDATE HERE
+                } else {
+                    statusLeak = testResult.getLeakStatus();
+                    statusMan = testResult.getManualStatus();
+                    statusBib = testResult.getBibStatus();
+                    statusPs = testResult.getPsStatus();
+                    statusWin = testResult.getWinStatus();
+                }
+                
+                if (currentStatus.contains("Failed")) {
+                    model.addAttribute("leakbutton", "disabled");
+                    model.addAttribute("manualbutton", "disabled");
+                    model.addAttribute("bibbutton", "disabled");
+                    model.addAttribute("psbutton", "disabled");
+                    model.addAttribute("winbutton", "disabled");
+                }
             }
         }
 
@@ -1141,21 +1172,21 @@ public class RmsBookingDetailController {
         model.addAttribute("winCheck", winTest);
 
         ParameterDetailsDAO pDx = new ParameterDetailsDAO();
-        List<ParameterDetails> bibResultData = pDx.getGroupParameterDetailList("", "016");
+        List<ParameterDetails> bibResultData = pDx.getGroupParameterDetailList(statusBib, "016");
         model.addAttribute("bibResultData", bibResultData);
 
         pDx = new ParameterDetailsDAO();
-        List<ParameterDetails> leakResultData = pDx.getGroupParameterDetailList("", "016");
+        List<ParameterDetails> leakResultData = pDx.getGroupParameterDetailList(statusLeak, "016");
         model.addAttribute("leakResultData", leakResultData);
 
         pDx = new ParameterDetailsDAO();
-        List<ParameterDetails> psResultData = pDx.getGroupParameterDetailList("", "016");
+        List<ParameterDetails> psResultData = pDx.getGroupParameterDetailList(statusPs, "016");
         model.addAttribute("psResultData", psResultData);
 
         pDx = new ParameterDetailsDAO();
-        List<ParameterDetails> winResultData = pDx.getGroupParameterDetailList("", "016");
+        List<ParameterDetails> winResultData = pDx.getGroupParameterDetailList(statusWin, "016");
         model.addAttribute("winResultData", winResultData);
-
+        
         //vm tab
         RmsBookingVisualInspection itemVm = new RmsBookingVisualInspection();
 
@@ -2742,7 +2773,7 @@ public class RmsBookingDetailController {
             if (leakUpload != null) {
                 try {
                     byte[] bytesConnector = leakUpload.getBytes();
-                    Path pathConnector = Paths.get(FOLDER_TEST + "_leakageTest_" + leakUpload.getOriginalFilename()); // THIS ONE TESTING ONLY, USE CORRECT GENERATED KEY
+                    Path pathConnector = Paths.get(FOLDER_TEST_BL + "_leakageTest_" + leakUpload.getOriginalFilename()); // THIS ONE TESTING ONLY, USE CORRECT GENERATED KEY
                     if (leakUpload.getOriginalFilename() == null || leakUpload.getOriginalFilename().equalsIgnoreCase("")) {
                         //
                     } else {
@@ -2759,6 +2790,7 @@ public class RmsBookingDetailController {
                 // UPDATE rms_booking_hardware status by itemPkidMb
                 // UPDATE rms_booking_hardware_group by hardwareId
                 saveToMaverickFunctionalTest("Leakage", username, groupId, leakHardware);
+                newStatus = "Failed Functional Test - Leakage Test";
             } else {
                 if (checkManual.equals("Yes")) {
                     newStatus = gotoMn;
@@ -2781,20 +2813,24 @@ public class RmsBookingDetailController {
                 booking.updateRmsBookingHardwareSubStatusByPkidAndBookingPkid(bookHardware);
             }
             RmsBookingFunctionalTest ftest = new RmsBookingFunctionalTest();
-            ftest.setFinalStatus("Failed Functional Test - Leakage Test");
+            ftest.setFinalStatus(newStatus);
             ftest.setLeakHwid(leakHardware);
             ftest.setLeakQty(totalQty);
             ftest.setLeakStatus(leakResult);
             ftest.setLeakUpload(linkUpload);
+            ftest.setRemark("");
+            ftest.setFlag("0");
+            ftest.setGroupId(groupId);
             RmsBookingFunctionalTestDAO ftestdao = new RmsBookingFunctionalTestDAO();
             ftestdao.updateLeakageTest(ftest);
         } else if (jenis.equals("manTest")) {
             
         } else if (jenis.equals("bibTest")) {
+            LOGGER.info("SINI KITA KENA UPDATE UNTUK BIB");
             if (bibUpload != null) {
                 try {
                     byte[] bytesConnector = bibUpload.getBytes();
-                    Path pathConnector = Paths.get(FOLDER_TEST + "_bibTest_" + bibUpload.getOriginalFilename()); // THIS ONE TESTING ONLY, USE CORRECT GENERATED KEY
+                    Path pathConnector = Paths.get(FOLDER_TEST_BL + "_bibTest_" + bibUpload.getOriginalFilename()); // THIS ONE TESTING ONLY, USE CORRECT GENERATED KEY
                     if (bibUpload.getOriginalFilename() == null || bibUpload.getOriginalFilename().equalsIgnoreCase("")) {
                         //
                     } else {
@@ -2807,8 +2843,11 @@ public class RmsBookingDetailController {
             }
             
             if (bibResult.equals("Fail")) {
+                LOGGER.info("FAILED");
                 saveToMaverickFunctionalTest("BIB", username, groupId, bibHardware);
+                newStatus = "Failed Functional Test - BIB Test";
             } else {
+                LOGGER.info("ATAU PASSED");
                 if (checkPs.equals("Yes")) {
                     newStatus = gotoPS;
                 } else if (checkWin.equals("Yes")) {
@@ -2824,19 +2863,24 @@ public class RmsBookingDetailController {
                 RmsBookingHardwareDAO booking = new RmsBookingHardwareDAO();
                 booking.updateRmsBookingHardwareSubStatusByPkidAndBookingPkid(bookHardware);
             }
+            LOGGER.info("KITA CUBA NK UPDATE BIB TEST RESUILT DEKAT SINI ::: "+bibResult);
             RmsBookingFunctionalTest ftest = new RmsBookingFunctionalTest();
-            ftest.setFinalStatus("Failed Functional Test - BIB Test");
+            ftest.setFinalStatus(newStatus);
             ftest.setBibHwid(bibHardware);
             ftest.setBibQty(totalQty);
             ftest.setBibStatus(bibResult);
             ftest.setBibUpload(linkUpload);
+            ftest.setRemark("");
+            ftest.setFlag("0");
+            ftest.setGroupId(groupId);
             RmsBookingFunctionalTestDAO ftestdao = new RmsBookingFunctionalTestDAO();
             ftestdao.updateBibTest(ftest);
+            LOGGER.info("DONE UPDATE BIB TEST????");
         } else if (jenis.equals("psTest")) {
             if (psUpload != null) {
                 try {
                     byte[] bytesConnector = psUpload.getBytes();
-                    Path pathConnector = Paths.get(FOLDER_TEST + "_psTest_" + psUpload.getOriginalFilename()); // THIS ONE TESTING ONLY, USE CORRECT GENERATED KEY
+                    Path pathConnector = Paths.get(FOLDER_TEST_BL + "_psTest_" + psUpload.getOriginalFilename()); // THIS ONE TESTING ONLY, USE CORRECT GENERATED KEY
                     if (psUpload.getOriginalFilename() == null || psUpload.getOriginalFilename().equalsIgnoreCase("")) {
                         //
                     } else {
@@ -2849,6 +2893,7 @@ public class RmsBookingDetailController {
             }
             if (psResult.equals("Fail")) {
                 saveToMaverickFunctionalTest("Power", username, groupId, psHardware);
+                newStatus = "Failed Functional Test - Power Supply Leakage Test";
             } else {
                 if (checkWin.equals("Yes")) {
                     newStatus = gotoWin;
@@ -2864,18 +2909,21 @@ public class RmsBookingDetailController {
                 booking.updateRmsBookingHardwareSubStatusByPkidAndBookingPkid(bookHardware);
             }
             RmsBookingFunctionalTest ftest = new RmsBookingFunctionalTest();
-            ftest.setFinalStatus("Failed Functional Test - Power Supply Leakage Test");
+            ftest.setFinalStatus(newStatus);
             ftest.setPsHwid(psHardware);
             ftest.setPsQty(totalQty);
             ftest.setPsStatus(psResult);
             ftest.setPsUpload(linkUpload);
+            ftest.setRemark("");
+            ftest.setFlag("0");
+            ftest.setGroupId(groupId);
             RmsBookingFunctionalTestDAO ftestdao = new RmsBookingFunctionalTestDAO();
             ftestdao.updatePowerTest(ftest);
         } else if (jenis.equals("winTest")) {
             if (winUpload != null) {
                 try {
                     byte[] bytesConnector = winUpload.getBytes();
-                    Path pathConnector = Paths.get(FOLDER_TEST + "_winTest_" + winUpload.getOriginalFilename()); // THIS ONE TESTING ONLY, USE CORRECT GENERATED KEY
+                    Path pathConnector = Paths.get(FOLDER_TEST_BL + "_winTest_" + winUpload.getOriginalFilename()); // THIS ONE TESTING ONLY, USE CORRECT GENERATED KEY
                     if (winUpload.getOriginalFilename() == null || winUpload.getOriginalFilename().equalsIgnoreCase("")) {
                         //
                     } else {
@@ -2889,6 +2937,7 @@ public class RmsBookingDetailController {
             if (winResult.equals("Fail")) {
                 // MASUK MAVERICK
                 saveToMaverickFunctionalTest("Winchester", username, groupId, winHardware);
+                newStatus = "Failed Functional Test - Winchester Chamber Leakage Test";
             } else {
                 // UPDATE STATUS
                 newStatus = goReady;
@@ -2901,13 +2950,18 @@ public class RmsBookingDetailController {
                 booking.updateRmsBookingHardwareSubStatusByPkidAndBookingPkid(bookHardware);
             }
             RmsBookingFunctionalTest ftest = new RmsBookingFunctionalTest();
-            ftest.setFinalStatus("Failed Functional Test - Winchester Chamber Leakage Test");
+            ftest.setFinalStatus(newStatus);
             ftest.setWinHwid(winHardware);
             ftest.setWinQty(totalQty);
             ftest.setWinStatus(winResult);
             ftest.setWinUpload(linkUpload);
+            ftest.setRemark("");
+            ftest.setFlag("0");
+            ftest.setGroupId(groupId);
             RmsBookingFunctionalTestDAO ftestdao = new RmsBookingFunctionalTestDAO();
             ftestdao.updateWinchesterTest(ftest);
+        } else {
+            LOGGER.info("SINI APA BENDA JADI SIAAAA >>>>>> "+jenis);
         }
         return target_location;
     }
@@ -3537,6 +3591,9 @@ public class RmsBookingDetailController {
         String mbBookingPkid = MbBookingHwPkid[1];
         
         String emailBodyFail = "";
+        String currentmodule = "Before Loading";
+        String currentsubmodule = "Functional Test";
+        String tajukEmail = "Failed Functional Test";
         
         if (jenistest.contains("Leakage")) {
             emailBodyFail = "Failed Functional Test - Leakage Test";
@@ -3572,9 +3629,9 @@ public class RmsBookingDetailController {
         
         RmsBookingMaverick maverick = new RmsBookingMaverick();
         maverick.setGroupId(groupId);
-        maverick.setModule("Before Loading");
-        maverick.setSubmodule("Functional Test");
-        maverick.setStatus("Failed Functional Test");
+        maverick.setModule(currentmodule);
+        maverick.setSubmodule(currentsubmodule);
+        maverick.setStatus(emailBodyFail);
         maverick.setFlag("0");
         maverick.setCreatedBy(user);
         RmsBookingMaverickDAO maverickD = new RmsBookingMaverickDAO();
@@ -3606,14 +3663,13 @@ public class RmsBookingDetailController {
 
         //send INFORMATION email
         EmailSender emailSender = new EmailSender();
-        emailSender.htmlEmailTable(
+        emailSender.htmlEmailFT(
                 servletContext,
-                "", //user name requestor
-                to, //to
-                //                        emailTo,
-                "Failed Visual Inspection", //subject
+                "",
+                to,
+                tajukEmail,
                 "<br />"
-                + "Please be informed that the item below failed the visual inspection."
+                + "Please be informed that the hardware for RMS below failed the visual inspection."
                 + "<br /> "
                 + "<br /> "
                 + "RMS No: " + rmsBooking.getRmsNo()
@@ -3629,7 +3685,7 @@ public class RmsBookingDetailController {
                 + "<br /> "
                 + "Please click <a href=\"http://" + hostname + "/HEATS/rmsbookingDetail/groupDetail/" + groupId + " \">HERE</a> for more detail."
                 + "<br /> "
-                + "<br />Thank you." //msg
+                + "<br />Thank you."
         );
         
         return data;
@@ -3649,8 +3705,10 @@ public class RmsBookingDetailController {
             ftest.setFlag("0");
             testdao = new RmsBookingFunctionalTestDAO();
             testdao.insertRmsBookingFunctionalTest(ftest);
+            LOGGER.info("CREATE NEW TEST RESULT FOR GROUP ID :::: "+groupId);
         } else {
             // BOLE UPDATE NANTI
+            LOGGER.info("DATA ALREADY CREATED, CAN UPDATE THE STATUS ACCORDINGLY FOR GROUP >>>> "+groupId);
         }
     }
 
