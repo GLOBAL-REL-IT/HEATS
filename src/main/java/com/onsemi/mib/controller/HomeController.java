@@ -363,6 +363,30 @@ public class HomeController {
                 }
             }
 
+            rmsBookingDetailD = new RmsBookingDetailDAO(); //check if any RMS has been removed before has been active back in FOL Report
+            List<RmsBookingDetail> rmsRemoved = rmsBookingDetailD.getBookingPkidwithFlag99AndFolNull();
+            for (int i = 0; i < rmsRemoved.size(); i++) {
+
+                if (list.contains(rmsRemoved.get(i).getBookingPkid())) {
+                    LOGGER.info("BookingPkid: " + rmsRemoved.get(i).getBookingPkid());
+                    //change flag to 99 and status = 'Remove'
+                    RmsBookingDetail rmsDetail = new RmsBookingDetail();
+                    rmsDetail.setBookingPkid(rmsRemoved.get(i).getBookingPkid());
+                    rmsDetail.setFlag("0");
+                    rmsDetail.setStatus("New");
+                    rmsBookingDetailD = new RmsBookingDetailDAO();
+                    QueryResult q = rmsBookingDetailD.updateRmsBookingDetailForFlagAndStatus(rmsDetail);
+
+                    //update log
+                    RmsBookingLog log = new RmsBookingLog();
+                    log.setBookingId(rmsRemoved.get(i).getId());
+                    log.setDetail("Added Back into Active List");
+                    log.setCreatedBy(userSession.getFullname());
+                    RmsBookingLogDAO logD = new RmsBookingLogDAO();
+                    QueryResult logQ = logD.insertRmsBookingLog(log);
+                }
+            }
+
             RmsBookingDetailDAO rmsD = new RmsBookingDetailDAO();
             List<RmsBookingDetail> booking = rmsD.getRmsBookingDetailListFlagZero();
             model.addAttribute("booking", booking);

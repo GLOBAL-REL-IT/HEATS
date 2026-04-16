@@ -201,7 +201,7 @@
                                         <div class="mb-1">
                                             <label for="itemId" class="form-label">Status</label>
                                             <div class="input input-group">
-                                                <input type="text" class="form-control" id="itemId" name="itemId" placeholder="" value="${rms.status}" readonly>
+                                                <input type="text" class="form-control" id="itemId" name="itemId" placeholder="" value="${subStatus}" readonly>
                                             </div>
                                         </div>
                                     </div>

@@ -333,6 +333,30 @@ public class RmsBookingDetailController {
             }
         }
 
+        rmsBookingDetailD = new RmsBookingDetailDAO(); //check if any RMS has been removed before has been active back in FOL Report
+        List<RmsBookingDetail> rmsRemoved = rmsBookingDetailD.getBookingPkidwithFlag99AndFolNull();
+        for (int i = 0; i < rmsRemoved.size(); i++) {
+
+            if (list.contains(rmsRemoved.get(i).getBookingPkid())) {
+                LOGGER.info("BookingPkid: " + rmsRemoved.get(i).getBookingPkid());
+                //change flag to 99 and status = 'Remove'
+                RmsBookingDetail rmsDetail = new RmsBookingDetail();
+                rmsDetail.setBookingPkid(rmsRemoved.get(i).getBookingPkid());
+                rmsDetail.setFlag("0");
+                rmsDetail.setStatus("New");
+                rmsBookingDetailD = new RmsBookingDetailDAO();
+                QueryResult q = rmsBookingDetailD.updateRmsBookingDetailForFlagAndStatus(rmsDetail);
+
+                //update log
+                RmsBookingLog log = new RmsBookingLog();
+                log.setBookingId(rmsRemoved.get(i).getId());
+                log.setDetail("Added Back into Active List");
+                log.setCreatedBy(userSession.getFullname());
+                RmsBookingLogDAO logD = new RmsBookingLogDAO();
+                QueryResult logQ = logD.insertRmsBookingLog(log);
+            }
+        }
+
         RmsBookingDetailDAO rmsD = new RmsBookingDetailDAO();
         List<RmsBookingDetail> booking = rmsD.getRmsBookingDetailListFlagZero();
 
@@ -1007,7 +1031,7 @@ public class RmsBookingDetailController {
         String itemIdMB = "";
         String mbSptsPkid = "";
         String itemIdLC = "";
-        
+
         String statusLeak = "";
         String statusMan = "";
         String statusBib = "";
@@ -1136,12 +1160,12 @@ public class RmsBookingDetailController {
                     model.addAttribute("itemIdMB", itemIdMB);
                     model.addAttribute("itemIdLC", itemIdLC);
                 }
-                
+
                 RmsBookingFunctionalTestDAO ftestdao2 = new RmsBookingFunctionalTestDAO();
                 RmsBookingFunctionalTest testResult = new RmsBookingFunctionalTest();
                 testResult = ftestdao2.getFuncTestResult(groupId);
                 model.addAttribute("testResult", testResult);
-                
+
                 if (testResult == null) {
                     // NOTHING TO UPDATE HERE
                 } else {
@@ -1151,7 +1175,7 @@ public class RmsBookingDetailController {
                     statusPs = testResult.getPsStatus();
                     statusWin = testResult.getWinStatus();
                 }
-                
+
                 if (currentStatus.contains("Failed")) {
                     model.addAttribute("leakbutton", "disabled");
                     model.addAttribute("manualbutton", "disabled");
@@ -1186,7 +1210,7 @@ public class RmsBookingDetailController {
         pDx = new ParameterDetailsDAO();
         List<ParameterDetails> winResultData = pDx.getGroupParameterDetailList(statusWin, "016");
         model.addAttribute("winResultData", winResultData);
-        
+
         //vm tab
         RmsBookingVisualInspection itemVm = new RmsBookingVisualInspection();
 
@@ -2667,8 +2691,8 @@ public class RmsBookingDetailController {
             RedirectAttributes redirectAttrs,
             @ModelAttribute UserSession userSession,
             @PathVariable("jenis") String jenis,
-//            @PathVariable("bookId") String bookId,
-//            @PathVariable("itemPkid") String itemPkid,
+            //            @PathVariable("bookId") String bookId,
+            //            @PathVariable("itemPkid") String itemPkid,
             @RequestParam(required = false) String bookId,
             @RequestParam(required = false) String motherboardId,
             @RequestParam(required = false) String itemPkid,
@@ -2688,20 +2712,20 @@ public class RmsBookingDetailController {
             @RequestParam(required = false) String winHardware,
             HttpServletResponse response
     ) throws IOException {
-        
-        String gotoMn   = "Pending Functional Test - Manual Test";
-        String gotoBib  = "Pending Functional Test - BIB Test";
-        String gotoPS   = "Pending Functional Test - Power Supply Leakage Test";
-        String gotoWin  = "Pending Functional Test - Winchester Chamber Leakage Test";
-        String goReady  = "Pending Release to Production";
-        
+
+        String gotoMn = "Pending Functional Test - Manual Test";
+        String gotoBib = "Pending Functional Test - BIB Test";
+        String gotoPS = "Pending Functional Test - Power Supply Leakage Test";
+        String gotoWin = "Pending Functional Test - Winchester Chamber Leakage Test";
+        String goReady = "Pending Release to Production";
+
         String checkLeak = "No";
         String checkManual = "No";
         String checkBib = "No";
         String checkPs = "No";
         String checkWin = "No";
         String linkUpload = "";
-        
+
         String itemIdMB = "";
         String mbSptsPkid = "";
         String itemIdLC = "";
@@ -2711,12 +2735,12 @@ public class RmsBookingDetailController {
         String newStatus = "";
         String latestResult = "";
         String target_location = "redirect:/rmsbookingDetail/groupDetail/" + bookId + "/" + motherboardId;
-        
+
         RmsBookingHardwareDAO bookdao = new RmsBookingHardwareDAO();
         Integer checkMb = bookdao.checkMotherboardData(bookId);
         bookdao = new RmsBookingHardwareDAO();
         Integer checkLc = bookdao.checkCardData(bookId);
-        
+
         if (checkMb == 0) {
             redirectAttrs.addFlashAttribute("error", "No motherboard configured");
         } else {
@@ -2766,9 +2790,9 @@ public class RmsBookingDetailController {
             model.addAttribute("itemIdMB", itemIdMB);
             model.addAttribute("itemIdLC", itemIdLC);
         }
-        
+
         checkInsertFunctionalTestResult(groupId, userSession.getLoginId());
-        
+
         if (jenis.equals("leakTest")) {
             if (leakUpload != null) {
                 try {
@@ -2784,7 +2808,7 @@ public class RmsBookingDetailController {
                     e.printStackTrace();
                 }
             }
-            
+
             if (leakResult.equals("Fail")) {
                 // INSERT MASUK KE MAVERICK
                 // UPDATE rms_booking_hardware status by itemPkidMb
@@ -2803,7 +2827,7 @@ public class RmsBookingDetailController {
                 } else {
                     newStatus = goReady;
                 }
-                LOGGER.info("CHECK TENGOK STATUS SETERUSNYA :::: "+newStatus);
+                LOGGER.info("CHECK TENGOK STATUS SETERUSNYA :::: " + newStatus);
                 // SINI PASS MACAM BIASA, UPDATE THE STATUS to next Functional Test
                 RmsBookingHardware bookHardware = new RmsBookingHardware();
                 bookHardware.setBookingPkid(bookId);
@@ -2824,7 +2848,7 @@ public class RmsBookingDetailController {
             RmsBookingFunctionalTestDAO ftestdao = new RmsBookingFunctionalTestDAO();
             ftestdao.updateLeakageTest(ftest);
         } else if (jenis.equals("manTest")) {
-            
+
         } else if (jenis.equals("bibTest")) {
             LOGGER.info("SINI KITA KENA UPDATE UNTUK BIB");
             if (bibUpload != null) {
@@ -2841,7 +2865,7 @@ public class RmsBookingDetailController {
                     e.printStackTrace();
                 }
             }
-            
+
             if (bibResult.equals("Fail")) {
                 LOGGER.info("FAILED");
                 saveToMaverickFunctionalTest("BIB", username, groupId, bibHardware);
@@ -2863,7 +2887,7 @@ public class RmsBookingDetailController {
                 RmsBookingHardwareDAO booking = new RmsBookingHardwareDAO();
                 booking.updateRmsBookingHardwareSubStatusByPkidAndBookingPkid(bookHardware);
             }
-            LOGGER.info("KITA CUBA NK UPDATE BIB TEST RESUILT DEKAT SINI ::: "+bibResult);
+            LOGGER.info("KITA CUBA NK UPDATE BIB TEST RESUILT DEKAT SINI ::: " + bibResult);
             RmsBookingFunctionalTest ftest = new RmsBookingFunctionalTest();
             ftest.setFinalStatus(newStatus);
             ftest.setBibHwid(bibHardware);
@@ -2961,7 +2985,7 @@ public class RmsBookingDetailController {
             RmsBookingFunctionalTestDAO ftestdao = new RmsBookingFunctionalTestDAO();
             ftestdao.updateWinchesterTest(ftest);
         } else {
-            LOGGER.info("SINI APA BENDA JADI SIAAAA >>>>>> "+jenis);
+            LOGGER.info("SINI APA BENDA JADI SIAAAA >>>>>> " + jenis);
         }
         return target_location;
     }
@@ -3498,7 +3522,7 @@ public class RmsBookingDetailController {
 
         return "rmsbookingDetail/detail_group_released";
     }
-    
+
     //function for hw recall from production
     @RequestMapping(value = "/recall", method = {RequestMethod.GET, RequestMethod.POST})
     public String recall(Model model,
@@ -3585,16 +3609,16 @@ public class RmsBookingDetailController {
 
     private String saveToMaverickFunctionalTest(String jenistest, String user, String groupId, String hardwareId) {
         String data = "";
-        
+
         String[] MbBookingHwPkid = groupId.split("/");
         String bookingPkid = MbBookingHwPkid[0];
         String mbBookingPkid = MbBookingHwPkid[1];
-        
+
         String emailBodyFail = "";
         String currentmodule = "Before Loading";
         String currentsubmodule = "Functional Test";
         String tajukEmail = "Failed Functional Test";
-        
+
         if (jenistest.contains("Leakage")) {
             emailBodyFail = "Failed Functional Test - Leakage Test";
         } else if (jenistest.contains("Manual")) {
@@ -3606,7 +3630,7 @@ public class RmsBookingDetailController {
         } else if (jenistest.contains("Winchester")) {
             emailBodyFail = "Failed Functional Test - Winchester Chamber Leakage Test";
         }
-        
+
         // UPDATE SUB STATUS rms_booking_hardware START
         RmsBookingHardware bookHardware = new RmsBookingHardware();
         bookHardware.setBookingPkid(bookingPkid);
@@ -3615,7 +3639,7 @@ public class RmsBookingDetailController {
         RmsBookingHardwareDAO booking = new RmsBookingHardwareDAO();
         booking.updateRmsBookingHardwareSubStatusByPkidAndBookingPkid(bookHardware);
         // UPDATE SUB STATUS rms_booking_hardware END
-        
+
         // UPDATE STATUS FOR EACH HARDWARE ID IN rms_booking_hardware_group START
         if (hardwareId != null && !hardwareId.trim().isEmpty()) {
             String[] parts = hardwareId.split(",");
@@ -3626,7 +3650,7 @@ public class RmsBookingDetailController {
             }
         }
         // UPDATE STATUS FOR EACH HARDWARE ID IN rms_booking_hardware_group END
-        
+
         RmsBookingMaverick maverick = new RmsBookingMaverick();
         maverick.setGroupId(groupId);
         maverick.setModule(currentmodule);
@@ -3687,15 +3711,15 @@ public class RmsBookingDetailController {
                 + "<br /> "
                 + "<br />Thank you."
         );
-        
+
         return data;
     }
-    
+
     public void checkInsertFunctionalTestResult(String groupId, String username) {
-        
+
         RmsBookingFunctionalTestDAO testdao = new RmsBookingFunctionalTestDAO();
         Integer checkData = testdao.getCountTestResultByGroupId(groupId);
-        
+
         if (checkData == 0) {
             // INSERT BARU
             RmsBookingFunctionalTest ftest = new RmsBookingFunctionalTest();
@@ -3705,10 +3729,10 @@ public class RmsBookingDetailController {
             ftest.setFlag("0");
             testdao = new RmsBookingFunctionalTestDAO();
             testdao.insertRmsBookingFunctionalTest(ftest);
-            LOGGER.info("CREATE NEW TEST RESULT FOR GROUP ID :::: "+groupId);
+            LOGGER.info("CREATE NEW TEST RESULT FOR GROUP ID :::: " + groupId);
         } else {
             // BOLE UPDATE NANTI
-            LOGGER.info("DATA ALREADY CREATED, CAN UPDATE THE STATUS ACCORDINGLY FOR GROUP >>>> "+groupId);
+            LOGGER.info("DATA ALREADY CREATED, CAN UPDATE THE STATUS ACCORDINGLY FOR GROUP >>>> " + groupId);
         }
     }
 

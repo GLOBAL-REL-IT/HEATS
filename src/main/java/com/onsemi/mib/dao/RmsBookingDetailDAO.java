@@ -682,4 +682,33 @@ public class RmsBookingDetailDAO {
         }
         return rmsbookingDetailList;
     }
+
+    public List<RmsBookingDetail> getBookingPkidwithFlag99AndFolNull() {
+        String sql = "SELECT booking_pkid, id FROM rms_booking_detail WHERE flag = '99' and fol_filename IS NULL ";
+        List<RmsBookingDetail> rmsbookingDetailList = new ArrayList<RmsBookingDetail>();
+        try {
+            PreparedStatement ps = conn.prepareStatement(sql);
+            RmsBookingDetail rmsbookingDetail;
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                rmsbookingDetail = new RmsBookingDetail();
+                rmsbookingDetail.setBookingPkid(rs.getString("booking_pkid"));
+                rmsbookingDetail.setId(rs.getString("id"));
+                rmsbookingDetailList.add(rmsbookingDetail);
+            }
+            rs.close();
+            ps.close();
+        } catch (SQLException e) {
+            LOGGER.error(e.getMessage());
+        } finally {
+            if (conn != null) {
+                try {
+                    conn.close();
+                } catch (SQLException e) {
+                    LOGGER.error(e.getMessage());
+                }
+            }
+        }
+        return rmsbookingDetailList;
+    }
 }
