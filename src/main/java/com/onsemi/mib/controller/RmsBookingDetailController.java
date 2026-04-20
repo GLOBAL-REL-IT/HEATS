@@ -113,6 +113,9 @@ public class RmsBookingDetailController {
         String eventStartDate = "";
         String ActStartDate = "";
 
+        String rms = ""; //added on 20 Apr 2026
+        String rms_event = ""; //added on 20 Apr 2026
+
         //to add bookingpkid from fol report to new list (to remove bookingpkid that not available in fol report)
         List<String> list = new ArrayList<>();
 
@@ -120,24 +123,31 @@ public class RmsBookingDetailController {
         for (int i = 0; i < getRMSBooking.length(); i++) {
 
             event = "";
+            rms = ""; //added on 20 Apr 2026
+            rms_event = ""; //added on 20 Apr 2026
             eventStartDate = "";
             ActStartDate = "";
 
+            RmsBookingDetail eqpt = new RmsBookingDetail();
+
             if (getRMSBooking.getJSONObject(i).has("BookingPKID")) {
                 pkid = Integer.toString(getRMSBooking.getJSONObject(i).getInt("BookingPKID"));
-                list.add(Integer.toString(getRMSBooking.getJSONObject(i).getInt("BookingPKID")));
+//                list.add(Integer.toString(getRMSBooking.getJSONObject(i).getInt("BookingPKID"))); //comment on 20/04/26
+                eqpt.setBookingPkid(pkid);
             } else {
-                pkid = "0";
-                list.add("null");
+//                pkid = "0";  //comment on 16/04/26
+//                list.add("null"); //comment on 20/04/26
             }
-            RmsBookingDetail eqpt = new RmsBookingDetail();
-            eqpt.setBookingPkid(pkid);
+//            RmsBookingDetail eqpt = new RmsBookingDetail();
+//            eqpt.setBookingPkid(pkid);
             if (getRMSBooking.getJSONObject(i).has("RMSNo")) {
                 Object RMSNo = getRMSBooking.getJSONObject(i).get("RMSNo");
                 if (RMSNo instanceof String) {
                     eqpt.setRmsNo(getRMSBooking.getJSONObject(i).getString("RMSNo"));
+                    rms = getRMSBooking.getJSONObject(i).getString("RMSNo");
                 } else {
                     eqpt.setRmsNo(Integer.toString(getRMSBooking.getJSONObject(i).getInt("RMSNo")));
+                    rms = Integer.toString(getRMSBooking.getJSONObject(i).getInt("RMSNo"));
                 }
             }
             if (getRMSBooking.getJSONObject(i).has("EventNameCode")) {
@@ -151,6 +161,12 @@ public class RmsBookingDetailController {
                 }
 
             }
+
+            //replace bookingpkid with rms_event for data checking;
+            rms_event = rms + "_" + event;
+            list.add(rms_event);
+//            LOGGER.info("rms_event: " + rms_event);
+
             if (getRMSBooking.getJSONObject(i).has("Device")) {
                 Object assembly = getRMSBooking.getJSONObject(i).get("Device");
                 if (assembly instanceof String) {
@@ -240,7 +256,8 @@ public class RmsBookingDetailController {
                 eqpt.setStatus("New");
                 eqpt.setFlag("0");
             } else { // no need to display rms with bib test file.
-
+                eqpt.setStatus("Removed");
+                eqpt.setFlag("99");
             }
 
             eqpt.setPriority("999"); // default
@@ -250,7 +267,8 @@ public class RmsBookingDetailController {
 
                 //check need to insert or update
                 RmsBookingDetailDAO rmsD = new RmsBookingDetailDAO();
-                int countBookingId = rmsD.getCountBookingId(pkid);
+//                int countBookingId = rmsD.getCountBookingId(pkid);
+                int countBookingId = rmsD.getCountByRmsAndEvent(eqpt.getRmsNo(), eqpt.getEvent()); //modify by 16/04/26 (to include rows without booking no)
                 if (countBookingId == 0) { //insert
                     rmsD = new RmsBookingDetailDAO();
                     QueryResult q = rmsD.insertRmsBookingDetail(eqpt);
@@ -267,10 +285,12 @@ public class RmsBookingDetailController {
                 } else if (countBookingId == 1) { //update
                     //only update if flag = 0
                     rmsD = new RmsBookingDetailDAO();
-                    int countBookingIdFlagZero = rmsD.getCountBookingIdFlagZero(pkid);
+//                    int countBookingIdFlagZero = rmsD.getCountBookingIdFlagZero(pkid);
+                    int countBookingIdFlagZero = rmsD.getCountByRmsNoAndEventWithFlagZero(eqpt.getRmsNo(), eqpt.getEvent()); //modify by 16/04/26 (to include rows without booking no)
                     if (countBookingIdFlagZero == 1) {
                         rmsD = new RmsBookingDetailDAO();
-                        QueryResult q = rmsD.updateRmsBookingDetailFromCBMSByPkid(eqpt);
+//                        QueryResult q = rmsD.updateRmsBookingDetailFromCBMSByPkid(eqpt);
+                        QueryResult q = rmsD.updateRmsBookingDetailFromCBMSByRmsNoAndEvent(eqpt);//modify by 16/04/26 (to include rows without booking no)
                         countUpdate += q.getResult();
 
                         String fol = eqpt.getFolFilename();
@@ -279,18 +299,24 @@ public class RmsBookingDetailController {
                             if (!fol.isEmpty() && !"null".equalsIgnoreCase(fol)) {
                                 // change status to removed and flag 99 if rms already has bib test file
 //                                LOGGER.info("eqpt.getFolFilename(): " + eqpt.getFolFilename());
+//                                LOGGER.info("eqpt.getRmsNo(): " + eqpt.getRmsNo());
+//                                LOGGER.info("eqpt.getEvent(): " + eqpt.getEvent());
 
                                 RmsBookingDetail eqpt2 = new RmsBookingDetail();
-                                eqpt2.setBookingPkid(pkid);
+                                eqpt2.setRmsNo(eqpt.getRmsNo());
+                                eqpt2.setEvent(eqpt.getEvent());
                                 eqpt2.setStatus("Removed");
                                 eqpt2.setFlag("99");
                                 RmsBookingDetailDAO rmsBookingDetailD = new RmsBookingDetailDAO();
-                                QueryResult q2 = rmsBookingDetailD.updateRmsBookingDetailForFlagAndStatus(eqpt2);
+//                                QueryResult q2 = rmsBookingDetailD.updateRmsBookingDetailForFlagAndStatus(eqpt2);
+                                QueryResult q2 = rmsBookingDetailD.updateRmsBookingDetailForFlagAndStatusByRmsNoAndEvent(eqpt2); //modify by 16/04/26 (to include rows without booking no)
                                 countUpdate += q2.getResult();
 
                                 //update log
+                                rmsD = new RmsBookingDetailDAO();
+                                RmsBookingDetail rmsI = rmsD.getBookingIdByRmsNoAndEvent(eqpt.getRmsNo(), eqpt.getEvent()); //modify by 16/04/26 (to include rows without booking no)
                                 RmsBookingLog log = new RmsBookingLog();
-                                log.setBookingId(pkid);
+                                log.setBookingId(rmsI.getId());
                                 log.setDetail("Removed from Active List");
                                 log.setCreatedBy(userSession.getFullname());
                                 RmsBookingLogDAO logD = new RmsBookingLogDAO();
@@ -310,22 +336,30 @@ public class RmsBookingDetailController {
 
         //cross check booking pkid in HEATS table with FOL report
         RmsBookingDetailDAO rmsBookingDetailD = new RmsBookingDetailDAO();
-        List<RmsBookingDetail> rms = rmsBookingDetailD.getBookingPkidwithFlagZero();
-        for (int i = 0; i < rms.size(); i++) {
+//        List<RmsBookingDetail> rms1 = rmsBookingDetailD.getBookingPkidwithFlagZero();
+        List<RmsBookingDetail> rms1 = rmsBookingDetailD.getBookingIdRmsAndEventwithFlagZero(); //modify by 20/04/26
+        for (int i = 0; i < rms1.size(); i++) {
 
-            if (!list.contains(rms.get(i).getBookingPkid())) {
+            String rms_event2 = rms1.get(i).getRmsNo() + "_" + rms1.get(i).getEvent(); //modify by 20/04/26
+//            LOGGER.info("rms_event(flag zero): " + rms_event2);
+
+//            if (!list.contains(rms1.get(i).getBookingPkid())) { //modify by 20/04/26
+            if (!list.contains(rms_event2)) { //modify by 20/04/26
 //                LOGGER.info("BookingPkid: " + rms.get(i).getBookingPkid());
                 //change flag to 99 and status = 'Remove'
                 RmsBookingDetail rmsDetail = new RmsBookingDetail();
-                rmsDetail.setBookingPkid(rms.get(i).getBookingPkid());
+//                rmsDetail.setBookingPkid(rms.get(i).getBookingPkid());
+                rmsDetail.setRmsNo(rms1.get(i).getRmsNo());
+                rmsDetail.setEvent(rms1.get(i).getEvent());
                 rmsDetail.setFlag("99");
                 rmsDetail.setStatus("Removed");
                 rmsBookingDetailD = new RmsBookingDetailDAO();
-                QueryResult q = rmsBookingDetailD.updateRmsBookingDetailForFlagAndStatus(rmsDetail);
+//                QueryResult q = rmsBookingDetailD.updateRmsBookingDetailForFlagAndStatus(rmsDetail);
+                QueryResult q = rmsBookingDetailD.updateRmsBookingDetailForFlagAndStatusByRmsNoAndEvent(rmsDetail); //modify by 16/04/26 (to include rows without booking no)
 
                 //update log
                 RmsBookingLog log = new RmsBookingLog();
-                log.setBookingId(rms.get(i).getId());
+                log.setBookingId(rms1.get(i).getId());
                 log.setDetail("Removed from Active List");
                 log.setCreatedBy(userSession.getFullname());
                 RmsBookingLogDAO logD = new RmsBookingLogDAO();
@@ -334,18 +368,27 @@ public class RmsBookingDetailController {
         }
 
         rmsBookingDetailD = new RmsBookingDetailDAO(); //check if any RMS has been removed before has been active back in FOL Report
-        List<RmsBookingDetail> rmsRemoved = rmsBookingDetailD.getBookingPkidwithFlag99AndFolNull();
+//        List<RmsBookingDetail> rmsRemoved = rmsBookingDetailD.getBookingPkidwithFlag99AndFolNull();
+        List<RmsBookingDetail> rmsRemoved = rmsBookingDetailD.getBookingPkidRmsAndEventwithFlag99AndFolNull(); //modify by 20/04/26
         for (int i = 0; i < rmsRemoved.size(); i++) {
 
-            if (list.contains(rmsRemoved.get(i).getBookingPkid())) {
-                LOGGER.info("BookingPkid: " + rmsRemoved.get(i).getBookingPkid());
+            String rms_event3 = rmsRemoved.get(i).getRmsNo() + "_" + rmsRemoved.get(i).getEvent(); //modify by 20/04/26
+//            LOGGER.info("rms_event(flag 99): " + rms_event3);
+
+//            if (list.contains(rmsRemoved.get(i).getBookingPkid())) {
+            if (list.contains(rms_event3)) { //modify by 20/04/26
+//                LOGGER.info("BookingPkid: " + rmsRemoved.get(i).getBookingPkid());
+
                 //change flag to 99 and status = 'Remove'
                 RmsBookingDetail rmsDetail = new RmsBookingDetail();
-                rmsDetail.setBookingPkid(rmsRemoved.get(i).getBookingPkid());
+//                rmsDetail.setBookingPkid(rmsRemoved.get(i).getBookingPkid()); //modify by 20/04/26
+                rmsDetail.setRmsNo(rmsRemoved.get(i).getRmsNo());
+                rmsDetail.setEvent(rmsRemoved.get(i).getEvent());
                 rmsDetail.setFlag("0");
                 rmsDetail.setStatus("New");
                 rmsBookingDetailD = new RmsBookingDetailDAO();
-                QueryResult q = rmsBookingDetailD.updateRmsBookingDetailForFlagAndStatus(rmsDetail);
+//                QueryResult q = rmsBookingDetailD.updateRmsBookingDetailForFlagAndStatus(rmsDetail);
+                QueryResult q = rmsBookingDetailD.updateRmsBookingDetailForFlagAndStatusByRmsNoAndEvent(rmsDetail); //modify by 20/04/26 (to include rows without booking no)
 
                 //update log
                 RmsBookingLog log = new RmsBookingLog();
@@ -360,20 +403,17 @@ public class RmsBookingDetailController {
         RmsBookingDetailDAO rmsD = new RmsBookingDetailDAO();
         List<RmsBookingDetail> booking = rmsD.getRmsBookingDetailListFlagZero();
 
-        model.addAttribute(
-                "booking", booking);
+        model.addAttribute("booking", booking);
 
         rmsD = new RmsBookingDetailDAO();
         int countBooking = rmsD.getCountBookingFlagZero();
 
-        model.addAttribute(
-                "countBooking", countBooking);
+        model.addAttribute("countBooking", countBooking);
 
         ParameterDetailsDAO pD = new ParameterDetailsDAO();
         List<ParameterDetails> priorityList = pD.getGroupParameterDetailListForPriorityBooking("", "019");
 
-        model.addAttribute(
-                "priorityList", priorityList);
+        model.addAttribute("priorityList", priorityList);
 
         return "rmsbookingDetail/rmsbookingDetail";
     }
@@ -463,9 +503,17 @@ public class RmsBookingDetailController {
 
         int onhandQty = 0;
         int requestQty = 0;
+        int bookingPkid = 0;
 
         //add hardware detail from spts
-        int bookingPkid = Integer.parseInt(rms.getBookingPkid());
+//        int bookingPkid = Integer.parseInt(rms.getBookingPkid());
+        try {
+            bookingPkid = Integer.parseInt(rms.getBookingPkid());
+        } catch (NumberFormatException e) {
+            // Handle the error or set a default value
+            bookingPkid = 0;
+        }
+
         JSONArray getItemByParamV = SPTSWebService.getBookingDetailByPKID(bookingPkid);
         for (int i = 0; i < getItemByParamV.length(); i++) {
 
@@ -784,14 +832,15 @@ public class RmsBookingDetailController {
         //send INFORMATION email
         LOGGER.info("######################### START EMAIL TO PIC ########################### ");
         EmailSender emailSender = new EmailSender();
-        emailSender.htmlEmailTable(
+//        emailSender.htmlEmailTable(
+        emailSender.htmlEmailTableForHwReplacement(
                 servletContext,
                 "", //user name requestor
                 to, //to
                 //                        emailTo,
                 "HW Prep for Loading - Request for HW replacement", //subject
                 "<br />"
-                + "Please be informed that the hardware below has been requested for replacement"
+                + "This is an urgent request to please replace the hardware listed below in the CBMS application at the earliest."
                 + "<br /> "
                 + "<br /> "
                 + "RMS No: " + rms.getRmsNo()
@@ -822,6 +871,74 @@ public class RmsBookingDetailController {
         );
         redirectAttrs.addFlashAttribute("success", "Email sent to planner.");
         return "redirect:/rmsbookingDetail/detail/" + rms.getId();
+
+    }
+
+    @RequestMapping(value = "/sendEmailBooking/{id}", method = {RequestMethod.GET, RequestMethod.POST})
+    public String sendEmailBooking(
+            Model model,
+            Locale locale,
+            RedirectAttributes redirectAttrs,
+            @ModelAttribute UserSession userSession,
+            @PathVariable("id") String id
+    ) {
+
+        RmsBookingDetailDAO rmsD = new RmsBookingDetailDAO();
+        RmsBookingDetail rms = rmsD.getRmsBookingDetail(id);
+
+        String text = "";
+
+        //send email
+        EmailHwReplacementDAO userDao = new EmailHwReplacementDAO();
+        List<EmailHwReplacement> userRecipientsList = userDao.getEmailHwReplacementList();
+
+        String[] to = new String[userRecipientsList.size()];
+        for (int x = 0; x < userRecipientsList.size(); x++) {
+            to[x] = userRecipientsList.get(x).getEmail();
+        }
+
+        //get current date and time
+        LocalDateTime instance = LocalDateTime.now();
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm");
+        String formattedString = formatter.format(instance); //15-02-2022 12:43
+
+        //gethostname
+        HostnameDAO hostnameD = new HostnameDAO();
+        Hostname host = hostnameD.getHostnameFlagZero();
+        String hostname = host.getHostname();
+
+        //send INFORMATION email
+        LOGGER.info("######################### START EMAIL TO PIC ########################### ");
+        EmailSender emailSender = new EmailSender();
+//        emailSender.htmlEmailTable(
+        emailSender.htmlEmailTableForHwReplacement(
+                servletContext,
+                "", //user name requestor
+                to, //to
+                //                        emailTo,
+                "HW Prep for Loading - Request for CBMS Booking", //subject
+                "<br />"
+                + "This is to highlight that the RMS_Event below currently has no booking in CBMS. Kindly prioritize and complete the CBMS booking as soon as possible, as this is required for MB team to proceed."
+                + "<br /> "
+                + "<br /> "
+                + "RMS No: " + rms.getRmsNo()
+                + "<br /> "
+                + "RMS Event: " + rms.getEvent()
+                + "<br /> "
+                + "Est Event Start Date: " + rms.getEventStartDate()
+                + "<br /> "
+                + "Requested By: " + userSession.getFullname()
+                + "<br /> "
+                + "Requested Date: " + formattedString
+                + "<br /> "
+                + "<br /> "
+                + "Please click <a href=\"http://" + hostname + "/HEATS/rmsbookingDetail\">HERE</a> for more detail."
+                + "<br /> "
+                + "<br />Thank you." //msg
+        );
+        redirectAttrs.addFlashAttribute("success", "Email sent to planner.");
+//        return "redirect:/rmsbookingDetail/detail/" + rms.getId();
+        return "redirect:/rmsbookingDetail";
 
     }
 

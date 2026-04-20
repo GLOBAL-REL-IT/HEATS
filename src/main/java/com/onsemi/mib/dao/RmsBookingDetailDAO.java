@@ -160,6 +160,48 @@ public class RmsBookingDetailDAO {
         return queryResult;
     }
 
+    public QueryResult updateRmsBookingDetailFromCBMSByRmsNoAndEvent(RmsBookingDetail rmsbookingDetail) {
+        QueryResult queryResult = new QueryResult();
+        try {
+            PreparedStatement ps = conn.prepareStatement(
+                    "UPDATE rms_booking_detail SET booking_pkid = ?, rms_no = ?, event = ?, device = ?, packages = ?, event_start_date = ?, rms_status = ?, event_begin_status = ?, event_end_status = ?, no_current_ftp = ?, equipment_location = ?, est_start_date = ?, act_start_date = ?, fol_filename = ?, total_booking = ?, modified_date = NOW(), days_to_event_start = ? "
+                    + " WHERE rms_no = ? AND event = ?"
+            );
+            ps.setString(1, rmsbookingDetail.getBookingPkid());
+            ps.setString(2, rmsbookingDetail.getRmsNo());
+            ps.setString(3, rmsbookingDetail.getEvent());
+            ps.setString(4, rmsbookingDetail.getDevice());
+            ps.setString(5, rmsbookingDetail.getPackages());
+            ps.setString(6, rmsbookingDetail.getEventStartDate());
+            ps.setString(7, rmsbookingDetail.getRmsStatus());
+            ps.setString(8, rmsbookingDetail.getEventBeginStatus());
+            ps.setString(9, rmsbookingDetail.getEventEndStatus());
+            ps.setString(10, rmsbookingDetail.getNoCurrentFtp());
+            ps.setString(11, rmsbookingDetail.getEquipmentLocation());
+            ps.setString(12, rmsbookingDetail.getEstStartDate());
+            ps.setString(13, rmsbookingDetail.getActStartDate());
+            ps.setString(14, rmsbookingDetail.getFolFilename());
+            ps.setString(15, rmsbookingDetail.getTotalBooking());
+            ps.setString(16, rmsbookingDetail.getDaysToEventStart());
+            ps.setString(17, rmsbookingDetail.getRmsNo());
+            ps.setString(18, rmsbookingDetail.getEvent());
+            queryResult.setResult(ps.executeUpdate());
+            ps.close();
+        } catch (SQLException e) {
+            queryResult.setErrorMessage(e.getMessage());
+            LOGGER.error(e.getMessage());
+        } finally {
+            if (conn != null) {
+                try {
+                    conn.close();
+                } catch (SQLException e) {
+                    LOGGER.error(e.getMessage());
+                }
+            }
+        }
+        return queryResult;
+    }
+
     public QueryResult updateRmsBookingDetailForFlagAndStatus(RmsBookingDetail rmsbookingDetail) {
         QueryResult queryResult = new QueryResult();
         try {
@@ -169,6 +211,33 @@ public class RmsBookingDetailDAO {
             ps.setString(1, rmsbookingDetail.getFlag());
             ps.setString(2, rmsbookingDetail.getStatus());
             ps.setString(3, rmsbookingDetail.getBookingPkid());
+            queryResult.setResult(ps.executeUpdate());
+            ps.close();
+        } catch (SQLException e) {
+            queryResult.setErrorMessage(e.getMessage());
+            LOGGER.error(e.getMessage());
+        } finally {
+            if (conn != null) {
+                try {
+                    conn.close();
+                } catch (SQLException e) {
+                    LOGGER.error(e.getMessage());
+                }
+            }
+        }
+        return queryResult;
+    }
+
+    public QueryResult updateRmsBookingDetailForFlagAndStatusByRmsNoAndEvent(RmsBookingDetail rmsbookingDetail) {
+        QueryResult queryResult = new QueryResult();
+        try {
+            PreparedStatement ps = conn.prepareStatement(
+                    "UPDATE rms_booking_detail SET flag = ?, modified_date = NOW(), status = ? WHERE rms_no = ? AND event = ?"
+            );
+            ps.setString(1, rmsbookingDetail.getFlag());
+            ps.setString(2, rmsbookingDetail.getStatus());
+            ps.setString(3, rmsbookingDetail.getRmsNo());
+            ps.setString(4, rmsbookingDetail.getEvent());
             queryResult.setResult(ps.executeUpdate());
             ps.close();
         } catch (SQLException e) {
@@ -600,11 +669,65 @@ public class RmsBookingDetailDAO {
         return count;
     }
 
+    public Integer getCountByRmsNoAndEventWithFlagZero(String rms, String event) {
+        Integer count = null;
+        try {
+            PreparedStatement ps = conn.prepareStatement(
+                    "SELECT COUNT(*) AS count FROM rms_booking_detail inc WHERE inc.rms_no = '" + rms + "' AND inc.event = '" + event + "' AND inc.flag = '0'"
+            );
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                count = rs.getInt("count");
+            }
+            rs.close();
+
+            ps.close();
+        } catch (SQLException e) {
+            LOGGER.error(e.getMessage());
+        } finally {
+            if (conn != null) {
+                try {
+                    conn.close();
+                } catch (SQLException e) {
+                    LOGGER.error(e.getMessage());
+                }
+            }
+        }
+        return count;
+    }
+
     public Integer getCountBookingFlagZero() {
         Integer count = null;
         try {
             PreparedStatement ps = conn.prepareStatement(
                     "SELECT COUNT(*) AS count FROM rms_booking_detail inc WHERE inc.flag = '0'"
+            );
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                count = rs.getInt("count");
+            }
+            rs.close();
+
+            ps.close();
+        } catch (SQLException e) {
+            LOGGER.error(e.getMessage());
+        } finally {
+            if (conn != null) {
+                try {
+                    conn.close();
+                } catch (SQLException e) {
+                    LOGGER.error(e.getMessage());
+                }
+            }
+        }
+        return count;
+    }
+
+    public Integer getCountByRmsAndEvent(String rms, String event) {
+        Integer count = null;
+        try {
+            PreparedStatement ps = conn.prepareStatement(
+                    "SELECT COUNT(*) AS count FROM rms_booking_detail inc WHERE inc.rms_no = '" + rms + "' AND inc.event = '" + event + "'"
             );
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
@@ -683,6 +806,63 @@ public class RmsBookingDetailDAO {
         return rmsbookingDetailList;
     }
 
+    public List<RmsBookingDetail> getBookingIdRmsAndEventwithFlagZero() {
+        String sql = "SELECT booking_pkid, id, rms_no, event FROM rms_booking_detail WHERE flag = '0'";
+        List<RmsBookingDetail> rmsbookingDetailList = new ArrayList<RmsBookingDetail>();
+        try {
+            PreparedStatement ps = conn.prepareStatement(sql);
+            RmsBookingDetail rmsbookingDetail;
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                rmsbookingDetail = new RmsBookingDetail();
+                rmsbookingDetail.setBookingPkid(rs.getString("booking_pkid"));
+                rmsbookingDetail.setId(rs.getString("id"));
+                rmsbookingDetail.setRmsNo(rs.getString("rms_no"));
+                rmsbookingDetail.setEvent(rs.getString("event"));
+                rmsbookingDetailList.add(rmsbookingDetail);
+            }
+            rs.close();
+            ps.close();
+        } catch (SQLException e) {
+            LOGGER.error(e.getMessage());
+        } finally {
+            if (conn != null) {
+                try {
+                    conn.close();
+                } catch (SQLException e) {
+                    LOGGER.error(e.getMessage());
+                }
+            }
+        }
+        return rmsbookingDetailList;
+    }
+
+    public RmsBookingDetail getBookingIdByRmsNoAndEvent(String rmsNo, String event) {
+        String sql = "SELECT id FROM rms_booking_detail WHERE rms_no = '" + rmsNo + "' AND event = '" + event + "'";
+        RmsBookingDetail rmsbookingDetail = null;
+        try {
+            PreparedStatement ps = conn.prepareStatement(sql);
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                rmsbookingDetail = new RmsBookingDetail();
+                rmsbookingDetail.setId(rs.getString("id"));
+            }
+            rs.close();
+            ps.close();
+        } catch (SQLException e) {
+            LOGGER.error(e.getMessage());
+        } finally {
+            if (conn != null) {
+                try {
+                    conn.close();
+                } catch (SQLException e) {
+                    LOGGER.error(e.getMessage());
+                }
+            }
+        }
+        return rmsbookingDetail;
+    }
+
     public List<RmsBookingDetail> getBookingPkidwithFlag99AndFolNull() {
         String sql = "SELECT booking_pkid, id FROM rms_booking_detail WHERE flag = '99' and fol_filename IS NULL ";
         List<RmsBookingDetail> rmsbookingDetailList = new ArrayList<RmsBookingDetail>();
@@ -694,6 +874,37 @@ public class RmsBookingDetailDAO {
                 rmsbookingDetail = new RmsBookingDetail();
                 rmsbookingDetail.setBookingPkid(rs.getString("booking_pkid"));
                 rmsbookingDetail.setId(rs.getString("id"));
+                rmsbookingDetailList.add(rmsbookingDetail);
+            }
+            rs.close();
+            ps.close();
+        } catch (SQLException e) {
+            LOGGER.error(e.getMessage());
+        } finally {
+            if (conn != null) {
+                try {
+                    conn.close();
+                } catch (SQLException e) {
+                    LOGGER.error(e.getMessage());
+                }
+            }
+        }
+        return rmsbookingDetailList;
+    }
+
+    public List<RmsBookingDetail> getBookingPkidRmsAndEventwithFlag99AndFolNull() {
+        String sql = "SELECT booking_pkid, id, rms_no, event FROM rms_booking_detail WHERE flag = '99' and fol_filename IS NULL ";
+        List<RmsBookingDetail> rmsbookingDetailList = new ArrayList<RmsBookingDetail>();
+        try {
+            PreparedStatement ps = conn.prepareStatement(sql);
+            RmsBookingDetail rmsbookingDetail;
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                rmsbookingDetail = new RmsBookingDetail();
+                rmsbookingDetail.setBookingPkid(rs.getString("booking_pkid"));
+                rmsbookingDetail.setId(rs.getString("id"));
+                rmsbookingDetail.setRmsNo(rs.getString("rms_no"));
+                rmsbookingDetail.setEvent(rs.getString("event"));
                 rmsbookingDetailList.add(rmsbookingDetail);
             }
             rs.close();

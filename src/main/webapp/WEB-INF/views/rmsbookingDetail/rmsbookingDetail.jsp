@@ -143,9 +143,35 @@
                                                                data-bs-target="#staticBackdrop" aria-controls="staticBackdrop" onclick="getData(this);">
                                                                 <i class="bi bi-list-ol h3"></i>
                                                             </a>
-                                                            <a href="${contextPath}/rmsbookingDetail/detail/${parameterMaster.id}" class="table-link" title="Manage">
-                                                                <i class="bi bi-box-arrow-in-right h3"></i>
-                                                            </a>
+                                                            <c:if test="${parameterMaster.totalBooking == '1'}">
+                                                                <a href="${contextPath}/rmsbookingDetail/detail/${parameterMaster.id}" class="table-link" title="Manage">
+                                                                    <i class="bi bi-box-arrow-in-right h3"></i>
+                                                                </a>
+                                                            </c:if>
+                                                            <c:if test="${parameterMaster.totalBooking == '0'}">
+                                                                <a modaldeleteid="${parameterMaster.id}" modalRms="${parameterMaster.rmsNo}" modalEvent="${parameterMaster.event}" type="button" title="No CBMS Booking" data-bs-toggle="modal" data-bs-target="#email_modal" class="table-link" onclick="sendEmail(this);">
+                                                                    <i class="bi bi-exclamation-octagon h3" style="color: red;"></i>
+                                                                </a>
+<!--                                                                <div class="modal fade" id="exampleModalLg" tabindex="-1" aria-labelledby="exampleModalLgLabel"
+                                                                     aria-hidden="true">
+                                                                    <div class="modal-dialog modal-lg">
+                                                                        <div class="modal-content">
+                                                                            <div class="modal-header">
+                                                                                <h5 class="modal-title h4" id="exampleModalLgLabel">
+                                                                                    No CBMS Booking
+                                                                                </h5>
+                                                                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                                                            </div>
+                                                                            <div class="modal-body"><p style="vertical-align: middle;">This RMS_Event does not have an associated booking in CBMS. 
+                                                                                    Please contact the Capacity Planner to complete the booking in CBMS before proceeding.</p></div>
+                                                                            <div class="modal-footer">
+                                                                                <button type="button" class="btn btn-dark" data-bs-dismiss="modal">Cancel</button>
+                                                                                <a id="modal_button" href="${contextPath}/rmsbookingDetail/sendEmailBooking/${parameterMaster.id}" class="btn btn-primary"><i class="bi bi-envelope"></i> Send Email to Planner</a>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>-->
+                                                            </c:if>
                                                         </td>
                                                     </tr>
                                                 </c:forEach>
@@ -293,6 +319,16 @@
                         console.error("Error loading data: " + textStatus, errorThrown);
                     }
                 });
+            }
+            
+            function sendEmail(e) {
+                var modaldeleteid = $(e).attr("modaldeleteid");
+                var modalRms = $(e).attr("modalRms");
+                var modalEvent = $(e).attr("modalEvent");
+                var deleteUrl = "${contextPath}/rmsbookingDetail/sendEmailBooking/" + modaldeleteid;
+                var deleteMsg = modalRms + "_" + modalEvent + " does not have an associated booking in CBMS. Please contact the Capacity Planner to complete the booking in CBMS before proceeding.";
+                $("#email_modal .modal-body").html(deleteMsg);
+                $("#modal_email_button").attr("href", deleteUrl);
             }
 
             function modalDeletePriority() {

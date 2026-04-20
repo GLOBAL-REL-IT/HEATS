@@ -41,6 +41,16 @@
                 background-color: #59AC77; /* Light blue */
                 color: #FFFFFF; /* White text for contrast */
             }
+            
+            .offcanvas.offcanvas-start-recall {
+                top: 0;
+                left: 0;
+                width: 800px;
+                border-right: 1px solid rgba(0, 6, 28, 0.175);
+                transform: translateX(-100%);
+                transition: transform 0.2s ease-in-out;
+                ;
+            }
 
         </style>
     </s:layout-component>
@@ -55,7 +65,11 @@
                 <!-- Card start -->
                 <div class="card mb-4">
                     <div class="card-header">
-                        <h5 class="card-title">New Hardware - Pending Vm/Functional Test <span class="h6" style="color:red">(${countItemPending})</span></h5>
+                        <h5 class="card-title">New Hardware - Pending Vm/Functional Test <span class="h6" style="color:red">(${countItemPending})</span> 
+                            <a type="button" data-bs-toggle="offcanvas" title="Summary"
+                                              data-bs-target="#staticBackdropSummary" aria-controls="staticBackdropSummary">
+                                                <i style="color:black" class="bi bi-info-circle h6"></i>
+                                            </a></h5>
                     </div>
                     <div class="card-body">
                         <div class="table-responsive">
@@ -168,13 +182,35 @@
                                     <td><c:out value=""/></td>
                                         </c:if>
                                     <td align="center">
-                                            <a modaldeleteid="${parameterMaster.id}" type="button" data-bs-toggle="offcanvas" title="Set Priority"
-                                              data-bs-target="#staticBackdrop" aria-controls="staticBackdrop" onclick="getData(this);">
-                                                <i class="bi bi-list-ol h3"></i>
+                                        <a modaldeleteid="${parameterMaster.id}" type="button" data-bs-toggle="offcanvas" title="Set Priority"
+                                          data-bs-target="#staticBackdrop" aria-controls="staticBackdrop" onclick="getData(this);">
+                                            <i class="bi bi-list-ol h3"></i>
+                                        </a>
+                                        <c:if test="${parameterMaster.totalBooking == '1'}">
+                                        <a href="${contextPath}/rmsbookingDetail/detail/${parameterMaster.id}" class="table-link" title="Manage">
+                                            <i class="bi bi-box-arrow-in-right h3"></i>
+                                        </a>
+                                        </c:if>
+                                        <c:if test="${parameterMaster.totalBooking == '0'}">
+                                            <a type="button" title="No CBMS Booking" data-bs-toggle="modal" data-bs-target="#exampleModalLg" class="table-link">
+                                                <i class="bi bi-exclamation-octagon h3" style="color: red;"></i>
                                             </a>
-                                            <a href="${contextPath}/rmsbookingDetail/detail/${parameterMaster.id}" class="table-link" title="Manage">
-                                                <i class="bi bi-box-arrow-in-right h3"></i>
-                                            </a>
+                                            <div class="modal fade" id="exampleModalLg" tabindex="-1" aria-labelledby="exampleModalLgLabel"
+                                                 aria-hidden="true">
+                                                <div class="modal-dialog modal-lg">
+                                                    <div class="modal-content">
+                                                        <div class="modal-header">
+                                                            <h5 class="modal-title h4" id="exampleModalLgLabel">
+                                                                No CBMS Booking
+                                                            </h5>
+                                                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                                        </div>
+                                                        <div class="modal-body"><p style="vertical-align: middle;">This RMS_Event does not have an associated booking in CBMS. 
+                                                            Please contact the Capacity Planner to complete the booking in CBMS before proceeding.</p></div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </c:if>
                                     </td>
                                     </tr>
                                 </c:forEach>
@@ -462,6 +498,40 @@
               </div>
             </div>
           </div>
+                                
+            <div class="offcanvas offcanvas-start-recall" data-bs-backdrop="static" tabindex="-1" id="staticBackdropSummary"
+            aria-labelledby="staticBackdropSummaryLabel">
+            <div class="offcanvas-header">
+              <h5 class="offcanvas-title" id="staticBackdropSummaryLabel">New Hardware - Pending Vm/Functional Test (Summary)</h5>
+              <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+            </div>
+            <div class="offcanvas-body">
+              <div>
+                <div class="row mb-3">
+                        <div class="table-responsive">
+                            <table id="listStorage" class="table custom-table pending">
+                                <thead>
+                                    <tr>
+                                        <th class="col-1">No</th>
+                                        <th class="col-1">Assembly ID</th>
+                                        <th class="col-1">Qty</th>
+                                    </tr>
+                                </thead>
+                                 <tbody>
+                                        <c:forEach items="${itemSummary}" var="parameterMaster" varStatus="parameterMasterLoop">
+                                    <tr>
+                                        <td><c:out value="${parameterMasterLoop.index+1}"/></td>
+                                    <td><c:out value="${parameterMaster.assemblyId}"/></td>
+                                    <td><c:out value="${parameterMaster.totalQty}"/></td>
+                                    </tr>
+                                </c:forEach>
+                                    </tbody>
+                            </table>
+                        </div>
+                    </div>
+              </div>
+            </div>
+          </div>
 
         </div>
     </s:layout-component>
@@ -469,29 +539,6 @@
 
         <!-- Apex Charts -->
         <script src="${contextPath}/resources/statflow/vendor/apex/apexcharts.min.js"></script>
-<!--        <script src="${contextPath}/resources/statflow/vendor/apex/custom/repotrs/demography.js"></script>
-        <script src="${contextPath}/resources/statflow/vendor/apex/examples/bar/basic-bar-graph-grouped.js"></script>
-        <script src="${contextPath}/resources/statflow/vendor/apex/custom/widgets/graph1.js"></script>
-        <script src="${contextPath}/resources/statflow/vendor/apex/custom/widgets/graph2.js"></script>
-        <script src="${contextPath}/resources/statflow/vendor/apex/custom/widgets/graph3.js"></script>
-        <script src="${contextPath}/resources/statflow/vendor/apex/custom/widgets/graph4.js"></script>
-        <script src="${contextPath}/resources/statflow/vendor/apex/custom/widgets/graph5.js"></script>
-        <script src="${contextPath}/resources/statflow/vendor/apex/custom/widgets/graph6.js"></script>
-        <script src="${contextPath}/resources/statflow/vendor/apex/custom/widgets/graph7.js"></script>
-        <script src="${contextPath}/resources/statflow/vendor/apex/custom/widgets/graph8.js"></script>-->
-
-        <!-- jVector Maps -->
-<!--        <script src="${contextPath}/resources/statflow/vendor/jvectormap/jquery-jvectormap-2.0.5.min.js"></script>
-        <script src="${contextPath}/resources/statflow/vendor/jvectormap/gdp-data.js"></script>
-        <script src="${contextPath}/resources/statflow/vendor/jvectormap/world-mill-en.js"></script>
-        <script src="${contextPath}/resources/statflow/vendor/jvectormap/africa-mill.js"></script>
-        <script src="${contextPath}/resources/statflow/vendor/jvectormap/europe-mill.js"></script>
-        <script src="${contextPath}/resources/statflow/vendor/jvectormap/custom/map-europe.js"></script>
-        <script src="${contextPath}/resources/statflow/vendor/jvectormap/custom/map-africa.js"></script>
-        <script src="${contextPath}/resources/statflow/vendor/jvectormap/custom/world-map-markers2.js"></script>-->
-
-        <!-- jQcloud Keywords -->
-        <!--<script src="${contextPath}/resources/statflow/vendor/tagsCloud/tagsCloud.js"></script>-->
 
         <!-- Data Tables -->
         <script src="${contextPath}/resources/statflow/vendor/datatables/dataTables.min.js"></script>
@@ -521,17 +568,10 @@
             function modalDelete() {
                 var id = $('#id');
                 var priorityRead = $('#priorityRead');
-//                if(priorityRead.val() == ""){
-//                    alert("No Priority was set for this RMS_Event");
-//                   var modalElement = document.getElementById('delete_modal');
-//var modalInstance = bootstrap.Modal.getOrCreateInstance(modalElement);
-//modalInstance.hide();
-//                }else{
                 var deleteUrl = "${contextPath}/cancelPriority/" + id.val();
                 var deleteMsg = "Are you sure want to remove priority for this RMS_Event?";
                 $("#delete_modal .modal-body").html(deleteMsg);
                 $("#modal_delete_button").attr("href", deleteUrl);  
-//                }
                 
             }
             
@@ -561,6 +601,21 @@
                 });
             }
 
+                $(function () {
+                $("#listStorage").DataTable({
+                    lengthMenu: [
+                        [10, 25, 50],
+                        [10, 25, 50, "All"],
+                    ],
+                    language: {
+                        lengthMenu: "Display _MENU_ Records Per Page",
+//                        info: "Showing Page _PAGE_ of _PAGES_",
+                        info: "Showing _START_ to _END_ of _TOTAL_ total records",
+                    },
+                    dom: "Blfrtip",
+                    buttons: ["copy", "csv", "pdf", "print"],
+                });
+            });
 
             //RMS Return from Loading
             $(function () {
@@ -801,8 +856,8 @@
 //                colors: ['#f0f0f0'],
 //            });
 
-            var chart = new ApexCharts(document.querySelector("#demography2"), options);
-            chart.render();
+            var chart1 = new ApexCharts(document.querySelector("#demography2"), options);
+            chart1.render();
 
             const averageValue = 3;
             const averageData = new Array(12).fill(averageValue);

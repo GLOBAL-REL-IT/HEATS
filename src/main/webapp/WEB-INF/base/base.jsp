@@ -415,6 +415,25 @@
                 </div><!-- /.modal-dialog -->
             </div>
             <!-- /.modal -->
+            
+               <div class="modal fade" id="email_modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" >
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <!--<button type="button" class="close" data-bs-dismiss="modal" aria-hidden="true">&times;</button>-->
+                            <!--<i class="fa fa-exclamation-triangle fa-stack-1x fa-inverse" style="color:yellow"></i>-->
+                            <h4 class="modal-title"><i class="bi bi-exclamation-diamond" style="color:goldenrod"></i> No CBMS Booking</h4>
+                        </div>
+                        <div class="modal-body">
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-dark" data-bs-dismiss="modal">Cancel</button>
+                            <a id="modal_email_button" href="#" class="btn btn-primary"><i class="bi bi-envelope"></i> Send Email to Planner</a>
+                        </div>
+                    </div><!-- /.modal-content -->
+                </div><!-- /.modal-dialog -->
+            </div>
+            <!-- /.modal -->
 
             <div class="modal fade" id="photo_modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" >
                 <div class="modal-dialog modal-lg">

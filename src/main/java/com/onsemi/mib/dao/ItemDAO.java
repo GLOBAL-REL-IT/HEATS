@@ -1596,4 +1596,33 @@ public class ItemDAO {
         return count;
     }
 
+    public List<Item> getItemSummaryByAssemblyId() {
+        String sql = "SELECT it.assembly_id, COUNT(it.assembly_id) AS qty FROM item it WHERE it.flag = '0' GROUP BY it.assembly_id ORDER BY it.assembly_id ";
+        List<Item> hardwaredetailList = new ArrayList<Item>();
+        try {
+            PreparedStatement ps = conn.prepareStatement(sql);
+            Item hardwaredetail;
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                hardwaredetail = new Item();
+                hardwaredetail.setAssemblyId(rs.getString("assembly_id"));
+                hardwaredetail.setTotalQty(rs.getString("qty"));
+                hardwaredetailList.add(hardwaredetail);
+            }
+            rs.close();
+            ps.close();
+        } catch (SQLException e) {
+            LOGGER.error(e.getMessage());
+        } finally {
+            if (conn != null) {
+                try {
+                    conn.close();
+                } catch (SQLException e) {
+                    LOGGER.error(e.getMessage());
+                }
+            }
+        }
+        return hardwaredetailList;
+    }
+
 }
