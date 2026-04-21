@@ -265,14 +265,17 @@
                                     </div>
                                 </div>
 
-                                <!-- Form actions start -->
-                                <!--                                <div class="col-md-12">
-                                                                    
-                                                                </div>-->
                                 <div class="col-md-12">
-                                    <a modaldeleteid="${rms.id}" type ="button" title="Release to Production" data-bs-toggle="modal" data-bs-target="#confirmation_modal" class="btn btn-success float-start" onclick="modalRelease(this);">
-                                        <i class="bi bi-check-circle-fill">&nbsp;&nbsp;Release to Production</i>
-                                    </a>
+                                    <c:if test="${releaseButton == 'Enable'}">
+                                        <a modaldeleteid="${rms.id}" type ="button" title="Release to Production" data-bs-toggle="modal" data-bs-target="#confirmation_modal" class="btn btn-success float-start" onclick="modalRelease(this);">
+                                            <i class="bi bi-check-circle-fill">&nbsp;&nbsp;Release to Production</i>
+                                        </a>
+                                    </c:if>
+                                    <c:if test="${releaseButton == 'Disable'}">
+                                        <a modaldeleteid="${rms.id}" type ="button" title="Release to Production" class="btn float-start disabled" disabled>
+                                            <i class="bi bi-check-circle-fill">&nbsp;&nbsp;Release to Production</i>
+                                        </a>
+                                    </c:if>  
                                     <a type="button" data-bs-toggle="offcanvas" title="Request for HW Replacement"
                                        data-bs-target="#staticBackdropEmailReplacement" aria-controls="staticBackdropEmailReplacement" class="btn btn-primary float-end">
                                         <i class="bi bi-envelope-arrow-up">&nbsp;&nbsp;Request for HW Replacement</i>
@@ -333,17 +336,17 @@
                                                     <c:choose>
                                                         <c:when test="${String eq 'Available'}">
                                                             <td style="font-size: 1.10rem;" class="semi-bold"><span class="badge bg-success "><c:out value="${parameterMaster.status}"/></span></td>
-                                                        </c:when>
-                                                        <c:when test="${String eq 'Released to Production'}">
+                                                            </c:when>
+                                                            <c:when test="${String eq 'Released to Production'}">
                                                             <td style="font-size: 1.10rem;" class="semi-bold"><span class="badge bg-success "><c:out value="${parameterMaster.status}"/></span></td>
                                                             </c:when>
                                                             <c:when test="${(fn:contains(String, 'Not Available'))}">
                                                             <td style="font-size: 1.10rem;" class="semi-bold"><span class="badge bg-danger "><c:out value="${parameterMaster.status}"/></span></td>
-                                                        </c:when>
-                                                        <c:otherwise>
+                                                            </c:when>
+                                                            <c:otherwise>
                                                             <td style="font-size: 1.10rem;" class="semi-bold"><span class="badge bg-light text-body "><c:out value="${parameterMaster.status}"/></span></td>
-                                                        </c:otherwise>
-                                                    </c:choose>
+                                                            </c:otherwise>
+                                                        </c:choose>
                                                     <td align="center">
                                                         <c:if test="${parameterMaster.status != 'NA'}">
                                                             <c:if test="${parameterMaster.recall == 'Yes'}">
@@ -430,8 +433,8 @@
                                                                 </c:when>
                                                                 <c:when test="${(fn:contains(String, 'Not Available'))}">
                                                                 <td style="font-size: 1.10rem;" class="semi-bold"><span class="badge bg-danger"><c:out value="${parameterMaster.status} - ${parameterMaster.subStatus}"/></span></td>  
-                                                            </c:when>
-                                                            <c:otherwise>
+                                                                </c:when>
+                                                                <c:otherwise>
                                                                 <td style="font-size: 1.10rem;" class="semi-bold" ><span class="badge bg-light text-body"><c:out value="${parameterMaster.status}"/></span></td> 
                                                                 </c:otherwise>
                                                             </c:choose>
@@ -442,15 +445,15 @@
                                                                 <c:when test="${String eq 'Available'}">
                                                                     <!--<td style="color:green" class="semi-bold"><c:out value="${parameterMaster.status}"/></td>-->  
                                                                 <td style="font-size: 1.10rem;" class="semi-bold"><span class="badge bg-success"><c:out value="${parameterMaster.status}"/></span></td>  
-                                                            </c:when>
-                                                            <c:when test="${(fn:contains(String, 'Not Available'))}">
+                                                                </c:when>
+                                                                <c:when test="${(fn:contains(String, 'Not Available'))}">
                                                                 <td style="font-size: 1.10rem;" class="semi-bold"><span class="badge bg-danger"><c:out value="${parameterMaster.status}"/></span></td>  
-                                                            </c:when>
-                                                            <c:otherwise>
+                                                                </c:when>
+                                                                <c:otherwise>
                                                                 <td style="font-size: 1.10rem;" class="semi-bold"><span class="badge bg-light text-body"><c:out value="${parameterMaster.status}"/></span></td>
-                                                            </c:otherwise>
-                                                        </c:choose>
-                                                    </c:if>
+                                                                </c:otherwise>
+                                                            </c:choose>
+                                                        </c:if>
                                                     <td align="center">
                                                         <c:if test="${parameterMaster.recall == 'Yes'}">
                                                             <a modaldeleteid="${parameterMaster.itemPkid}" modaldeleteid2="${parameterMaster.id}" type="button" data-bs-toggle="offcanvas" title="Recall from Storage Factory"
@@ -685,148 +688,148 @@
     </s:layout-component>
     <s:layout-component name="page_js_inline">
         <script>
-            $(document).ready(function () {
-                $('.js-example-basic-single').select2();
-            });
+                                    $(document).ready(function () {
+                                        $('.js-example-basic-single').select2();
+                                    });
 
-            document.addEventListener('DOMContentLoaded', function () {
-                const url = new URL(window.location.href);
-                if (url.searchParams.get('saved') === '1') {
-                    const el = document.getElementById('staticBackdropEmailReplacement');
-                    if (el)
-                        bootstrap.Offcanvas.getOrCreateInstance(el).show();
-                    // Clean the URL so F5 or navigation won’t auto-open again
-                    url.searchParams.delete('saved');
-                    window.history.replaceState({}, '', url);
-                }
-            });
+                                    document.addEventListener('DOMContentLoaded', function () {
+                                        const url = new URL(window.location.href);
+                                        if (url.searchParams.get('saved') === '1') {
+                                            const el = document.getElementById('staticBackdropEmailReplacement');
+                                            if (el)
+                                                bootstrap.Offcanvas.getOrCreateInstance(el).show();
+                                            // Clean the URL so F5 or navigation won’t auto-open again
+                                            url.searchParams.delete('saved');
+                                            window.history.replaceState({}, '', url);
+                                        }
+                                    });
 
-            function modalDelete(e) {
-                var bookingDetailId = $("#id").val();
-                var deleteId = $(e).attr("modaldeleteid");
-                var deleteInfo = $("#modal_delete_info_" + deleteId).html();
-                var deleteUrl = "${contextPath}/rmsbookingDetail/deleteHwReplacement/" + deleteId + "/" + bookingDetailId;
-                var deleteMsg = "<f:message key='general.label.delete.confirmation'><f:param value='" + deleteInfo + "'/></f:message>";
-                $("#delete_modal .modal-body").html(deleteMsg);
-                $("#modal_delete_button").attr("href", deleteUrl);
-            }
-            
-            function modalRelease(e) {
-                var id = $(e).attr("modaldeleteid");
-                var deleteUrl = "${contextPath}/rmsbookingDetail/release/" + id;
-                var deleteMsg = "Are you sure want to release this RMS_Event to production?";
-                $("#confirmation_modal .modal-body").html(deleteMsg);
-                $("#modal_button").attr("href", deleteUrl);
-            }
+                                    function modalDelete(e) {
+                                        var bookingDetailId = $("#id").val();
+                                        var deleteId = $(e).attr("modaldeleteid");
+                                        var deleteInfo = $("#modal_delete_info_" + deleteId).html();
+                                        var deleteUrl = "${contextPath}/rmsbookingDetail/deleteHwReplacement/" + deleteId + "/" + bookingDetailId;
+                                        var deleteMsg = "<f:message key='general.label.delete.confirmation'><f:param value='" + deleteInfo + "'/></f:message>";
+                                        $("#delete_modal .modal-body").html(deleteMsg);
+                                        $("#modal_delete_button").attr("href", deleteUrl);
+                                    }
 
-            function sendEmail() {
-                var bookingPkid = $("#bookingPkid").val();
-                var deleteUrl = "${contextPath}/rmsbookingDetail/sendEmailReplacementByGroup/" + bookingPkid;
-                var deleteMsg = "Are you sure want to send email to Planner for HW replacement?";
-                $("#confirmation_modal .modal-body").html(deleteMsg);
-                $("#modal_button").attr("href", deleteUrl);
-            }
+                                    function modalRelease(e) {
+                                        var id = $(e).attr("modaldeleteid");
+                                        var deleteUrl = "${contextPath}/rmsbookingDetail/release/" + id;
+                                        var deleteMsg = "Are you sure want to release this RMS_Event to production?";
+                                        $("#confirmation_modal .modal-body").html(deleteMsg);
+                                        $("#modal_button").attr("href", deleteUrl);
+                                    }
 
-            function getData(e) {
-                var id = $(e).attr("modaldeleteid");
-                $.ajax({
-                    url: '${contextPath}/rmsbookingDetail/emailBody', // Replace with your controller URL
-                    type: 'GET',
-                    data: {id: id},
-                    dataType: 'json',
-                    success: function (data) {
-                        // Populate form fields with received data
-                        $("#itemId2").val(data.itemId);
-                        $("#id2").val(data.id);
-                        $("#itemType").val(data.itemType);
-                    },
-                    error: function (jqXHR, textStatus, errorThrown) {
-                        console.error("Error loading data: " + textStatus, errorThrown);
-                    }
-                });
-            }
+                                    function sendEmail() {
+                                        var bookingPkid = $("#bookingPkid").val();
+                                        var deleteUrl = "${contextPath}/rmsbookingDetail/sendEmailReplacementByGroup/" + bookingPkid;
+                                        var deleteMsg = "Are you sure want to send email to Planner for HW replacement?";
+                                        $("#confirmation_modal .modal-body").html(deleteMsg);
+                                        $("#modal_button").attr("href", deleteUrl);
+                                    }
 
-            $(document).ready(function () {
-                $('.js-example-basic-single').select2();
-            });
+                                    function getData(e) {
+                                        var id = $(e).attr("modaldeleteid");
+                                        $.ajax({
+                                            url: '${contextPath}/rmsbookingDetail/emailBody', // Replace with your controller URL
+                                            type: 'GET',
+                                            data: {id: id},
+                                            dataType: 'json',
+                                            success: function (data) {
+                                                // Populate form fields with received data
+                                                $("#itemId2").val(data.itemId);
+                                                $("#id2").val(data.id);
+                                                $("#itemType").val(data.itemType);
+                                            },
+                                            error: function (jqXHR, textStatus, errorThrown) {
+                                                console.error("Error loading data: " + textStatus, errorThrown);
+                                            }
+                                        });
+                                    }
 
-            $(function () {
-                $("#customButtons1").DataTable({
-                    lengthMenu: [
-                        [10, 25, 50],
-                        [10, 25, 50, "All"],
-                    ],
-                    language: {
-                        lengthMenu: "Display _MENU_ Records Per Page",
+                                    $(document).ready(function () {
+                                        $('.js-example-basic-single').select2();
+                                    });
+
+                                    $(function () {
+                                        $("#customButtons1").DataTable({
+                                            lengthMenu: [
+                                                [10, 25, 50],
+                                                [10, 25, 50, "All"],
+                                            ],
+                                            language: {
+                                                lengthMenu: "Display _MENU_ Records Per Page",
 //                        info: "Showing Page _PAGE_ of _PAGES_",
-                        info: "Showing _START_ to _END_ of _TOTAL_ total records",
-                    },
-                    dom: "Blfrtip",
-                    buttons: ["copy", "csv", "pdf", "print"],
-                });
-            });
+                                                info: "Showing _START_ to _END_ of _TOTAL_ total records",
+                                            },
+                                            dom: "Blfrtip",
+                                            buttons: ["copy", "csv", "pdf", "print"],
+                                        });
+                                    });
 
-            $(function () {
-                $("#customButtons2").DataTable({
-                    lengthMenu: [
-                        [10, 25, 50],
-                        [10, 25, 50, "All"],
-                    ],
-                    language: {
-                        lengthMenu: "Display _MENU_ Records Per Page",
+                                    $(function () {
+                                        $("#customButtons2").DataTable({
+                                            lengthMenu: [
+                                                [10, 25, 50],
+                                                [10, 25, 50, "All"],
+                                            ],
+                                            language: {
+                                                lengthMenu: "Display _MENU_ Records Per Page",
 //                        info: "Showing Page _PAGE_ of _PAGES_",
-                        info: "Showing _START_ to _END_ of _TOTAL_ total records",
-                    },
-                    dom: "Blfrtip",
-                    buttons: ["copy", "csv", "pdf", "print"],
-                });
-            });
+                                                info: "Showing _START_ to _END_ of _TOTAL_ total records",
+                                            },
+                                            dom: "Blfrtip",
+                                            buttons: ["copy", "csv", "pdf", "print"],
+                                        });
+                                    });
 
-            function ajaxStorage(e) {
-                var itemPKID = $(e).attr("modaldeleteid");
-                var id = $(e).attr("modaldeleteid2");
-                $('#listStorage').DataTable().destroy();
-                new DataTable('#listStorage', {
-                    ajax: {
-                        data: {itemPKID: itemPKID},
-                        url: '${contextPath}/hw/item/ajaxStorage',
-                        dataSrc: ''
-                    },
-                    columns: [
-                        {"data": "itemId"},
-                        {"data": "boxNo"},
-                        {"data": "rack"},
-                        {"data": "shelf"},
-                        {"data": "qty"},
-                        {"data": "movementDateTime"},
-                        {
-                            data: "invId", // This column won't directly map to a data field
-                            render: function (data, type, row) {
-                                return '<c:if test="${userItemSfRecall == 'Yes'}"><button class="btn btn-primary edit-btn" data-inv="' + data + '" data-pkid="' + itemPKID + '" data-id="' + id + '" data-bs-toggle="modal" data-bs-target="#confirmation_modal">Recall</button></c:if>';
-                            }
-                        }
-                    ]
-                });
-            }
+                                    function ajaxStorage(e) {
+                                        var itemPKID = $(e).attr("modaldeleteid");
+                                        var id = $(e).attr("modaldeleteid2");
+                                        $('#listStorage').DataTable().destroy();
+                                        new DataTable('#listStorage', {
+                                            ajax: {
+                                                data: {itemPKID: itemPKID},
+                                                url: '${contextPath}/hw/item/ajaxStorage',
+                                                dataSrc: ''
+                                            },
+                                            columns: [
+                                                {"data": "itemId"},
+                                                {"data": "boxNo"},
+                                                {"data": "rack"},
+                                                {"data": "shelf"},
+                                                {"data": "qty"},
+                                                {"data": "movementDateTime"},
+                                                {
+                                                    data: "invId", // This column won't directly map to a data field
+                                                    render: function (data, type, row) {
+                                                        return '<c:if test="${userItemSfRecall == 'Yes'}"><button class="btn btn-primary edit-btn" data-inv="' + data + '" data-pkid="' + itemPKID + '" data-id="' + id + '" data-bs-toggle="modal" data-bs-target="#confirmation_modal">Recall</button></c:if>';
+                                                    }
+                                                }
+                                            ]
+                                        });
+                                    }
 
-            $('#listStorage tbody').on('click', '.edit-btn', function () {
-                var rowInv = $(this).data('inv'); // Get the 'data-id' attribute
-                var rowPkid = $(this).data('pkid'); // Get the 'data-id' attribute
-                var rowId = $(this).data('id'); // Get the 'data-id' attribute
-                var rmsBookingId = $("#id").val();
-                // Perform further actions, e.g., open a modal for editing
-                if (rowId) {
-                    var deleteUrl = "${contextPath}/rmsbookingDetail/retrieveSF/" + rowInv + "/" + rowPkid + "/" + rowId + "/" + rmsBookingId;
-                    var deleteMsg = "Are you sure want to retrieve this item from Storage Factory?";
-                    $("#confirmation_modal .modal-body").html(deleteMsg);
-                    $("#modal_button").attr("href", deleteUrl);
-                } else {
-                    var deleteUrl = "";
-                    var deleteMsg = "No Item Selected.";
-                    $("#confirmation_modal .modal-body").html(deleteMsg);
-                    $("#modal_button").attr("href", deleteUrl);
-                }
-            });
+                                    $('#listStorage tbody').on('click', '.edit-btn', function () {
+                                        var rowInv = $(this).data('inv'); // Get the 'data-id' attribute
+                                        var rowPkid = $(this).data('pkid'); // Get the 'data-id' attribute
+                                        var rowId = $(this).data('id'); // Get the 'data-id' attribute
+                                        var rmsBookingId = $("#id").val();
+                                        // Perform further actions, e.g., open a modal for editing
+                                        if (rowId) {
+                                            var deleteUrl = "${contextPath}/rmsbookingDetail/retrieveSF/" + rowInv + "/" + rowPkid + "/" + rowId + "/" + rmsBookingId;
+                                            var deleteMsg = "Are you sure want to retrieve this item from Storage Factory?";
+                                            $("#confirmation_modal .modal-body").html(deleteMsg);
+                                            $("#modal_button").attr("href", deleteUrl);
+                                        } else {
+                                            var deleteUrl = "";
+                                            var deleteMsg = "No Item Selected.";
+                                            $("#confirmation_modal .modal-body").html(deleteMsg);
+                                            $("#modal_button").attr("href", deleteUrl);
+                                        }
+                                    });
         </script>
     </s:layout-component>
 </s:layout-render>

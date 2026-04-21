@@ -961,6 +961,58 @@ public class RmsBookingHardwareDAO {
         return count;
     }
 
+    public Integer getCountMotherboardByBookingPkidAndFlagNot99(String bookingPkid) {
+        Integer count = null;
+        try {
+            PreparedStatement ps = conn.prepareStatement(
+                    "SELECT COUNT(*) AS count FROM rms_booking_hardware inc WHERE inc.booking_pkid = '" + bookingPkid + "' AND inc.item_type = 'Motherboard' AND inc.flag != '99'"
+            );
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                count = rs.getInt("count");
+            }
+            rs.close();
+            ps.close();
+        } catch (SQLException e) {
+            LOGGER.error(e.getMessage());
+        } finally {
+            if (conn != null) {
+                try {
+                    conn.close();
+                } catch (SQLException e) {
+                    LOGGER.error(e.getMessage());
+                }
+            }
+        }
+        return count;
+    }
+
+    public Integer getCountMotherboardByBookingPkidAndPendingRelease(String bookingPkid) {
+        Integer count = null;
+        try {
+            PreparedStatement ps = conn.prepareStatement(
+                    "SELECT COUNT(*) AS count FROM rms_booking_hardware inc WHERE inc.booking_pkid = '" + bookingPkid + "' AND inc.item_type = 'Motherboard' AND inc.sub_status = 'Pending Release to Production'"
+            );
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                count = rs.getInt("count");
+            }
+            rs.close();
+            ps.close();
+        } catch (SQLException e) {
+            LOGGER.error(e.getMessage());
+        } finally {
+            if (conn != null) {
+                try {
+                    conn.close();
+                } catch (SQLException e) {
+                    LOGGER.error(e.getMessage());
+                }
+            }
+        }
+        return count;
+    }
+
     public Integer checkMotherboardData(String bookingId) {
         Integer count = 0;
         String sql = "SELECT COUNT(*) as count FROM rms_booking_hardware WHERE booking_pkid = '" + bookingId + "' AND item_type = 'Motherboard'";

@@ -662,8 +662,25 @@ public class RmsBookingDetailController {
             }
         }
 
-        //get motherboard detail
+        // to show/hide release button
+        String releaseButton = "";
         RmsBookingHardwareDAO rmsHD = new RmsBookingHardwareDAO();
+        int countBib = rmsHD.getCountMotherboardByBookingPkidAndFlagNot99(Integer.toString(bookingPkid));
+
+        rmsHD = new RmsBookingHardwareDAO();
+        int countBibPendingRelease = rmsHD.getCountMotherboardByBookingPkidAndPendingRelease(Integer.toString(bookingPkid));
+        LOGGER.info("countBib: " + countBib);
+        LOGGER.info("countBibPendingRelease: " + countBibPendingRelease);
+
+        if (countBib == countBibPendingRelease) {
+            releaseButton = "Enable";
+        } else {
+            releaseButton = "Disable";
+        }
+        model.addAttribute("releaseButton", releaseButton);
+
+        //get motherboard detail
+        rmsHD = new RmsBookingHardwareDAO();
         List<RmsBookingHardware> BibList = rmsHD.getRmsBookingHardwareListForMotherboardByBookingPkid(Integer.toString(bookingPkid));
         model.addAttribute("BibList", BibList);
 
