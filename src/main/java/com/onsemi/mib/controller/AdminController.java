@@ -1259,6 +1259,7 @@ public class AdminController {
             @RequestParam(required = false) String sptsPkid,
             @RequestParam(required = false) String viCheck,
             @RequestParam(required = false) String bibTestCheck,
+            @RequestParam(required = false) String daqTestCheck,
             @RequestParam(required = false) String manualTestCheck,
             @RequestParam(required = false) String leakageTestCheck,
             @RequestParam(required = false) String psLeakageTestCheck,
@@ -1276,6 +1277,11 @@ public class AdminController {
             itemA.setBibTest("Yes");
         } else {
             itemA.setBibTest("No");
+        }
+        if ("on".equals(daqTestCheck)) {
+            itemA.setBibDaqTest("Yes");
+        } else {
+            itemA.setBibDaqTest("No");
         }
         if ("on".equals(manualTestCheck)) {
             itemA.setManualTest("Yes");
@@ -1364,7 +1370,6 @@ public class AdminController {
             @ModelAttribute UserSession userSession,
             @PathVariable("id") String id) {
 
-
         UserAccessControlDAO uacD = new UserAccessControlDAO();
         UserAccessControl uac = uacD.getUserAccessControlByLoginId(userSession.getLoginId());
         model.addAttribute("uac", uac);
@@ -1414,6 +1419,7 @@ public class AdminController {
             @RequestParam(required = false) String id,
             @RequestParam(required = false) String viCheck,
             @RequestParam(required = false) String bibTestCheck,
+            @RequestParam(required = false) String daqTestCheck,
             @RequestParam(required = false) String manualTestCheck,
             @RequestParam(required = false) String leakageTestCheck,
             @RequestParam(required = false) String psLeakageTestCheck,
@@ -1441,6 +1447,11 @@ public class AdminController {
         } else {
             itemA.setBibTest("No");
         }
+        if ("on".equals(daqTestCheck)) {
+            itemA.setBibDaqTest("Yes");
+        } else {
+            itemA.setBibDaqTest("No");
+        }
         if ("on".equals(manualTestCheck)) {
             itemA.setManualTest("Yes");
             saiz = compName.size();
@@ -1454,7 +1465,7 @@ public class AdminController {
 
             ManualTestDAO test = new ManualTestDAO();
             Integer check1 = test.getManualTestCurrentRecord(itemId);
-            
+
             if ("0".equals(check1)) {
                 test = new ManualTestDAO();
                 QueryResult q0 = test.insertManualTestBeforeLoading(itemId, id, String.valueOf(inputQuantity), inputDUT, String.valueOf(saiz), user, flag);
@@ -1469,7 +1480,7 @@ public class AdminController {
             } else {
                 test = new ManualTestDAO();
                 String configId = test.getConfigIdByItemId(itemId).toString();
-                
+
                 if ("0".equals(configId)) {
                     test = new ManualTestDAO();
                     QueryResult q0 = test.insertManualTestBeforeLoading(itemId, id, String.valueOf(inputQuantity), inputDUT, String.valueOf(saiz), user, flag);
@@ -1481,7 +1492,7 @@ public class AdminController {
                     test = new ManualTestDAO();
                     QueryResult q0 = test.updateItemActivityConfig(String.valueOf(inputQuantity), inputDUT, String.valueOf(saiz), String.valueOf(configId));
                 }
-                
+
                 // FUNCTION TO REMOVE PREVIOUS COMPONENT, AND THEN SAVE THE NEW ONE
                 test = new ManualTestDAO();
                 test.removeCurrentDataBefore(configId, itemId);
@@ -1532,6 +1543,7 @@ public class AdminController {
             @RequestParam(required = false) String id,
             @RequestParam(required = false) String viCheck,
             @RequestParam(required = false) String bibTestCheck,
+            @RequestParam(required = false) String daqTestCheck,
             @RequestParam(required = false) String manualTestCheck,
             @RequestParam(required = false) String leakageTestCheck,
             @RequestParam(required = false) String psLeakageTestCheck,
@@ -1559,6 +1571,11 @@ public class AdminController {
             itemA.setBibTest("Yes");
         } else {
             itemA.setBibTest("No");
+        }
+        if ("on".equals(daqTestCheck)) {
+            itemA.setBibDaqTest("Yes");
+        } else {
+            itemA.setBibDaqTest("No");
         }
         if ("on".equals(manualTestCheck)) {
             itemA.setManualTest("Yes");
@@ -1589,7 +1606,7 @@ public class AdminController {
             } else {
                 test = new ManualTestDAO();
                 String configId = test.getConfigIdByItemId(itemId).toString();
-                
+
                 if ("0".equals(configId)) {
                     test = new ManualTestDAO();
                     QueryResult q0 = test.insertManualTestBeforeLoading(itemId, id, String.valueOf(inputQuantity), inputDUT, String.valueOf(saiz), user, flag);
@@ -1601,7 +1618,7 @@ public class AdminController {
                     test = new ManualTestDAO();
                     QueryResult q0 = test.updateItemActivityConfig(String.valueOf(inputQuantity), inputDUT, String.valueOf(saiz), String.valueOf(configId));
                 }
-                
+
                 // FUNCTION TO REMOVE PREVIOUS COMPONENT, AND THEN SAVE THE NEW ONE
                 test = new ManualTestDAO();
                 test.removeCurrentDataBefore(configId, itemId);
@@ -1738,11 +1755,11 @@ public class AdminController {
         ItemHardwareConfigDAO itemdao = new ItemHardwareConfigDAO();
         List<ItemHardwareConfig> itemList = itemdao.getItemHardwareConfigList();
         model.addAttribute("itemList", itemList);
-        
+
         JSONObject paramsConfig = new JSONObject();
         paramsConfig.put("itemPKID", "");                               // LETAK RANDOM SBB NK BACA SEMUA DATA JA - BETTER DONT HAVE TOO MANY CONFIG DATA
         JSONArray getItemHwConfigByParam = SPTSWebService.getHardwareIdConfigByParam(paramsConfig);
-        
+
         for (int i = 0; i < getItemHwConfigByParam.length(); i++) {
             Integer sptsPKID = 0;
             String itemType = "";
@@ -1760,7 +1777,7 @@ public class AdminController {
             Integer flag = 0;
             String createdBy = "";
             String createdDate = "";
-            
+
             sptsPKID = getItemHwConfigByParam.getJSONObject(i).getInt("PKID");
             if (sptsPKID == 0) {
                 // CREATE NOTHING HERE
@@ -1780,12 +1797,12 @@ public class AdminController {
 //                flag = getItemHwConfigByParam.getJSONObject(i).getInt("Flag");
 //                createdBy = getItemHwConfigByParam.getJSONObject(i).getString("CreatedBy");
 //                createdDate = getItemHwConfigByParam.getJSONObject(i).getString("CreatedDate");
-                
+
                 if (getItemHwConfigByParam.getJSONObject(i).has("SubType")) {
                     subType = getItemHwConfigByParam.getJSONObject(i).getString("SubType");
                 }
                 subType = Strings.nullToEmpty(subType);                     // CONVERT NULL DATA TO EMPTY STRING
-                
+
                 itemdao = new ItemHardwareConfigDAO();
                 ItemHardwareConfig itemconfig = itemdao.getConfigItem(itemType, subType);
 
@@ -1834,7 +1851,7 @@ public class AdminController {
                         a.setFlag(Integer.toString(getItemHwConfigByParam.getJSONObject(i).getInt("Flag")));
                     }
                 }
-                
+
                 if (itemconfig == null) {
                     itemdao = new ItemHardwareConfigDAO();
                     QueryResult queryResult = itemdao.insertItemHardwareConfig(a);
@@ -1843,13 +1860,13 @@ public class AdminController {
                     LocalDateTime instance = LocalDateTime.now();
                     DateTimeFormatter formatter = DateTimeFormatter.ofPattern(pattern);
                     String dateNow = formatter.format(instance);
-                    
+
                     a.setUpdatedBy("SPTS");
                     a.setUpdatedDate(dateNow);
                     itemdao = new ItemHardwareConfigDAO();
                     itemdao.updateItemHardwareConfig(a);
                 }
-             }
+            }
         }
 
         return "admin/hw_id_list";
@@ -2024,7 +2041,7 @@ public class AdminController {
         partnumber = onToYesNo(partnumber);
         alu = onToYesNo(alu);
         shelf = onToYesNo(shelf);
-        
+
         subType = Strings.nullToEmpty(subType);
 
         ItemHardwareConfig itemupdate = new ItemHardwareConfig();

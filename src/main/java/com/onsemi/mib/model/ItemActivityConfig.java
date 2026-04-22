@@ -6,6 +6,7 @@ public class ItemActivityConfig {
     private String mibItemId;
     private String vi;
     private String bibTest;
+    private String bibDaqTest;
     private String manualTest;
     private String leakageTest;
     private String psLeakageTest;
@@ -110,6 +111,14 @@ public class ItemActivityConfig {
 
     public void setBibTest(String bibTest) {
         this.bibTest = bibTest;
+    }
+
+    public String getBibDaqTest() {
+        return bibDaqTest;
+    }
+
+    public void setBibDaqTest(String bibDaqTest) {
+        this.bibDaqTest = bibDaqTest;
     }
 
     public String getManualTest() {

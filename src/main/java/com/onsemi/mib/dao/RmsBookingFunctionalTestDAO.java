@@ -70,7 +70,7 @@ public class RmsBookingFunctionalTestDAO {
         QueryResult queryResult = new QueryResult();
         try {
             PreparedStatement ps = conn.prepareStatement(
-                    "UPDATE rms_booking_functional_test SET bib_qty = ?, bib_status = ?, bib_upload = ?, remark = ?, final_status = ?, flag = ? WHERE group_id = ? "
+                    "UPDATE rms_booking_functional_test SET bib_qty = ?, bib_status = ?, bib_upload = ?, remark = ?, final_status = ?, flag = ?, bib_hwid = ? WHERE group_id = ? "
             );
             ps.setString(1, book.getBibQty());
             ps.setString(2, book.getBibStatus());
@@ -79,6 +79,7 @@ public class RmsBookingFunctionalTestDAO {
             ps.setString(5, book.getFinalStatus());
             ps.setString(6, book.getFlag());
             ps.setString(7, book.getGroupId());
+            ps.setString(8, book.getBibHwid());
             queryResult.setResult(ps.executeUpdate());
             ps.close();
         } catch (SQLException e) {
@@ -129,7 +130,7 @@ public class RmsBookingFunctionalTestDAO {
         QueryResult queryResult = new QueryResult();
         try {
             PreparedStatement ps = conn.prepareStatement(
-                    "UPDATE rms_booking_functional_test SET leak_qty=?, leak_status=?, leak_upload=?, remark=?, final_status=?, flag=? WHERE group_id = ? "
+                    "UPDATE rms_booking_functional_test SET leak_qty=?, leak_status=?, leak_upload=?, remark=?, final_status=?, flag=?, leak_hwid=? WHERE group_id = ? "
             );
             ps.setString(1, book.getLeakQty());
             ps.setString(2, book.getLeakStatus());
@@ -138,6 +139,38 @@ public class RmsBookingFunctionalTestDAO {
             ps.setString(5, book.getFinalStatus());
             ps.setString(6, book.getFlag());
             ps.setString(7, book.getGroupId());
+            ps.setString(8, book.getLeakHwid());
+            queryResult.setResult(ps.executeUpdate());
+            ps.close();
+        } catch (SQLException e) {
+            queryResult.setErrorMessage(e.getMessage());
+            LOGGER.error(e.getMessage());
+        } finally {
+            if (conn != null) {
+                try {
+                    conn.close();
+                } catch (SQLException e) {
+                    LOGGER.error(e.getMessage());
+                }
+            }
+        }
+        return queryResult;
+    }
+    
+    public QueryResult updateBibDaqTest(RmsBookingFunctionalTest book) {
+        QueryResult queryResult = new QueryResult();
+        try {
+            PreparedStatement ps = conn.prepareStatement(
+                    "UPDATE rms_booking_functional_test SET bib_daq_qty = ?, bib_daq_status = ?, bib_daq_upload = ?, remark = ?, final_status = ?, flag = ?, bib_daq_hwid = ? WHERE group_id = ? "
+            );
+            ps.setString(1, book.getBibDaqQty());
+            ps.setString(2, book.getBibDaqStatus());
+            ps.setString(3, book.getBibDaqUpload());
+            ps.setString(4, book.getRemark());
+            ps.setString(5, book.getFinalStatus());
+            ps.setString(6, book.getFlag());
+            ps.setString(7, book.getGroupId());
+            ps.setString(8, book.getBibDaqHwid());
             queryResult.setResult(ps.executeUpdate());
             ps.close();
         } catch (SQLException e) {
@@ -159,7 +192,7 @@ public class RmsBookingFunctionalTestDAO {
         QueryResult queryResult = new QueryResult();
         try {
             PreparedStatement ps = conn.prepareStatement(
-                    "UPDATE rms_booking_functional_test SET ps_qty=?, ps_status=?, ps_upload=?, remark=?, final_status=?, flag=? WHERE group_id = ? "
+                    "UPDATE rms_booking_functional_test SET ps_qty=?, ps_status=?, ps_upload=?, remark=?, final_status=?, flag=?, ps_hwid WHERE group_id = ? "
             );
             ps.setString(1, book.getPsQty());
             ps.setString(2, book.getPsStatus());
@@ -168,6 +201,7 @@ public class RmsBookingFunctionalTestDAO {
             ps.setString(5, book.getFinalStatus());
             ps.setString(6, book.getFlag());
             ps.setString(7, book.getGroupId());
+            ps.setString(8, book.getPsHwid());
             queryResult.setResult(ps.executeUpdate());
             ps.close();
         } catch (SQLException e) {
@@ -189,7 +223,7 @@ public class RmsBookingFunctionalTestDAO {
         QueryResult queryResult = new QueryResult();
         try {
             PreparedStatement ps = conn.prepareStatement(
-                    "UPDATE rms_booking_functional_test SET win_qty=?, win_status=?, win_upload=?, remark=?, final_status=?, flag=? WHERE group_id = ? "
+                    "UPDATE rms_booking_functional_test SET win_qty=?, win_status=?, win_upload=?, remark=?, final_status=?, flag=?, win_hwid=? WHERE group_id = ? "
             );
             ps.setString(1, book.getWinQty());
             ps.setString(2, book.getWinStatus());
@@ -198,6 +232,7 @@ public class RmsBookingFunctionalTestDAO {
             ps.setString(5, book.getFinalStatus());
             ps.setString(6, book.getFlag());
             ps.setString(7, book.getGroupId());
+            ps.setString(8, book.getWinHwid());
             queryResult.setResult(ps.executeUpdate());
             ps.close();
         } catch (SQLException e) {
@@ -285,6 +320,10 @@ public class RmsBookingFunctionalTestDAO {
                 testResult.setBibQty(rs.getString("bib_qty"));
                 testResult.setBibStatus(rs.getString("bib_status"));
                 testResult.setBibUpload(rs.getString("bib_upload"));
+                testResult.setBibDaqHwid(rs.getString("bib_daq_hwid"));
+                testResult.setBibDaqQty(rs.getString("bib_daq_qty"));
+                testResult.setBibDaqStatus(rs.getString("bib_daq_status"));
+                testResult.setBibDaqUpload(rs.getString("bib_daq_upload"));
                 testResult.setPsHwid(rs.getString("ps_hwid"));
                 testResult.setPsQty(rs.getString("ps_qty"));
                 testResult.setPsStatus(rs.getString("ps_status"));

@@ -230,17 +230,21 @@
                                             <div class="input-group form-check form-switch">
                                                 <input class="form-check-input" type="checkbox" role="switch" id="viCheck" name="viCheck"  <c:if test="${item.vi == 'Yes'}">checked</c:if> >
                                             </div>
-                                            <label for="bibTestCheck" class="form-label">Bib Test</label>
+                                            <label for="leakageTestCheck" class="form-label">Leakage Test</label>
                                             <div class="input-group form-check form-switch">
-                                                <input class="form-check-input" type="checkbox" role="switch" id="bibTestCheck" name="bibTestCheck" <c:if test="${item.bibTest == 'Yes'}">checked</c:if> >
+                                                <input class="form-check-input" type="checkbox" role="switch" id="leakageTestCheck" name="leakageTestCheck" <c:if test="${item.leakageTest == 'Yes'}">checked</c:if> >
                                             </div>
                                             <label for="manualTestCheck" class="form-label">Manual Test</label>
                                             <div class="input-group form-check form-switch">
                                                 <input class="form-check-input" type="checkbox" role="switch" onchange="toggleVisibility()" id="manualTestCheck" name="manualTestCheck" <c:if test="${item.manualTest == 'Yes'}">checked</c:if> >
                                             </div>
-                                            <label for="leakageTestCheck" class="form-label">Leakage Test</label>
+                                            <label for="bibTestCheck" class="form-label">BIB Test</label>
                                             <div class="input-group form-check form-switch">
-                                                <input class="form-check-input" type="checkbox" role="switch" id="leakageTestCheck" name="leakageTestCheck" <c:if test="${item.leakageTest == 'Yes'}">checked</c:if> >
+                                                <input class="form-check-input" type="checkbox" role="switch" id="bibTestCheck" name="bibTestCheck" <c:if test="${item.bibTest == 'Yes'}">checked</c:if> >
+                                            </div>
+                                            <label for="bibDaqTestCheck" class="form-label">BIB DAQ Test</label>
+                                            <div class="input-group form-check form-switch">
+                                                <input class="form-check-input" type="checkbox" role="switch" id="bibDaqTestCheck" name="bibDaqTestCheck" <c:if test="${item.bibDaqTest == 'Yes'}">checked</c:if> >
                                             </div>
                                             <label for="psLeakageTestCheck" class="form-label">Power Supply Leakage Test</label>
                                             <div class="input-group form-check form-switch">

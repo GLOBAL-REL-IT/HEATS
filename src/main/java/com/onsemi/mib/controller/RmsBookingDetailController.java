@@ -1131,6 +1131,7 @@ public class RmsBookingDetailController {
         String leakTest = "";
         String manTest = "";
         String bibTest = "";
+        String daqTest = "";
         String psTest = "";
         String winTest = "";
         String groupId = bookingId + "/" + itemPkid;
@@ -1169,6 +1170,7 @@ public class RmsBookingDetailController {
         String statusLeak = "";
         String statusMan = "";
         String statusBib = "";
+        String statusBibD = "";
         String statusPs = "";
         String statusWin = "";
 
@@ -1215,6 +1217,7 @@ public class RmsBookingDetailController {
 
                     if (itemactlc != null) {
                         bibTest = itemactlc.getBibTest();
+                        daqTest = itemactlc.getBibDaqTest();
                         manTest = itemactlc.getManualTest();
                     } else {
                         redirectAttrs.addFlashAttribute("error", "No load card configuration configured");
@@ -1230,6 +1233,8 @@ public class RmsBookingDetailController {
                 currentStatus = "Pending Functional Test - Manual Test";
             } else if (bibTest.contains("Yes")) {
                 currentStatus = "Pending Functional Test - BIB Test";
+            } else if (daqTest.contains("Yes")) {
+                currentStatus = "Pending Functional Test - BIB DAQ Test";
             } else if (psTest.contains("Yes")) {
                 currentStatus = "Pending Functional Test - Power Supply Leakage Test";
             } else if (winTest.contains("Yes")) {
@@ -1286,6 +1291,7 @@ public class RmsBookingDetailController {
 
                         if (itemactlc != null) {
                             bibTest = itemactlc.getBibTest();
+                            daqTest = itemactlc.getBibDaqTest();
                             manTest = itemactlc.getManualTest();
                         } else {
                             redirectAttrs.addFlashAttribute("error", "No load card configuration configured");
@@ -1306,18 +1312,77 @@ public class RmsBookingDetailController {
                     statusLeak = testResult.getLeakStatus();
                     statusMan = testResult.getManualStatus();
                     statusBib = testResult.getBibStatus();
+                    statusBibD = testResult.getBibDaqStatus();
                     statusPs = testResult.getPsStatus();
                     statusWin = testResult.getWinStatus();
                 }
+                LOGGER.info("status kita >>>> " + currentStatus);
+                String check01 = "disabled";    // LEAKAGE
+                String check02 = "disabled";    // MANUAL
+                String check03 = "disabled";    // BIB 
+                String check04 = "disabled";    // BIB DAQ
+                String check05 = "disabled";    // PS
+                String check06 = "disabled";    // WINCHESTER
+                String edit01 = "visually-hidden";
+                String edit02 = "visually-hidden";
+                String edit03 = "visually-hidden";
+                String edit04 = "visually-hidden";
+                String edit05 = "visually-hidden";
+                String edit06 = "visually-hidden";
 
                 if (currentStatus.contains("Failed")) {
                     model.addAttribute("leakbutton", "disabled");
                     model.addAttribute("manualbutton", "disabled");
                     model.addAttribute("bibbutton", "disabled");
+                    model.addAttribute("bibdaqbutton", "disabled");
                     model.addAttribute("psbutton", "disabled");
                     model.addAttribute("winbutton", "disabled");
+                } else {
+                    if (currentStatus.contains("Leakage")) {
+                        check01 = "";
+                        edit01 = "";
+                    } else if (currentStatus.contains("BIB Test")) {
+                        check03 = "";
+                        edit03 = "";
+                    } else if (currentStatus.contains("BIB DAQ")) {
+                        check04 = "";
+                        edit04 = "";
+                    } else if (currentStatus.contains("Manual")) {
+                        check02 = "";
+                        edit02 = "";
+                    } else if (currentStatus.contains("Winchester")) {
+                        check06 = "";
+                        edit06 = "";
+                    } else if (currentStatus.contains("Power")) {
+                        check05 = "";
+                        edit05 = "";
+                    }
                 }
+
+                model.addAttribute("leakbutton", check01);
+                model.addAttribute("manualbutton", check02);
+                model.addAttribute("bibbutton", check03);
+                model.addAttribute("bibdaqbutton", check04);
+                model.addAttribute("psbutton", check05);
+                model.addAttribute("winbutton", check06);
+                model.addAttribute("editleakbutton", edit01);
+                model.addAttribute("editmanualbutton", edit02);
+                model.addAttribute("editbibbutton", edit03);
+                model.addAttribute("editbibdaqbutton", edit04);
+                model.addAttribute("editpsbutton", edit05);
+                model.addAttribute("editwinbutton", edit06);
+                LOGGER.info("MASUK SINI KE   **********************************");
             }
+        }
+
+        if (statusLeak.equals("Fail")) {
+            model.addAttribute("leakbutton", "disabled");
+            model.addAttribute("editleakbutton", "disabled");
+        } else if (statusLeak.equals("Pass")) {
+            model.addAttribute("leakbutton", "disabled");
+            model.addAttribute("editleakbutton", "enabled");
+        } else {
+
         }
 
         model.addAttribute("bookId", bookingId);
@@ -1326,12 +1391,17 @@ public class RmsBookingDetailController {
         model.addAttribute("leakCheck", leakTest);
         model.addAttribute("manCheck", manTest);
         model.addAttribute("bibCheck", bibTest);
+        model.addAttribute("daqCheck", daqTest);
         model.addAttribute("psCheck", psTest);
         model.addAttribute("winCheck", winTest);
 
         ParameterDetailsDAO pDx = new ParameterDetailsDAO();
         List<ParameterDetails> bibResultData = pDx.getGroupParameterDetailList(statusBib, "016");
         model.addAttribute("bibResultData", bibResultData);
+
+        pDx = new ParameterDetailsDAO();
+        List<ParameterDetails> bibDaqResultData = pDx.getGroupParameterDetailList(statusBibD, "016");
+        model.addAttribute("bibDaqResultData", bibDaqResultData);
 
         pDx = new ParameterDetailsDAO();
         List<ParameterDetails> leakResultData = pDx.getGroupParameterDetailList(statusLeak, "016");
@@ -1561,18 +1631,18 @@ public class RmsBookingDetailController {
         if (currentStatus.contains("Test")) {
             teActive = "active";
             teActiveTab = "show active";
-            if (currentStatus.contains("Leakage Test")) {
-                if (currentStatus.contains("Power Supply")) {
-                    model.addAttribute("psshow", teActiveTab);
-                } else if (currentStatus.contains("Winchester")) {
-                    model.addAttribute("winshow", teActiveTab);
-                } else {
-                    model.addAttribute("leakshow", teActiveTab);
-                }
+            if (currentStatus.contains("- Leakage Test")) {
+                model.addAttribute("leakshow", teActiveTab);
             } else if (currentStatus.contains("Manual")) {
                 model.addAttribute("manshow", teActiveTab);
-            } else if (currentStatus.contains("BIB")) {
+            } else if (currentStatus.contains("BIB Test")) {
                 model.addAttribute("bibshow", teActiveTab);
+            } else if (currentStatus.contains("BIB DAQ")) {
+                model.addAttribute("bibDshow", teActiveTab);
+            } else if (currentStatus.contains("Power Supply")) {
+                model.addAttribute("psshow", teActiveTab);
+            } else if (currentStatus.contains("Winchester")) {
+                model.addAttribute("winshow", teActiveTab);
             }
         } else {
             // DO NOTHING HERE
@@ -2840,8 +2910,11 @@ public class RmsBookingDetailController {
             @RequestParam(required = false) MultipartFile psUpload,
             @RequestParam(required = false) String winResult,
             @RequestParam(required = false) MultipartFile winUpload,
+            @RequestParam(required = false) String bibDaqResult,
+            @RequestParam(required = false) MultipartFile bibDaqUpload,
             @RequestParam(required = false) String leakHardware,
             @RequestParam(required = false) String bibHardware,
+            @RequestParam(required = false) String bibDaqHardware,
             @RequestParam(required = false) String psHardware,
             @RequestParam(required = false) String winHardware,
             HttpServletResponse response
@@ -2849,6 +2922,7 @@ public class RmsBookingDetailController {
 
         String gotoMn = "Pending Functional Test - Manual Test";
         String gotoBib = "Pending Functional Test - BIB Test";
+        String gotoDaq = "Pending Functional Test - BIB DAQ Test";
         String gotoPS = "Pending Functional Test - Power Supply Leakage Test";
         String gotoWin = "Pending Functional Test - Winchester Chamber Leakage Test";
         String goReady = "Pending Release to Production";
@@ -2856,6 +2930,7 @@ public class RmsBookingDetailController {
         String checkLeak = "No";
         String checkManual = "No";
         String checkBib = "No";
+        String checkDaq = "No";
         String checkPs = "No";
         String checkWin = "No";
         String linkUpload = "";
@@ -2899,6 +2974,7 @@ public class RmsBookingDetailController {
                 checkLeak = "No";
                 checkManual = "No";
                 checkBib = "No";
+                checkDaq = "No";
                 checkPs = "No";
                 checkWin = "No";
             }
@@ -2916,6 +2992,7 @@ public class RmsBookingDetailController {
                 if (itemactlc != null) {
                     LOGGER.info("DAPAT LC");
                     checkBib = itemactlc.getBibTest();
+                    checkDaq = itemactlc.getBibDaqTest();
                     checkManual = itemactlc.getManualTest();
                 } else {
                     redirectAttrs.addFlashAttribute("error", "No load card configuration configured");
@@ -2954,6 +3031,8 @@ public class RmsBookingDetailController {
                     newStatus = gotoMn;
                 } else if (checkBib.equals("Yes")) {
                     newStatus = gotoBib;
+                } else if (checkDaq.equals("Yes")) {
+                    newStatus = gotoDaq;
                 } else if (checkPs.equals("Yes")) {
                     newStatus = gotoPS;
                 } else if (checkWin.equals("Yes")) {
@@ -3006,7 +3085,9 @@ public class RmsBookingDetailController {
                 newStatus = "Failed Functional Test - BIB Test";
             } else {
                 LOGGER.info("ATAU PASSED");
-                if (checkPs.equals("Yes")) {
+                if (checkDaq.equals("Yes")) {
+                    newStatus = gotoDaq;
+                } else if (checkPs.equals("Yes")) {
                     newStatus = gotoPS;
                 } else if (checkWin.equals("Yes")) {
                     newStatus = gotoWin;
@@ -3034,6 +3115,57 @@ public class RmsBookingDetailController {
             RmsBookingFunctionalTestDAO ftestdao = new RmsBookingFunctionalTestDAO();
             ftestdao.updateBibTest(ftest);
             LOGGER.info("DONE UPDATE BIB TEST????");
+        } else if (jenis.equals("bibDaqTest")) {
+            LOGGER.info("SINI KITA KENA UPDATE UNTUK BIB DAQ");
+            if (bibDaqUpload != null) {
+                try {
+                    byte[] bytesConnector = bibDaqUpload.getBytes();
+                    Path pathConnector = Paths.get(FOLDER_TEST_BL + "_bibDaqTest_" + bibDaqUpload.getOriginalFilename()); // THIS ONE TESTING ONLY, USE CORRECT GENERATED KEY
+                    if (bibDaqUpload.getOriginalFilename() == null || bibDaqUpload.getOriginalFilename().equalsIgnoreCase("")) {
+                        //
+                    } else {
+                        Files.write(pathConnector, bytesConnector);
+                        linkUpload = pathConnector.toString();
+                    }
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+
+            if (bibDaqResult.equals("Fail")) {
+                LOGGER.info("FAILED");
+                saveToMaverickFunctionalTest("BIBDAQ", username, groupId, bibDaqHardware);
+                newStatus = "Failed Functional Test - BIB DAQ Test";
+            } else {
+                LOGGER.info("ATAU PASSED");
+                if (checkPs.equals("Yes")) {
+                    newStatus = gotoPS;
+                } else if (checkWin.equals("Yes")) {
+                    newStatus = gotoWin;
+                } else {
+                    newStatus = goReady;
+                }
+                // UPDATE THE STATUS
+                RmsBookingHardware bookHardware = new RmsBookingHardware();
+                bookHardware.setBookingPkid(bookId);
+                bookHardware.setPkid(motherboardId);
+                bookHardware.setSubStatus(newStatus);
+                RmsBookingHardwareDAO booking = new RmsBookingHardwareDAO();
+                booking.updateRmsBookingHardwareSubStatusByPkidAndBookingPkid(bookHardware);
+            }
+            LOGGER.info("KITA CUBA NK UPDATE BIB TEST RESUILT DEKAT SINI ::: " + bibResult);
+            RmsBookingFunctionalTest ftest = new RmsBookingFunctionalTest();
+            ftest.setFinalStatus(newStatus);
+            ftest.setBibDaqHwid(bibDaqHardware);
+            ftest.setBibDaqQty(totalQty);
+            ftest.setBibDaqStatus(bibDaqResult);
+            ftest.setBibDaqUpload(linkUpload);
+            ftest.setRemark("");
+            ftest.setFlag("0");
+            ftest.setGroupId(groupId);
+            RmsBookingFunctionalTestDAO ftestdao = new RmsBookingFunctionalTestDAO();
+            ftestdao.updateBibDaqTest(ftest);
+            LOGGER.info("DONE UPDATE BIB DAQ TEST????");
         } else if (jenis.equals("psTest")) {
             if (psUpload != null) {
                 try {
@@ -3135,6 +3267,7 @@ public class RmsBookingDetailController {
             item.setLeakageTest(itemact.getLeakageTest());
             item.setManualTest(itemact.getManualTest());
             item.setBibTest(itemact.getBibTest());
+            item.setBibDaqTest(itemact.getBibDaqTest());
             item.setPsLeakageTest(itemact.getPsLeakageTest());
             item.setWinchesterChamberLeakageTest(itemact.getWinchesterChamberLeakageTest());
         }
@@ -3306,6 +3439,7 @@ public class RmsBookingDetailController {
         String leakTest = "";
         String manTest = "";
         String bibTest = "";
+        String daqTest = "";
         String psTest = "";
         String winTest = "";
         String groupId = bookingId + "/" + itemPkid;
@@ -3383,6 +3517,7 @@ public class RmsBookingDetailController {
 
                     if (itemactlc != null) {
                         bibTest = itemactlc.getBibTest();
+                        daqTest = itemactlc.getBibDaqTest();
                         manTest = itemactlc.getManualTest();
                     } else {
                         redirectAttrs.addFlashAttribute("error", "No load card configuration configured");
@@ -3398,6 +3533,8 @@ public class RmsBookingDetailController {
                 currentStatus = "Pending Functional Test - Manual Test";
             } else if (bibTest.contains("Yes")) {
                 currentStatus = "Pending Functional Test - BIB Test";
+            } else if (daqTest.contains("Yes")) {
+                currentStatus = "Pending Functional Test - BIB DAQ Test";
             } else if (psTest.contains("Yes")) {
                 currentStatus = "Pending Functional Test - Power Supply Leakage Test";
             } else if (winTest.contains("Yes")) {
@@ -3412,12 +3549,17 @@ public class RmsBookingDetailController {
         model.addAttribute("leakCheck", leakTest);
         model.addAttribute("manCheck", manTest);
         model.addAttribute("bibCheck", bibTest);
+        model.addAttribute("bibDaqCheck", daqTest);
         model.addAttribute("psCheck", psTest);
         model.addAttribute("winCheck", winTest);
 
         ParameterDetailsDAO pDx = new ParameterDetailsDAO();
         List<ParameterDetails> bibResultData = pDx.getGroupParameterDetailList("", "016");
         model.addAttribute("bibResultData", bibResultData);
+
+        pDx = new ParameterDetailsDAO();
+        List<ParameterDetails> bibDaqResultData = pDx.getGroupParameterDetailList("", "016");
+        model.addAttribute("bibDaqResultData", bibDaqResultData);
 
         pDx = new ParameterDetailsDAO();
         List<ParameterDetails> leakResultData = pDx.getGroupParameterDetailList("", "016");
@@ -3635,18 +3777,18 @@ public class RmsBookingDetailController {
         if (currentStatus.contains("Test")) {
             teActive = "active";
             teActiveTab = "show active";
-            if (currentStatus.contains("Leakage Test")) {
-                if (currentStatus.contains("Power Supply")) {
-                    model.addAttribute("psshow", teActiveTab);
-                } else if (currentStatus.contains("Winchester")) {
-                    model.addAttribute("winshow", teActiveTab);
-                } else {
-                    model.addAttribute("leakshow", teActiveTab);
-                }
+            if (currentStatus.contains("- Leakage Test")) {
+                model.addAttribute("leakshow", teActiveTab);
             } else if (currentStatus.contains("Manual")) {
                 model.addAttribute("manshow", teActiveTab);
-            } else if (currentStatus.contains("BIB")) {
+            } else if (currentStatus.contains("BIB Test")) {
                 model.addAttribute("bibshow", teActiveTab);
+            } else if (currentStatus.contains("BIB DAQ")) {
+                model.addAttribute("bibDshow", teActiveTab);
+            } else if (currentStatus.contains("Power Supply")) {
+                model.addAttribute("psshow", teActiveTab);
+            } else if (currentStatus.contains("Winchester")) {
+                model.addAttribute("winshow", teActiveTab);
             }
         } else {
             // DO NOTHING HERE
@@ -3759,6 +3901,8 @@ public class RmsBookingDetailController {
             emailBodyFail = "Failed Functional Test - Manual Test";
         } else if (jenistest.contains("BIB")) {
             emailBodyFail = "Failed Functional Test - BIB Test";
+        } else if (jenistest.contains("BIBDAQ")) {
+            emailBodyFail = "Failed Functional Test - BIB DAQ Test";
         } else if (jenistest.contains("Power")) {
             emailBodyFail = "Failed Functional Test - Power Supply Leakage Test";
         } else if (jenistest.contains("Winchester")) {

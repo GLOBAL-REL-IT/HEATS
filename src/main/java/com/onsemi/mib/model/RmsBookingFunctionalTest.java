@@ -21,6 +21,10 @@ public class RmsBookingFunctionalTest {
     private String bibQty;
     private String bibUpload;
     private String bibStatus;
+    private String bibDaqHwid;
+    private String bibDaqQty;
+    private String bibDaqUpload;
+    private String bibDaqStatus;
     private String psHwid;
     private String psQty;
     private String psUpload;
@@ -129,6 +133,38 @@ public class RmsBookingFunctionalTest {
 
     public void setBibStatus(String bibStatus) {
         this.bibStatus = bibStatus;
+    }
+
+    public String getBibDaqHwid() {
+        return bibDaqHwid;
+    }
+
+    public void setBibDaqHwid(String bibDaqHwid) {
+        this.bibDaqHwid = bibDaqHwid;
+    }
+
+    public String getBibDaqQty() {
+        return bibDaqQty;
+    }
+
+    public void setBibDaqQty(String bibDaqQty) {
+        this.bibDaqQty = bibDaqQty;
+    }
+
+    public String getBibDaqUpload() {
+        return bibDaqUpload;
+    }
+
+    public void setBibDaqUpload(String bibDaqUpload) {
+        this.bibDaqUpload = bibDaqUpload;
+    }
+
+    public String getBibDaqStatus() {
+        return bibDaqStatus;
+    }
+
+    public void setBibDaqStatus(String bibDaqStatus) {
+        this.bibDaqStatus = bibDaqStatus;
     }
 
     public String getPsHwid() {

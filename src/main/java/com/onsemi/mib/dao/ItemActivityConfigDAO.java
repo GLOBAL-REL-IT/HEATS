@@ -30,7 +30,7 @@ public class ItemActivityConfigDAO {
         QueryResult queryResult = new QueryResult();
         try {
             PreparedStatement ps = conn.prepareStatement(
-                    "INSERT INTO item_activity_config (mib_item_id, vi, bib_test, manual_test, leakage_test, ps_leakage_test, created_by, created_date, status, flag, winchester_chamber_leakage_test) VALUES (?,?,?,?,?,?,?,NOW(),?,?,?)", Statement.RETURN_GENERATED_KEYS
+                    "INSERT INTO item_activity_config (mib_item_id, vi, bib_test, manual_test, leakage_test, ps_leakage_test, created_by, created_date, status, flag, winchester_chamber_leakage_test, bib_daq_test) VALUES (?,?,?,?,?,?,?,NOW(),?,?,?,?)", Statement.RETURN_GENERATED_KEYS
             );
             ps.setString(1, itemactivityConfig.getMibItemId());
             ps.setString(2, itemactivityConfig.getVi());
@@ -42,6 +42,7 @@ public class ItemActivityConfigDAO {
             ps.setString(8, itemactivityConfig.getStatus());
             ps.setString(9, itemactivityConfig.getFlag());
             ps.setString(10, itemactivityConfig.getWinchesterChamberLeakageTest());
+            ps.setString(11, itemactivityConfig.getBibDaqTest());
             queryResult.setResult(ps.executeUpdate());
             ResultSet rs = ps.getGeneratedKeys();
             if (rs.next()) {
@@ -68,7 +69,7 @@ public class ItemActivityConfigDAO {
         QueryResult queryResult = new QueryResult();
         try {
             PreparedStatement ps = conn.prepareStatement(
-                    "UPDATE item_activity_config SET vi = ?, bib_test = ?, manual_test = ?, leakage_test = ?, ps_leakage_test = ?, status = ?, flag = ?, winchester_chamber_leakage_test = ? WHERE id = ?"
+                    "UPDATE item_activity_config SET vi = ?, bib_test = ?, manual_test = ?, leakage_test = ?, ps_leakage_test = ?, status = ?, flag = ?, winchester_chamber_leakage_test = ?, bib_daq_test = ? WHERE id = ?"
             );
 //            ps.setString(1, itemactivityConfig.getMibItemId());
             ps.setString(1, itemactivityConfig.getVi());
@@ -79,7 +80,8 @@ public class ItemActivityConfigDAO {
             ps.setString(6, itemactivityConfig.getStatus());
             ps.setString(7, itemactivityConfig.getFlag());
             ps.setString(8, itemactivityConfig.getWinchesterChamberLeakageTest());
-            ps.setString(9, itemactivityConfig.getId());
+            ps.setString(9, itemactivityConfig.getBibDaqTest());
+            ps.setString(10, itemactivityConfig.getId());
             queryResult.setResult(ps.executeUpdate());
             ps.close();
         } catch (SQLException e) {
@@ -132,6 +134,7 @@ public class ItemActivityConfigDAO {
                 itemactivityConfig.setMibItemId(rs.getString("mib_item_id"));
                 itemactivityConfig.setVi(rs.getString("vi"));
                 itemactivityConfig.setBibTest(rs.getString("bib_test"));
+                itemactivityConfig.setBibDaqTest(rs.getString("bib_daq_test"));
                 itemactivityConfig.setManualTest(rs.getString("manual_test"));
                 itemactivityConfig.setLeakageTest(rs.getString("leakage_test"));
                 itemactivityConfig.setPsLeakageTest(rs.getString("ps_leakage_test"));
@@ -170,6 +173,7 @@ public class ItemActivityConfigDAO {
                 itemactivityConfig.setMibItemId(rs.getString("mib_item_id"));
                 itemactivityConfig.setVi(rs.getString("vi"));
                 itemactivityConfig.setBibTest(rs.getString("bib_test"));
+                itemactivityConfig.setBibDaqTest(rs.getString("bib_daq_test"));
                 itemactivityConfig.setManualTest(rs.getString("manual_test"));
                 itemactivityConfig.setLeakageTest(rs.getString("leakage_test"));
                 itemactivityConfig.setPsLeakageTest(rs.getString("ps_leakage_test"));
@@ -208,6 +212,7 @@ public class ItemActivityConfigDAO {
                 itemactivityConfig.setMibItemId(rs.getString("mib_item_id"));
                 itemactivityConfig.setVi(rs.getString("vi"));
                 itemactivityConfig.setBibTest(rs.getString("bib_test"));
+                itemactivityConfig.setBibDaqTest(rs.getString("bib_daq_test"));
                 itemactivityConfig.setManualTest(rs.getString("manual_test"));
                 itemactivityConfig.setLeakageTest(rs.getString("leakage_test"));
                 itemactivityConfig.setPsLeakageTest(rs.getString("ps_leakage_test"));
@@ -256,6 +261,7 @@ public class ItemActivityConfigDAO {
                 itemactivityConfig.setMibItemId(rs.getString("mib_item_id"));
                 itemactivityConfig.setVi(rs.getString("vi"));
                 itemactivityConfig.setBibTest(rs.getString("bib_test"));
+                itemactivityConfig.setBibDaqTest(rs.getString("bib_daq_test"));
                 itemactivityConfig.setManualTest(rs.getString("manual_test"));
                 itemactivityConfig.setLeakageTest(rs.getString("leakage_test"));
                 itemactivityConfig.setPsLeakageTest(rs.getString("ps_leakage_test"));
@@ -304,6 +310,7 @@ public class ItemActivityConfigDAO {
                 itemactivityConfig.setMibItemId(rs.getString("mib_item_id"));
                 itemactivityConfig.setVi(rs.getString("vi"));
                 itemactivityConfig.setBibTest(rs.getString("bib_test"));
+                itemactivityConfig.setBibDaqTest(rs.getString("bib_daq_test"));
                 itemactivityConfig.setManualTest(rs.getString("manual_test"));
                 itemactivityConfig.setLeakageTest(rs.getString("leakage_test"));
                 itemactivityConfig.setPsLeakageTest(rs.getString("ps_leakage_test"));
@@ -351,6 +358,7 @@ public class ItemActivityConfigDAO {
                 itemactivityConfig.setMibItemId(rs.getString("mib_item_id"));
                 itemactivityConfig.setVi(rs.getString("vi"));
                 itemactivityConfig.setBibTest(rs.getString("bib_test"));
+                itemactivityConfig.setBibDaqTest(rs.getString("bib_daq_test"));
                 itemactivityConfig.setManualTest(rs.getString("manual_test"));
                 itemactivityConfig.setLeakageTest(rs.getString("leakage_test"));
                 itemactivityConfig.setPsLeakageTest(rs.getString("ps_leakage_test"));
@@ -395,6 +403,7 @@ public class ItemActivityConfigDAO {
                 itemactivityConfig.setMibItemId(rs.getString("mib_item_id"));
                 itemactivityConfig.setVi(rs.getString("vi"));
                 itemactivityConfig.setBibTest(rs.getString("bib_test"));
+                itemactivityConfig.setBibDaqTest(rs.getString("bib_daq_test"));
                 itemactivityConfig.setManualTest(rs.getString("manual_test"));
                 itemactivityConfig.setLeakageTest(rs.getString("leakage_test"));
                 itemactivityConfig.setPsLeakageTest(rs.getString("ps_leakage_test"));
@@ -456,7 +465,6 @@ public class ItemActivityConfigDAO {
                 count = rs.getInt("count");
             }
             rs.close();
-
             ps.close();
         } catch (SQLException e) {
             LOGGER.error(e.getMessage());
