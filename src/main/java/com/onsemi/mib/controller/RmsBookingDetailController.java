@@ -1134,6 +1134,10 @@ public class RmsBookingDetailController {
         String daqTest = "";
         String psTest = "";
         String winTest = "";
+        
+        String teActive = "";
+        String teActiveTab = "";
+        
         String groupId = bookingId + "/" + itemPkid;
         model.addAttribute("groupId", groupId);
         model.addAttribute("userItemSfRecall", userSession.getItemSfRecall());
@@ -1191,6 +1195,8 @@ public class RmsBookingDetailController {
                 mbSptsPkid = bookdao.getSptsPkidForItemIdMb(bookingId, itemPkid);
                 ItemDAO itemdao = new ItemDAO();
                 itemIdMB = itemdao.getMibItemIdBySptsPkId(mbSptsPkid);
+                itemdao = new ItemDAO();
+                String boardName = itemdao.getItemIdById(itemIdMB);
                 ItemActivityConfigDAO itemactdao = new ItemActivityConfigDAO();
                 ItemActivityConfig itemactmb = itemactdao.getItemActivityByItemId(itemIdMB);
                 if (itemactmb != null) {
@@ -1202,16 +1208,18 @@ public class RmsBookingDetailController {
                     model.addAttribute("configMotherboard", "TRIGGERERROR");
                     model.addAttribute("itemIdMB", itemIdMB);
                     model.addAttribute("itemIdLC", itemIdLC);
-                    redirectAttrs.addFlashAttribute("error", "No motherboard configuration configured");
+                    model.addAttribute("message", "MB Configuration Error [" + itemIdMB + "]" + ": The BIB Activity Config for " + boardName + " was not found!");
                 }
 
                 if (checkLc == 0) {
                     // SINI TAKDE LC
-                    redirectAttrs.addFlashAttribute("error", "No load card configured");
+                    model.addAttribute("message", "No Load Card Information Found");
                 } else {
                     // SINI DUA2 ADA
                     bookdao = new RmsBookingHardwareDAO();
                     itemIdLC = bookdao.getSptsPkidForItemIdLC(bookingId);
+                    itemdao = new ItemDAO();
+                    String loadcardName = itemdao.getItemIdById(itemIdLC);
                     itemactdao = new ItemActivityConfigDAO();
                     ItemActivityConfig itemactlc = itemactdao.getItemActivityByItemId(itemIdLC);
 
@@ -1220,7 +1228,7 @@ public class RmsBookingDetailController {
                         daqTest = itemactlc.getBibDaqTest();
                         manTest = itemactlc.getManualTest();
                     } else {
-                        redirectAttrs.addFlashAttribute("error", "No load card configuration configured");
+                        model.addAttribute("message", "LC Configuration Error [" + itemIdLC + "]" + ": The BIB Activity Config for " + loadcardName + " was not found!");
                     }
                 }
                 model.addAttribute("itemIdMB", itemIdMB);
@@ -1243,7 +1251,6 @@ public class RmsBookingDetailController {
                 currentStatus = "Pending Release to Production";
             }
         } else {
-            LOGGER.info("HEHEHE, KELUAR SINI DA LA>>>>");
             // DO NOTHING HERE
             if (currentStatus.equals("Pending HW Registration")) {
                 model.addAttribute("configMotherboard", "HW");
@@ -1316,7 +1323,6 @@ public class RmsBookingDetailController {
                     statusPs = testResult.getPsStatus();
                     statusWin = testResult.getWinStatus();
                 }
-                LOGGER.info("status kita >>>> " + currentStatus);
                 String check01 = "disabled";    // LEAKAGE
                 String check02 = "disabled";    // MANUAL
                 String check03 = "disabled";    // BIB 
@@ -1371,7 +1377,8 @@ public class RmsBookingDetailController {
                 model.addAttribute("editbibdaqbutton", edit04);
                 model.addAttribute("editpsbutton", edit05);
                 model.addAttribute("editwinbutton", edit06);
-                LOGGER.info("MASUK SINI KE   **********************************");
+            } else {
+
             }
         }
 
@@ -1626,8 +1633,7 @@ public class RmsBookingDetailController {
 //            model.addAttribute("teActiveTab", teActiveTab);
 //        }
 
-        String teActive = "";
-        String teActiveTab = "";
+        
         if (currentStatus.contains("Test")) {
             teActive = "active";
             teActiveTab = "show active";
@@ -2689,7 +2695,6 @@ public class RmsBookingDetailController {
 
         inputStream.close();
         outStream.close();
-
     }
 
     @RequestMapping(value = "/save", method = RequestMethod.POST)
@@ -2960,7 +2965,6 @@ public class RmsBookingDetailController {
             ItemActivityConfigDAO itemactdao = new ItemActivityConfigDAO();
             ItemActivityConfig itemactmb = itemactdao.getItemActivityByItemId(itemIdMB);
             if (itemactmb != null) {
-//                LOGGER.info("DAPAT MB");
                 checkLeak = itemactmb.getLeakageTest();
                 checkPs = itemactmb.getPsLeakageTest();
                 checkWin = itemactmb.getWinchesterChamberLeakageTest();
@@ -2970,7 +2974,7 @@ public class RmsBookingDetailController {
                 model.addAttribute("itemIdMB", itemIdMB);
                 model.addAttribute("itemIdLC", itemIdLC);
                 redirectAttrs.addFlashAttribute("error", "No motherboard configuration configured");
-//                LOGGER.info("SBB MB KOSONG, KITA RESET BALIK SEMUA DEKAT SINI");
+
                 checkLeak = "No";
                 checkManual = "No";
                 checkBib = "No";
@@ -2990,7 +2994,6 @@ public class RmsBookingDetailController {
                 ItemActivityConfig itemactlc = itemactdao.getItemActivityByItemId(itemIdLC);
 
                 if (itemactlc != null) {
-                    LOGGER.info("DAPAT LC");
                     checkBib = itemactlc.getBibTest();
                     checkDaq = itemactlc.getBibDaqTest();
                     checkManual = itemactlc.getManualTest();
@@ -3040,7 +3043,6 @@ public class RmsBookingDetailController {
                 } else {
                     newStatus = goReady;
                 }
-                LOGGER.info("CHECK TENGOK STATUS SETERUSNYA :::: " + newStatus);
                 // SINI PASS MACAM BIASA, UPDATE THE STATUS to next Functional Test
                 RmsBookingHardware bookHardware = new RmsBookingHardware();
                 bookHardware.setBookingPkid(bookId);
@@ -3063,7 +3065,6 @@ public class RmsBookingDetailController {
         } else if (jenis.equals("manTest")) {
 
         } else if (jenis.equals("bibTest")) {
-            LOGGER.info("SINI KITA KENA UPDATE UNTUK BIB");
             if (bibUpload != null) {
                 try {
                     byte[] bytesConnector = bibUpload.getBytes();
@@ -3080,11 +3081,9 @@ public class RmsBookingDetailController {
             }
 
             if (bibResult.equals("Fail")) {
-                LOGGER.info("FAILED");
                 saveToMaverickFunctionalTest("BIB", username, groupId, bibHardware);
                 newStatus = "Failed Functional Test - BIB Test";
             } else {
-                LOGGER.info("ATAU PASSED");
                 if (checkDaq.equals("Yes")) {
                     newStatus = gotoDaq;
                 } else if (checkPs.equals("Yes")) {
@@ -3102,7 +3101,6 @@ public class RmsBookingDetailController {
                 RmsBookingHardwareDAO booking = new RmsBookingHardwareDAO();
                 booking.updateRmsBookingHardwareSubStatusByPkidAndBookingPkid(bookHardware);
             }
-            LOGGER.info("KITA CUBA NK UPDATE BIB TEST RESUILT DEKAT SINI ::: " + bibResult);
             RmsBookingFunctionalTest ftest = new RmsBookingFunctionalTest();
             ftest.setFinalStatus(newStatus);
             ftest.setBibHwid(bibHardware);
@@ -3114,9 +3112,7 @@ public class RmsBookingDetailController {
             ftest.setGroupId(groupId);
             RmsBookingFunctionalTestDAO ftestdao = new RmsBookingFunctionalTestDAO();
             ftestdao.updateBibTest(ftest);
-            LOGGER.info("DONE UPDATE BIB TEST????");
         } else if (jenis.equals("bibDaqTest")) {
-            LOGGER.info("SINI KITA KENA UPDATE UNTUK BIB DAQ");
             if (bibDaqUpload != null) {
                 try {
                     byte[] bytesConnector = bibDaqUpload.getBytes();
@@ -3133,11 +3129,9 @@ public class RmsBookingDetailController {
             }
 
             if (bibDaqResult.equals("Fail")) {
-                LOGGER.info("FAILED");
                 saveToMaverickFunctionalTest("BIBDAQ", username, groupId, bibDaqHardware);
                 newStatus = "Failed Functional Test - BIB DAQ Test";
             } else {
-                LOGGER.info("ATAU PASSED");
                 if (checkPs.equals("Yes")) {
                     newStatus = gotoPS;
                 } else if (checkWin.equals("Yes")) {
@@ -3153,7 +3147,6 @@ public class RmsBookingDetailController {
                 RmsBookingHardwareDAO booking = new RmsBookingHardwareDAO();
                 booking.updateRmsBookingHardwareSubStatusByPkidAndBookingPkid(bookHardware);
             }
-            LOGGER.info("KITA CUBA NK UPDATE BIB TEST RESUILT DEKAT SINI ::: " + bibResult);
             RmsBookingFunctionalTest ftest = new RmsBookingFunctionalTest();
             ftest.setFinalStatus(newStatus);
             ftest.setBibDaqHwid(bibDaqHardware);
@@ -3165,7 +3158,6 @@ public class RmsBookingDetailController {
             ftest.setGroupId(groupId);
             RmsBookingFunctionalTestDAO ftestdao = new RmsBookingFunctionalTestDAO();
             ftestdao.updateBibDaqTest(ftest);
-            LOGGER.info("DONE UPDATE BIB DAQ TEST????");
         } else if (jenis.equals("psTest")) {
             if (psUpload != null) {
                 try {
@@ -3251,7 +3243,7 @@ public class RmsBookingDetailController {
             RmsBookingFunctionalTestDAO ftestdao = new RmsBookingFunctionalTestDAO();
             ftestdao.updateWinchesterTest(ftest);
         } else {
-            LOGGER.info("SINI APA BENDA JADI SIAAAA >>>>>> " + jenis);
+
         }
         return target_location;
     }
@@ -3809,7 +3801,6 @@ public class RmsBookingDetailController {
             @RequestParam(required = false) String recallRemarks) {
 
         LOGGER.info("id: " + id);
-
         RmsBookingDetailDAO rmsD = new RmsBookingDetailDAO();
         RmsBookingDetail rms1 = rmsD.getRmsBookingDetail(id);
 
@@ -3850,7 +3841,6 @@ public class RmsBookingDetailController {
                 }
                 rmsHD = new RmsBookingHardwareDAO();
                 QueryResult q2 = rmsHD.updateRmsBookingHardwareForFlagAndStatusById(hardware1);
-
             }
 
             RmsBookingHardwareGroupDAO groupD = new RmsBookingHardwareGroupDAO();
@@ -3872,7 +3862,6 @@ public class RmsBookingDetailController {
                 log2.setCreatedBy(userSession.getFullname());
                 RmsBookingHardwareGroupLogDAO logD2 = new RmsBookingHardwareGroupLogDAO();
                 QueryResult logQ2 = logD2.insertRmsBookingHardwareGroupLog(log2);
-
             }
 
             redirectAttrs.addFlashAttribute("success", "Successfully update the hardware status. Please return the hardware to MB room.");
@@ -3989,7 +3978,6 @@ public class RmsBookingDetailController {
                 + "<br /> "
                 + "<br />Thank you."
         );
-
         return data;
     }
 
@@ -4007,10 +3995,8 @@ public class RmsBookingDetailController {
             ftest.setFlag("0");
             testdao = new RmsBookingFunctionalTestDAO();
             testdao.insertRmsBookingFunctionalTest(ftest);
-            LOGGER.info("CREATE NEW TEST RESULT FOR GROUP ID :::: " + groupId);
         } else {
             // BOLE UPDATE NANTI
-            LOGGER.info("DATA ALREADY CREATED, CAN UPDATE THE STATUS ACCORDINGLY FOR GROUP >>>> " + groupId);
         }
     }
 

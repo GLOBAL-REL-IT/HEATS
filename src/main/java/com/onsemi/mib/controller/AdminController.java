@@ -1263,8 +1263,20 @@ public class AdminController {
             @RequestParam(required = false) String manualTestCheck,
             @RequestParam(required = false) String leakageTestCheck,
             @RequestParam(required = false) String psLeakageTestCheck,
-            @RequestParam(required = false) String winchesterChamberLeakageTest
-    ) {
+            @RequestParam(required = false) String winchesterChamberLeakageTest,
+            @RequestParam(required = false) String inputDUT,
+            @RequestParam(required = false, value = "component_name[]") List<String> compName,
+            @RequestParam(required = false, value = "component_type[]") List<String> type,
+            @RequestParam(required = false, value = "actual_value[]") List<String> compValue,
+            @RequestParam(required = false, value = "percentage[]") List<String> percentageValue,
+            @RequestParam(required = false, value = "lower[]") List<String> lowerValue,
+            @RequestParam(required = false, value = "upper[]") List<String> upperValue) {
+        
+        LOGGER.info("SINI KITA NK PERTAMA KALI SAVE");
+        LOGGER.info("mibItemId >>>>> "+mibItemId);
+        
+        int saiz = 0;
+        int inputQuantity = 1;
 
         ItemActivityConfig itemA = new ItemActivityConfig();
         itemA.setMibItemId(mibItemId);
@@ -1310,6 +1322,63 @@ public class AdminController {
         ItemActivityConfigDAO itemD = new ItemActivityConfigDAO();
         QueryResult itemQ = itemD.insertItemActivityConfig(itemA);
         if (!"0".equals(itemQ.getGeneratedKey())) {
+            if ("on".equals(manualTestCheck)) {
+                saiz = compName.size();
+                String flag = "1";
+                String status = "";
+                int saizDut = Integer.parseInt(inputDUT);
+                String user = userSession.getLoginId();
+
+                ItemActivityConfigDAO itemactdao = new ItemActivityConfigDAO();
+                String itemId = itemactdao.getItemIdByConfigId(mibItemId);
+
+                ManualTestDAO test = new ManualTestDAO();
+                Integer check1 = test.getManualTestCurrentRecord(itemId);
+                
+                LOGGER.info("****************************");
+                LOGGER.info("NK TENGOK DATA DEKAT SINI :::: "+itemQ.getGeneratedKey());
+
+                if ("0".equals(check1)) {
+                    LOGGER.info("huhuhuhuhuhuhuhu");
+                    test = new ManualTestDAO();
+                    QueryResult q0 = test.insertManualTestBeforeLoading(itemId, itemQ.getGeneratedKey(), String.valueOf(inputQuantity), inputDUT, String.valueOf(saiz), user, flag);
+                    LOGGER.info("111111111");
+                    if (!"0".equals(q0.getGeneratedKey())) {
+                        String configId = q0.getGeneratedKey();
+                        for (int c1 = 0; c1 < saiz; c1++) {
+                            test = new ManualTestDAO();
+                            QueryResult q3 = test.insertManualTestBeforeLoadingSub(itemId, configId, inputDUT, type.get(c1), compName.get(c1), compValue.get(c1), percentageValue.get(c1), lowerValue.get(c1), upperValue.get(c1), user, flag);
+                            LOGGER.info("222222222");
+                        }
+                    }
+                } else {
+                    LOGGER.info("hihihihihihihihihihihihihih");
+                    test = new ManualTestDAO();
+                    String configId = test.getConfigIdByItemId(itemId).toString();
+
+                    if ("0".equals(configId)) {
+                        test = new ManualTestDAO();
+                        QueryResult q0 = test.insertManualTestBeforeLoading(itemId, itemQ.getGeneratedKey(), String.valueOf(inputQuantity), inputDUT, String.valueOf(saiz), user, flag);
+                        LOGGER.info("33333");
+                        if (!"0".equals(q0.getGeneratedKey())) {
+                            configId = q0.getGeneratedKey();
+                        }
+                    } else {
+                        test = new ManualTestDAO();
+                        QueryResult q0 = test.updateItemActivityConfig(String.valueOf(inputQuantity), inputDUT, String.valueOf(saiz), String.valueOf(configId));
+                        LOGGER.info("44444");
+                    }
+
+                    // FUNCTION TO REMOVE PREVIOUS COMPONENT, AND THEN SAVE THE NEW ONE
+                    test = new ManualTestDAO();
+                    test.removeCurrentDataBefore(configId, itemId);
+
+                    for (int c1 = 0; c1 < saiz; c1++) {
+                        test = new ManualTestDAO();
+                        QueryResult q3 = test.insertManualTestBeforeLoadingSub(itemId, configId, inputDUT, type.get(c1), compName.get(c1), compValue.get(c1), percentageValue.get(c1), lowerValue.get(c1), upperValue.get(c1), user, flag);
+                    }
+                }
+            }
             redirectAttrs.addFlashAttribute("success", "Activity Configuration Succesfully Added.");
             return "redirect:/hw/" + sptsPkid;
         } else {

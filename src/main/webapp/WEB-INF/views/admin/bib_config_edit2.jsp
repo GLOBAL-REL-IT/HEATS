@@ -213,7 +213,7 @@
                                         </div>
                                     </div>
                                 </div>
-                                            <div class="row mb-4">
+                                <div class="row mb-4">
                                     <label class="col-sm-2 col-md-1 col-form-label fw-semibold" for="stressType">Stress Type</label>
                                     <div class="col-sm-9 col-md-10">
                                         <div class="row g-2">
@@ -230,30 +230,34 @@
                                             <label for="viCheck" class="form-label">Visual Inspection</label>
                                             <div class="input-group form-check form-switch">
                                                 <input class="form-check-input" type="checkbox" role="switch" id="viCheck" name="viCheck"  <c:if test="${item.vi == 'Yes'}">checked</c:if> >
-                                            </div>
-                                            <label for="bibTestCheck" class="form-label">Bib Test</label>
-                                            <div class="input-group form-check form-switch">
-                                                <input class="form-check-input" type="checkbox" role="switch" id="bibTestCheck" name="bibTestCheck" <c:if test="${item.bibTest == 'Yes'}">checked</c:if> >
-                                            </div>
-                                            <label for="manualTestCheck" class="form-label">Manual Test</label>
-                                            <div class="input-group form-check form-switch">
-                                                <input class="form-check-input" type="checkbox" role="switch" onchange="toggleVisibility()" id="manualTestCheck" name="manualTestCheck" <c:if test="${item.manualTest == 'Yes'}">checked</c:if> >
-                                            </div>
-                                            <label for="leakageTestCheck" class="form-label">Leakage Test</label>
-                                            <div class="input-group form-check form-switch">
-                                                <input class="form-check-input" type="checkbox" role="switch" id="leakageTestCheck" name="leakageTestCheck" <c:if test="${item.leakageTest == 'Yes'}">checked</c:if> >
-                                            </div>
-                                            <label for="psLeakageTestCheck" class="form-label">Power Supply Leakage Test</label>
-                                            <div class="input-group form-check form-switch">
-                                                <input class="form-check-input" type="checkbox" role="switch" id="psLeakageTestCheck" name="psLeakageTestCheck" <c:if test="${item.psLeakageTest == 'Yes'}">checked</c:if> >
-                                            </div>
-                                            <label for="winchesterChamberLeakageTest" class="form-label">Winchester Chamber Leakage Test</label>
-                                            <div class="input-group form-check form-switch">
-                                                <input class="form-check-input" type="checkbox" role="switch" id="winchesterChamberLeakageTest" name="winchesterChamberLeakageTest" <c:if test="${item.winchesterChamberLeakageTest == 'Yes'}">checked</c:if> >
+                                                </div>
+                                                <label for="leakageTestCheck" class="form-label">Leakage Test</label>
+                                                <div class="input-group form-check form-switch">
+                                                    <input class="form-check-input" type="checkbox" role="switch" id="leakageTestCheck" name="leakageTestCheck" <c:if test="${item.leakageTest == 'Yes'}">checked</c:if> >
+                                                </div>
+                                                <label for="manualTestCheck" class="form-label">Manual Test</label>
+                                                <div class="input-group form-check form-switch">
+                                                    <input class="form-check-input" type="checkbox" role="switch" onchange="toggleVisibility()" id="manualTestCheck" name="manualTestCheck" <c:if test="${item.manualTest == 'Yes'}">checked</c:if> >
+                                                </div>
+                                                <label for="bibTestCheck" class="form-label">Bib Test</label>
+                                                <div class="input-group form-check form-switch">
+                                                    <input class="form-check-input" type="checkbox" role="switch" id="bibTestCheck" name="bibTestCheck" <c:if test="${item.bibTest == 'Yes'}">checked</c:if> >
+                                                </div>
+                                                <label for="daqTestCheck" class="form-label">Bib DAQ Test</label>
+                                                <div class="input-group form-check form-switch">
+                                                    <input class="form-check-input" type="checkbox" role="switch" id="daqTestCheck" name="daqTestCheck" <c:if test="${item.bibDaqTest == 'Yes'}">checked</c:if> >
+                                                </div>
+                                                <label for="psLeakageTestCheck" class="form-label">Power Supply Leakage Test</label>
+                                                <div class="input-group form-check form-switch">
+                                                    <input class="form-check-input" type="checkbox" role="switch" id="psLeakageTestCheck" name="psLeakageTestCheck" <c:if test="${item.psLeakageTest == 'Yes'}">checked</c:if> >
+                                                </div>
+                                                <label for="winchesterChamberLeakageTest" class="form-label">Winchester Chamber Leakage Test</label>
+                                                <div class="input-group form-check form-switch">
+                                                    <input class="form-check-input" type="checkbox" role="switch" id="winchesterChamberLeakageTest" name="winchesterChamberLeakageTest" <c:if test="${item.winchesterChamberLeakageTest == 'Yes'}">checked</c:if> >
+                                                </div>
                                             </div>
                                         </div>
-                                    </div>
-                                            
+
                                     <c:choose>
                                         <c:when test="${item.manualTest == 'Yes'}">
                                             <div class="col-xl-6 col-sm-12 col-12" id="manual_page_control">
@@ -282,24 +286,24 @@
                                                             <tr>
                                                                 <td><input type="text" class="standard-input-read" name="component_type[]" value="<c:out value="${manualList.componentType}"/>" readonly></td>
                                                                 <td><input type="text" class="standard-input-read" name="component_name[]" value="<c:out value="${manualList.componentName}"/>" readonly></td>
-                                                                <c:choose>
-                                                                    <c:when test="${manualList.componentType == 'Fuse'}">
+                                                                    <c:choose>
+                                                                        <c:when test="${manualList.componentType == 'Fuse'}">
                                                                         <td class="status2-text" style="text-align: center;" colspan="4">OPEN / SHORT</td>
-                                                                        <input type="hidden" class="standard-input-read" name="actual_value[]" value="<c:out value="1"/>" readonly>
-                                                                        <input type="hidden" class="standard-input-read" name="percentage[]" value="<c:out value="0"/>" readonly>
-                                                                        <input type="hidden" class="standard-input-read" name="lower[]" value="<c:out value="0"/>" readonly>
-                                                                        <input type="hidden" class="standard-input-read" name="upper[]" value="<c:out value="1"/>" readonly>
-                                                                    </c:when>
-                                                                    <c:otherwise>
-                                                                        <td><input type="text" class="standard-input-read" name="actual_value[]" value="<c:out value="${manualList.componentValue}"/>" readonly></td>
-                                                                        <td><input type="text" class="standard-input-read" name="percentage[]" value="<c:out value="${manualList.percentage}"/>" readonly></td>
-                                                                        <td><input type="text" class="standard-input-read" name="lower[]" value="<c:out value="${manualList.lowerLimit}"/>" readonly></td>
-                                                                        <td><input type="text" class="standard-input-read" name="upper[]" value="<c:out value="${manualList.upperLimit}"/>" readonly></td>
-                                                                    </c:otherwise>
-                                                                </c:choose>
-                                                                <td><button class="delete-btn" onclick="deleteRow(this)"><i class="bi bi-trash h3" style="color: gray;"></i></button></td>
-                                                            </tr>
-                                                        </c:forEach>
+                                                                <input type="hidden" class="standard-input-read" name="actual_value[]" value="<c:out value="1"/>" readonly>
+                                                                <input type="hidden" class="standard-input-read" name="percentage[]" value="<c:out value="0"/>" readonly>
+                                                                <input type="hidden" class="standard-input-read" name="lower[]" value="<c:out value="0"/>" readonly>
+                                                                <input type="hidden" class="standard-input-read" name="upper[]" value="<c:out value="1"/>" readonly>
+                                                            </c:when>
+                                                            <c:otherwise>
+                                                                <td><input type="text" class="standard-input-read" name="actual_value[]" value="<c:out value="${manualList.componentValue}"/>" readonly></td>
+                                                                <td><input type="text" class="standard-input-read" name="percentage[]" value="<c:out value="${manualList.percentage}"/>" readonly></td>
+                                                                <td><input type="text" class="standard-input-read" name="lower[]" value="<c:out value="${manualList.lowerLimit}"/>" readonly></td>
+                                                                <td><input type="text" class="standard-input-read" name="upper[]" value="<c:out value="${manualList.upperLimit}"/>" readonly></td>
+                                                                </c:otherwise>
+                                                            </c:choose>
+                                                        <td><button class="delete-btn" onclick="deleteRow(this)"><i class="bi bi-trash h3" style="color: gray;"></i></button></td>
+                                                        </tr>
+                                                    </c:forEach>
                                                     </tbody>
                                                 </table>
                                             </div>
@@ -331,8 +335,8 @@
                                                             <tr>
                                                                 <td><input type="text" class="standard-input-read" name="component_type[]" value="<c:out value="${manualList.componentType}"/>" readonly></td>
                                                                 <td><input type="text" class="standard-input-read" name="component_name[]" value="<c:out value="${manualList.componentName}"/>" readonly></td>
-                                                                <c:choose>
-                                                                    <c:when test="${manualList.componentType == 'Fuse'}">
+                                                                    <c:choose>
+                                                                        <c:when test="${manualList.componentType == 'Fuse'}">
                                                                         <td class="status2-text" style="text-align: right;" colspan="4">OPEN / SHORT</td>
                                                                     </c:when>
                                                                     <c:otherwise>
@@ -340,8 +344,8 @@
                                                                         <td><input type="text" class="standard-input-read" name="percentage[]" value="<c:out value="${manualList.percentage}"/>" readonly></td>
                                                                         <td><input type="text" class="standard-input-read" name="lower[]" value="<c:out value="${manualList.lowerLimit}"/>" readonly></td>
                                                                         <td><input type="text" class="standard-input-read" name="upper[]" value="<c:out value="${manualList.upperLimit}"/>" readonly></td>
-                                                                    </c:otherwise>
-                                                                </c:choose>
+                                                                        </c:otherwise>
+                                                                    </c:choose>
                                                                 <td><button class="delete-btn" onclick="deleteRow(this)"><i class="bi bi-trash h3" style="color: gray;"></i></button></td>
                                                             </tr>
                                                         </c:forEach>
@@ -397,11 +401,11 @@
     </s:layout-component>
     <s:layout-component name="page_js_inline">
         <script>
-            $(document).ready(function () {
-                //            $('#onHandQty').change(function () {
-                ////                    $('#totalQty').val(parseInt($('#onHandQty').val()) + parseInt($('#productionQty').val()) + parseInt($('#productionStagingQty').val()) + parseInt($('#repairQty').val()));
-                //                $('#totalQty').val(parseInt($('#onHandQty').val()));
-                //            });
+                                                                    $(document).ready(function () {
+                                                                        //            $('#onHandQty').change(function () {
+                                                                        ////                    $('#totalQty').val(parseInt($('#onHandQty').val()) + parseInt($('#productionQty').val()) + parseInt($('#productionStagingQty').val()) + parseInt($('#repairQty').val()));
+                                                                        //                $('#totalQty').val(parseInt($('#onHandQty').val()));
+                                                                        //            });
 //                var element = $('#itemTypeRead');
 //                if (!element.val()) {
 //                    //                        alert();
@@ -409,193 +413,198 @@
 //                } else {
 //                    $("#submit").removeAttr('disabled');
 //                }
-            });
-            
-            function toggleVisibility() {
-                var checkbox = document.getElementById("manualTestCheck");
-                var inputContainer = document.getElementById("manual_page_control");
-                var checkDut = document.getElementById("inputDUT");
+                                                                    });
 
-                if (checkbox.checked) {
-                    inputContainer.classList.remove("hidden");
-                    document.getElementById("inputDUT").setAttribute("required", "required");
-                } else {
-                    inputContainer.classList.add("hidden");
-                    document.getElementById("inputDUT").removeAttribute("required");
-                }
-            }
-            
-            function addRow() {
-                const dut = document.getElementById("inputDUT").value || 1;
+                                                                    function toggleVisibility() {
+                                                                        var checkbox = document.getElementById("manualTestCheck");
+                                                                        var inputContainer = document.getElementById("manual_page_control");
+                                                                        var checkDut = document.getElementById("inputDUT");
 
-                const tableBody = document.getElementById("tableBody");
-                const newRow = tableBody.insertRow(-1);
+                                                                        if (checkbox.checked) {
+                                                                            inputContainer.classList.remove("hidden");
+                                                                            document.getElementById("inputDUT").setAttribute("required", "required");
+                                                                        } else {
+                                                                            inputContainer.classList.add("hidden");
+                                                                            document.getElementById("inputDUT").removeAttribute("required");
+                                                                        }
+                                                                    }
 
-                const typeCell = newRow.insertCell(0);
-                const nameCell = newRow.insertCell(1);
-                const valueCell = newRow.insertCell(2);
-                const percentageCell = newRow.insertCell(3);
-                const lowerLimitCell = newRow.insertCell(4);
-                const upperLimitCell = newRow.insertCell(5);
-                const actionCell = newRow.insertCell(6);
+                                                                    function addRow() {
+                                                                        const dut = document.getElementById("inputDUT").value || 1;
 
-                // --- Component Type Select ---
-                const typeSelect = document.createElement("select");
-                typeSelect.name = 'component_type[]';
-                typeSelect.innerHTML = `
+                                                                        const tableBody = document.getElementById("tableBody");
+                                                                        const newRow = tableBody.insertRow(-1);
+
+                                                                        const typeCell = newRow.insertCell(0);
+                                                                        const nameCell = newRow.insertCell(1);
+                                                                        const valueCell = newRow.insertCell(2);
+                                                                        const percentageCell = newRow.insertCell(3);
+                                                                        const lowerLimitCell = newRow.insertCell(4);
+                                                                        const upperLimitCell = newRow.insertCell(5);
+                                                                        const actionCell = newRow.insertCell(6);
+
+                                                                        // --- Component Type Select ---
+                                                                        const typeSelect = document.createElement("select");
+                                                                        typeSelect.name = 'component_type[]';
+                                                                        typeSelect.innerHTML = `
                     <option value="Capacitor">Capacitor</option>
                     <option value="Resistor">Resistor</option>
                     <option value="Zener">Zener</option>
                     <option value="Fuse">Fuse</option>
                     <option value="Diode">Diode</option>
                 `;
-                typeSelect.name = 'component_type[]';
-                typeCell.appendChild(typeSelect);
+                                                                        typeSelect.name = 'component_type[]';
+                                                                        typeCell.appendChild(typeSelect);
 
-                // --- Name Input ---
-                const nameInput = document.createElement("input");
-                nameInput.type = "text";
-                nameInput.name = 'component_name[]';
-                nameInput.placeholder = "Name";
-                nameInput.className = 'standard-input';
-    //            nameInput.style.width = '90px';
-                nameInput.required = true;
-                nameCell.appendChild(nameInput);
+                                                                        // --- Name Input ---
+                                                                        const nameInput = document.createElement("input");
+                                                                        nameInput.type = "text";
+                                                                        nameInput.name = 'component_name[]';
+                                                                        nameInput.placeholder = "Name";
+                                                                        nameInput.className = 'standard-input';
+                                                                        //            nameInput.style.width = '90px';
+                                                                        nameInput.required = true;
+                                                                        nameCell.appendChild(nameInput);
 
-                // --- Value Input ---
-                const valueInput = document.createElement("input");
-                valueInput.type = "number";
-                valueInput.name = 'actual_value[]';
-                valueInput.step = "any";
-                valueInput.placeholder = "Value";
-                valueInput.className = 'standard-input';
-    //            valueInput.style.width = '70px';
-                valueInput.required = true;
-                valueInput.step = '0.01';
-                valueInput.addEventListener('blur', function() {
-                    if (this.value) {
-                        this.value = parseFloat(this.value).toFixed(2);
-                    }
-                });
-                valueCell.appendChild(valueInput);
+                                                                        // --- Value Input ---
+                                                                        const valueInput = document.createElement("input");
+                                                                        valueInput.type = "number";
+                                                                        valueInput.name = 'actual_value[]';
+                                                                        valueInput.step = "any";
+                                                                        valueInput.placeholder = "Value";
+                                                                        valueInput.className = 'standard-input';
+                                                                        //            valueInput.style.width = '70px';
+                                                                        valueInput.required = true;
+                                                                        valueInput.step = '0.01';
+                                                                        valueInput.addEventListener('blur', function () {
+                                                                            if (this.value) {
+                                                                                this.value = parseFloat(this.value).toFixed(2);
+                                                                            }
+                                                                        });
+                                                                        valueCell.appendChild(valueInput);
 
-                // --- Percentage Input ---
-                const percentageInput = document.createElement("input");
-                percentageInput.type = "number";
-                percentageInput.name = 'percentage[]';
-                percentageInput.step = "any";
-                percentageInput.placeholder = "%";
-                percentageInput.className = 'standard-input';
-    //            percentageInput.style.width = '70px';
-                percentageInput.step = '0.01';
-                percentageInput.addEventListener('blur', function() {
-                    if (this.value) {
-                        this.value = parseFloat(this.value).toFixed(2);
-                    }
-                });
-                percentageCell.appendChild(percentageInput);
+                                                                        // --- Percentage Input ---
+                                                                        const percentageInput = document.createElement("input");
+                                                                        percentageInput.type = "number";
+                                                                        percentageInput.name = 'percentage[]';
+                                                                        percentageInput.step = "any";
+                                                                        percentageInput.placeholder = "%";
+                                                                        percentageInput.className = 'standard-input';
+                                                                        //            percentageInput.style.width = '70px';
+                                                                        percentageInput.step = '0.01';
+                                                                        percentageInput.addEventListener('blur', function () {
+                                                                            if (this.value) {
+                                                                                this.value = parseFloat(this.value).toFixed(2);
+                                                                            }
+                                                                        });
+                                                                        percentageCell.appendChild(percentageInput);
 
-                // --- Lower Limit (Input for Java compatibility) ---
-                const lowerLimitInput = document.createElement("input");
-                lowerLimitInput.type = "text";
-                lowerLimitInput.name = "lower[]";
-                lowerLimitInput.readOnly = true; // Prevents manual editing
-                lowerLimitInput.className = "standard-input";
-    //            lowerLimitInput.style.width = "70px";
-                lowerLimitInput.value = "N/A";
-                lowerLimitInput.addEventListener('blur', function() {
-                    if (this.value) {
-                        this.value = parseFloat(this.value).toFixed(2);
-                    }
-                });
-                lowerLimitCell.appendChild(lowerLimitInput);
+                                                                        // --- Lower Limit (Input for Java compatibility) ---
+                                                                        const lowerLimitInput = document.createElement("input");
+                                                                        lowerLimitInput.type = "text";
+                                                                        lowerLimitInput.name = "lower[]";
+                                                                        lowerLimitInput.readOnly = true; // Prevents manual editing
+                                                                        lowerLimitInput.className = "standard-input";
+                                                                        //            lowerLimitInput.style.width = "70px";
+                                                                        lowerLimitInput.value = "N/A";
+                                                                        lowerLimitInput.addEventListener('blur', function () {
+                                                                            if (this.value) {
+                                                                                this.value = parseFloat(this.value).toFixed(2);
+                                                                            }
+                                                                        });
+                                                                        lowerLimitCell.appendChild(lowerLimitInput);
 
-                // --- Upper Limit (Input for Java compatibility) ---
-                const upperLimitInput = document.createElement("input");
-                upperLimitInput.type = "text";
-                upperLimitInput.name = "upper[]";
-                upperLimitInput.readOnly = true;
-                upperLimitInput.className = "standard-input";
-    //            upperLimitInput.style.width = "70px";
-                upperLimitInput.value = "N/A";
-                upperLimitInput.addEventListener('blur', function() {
-                    if (this.value) {
-                        this.value = parseFloat(this.value).toFixed(2);
-                    }
-                });
-                upperLimitCell.appendChild(upperLimitInput);
+                                                                        // --- Upper Limit (Input for Java compatibility) ---
+                                                                        const upperLimitInput = document.createElement("input");
+                                                                        upperLimitInput.type = "text";
+                                                                        upperLimitInput.name = "upper[]";
+                                                                        upperLimitInput.readOnly = true;
+                                                                        upperLimitInput.className = "standard-input";
+                                                                        //            upperLimitInput.style.width = "70px";
+                                                                        upperLimitInput.value = "N/A";
+                                                                        upperLimitInput.addEventListener('blur', function () {
+                                                                            if (this.value) {
+                                                                                this.value = parseFloat(this.value).toFixed(2);
+                                                                            }
+                                                                        });
+                                                                        upperLimitCell.appendChild(upperLimitInput);
 
-                const deleteButton = document.createElement("button");
-                const trashIcon = document.createElement("i");
-                trashIcon.className = "bi bi-trash h3";
-                trashIcon.style.color = "gray";
-                deleteButton.innerText = "";
-                deleteButton.appendChild(trashIcon);
-                deleteButton.className = "delete-btn";
-                deleteButton.onclick = function () { this.closest('tr').remove(); };
-                actionCell.appendChild(deleteButton);
+                                                                        const deleteButton = document.createElement("button");
+                                                                        const trashIcon = document.createElement("i");
+                                                                        trashIcon.className = "bi bi-trash h3";
+                                                                        trashIcon.style.color = "gray";
+                                                                        deleteButton.innerText = "";
+                                                                        deleteButton.appendChild(trashIcon);
+                                                                        deleteButton.className = "delete-btn";
+                                                                        deleteButton.onclick = function () {
+                                                                            this.closest('tr').remove();
+                                                                        };
+                                                                        actionCell.appendChild(deleteButton);
 
-                // --- Calculation Logic ---
-                const calculateLimits = () => {
-                    const type = typeSelect.value;
-                    if (type !== "Fuse") {
-                        const val = parseFloat(valueInput.value);
-                        const pcnt = parseFloat(percentageInput.value);
+                                                                        // --- Calculation Logic ---
+                                                                        const calculateLimits = () => {
+                                                                            const type = typeSelect.value;
+                                                                            if (type !== "Fuse") {
+                                                                                const val = parseFloat(valueInput.value);
+                                                                                const pcnt = parseFloat(percentageInput.value);
 
-                        if (!isNaN(val) && !isNaN(pcnt)) {
-                            const tolerance = (val * pcnt) / 100;
-                            lowerLimitInput.value = (val - tolerance).toFixed(2);
-                            upperLimitInput.value = (val + tolerance).toFixed(2);
-                        } else {
-                            lowerLimitInput.value = "N/A";
-                            upperLimitInput.value = "N/A";
-                        }
-                    }
-                };
+                                                                                if (!isNaN(val) && !isNaN(pcnt)) {
+                                                                                    const tolerance = (val * pcnt) / 100;
+                                                                                    lowerLimitInput.value = (val - tolerance).toFixed(2);
+                                                                                    upperLimitInput.value = (val + tolerance).toFixed(2);
+                                                                                } else {
+                                                                                    lowerLimitInput.value = "N/A";
+                                                                                    upperLimitInput.value = "N/A";
+                                                                                }
+                                                                            }
+                                                                        };
 
-                const updateRowState = () => {
-                    const type = typeSelect.value;
-                    newRow.querySelectorAll('.status-text').forEach(el => el.remove());
+                                                                        const updateRowState = () => {
+                                                                            const type = typeSelect.value;
+                                                                            newRow.querySelectorAll('.status-text').forEach(el => el.remove());
 
-                    // Reset visibility
-                    [valueCell, percentageCell, lowerLimitCell, upperLimitCell].forEach(c => c.style.display = '');
-                    valueCell.colSpan = 1; percentageCell.colSpan = 1;
-                    valueInput.style.display = ''; percentageInput.style.display = '';
-                    lowerLimitInput.style.display = ''; upperLimitInput.style.display = '';
+                                                                            // Reset visibility
+                                                                            [valueCell, percentageCell, lowerLimitCell, upperLimitCell].forEach(c => c.style.display = '');
+                                                                            valueCell.colSpan = 1;
+                                                                            percentageCell.colSpan = 1;
+                                                                            valueInput.style.display = '';
+                                                                            percentageInput.style.display = '';
+                                                                            lowerLimitInput.style.display = '';
+                                                                            upperLimitInput.style.display = '';
 
-                    if (type === "Fuse") {
-                        valueInput.style.display = 'none';
-                        percentageCell.style.display = 'none';
-                        lowerLimitCell.style.display = 'none';
-                        upperLimitCell.style.display = 'none';
-                        valueInput.value = 1.0;
-                        percentageInput.value = 0.0;
-                        lowerLimitInput.value = 0.0;
-                        upperLimitInput.value = 1.0;
-                        valueCell.colSpan = 4;
-                        const span = document.createElement('span');
-                        span.className = 'status-text';
-                        span.innerText = "OPEN / SHORT";
-                        valueCell.appendChild(span);
-                    } else {
-                        calculateLimits();
-                    }
-                };
+                                                                            if (type === "Fuse") {
+                                                                                valueInput.style.display = 'none';
+                                                                                percentageCell.style.display = 'none';
+                                                                                lowerLimitCell.style.display = 'none';
+                                                                                upperLimitCell.style.display = 'none';
+                                                                                valueInput.value = 1.0;
+                                                                                percentageInput.value = 0.0;
+                                                                                lowerLimitInput.value = 0.0;
+                                                                                upperLimitInput.value = 1.0;
+                                                                                valueCell.colSpan = 4;
+                                                                                const span = document.createElement('span');
+                                                                                span.className = 'status-text';
+                                                                                span.innerText = "OPEN / SHORT";
+                                                                                valueCell.appendChild(span);
+                                                                            } else {
+                                                                                calculateLimits();
+                                                                            }
+                                                                        };
 
-                // --- Key Event Listeners for Live Updates ---
-                valueInput.addEventListener('input', calculateLimits);      // Updates as user types
-                percentageInput.addEventListener('input', calculateLimits); // Updates as user types
-                typeSelect.addEventListener('change', updateRowState);      // Updates on dropdown change
+                                                                        // --- Key Event Listeners for Live Updates ---
+                                                                        valueInput.addEventListener('input', calculateLimits);      // Updates as user types
+                                                                        percentageInput.addEventListener('input', calculateLimits); // Updates as user types
+                                                                        typeSelect.addEventListener('change', updateRowState);      // Updates on dropdown change
 
-                updateRowState();
-            }
-            
-            function deleteRow(buttonElement) {
-                let tableCell = buttonElement.parentNode;
-                let tableRow = tableCell.parentNode;
-                let tableBody = tableRow.parentNode;
-                tableBody.removeChild(tableRow);
-            }
+                                                                        updateRowState();
+                                                                    }
+
+                                                                    function deleteRow(buttonElement) {
+                                                                        let tableCell = buttonElement.parentNode;
+                                                                        let tableRow = tableCell.parentNode;
+                                                                        let tableBody = tableRow.parentNode;
+                                                                        tableBody.removeChild(tableRow);
+                                                                    }
         </script>
     </s:layout-component>
 </s:layout-render>

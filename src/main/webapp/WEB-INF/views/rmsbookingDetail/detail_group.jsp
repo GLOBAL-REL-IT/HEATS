@@ -1694,10 +1694,9 @@
                                                             <div class="accordion" id="accordionPanelsStayOpenExample">
                                                                 <c:choose>
                                                                     <c:when test="${configMotherboard == 'TRIGGERERROR'}">
-<!--                                                                        <p>DEKAT SINI SEMUA ERROR. ${itemIdMB}</p>
-                                                                        <p>${itemIdMB} - DATA MOTHERBOARD</p>
-                                                                        <p>${itemIdLC} - DATA LOAD CARD</p>
-                                                                        <p>huhuhu ::: ${configMotherboard}</p>-->
+                                                                        <p>${message}</p>
+<!--                                                                        <p>${itemIdMB} - DATA MOTHERBOARD</p>
+                                                                        <p>${itemIdLC} - DATA LOAD CARD</p>-->
                                                                     </c:when>
                                                                     <c:when test="${configMotherboard == 'HW' || configMotherboard == 'VM'}">
                                                                         <p>${message}</p>
@@ -1927,8 +1926,8 @@
                                                                                                     <label for="bibDaqResult" class="form-label">BIB DAQ Result</label>
                                                                                                     <select class="select-single js-states form-control" id="bibDaqResult" name="bibDaqResult" title="Select BIB DAQ Result" data-live-search="true" style="width: 100%" required>
                                                                                                         <option></option>
-                                                                                                        <c:forEach items="${bibDaqResultData}" var="bibResult">
-                                                                                                            <option value="${bibResult.name}" ${bibResult.selected}>${bibResult.name}</option>
+                                                                                                        <c:forEach items="${bibDaqResultData}" var="daqResult">
+                                                                                                            <option value="${daqResult.name}" ${daqResult.selected}>${daqResult.name}</option>
                                                                                                         </c:forEach>
                                                                                                     </select>
                                                                                                 </div>
@@ -2171,26 +2170,31 @@
         <script>
             $(document).ready(function () {
                 const divBib = document.getElementById('tabBib');
+                const divDaq = document.getElementById('tabBibD');
                 const divMan = document.getElementById('tabManual');
                 const divLeak = document.getElementById('tabLeak');
                 const divPs = document.getElementById('tabPs');
                 const divWin = document.getElementById('tabWin');
 
                 const checkStatus = "${currentStatus}";
+                
+                console.log("KITA TENGOK STATUS SINI :::: "+checkStatus);
 
-                if (checkStatus === "Pending Functional Test - Leakage Test") {
-                    divLeak.classList.remove('collapsed');
-                } else if (checkStatus === "Pending Functional Test - Manual Test") {
-                    divMan.classList.remove('collapsed');
-                } else if (checkStatus === "Pending Functional Test - BIB Test") {
-                    divBib.classList.remove('collapsed');
-                } else if (checkStatus === "Pending Functional Test - Power Supply Leakage Test") {
-                    divPs.classList.remove('collapsed');
-                } else if (checkStatus === "Pending Functional Test - Winchester Chamber Leakage Test") {
-                    divWin.classList.remove('collapsed');
-                } else {
-                    console.log("LATEST STATUS ::: "+checkStatus);
-                }
+//                if (checkStatus === "Pending Functional Test - Leakage Test") {
+//                    divLeak.classList.remove('collapsed');
+//                } else if (checkStatus === "Pending Functional Test - Manual Test") {
+//                    divMan.classList.remove('collapsed');
+//                } else if (checkStatus === "Pending Functional Test - BIB Test") {
+//                    divBib.classList.remove('collapsed');
+//                } else if (checkStatus === "Pending Functional Test - BIB DAQ Test") {
+//                    divDaq.classList.remove('collapsed');
+//                } else if (checkStatus === "Pending Functional Test - Power Supply Leakage Test") {
+//                    divPs.classList.remove('collapsed');
+//                } else if (checkStatus === "Pending Functional Test - Winchester Chamber Leakage Test") {
+//                    divWin.classList.remove('collapsed');
+//                } else {
+//                    console.log("LATEST STATUS ::: "+checkStatus);
+//                }
 
                 $('.js-example-basic-multiple').select2();
                 var valueJsonPcb = ${valueJsonPcb};
@@ -2248,6 +2252,7 @@
 
                 $('#leakResult').trigger('change');
                 $('#bibResult').trigger('change');
+                $('#bibDaqResult').trigger('change');
                 $('#psResult').trigger('change');
                 $('#winResult').trigger('change');
             });
