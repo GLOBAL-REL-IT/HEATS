@@ -338,12 +338,12 @@
                                                     </div>
                                                 </div>
                                             </div>
-                                            <div class="col-xl-4 col-sm-12 col-12">
+                                            <div class="form-group required col-xl-4 col-sm-12 col-12">
                                                 <div class="mb-3">
                                                     <label for="eqptTech" class="form-label">Equipment Tech</label>
                                                     <div class="input input-group">
                                                         <select class="input js-example-tags" id="eqptTech" name="eqptTech"
-                                                                title="Select Eqpt Tech" data-live-search="true" style="width: 100%" disabled>
+                                                                title="Select Eqpt Tech" data-live-search="true" style="width: 100%" disabled required>
                                                             <option></option>
                                                             <c:forEach items="${eqptTechList}" var="invInner">
                                                                 <option value="${invInner.sptsPkid}" ${invInner.selected}>${invInner.name}</option>
@@ -352,12 +352,12 @@
                                                     </div>
                                                 </div>
                                             </div>
-                                            <div class="col-xl-4 col-sm-12 col-12">
+                                            <div class="form-group required col-xl-4 col-sm-12 col-12">
                                                 <div class="mb-3">
                                                     <label for="eqptMon" class="form-label">Equipment Monitoring</label>
                                                     <div class="input input-group">
                                                         <select class="input js-example-tags" id="eqptMon" name="eqptMon"
-                                                                title="Select Eqpt Monitoring" data-live-search="true" style="width: 100%" disabled>
+                                                                title="Select Eqpt Monitoring" data-live-search="true" style="width: 100%" disabled required>
                                                             <option></option>
                                                             <c:forEach items="${eqptMonList}" var="invInner">
                                                                 <option value="${invInner.sptsPkid}" ${invInner.selected}>${invInner.name}</option>
@@ -366,12 +366,12 @@
                                                     </div>
                                                 </div>
                                             </div>
-                                            <div class="col-xl-4 col-sm-12 col-12">
+                                            <div class="form-group required col-xl-4 col-sm-12 col-12">
                                                 <div class="mb-3">
                                                     <label for="eqptViMon" class="form-label">Equipment VI Monitoring</label>
                                                     <div class="input input-group">
                                                         <select class="input js-example-tags" id="eqptViMon" name="eqptViMon"
-                                                                title="Select Eqpt VI Monitoring" data-live-search="true" style="width: 100%" disabled>
+                                                                title="Select Eqpt VI Monitoring" data-live-search="true" style="width: 100%" disabled required>
                                                             <option></option>
                                                             <c:forEach items="${eqptViMonList}" var="invInner">
                                                                 <option value="${invInner.sptsPkid}" ${invInner.selected}>${invInner.name}</option>

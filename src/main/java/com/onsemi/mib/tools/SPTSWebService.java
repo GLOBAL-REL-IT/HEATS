@@ -113,18 +113,19 @@ public class SPTSWebService {
     private static final String CBMS_ACTION_BOOKINGDETAILGETBYBOOKINGPKID = "http://tempuri.org/BookingDetail_GetByBookingPKID";
     private static final String CBMS_ACTION_GETBOOKEDEQUIPMENT = "http://tempuri.org/GetBookedEquipment";
     private static final String CBMS_ACTION_GETBOOKINGBYPKID = "http://tempuri.org/Booking_GetByPKID";
-    
+
     // HARDWARE ID CONFIG / DATA
-    private static final String HWIDCONFIG_DELETE_BYPKID    = "http://tempuri.org/ItemHardwareConfig_DeleteByPKID";
-    private static final String HWIDCONFIG_GET_BYPKID       = "http://tempuri.org/ItemHardwareConfig_GetByPKID";
-    private static final String HWIDCONFIG_GET_BYPARAMS     = "http://tempuri.org/ItemHardwareConfig_GetByParams";
-    private static final String HWIDCONFIG_INSERT           = "http://tempuri.org/ItemHardwareConfig_Insert";
-    private static final String HWIDCONFIG_UPDATE_BYPKID    = "http://tempuri.org/ItemHardwareConfig_UpdateByPKID";
-    private static final String HWID_DELETE_BYPKID          = "http://tempuri.org/ItemHardware_DeleteByPKID";
-    private static final String HWID_GET_BYPKID             = "http://tempuri.org/ItemHardware_GetByPKID";
-    private static final String HWID_GET_BYPARAMS           = "http://tempuri.org/ItemHardware_GetByParams";
-    private static final String HWID_INSERT                 = "http://tempuri.org/ItemHardware_Insert";
-    private static final String HWID_UPDATE_BYPKID          = "http://tempuri.org/ItemHardware_UpdateByPKID";
+    private static final String HWIDCONFIG_DELETE_BYPKID = "http://tempuri.org/ItemHardwareConfig_DeleteByPKID";
+    private static final String HWIDCONFIG_GET_BYPKID = "http://tempuri.org/ItemHardwareConfig_GetByPKID";
+    private static final String HWIDCONFIG_GET_BYPARAMS = "http://tempuri.org/ItemHardwareConfig_GetByParams";
+    private static final String HWIDCONFIG_INSERT = "http://tempuri.org/ItemHardwareConfig_Insert";
+    private static final String HWIDCONFIG_UPDATE_BYPKID = "http://tempuri.org/ItemHardwareConfig_UpdateByPKID";
+    private static final String HWID_DELETE_BYPKID = "http://tempuri.org/ItemHardware_DeleteByPKID";
+    private static final String HWID_GET_BYPKID = "http://tempuri.org/ItemHardware_GetByPKID";
+    private static final String HWID_GET_BYPARAMS = "http://tempuri.org/ItemHardware_GetByParams";
+    private static final String HWID_INSERT = "http://tempuri.org/ItemHardware_Insert";
+    private static final String HWID_UPDATE_BYPKID = "http://tempuri.org/ItemHardware_UpdateByPKID";
+    private static final String HWID_MOVEMENT_INSERT = "http://tempuri.org/ItemHardwareMovement_Insert";
 
     public static JSONArray getItemAll() throws IOException {
         JSONArray items = new JSONArray();
@@ -3314,7 +3315,7 @@ public class SPTSWebService {
         }
         return items;
     }
-    
+
     public static JSONArray getBookingByPKID(int pkid) throws IOException {
         JSONArray items = new JSONArray();
         RequestEntity requestEntity = new StringRequestEntity(SPTSRequestXML.getBookingByPKID(pkid), "text/xml", "ISO-8859-1");
@@ -3356,7 +3357,7 @@ public class SPTSWebService {
         }
         return items;
     }
-    
+
     //<editor-fold defaultstate="collapsed" desc="HARDWARE ID CONFIGURATION / DATA">
     public static SPTSResponse insertItemHardwareConfig(JSONObject params) throws IOException {
         SPTSResponse sr = new SPTSResponse();
@@ -3397,7 +3398,7 @@ public class SPTSWebService {
         }
         return sr;
     }
-    
+
     public static SPTSResponse insertItemHardware(JSONObject params) throws IOException {
         SPTSResponse sr = new SPTSResponse();
         Integer pkID = 0;
@@ -3437,7 +3438,7 @@ public class SPTSWebService {
         }
         return sr;
     }
-    
+
     public static SPTSResponse updateHardwareIdConfig(JSONObject params) throws IOException {
         SPTSResponse sr = new SPTSResponse();
         RequestEntity requestEntity = new StringRequestEntity(SPTSRequestXML.updateHardwareIdConfig(params), "text/xml", "ISO-8859-1");
@@ -3476,7 +3477,7 @@ public class SPTSWebService {
         }
         return sr;
     }
-    
+
     public static SPTSResponse updateHardwareId(JSONObject params) throws IOException {
         SPTSResponse sr = new SPTSResponse();
         RequestEntity requestEntity = new StringRequestEntity(SPTSRequestXML.updateHardwareId(params), "text/xml", "ISO-8859-1");
@@ -3515,7 +3516,7 @@ public class SPTSWebService {
         }
         return sr;
     }
-    
+
     public static JSONArray getHardwareIdConfigByPKID(JSONObject params) throws IOException {
         JSONArray items = new JSONArray();
         RequestEntity requestEntity = new StringRequestEntity(SPTSRequestXML.getHardwareIdConfigByPKID(params), "text/xml", "ISO-8859-1");
@@ -3549,7 +3550,7 @@ public class SPTSWebService {
                     items = jsonArray;
                 }
             } catch (Exception e) {
-                LOGGER.info("SINI MASUK EXCEPTION >> "+e.getMessage());
+                LOGGER.info("SINI MASUK EXCEPTION >> " + e.getMessage());
                 //Ignore
             }
         } else {
@@ -3558,7 +3559,7 @@ public class SPTSWebService {
         }
         return items;
     }
-    
+
     public static JSONObject getHardwareIdConfigByPKIDJO(JSONObject params) throws IOException {
         JSONObject item = new JSONObject();
         RequestEntity requestEntity = new StringRequestEntity(SPTSRequestXML.getHardwareIdConfigByPKID(params), "text/xml", "ISO-8859-1");
@@ -3588,7 +3589,7 @@ public class SPTSWebService {
         }
         return item;
     }
-    
+
     public static JSONArray getHardwareIdByPKID(JSONObject params) throws IOException {
         JSONArray items = new JSONArray();
         RequestEntity requestEntity = new StringRequestEntity(SPTSRequestXML.getHardwareIdByPKID(params), "text/xml", "ISO-8859-1");
@@ -3630,7 +3631,7 @@ public class SPTSWebService {
         }
         return items;
     }
-    
+
     public static JSONObject getHardwareIdByPKIDJO(JSONObject params) throws IOException {
         JSONObject item = new JSONObject();
         RequestEntity requestEntity = new StringRequestEntity(SPTSRequestXML.getHardwareIdByPKID(params), "text/xml", "ISO-8859-1");
@@ -3660,7 +3661,7 @@ public class SPTSWebService {
         }
         return item;
     }
-    
+
     public static JSONArray getHardwareIdConfigByParam(JSONObject params) throws IOException {
         JSONArray items = new JSONArray();
         RequestEntity requestEntity = new StringRequestEntity(SPTSRequestXML.getHardwareIdConfigByParam(params), "text/xml", "ISO-8859-1");
@@ -3702,7 +3703,7 @@ public class SPTSWebService {
         }
         return items;
     }
-    
+
     public static JSONArray getHardwareIdByParam(JSONObject params) throws IOException {
         JSONArray items = new JSONArray();
         RequestEntity requestEntity = new StringRequestEntity(SPTSRequestXML.getHardwareIdByParam(params), "text/xml", "ISO-8859-1");
@@ -3744,7 +3745,7 @@ public class SPTSWebService {
         }
         return items;
     }
-    
+
     // DELETE
     public static SPTSResponse deleteHardwareIdConfigByPKID(JSONObject params) throws IOException {
         SPTSResponse sr = new SPTSResponse();
@@ -3785,7 +3786,7 @@ public class SPTSWebService {
         }
         return sr;
     }
-    
+
     public static SPTSResponse deleteHardwareIdByPKID(JSONObject params) throws IOException {
         SPTSResponse sr = new SPTSResponse();
         RequestEntity requestEntity = new StringRequestEntity(SPTSRequestXML.deleteHardwareId(params), "text/xml", "ISO-8859-1");
@@ -3824,5 +3825,45 @@ public class SPTSWebService {
         return sr;
     }
     //</editor-fold>
+
+    public static SPTSResponse insertTransactionHwId(JSONObject params) throws IOException {
+        SPTSResponse sr = new SPTSResponse();
+        Integer pkID = 0;
+        RequestEntity requestEntity = new StringRequestEntity(SPTSRequestXML.insertTransactionHwId(params), "text/xml", "ISO-8859-1");
+        PostMethod postMethod = new PostMethod(SPTS_WEB_SERVICE_URL);
+        postMethod.setRequestEntity(requestEntity);
+        postMethod.setRequestHeader("SOAPAction", HWID_MOVEMENT_INSERT);
+        HttpClient httpClient = new HttpClient();
+        int result = httpClient.executeMethod(postMethod);
+        if (result == 200) {
+            InputStream inputStream = postMethod.getResponseBodyAsStream();
+            StringBuilder stringBuilder = new StringBuilder();
+            Reader reader = new InputStreamReader(inputStream, "UTF-8");
+            copy(reader, stringBuilder);
+            reader.close();
+            String xmlString = stringBuilder.toString();
+            JSONObject jsonObject = XML.toJSONObject(xmlString);
+            JSONObject soapEnvelope = jsonObject.getJSONObject("soap:Envelope");
+            JSONObject soapBody = soapEnvelope.getJSONObject("soap:Body");
+            JSONObject getAllItemResponse = soapBody.getJSONObject("ItemHardwareMovement_InsertResponse");
+            pkID = getAllItemResponse.getInt("ItemHardwareMovement_InsertResult");
+            sr.setStatus(Boolean.TRUE);
+            sr.setResponseCode(result);
+            sr.setResponseId(pkID);
+            sr.setErrorCode("");
+            sr.setErrorMessage("");
+            sr.setErrorDetail("");
+        } else {
+            String errorResponse = postMethod.getResponseBodyAsString();
+            HashMap error = errorResponse(result, errorResponse);
+            sr.setStatus(Boolean.FALSE);
+            sr.setResponseCode(result);
+            sr.setResponseId(pkID);
+            sr.setErrorCode(error.get("errorCode").toString());
+            sr.setErrorMessage(error.get("errorMessage").toString());
+            sr.setErrorDetail(error.get("errorDetail").toString());
+        }
+        return sr;
+    }
 
 }

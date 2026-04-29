@@ -2,14 +2,17 @@ package com.onsemi.mib.config;
 
 import javax.sql.DataSource;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.core.env.Environment;
+import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.ldap.authentication.ad.ActiveDirectoryLdapAuthenticationProvider;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
 @Configuration
@@ -23,7 +26,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Autowired
     private DataSource dataSource;
 
-    @Autowired
+//    @Autowired
     public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {
         auth
                 .jdbcAuthentication()
@@ -32,6 +35,26 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .passwordEncoder(new BCryptPasswordEncoder())
                 .authoritiesByUsernameQuery(getAuthoritiesQuery());
     }
+    
+//    @Autowired
+//    public void configureGlobal2(AuthenticationManagerBuilder auth) {
+//        auth.authenticationProvider(adAuthenticationProvider());
+//    }
+//
+//    @Bean
+//    public AuthenticationProvider adAuthenticationProvider() {
+//
+//        ActiveDirectoryLdapAuthenticationProvider provider
+//                = new ActiveDirectoryLdapAuthenticationProvider(
+//                        "ad.onsemi.com",
+//                        "ldap://adldap.ad.onsemi.com:389"
+//                );
+//
+//        provider.setConvertSubErrorCodesToExceptions(true);
+//        provider.setUseAuthenticationRequestCredentials(true);
+//
+//        return provider;
+//    }
 
     @Autowired
     public void configureGlobal2(AuthenticationManagerBuilder auth) throws Exception {
@@ -44,14 +67,13 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .userSearchBase("ou=onsemi")
                 .contextSource()
                 .url(env.getProperty("ldap.url"));
-
-        //Config LDAP Login
+    }        
+    //Config LDAP Login
 //                .ldapAuthentication()
 //                .userDnPatterns(env.getProperty("ldap.userDnPatterns"))
 //                .contextSource()
 //                .url(env.getProperty("ldap.url"));
-    }
-
+//    
     private String getUserQuery() {
         return "SELECT login_id AS username, password AS password, is_active AS enabled "
                 + "FROM user_ldap "
@@ -75,7 +97,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/login/**").permitAll()
                 .antMatchers("/logout/**").permitAll()
                 .antMatchers("/register/**").permitAll()
-//                .antMatchers("/admin/user/add/**").permitAll()
+                //                .antMatchers("/admin/user/add/**").permitAll()
                 .anyRequest().authenticated()
                 .and()
                 .formLogin()

@@ -429,7 +429,7 @@ public class EquipmentController {
                 }
             }
             if (getItemByParam.getJSONObject(i).has("EquipMonitoringPKID")) {
-                eqpt.setEquipMonitoringPkid(Integer.toString(getItemByParam.getJSONObject(i).getInt("EquipTechPKID")));
+                eqpt.setEquipMonitoringPkid(Integer.toString(getItemByParam.getJSONObject(i).getInt("EquipMonitoringPKID")));
             }
             if (getItemByParam.getJSONObject(i).has("VIMonitoringPKID")) {
                 eqpt.setViMonitoringPkid(Integer.toString(getItemByParam.getJSONObject(i).getInt("VIMonitoringPKID")));
@@ -572,17 +572,17 @@ public class EquipmentController {
 
         //save to SPTS first
         JSONObject params = new JSONObject();
-        params.put("equipmentID", eqptId);
+        params.put("equipmentID", StringEscapeUtils.escapeXml10(eqptId));
         params.put("familyPKID", familyName);
         params.put("relTestGroupPKID", relTestGroupName);
         params.put("currentStatus", eqptStatus);
         params.put("equipmentType", eqptType);
-        params.put("manufacturer", eqptManufacturer);
-        params.put("modal", eqptModel);
+        params.put("manufacturer", StringEscapeUtils.escapeXml10(eqptManufacturer));
+        params.put("modal", StringEscapeUtils.escapeXml10(eqptModel));
         params.put("cbmsType", cbmsType);
-        params.put("remarks", remarks);
+        params.put("remarks", StringEscapeUtils.escapeXml10(remarks));
         params.put("equipTechPKID", eqptTech);
-        params.put("equipCapability", eqptCapability);
+        params.put("equipCapability", StringEscapeUtils.escapeXml10(eqptCapability));
         params.put("equipMonitoringPKID", eqptMon);
         params.put("vIMonitoringPKID", eqptViMon);
         SPTSResponse sr = SPTSWebService.insertEqpt(params);
@@ -728,17 +728,17 @@ public class EquipmentController {
         JSONObject params = new JSONObject();
         params.put("pkID", itemPKID);
         params.put("version", versionss);
-        params.put("equipmentID", eqptId);
-        params.put("familyPKID", familyName);
-        params.put("relTestGroupPKID", relTestGroupName);
+        params.put("equipmentID", StringEscapeUtils.escapeXml10(eqptId));
+        params.put("familyPKID", StringEscapeUtils.escapeXml10(familyName));
+        params.put("relTestGroupPKID", StringEscapeUtils.escapeXml10(relTestGroupName));
         params.put("currentStatus", eqptStatus);
-        params.put("equipmentType", eqptType);
-        params.put("manufacturer", eqptManufacturer);
-        params.put("modal", eqptModel);
+        params.put("equipmentType", StringEscapeUtils.escapeXml10(eqptType));
+        params.put("manufacturer", StringEscapeUtils.escapeXml10(eqptManufacturer));
+        params.put("modal", StringEscapeUtils.escapeXml10(eqptModel));
         params.put("cbmsType", cbmsType);
-        params.put("remarks", remarks);
+        params.put("remarks", StringEscapeUtils.escapeXml10(remarks));
         params.put("equipTechPKID", eqptTech);
-        params.put("equipCapability", eqptCapability);
+        params.put("equipCapability", StringEscapeUtils.escapeXml10(eqptCapability));
         params.put("equipMonitoringPKID", eqptMon);
         params.put("vIMonitoringPKID", eqptViMon);
         SPTSResponse sr = SPTSWebService.updateEqpt(params);

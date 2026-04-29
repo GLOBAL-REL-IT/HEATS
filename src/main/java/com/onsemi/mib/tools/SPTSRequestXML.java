@@ -1204,7 +1204,7 @@ public class SPTSRequestXML {
                 + "</soap:Envelope>";
         return xmlString;
     }
-    
+
     //<editor-fold defaultstate="collapsed" desc="HARDWARE ID CONFIGURATION / DATA">
     public static String ItemHardwareConfig_Insert(JSONObject params) throws IOException {
         String paramsXmlString = "";
@@ -1223,7 +1223,7 @@ public class SPTSRequestXML {
                 + "</soap:Envelope>";
         return xmlString;
     }
-    
+
     public static String ItemHardware_Insert(JSONObject params) throws IOException {
         String paramsXmlString = "";
         for (Iterator iterator = params.keySet().iterator(); iterator.hasNext();) {
@@ -1241,7 +1241,7 @@ public class SPTSRequestXML {
                 + "</soap:Envelope>";
         return xmlString;
     }
-    
+
     public static String updateHardwareIdConfig(JSONObject params) throws IOException {
         String paramsXmlString = "";
         for (Iterator iterator = params.keySet().iterator(); iterator.hasNext();) {
@@ -1259,7 +1259,7 @@ public class SPTSRequestXML {
                 + "</soap:Envelope>";
         return xmlString;
     }
-    
+
     public static String updateHardwareId(JSONObject params) throws IOException {
         String paramsXmlString = "";
         for (Iterator iterator = params.keySet().iterator(); iterator.hasNext();) {
@@ -1277,7 +1277,7 @@ public class SPTSRequestXML {
                 + "</soap:Envelope>";
         return xmlString;
     }
-    
+
     public static String deleteHardwareIdConfig(JSONObject params) throws IOException {
         String paramsXmlString = "";
         for (Iterator iterator = params.keySet().iterator(); iterator.hasNext();) {
@@ -1295,7 +1295,7 @@ public class SPTSRequestXML {
                 + "</soap:Envelope>";
         return xmlString;
     }
-    
+
     public static String deleteHardwareId(JSONObject params) throws IOException {
         String paramsXmlString = "";
         for (Iterator iterator = params.keySet().iterator(); iterator.hasNext();) {
@@ -1313,7 +1313,7 @@ public class SPTSRequestXML {
                 + "</soap:Envelope>";
         return xmlString;
     }
-    
+
     public static String getHardwareIdConfigByPKID(JSONObject params) throws IOException {
         String paramsXmlString = "";
         for (Iterator iterator = params.keySet().iterator(); iterator.hasNext();) {
@@ -1331,7 +1331,7 @@ public class SPTSRequestXML {
                 + "</soap:Envelope>";
         return xmlString;
     }
-    
+
     public static String getHardwareIdByPKID(JSONObject params) throws IOException {
         String paramsXmlString = "";
         for (Iterator iterator = params.keySet().iterator(); iterator.hasNext();) {
@@ -1349,7 +1349,7 @@ public class SPTSRequestXML {
                 + "</soap:Envelope>";
         return xmlString;
     }
-    
+
     public static String getHardwareIdConfigByParam(JSONObject params) throws IOException {
         String paramsXmlString = "";
         for (Iterator iterator = params.keySet().iterator(); iterator.hasNext();) {
@@ -1367,7 +1367,7 @@ public class SPTSRequestXML {
                 + "</soap:Envelope>";
         return xmlString;
     }
-    
+
     public static String getHardwareIdByParam(JSONObject params) throws IOException {
         String paramsXmlString = "";
         for (Iterator iterator = params.keySet().iterator(); iterator.hasNext();) {
@@ -1386,5 +1386,23 @@ public class SPTSRequestXML {
         return xmlString;
     }
     //</editor-fold>
+
+    public static String insertTransactionHwId(JSONObject params) throws IOException {
+        String paramsXmlString = "";
+        for (Iterator iterator = params.keySet().iterator(); iterator.hasNext();) {
+            String key = (String) iterator.next();
+            String value = params.get(key).toString();
+            paramsXmlString += "<" + key + ">" + value + "</" + key + ">";
+        }
+        String xmlString = "<?xml version=\"1.0\" encoding=\"utf-8\"?>"
+                + "<soap:Envelope xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\" xmlns:soap=\"http://schemas.xmlsoap.org/soap/envelope/\">"
+                + "<soap:Body>"
+                + "<ItemHardwareMovement_Insert xmlns=\"http://tempuri.org/\">"
+                + paramsXmlString
+                + "</ItemHardwareMovement_Insert>"
+                + "</soap:Body>"
+                + "</soap:Envelope>";
+        return xmlString;
+    }
 
 }

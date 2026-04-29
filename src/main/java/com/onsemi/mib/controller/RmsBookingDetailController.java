@@ -42,6 +42,7 @@ import com.onsemi.mib.model.UserSession;
 import com.onsemi.mib.tools.EmailSender;
 import com.onsemi.mib.tools.HimsRetrieve;
 import com.onsemi.mib.tools.QueryResult;
+import com.onsemi.mib.tools.SPTSResponse;
 import com.onsemi.mib.tools.SPTSWebService;
 import java.io.File;
 import java.io.FileInputStream;
@@ -51,11 +52,14 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.sql.SQLException;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
+import java.util.Date;
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletResponse;
 import org.json.JSONArray;
@@ -1134,10 +1138,10 @@ public class RmsBookingDetailController {
         String daqTest = "";
         String psTest = "";
         String winTest = "";
-        
+
         String teActive = "";
         String teActiveTab = "";
-        
+
         String groupId = bookingId + "/" + itemPkid;
         model.addAttribute("groupId", groupId);
         model.addAttribute("userItemSfRecall", userSession.getItemSfRecall());
@@ -1633,7 +1637,6 @@ public class RmsBookingDetailController {
 //            model.addAttribute("teActiveTab", teActiveTab);
 //        }
 
-        
         if (currentStatus.contains("Test")) {
             teActive = "active";
             teActiveTab = "show active";
@@ -3272,12 +3275,161 @@ public class RmsBookingDetailController {
             HttpServletRequest request,
             RedirectAttributes redirectAttrs,
             @ModelAttribute UserSession userSession,
-            @PathVariable("id") String id) {
+            @PathVariable("id") String id) throws IOException {
 
         LOGGER.info("id: " + id);
 
+        DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");
+        Date date = new Date();
+        String formattedDate = dateFormat.format(date);
+        String date1 = formattedDate.substring(0, 10);
+        String time = formattedDate.substring(11, 23);
+        String completeDateTime = date1 + "T" + time;
+
         RmsBookingDetailDAO rmsD = new RmsBookingDetailDAO();
         RmsBookingDetail rms1 = rmsD.getRmsBookingDetail(id);
+
+        RmsBookingHardwareDAO rmsHD = new RmsBookingHardwareDAO();
+        List<RmsBookingHardware> hardware = rmsHD.getRmsBookingHardwareListByBookingPkidWithFlagZeroAndStatusNotNA(rms1.getBookingPkid());
+
+        for (int i = 0; i < hardware.size(); i++) {
+
+            LOGGER.info("hardware.get(i).getId(): " + hardware.get(i).getId());
+            //update movement in SPTS for Item ID first before update HEATS DB
+            JSONObject params2 = new JSONObject();
+            params2.put("dateTime", completeDateTime);
+            params2.put("itemsPKID", hardware.get(i).getItemPkid());
+            params2.put("transType", "25");
+            params2.put("transQty", hardware.get(i).getQty());
+            params2.put("remarks", "Out to Production Staging through HEATS");
+
+            SPTSResponse TransPkid = SPTSWebService.insertTransaction(params2);
+
+            if (TransPkid.getResponseId() > 0) {
+                RmsBookingHardware hardware1 = new RmsBookingHardware();
+                hardware1.setId(hardware.get(i).getId());
+                hardware1.setFlag("1");
+                hardware1.setModifiedBy(userSession.getFullname());
+                if ("Motherboard".equals(hardware.get(i).getItemType())) {
+                    hardware1.setStatus(hardware.get(i).getStatus());
+                    hardware1.setSubStatus("Released to Production");
+                } else if ("Load Card".equals(hardware.get(i).getItemType()) || "Program Card".equals(hardware.get(i).getItemType())) {
+                    hardware1.setStatus("Released to Production");
+                }
+                rmsHD = new RmsBookingHardwareDAO();
+                QueryResult q2 = rmsHD.updateRmsBookingHardwareForFlagAndStatusById(hardware1);
+            } else {
+                LOGGER.info("Fail to insert transaction for Item ID: " + hardware.get(i).getItemId());
+
+                String[] to = {"global-rel-it@onsemi.com"};
+
+                //gethostname
+                HostnameDAO hostnameD = new HostnameDAO();
+                Hostname h = hostnameD.getHostnameFlagZero();
+                String hostname = h.getHostname();
+
+                EmailSender emailSender = new EmailSender();
+                emailSender.htmlEmailTable(
+                        servletContext,
+                        "", //user name requestor
+                        to, //to
+                        //                        emailTo,
+                        "HW Release to Production - Failed to Insert SPTS Transaction", //subject
+                        "<br />"
+                        + "Please be informed that the item below failed to insert SPTS transaction (Out to Production Staging)."
+                        + "<br /> "
+                        + "<br /> "
+                        + "RMS No: " + rms1.getRmsNo()
+                        + "<br /> "
+                        + "Event: " + rms1.getEvent()
+                        + "<br /> "
+                        + "Item ID: " + hardware.get(i).getItemId()
+                        + "<br /> "
+                        + "Transaction Date: " + completeDateTime
+                        + "<br /> "
+                        + "<br /> "
+                        + "Detail: Failed to insert SPTS Transaction (Out to Production Staging)"
+                        + "<br /> "
+                        + "Please click <a href=\"http://" + hostname + "/HEATS/rmsbookingDetail/detail/" + id + " \">HERE</a> for more detail."
+                        + "<br /> "
+                        + "<br />Thank you." //msg
+                );
+            }
+
+        }
+
+        RmsBookingHardwareGroupDAO groupD = new RmsBookingHardwareGroupDAO();
+        List<RmsBookingHardwareGroup> group = groupD.getRmsBookingHardwareGroupListByBookingPkid(rms1.getBookingPkid());
+
+        for (int x = 0; x < group.size(); x++) {
+            LOGGER.info("group.get(x).getId(): " + group.get(x).getId());
+
+            //update movement in SPTS for Hardware ID first before update HEATS DB
+            JSONObject params = new JSONObject();
+            params.put("transDate", completeDateTime);
+            params.put("itemHardwarePKID", group.get(x).getHardwarePkid());
+            params.put("transType", "25");
+            params.put("rmsEvent", group.get(x).getRmsNo() + "_" + group.get(x).getEvent());
+            params.put("remarks", "Out to Production Staging through HEATS");
+            params.put("createdBy", userSession.getFullname());
+
+            SPTSResponse TransHwPkid = SPTSWebService.insertTransactionHwId(params);
+
+            if (TransHwPkid.getResponseId() > 0) {
+                RmsBookingHardwareGroup group1 = new RmsBookingHardwareGroup();
+                group1.setId(group.get(x).getId());
+                group1.setStatus("Released to Production");
+                group1.setFlag("1");
+                groupD = new RmsBookingHardwareGroupDAO();
+                QueryResult q3 = groupD.updateRmsBookingHardwareGroupStatusAndFlag(group1);
+
+                //add log
+                RmsBookingHardwareGroupLog log2 = new RmsBookingHardwareGroupLog();
+                log2.setGroupId(group.get(x).getGroupId());
+                log2.setDetail("Released to Production: " + group.get(x).getHardwareId());
+                log2.setCreatedBy(userSession.getFullname());
+                RmsBookingHardwareGroupLogDAO logD2 = new RmsBookingHardwareGroupLogDAO();
+                QueryResult logQ2 = logD2.insertRmsBookingHardwareGroupLog(log2);
+
+            } else {
+                LOGGER.info("Fail to insert transaction for Hardware ID: " + group.get(x).getHardwareId());
+
+                String[] to = {"global-rel-it@onsemi.com"};
+
+                //gethostname
+                HostnameDAO hostnameD = new HostnameDAO();
+                Hostname h = hostnameD.getHostnameFlagZero();
+                String hostname = h.getHostname();
+
+                EmailSender emailSender = new EmailSender();
+                emailSender.htmlEmailTable(
+                        servletContext,
+                        "", //user name requestor
+                        to, //to
+                        //                        emailTo,
+                        "HW Release to Production - Failed to Insert SPTS Transaction", //subject
+                        "<br />"
+                        + "Please be informed that the Hardware ID below failed to insert SPTS transaction (Out to Production Staging)."
+                        + "<br /> "
+                        + "<br /> "
+                        + "RMS No: " + rms1.getRmsNo()
+                        + "<br /> "
+                        + "Event: " + rms1.getEvent()
+                        + "<br /> "
+                        + "Hardware ID: " + group.get(x).getHardwareId()
+                        + "<br /> "
+                        + "Transaction Date: " + completeDateTime
+                        + "<br /> "
+                        + "<br /> "
+                        + "Detail: Failed to insert SPTS Transaction (Out to Production Staging)"
+                        + "<br /> "
+                        + "Please click <a href=\"http://" + hostname + "/HEATS/rmsbookingDetail/detail/" + id + " \">HERE</a> for more detail."
+                        + "<br /> "
+                        + "<br />Thank you." //msg
+                );
+            }
+
+        }
 
         //update status
         RmsBookingDetail rms = new RmsBookingDetail();
@@ -3295,48 +3447,6 @@ public class RmsBookingDetailController {
             log.setCreatedBy(userSession.getFullname());
             RmsBookingLogDAO logD = new RmsBookingLogDAO();
             QueryResult logQ = logD.insertRmsBookingLog(log);
-
-            RmsBookingHardwareDAO rmsHD = new RmsBookingHardwareDAO();
-            List<RmsBookingHardware> hardware = rmsHD.getRmsBookingHardwareListByBookingPkidWithFlagZeroAndStatusNotNA(rms1.getBookingPkid());
-
-            for (int i = 0; i < hardware.size(); i++) {
-                LOGGER.info("hardware.get(i).getId(): " + hardware.get(i).getId());
-                RmsBookingHardware hardware1 = new RmsBookingHardware();
-                hardware1.setId(hardware.get(i).getId());
-                hardware1.setFlag("1");
-                hardware1.setModifiedBy(userSession.getFullname());
-                if ("Motherboard".equals(hardware.get(i).getItemType())) {
-                    hardware1.setStatus(hardware.get(i).getStatus());
-                    hardware1.setSubStatus("Released to Production");
-                } else if ("Load Card".equals(hardware.get(i).getItemType()) || "Program Card".equals(hardware.get(i).getItemType())) {
-                    hardware1.setStatus("Released to Production");
-                }
-                rmsHD = new RmsBookingHardwareDAO();
-                QueryResult q2 = rmsHD.updateRmsBookingHardwareForFlagAndStatusById(hardware1);
-
-            }
-
-            RmsBookingHardwareGroupDAO groupD = new RmsBookingHardwareGroupDAO();
-            List<RmsBookingHardwareGroup> group = groupD.getRmsBookingHardwareGroupListByBookingPkid(rms1.getBookingPkid());
-
-            for (int x = 0; x < group.size(); x++) {
-                LOGGER.info("group.get(x).getId(): " + group.get(x).getId());
-                RmsBookingHardwareGroup group1 = new RmsBookingHardwareGroup();
-                group1.setId(group.get(x).getId());
-                group1.setStatus("Released to Production");
-                group1.setFlag("1");
-                groupD = new RmsBookingHardwareGroupDAO();
-                QueryResult q3 = groupD.updateRmsBookingHardwareGroupStatusAndFlag(group1);
-
-                //add log
-                RmsBookingHardwareGroupLog log2 = new RmsBookingHardwareGroupLog();
-                log2.setGroupId(group.get(x).getGroupId());
-                log2.setDetail("Released to Production: " + group.get(x).getHardwareId());
-                log2.setCreatedBy(userSession.getFullname());
-                RmsBookingHardwareGroupLogDAO logD2 = new RmsBookingHardwareGroupLogDAO();
-                QueryResult logQ2 = logD2.insertRmsBookingHardwareGroupLog(log2);
-
-            }
 
             redirectAttrs.addFlashAttribute("success", "Successfully Release to Production");
         } else {
@@ -3798,11 +3908,160 @@ public class RmsBookingDetailController {
             RedirectAttributes redirectAttrs,
             @ModelAttribute UserSession userSession,
             @RequestParam(required = false) String id,
-            @RequestParam(required = false) String recallRemarks) {
+            @RequestParam(required = false) String recallRemarks) throws IOException {
 
         LOGGER.info("id: " + id);
+
+        DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");
+        Date date = new Date();
+        String formattedDate = dateFormat.format(date);
+        String date1 = formattedDate.substring(0, 10);
+        String time = formattedDate.substring(11, 23);
+        String completeDateTime = date1 + "T" + time;
+
         RmsBookingDetailDAO rmsD = new RmsBookingDetailDAO();
         RmsBookingDetail rms1 = rmsD.getRmsBookingDetail(id);
+
+        RmsBookingHardwareDAO rmsHD = new RmsBookingHardwareDAO();
+        List<RmsBookingHardware> hardware = rmsHD.getRmsBookingHardwareListByBookingPkidWithFlagOneAndStatusNotNA(rms1.getBookingPkid());
+
+        for (int i = 0; i < hardware.size(); i++) {
+            LOGGER.info("hardware.get(i).getId(): " + hardware.get(i).getId());
+
+            //update movement in SPTS for Item ID first before update HEATS DB
+            JSONObject params2 = new JSONObject();
+            params2.put("dateTime", completeDateTime);
+            params2.put("itemsPKID", hardware.get(i).getItemPkid());
+            params2.put("transType", "26");
+            params2.put("transQty", hardware.get(i).getQty());
+            params2.put("remarks", "Return from Production Staging through HEATS");
+
+            SPTSResponse TransPkid = SPTSWebService.insertTransaction(params2);
+
+            if (TransPkid.getResponseId() > 0) {
+                RmsBookingHardware hardware1 = new RmsBookingHardware();
+                hardware1.setId(hardware.get(i).getId());
+                hardware1.setFlag("0");
+                hardware1.setModifiedBy(userSession.getFullname());
+                if ("Motherboard".equals(hardware.get(i).getItemType())) {
+                    hardware1.setStatus(hardware.get(i).getStatus());
+                    hardware1.setSubStatus("Pending Release to Production");
+                } else if ("Load Card".equals(hardware.get(i).getItemType()) || "Program Card".equals(hardware.get(i).getItemType())) {
+                    hardware1.setStatus("Pending Release to Production");
+                }
+                rmsHD = new RmsBookingHardwareDAO();
+                QueryResult q2 = rmsHD.updateRmsBookingHardwareForFlagAndStatusById(hardware1);
+
+            } else {
+                LOGGER.info("Fail to insert transaction for Item ID: " + hardware.get(i).getItemId());
+
+                String[] to = {"global-rel-it@onsemi.com"};
+
+                //gethostname
+                HostnameDAO hostnameD = new HostnameDAO();
+                Hostname h = hostnameD.getHostnameFlagZero();
+                String hostname = h.getHostname();
+
+                EmailSender emailSender = new EmailSender();
+                emailSender.htmlEmailTable(
+                        servletContext,
+                        "", //user name requestor
+                        to, //to
+                        //                        emailTo,
+                        "HW Release to Production - Failed to Insert SPTS Transaction (Recall)", //subject
+                        "<br />"
+                        + "Please be informed that the item below failed to insert SPTS transaction (Return from Production Staging)."
+                        + "<br /> "
+                        + "<br /> "
+                        + "RMS No: " + rms1.getRmsNo()
+                        + "<br /> "
+                        + "Event: " + rms1.getEvent()
+                        + "<br /> "
+                        + "Item ID: " + hardware.get(i).getItemId()
+                        + "<br /> "
+                        + "Transaction Date: " + completeDateTime
+                        + "<br /> "
+                        + "<br /> "
+                        + "Detail: Failed to insert SPTS Transaction (Return from Production Staging)"
+                        + "<br /> "
+                        + "Please click <a href=\"http://" + hostname + "/HEATS/rmsbookingDetail/detail/" + id + " \">HERE</a> for more detail."
+                        + "<br /> "
+                        + "<br />Thank you." //msg
+                );
+            }
+        }
+
+        RmsBookingHardwareGroupDAO groupD = new RmsBookingHardwareGroupDAO();
+        List<RmsBookingHardwareGroup> group = groupD.getRmsBookingHardwareGroupListByBookingPkidWithFlagOne(rms1.getBookingPkid());
+
+        for (int x = 0; x < group.size(); x++) {
+            LOGGER.info("group.get(x).getId(): " + group.get(x).getId());
+
+            //update movement in SPTS for Hardware ID first before update HEATS DB
+            JSONObject params = new JSONObject();
+            params.put("transDate", completeDateTime);
+            params.put("itemHardwarePKID", group.get(x).getHardwarePkid());
+            params.put("transType", "26");
+            params.put("rmsEvent", group.get(x).getRmsNo() + "_" + group.get(x).getEvent());
+            params.put("remarks", "Return from Production Staging through HEATS");
+            params.put("createdBy", userSession.getFullname());
+
+            SPTSResponse TransHwPkid = SPTSWebService.insertTransactionHwId(params);
+
+            if (TransHwPkid.getResponseId() > 0) {
+                RmsBookingHardwareGroup group1 = new RmsBookingHardwareGroup();
+                group1.setId(group.get(x).getId());
+                group1.setStatus("Pending Release to Production");
+                group1.setFlag("0");
+                groupD = new RmsBookingHardwareGroupDAO();
+                QueryResult q3 = groupD.updateRmsBookingHardwareGroupStatusAndFlag(group1);
+
+                //add log
+                RmsBookingHardwareGroupLog log2 = new RmsBookingHardwareGroupLog();
+                log2.setGroupId(group.get(x).getGroupId());
+                log2.setDetail("Return to MB Room: " + group.get(x).getHardwareId());
+                log2.setCreatedBy(userSession.getFullname());
+                RmsBookingHardwareGroupLogDAO logD2 = new RmsBookingHardwareGroupLogDAO();
+                QueryResult logQ2 = logD2.insertRmsBookingHardwareGroupLog(log2);
+            } else {
+                LOGGER.info("Fail to insert transaction for Hardware ID: " + group.get(x).getHardwareId());
+
+                String[] to = {"global-rel-it@onsemi.com"};
+
+                //gethostname
+                HostnameDAO hostnameD = new HostnameDAO();
+                Hostname h = hostnameD.getHostnameFlagZero();
+                String hostname = h.getHostname();
+
+                EmailSender emailSender = new EmailSender();
+                emailSender.htmlEmailTable(
+                        servletContext,
+                        "", //user name requestor
+                        to, //to
+                        //                        emailTo,
+                        "HW Release to Production - Failed to Insert SPTS Transaction (Recall)", //subject
+                        "<br />"
+                        + "Please be informed that the Hardware ID below failed to insert SPTS transaction (Return from Production Staging)."
+                        + "<br /> "
+                        + "<br /> "
+                        + "RMS No: " + rms1.getRmsNo()
+                        + "<br /> "
+                        + "Event: " + rms1.getEvent()
+                        + "<br /> "
+                        + "Hardware ID: " + group.get(x).getHardwareId()
+                        + "<br /> "
+                        + "Transaction Date: " + completeDateTime
+                        + "<br /> "
+                        + "<br /> "
+                        + "Detail: Failed to insert SPTS Transaction (Return from Production Staging)"
+                        + "<br /> "
+                        + "Please click <a href=\"http://" + hostname + "/HEATS/rmsbookingDetail/detail/" + id + " \">HERE</a> for more detail."
+                        + "<br /> "
+                        + "<br />Thank you." //msg
+                );
+            }
+
+        }
 
         //update status
         RmsBookingDetail rms = new RmsBookingDetail();
@@ -3823,46 +4082,6 @@ public class RmsBookingDetailController {
             log.setCreatedBy(userSession.getFullname());
             RmsBookingLogDAO logD = new RmsBookingLogDAO();
             QueryResult logQ = logD.insertRmsBookingLog(log);
-
-            RmsBookingHardwareDAO rmsHD = new RmsBookingHardwareDAO();
-            List<RmsBookingHardware> hardware = rmsHD.getRmsBookingHardwareListByBookingPkidWithFlagOneAndStatusNotNA(rms1.getBookingPkid());
-
-            for (int i = 0; i < hardware.size(); i++) {
-                LOGGER.info("hardware.get(i).getId(): " + hardware.get(i).getId());
-                RmsBookingHardware hardware1 = new RmsBookingHardware();
-                hardware1.setId(hardware.get(i).getId());
-                hardware1.setFlag("0");
-                hardware1.setModifiedBy(userSession.getFullname());
-                if ("Motherboard".equals(hardware.get(i).getItemType())) {
-                    hardware1.setStatus(hardware.get(i).getStatus());
-                    hardware1.setSubStatus("Pending Release to Production");
-                } else if ("Load Card".equals(hardware.get(i).getItemType()) || "Program Card".equals(hardware.get(i).getItemType())) {
-                    hardware1.setStatus("Pending Release to Production");
-                }
-                rmsHD = new RmsBookingHardwareDAO();
-                QueryResult q2 = rmsHD.updateRmsBookingHardwareForFlagAndStatusById(hardware1);
-            }
-
-            RmsBookingHardwareGroupDAO groupD = new RmsBookingHardwareGroupDAO();
-            List<RmsBookingHardwareGroup> group = groupD.getRmsBookingHardwareGroupListByBookingPkidWithFlagOne(rms1.getBookingPkid());
-
-            for (int x = 0; x < group.size(); x++) {
-                LOGGER.info("group.get(x).getId(): " + group.get(x).getId());
-                RmsBookingHardwareGroup group1 = new RmsBookingHardwareGroup();
-                group1.setId(group.get(x).getId());
-                group1.setStatus("Pending Release to Production");
-                group1.setFlag("0");
-                groupD = new RmsBookingHardwareGroupDAO();
-                QueryResult q3 = groupD.updateRmsBookingHardwareGroupStatusAndFlag(group1);
-
-                //add log
-                RmsBookingHardwareGroupLog log2 = new RmsBookingHardwareGroupLog();
-                log2.setGroupId(group.get(x).getGroupId());
-                log2.setDetail("Return to MB Room: " + group.get(x).getHardwareId());
-                log2.setCreatedBy(userSession.getFullname());
-                RmsBookingHardwareGroupLogDAO logD2 = new RmsBookingHardwareGroupLogDAO();
-                QueryResult logQ2 = logD2.insertRmsBookingHardwareGroupLog(log2);
-            }
 
             redirectAttrs.addFlashAttribute("success", "Successfully update the hardware status. Please return the hardware to MB room.");
         } else {
