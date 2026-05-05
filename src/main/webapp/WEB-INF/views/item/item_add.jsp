@@ -3132,7 +3132,14 @@
                                                             <div class="mb-3">
                                                                 <label for="assemblyId" class="form-label">Assembly ID</label>
                                                                 <div class="input input-group">
-                                                                    <input type="text" class="form-control" id="assemblyId" name="assemblyId" placeholder="" value="">
+                                                                    <!--<input type="text" class="form-control" id="assemblyId" name="assemblyId" placeholder="" value="">-->
+                                                                    <select class="js-example-tags" id="assemblyId" name="assemblyId"
+                                                                            style="width: 100%">
+                                                                        <option></option>
+                                                                        <c:forEach items="${listAssemblyId}" var="invInner">
+                                                                            <option value="${invInner.assemblyId}">${invInner.assemblyId}</option>
+                                                                        </c:forEach>
+                                                                    </select>
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -3140,7 +3147,14 @@
                                                             <div class="mb-3">
                                                                 <label for="model" class="form-label">Spare Part Model</label>
                                                                 <div class="input input-group">
-                                                                    <input type="text" class="form-control" id="model2" name="model2" value="">
+                                                                    <!--<input type="text" class="form-control" id="model2" name="model2" value="">-->
+                                                                    <select class="js-example-tags" id="model2" name="model2"
+                                                                            style="width: 100%">
+                                                                        <option></option>
+                                                                        <c:forEach items="${listModel}" var="invInner">
+                                                                            <option value="${invInner.model}">${invInner.model}</option>
+                                                                        </c:forEach>
+                                                                    </select>
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -3149,7 +3163,14 @@
                                                             <div class="mb-3">
                                                                 <label for="manufacturer" class="form-label">Spare Part Manufacturer</label>
                                                                 <div class="input input-group">
-                                                                    <input type="text" class="form-control" id="manufacturer" name="manufacturer" placeholder="" value="">
+                                                                    <!--<input type="text" class="form-control" id="manufacturer" name="manufacturer" placeholder="" value="">-->
+                                                                    <select class="js-example-tags" id="manufacturer" name="manufacturer"
+                                                                            style="width: 100%">
+                                                                        <option></option>
+                                                                        <c:forEach items="${listManufacturer}" var="invInner">
+                                                                            <option value="${invInner.manufacturer}">${invInner.manufacturer}</option>
+                                                                        </c:forEach>
+                                                                    </select>
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -3165,7 +3186,14 @@
                                                             <div class="mb-3">
                                                                 <label for="equipmentType" class="form-label">Equipment Type</label>
                                                                 <div class="input input-group">
-                                                                    <input type="text" class="form-control" id="equipmentType" name="equipmentType" placeholder="" value="">
+                                                                    <!--<input type="text" class="form-control" id="equipmentType" name="equipmentType" placeholder="" value="">-->
+                                                                    <select class="js-example-tags" id="equipmentType" name="equipmentType"
+                                                                            style="width: 100%">
+                                                                        <option></option>
+                                                                        <c:forEach items="${listEqptType}" var="invInner">
+                                                                            <option value="${invInner.equipmentType}">${invInner.equipmentType}</option>
+                                                                        </c:forEach>
+                                                                    </select>
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -3173,7 +3201,14 @@
                                                             <div class="mb-3">
                                                                 <label for="equipmentModel" class="form-label">Equipment Model</label>
                                                                 <div class="input input-group">
-                                                                    <input type="text" class="form-control" id="equipmentModel" name="equipmentModel" value="">
+                                                                    <!--<input type="text" class="form-control" id="equipmentModel" name="equipmentModel" value="">-->
+                                                                    <select class="js-example-tags" id="equipmentModel" name="equipmentModel"
+                                                                            style="width: 100%">
+                                                                        <option></option>
+                                                                        <c:forEach items="${listEqptModel}" var="invInner">
+                                                                            <option value="${invInner.equipmentModel}">${invInner.equipmentModel}</option>
+                                                                        </c:forEach>
+                                                                    </select>
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -3181,7 +3216,14 @@
                                                             <div class="mb-3">
                                                                 <label for="equipmentManufacturer" class="form-label">Eqpt Manufacturer</label>
                                                                 <div class="input input-group">
-                                                                    <input type="text" class="form-control" id="equipmentManufacturer" name="equipmentManufacturer" value="" >
+                                                                    <!--<input type="text" class="form-control" id="equipmentManufacturer" name="equipmentManufacturer" value="" >-->
+                                                                    <select class="js-example-tags" id="equipmentManufacturer" name="equipmentManufacturer"
+                                                                            style="width: 100%">
+                                                                        <option></option>
+                                                                        <c:forEach items="${listEqptManufacturer}" var="invInner">
+                                                                            <option value="${invInner.equipmentManufacturer}">${invInner.equipmentManufacturer}</option>
+                                                                        </c:forEach>
+                                                                    </select>
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -3204,21 +3246,21 @@
                                                                 </div>
                                                             </div>
                                                         </div>
-                                                        <div class="col-xl-3 col-sm-12 col-12">
+                                                        <div class="form-group required col-xl-3 col-sm-12 col-12">
                                                             <div class="mb-3">
                                                                 <label for="rack" class="form-label">Rack</label>
                                                                 <div class="input input-group">
                                                                     <input type="text" class="form-control" id="rack" name="rack"
-                                                                           placeholder="" value="">
+                                                                           placeholder="" value="" required>
                                                                 </div>
                                                             </div>
                                                         </div>
-                                                        <div class="col-xl-3 col-sm-12 col-12">
+                                                        <div class="form-group required col-xl-3 col-sm-12 col-12">
                                                             <div class="mb-3">
                                                                 <label for="shelf" class="form-label">Shelf</label>
                                                                 <div class="input input-group">
                                                                     <input type="text" class="form-control" id="shelf" name="shelf"
-                                                                           placeholder="" value="">
+                                                                           placeholder="" value="" required>
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -3226,8 +3268,14 @@
                                                             <div class="mb-3">
                                                                 <label for="stressType" class="form-label">Stress Type</label>
                                                                 <div class="input input-group">
-                                                                    <input type="text" class="form-control" id="stressType" name="stressType"
-                                                                           placeholder="" value="">
+                                                                    <!--<input type="text" class="form-control" id="stressType" name="stressType" placeholder="" value="">-->
+                                                                    <select class="js-example-tags" id="stressType" name="stressType"
+                                                                            style="width: 100%">
+                                                                        <option></option>
+                                                                        <c:forEach items="${listStressType}" var="invInner">
+                                                                            <option value="${invInner.stressType}">${invInner.stressType}</option>
+                                                                        </c:forEach>
+                                                                    </select>
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -3376,8 +3424,6 @@
                                                                 </div>
                                                             </div>
                                                         </div>
-
-                                                        Additional Information Section 
                                                         <div class="col-12 mt-2 mb-3">
                                                             <h6 class="fw-semibold mb-3 border-start border-warning ps-2"
                                                                 style="border-left-width: 3px !important;">
@@ -3535,7 +3581,8 @@
 
         $(document).ready(function () {
             $(".js-example-tags").select2({
-                tags: true
+                tags: true,
+                 maximumInputLength: 50 // Limits each tag to 10 characters
             });
 
             //            $('#onHandQty').change(function () {

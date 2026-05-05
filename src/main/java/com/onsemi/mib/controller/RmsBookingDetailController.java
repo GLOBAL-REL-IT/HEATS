@@ -7,6 +7,8 @@ import com.onsemi.mib.dao.HostnameDAO;
 import com.onsemi.mib.dao.ItemActivityConfigDAO;
 import com.onsemi.mib.dao.ItemDAO;
 import com.onsemi.mib.dao.ItemHardwareDAO;
+import com.onsemi.mib.dao.ItemHardwareMovementDAO;
+import com.onsemi.mib.dao.ItemTransactionDAO;
 import com.onsemi.mib.dao.ParameterDetailsDAO;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
@@ -24,10 +26,13 @@ import com.onsemi.mib.dao.RmsBookingMaverickDAO;
 import com.onsemi.mib.dao.RmsBookingVisualInspectionDAO;
 import com.onsemi.mib.model.EmailHwReplacement;
 import com.onsemi.mib.model.EmailVmFail;
+import com.onsemi.mib.model.Hardware;
 import com.onsemi.mib.model.Hostname;
 import com.onsemi.mib.model.Item;
 import com.onsemi.mib.model.ItemActivityConfig;
 import com.onsemi.mib.model.ItemHardware;
+import com.onsemi.mib.model.ItemHardwareMovement;
+import com.onsemi.mib.model.ItemTransaction;
 import com.onsemi.mib.model.ParameterDetails;
 import com.onsemi.mib.model.RmsBookingDetail;
 import com.onsemi.mib.model.RmsBookingDetailHwReplacement;
@@ -43,6 +48,7 @@ import com.onsemi.mib.tools.EmailSender;
 import com.onsemi.mib.tools.HimsRetrieve;
 import com.onsemi.mib.tools.QueryResult;
 import com.onsemi.mib.tools.SPTSResponse;
+import com.onsemi.mib.tools.SPTSStatus;
 import com.onsemi.mib.tools.SPTSWebService;
 import java.io.File;
 import java.io.FileInputStream;
@@ -3306,6 +3312,22 @@ public class RmsBookingDetailController {
             SPTSResponse TransPkid = SPTSWebService.insertTransaction(params2);
 
             if (TransPkid.getResponseId() > 0) {
+
+                //add transaction to DB
+                ItemTransaction item = new ItemTransaction();
+                item.setSptsPkid(TransPkid.getResponseId().toString());
+                item.setItemPkid(hardware.get(i).getItemPkid());
+                item.setSiteName("Seremban");
+                item.setDateTime(date1 + " " + time);
+                item.setTransType("25");
+                item.setTransTypeName("Out For Production Staging");
+                item.setTransQty(hardware.get(i).getQty());
+                item.setTransOutQty(hardware.get(i).getQty());
+                item.setRemarks("Out to Production Staging through HEATS");
+
+                ItemTransactionDAO itemD = new ItemTransactionDAO();
+                QueryResult qI = itemD.insertItemTransaction(item);
+
                 RmsBookingHardware hardware1 = new RmsBookingHardware();
                 hardware1.setId(hardware.get(i).getId());
                 hardware1.setFlag("1");
@@ -3376,12 +3398,83 @@ public class RmsBookingDetailController {
             SPTSResponse TransHwPkid = SPTSWebService.insertTransactionHwId(params);
 
             if (TransHwPkid.getResponseId() > 0) {
+
+                //add transaction to item_hardware_movement
+                ItemHardwareDAO itemD = new ItemHardwareDAO();
+                ItemHardware itemHw = itemD.getItemHardwareByHardwareId(group.get(x).getHardwareId());
+
+                ItemHardwareMovement itemHwMovement = new ItemHardwareMovement();
+                itemHwMovement.setMibHardwareId(itemHw.getId());
+                itemHwMovement.setSptsPkid(TransHwPkid.getResponseId().toString());
+                itemHwMovement.setTransType("25");
+                itemHwMovement.setRmsEvent(group.get(x).getRmsNo() + "_" + group.get(x).getEvent());
+                itemHwMovement.setCreatedBy(userSession.getFullname());
+                ItemHardwareMovementDAO itD = new ItemHardwareMovementDAO();
+                QueryResult q2 = itD.insertItemHardwareMovement(itemHwMovement);
+
+                String sptsStatus = "";
+
+                //update table item_hardware
+                JSONObject paramsItem = new JSONObject();
+                paramsItem.put("pkid", group.get(x).getHardwarePkid());
+                JSONArray getRMSBooking = SPTSWebService.getHardwareIdByPKID(paramsItem);
+                for (int i = 0; i < getRMSBooking.length(); i++) {
+
+                    ItemHardware itemH = new ItemHardware();
+                    itemH.setSptsPkid(group.get(x).getHardwarePkid());
+                    itemH.setHardwareId(group.get(x).getHardwareId());
+                    //  Scrapped = -1, No_Stock = 0,Good = 1,Production = 2,Repair = 3,Others = 4,Quarantine = 5,External_Cleaning = 6,External_Re_Cleaning = 7,Internal_Cleaning = 8,Internal_Re_Cleaning = 9,
+//Storage_Factory = 10,Shipped_To_Other_ON_Semi_Site = 11,Shipped_To_Vendor = 12,Out_For_Production_Staging = 13
+
+//                    sptsStatus = sptsStatus(getRMSBooking.getJSONObject(i).getInt("HardwareStatus"));
+                    SPTSStatus spts = new SPTSStatus();
+                    sptsStatus = spts.sptsStatus(getRMSBooking.getJSONObject(i).getInt("HardwareStatus"));
+
+                    itemH.setStatus(sptsStatus);
+                    if (getRMSBooking.getJSONObject(i).has("ALU")) {
+                        Object alu = getRMSBooking.getJSONObject(i).get("ALU");
+                        if (alu instanceof String) {
+                            itemH.setAlu(getRMSBooking.getJSONObject(i).getString("ALU"));
+                        } else {
+                            itemH.setAlu(Integer.toString(getRMSBooking.getJSONObject(i).getInt("ALU")));
+                        }
+                    }
+                    if (getRMSBooking.getJSONObject(i).has("RMS_Event")) {
+                        Object RMS_Event = getRMSBooking.getJSONObject(i).get("RMS_Event");
+                        if (RMS_Event instanceof String) {
+                            itemH.setRmsEvent(getRMSBooking.getJSONObject(i).getString("RMS_Event"));
+                        } else {
+                            itemH.setRmsEvent(Integer.toString(getRMSBooking.getJSONObject(i).getInt("RMS_Event")));
+                        }
+                    }
+                    if (getRMSBooking.getJSONObject(i).has("ShelfTime")) {
+                        Object ShelfTime = getRMSBooking.getJSONObject(i).get("ShelfTime");
+                        if (ShelfTime instanceof String) {
+                            itemH.setShelfTime(getRMSBooking.getJSONObject(i).getString("ShelfTime"));
+                        } else {
+                            itemH.setShelfTime(Integer.toString(getRMSBooking.getJSONObject(i).getInt("ShelfTime")));
+                        }
+                    }
+
+                    LOGGER.info("hardwarePKID: " + itemH.getSptsPkid());
+                    LOGGER.info("hardware ID: " + itemH.getHardwareId());
+                    LOGGER.info("sptsStatus: " + itemH.getStatus());
+                    LOGGER.info("ALU: " + itemH.getAlu());
+                    LOGGER.info("RMS_Event: " + itemH.getRmsEvent());
+                    LOGGER.info("ShelfTime: " + itemH.getShelfTime());
+
+                    itemD = new ItemHardwareDAO();
+                    QueryResult ItemDq = itemD.updateItemHardwareFromSPTS(itemH);
+                    LOGGER.info("ItemDq.getResult(): " + ItemDq.getResult());
+                }
+
                 RmsBookingHardwareGroup group1 = new RmsBookingHardwareGroup();
                 group1.setId(group.get(x).getId());
                 group1.setStatus("Released to Production");
+                group1.setSptsStatus(sptsStatus); //waiting confirmation from JFLim 30.04.26
                 group1.setFlag("1");
                 groupD = new RmsBookingHardwareGroupDAO();
-                QueryResult q3 = groupD.updateRmsBookingHardwareGroupStatusAndFlag(group1);
+                QueryResult q3 = groupD.updateRmsBookingHardwareGroupStatusAndSptsStatusAndFlag(group1);
 
                 //add log
                 RmsBookingHardwareGroupLog log2 = new RmsBookingHardwareGroupLog();
@@ -3939,6 +4032,22 @@ public class RmsBookingDetailController {
             SPTSResponse TransPkid = SPTSWebService.insertTransaction(params2);
 
             if (TransPkid.getResponseId() > 0) {
+
+                //add transaction to DB
+                ItemTransaction item = new ItemTransaction();
+                item.setSptsPkid(TransPkid.getResponseId().toString());
+                item.setItemPkid(hardware.get(i).getItemPkid());
+                item.setSiteName("Seremban");
+                item.setDateTime(date1 + " " + time);
+                item.setTransType("26");
+                item.setTransTypeName("Return from Production Staging");
+                item.setTransQty(hardware.get(i).getQty());
+                item.setTransOutQty(hardware.get(i).getQty());
+                item.setRemarks("Return from Production Staging through HEATS");
+
+                ItemTransactionDAO itemD = new ItemTransactionDAO();
+                QueryResult qI = itemD.insertItemTransaction(item);
+
                 RmsBookingHardware hardware1 = new RmsBookingHardware();
                 hardware1.setId(hardware.get(i).getId());
                 hardware1.setFlag("0");
@@ -4002,19 +4111,84 @@ public class RmsBookingDetailController {
             params.put("transDate", completeDateTime);
             params.put("itemHardwarePKID", group.get(x).getHardwarePkid());
             params.put("transType", "26");
-            params.put("rmsEvent", group.get(x).getRmsNo() + "_" + group.get(x).getEvent());
+//            params.put("rmsEvent", group.get(x).getRmsNo() + "_" + group.get(x).getEvent());
+            params.put("rmsEvent", "NONE");
             params.put("remarks", "Return from Production Staging through HEATS");
             params.put("createdBy", userSession.getFullname());
 
             SPTSResponse TransHwPkid = SPTSWebService.insertTransactionHwId(params);
 
             if (TransHwPkid.getResponseId() > 0) {
+
+                //add transaction to item_hardware_movement
+                ItemHardwareDAO itemD = new ItemHardwareDAO();
+                ItemHardware itemHw = itemD.getItemHardwareByHardwareId(group.get(x).getHardwareId());
+
+                ItemHardwareMovement itemHwMovement = new ItemHardwareMovement();
+                itemHwMovement.setMibHardwareId(itemHw.getId());
+                itemHwMovement.setSptsPkid(TransHwPkid.getResponseId().toString());
+                itemHwMovement.setTransType("26");
+                itemHwMovement.setRmsEvent(group.get(x).getRmsNo() + "_" + group.get(x).getEvent());
+                itemHwMovement.setCreatedBy(userSession.getFullname());
+                ItemHardwareMovementDAO itD = new ItemHardwareMovementDAO();
+                QueryResult q2 = itD.insertItemHardwareMovement(itemHwMovement);
+
+                String sptsStatus = "";
+
+                //update table item_hardware
+                JSONObject paramsItem = new JSONObject();
+                paramsItem.put("pkid", group.get(x).getHardwarePkid());
+                JSONArray getRMSBooking = SPTSWebService.getHardwareIdByPKID(paramsItem);
+                for (int i = 0; i < getRMSBooking.length(); i++) {
+
+                    ItemHardware itemH = new ItemHardware();
+                    itemH.setSptsPkid(group.get(x).getHardwarePkid());
+                    itemH.setHardwareId(group.get(x).getHardwareId());
+                    //  Scrapped = -1, No_Stock = 0,Good = 1,Production = 2,Repair = 3,Others = 4,Quarantine = 5,External_Cleaning = 6,External_Re_Cleaning = 7,Internal_Cleaning = 8,Internal_Re_Cleaning = 9,
+//Storage_Factory = 10,Shipped_To_Other_ON_Semi_Site = 11,Shipped_To_Vendor = 12,Out_For_Production_Staging = 13
+
+//                    sptsStatus = sptsStatus(getRMSBooking.getJSONObject(i).getInt("HardwareStatus")); //call function to replace SPTS int hardware status to string status
+                    SPTSStatus spts = new SPTSStatus(); //call function to replace SPTS int hardware status to string status
+                    sptsStatus = spts.sptsStatus(getRMSBooking.getJSONObject(i).getInt("HardwareStatus"));
+
+                    itemH.setStatus(sptsStatus);
+//                     itemH.setStatus(getRMSBooking.getJSONObject(i).getString("Status"));
+                    if (getRMSBooking.getJSONObject(i).has("ALU")) {
+                        Object alu = getRMSBooking.getJSONObject(i).get("ALU");
+                        if (alu instanceof String) {
+                            itemH.setAlu(getRMSBooking.getJSONObject(i).getString("ALU"));
+                        } else {
+                            itemH.setAlu(Integer.toString(getRMSBooking.getJSONObject(i).getInt("ALU")));
+                        }
+                    }
+                    if (getRMSBooking.getJSONObject(i).has("RMS_Event")) {
+                        Object RMS_Event = getRMSBooking.getJSONObject(i).get("RMS_Event");
+                        if (RMS_Event instanceof String) {
+                            itemH.setRmsEvent(getRMSBooking.getJSONObject(i).getString("RMS_Event"));
+                        } else {
+                            itemH.setRmsEvent(Integer.toString(getRMSBooking.getJSONObject(i).getInt("RMS_Event")));
+                        }
+                    }
+                    if (getRMSBooking.getJSONObject(i).has("ShelfTime")) {
+                        Object ShelfTime = getRMSBooking.getJSONObject(i).get("ShelfTime");
+                        if (ShelfTime instanceof String) {
+                            itemH.setShelfTime(getRMSBooking.getJSONObject(i).getString("ShelfTime"));
+                        } else {
+                            itemH.setShelfTime(Integer.toString(getRMSBooking.getJSONObject(i).getInt("ShelfTime")));
+                        }
+                    }
+                    itemD = new ItemHardwareDAO();
+                    QueryResult ItemDq = itemD.updateItemHardwareFromSPTS(itemH);
+                }
+
                 RmsBookingHardwareGroup group1 = new RmsBookingHardwareGroup();
                 group1.setId(group.get(x).getId());
                 group1.setStatus("Pending Release to Production");
+                group1.setSptsStatus(sptsStatus); //waiting confirmation from JFLim 30.04.26
                 group1.setFlag("0");
                 groupD = new RmsBookingHardwareGroupDAO();
-                QueryResult q3 = groupD.updateRmsBookingHardwareGroupStatusAndFlag(group1);
+//                QueryResult q3 = groupD.updateRmsBookingHardwareGroupStatusAndFlag(group1);
+                QueryResult q3 = groupD.updateRmsBookingHardwareGroupStatusAndSptsStatusAndFlag(group1);
 
                 //add log
                 RmsBookingHardwareGroupLog log2 = new RmsBookingHardwareGroupLog();
@@ -4218,5 +4392,4 @@ public class RmsBookingDetailController {
             // BOLE UPDATE NANTI
         }
     }
-
 }

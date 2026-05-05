@@ -2,68 +2,77 @@ package com.onsemi.mib.model;
 
 public class ItemHardwareMovement {
 
-	private String id;
-	private String mibHardwareId;
-	private String transType;
-	private String rmsEvent;
-	private String alu;
-	private String createdBy;
-	private String createdDate;
+    private String id;
+    private String sptsPkid;
+    private String mibHardwareId;
+    private String transType;
+    private String rmsEvent;
+    private String alu;
+    private String createdBy;
+    private String createdDate;
 
-	public String getId() {
-		return id;
-	}
+    public String getId() {
+        return id;
+    }
 
-	public void setId(String id) {
-		this.id = id;
-	}
+    public void setId(String id) {
+        this.id = id;
+    }
 
-	public String getMibHardwareId() {
-		return mibHardwareId;
-	}
+    public String getSptsPkid() {
+        return sptsPkid;
+    }
 
-	public void setMibHardwareId(String mibHardwareId) {
-		this.mibHardwareId = mibHardwareId;
-	}
+    public void setSptsPkid(String sptsPkid) {
+        this.sptsPkid = sptsPkid;
+    }
 
-	public String getTransType() {
-		return transType;
-	}
+    public String getMibHardwareId() {
+        return mibHardwareId;
+    }
 
-	public void setTransType(String transType) {
-		this.transType = transType;
-	}
+    public void setMibHardwareId(String mibHardwareId) {
+        this.mibHardwareId = mibHardwareId;
+    }
 
-	public String getRmsEvent() {
-		return rmsEvent;
-	}
+    public String getTransType() {
+        return transType;
+    }
 
-	public void setRmsEvent(String rmsEvent) {
-		this.rmsEvent = rmsEvent;
-	}
+    public void setTransType(String transType) {
+        this.transType = transType;
+    }
 
-	public String getAlu() {
-		return alu;
-	}
+    public String getRmsEvent() {
+        return rmsEvent;
+    }
 
-	public void setAlu(String alu) {
-		this.alu = alu;
-	}
+    public void setRmsEvent(String rmsEvent) {
+        this.rmsEvent = rmsEvent;
+    }
 
-	public String getCreatedBy() {
-		return createdBy;
-	}
+    public String getAlu() {
+        return alu;
+    }
 
-	public void setCreatedBy(String createdBy) {
-		this.createdBy = createdBy;
-	}
+    public void setAlu(String alu) {
+        this.alu = alu;
+    }
 
-	public String getCreatedDate() {
-		return createdDate;
-	}
+    public String getCreatedBy() {
+        return createdBy;
+    }
 
-	public void setCreatedDate(String createdDate) {
-		this.createdDate = createdDate;
-	}
+    public void setCreatedBy(String createdBy) {
+        this.createdBy = createdBy;
+    }
+
+    public String getCreatedDate() {
+        return createdDate;
+    }
+
+    public void setCreatedDate(String createdDate) {
+        this.createdDate = createdDate;
+    }
 
 }

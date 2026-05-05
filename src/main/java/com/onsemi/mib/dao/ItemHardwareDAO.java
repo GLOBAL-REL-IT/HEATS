@@ -100,13 +100,17 @@ public class ItemHardwareDAO {
     public QueryResult insertHardwareIDFromSpts(ItemHardware itemhardware) {
         QueryResult queryResult = new QueryResult();
         try {
-            PreparedStatement ps = conn.prepareStatement("INSERT INTO item_hardware (mib_item_id, hardware_id, status, created_by, created_date, flag, spts_pkid) VALUES (?,?,?,?,NOW(),?,?)", Statement.RETURN_GENERATED_KEYS);
+//            PreparedStatement ps = conn.prepareStatement("INSERT INTO item_hardware (mib_item_id, hardware_id, status, created_by, created_date, flag, spts_pkid) VALUES (?,?,?,?,NOW(),?,?)", Statement.RETURN_GENERATED_KEYS);
+            PreparedStatement ps = conn.prepareStatement("INSERT INTO item_hardware (mib_item_id, hardware_id, status, created_by, created_date, flag, spts_pkid, rms_event, alu, shelf_time) VALUES (?,?,?,?,NOW(),?,?,?,?,?)", Statement.RETURN_GENERATED_KEYS);
             ps.setString(1, itemhardware.getMibItemId());
             ps.setString(2, itemhardware.getHardwareId());
             ps.setString(3, itemhardware.getStatus());
             ps.setString(4, itemhardware.getCreatedBy());
             ps.setString(5, itemhardware.getFlag());
             ps.setString(6, itemhardware.getSptsPkid());
+            ps.setString(6, itemhardware.getRmsEvent());
+            ps.setString(6, itemhardware.getAlu());
+            ps.setString(6, itemhardware.getShelfTime());
             queryResult.setResult(ps.executeUpdate());
             ResultSet rs = ps.getGeneratedKeys();
             if (rs.next()) {
@@ -148,6 +152,36 @@ public class ItemHardwareDAO {
             ps.setString(11, itemhardware.getVerifyDate());
             ps.setString(12, itemhardware.getFlag());
             ps.setString(13, itemhardware.getId());
+            queryResult.setResult(ps.executeUpdate());
+            ps.close();
+        } catch (SQLException e) {
+            queryResult.setErrorMessage(e.getMessage());
+            LOGGER.error(e.getMessage());
+        } finally {
+            if (conn != null) {
+                try {
+                    conn.close();
+                } catch (SQLException e) {
+                    LOGGER.error(e.getMessage());
+                }
+            }
+        }
+        return queryResult;
+    }
+
+    public QueryResult updateItemHardwareFromSPTS(ItemHardware itemhardware) {
+        QueryResult queryResult = new QueryResult();
+        try {
+            PreparedStatement ps = conn.prepareStatement(
+                    "UPDATE item_hardware SET spts_pkid = ?, hardware_id = ?, alu = ?, status = ?, rms_event = ?, shelf_time = ? WHERE spts_pkid = ?"
+            );
+            ps.setString(1, itemhardware.getSptsPkid());
+            ps.setString(2, itemhardware.getHardwareId());
+            ps.setString(3, itemhardware.getAlu());
+            ps.setString(4, itemhardware.getStatus());
+            ps.setString(5, itemhardware.getRmsEvent());
+            ps.setString(6, itemhardware.getShelfTime());
+            ps.setString(7, itemhardware.getSptsPkid());
             queryResult.setResult(ps.executeUpdate());
             ps.close();
         } catch (SQLException e) {
@@ -225,7 +259,7 @@ public class ItemHardwareDAO {
         }
         return itemhardware;
     }
-    
+
     public ItemHardware getItemHardwareByHardwareId(String hwId) {
         String sql = "SELECT * FROM item_hardware WHERE hardware_id = '" + hwId + "'";
         ItemHardware itemhardware = null;
@@ -537,7 +571,7 @@ public class ItemHardwareDAO {
         }
         return queryResult;
     }
-    
+
     public Integer getTotalHardwareCreated(String mibItemId) {
         Integer count = 0;
         try {
@@ -563,7 +597,7 @@ public class ItemHardwareDAO {
         }
         return count;
     }
-    
+
     public Integer getTotalHardwareAvailable(String mibItemId) {
         Integer count = 0;
         String sql = "SELECT COUNT(*) AS count FROM item_hardware WHERE mib_item_id = '" + mibItemId + "' AND flag = '1'";

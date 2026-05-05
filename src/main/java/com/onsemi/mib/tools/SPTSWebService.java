@@ -126,6 +126,7 @@ public class SPTSWebService {
     private static final String HWID_INSERT = "http://tempuri.org/ItemHardware_Insert";
     private static final String HWID_UPDATE_BYPKID = "http://tempuri.org/ItemHardware_UpdateByPKID";
     private static final String HWID_MOVEMENT_INSERT = "http://tempuri.org/ItemHardwareMovement_Insert";
+    private static final String HWIDMOVEMENT_GETBYPARAM = "http://tempuri.org/ItemHardwareMovement_GetByParams";
 
     public static JSONArray getItemAll() throws IOException {
         JSONArray items = new JSONArray();
@@ -3864,6 +3865,49 @@ public class SPTSWebService {
             sr.setErrorDetail(error.get("errorDetail").toString());
         }
         return sr;
+    }
+    
+    public static JSONArray getHardwareIdMovementByParam(JSONObject params) throws IOException {
+        JSONArray items = new JSONArray();
+        RequestEntity requestEntity = new StringRequestEntity(SPTSRequestXML.getHardwareIdMovementByParam(params), "text/xml", "ISO-8859-1");
+        PostMethod postMethod = new PostMethod(SPTS_WEB_SERVICE_URL);
+        postMethod.setRequestEntity(requestEntity);
+        postMethod.setRequestHeader("SOAPAction", HWIDMOVEMENT_GETBYPARAM);
+        HttpClient httpClient = new HttpClient();
+        int result = httpClient.executeMethod(postMethod);
+        if (result == 200) {
+            InputStream inputStream = postMethod.getResponseBodyAsStream();
+//            System.out.println("postMethod.getResponseBodyAsString(): " + postMethod.getResponseBodyAsString());
+            StringBuilder stringBuilder = new StringBuilder();
+            Reader reader = new InputStreamReader(inputStream, "UTF-8");
+            copy(reader, stringBuilder);
+            reader.close();
+            String xmlString = stringBuilder.toString();
+            JSONObject jsonObject = XML.toJSONObject(xmlString);
+            JSONObject soapEnvelope = jsonObject.getJSONObject("soap:Envelope");
+            JSONObject soapBody = soapEnvelope.getJSONObject("soap:Body");
+            JSONObject getAllItemResponse = soapBody.getJSONObject("ItemHardwareMovement_GetByParamsResponse");
+            try {
+                JSONObject getAllItemResult = getAllItemResponse.getJSONObject("ItemHardwareMovement_GetByParamsResult");
+                JSONObject resultContent = getAllItemResult.getJSONObject("diffgr:diffgram");
+                JSONObject itemDS = resultContent.getJSONObject("ItemHardwareMovementData");
+                JSONArray jsonArray = itemDS.optJSONArray("ItemHardwareMovement");
+                if (jsonArray == null) {
+                    JSONObject jo = itemDS.getJSONObject("ItemHardwareMovement");
+                    JSONArray ja = new JSONArray();
+                    ja.put(jo);
+                    items = ja;
+                } else {
+                    items = jsonArray;
+                }
+            } catch (Exception e) {
+                //Ignore
+            }
+        } else {
+            String errorResponse = postMethod.getResponseBodyAsString();
+            errorResponse(result, errorResponse);
+        }
+        return items;
     }
 
 }

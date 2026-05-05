@@ -49,6 +49,7 @@ import com.onsemi.mib.tools.EmailSender;
 import com.onsemi.mib.tools.HimsRetrieve;
 import com.onsemi.mib.tools.QueryResult;
 import com.onsemi.mib.tools.SPTSResponse;
+import com.onsemi.mib.tools.SPTSStatus;
 import com.onsemi.mib.tools.SPTSWebService;
 import com.onsemi.mib.tools.SystemUtil;
 import java.io.File;
@@ -630,7 +631,7 @@ public class ItemController {
 
     @RequestMapping(value = "/item/detail", method = {RequestMethod.GET, RequestMethod.POST})
     @ResponseBody
-    public Item getHardwareDetail(
+    public Item detail(
             @ModelAttribute UserSession userSession,
             Model model,
             HttpServletRequest request,
@@ -997,6 +998,7 @@ public class ItemController {
         JSONArray getItemHwByParam = SPTSWebService.getHardwareIdByParam(paramsHwid);
 
         for (int i = 0; i < getItemHwByParam.length(); i++) {
+            String sptsStatus = "";
             Integer sptsId = 0;
             String hardwareId = "";
             String status = "";
@@ -1005,10 +1007,16 @@ public class ItemController {
             Integer flag = 0;
             String verifyBy = "";
             String verifyDate = "";
+            String alu = "0";
+            String rmsEvent = "";
+            String shelfTime = "0";
+
+            SPTSStatus spts = new SPTSStatus();
+            sptsStatus = spts.sptsStatus(getItemHwByParam.getJSONObject(i).getInt("HardwareStatus"));
 
             sptsId = getItemHwByParam.getJSONObject(i).getInt("PKID");
             hardwareId = getItemHwByParam.getJSONObject(i).getString("HardwareID");
-            status = getItemHwByParam.getJSONObject(i).getString("Status");
+//            status = getItemHwByParam.getJSONObject(i).getString("Status");
             createdBy = getItemHwByParam.getJSONObject(i).getString("CreatedBy");
             createdDate = getItemHwByParam.getJSONObject(i).getString("CreatedDate").substring(0, 19);
             flag = getItemHwByParam.getJSONObject(i).getInt("Flag");
@@ -1024,15 +1032,47 @@ public class ItemController {
                     verifyDate = tarikh + " " + masa;
                 }
             }
+            if (getItemHwByParam.getJSONObject(i).has("ALU")) {
+                Object aluObject = getItemHwByParam.getJSONObject(i).get("ALU");
+                if (aluObject instanceof String) {
+                    alu = getItemHwByParam.getJSONObject(i).getString("ALU");
+                } else {
+                    alu = Integer.toString(getItemHwByParam.getJSONObject(i).getInt("ALU"));
+                }
+            }
+            if (getItemHwByParam.getJSONObject(i).has("RMS_Event")) {
+                Object RMS_Event = getItemHwByParam.getJSONObject(i).get("RMS_Event");
+                if (RMS_Event instanceof String) {
+                    rmsEvent = getItemHwByParam.getJSONObject(i).getString("RMS_Event");
+                } else {
+                    rmsEvent = Integer.toString(getItemHwByParam.getJSONObject(i).getInt("RMS_Event"));
+                }
+            }
+            if (getItemHwByParam.getJSONObject(i).has("ShelfTime")) {
+                Object ShelfTimeObject = getItemHwByParam.getJSONObject(i).get("ShelfTime");
+                if (ShelfTimeObject instanceof String) {
+                    shelfTime = getItemHwByParam.getJSONObject(i).getString("ShelfTime");
+                } else {
+                    shelfTime = Integer.toString(getItemHwByParam.getJSONObject(i).getInt("ShelfTime"));
+                }
+            }
 
             ItemHardware itemhardware = new ItemHardware();
             itemhardware.setMibItemId(mibItemId);
             itemhardware.setSptsPkid(sptsId.toString());
             itemhardware.setHardwareId(hardwareId);
-            itemhardware.setStatus(status);
+//            itemhardware.setStatus(status);
+            itemhardware.setStatus(sptsStatus);
             itemhardware.setCreatedBy(createdBy);
             itemhardware.setCreatedDate(createdDate);
             itemhardware.setFlag(flag.toString());
+            if (!"0".equals(alu)) {
+                itemhardware.setAlu(alu);
+            }
+            if (!"0".equals(shelfTime)) {
+                itemhardware.setShelfTime(shelfTime);
+            }
+            itemhardware.setRmsEvent(rmsEvent);
 
             ItemHardwareDAO itemhwdao = new ItemHardwareDAO();
             ItemHardware itemhw = itemhwdao.getItemHardwareByHardwareId(hardwareId);
@@ -4143,7 +4183,7 @@ public class ItemController {
         }
 
         if ("Fail".equals(pcb) || "Fail".equals(handle) || "Fail".equals(metalFrame) || "Fail".equals(hardwareFasterners) || "Fail".equals(clipHolder) || "Fail".equals(pcbEdgeFinger) || "Fail".equals(connector)
-                || "Fail".equals(dutSockets) || "Fail".equals(edgeMbBanana) || "Fail".equals(electComponent) || "Fail".equals(solderJoint) || "Fail".equals(winConnector) 
+                || "Fail".equals(dutSockets) || "Fail".equals(edgeMbBanana) || "Fail".equals(electComponent) || "Fail".equals(solderJoint) || "Fail".equals(winConnector)
                 || "Fail".equals(teflonConnector) || "Fail".equals(pogoReceptaclesPin) || "Fail".equals(cableWiredCopperWire) || "Fail".equals(labelIdentification)) {
             finalStatus = "Fail";
             itemVm.setFlag("99");
@@ -6885,7 +6925,7 @@ public class ItemController {
 
         ItemDAO itemdao = new ItemDAO();
         Integer sptsId = Integer.parseInt(itemdao.getSptsPkIdByMibItemId(itempkid));
-        
+
         JSONObject addItemHw = new JSONObject();
         addItemHw.put("itemPKID", sptsId);                              // int
         addItemHw.put("mibHardwareID", id);
@@ -6987,6 +7027,18 @@ public class ItemController {
         }
 
         return data.toString();
+    }
+
+    @RequestMapping(value = "/item/insertSPTSTesting/{mibItemId}/{username}", method = {RequestMethod.GET, RequestMethod.POST})
+    public String insertSPTSTesting(
+            Model model,
+            @ModelAttribute UserSession userSession,
+            @PathVariable("mibItemId") String mibItemId,
+            @PathVariable("username") String username) throws IOException {
+
+        insertSPTSData(mibItemId, username);
+
+        return "redirect:/hw";
     }
 
 }

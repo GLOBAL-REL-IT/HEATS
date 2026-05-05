@@ -129,6 +129,33 @@ public class RmsBookingHardwareGroupDAO {
         return queryResult;
     }
 
+    public QueryResult updateRmsBookingHardwareGroupStatusAndSptsStatusAndFlag(RmsBookingHardwareGroup rmsbookingHardwareGroup) {
+        QueryResult queryResult = new QueryResult();
+        try {
+            PreparedStatement ps = conn.prepareStatement(
+                    "UPDATE rms_booking_hardware_group SET spts_status = ?, status = ?, flag = ? WHERE id = ?"
+            );
+            ps.setString(1, rmsbookingHardwareGroup.getSptsStatus());
+            ps.setString(2, rmsbookingHardwareGroup.getStatus());
+            ps.setString(3, rmsbookingHardwareGroup.getFlag());
+            ps.setString(4, rmsbookingHardwareGroup.getId());
+            queryResult.setResult(ps.executeUpdate());
+            ps.close();
+        } catch (SQLException e) {
+            queryResult.setErrorMessage(e.getMessage());
+            LOGGER.error(e.getMessage());
+        } finally {
+            if (conn != null) {
+                try {
+                    conn.close();
+                } catch (SQLException e) {
+                    LOGGER.error(e.getMessage());
+                }
+            }
+        }
+        return queryResult;
+    }
+
     public QueryResult deleteRmsBookingHardwareGroup(String rmsbookingHardwareGroupId) {
         QueryResult queryResult = new QueryResult();
         try {
@@ -318,7 +345,7 @@ public class RmsBookingHardwareGroupDAO {
         }
         return rmsbookingHardwareGroupList;
     }
-    
+
     public List<RmsBookingHardwareGroup> getRmsBookingHardwareGroupListByBookingPkidWithFlagOne(String bookingPkid) {
         String sql = "SELECT g.*, DATE_FORMAT(g.created_date,'%d-%M-%Y') AS createdDate "
                 + "FROM rms_booking_hardware_group g  "
@@ -469,7 +496,7 @@ public class RmsBookingHardwareGroupDAO {
         }
         return count;
     }
-    
+
     public QueryResult updateGroupStatus(String status, String groupId, String hardwareId) {
         QueryResult queryResult = new QueryResult();
         try {
@@ -494,5 +521,5 @@ public class RmsBookingHardwareGroupDAO {
         }
         return queryResult;
     }
-    
+
 }
