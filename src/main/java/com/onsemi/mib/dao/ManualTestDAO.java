@@ -181,6 +181,47 @@ public class ManualTestDAO {
         }
         return queryResult;
     }
+    
+    public QueryResult insertManualBeforeLoading(String itemId, String qtyId, String dutId, String ctype, String cpntName, String cpntValue, String lower, String upper, String percentage, String status, String user, String flag) {
+        QueryResult queryResult = new QueryResult();
+        String sql = "";
+        ManualTest test = null;
+        try {
+            PreparedStatement ps = conn.prepareStatement(
+                    "INSERT INTO item_manual_test_before_result (mib_item_id, l1_id, l2_id, component_type, component_name, component_value, lower_limit, upper_limit, percentage, status, created_by, created_date, flag) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, NOW(), ?)", Statement.RETURN_GENERATED_KEYS
+            );
+            ps.setString(1, itemId);
+            ps.setString(2, qtyId);
+            ps.setString(3, dutId);
+            ps.setString(4, ctype);
+            ps.setString(5, cpntName);
+            ps.setString(6, cpntValue);
+            ps.setString(7, lower);
+            ps.setString(8, upper);
+            ps.setString(9, percentage);
+            ps.setString(10, status);
+            ps.setString(11, user);
+            ps.setString(12, flag);
+            queryResult.setResult(ps.executeUpdate());
+            ResultSet rs = ps.getGeneratedKeys();
+            if (rs.next()) {
+                queryResult.setGeneratedKey(Integer.toString(rs.getInt(1)));
+            }
+            rs.close();
+            ps.close();
+        } catch (SQLException e) {
+            LOGGER.error(e.getMessage());
+        } finally {
+            if (conn != null) {
+                try {
+                    conn.close();
+                } catch (SQLException e) {
+                    LOGGER.error(e.getMessage());
+                }
+            }
+        }
+        return queryResult;
+    }
 
     public List<ManualTest> getManualTestConfig() {
         String sql = "SELECT * FROM item_activity_config ORDER BY id ASC";
@@ -615,6 +656,37 @@ public class ManualTestDAO {
                 manual.setConfigId(rs.getString("config_id"));
                 manual.setQty(rs.getString("qty"));
                 manual.setDut(rs.getString("dut"));
+            }
+            rs.close();
+            ps.close();
+        } catch (SQLException e) {
+            LOGGER.error(e.getMessage());
+        } finally {
+            if (conn != null) {
+                try {
+                    conn.close();
+                } catch (SQLException e) {
+                    LOGGER.error(e.getMessage());
+                }
+            }
+        }
+        return manual;
+    }
+
+    public ManualTest getComponentConfigBeforeByItemId(String configId) {
+        String sql = "SELECT * FROM item_manual_test_before WHERE mib_item_id = '" + configId + "'";
+        ManualTest manual = null;
+        try {
+            PreparedStatement ps = conn.prepareStatement(sql);
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                manual = new ManualTest();
+                manual.setId(rs.getString("id"));
+                manual.setMibItemId(rs.getString("mib_item_id"));
+                manual.setConfigId(rs.getString("config_id"));
+                manual.setQty(rs.getString("qty"));
+                manual.setDut(rs.getString("dut"));
+                manual.setComponent(rs.getString("component"));
             }
             rs.close();
             ps.close();

@@ -9,6 +9,7 @@ import com.onsemi.mib.dao.ItemDAO;
 import com.onsemi.mib.dao.ItemHardwareDAO;
 import com.onsemi.mib.dao.ItemHardwareMovementDAO;
 import com.onsemi.mib.dao.ItemTransactionDAO;
+import com.onsemi.mib.dao.ManualTestDAO;
 import com.onsemi.mib.dao.ParameterDetailsDAO;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
@@ -33,6 +34,7 @@ import com.onsemi.mib.model.ItemActivityConfig;
 import com.onsemi.mib.model.ItemHardware;
 import com.onsemi.mib.model.ItemHardwareMovement;
 import com.onsemi.mib.model.ItemTransaction;
+import com.onsemi.mib.model.ManualTest;
 import com.onsemi.mib.model.ParameterDetails;
 import com.onsemi.mib.model.RmsBookingDetail;
 import com.onsemi.mib.model.RmsBookingDetailHwReplacement;
@@ -50,6 +52,7 @@ import com.onsemi.mib.tools.QueryResult;
 import com.onsemi.mib.tools.SPTSResponse;
 import com.onsemi.mib.tools.SPTSStatus;
 import com.onsemi.mib.tools.SPTSWebService;
+import com.onsemi.mib.tools.SpmlUtil;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -1326,12 +1329,18 @@ public class RmsBookingDetailController {
                 if (testResult == null) {
                     // NOTHING TO UPDATE HERE
                 } else {
-                    statusLeak = testResult.getLeakStatus();
-                    statusMan = testResult.getManualStatus();
-                    statusBib = testResult.getBibStatus();
-                    statusBibD = testResult.getBibDaqStatus();
-                    statusPs = testResult.getPsStatus();
-                    statusWin = testResult.getWinStatus();
+//                    statusLeak = testResult.getLeakStatus();
+//                    statusMan = testResult.getManualStatus();
+//                    statusBib = testResult.getBibStatus();
+//                    statusBibD = testResult.getBibDaqStatus();
+//                    statusPs = testResult.getPsStatus();
+//                    statusWin = testResult.getPsStatus();
+                    statusLeak = SpmlUtil.nullToEmptyString(testResult.getLeakStatus());
+                    statusMan = SpmlUtil.nullToEmptyString(testResult.getManualStatus());
+                    statusBib = SpmlUtil.nullToEmptyString(testResult.getBibStatus());
+                    statusBibD = SpmlUtil.nullToEmptyString(testResult.getBibDaqStatus());
+                    statusPs = SpmlUtil.nullToEmptyString(testResult.getPsStatus());
+                    statusWin = SpmlUtil.nullToEmptyString(testResult.getPsStatus());
                 }
                 String check01 = "disabled";    // LEAKAGE
                 String check02 = "disabled";    // MANUAL
@@ -4265,6 +4274,69 @@ public class RmsBookingDetailController {
         return "redirect:/rmsbookingDetail";
     }
 
+    @RequestMapping(value = "/createManualTest", method = {RequestMethod.GET, RequestMethod.POST})
+    public String bookingFunctionalTest(
+            Model model,
+            Locale locale,
+            RedirectAttributes redirectAttrs,
+            @ModelAttribute UserSession userSession,
+            @RequestParam(required = false) String totalQty,
+            @RequestParam(required = false) String mbItemId,
+            @RequestParam(required = false) String lcItemId,
+            @RequestParam(required = false) String groupId) {
+
+        String path = "";
+
+        // SINI KITA HARDCODE UNTUK PERGI KE PHP PROUJECT LINK FOR HEATS
+        String link = "http://zbqb9x-7jwwld4:86/Tutorial/sample-heat/manual_test_before_loading.php?id=" + lcItemId + "&groupId=" + groupId;
+        model.addAttribute("link", link);
+
+        ManualTestDAO testdao = new ManualTestDAO();
+        ManualTest mantest = testdao.getComponentConfigBeforeByItemId(lcItemId);
+
+        if (mantest != null) {
+            path = "rmsbookingDetail/goto_manual_test";
+            redirectAttrs.addFlashAttribute("success", "Please perform manual test.");
+
+            int saizQty = Integer.parseInt(totalQty);
+            int saizDut = Integer.parseInt(mantest.getDut());
+            int saizCom = Integer.parseInt(mantest.getComponent());
+
+            // FUNCTION UPDATE THE LATEST QUANTITY - START
+            testdao = new ManualTestDAO();
+            testdao.updateItemActivityConfig(String.valueOf(saizQty), String.valueOf(saizDut), String.valueOf(saizCom), mantest.getId());
+            // FUNCTION UPDATE THE LATEST QUANTITY - END
+
+            testdao = new ManualTestDAO();
+            List<ManualTest> listComponent = testdao.getAllComponentConfigBefore(lcItemId);
+
+            for (int i = 0; i < listComponent.size(); i++) {
+                String compType = listComponent.get(i).getComponentType();
+                String compName = listComponent.get(i).getComponentName();
+                String compValue = listComponent.get(i).getComponentValue();
+                String minValue = listComponent.get(i).getLowerLimit();
+                String maxValue = listComponent.get(i).getUpperLimit();
+                String percentage = listComponent.get(i).getPercentage();
+
+                for (int c1 = 1; c1 <= saizQty; c1++) {
+                    for (int c2 = 1; c2 <= saizDut; c2++) {
+                        testdao = new ManualTestDAO();
+                        QueryResult qr = testdao.insertManualBeforeLoading(lcItemId, String.valueOf(c1), String.valueOf(c2), compType, compName, compValue, minValue, maxValue, percentage, "", "", "1");
+                    }
+                }
+            }
+        } else {
+            path = "redirect:/rmsbookingDetail/groupDetail/" + groupId;
+            redirectAttrs.addFlashAttribute("error", "Please check the manual test configuration for the ITEM ID " + mbItemId);
+        }
+
+        // BERJAYA 
+//        path = "rmsbookingDetail/goto_manual_test";
+        // GAGAL
+//        path = "redirect:/rmsbookingDetail/groupDetail/"+groupId;
+        return path;
+    }
+
     private String saveToMaverickFunctionalTest(String jenistest, String user, String groupId, String hardwareId) {
         String data = "";
 
@@ -4392,4 +4464,5 @@ public class RmsBookingDetailController {
             // BOLE UPDATE NANTI
         }
     }
+
 }

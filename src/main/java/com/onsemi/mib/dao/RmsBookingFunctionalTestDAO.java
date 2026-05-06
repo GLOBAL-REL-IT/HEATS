@@ -67,6 +67,7 @@ public class RmsBookingFunctionalTestDAO {
     }
     
     public QueryResult updateBibTest(RmsBookingFunctionalTest book) {
+        LOGGER.info("DAO - UPDATE BIB TEST");
         QueryResult queryResult = new QueryResult();
         try {
             PreparedStatement ps = conn.prepareStatement(
@@ -78,8 +79,8 @@ public class RmsBookingFunctionalTestDAO {
             ps.setString(4, book.getRemark());
             ps.setString(5, book.getFinalStatus());
             ps.setString(6, book.getFlag());
-            ps.setString(7, book.getGroupId());
-            ps.setString(8, book.getBibHwid());
+            ps.setString(7, book.getBibHwid());
+            ps.setString(8, book.getGroupId());
             queryResult.setResult(ps.executeUpdate());
             ps.close();
         } catch (SQLException e) {
@@ -98,6 +99,7 @@ public class RmsBookingFunctionalTestDAO {
     }
     
     public QueryResult updateManualTest(RmsBookingFunctionalTest book) {
+        LOGGER.info("DAO - UPDATE MANUAL TEST, TAK GUNA YANG NI AQ RASA, hAHHAHAHA");
         QueryResult queryResult = new QueryResult();
         try {
             PreparedStatement ps = conn.prepareStatement(
@@ -127,7 +129,12 @@ public class RmsBookingFunctionalTestDAO {
     }
     
     public QueryResult updateLeakageTest(RmsBookingFunctionalTest book) {
+        LOGGER.info("DAO - UPDATE LEAKAGE TEST");
         QueryResult queryResult = new QueryResult();
+        LOGGER.info("DATA DEKAT SINI :::::   "+book.getLeakHwid());
+        LOGGER.info("DATA DEKAT SINI :::::   "+book.getLeakQty());
+        LOGGER.info("DATA DEKAT SINI :::::   "+book.getLeakStatus());
+        LOGGER.info("DATA GROUP ID   :::::   "+book.getGroupId());
         try {
             PreparedStatement ps = conn.prepareStatement(
                     "UPDATE rms_booking_functional_test SET leak_qty=?, leak_status=?, leak_upload=?, remark=?, final_status=?, flag=?, leak_hwid=? WHERE group_id = ? "
@@ -138,8 +145,8 @@ public class RmsBookingFunctionalTestDAO {
             ps.setString(4, book.getRemark());
             ps.setString(5, book.getFinalStatus());
             ps.setString(6, book.getFlag());
-            ps.setString(7, book.getGroupId());
-            ps.setString(8, book.getLeakHwid());
+            ps.setString(7, book.getLeakHwid());
+            ps.setString(8, book.getGroupId());
             queryResult.setResult(ps.executeUpdate());
             ps.close();
         } catch (SQLException e) {
@@ -158,6 +165,7 @@ public class RmsBookingFunctionalTestDAO {
     }
     
     public QueryResult updateBibDaqTest(RmsBookingFunctionalTest book) {
+        LOGGER.info("DAO - UPDATE BIB DAQ TEST");
         QueryResult queryResult = new QueryResult();
         try {
             PreparedStatement ps = conn.prepareStatement(
@@ -169,8 +177,8 @@ public class RmsBookingFunctionalTestDAO {
             ps.setString(4, book.getRemark());
             ps.setString(5, book.getFinalStatus());
             ps.setString(6, book.getFlag());
-            ps.setString(7, book.getGroupId());
-            ps.setString(8, book.getBibDaqHwid());
+            ps.setString(7, book.getBibDaqHwid());
+            ps.setString(8, book.getGroupId());
             queryResult.setResult(ps.executeUpdate());
             ps.close();
         } catch (SQLException e) {
@@ -189,6 +197,7 @@ public class RmsBookingFunctionalTestDAO {
     }
     
     public QueryResult updatePowerTest(RmsBookingFunctionalTest book) {
+        LOGGER.info("DAO - UPDATE POWER SUPPLY TEST");
         QueryResult queryResult = new QueryResult();
         try {
             PreparedStatement ps = conn.prepareStatement(
@@ -200,8 +209,8 @@ public class RmsBookingFunctionalTestDAO {
             ps.setString(4, book.getRemark());
             ps.setString(5, book.getFinalStatus());
             ps.setString(6, book.getFlag());
-            ps.setString(7, book.getGroupId());
-            ps.setString(8, book.getPsHwid());
+            ps.setString(7, book.getPsHwid());
+            ps.setString(8, book.getGroupId());
             queryResult.setResult(ps.executeUpdate());
             ps.close();
         } catch (SQLException e) {
@@ -220,6 +229,7 @@ public class RmsBookingFunctionalTestDAO {
     }
     
     public QueryResult updateWinchesterTest(RmsBookingFunctionalTest book) {
+        LOGGER.info("DAO - UPDATE WINCHESTER TEST");
         QueryResult queryResult = new QueryResult();
         try {
             PreparedStatement ps = conn.prepareStatement(
@@ -231,8 +241,8 @@ public class RmsBookingFunctionalTestDAO {
             ps.setString(4, book.getRemark());
             ps.setString(5, book.getFinalStatus());
             ps.setString(6, book.getFlag());
-            ps.setString(7, book.getGroupId());
-            ps.setString(8, book.getWinHwid());
+            ps.setString(7, book.getWinHwid());
+            ps.setString(8, book.getGroupId());
             queryResult.setResult(ps.executeUpdate());
             ps.close();
         } catch (SQLException e) {
