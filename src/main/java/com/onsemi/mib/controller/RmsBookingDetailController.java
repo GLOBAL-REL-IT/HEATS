@@ -1700,7 +1700,8 @@ public class RmsBookingDetailController {
         } else {
             //check if active in rmsBookingHardwareGroup table (flag != 99)
             RmsBookingHardwareGroupDAO hwGroupD = new RmsBookingHardwareGroupDAO();
-            int count = hwGroupD.getCountHwWithFlagNE99(hwId);
+//            int count = hwGroupD.getCountHwWithFlagNE99(hwId);
+            int count = hwGroupD.getCountHwWithFlagNE99And2(hwId); //to include flag = 2 6.5.2026
             if (count > 0) {
                 LOGGER.info("hwID already active in rmsBookingHardwareGroup");
                 redirectAttrs.addFlashAttribute("error", hwId + " already registered. Pls register with another Hardware ID");

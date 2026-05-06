@@ -6850,7 +6850,8 @@ public class ItemController {
         itemhw.setVerifyBy(userSession.getLoginId());
 
         ItemHardwareDAO itemhwdao = new ItemHardwareDAO();
-        itemhwdao.updateHardwareIdStatus(itemhw);
+//        itemhwdao.updateHardwareIdStatus(itemhw);
+        itemhwdao.updateHardwareIdStatusGood(itemhw); //change status from 'Available' to 'Good'
 
         String status = insertItemHardwareIntoSpts(hwid, mibId, hardwareId, hwidStatus, userSession.getLoginId());
         if (status.equals("SUCCESS")) {
@@ -7033,7 +7034,8 @@ public class ItemController {
                             + "</li>";
                     data.append(hehe);
                 } // 2. Check if status is Available
-                else if ("Available".equalsIgnoreCase(hw.getStatus())) {
+//                                else if ("Available".equalsIgnoreCase(hw.getStatus())) {
+                else if ("Available".equalsIgnoreCase(hw.getStatus()) || "Good".equalsIgnoreCase(hw.getStatus())) { // to include status 'Good' 6.5.2026
                     String hehe = "<li class=\"list-group-item d-flex justify-content-between align-items-center\">"
                             + "<div class=\"icon-box sm rounded-circle bg-success\">"
                             + "<i class=\"bi bi-bookmark-check\">"

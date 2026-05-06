@@ -551,6 +551,31 @@ public class ItemHardwareDAO {
         QueryResult queryResult = new QueryResult();
         try {
             PreparedStatement ps = conn.prepareStatement(
+                    "UPDATE item_hardware SET status = 'Good', flag = '1', verify_date = NOW(), verify_by = ? WHERE id = ?"
+            );
+            ps.setString(1, item.getVerifyBy());
+            ps.setString(2, item.getId());
+            queryResult.setResult(ps.executeUpdate());
+            ps.close();
+        } catch (SQLException e) {
+            queryResult.setErrorMessage(e.getMessage());
+            LOGGER.error(e.getMessage());
+        } finally {
+            if (conn != null) {
+                try {
+                    conn.close();
+                } catch (SQLException e) {
+                    LOGGER.error(e.getMessage());
+                }
+            }
+        }
+        return queryResult;
+    }
+
+    public QueryResult updateHardwareIdStatusGood(ItemHardware item) {
+        QueryResult queryResult = new QueryResult();
+        try {
+            PreparedStatement ps = conn.prepareStatement(
                     "UPDATE item_hardware SET status = 'Available', flag = '1', verify_date = NOW(), verify_by = ? WHERE id = ?"
             );
             ps.setString(1, item.getVerifyBy());
@@ -630,7 +655,8 @@ public class ItemHardwareDAO {
         Integer count = null;
         try {
             PreparedStatement ps = conn.prepareStatement(
-                    "SELECT COUNT(*) AS count FROM item_hardware inc WHERE inc.hardware_id = '" + hwId + "' AND status = 'Available'"
+                    //                    "SELECT COUNT(*) AS count FROM item_hardware inc WHERE inc.hardware_id = '" + hwId + "' AND status = 'Available'"
+                    "SELECT COUNT(*) AS count FROM item_hardware inc WHERE inc.hardware_id = '" + hwId + "' AND status in ('Available','Good')" //include status 'Good'
             );
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {

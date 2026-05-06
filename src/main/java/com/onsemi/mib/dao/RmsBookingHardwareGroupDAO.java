@@ -470,6 +470,33 @@ public class RmsBookingHardwareGroupDAO {
         return count;
     }
 
+    public Integer getCountHwWithFlagNE99And2(String hwId) {
+        Integer count = null;
+        try {
+            PreparedStatement ps = conn.prepareStatement(
+                    "SELECT COUNT(*) AS count FROM rms_booking_hardware_group inc WHERE inc.hardware_id = '" + hwId + "' AND inc.flag NOT IN ('99', '2')"
+            );
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                count = rs.getInt("count");
+            }
+            rs.close();
+
+            ps.close();
+        } catch (SQLException e) {
+            LOGGER.error(e.getMessage());
+        } finally {
+            if (conn != null) {
+                try {
+                    conn.close();
+                } catch (SQLException e) {
+                    LOGGER.error(e.getMessage());
+                }
+            }
+        }
+        return count;
+    }
+
     public Integer getCountHwWithinSameBookingPkidAndItemPkid(String bookingPkid, String itemPkid) {
         Integer count = null;
         try {
