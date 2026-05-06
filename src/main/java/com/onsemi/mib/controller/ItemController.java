@@ -6889,7 +6889,6 @@ public class ItemController {
             itemM.setSptsPkid(itemMovementOld.get(i).getSptsPkid());
             SPTSStatus sptsStatus = new SPTSStatus();
             String transType = sptsStatus.sptsTransType(Integer.parseInt(itemMovementOld.get(i).getTransType()));
-            LOGGER.info("transType: " + transType);
             itemM.setTransType(transType);
             itemMovement.add(itemM);
         }
