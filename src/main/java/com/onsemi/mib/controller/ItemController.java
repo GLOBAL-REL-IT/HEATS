@@ -13,6 +13,7 @@ import com.onsemi.mib.dao.ItemAluConfigDAO;
 import com.onsemi.mib.dao.ItemFunctionalTestDAO;
 import com.onsemi.mib.dao.ItemHardwareConfigDAO;
 import com.onsemi.mib.dao.ItemHardwareDAO;
+import com.onsemi.mib.dao.ItemHardwareMovementDAO;
 import com.onsemi.mib.dao.ItemLogDAO;
 import com.onsemi.mib.dao.ItemMaverickDAO;
 import com.onsemi.mib.dao.ItemRecallDAO;
@@ -34,6 +35,7 @@ import com.onsemi.mib.model.ItemActivityConfig;
 import com.onsemi.mib.model.ItemFunctionalTest;
 import com.onsemi.mib.model.ItemHardware;
 import com.onsemi.mib.model.ItemHardwareConfig;
+import com.onsemi.mib.model.ItemHardwareMovement;
 import com.onsemi.mib.model.ItemLog;
 import com.onsemi.mib.model.ItemMaverick;
 import com.onsemi.mib.model.ItemRecall;
@@ -6857,6 +6859,47 @@ public class ItemController {
             redirectAttrs.addFlashAttribute("error", status);
         }
         return "redirect:/hw/" + sptsPkid;
+    }
+
+    @RequestMapping(value = "/item/movement/{itemHwId}", method = RequestMethod.GET)
+    public String hardwareMovement(
+            Model model,
+            @ModelAttribute UserSession userSession,
+            @PathVariable("itemHwId") String itemHwId) throws IOException {
+
+        ItemHardwareDAO itemhwdao = new ItemHardwareDAO();
+        String itemId = itemhwdao.getMibItemIdByItemHwId(itemHwId);
+
+        itemhwdao = new ItemHardwareDAO();
+        ItemHardware itemhw = itemhwdao.getItemHardware(itemHwId);
+        model.addAttribute("itemhw", itemhw);
+
+        List<ItemHardwareMovement> itemMovement = new ArrayList<>();
+
+        ItemHardwareMovementDAO itemMd = new ItemHardwareMovementDAO();
+        List<ItemHardwareMovement> itemMovementOld = itemMd.getItemHardwareMovementListByMibHwId(itemHwId);
+        for (int i = 0; i < itemMovementOld.size(); i++) {
+            ItemHardwareMovement itemM = new ItemHardwareMovement();
+            itemM.setId(itemMovementOld.get(i).getId());
+            itemM.setAlu(itemMovementOld.get(i).getAlu());
+            itemM.setCreatedBy(itemMovementOld.get(i).getCreatedBy());
+            itemM.setCreatedDate(itemMovementOld.get(i).getCreatedDate());
+            itemM.setMibHardwareId(itemMovementOld.get(i).getMibHardwareId());
+            itemM.setRmsEvent(itemMovementOld.get(i).getRmsEvent());
+            itemM.setSptsPkid(itemMovementOld.get(i).getSptsPkid());
+            SPTSStatus sptsStatus = new SPTSStatus();
+            String transType = sptsStatus.sptsTransType(Integer.parseInt(itemMovementOld.get(i).getTransType()));
+            LOGGER.info("transType: " + transType);
+            itemM.setTransType(transType);
+            itemMovement.add(itemM);
+        }
+        model.addAttribute("itemMovement", itemMovement);
+
+        ItemDAO itemdao = new ItemDAO();
+        String sptsItemId = itemdao.getSptsPkIdByMibItemId(itemId);
+        model.addAttribute("sptsItemId", sptsItemId);
+
+        return "item/hardware_movement";
     }
 
     @RequestMapping(value = "/item/hardware/delete/{hwid}", method = {RequestMethod.GET, RequestMethod.POST})

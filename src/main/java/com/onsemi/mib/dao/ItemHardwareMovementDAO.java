@@ -181,4 +181,39 @@ public class ItemHardwareMovementDAO {
         }
         return itemhardwareMovementList;
     }
+
+    public List<ItemHardwareMovement> getItemHardwareMovementListByMibHwId(String mibHwId) {
+        String sql = "SELECT *,DATE_FORMAT(created_date,'%d-%M-%Y %H:%i:%s') AS createdDate FROM item_hardware_movement WHERE mib_hardware_id = '" + mibHwId + "' ORDER BY id ASC";
+        List<ItemHardwareMovement> itemhardwareMovementList = new ArrayList<ItemHardwareMovement>();
+        try {
+            PreparedStatement ps = conn.prepareStatement(sql);
+            ItemHardwareMovement itemhardwareMovement;
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                itemhardwareMovement = new ItemHardwareMovement();
+                itemhardwareMovement.setId(rs.getString("id"));
+                itemhardwareMovement.setMibHardwareId(rs.getString("mib_hardware_id"));
+                itemhardwareMovement.setSptsPkid(rs.getString("spts_pkid"));
+                itemhardwareMovement.setTransType(rs.getString("trans_type"));
+                itemhardwareMovement.setRmsEvent(rs.getString("rms_event"));
+                itemhardwareMovement.setAlu(rs.getString("alu"));
+                itemhardwareMovement.setCreatedBy(rs.getString("created_by"));
+                itemhardwareMovement.setCreatedDate(rs.getString("createdDate"));
+                itemhardwareMovementList.add(itemhardwareMovement);
+            }
+            rs.close();
+            ps.close();
+        } catch (SQLException e) {
+            LOGGER.error(e.getMessage());
+        } finally {
+            if (conn != null) {
+                try {
+                    conn.close();
+                } catch (SQLException e) {
+                    LOGGER.error(e.getMessage());
+                }
+            }
+        }
+        return itemhardwareMovementList;
+    }
 }

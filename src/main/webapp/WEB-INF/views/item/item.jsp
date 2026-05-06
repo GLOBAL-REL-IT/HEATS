@@ -224,9 +224,9 @@
                                             <c:if test="${not empty itemTypeTitle}"><div class="mb-3 container-fluid justify-content-start">
                                                     <c:if test="${userItemDelete == 'Yes'}"><a onclick="scrapModal();" role="button" title="Scrap" data-bs-toggle="modal" data-bs-target="#delete_modal" class="btn btn-outline-danger me-2">
                                                             <i class="bi bi-trash3" style="color:red"></i>&nbsp;&nbsp;Scrap</a></c:if>
-                                                    <c:if test="${itemTypeForBib == 'BIB' || itemTypeForBib == 'BIB Card'}">
-                                                        <c:if test="${userItemActConfig == 'Yes'}">
-                                                           <a class="btn btn-outline-success me-2" role="button" onclick="goToActivityConfig()"><i class='bi bi-sliders2'></i>&nbsp;&nbsp;Add/Edit Activity config</a> 
+                                                        <c:if test="${itemTypeForBib == 'BIB' || itemTypeForBib == 'BIB Card'}">
+                                                            <c:if test="${userItemActConfig == 'Yes'}">
+                                                            <a class="btn btn-outline-success me-2" role="button" onclick="goToActivityConfig()"><i class='bi bi-sliders2'></i>&nbsp;&nbsp;Add/Edit Activity config</a> 
                                                         </c:if>
                                                     </c:if>
                                                 </div></c:if>
@@ -3912,11 +3912,12 @@
                                                         <tr>
                                                             <th>Hardware ID</th>
                                                             <th>ALU</th>
+                                                            <th>RMS_Event</th>
                                                             <th>Shelf Time</th>
                                                             <th>Status</th>
                                                             <th>Manage</th>
-<!--                                                            <th>RMS_Event</th>
-                                                            <th>Flag</th>-->
+                                                            <!--                                                            <th>RMS_Event</th>
+                                                                                                                        <th>Flag</th>-->
                                                         </tr>
                                                     </thead>
                                                     <tbody>
@@ -4379,6 +4380,7 @@
 //                                                                {data: 'aluhrs'},
                                                                 {data: 'hardware_id'},
                                                                 {data: 'alu'},
+                                                                {data: 'rms_event'},
                                                                 {data: 'shelf_time'},
                                                                 {data: 'status'},
 //                                                                {data: 'rms_event'},
@@ -4389,13 +4391,14 @@
 //                                                                        if (row.status === 'Available') {
 //                                                                            return `<button class="btn btn-secondary edit-btn">Verify</button> 
 //                                                                                    <button class="btn btn-info edit-btn" onclick="viewRow(`+row.id+`)">Log</button>`;
-                                                                        if (row.status === 'Available') {
-                                                                            return `<button class="btn btn-info edit-btn" onclick="viewRow(`+row.id+`)">Log</button>
-                                                                                    <button class="btn btn-light edit-btn" onclick="deleteRow(`+row.id+`)"><i class="bi bi-trash h5" style="color:red"></i></button>`;
-                                                                        } else {
+                                                                        if (row.status === 'Pending Verification') {
                                                                             return `<button class="btn btn-success edit-btn" onclick="verifyRow(`+row.id+`)">Verify</button> 
                                                                                     <button class="btn btn-info edit-btn" onclick="viewRow(`+row.id+`)">Log</button>
                                                                                     <button class="btn btn-light edit-btn" onclick="deleteRow(`+row.id+`)"><i class="bi bi-trash h5" style="color:red"></i></button>`;
+                                                                        } else {
+                                                                            return `<button class="btn btn-info edit-btn" onclick="viewRow(`+row.id+`)">Log</button>
+                                                                                    <button class="btn btn-light edit-btn" onclick="deleteRow(`+row.id+`)"><i class="bi bi-trash h5" style="color:red"></i></button>`;
+                                                                            
                                                                         }
                                                                     }
                                                                 }
@@ -4410,7 +4413,7 @@
                                                     }
                                                     
                                                     function viewRow(itemPKID) {
-                                                        var Url = "${contextPath}/hw/item/deleteHardwareId/" + itemPKID;
+                                                        var Url = "${contextPath}/hw/item/movement/" + itemPKID;
                                                         window.location.href = Url;
                                                         // Add your delete logic here (e.g., confirmation dialog, API call)
                                                     }
