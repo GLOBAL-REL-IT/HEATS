@@ -2,6 +2,7 @@ package com.onsemi.mib.controller;
 
 import com.google.gson.Gson;
 import com.onsemi.mib.dao.EmailHwReplacementDAO;
+import com.onsemi.mib.dao.EmailHwReturnFromStagingDAO;
 import com.onsemi.mib.dao.EmailVmFailDAO;
 import com.onsemi.mib.dao.HostnameDAO;
 import com.onsemi.mib.dao.ItemActivityConfigDAO;
@@ -26,6 +27,7 @@ import com.onsemi.mib.dao.RmsBookingLogDAO;
 import com.onsemi.mib.dao.RmsBookingMaverickDAO;
 import com.onsemi.mib.dao.RmsBookingVisualInspectionDAO;
 import com.onsemi.mib.model.EmailHwReplacement;
+import com.onsemi.mib.model.EmailHwReturnFromStaging;
 import com.onsemi.mib.model.EmailVmFail;
 import com.onsemi.mib.model.Hardware;
 import com.onsemi.mib.model.Hostname;
@@ -4268,6 +4270,48 @@ public class RmsBookingDetailController {
             QueryResult logQ = logD.insertRmsBookingLog(log);
 
             redirectAttrs.addFlashAttribute("success", "Successfully update the hardware status. Please return the hardware to MB room.");
+
+            //send email to team when successfully recall
+            EmailHwReturnFromStagingDAO userDao = new EmailHwReturnFromStagingDAO();
+            List<EmailHwReturnFromStaging> userRecipientsList = userDao.getEmailHwReturnFromStagingList();
+
+            String[] to = new String[userRecipientsList.size()];
+            for (int x = 0; x < userRecipientsList.size(); x++) {
+                to[x] = userRecipientsList.get(x).getEmail();
+            }
+
+            //gethostname
+            HostnameDAO hostnameD = new HostnameDAO();
+            Hostname h = hostnameD.getHostnameFlagZero();
+            String hostname = h.getHostname();
+
+            EmailSender emailSender = new EmailSender();
+            emailSender.htmlEmailTable(
+                    servletContext,
+                    "", //user name requestor
+                    to, //to
+                    //                        emailTo,
+                    "[Action Required]HW Release – Reverted to Motherboard Room", //subject
+                    "<br />"
+                    + "Please be informed that the HW for below RMS_Event have been reverted by Loading Tech."
+                    + "<br /> "
+                    + "<br /> "
+                    + "RMS No: " + rms1.getRmsNo()
+                    + "<br /> "
+                    + "Event: " + rms1.getEvent()
+                    + "<br /> "
+                    + "Returned By: " + userSession.getFullname()
+                    + "<br /> "
+                    + "Transaction Date: " + completeDateTime
+                    + "<br /> "
+                    + "Remark: " + recallRemarks
+                    + "<br /> "
+                    + "<br /> "
+                    + "Please click <a href=\"http://" + hostname + "/HEATS/rmsbookingDetail/detail/" + id + " \">HERE</a> for more detail."
+                    + "<br /> "
+                    + "<br />Thank you." //msg
+            );
+
         } else {
             redirectAttrs.addFlashAttribute("error", "Failed to update the hardware status. Pls contact system admin.");
         }
