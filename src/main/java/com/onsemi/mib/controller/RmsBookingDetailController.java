@@ -4343,32 +4343,39 @@ public class RmsBookingDetailController {
             path = "rmsbookingDetail/goto_manual_test";
             redirectAttrs.addFlashAttribute("success", "Please perform manual test.");
 
-            int saizQty = Integer.parseInt(totalQty);
-            int saizDut = Integer.parseInt(mantest.getDut());
-            int saizCom = Integer.parseInt(mantest.getComponent());
-
-            // FUNCTION UPDATE THE LATEST QUANTITY - START
             testdao = new ManualTestDAO();
-            testdao.updateItemActivityConfig(String.valueOf(saizQty), String.valueOf(saizDut), String.valueOf(saizCom), mantest.getId());
-            // FUNCTION UPDATE THE LATEST QUANTITY - END
+            List<ManualTest> listManual = testdao.getAllComponentConfigBeforeLoading(lcItemId);
 
-            testdao = new ManualTestDAO();
-            List<ManualTest> listComponent = testdao.getAllComponentConfigBefore(lcItemId);
+            if (listManual.size() == 0) {
+                int saizQty = Integer.parseInt(totalQty);
+                int saizDut = Integer.parseInt(mantest.getDut());
+                int saizCom = Integer.parseInt(mantest.getComponent());
 
-            for (int i = 0; i < listComponent.size(); i++) {
-                String compType = listComponent.get(i).getComponentType();
-                String compName = listComponent.get(i).getComponentName();
-                String compValue = listComponent.get(i).getComponentValue();
-                String minValue = listComponent.get(i).getLowerLimit();
-                String maxValue = listComponent.get(i).getUpperLimit();
-                String percentage = listComponent.get(i).getPercentage();
+                // FUNCTION UPDATE THE LATEST QUANTITY - START
+                testdao = new ManualTestDAO();
+                testdao.updateItemActivityConfig(String.valueOf(saizQty), String.valueOf(saizDut), String.valueOf(saizCom), mantest.getId());
+                // FUNCTION UPDATE THE LATEST QUANTITY - END
 
-                for (int c1 = 1; c1 <= saizQty; c1++) {
-                    for (int c2 = 1; c2 <= saizDut; c2++) {
-                        testdao = new ManualTestDAO();
-                        QueryResult qr = testdao.insertManualBeforeLoading(lcItemId, String.valueOf(c1), String.valueOf(c2), compType, compName, compValue, minValue, maxValue, percentage, "", "", "1");
+                testdao = new ManualTestDAO();
+                List<ManualTest> listComponent = testdao.getAllComponentConfigBefore(lcItemId);
+
+                for (int i = 0; i < listComponent.size(); i++) {
+                    String compType = listComponent.get(i).getComponentType();
+                    String compName = listComponent.get(i).getComponentName();
+                    String compValue = listComponent.get(i).getComponentValue();
+                    String minValue = listComponent.get(i).getLowerLimit();
+                    String maxValue = listComponent.get(i).getUpperLimit();
+                    String percentage = listComponent.get(i).getPercentage();
+
+                    for (int c1 = 1; c1 <= saizQty; c1++) {
+                        for (int c2 = 1; c2 <= saizDut; c2++) {
+                            testdao = new ManualTestDAO();
+                            QueryResult qr = testdao.insertManualBeforeLoading(lcItemId, String.valueOf(c1), String.valueOf(c2), compType, compName, compValue, minValue, maxValue, percentage, "", "", "1");
+                        }
                     }
                 }
+            } else {
+                // WHAT NEED TO BE DONE HERE? SINCE THERE ALREADY DATA, WE SKIP INSERTING A NEW ONE
             }
         } else {
             path = "redirect:/rmsbookingDetail/groupDetail/" + groupId;

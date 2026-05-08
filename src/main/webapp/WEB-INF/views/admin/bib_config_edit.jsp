@@ -30,7 +30,7 @@
             }
             .select2-container-active .select2-choice,
             .select2-container-active .select2-choices {
-                border: 1px solid $input-border-focus !important;
+/*                border: 1px solid $input-border-focus !important;*/
                 -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, .075), 0 0 6px #009d9b !important;
                 box-shadow: inset 0 1px 1px rgba(0, 0, 0, .075), 0 0 6px #009d9b !important;
                 -webkit-box-shadow: inset 0 1px 1px rgba(0,0,0,.075), 0 0 8px rgba(102, 175, 233, .6) !important;
@@ -46,7 +46,7 @@
             }
             .select2-dropdown-open.select2-drop-above .select2-choice,
             .select2-dropdown-open.select2-drop-above .select2-choices {
-                border: 1px solid $input-border-focus !important;
+                /*border: 1px solid $input-border-focus !important;*/
                 border-top: 0 !important;
                 background-image: none;
                 background-color: #fff;
@@ -242,9 +242,9 @@
                                             <div class="input-group form-check form-switch">
                                                 <input class="form-check-input" type="checkbox" role="switch" id="bibTestCheck" name="bibTestCheck" <c:if test="${item.bibTest == 'Yes'}">checked</c:if> >
                                             </div>
-                                            <label for="bibDaqTestCheck" class="form-label">BIB DAQ Test</label>
+                                            <label for="daqTestCheck" class="form-label">BIB DAQ Test</label>
                                             <div class="input-group form-check form-switch">
-                                                <input class="form-check-input" type="checkbox" role="switch" id="bibDaqTestCheck" name="bibDaqTestCheck" <c:if test="${item.bibDaqTest == 'Yes'}">checked</c:if> >
+                                                <input class="form-check-input" type="checkbox" role="switch" id="daqTestCheck" name="daqTestCheck" <c:if test="${item.bibDaqTest == 'Yes'}">checked</c:if> >
                                             </div>
                                             <label for="psLeakageTestCheck" class="form-label">Power Supply Leakage Test</label>
                                             <div class="input-group form-check form-switch">
@@ -267,7 +267,6 @@
                                                         <button type="button" class="add-row-btn" onclick="addRow()">Add Component</button>
                                                     </div>
                                                 </div>
-
                                                 <table id="dataTable">
                                                     <thead>
                                                         <tr>
@@ -411,17 +410,6 @@
                     inputContainer.classList.add("hidden");
                     document.getElementById("inputDUT").removeAttribute("required");
                 }
-                //            $('#onHandQty').change(function () {
-                ////                    $('#totalQty').val(parseInt($('#onHandQty').val()) + parseInt($('#productionQty').val()) + parseInt($('#productionStagingQty').val()) + parseInt($('#repairQty').val()));
-                //                $('#totalQty').val(parseInt($('#onHandQty').val()));
-                //            });
-//                var element = $('#itemTypeRead');
-//                if (!element.val()) {
-//                    //                        alert();
-//                    $("#submit").attr("disabled", true);
-//                } else {
-//                    $("#submit").removeAttr('disabled');
-//                }
             });
             
             function toggleVisibility() {

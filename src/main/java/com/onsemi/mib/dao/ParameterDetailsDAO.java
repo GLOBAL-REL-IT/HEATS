@@ -327,7 +327,6 @@ public class ParameterDetailsDAO {
     public List<ParameterDetails> getActivityParameter(String name, String masterCode) {
         String sql = "SELECT id, master_code AS masterCode, detail_code AS detailCode, name AS name, remarks AS remarks, IF(name=\"" + name + "\",\"selected=''\",\"\") AS selected FROM parameter_details "
                 + " WHERE master_code = '" + masterCode + "' ORDER BY detail_code";
-        LOGGER.info("sql >>> " + sql);
         List<ParameterDetails> parameterDetailList = new ArrayList<ParameterDetails>();
         try {
             PreparedStatement ps = conn.prepareStatement(sql);

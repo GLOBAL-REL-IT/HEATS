@@ -3318,6 +3318,7 @@ public class ItemController {
         ItemActivityConfig itemData = itemdao.getItemActivityByItemId(mibItemId);
         String viCheck = "NO";
         String bibCheck = "NO";
+        String bibDaqCheck = "NO";
         String manCheck = "NO";
         String leakCheck = "NO";
         String psCheck = "NO";
@@ -3325,6 +3326,7 @@ public class ItemController {
         if (itemData != null) {
             viCheck = itemData.getVi();
             bibCheck = itemData.getBibTest();
+            bibDaqCheck = itemData.getBibDaqTest();
             manCheck = itemData.getManualTest();
             leakCheck = itemData.getLeakageTest();
             psCheck = itemData.getPsLeakageTest();
@@ -3360,6 +3362,10 @@ public class ItemController {
         ParameterDetailsDAO pD = new ParameterDetailsDAO();
         List<ParameterDetails> BibPassFail = pD.getGroupParameterDetailList("", "016");
         model.addAttribute("BibPassFail", BibPassFail);
+
+        pD = new ParameterDetailsDAO();
+        List<ParameterDetails> daqPassFail = pD.getGroupParameterDetailList("", "016");
+        model.addAttribute("daqPassFail", daqPassFail);
 
         pD = new ParameterDetailsDAO();
         List<ParameterDetails> paramItemUsage = pD.getGroupParameterDetailList(item.getItemUsage(), "001");
@@ -3462,39 +3468,52 @@ public class ItemController {
             model.addAttribute("teActive", teActive);
             model.addAttribute("teActiveTab", teActiveTab);
 
-            if (item.getStatus().contains("BIB")) {
-                model.addAttribute("bibshow", teActiveTab);
-//                model.addAttribute("bibbutton",buttonDisabled);
+            if (item.getStatus().contains("Leakage")) {
+                model.addAttribute("leakshow", teActiveTab);
+//                model.addAttribute("leakbutton",buttonDisabled);
                 model.addAttribute("manbutton", buttonDisabled);
-                model.addAttribute("leakbutton", buttonDisabled);
+                model.addAttribute("bibbutton", buttonDisabled);
+                model.addAttribute("bibdaqbutton", buttonDisabled);
                 model.addAttribute("psbutton", buttonDisabled);
                 model.addAttribute("winbutton", buttonDisabled);
             } else if (item.getStatus().contains("Manual")) {
                 model.addAttribute("manshow", teActiveTab);
-                model.addAttribute("bibbutton", buttonDisabled);
-//                model.addAttribute("manbutton",buttonDisabled);
                 model.addAttribute("leakbutton", buttonDisabled);
+//                model.addAttribute("manbutton",buttonDisabled);
+                model.addAttribute("bibbutton", buttonDisabled);
+                model.addAttribute("bibdaqbutton", buttonDisabled);
                 model.addAttribute("psbutton", buttonDisabled);
                 model.addAttribute("winbutton", buttonDisabled);
-            } else if (item.getStatus().contains("Leakage")) {
-                model.addAttribute("leakshow", teActiveTab);
-                model.addAttribute("bibbutton", buttonDisabled);
+            } else if (item.getStatus().contains("BIB Test")) {
+                model.addAttribute("bibshow", teActiveTab);
+                model.addAttribute("leakbutton", buttonDisabled);
                 model.addAttribute("manbutton", buttonDisabled);
-//                model.addAttribute("leakbutton",buttonDisabled);
+//                model.addAttribute("bibbutton",buttonDisabled);
+                model.addAttribute("bibdaqbutton", buttonDisabled);
+                model.addAttribute("psbutton", buttonDisabled);
+                model.addAttribute("winbutton", buttonDisabled);
+            } else if (item.getStatus().contains("BIB DAQ Test")) {
+                model.addAttribute("bibdaqshow", teActiveTab);
+                model.addAttribute("leakbutton", buttonDisabled);
+                model.addAttribute("manbutton", buttonDisabled);
+                model.addAttribute("bibbutton", buttonDisabled);
+//                model.addAttribute("bibdaqbutton", buttonDisabled);
                 model.addAttribute("psbutton", buttonDisabled);
                 model.addAttribute("winbutton", buttonDisabled);
             } else if (item.getStatus().contains("Power")) {
                 model.addAttribute("psshow", teActiveTab);
-                model.addAttribute("bibbutton", buttonDisabled);
-                model.addAttribute("manbutton", buttonDisabled);
                 model.addAttribute("leakbutton", buttonDisabled);
+                model.addAttribute("manbutton", buttonDisabled);
+                model.addAttribute("bibbutton", buttonDisabled);
+                model.addAttribute("bibdaqbutton", buttonDisabled);
 //                model.addAttribute("psbutton",buttonDisabled);
                 model.addAttribute("winbutton", buttonDisabled);
             } else if (item.getStatus().contains("Winchester")) {
                 model.addAttribute("winshow", teActiveTab);
-                model.addAttribute("bibbutton", buttonDisabled);
-                model.addAttribute("manbutton", buttonDisabled);
                 model.addAttribute("leakbutton", buttonDisabled);
+                model.addAttribute("manbutton", buttonDisabled);
+                model.addAttribute("bibbutton", buttonDisabled);
+                model.addAttribute("bibdaqbutton", buttonDisabled);
                 model.addAttribute("psbutton", buttonDisabled);
 //                model.addAttribute("winbutton",buttonDisabled);
             }
@@ -3516,6 +3535,10 @@ public class ItemController {
             model.addAttribute("bibResultData", bibResultData);
 
             pDx = new ParameterDetailsDAO();
+            List<ParameterDetails> daqResultData = pDx.getGroupParameterDetailList(itemdata2.getBibDaqStatus(), "016");
+            model.addAttribute("daqResultData", daqResultData);
+
+            pDx = new ParameterDetailsDAO();
             List<ParameterDetails> leakResultData = pDx.getGroupParameterDetailList(itemdata2.getLeakStatus(), "016");
             model.addAttribute("leakResultData", leakResultData);
 
@@ -3532,6 +3555,10 @@ public class ItemController {
             model.addAttribute("bibResultData", bibResultData);
 
             pDx = new ParameterDetailsDAO();
+            List<ParameterDetails> daqResultData = pDx.getGroupParameterDetailList("", "016");
+            model.addAttribute("daqResultData", daqResultData);
+
+            pDx = new ParameterDetailsDAO();
             List<ParameterDetails> leakResultData = pDx.getGroupParameterDetailList("", "016");
             model.addAttribute("leakResultData", leakResultData);
 
@@ -3546,6 +3573,7 @@ public class ItemController {
 
         model.addAttribute("viCheck", viCheck);
         model.addAttribute("bibCheck", bibCheck);
+        model.addAttribute("bibDaqCheck", bibDaqCheck);
         model.addAttribute("manCheck", manCheck);
         model.addAttribute("leakCheck", leakCheck);
         model.addAttribute("psCheck", psCheck);
@@ -3600,6 +3628,7 @@ public class ItemController {
         ItemActivityConfig itemData = itemdao.getItemActivityByItemId(mibItemId);
         String viCheck = "NO";
         String bibCheck = "NO";
+        String bibDaqCheck = "NO";
         String manCheck = "NO";
         String leakCheck = "NO";
         String psCheck = "NO";
@@ -3608,6 +3637,7 @@ public class ItemController {
         if (itemData != null) {
             viCheck = itemData.getVi();
             bibCheck = itemData.getBibTest();
+            bibDaqCheck = itemData.getBibDaqTest();
             manCheck = itemData.getManualTest();
             leakCheck = itemData.getLeakageTest();
             psCheck = itemData.getPsLeakageTest();
@@ -3643,6 +3673,10 @@ public class ItemController {
         ParameterDetailsDAO pD = new ParameterDetailsDAO();
         List<ParameterDetails> BibPassFail = pD.getGroupParameterDetailList("", "016");
         model.addAttribute("BibPassFail", BibPassFail);
+
+        pD = new ParameterDetailsDAO();
+        List<ParameterDetails> daqPassFail = pD.getGroupParameterDetailList("", "016");
+        model.addAttribute("daqPassFail", daqPassFail);
 
         pD = new ParameterDetailsDAO();
         List<ParameterDetails> paramItemUsage = pD.getGroupParameterDetailList(item.getItemUsage(), "001");
@@ -3729,39 +3763,52 @@ public class ItemController {
             model.addAttribute("teActive", teActive);
             model.addAttribute("teActiveTab", teActiveTab);
 
-            if (item.getStatus().contains("BIB")) {
-                model.addAttribute("bibshow", teActiveTab);
-//                model.addAttribute("bibbutton",buttonDisabled);
+            if (item.getStatus().contains("Leakage")) {
+                model.addAttribute("leakshow", teActiveTab);
+//                model.addAttribute("leakbutton",buttonDisabled);
                 model.addAttribute("manbutton", buttonDisabled);
-                model.addAttribute("leakbutton", buttonDisabled);
+                model.addAttribute("bibbutton", buttonDisabled);
+                model.addAttribute("bibdaqbutton", buttonDisabled);
                 model.addAttribute("psbutton", buttonDisabled);
                 model.addAttribute("winbutton", buttonDisabled);
             } else if (item.getStatus().contains("Manual")) {
                 model.addAttribute("manshow", teActiveTab);
-                model.addAttribute("bibbutton", buttonDisabled);
-//                model.addAttribute("manbutton",buttonDisabled);
                 model.addAttribute("leakbutton", buttonDisabled);
+//                model.addAttribute("manbutton",buttonDisabled);
+                model.addAttribute("bibbutton", buttonDisabled);
+                model.addAttribute("bibdaqbutton", buttonDisabled);
                 model.addAttribute("psbutton", buttonDisabled);
                 model.addAttribute("winbutton", buttonDisabled);
-            } else if (item.getStatus().contains("Leakage")) {
-                model.addAttribute("leakshow", teActiveTab);
-                model.addAttribute("bibbutton", buttonDisabled);
+            } else if (item.getStatus().contains("BIB Test")) {
+                model.addAttribute("bibshow", teActiveTab);
+                model.addAttribute("leakbutton", buttonDisabled);
                 model.addAttribute("manbutton", buttonDisabled);
-//                model.addAttribute("leakbutton",buttonDisabled);
+//                model.addAttribute("bibbutton",buttonDisabled);
+                model.addAttribute("bibdaqbutton", buttonDisabled);
+                model.addAttribute("psbutton", buttonDisabled);
+                model.addAttribute("winbutton", buttonDisabled);
+            } else if (item.getStatus().contains("BIB DAQ Test")) {
+                model.addAttribute("bibdaqshow", teActiveTab);
+                model.addAttribute("leakbutton", buttonDisabled);
+                model.addAttribute("manbutton", buttonDisabled);
+                model.addAttribute("bibbutton", buttonDisabled);
+//                model.addAttribute("bibdaqbutton", buttonDisabled);
                 model.addAttribute("psbutton", buttonDisabled);
                 model.addAttribute("winbutton", buttonDisabled);
             } else if (item.getStatus().contains("Power")) {
                 model.addAttribute("psshow", teActiveTab);
-                model.addAttribute("bibbutton", buttonDisabled);
-                model.addAttribute("manbutton", buttonDisabled);
                 model.addAttribute("leakbutton", buttonDisabled);
+                model.addAttribute("manbutton", buttonDisabled);
+                model.addAttribute("bibbutton", buttonDisabled);
+                model.addAttribute("bibdaqbutton", buttonDisabled);
 //                model.addAttribute("psbutton",buttonDisabled);
                 model.addAttribute("winbutton", buttonDisabled);
             } else if (item.getStatus().contains("Winchester")) {
                 model.addAttribute("winshow", teActiveTab);
-                model.addAttribute("bibbutton", buttonDisabled);
-                model.addAttribute("manbutton", buttonDisabled);
                 model.addAttribute("leakbutton", buttonDisabled);
+                model.addAttribute("manbutton", buttonDisabled);
+                model.addAttribute("bibbutton", buttonDisabled);
+                model.addAttribute("bibdaqbutton", buttonDisabled);
                 model.addAttribute("psbutton", buttonDisabled);
 //                model.addAttribute("winbutton",buttonDisabled);
             }
@@ -3783,6 +3830,10 @@ public class ItemController {
             model.addAttribute("bibResultData", bibResultData);
 
             pDx = new ParameterDetailsDAO();
+            List<ParameterDetails> daqResultData = pDx.getGroupParameterDetailList(itemdata2.getBibDaqStatus(), "016");
+            model.addAttribute("daqResultData", daqResultData);
+
+            pDx = new ParameterDetailsDAO();
             List<ParameterDetails> leakResultData = pDx.getGroupParameterDetailList(itemdata2.getLeakStatus(), "016");
             model.addAttribute("leakResultData", leakResultData);
 
@@ -3799,6 +3850,10 @@ public class ItemController {
             ParameterDetailsDAO pDx = new ParameterDetailsDAO();
             List<ParameterDetails> bibResultData = pDx.getGroupParameterDetailList("", "016");
             model.addAttribute("bibResultData", bibResultData);
+
+            pDx = new ParameterDetailsDAO();
+            List<ParameterDetails> daqResultData = pDx.getGroupParameterDetailList("", "016");
+            model.addAttribute("daqResultData", daqResultData);
 
             pDx = new ParameterDetailsDAO();
             List<ParameterDetails> leakResultData = pDx.getGroupParameterDetailList("", "016");
@@ -3819,6 +3874,7 @@ public class ItemController {
         model.addAttribute("manualStatus", manualStatus);
         model.addAttribute("viCheck", viCheck);
         model.addAttribute("bibCheck", bibCheck);
+        model.addAttribute("bibDaqCheck", bibDaqCheck);
         model.addAttribute("manCheck", manCheck);
         model.addAttribute("leakCheck", leakCheck);
         model.addAttribute("psCheck", psCheck);
@@ -3836,8 +3892,10 @@ public class ItemController {
             @RequestParam(required = false) String mibItemId) {
 
         String finalStatus = "";
-        String statusMan = "";
         String statusLeak = "";
+        String statusMan = "";
+        String statusBib = "";
+        String statusDaq = "";
         String statusPs = "";
         String statusWin = "";
 
@@ -3846,15 +3904,19 @@ public class ItemController {
 
         iac = iacdao.getItemActivityByItemId(mibItemId);
         if (iac != null) {
-            statusMan = iac.getManualTest();
             statusLeak = iac.getLeakageTest();
+            statusMan = iac.getManualTest();
+            statusBib = iac.getBibTest();
+            statusDaq = iac.getBibDaqTest();
             statusPs = iac.getPsLeakageTest();
             statusWin = iac.getWinchesterChamberLeakageTest();
         }
 
         if (statusMan.equals("Yes")) {
-            if (statusLeak.equals("Yes")) {
-                finalStatus = "Pending Functional Test - Leakage Test";
+            if (statusBib.equals("Yes")) {
+                finalStatus = "Pending Functional Test - BIB Test";
+            } else if (statusDaq.equals("Yes")) {
+                finalStatus = "Pending Functional Test - BIB DAQ Test";
             } else if (statusPs.equals("Yes")) {
                 finalStatus = "Pending Functional Test - Power Supply Test";
             } else if (statusWin.equals("Yes")) {
@@ -3881,6 +3943,7 @@ public class ItemController {
         String status = "";
         String statusVi = "";
         String statusBib = "";
+        String statusDaq = "";
         String statusMan = "";
         String statusLeak = "";
         String statusPs = "";
@@ -3891,9 +3954,10 @@ public class ItemController {
         iac = iacdao.getItemActivityByItemId(itemId);
         if (iac != null) {
             statusVi = iac.getVi();
-            statusBib = iac.getBibTest();
-            statusMan = iac.getManualTest();
             statusLeak = iac.getLeakageTest();
+            statusMan = iac.getManualTest();
+            statusBib = iac.getBibTest();
+            statusDaq = iac.getBibDaqTest();
             statusPs = iac.getPsLeakageTest();
             statusWin = iac.getWinchesterChamberLeakageTest();
         }
@@ -3905,9 +3969,10 @@ public class ItemController {
     public String getCurrentStatus(String itemId) {
         String status = "No setup found";
         String statusVi = "";
-        String statusBib = "";
-        String statusMan = "";
         String statusLeak = "";
+        String statusMan = "";
+        String statusBib = "";
+        String statusDaq = "";
         String statusPs = "";
         String statusWin = "";
         ItemActivityConfig iac = new ItemActivityConfig();
@@ -3916,20 +3981,23 @@ public class ItemController {
         iac = iacdao.getItemActivityByItemId(itemId);
         if (iac != null) {
             statusVi = iac.getVi();
-            statusBib = iac.getBibTest();
-            statusMan = iac.getManualTest();
             statusLeak = iac.getLeakageTest();
+            statusMan = iac.getManualTest();
+            statusBib = iac.getBibTest();
+            statusDaq = iac.getBibDaqTest();
             statusPs = iac.getPsLeakageTest();
             statusWin = iac.getWinchesterChamberLeakageTest();
         }
 
         // HANYA UNTUK FIRST TIME SELEPAS DIA COMPLETE KAN VISUAL INSPECTION
-        if (statusBib.equals("Yes")) {
-            status = "Pending Functional Test - BIB Test";
+        if (statusLeak.equals("Yes")) {
+            status = "Pending Functional Test - Leakage Test";
         } else if (statusMan.equals("Yes")) {
             status = "Pending Functional Test - Manual Test";
-        } else if (statusLeak.equals("Yes")) {
-            status = "Pending Functional Test - Leakage Test";
+        } else if (statusBib.equals("Yes")) {
+            status = "Pending Functional Test - BIB Test";
+        } else if (statusDaq.equals("Yes")) {
+            status = "Pending Functional Test - BIB DAQ Test";
         } else if (statusPs.equals("Yes")) {
             status = "Pending Functional Test - Power Supply Test";
         } else if (statusWin.equals("Yes")) {
@@ -4539,6 +4607,8 @@ public class ItemController {
             @RequestParam(required = false) String totalQty,
             @RequestParam(required = false) String bibResult,
             @RequestParam(required = false) MultipartFile bibUpload,
+            @RequestParam(required = false) String bibDaqResult,
+            @RequestParam(required = false) MultipartFile bibDaqUpload,
             @RequestParam(required = false) String leakResult,
             @RequestParam(required = false) MultipartFile leakUpload,
             @RequestParam(required = false) String psResult,
@@ -4547,59 +4617,51 @@ public class ItemController {
             @RequestParam(required = false) MultipartFile winUpload,
             HttpServletResponse response
     ) throws IOException {
+        LOGGER.info("SINI KITA NK SAVE FUNCTION TEST");
 
         // jenis2
         // ------------------------ // 
-        // /bibTest
         // /leakTest
+        // /bibTest
+        // /daqTest
         // /psTest
         // /winTest
         String username = userSession.getFullname();
         String newStatus = "";
-        String latestResult = "";
         checkInsertFunctionalTest(mibItemId, username);
         String target_location = "redirect:/hw/item/add2/" + mibItemId;
 
-        String pathBib = "";
         String pathLeak = "";
+        String pathBib = "";
+        String pathDaq = "";
         String pathPs = "";
         String pathWin = "";
+        
+        LOGGER.info("bibUpload        :::::::::: " +bibUpload);
+        LOGGER.info("bibDaqUpload     :::::::::: " +bibDaqUpload);
+        LOGGER.info("leakUpload       :::::::::: " +leakUpload);
+        LOGGER.info("psUpload         :::::::::: " +psUpload);
+        LOGGER.info("winUpload        :::::::::: " +winUpload);
 
-        /*  // COMMENT BECAUSE JUST CHECK THE DATA
-        switch (jenis) {
-            case "bibTest":
-                LOGGER.info("KITA MASUK DEKAT BIB TEST");
-                break;
-            case "leakTest":
-                LOGGER.info("KITA MASUK UNTUK LEAKEAGE TEST");
-                break;
-            case "psTest":
-                LOGGER.info("KITA DAPAT BUAT POWER SUPPLY TEST");
-                break;
-            case "winTest":
-                LOGGER.info("KITA BUAT WINCHESTER TEST");
-                break;
-            default:
-                LOGGER.info("KITA BREAK BY DEFAULT");
-                break;
-        }
-         */
         ItemFunctionalTest item = new ItemFunctionalTest();
 
         ItemActivityConfigDAO itemdao2 = new ItemActivityConfigDAO();
         ItemActivityConfig itemdata = itemdao2.getItemActivityByItemId(mibItemId);
         // SINI TAK CHECK DATA NULL - ASSUME SEBELUM NI DA CHECK AND *MESTI* ADA DATA
-        String checkBib = itemdata.getBibTest();
-        String checkMan = itemdata.getManualTest();
         String checkLeak = itemdata.getLeakageTest();
+        String checkMan = itemdata.getManualTest();
+        String checkBib = itemdata.getBibTest();
+        String checkDaq = itemdata.getBibDaqTest();
         String checkPs = itemdata.getPsLeakageTest();;
         String checkWin = itemdata.getWinchesterChamberLeakageTest();
+        
+        LOGGER.info("APA BENDA NAY ::: "+jenis);
 
         if (bibUpload != null) {
+            LOGGER.info("SINI MASUK YANG BIB PUNYA");
             try {
                 // Get the file and save it somewhere
                 byte[] bytesConnector = bibUpload.getBytes();
-//                Path pathBibConnector = Paths.get(UPLOADED_FOLDER + q.getGeneratedKey() + "_winConnector_" + bibUpload.getOriginalFilename());
                 Path pathConnector = Paths.get(FOLDER_TEST + "_bibTest_" + bibUpload.getOriginalFilename()); // THIS ONE TESTING ONLY, USE CORRECT GENERATED KEY
                 if (bibUpload.getOriginalFilename() == null || bibUpload.getOriginalFilename().equalsIgnoreCase("")) {
 
@@ -4608,28 +4670,14 @@ public class ItemController {
                     pathBib = pathConnector.toString();
                 }
 
-                // UPDATE TABLE ITEM_FUNCTIONAL_TEST START
-                ItemFunctionalTestDAO itemdao = new ItemFunctionalTestDAO();
-                item.setMibItemId(mibItemId);
-                item.setBibQty(totalQty);
-                item.setBibStatus(bibResult);
-                item.setBibUpload(pathBib);
-                item.setRemark("");
-                item.setFinalStatus("");
-                item.setFlag("0");
-                itemdao.updateBibTest(item);
-                // UPDATE TABLE ITEM_FUNCTIONAL_TEST END
-
                 // UPDATE STATUS TABLE ITEM START
                 Item item0 = new Item();
                 item0.setId(mibItemId);
                 item0.setFlag("0");
 
                 if (bibResult.equals("Pass")) {
-                    if (checkMan.equals("Yes")) {
-                        newStatus = "Pending Functional Test - Manual Test";
-                    } else if (checkLeak.equals("Yes")) {
-                        newStatus = "Pending Functional Test - Leakage Test";
+                    if (checkDaq.equals("Yes")) {
+                        newStatus = "Pending Functional Test - BIB DAQ Test";
                     } else if (checkPs.equals("Yes")) {
                         newStatus = "Pending Functional Test - Power Supply Test";
                     } else if (checkWin.equals("Yes")) {
@@ -4649,15 +4697,85 @@ public class ItemController {
                 ItemDAO itemDA = new ItemDAO();
                 QueryResult iQ = itemDA.updateItemStatusAndFlag(item0);
                 // UPDATE STATUS TABLE ITEM END
+                
+                // UPDATE TABLE ITEM_FUNCTIONAL_TEST START
+                ItemFunctionalTestDAO itemdao = new ItemFunctionalTestDAO();
+                item.setMibItemId(mibItemId);
+                item.setBibQty(totalQty);
+                item.setBibStatus(bibResult);
+                item.setBibUpload(pathBib);
+                item.setRemark("");
+                item.setFinalStatus(newStatus);
+                item.setFlag("0");
+                itemdao.updateBibTest(item);
+                // UPDATE TABLE ITEM_FUNCTIONAL_TEST END
             } catch (IOException e) {
                 e.printStackTrace();
             }
+        } else {
+            LOGGER.info("33");
+        }
+        if (bibDaqUpload != null) {
+            LOGGER.info("MASUK KE SINI UNTUK BIB DAQ KE TAK");
+            try {
+                // Get the file and save it somewhere
+                byte[] bytesConnector = bibDaqUpload.getBytes();
+                Path pathConnector = Paths.get(FOLDER_TEST + "_bibDaqTest_" + bibDaqUpload.getOriginalFilename()); // THIS ONE TESTING ONLY, USE CORRECT GENERATED KEY
+                if (bibDaqUpload.getOriginalFilename() == null || bibDaqUpload.getOriginalFilename().equalsIgnoreCase("")) {
+
+                } else {
+                    Files.write(pathConnector, bytesConnector);
+                    pathDaq = pathConnector.toString();
+                }
+
+                // UPDATE STATUS TABLE ITEM START
+                Item item0 = new Item();
+                item0.setId(mibItemId);
+                item0.setFlag("0");
+
+                if (bibDaqResult.equals("Pass")) {
+                    if (checkPs.equals("Yes")) {
+                        newStatus = "Pending Functional Test - Power Supply Test";
+                    } else if (checkWin.equals("Yes")) {
+                        newStatus = "Pending Functional Test - Winchester Chamber Test";
+                    } else {
+                        newStatus = "Good";
+                        item0.setFlag("1");
+                        insertSPTSData(mibItemId, username);
+                        target_location = "redirect:/hw/item/pending";
+                    }
+                } else {
+                    newStatus = "Failed Functional Test - BIB DAQ Test - Waiting Maverick CA";
+                    updateMaverickAndEmail(mibItemId, username, "BIB");
+                }
+                item0.setStatus(newStatus);
+
+                ItemDAO itemDA = new ItemDAO();
+                QueryResult iQ = itemDA.updateItemStatusAndFlag(item0);
+                // UPDATE STATUS TABLE ITEM END
+                
+                // UPDATE TABLE ITEM_FUNCTIONAL_TEST START
+                ItemFunctionalTestDAO itemdao = new ItemFunctionalTestDAO();
+                item.setMibItemId(mibItemId);
+                item.setBibDaqQty(totalQty);
+                item.setBibDaqStatus(bibDaqResult);
+                item.setBibDaqUpload(pathDaq);
+                item.setRemark("");
+                item.setFinalStatus(newStatus);
+                item.setFlag("0");
+                itemdao.updateBibDaqTest(item);
+                // UPDATE TABLE ITEM_FUNCTIONAL_TEST END
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        } else {
+            LOGGER.info("44 ");
         }
         if (leakUpload != null) {
+            LOGGER.info("SINI MASUK LEAKAGE TEST");
             try {
                 // Get the file and save it somewhere
                 byte[] bytesConnector = leakUpload.getBytes();
-//                Path pathBibConnector = Paths.get(UPLOADED_FOLDER + q.getGeneratedKey() + "_winConnector_" + bibUpload.getOriginalFilename());
                 Path pathConnector = Paths.get(FOLDER_TEST + "_leakTest_" + leakUpload.getOriginalFilename()); // THIS ONE TESTING ONLY, USE CORRECT GENERATED KEY
                 if (leakUpload.getOriginalFilename() == null || leakUpload.getOriginalFilename().equalsIgnoreCase("")) {
 
@@ -4665,17 +4783,6 @@ public class ItemController {
                     Files.write(pathConnector, bytesConnector);
                     pathLeak = pathConnector.toString();
                 }
-                // UPDATE TABLE ITEM_FUNCTIONAL_TEST START
-                ItemFunctionalTestDAO itemdao = new ItemFunctionalTestDAO();
-                item.setMibItemId(mibItemId);
-                item.setLeakQty(totalQty);
-                item.setLeakStatus(leakResult);
-                item.setLeakUpload(pathLeak);
-                item.setRemark("");
-                item.setFinalStatus("");
-                item.setFlag("0");
-                itemdao.updateLeakageTest(item);
-                // UPDATE TABLE ITEM_FUNCTIONAL_TEST END
 
                 // UPDATE STATUS TABLE ITEM START
                 Item item0 = new Item();
@@ -4683,7 +4790,13 @@ public class ItemController {
                 item0.setFlag("0");
 
                 if (leakResult.equals("Pass")) {
-                    if (checkPs.equals("Yes")) {
+                    if (checkMan.equals("Yes")) {
+                        newStatus = "Pending Functional Test - Manual Test";
+                    } else if (checkBib.equals("Yes")) {
+                        newStatus = "Pending Functional Test - BIB Test";
+                    } else if (checkDaq.equals("Yes")) {
+                        newStatus = "Pending Functional Test - BIB DAQ Test";
+                    } else if (checkPs.equals("Yes")) {
                         newStatus = "Pending Functional Test - Power Supply Test";
                     } else if (checkWin.equals("Yes")) {
                         newStatus = "Pending Functional Test - Winchester Chamber Test";
@@ -4702,16 +4815,29 @@ public class ItemController {
                 ItemDAO itemDA = new ItemDAO();
                 QueryResult iQ = itemDA.updateItemStatusAndFlag(item0);
                 // UPDATE STATUS TABLE ITEM END
+                
+                // UPDATE TABLE ITEM_FUNCTIONAL_TEST START
+                ItemFunctionalTestDAO itemdao = new ItemFunctionalTestDAO();
+                item.setMibItemId(mibItemId);
+                item.setLeakQty(totalQty);
+                item.setLeakStatus(leakResult);
+                item.setLeakUpload(pathLeak);
+                item.setRemark("");
+                item.setFinalStatus(newStatus);
+                item.setFlag("0");
+                itemdao.updateLeakageTest(item);
+                // UPDATE TABLE ITEM_FUNCTIONAL_TEST END
             } catch (IOException e) {
                 e.printStackTrace();
             }
-//            itemVm.setWinConnectorRejectUpload(pathLeak);
+        } else {
+            LOGGER.info("111");
         }
         if (psUpload != null) {
+            LOGGER.info("SINI MASUK POWER SUPPLY TEST");
             try {
                 // Get the file and save it somewhere
                 byte[] bytesConnector = psUpload.getBytes();
-//                Path pathBibConnector = Paths.get(UPLOADED_FOLDER + q.getGeneratedKey() + "_winConnector_" + bibUpload.getOriginalFilename());
                 Path pathConnector = Paths.get(FOLDER_TEST + "_psTest_" + psUpload.getOriginalFilename()); // THIS ONE TESTING ONLY, USE CORRECT GENERATED KEY
                 if (psUpload.getOriginalFilename() == null || psUpload.getOriginalFilename().equalsIgnoreCase("")) {
 
@@ -4719,17 +4845,6 @@ public class ItemController {
                     Files.write(pathConnector, bytesConnector);
                     pathPs = pathConnector.toString();
                 }
-                // UPDATE TABLE ITEM_FUNCTIONAL_TEST START
-                ItemFunctionalTestDAO itemdao = new ItemFunctionalTestDAO();
-                item.setMibItemId(mibItemId);
-                item.setPsQty(totalQty);
-                item.setPsStatus(psResult);
-                item.setPsUpload(pathPs);
-                item.setRemark("");
-                item.setFinalStatus("");
-                item.setFlag("0");
-                itemdao.updatePowerTest(item);
-                // UPDATE TABLE ITEM_FUNCTIONAL_TEST END
 
                 // UPDATE STATUS TABLE ITEM START
                 Item item0 = new Item();
@@ -4754,16 +4869,29 @@ public class ItemController {
                 ItemDAO itemDA = new ItemDAO();
                 QueryResult iQ = itemDA.updateItemStatusAndFlag(item0);
                 // UPDATE STATUS TABLE ITEM END
+                
+                // UPDATE TABLE ITEM_FUNCTIONAL_TEST START
+                ItemFunctionalTestDAO itemdao = new ItemFunctionalTestDAO();
+                item.setMibItemId(mibItemId);
+                item.setPsQty(totalQty);
+                item.setPsStatus(psResult);
+                item.setPsUpload(pathPs);
+                item.setRemark("");
+                item.setFinalStatus(newStatus);
+                item.setFlag("0");
+                itemdao.updatePowerTest(item);
+                // UPDATE TABLE ITEM_FUNCTIONAL_TEST END
             } catch (IOException e) {
                 e.printStackTrace();
             }
-//            itemVm.setWinConnectorRejectUpload(pathBib);
+        } else {
+            LOGGER.info("5555");
         }
         if (winUpload != null) {
+            LOGGER.info("SINI MASUK WINCHESTER CHAMBER TEST");
             try {
                 // Get the file and save it somewhere
                 byte[] bytesConnector = winUpload.getBytes();
-//                Path pathBibConnector = Paths.get(UPLOADED_FOLDER + q.getGeneratedKey() + "_winConnector_" + bibUpload.getOriginalFilename());
                 Path pathConnector = Paths.get(FOLDER_TEST + "_winTest_" + winUpload.getOriginalFilename()); // THIS ONE TESTING ONLY, USE CORRECT GENERATED KEY
                 if (winUpload.getOriginalFilename() == null || winUpload.getOriginalFilename().equalsIgnoreCase("")) {
 
@@ -4771,17 +4899,6 @@ public class ItemController {
                     Files.write(pathConnector, bytesConnector);
                     pathWin = pathConnector.toString();
                 }
-                // UPDATE TABLE ITEM_FUNCTIONAL_TEST START
-                ItemFunctionalTestDAO itemdao = new ItemFunctionalTestDAO();
-                item.setMibItemId(mibItemId);
-                item.setWinQty(totalQty);
-                item.setWinStatus(winResult);
-                item.setWinUpload(pathWin);
-                item.setRemark("");
-                item.setFinalStatus("");
-                item.setFlag("0");
-                itemdao.updateWinchesterTest(item);
-                // UPDATE TABLE ITEM_FUNCTIONAL_TEST END
 
                 // UPDATE STATUS TABLE ITEM START
                 Item item0 = new Item();
@@ -4801,13 +4918,25 @@ public class ItemController {
                 ItemDAO itemDA = new ItemDAO();
                 QueryResult iQ = itemDA.updateItemStatusAndFlag(item0);
                 // UPDATE STATUS TABLE ITEM END
+                
+                // UPDATE TABLE ITEM_FUNCTIONAL_TEST START
+                ItemFunctionalTestDAO itemdao = new ItemFunctionalTestDAO();
+                item.setMibItemId(mibItemId);
+                item.setWinQty(totalQty);
+                item.setWinStatus(winResult);
+                item.setWinUpload(pathWin);
+                item.setRemark("");
+                item.setFinalStatus(newStatus);
+                item.setFlag("0");
+                itemdao.updateWinchesterTest(item);
+                // UPDATE TABLE ITEM_FUNCTIONAL_TEST END
             } catch (IOException e) {
                 e.printStackTrace();
             }
-//            itemVm.setWinConnectorRejectUpload(pathBib);
+        } else {
+            LOGGER.info("6666");
         }
-
-//        return "redirect:/hw/item/add2/" + mibItemId;
+        LOGGER.info("KITA RETURN KE MANA NI "+target_location);
         return target_location;
     }
 
@@ -4851,14 +4980,17 @@ public class ItemController {
         String status = "Failed Functional Test";
 
         switch (jenis) {
-            case "BIB":
-                sub = "BIB Test";
+            case "Leakage":
+                sub = "Leakage Test";
                 break;
             case "Manual":
                 sub = "Manual Test";
                 break;
-            case "Leakage":
-                sub = "Leakage Test";
+            case "BIB":
+                sub = "BIB Test";
+                break;
+            case "DAQ":
+                sub = "BIB DAQ Test";
                 break;
             case "Power":
                 sub = "Power Supply Leakage Test";
@@ -5066,18 +5198,21 @@ public class ItemController {
         ItemFunctionalTestDAO itemdao = new ItemFunctionalTestDAO();
         ItemFunctionalTest item = itemdao.getItemActivityByItemId(itemId);
         if (item != null) {
-
+            // DO NOTHING SINCE DATA ALREADY EXISTED
         } else {
             itemdao = new ItemFunctionalTestDAO();
             ItemFunctionalTest itembaru = new ItemFunctionalTest();
             itembaru.setMibItemId(itemId);
-            itembaru.setBibQty("0");
-            itembaru.setBibStatus("");
-            itembaru.setBibUpload("");
-            itembaru.setManStatus("");
             itembaru.setLeakQty("0");
             itembaru.setLeakStatus("");
             itembaru.setLeakUpload("");
+            itembaru.setManStatus("");
+            itembaru.setBibQty("0");
+            itembaru.setBibStatus("");
+            itembaru.setBibUpload("");
+            itembaru.setBibDaqQty("0");
+            itembaru.setBibDaqStatus("");
+            itembaru.setBibDaqUpload("");
             itembaru.setPsQty("0");
             itembaru.setPsStatus("");
             itembaru.setPsUpload("");
@@ -5209,6 +5344,9 @@ public class ItemController {
             case "bibtest":
                 attachment = itemf.getBibUpload();
                 break;
+            case "bibdaqtest":
+                attachment = itemf.getBibDaqUpload();
+                break;
             case "leaktest":
                 attachment = itemf.getLeakUpload();
                 break;
@@ -5255,8 +5393,7 @@ public class ItemController {
     public String addActivity(
             Model model,
             @ModelAttribute UserSession userSession,
-            @PathVariable("id") String id
-    ) {
+            @PathVariable("id") String id) {
 
         ItemDAO itemD = new ItemDAO();
         Item item = itemD.getHardwareDetail(id);
@@ -5266,7 +5403,6 @@ public class ItemController {
 
         model.addAttribute("item", item);
         model.addAttribute("activity", paramItemUsage);
-
         model.addAttribute("userItemActAdd", userSession.getItemActivityAdd());
 
         return "item/item_check";
@@ -5281,6 +5417,7 @@ public class ItemController {
             @RequestParam(required = false) String mibItemId,
             @RequestParam(required = false) String viCheck,
             @RequestParam(required = false) String bibTestCheck,
+            @RequestParam(required = false) String daqTestCheck,
             @RequestParam(required = false) String manualTestCheck,
             @RequestParam(required = false) String leakageTestCheck,
             @RequestParam(required = false) String psLeakageTestCheck,
@@ -5307,6 +5444,11 @@ public class ItemController {
             itemA.setBibTest("Yes");
         } else {
             itemA.setBibTest("No");
+        }
+        if ("on".equals(daqTestCheck)) {
+            itemA.setBibDaqTest("Yes");
+        } else {
+            itemA.setBibDaqTest("No");
         }
 
         String status = "";
@@ -5472,6 +5614,7 @@ public class ItemController {
             @RequestParam(required = false) String mibItemId,
             @RequestParam(required = false) String viCheck,
             @RequestParam(required = false) String bibTestCheck,
+            @RequestParam(required = false) String daqTestCheck,
             @RequestParam(required = false) String manualTestCheck,
             @RequestParam(required = false) String leakageTestCheck,
             @RequestParam(required = false) String psLeakageTestCheck,
@@ -5487,6 +5630,7 @@ public class ItemController {
 
         String vi = "No";
         String bb = "No";
+        String bd = "No";
         String mn = "No";
         String lk = "No";
         String ps = "No";
@@ -5498,6 +5642,9 @@ public class ItemController {
         }
         if ("on".equals(bibTestCheck)) {
             bb = "Yes";
+        }
+        if ("on".equals(daqTestCheck)) {
+            bd = "Yes";
         }
         if ("on".equals(manualTestCheck)) {
             mn = "Yes";
@@ -5571,9 +5718,10 @@ public class ItemController {
         ItemActivityConfig xtvt = new ItemActivityConfig();
         ItemActivityConfigDAO itemdao = new ItemActivityConfigDAO();
         xtvt.setVi(vi);
-        xtvt.setBibTest(bb);
-        xtvt.setManualTest(mn);
         xtvt.setLeakageTest(lk);
+        xtvt.setManualTest(mn);
+        xtvt.setBibTest(bb);
+        xtvt.setBibDaqTest(bd);
         xtvt.setPsLeakageTest(ps);
         xtvt.setWinchesterChamberLeakageTest(wn);
         xtvt.setStatus("Update Config");
@@ -7034,7 +7182,7 @@ public class ItemController {
                             + "</li>";
                     data.append(hehe);
                 } // 2. Check if status is Available
-//                                else if ("Available".equalsIgnoreCase(hw.getStatus())) {
+                //                                else if ("Available".equalsIgnoreCase(hw.getStatus())) {
                 else if ("Available".equalsIgnoreCase(hw.getStatus()) || "Good".equalsIgnoreCase(hw.getStatus())) { // to include status 'Good' 6.5.2026
                     String hehe = "<li class=\"list-group-item d-flex justify-content-between align-items-center\">"
                             + "<div class=\"icon-box sm rounded-circle bg-success\">"

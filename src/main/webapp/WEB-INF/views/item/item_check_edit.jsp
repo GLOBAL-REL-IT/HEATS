@@ -218,17 +218,21 @@
                                             <div class="input-group form-check form-switch">
                                                 <input class="form-check-input" type="checkbox" role="switch" id="viCheck" name="viCheck" <c:if test="${item.vi == 'Yes'}">checked</c:if> >
                                                 </div>
-                                                <label for="bibTestCheck" class="form-label">Bib Test</label>
+                                                <label for="leakageTestCheck" class="form-label">Leakage Test</label>
                                                 <div class="input-group form-check form-switch">
-                                                    <input class="form-check-input" type="checkbox" role="switch" id="bibTestCheck" name="bibTestCheck" <c:if test="${item.bibTest == 'Yes'}">checked</c:if> >
+                                                    <input class="form-check-input" type="checkbox" role="switch" id="leakageTestCheck" name="leakageTestCheck" <c:if test="${item.leakageTest == 'Yes'}">checked</c:if> >
                                                 </div>
                                                 <label for="manualTestCheck" class="form-label">Manual Test</label>
                                                 <div class="input-group form-check form-switch">
                                                     <input class="form-check-input" type="checkbox" role="switch" id="manualTestCheck" name="manualTestCheck" onchange="toggleVisibility()" <c:if test="${item.manualTest == 'Yes'}">checked</c:if> >
                                                 </div>
-                                                <label for="leakageTestCheck" class="form-label">Leakage Test</label>
+                                                <label for="bibTestCheck" class="form-label">BIB Test</label>
                                                 <div class="input-group form-check form-switch">
-                                                    <input class="form-check-input" type="checkbox" role="switch" id="leakageTestCheck" name="leakageTestCheck" <c:if test="${item.leakageTest == 'Yes'}">checked</c:if> >
+                                                    <input class="form-check-input" type="checkbox" role="switch" id="bibTestCheck" name="bibTestCheck" <c:if test="${item.bibTest == 'Yes'}">checked</c:if> >
+                                                </div>
+                                                <label for="daqTestCheck" class="form-label">BIB DAQ Test</label>
+                                                <div class="input-group form-check form-switch">
+                                                    <input class="form-check-input" type="checkbox" role="switch" id="daqTestCheck" name="daqTestCheck" <c:if test="${item.bibDaqTest == 'Yes'}">checked</c:if> >
                                                 </div>
                                                 <label for="psLeakageTestCheck" class="form-label">Power Supply Leakage Test</label>
                                                 <div class="input-group form-check form-switch">
@@ -277,16 +281,9 @@
                                                                 <td><input type="text" class="standard-input-read" name="component_type[]" value="<c:out value="${manualList.componentType}"/>" readonly></td>
                                                                 <td><input type="text" class="standard-input-read" name="component_name[]" value="<c:out value="${manualList.componentName}"/>" readonly></td>
                                                                 <c:choose>
-                                                                    <%-- Condition 3: Fuse -> Combined value/percentage/limits into one cell, text changes to SHORT/OPEN --%>
                                                                     <c:when test="${manualList.componentType == 'Fuse'}">
                                                                         <td class="status2-text" style="text-align: right;" colspan="4">OPEN / SHORT</td>
                                                                     </c:when>
-                                                                    <%-- Condition 4: Zener or Diode -> View value, combined percentage/limits, text update to OPEN/SHORT --%>
-                                                                    <%--<c:when test="${manualList.componentType == 'Zener' || manualList.componentType == 'Diode'}">
-                                                                        <td name="actual_value[]"><c:out value="${manualList.componentValue}"/></td>
-                                                                        <td class="status2-text" style="text-align: right;" colspan="3">OPEN / SHORT</td>
-                                                                    </c:when> --%>
-                                                                    <%-- Optional: Default case if the component type doesn't match any specific rule --%>
                                                                     <c:otherwise>
                                                                         <td><input type="text" class="standard-input-read" name="actual_value[]" value="<c:out value="${manualList.componentValue}"/>" readonly></td>
                                                                         <td><input type="text" class="standard-input-read" name="percentage[]" value="<c:out value="${manualList.percentage}"/>" readonly></td>
@@ -336,16 +333,9 @@
                                                                 <td><input type="text" class="standard-input-read" name="component_type[]" value="<c:out value="${manualList.componentType}"/>" readonly></td>
                                                                 <td><input type="text" class="standard-input-read" name="component_name[]" value="<c:out value="${manualList.componentName}"/>" readonly></td>
                                                                 <c:choose>
-                                                                    <%-- Condition 3: Fuse -> Combined value/percentage/limits into one cell, text changes to SHORT/OPEN --%>
                                                                     <c:when test="${manualList.componentType == 'Fuse'}">
                                                                         <td class="status2-text" style="text-align: right;" colspan="4">OPEN / SHORT</td>
                                                                     </c:when>
-                                                                    <%-- Condition 4: Zener or Diode -> View value, combined percentage/limits, text update to OPEN/SHORT --%>
-                                                                    <%--<c:when test="${manualList.componentType == 'Zener' || manualList.componentType == 'Diode'}">
-                                                                        <td name="actual_value[]"><c:out value="${manualList.componentValue}"/></td>
-                                                                        <td class="status2-text" style="text-align: right;" colspan="3">OPEN / SHORT</td>
-                                                                    </c:when> --%>
-                                                                    <%-- Optional: Default case if the component type doesn't match any specific rule --%>
                                                                     <c:otherwise>
                                                                         <td><input type="text" class="standard-input-read" name="actual_value[]" value="<c:out value="${manualList.componentValue}"/>" readonly></td>
                                                                         <td><input type="text" class="standard-input-read" name="percentage[]" value="<c:out value="${manualList.percentage}"/>" readonly></td>
@@ -362,29 +352,16 @@
                                         </c:otherwise>
                                     </c:choose>
                                 </div>
-
-                                <!-- Form actions start -->
                                 <div class="col-md-12">
                                     <button type="submit" id="submit" id="submit" class="btn btn-primary float-end" <c:if test="${userItemActEdit ne 'Yes'}">disabled</c:if> >Save</button>
                                         <a href="${contextPath}/hw/item/pending" class="btn btn-dark float-start">Back</a>
                                 </div>
-                                <!-- Form actions end -->
                             </form>
-                            <!-- Row end -->
-
                         </div>
                     </div>
-                    <!-- Card end -->
                 </div>
             </div>
-            <!-- Row end -->
-
-            <!-- Row start -->
-
         </div>
-        <!-- Content wrapper end -->
-
-        <!-- App Footer start -->
         <div class="app-footer">
             <img class="img3" src="${contextPath}/resources/onsemi logo.webp" alt="onsemi">
             <span>© HEATs 2025</span>
@@ -400,8 +377,6 @@
     <!-- Data Tables -->
     <script src="${contextPath}/resources/statflow/vendor/datatables/dataTables.min.js"></script>
     <script src="${contextPath}/resources/statflow/vendor/datatables/dataTables.bootstrap.min.js"></script>
-
-    <!-- Custom Data tables -->
     <script src="${contextPath}/resources/statflow/vendor/datatables/custom/custom-datatables.js"></script>
 
     <!-- DataTable Buttons -->
@@ -578,16 +553,6 @@
                     span.className = 'status-text';
                     span.innerText = "OPEN / SHORT";
                     valueCell.appendChild(span);
-//                } else if (type === "Diode" || type === "Zener") {
-//                    percentageInput.value = 0;
-//                    percentageInput.style.display = 'none';
-//                    percentageCell.colSpan = 3;
-//                    lowerLimitCell.style.display = 'none';
-//                    upperLimitCell.style.display = 'none';
-//                    const span = document.createElement('span');
-//                    span.className = 'status-text';
-//                    span.innerText = "OPEN / SHORT";
-//                    percentageCell.appendChild(span);
                 } else {
                     calculateLimits();
                 }
@@ -610,27 +575,20 @@
         
         function toggleVisibility() {
             var checkbox = document.getElementById("manualTestCheck");
-            var inputContainer = document.getElementById("manual_page_control");
-            var checkQty = document.getElementById("inputQuantity");
-            var checkDut = document.getElementById("inputDUT");
+            var container = document.getElementById("manual_page_control");
+            var qty = document.getElementById("inputQuantity");
+            var dut = document.getElementById("inputDUT");
 
             if (checkbox.checked) {
-                inputContainer.classList.remove("hidden");
-                document.getElementById("inputQuantity").setAttribute("required", "required");
-                document.getElementById("inputDUT").setAttribute("required", "required");
+                container.classList.remove("hidden");
+                qty.setAttribute("required", "required");
+                dut.setAttribute("required", "required");
             } else {
-                inputContainer.classList.add("hidden");
-                document.getElementById("inputQuantity").removeAttribute("required");
-                document.getElementById("inputDUT").removeAttribute("required");
+                container.classList.add("hidden");
+                qty.removeAttribute("required");
+                dut.removeAttribute("required");
+                
             }
-            
-//            var inputContainer2 = document.getElementById("additionalInputs");
-//
-//            if (checkbox.checked) {
-//                inputContainer2.classList.remove("hidden");
-//            } else {
-//                inputContainer2.classList.add("hidden");
-//            }
         }
         
         const calculateLimits = () => {
@@ -653,9 +611,9 @@
         const testdata = document.createElement("actual_value[]");
         testdata.addEventListener('input', calculateLimits);
         
-//        $(document).ready(function () {
-            
-//        });
+        document.addEventListener("DOMContentLoaded", function () {
+            toggleVisibility();
+        });
     </script>
 </s:layout-component>
 </s:layout-render>

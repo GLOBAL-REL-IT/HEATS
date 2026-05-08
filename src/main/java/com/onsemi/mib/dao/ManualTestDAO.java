@@ -500,6 +500,40 @@ public class ManualTestDAO {
         }
         return manualList;
     }
+    
+    public List<ManualTest> getAllComponentConfigBeforeLoading(String mibItemId) {
+        String sql = "SELECT * FROM item_manual_test_before_result WHERE mib_item_id = '" + mibItemId + "' AND flag = '1' GROUP BY component_name ";
+        List<ManualTest> manualList = new ArrayList<ManualTest>();
+        try {
+            PreparedStatement ps = conn.prepareStatement(sql);
+            ManualTest manualtest;
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                manualtest = new ManualTest();
+                manualtest.setMibItemId(rs.getString("mib_item_id"));
+                manualtest.setComponentType(rs.getString("component_type"));
+                manualtest.setComponentName(rs.getString("component_name"));
+                manualtest.setComponentValue(rs.getString("component_value"));
+                manualtest.setPercentage(rs.getString("percentage"));
+                manualtest.setLowerLimit(rs.getString("lower_limit"));
+                manualtest.setUpperLimit(rs.getString("upper_limit"));
+                manualList.add(manualtest);
+            }
+            rs.close();
+            ps.close();
+        } catch (SQLException e) {
+            LOGGER.error(e.getMessage());
+        } finally {
+            if (conn != null) {
+                try {
+                    conn.close();
+                } catch (SQLException e) {
+                    LOGGER.error(e.getMessage());
+                }
+            }
+        }
+        return manualList;
+    }
 
     public QueryResult insertManualTestBeforeLoading(String itemId, String configId, String qty, String dut, String cpnt, String user, String flag) {
         QueryResult queryResult = new QueryResult();

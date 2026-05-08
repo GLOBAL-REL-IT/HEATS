@@ -34,8 +34,8 @@ public class ItemFunctionalTestDAO {
             PreparedStatement ps = conn.prepareStatement(
                     "INSERT INTO item_functional_test (mib_item_id, bib_qty, bib_status, bib_upload, man_status, leak_qty, leak_status, leak_upload, "
                             + "ps_qty, ps_status, ps_upload, win_qty, win_status, win_upload, "
-                            + "remark, final_status, created_by, created_date, flag) "
-                            + "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, NOW(), ?)", Statement.RETURN_GENERATED_KEYS
+                            + "remark, final_status, created_by, created_date, flag, bib_daq_qty, bib_daq_status, bib_daq_upload) "
+                            + "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, NOW(), ?, ?, ?, ?)", Statement.RETURN_GENERATED_KEYS
             );
             ps.setString(1, item.getMibItemId());
             ps.setString(2, item.getBibQty());
@@ -55,6 +55,9 @@ public class ItemFunctionalTestDAO {
             ps.setString(16, item.getFinalStatus());
             ps.setString(17, item.getCreatedBy());
             ps.setString(18, item.getFlag());
+            ps.setString(19, item.getBibDaqQty());
+            ps.setString(20, item.getBibDaqStatus());
+            ps.setString(21, item.getBibDaqUpload());
 
             queryResult.setResult(ps.executeUpdate());
             ResultSet rs = ps.getGeneratedKeys();
@@ -82,7 +85,7 @@ public class ItemFunctionalTestDAO {
         QueryResult queryResult = new QueryResult();
         try {
             PreparedStatement ps = conn.prepareStatement(
-                    "UPDATE item_functional_test SET mib_item_id=?, bib_qty=?, bib_status=?, bib_upload=?, man_status=?, leak_qty=?, leak_status=?, leak_upload=?, ps_qty=?, ps_status=?, ps_upload=?, win_qty=?, win_status=?, win_upload=?, remark=?, final_status=?, flag=? WHERE id=?"
+                    "UPDATE item_functional_test SET mib_item_id=?, bib_qty=?, bib_status=?, bib_upload=?, man_status=?, leak_qty=?, leak_status=?, leak_upload=?, ps_qty=?, ps_status=?, ps_upload=?, win_qty=?, win_status=?, win_upload=?, remark=?, final_status=?, flag=?, bib_daq_qty=?, bib_daq_status=?, bib_daq_upload=? WHERE id=?"
             );
             ps.setString(1, item.getMibItemId());
             ps.setString(2, item.getBibQty());
@@ -101,7 +104,10 @@ public class ItemFunctionalTestDAO {
             ps.setString(15, item.getRemark());
             ps.setString(16, item.getFinalStatus());
             ps.setString(17, item.getFlag());
-            ps.setString(18, item.getId());
+            ps.setString(18, item.getBibDaqQty());
+            ps.setString(19, item.getBibDaqStatus());
+            ps.setString(20, item.getBibDaqUpload());
+            ps.setString(21, item.getId());
             queryResult.setResult(ps.executeUpdate());
             ps.close();
         } catch (SQLException e) {
@@ -128,6 +134,36 @@ public class ItemFunctionalTestDAO {
             ps.setString(1, item.getBibQty());
             ps.setString(2, item.getBibStatus());
             ps.setString(3, item.getBibUpload());
+            ps.setString(4, item.getRemark());
+            ps.setString(5, item.getFinalStatus());
+            ps.setString(6, item.getFlag());
+            ps.setString(7, item.getMibItemId());
+            queryResult.setResult(ps.executeUpdate());
+            ps.close();
+        } catch (SQLException e) {
+            queryResult.setErrorMessage(e.getMessage());
+            LOGGER.error(e.getMessage());
+        } finally {
+            if (conn != null) {
+                try {
+                    conn.close();
+                } catch (SQLException e) {
+                    LOGGER.error(e.getMessage());
+                }
+            }
+        }
+        return queryResult;
+    }
+    
+    public QueryResult updateBibDaqTest(ItemFunctionalTest item) {
+        QueryResult queryResult = new QueryResult();
+        try {
+            PreparedStatement ps = conn.prepareStatement(
+                    "UPDATE item_functional_test SET bib_daq_qty=?, bib_daq_status=?, bib_daq_upload=?, remark=?, final_status=?, flag=? WHERE mib_item_id=?"
+            );
+            ps.setString(1, item.getBibDaqQty());
+            ps.setString(2, item.getBibDaqStatus());
+            ps.setString(3, item.getBibDaqUpload());
             ps.setString(4, item.getRemark());
             ps.setString(5, item.getFinalStatus());
             ps.setString(6, item.getFlag());
@@ -303,6 +339,9 @@ public class ItemFunctionalTestDAO {
                 item.setBibQty(rs.getString("bib_qty"));
                 item.setBibStatus(rs.getString("bib_status"));
                 item.setBibUpload(rs.getString("bib_upload"));
+                item.setBibDaqQty(rs.getString("bib_daq_qty"));
+                item.setBibDaqStatus(rs.getString("bib_daq_status"));
+                item.setBibDaqUpload(rs.getString("bib_daq_upload"));
                 item.setManStatus(rs.getString("man_status"));
                 item.setLeakQty(rs.getString("leak_qty"));
                 item.setLeakStatus(rs.getString("leak_status"));
@@ -335,4 +374,4 @@ public class ItemFunctionalTestDAO {
         return item;
     }
     
-}
+ }

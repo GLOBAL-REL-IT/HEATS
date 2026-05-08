@@ -1184,14 +1184,12 @@ public class AdminController {
     @RequestMapping(value = "/bibActivity", method = {RequestMethod.GET, RequestMethod.POST})
     public String bibActivity(
             Model model,
-            @ModelAttribute UserSession userSession
-    ) {
-
-        model.addAttribute("userItemAdd", userSession.getItemAdd());
+            @ModelAttribute UserSession userSession) {
 
         ItemActivityConfigDAO itemD = new ItemActivityConfigDAO();
         List<ItemActivityConfig> item = itemD.getItemActivityConfigListWithItemDetailForBib(); //default display for motherboard only
         model.addAttribute("item", item);
+        model.addAttribute("userItemAdd", userSession.getItemAdd());
 
         return "admin/bib_config";
     }
@@ -1199,14 +1197,12 @@ public class AdminController {
     @RequestMapping(value = "/bibActivity/bib", method = {RequestMethod.GET, RequestMethod.POST})
     public String bibActivityBib(
             Model model,
-            @ModelAttribute UserSession userSession
-    ) {
-
-        model.addAttribute("userItemAdd", userSession.getItemAdd());
+            @ModelAttribute UserSession userSession) {
 
         ItemActivityConfigDAO itemD = new ItemActivityConfigDAO();
         List<ItemActivityConfig> item = itemD.getItemActivityConfigListWithItemDetailForBib();
         model.addAttribute("item", item);
+        model.addAttribute("userItemAdd", userSession.getItemAdd());
 
         return "admin/bib_config";
     }
@@ -1214,14 +1210,12 @@ public class AdminController {
     @RequestMapping(value = "/bibActivity/bibCard", method = {RequestMethod.GET, RequestMethod.POST})
     public String bibActivityBibCard(
             Model model,
-            @ModelAttribute UserSession userSession
-    ) {
-
-        model.addAttribute("userItemAdd", userSession.getItemAdd());
+            @ModelAttribute UserSession userSession) {
 
         ItemActivityConfigDAO itemD = new ItemActivityConfigDAO();
         List<ItemActivityConfig> item = itemD.getItemActivityConfigListWithItemDetailForBibCard();
         model.addAttribute("item", item);
+        model.addAttribute("userItemAdd", userSession.getItemAdd());
 
         return "admin/bib_config";
     }

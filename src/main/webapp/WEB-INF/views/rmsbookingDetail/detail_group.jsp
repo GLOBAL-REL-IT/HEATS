@@ -1705,8 +1705,9 @@
 <!--                                                                        <p>DEKAT SINI PTT KELUAR DATA MACAM BIASA. :::: ${configMotherboard}</p>
                                                                         <p>${itemIdMB} - DATA MOTHERBOARD</p>
                                                                         <p>${itemIdLC} - DATA LOAD CARD</p>
-                                                                        <p>book pkid ::: ${configMotherboard}</p>
-                                                                        <p>current status ::: ${currentStatus}</p>-->
+                                                                        <p>book pkid ::: ${configMotherboard}</p>-->
+                                                                        <!--<p>current status ::: ${currentStatus}</p>-->
+                                                                        <p>${message}</p>
 
                                                                         <c:if test="${leakCheck eq 'Yes'}">
                                                                             <div class="accordion-item">
@@ -1790,14 +1791,17 @@
                                                                                 </h2>
                                                                                 <div id="panelsStayOpen-collapseTwo" class="accordion-collapse collapse ${manshow}" aria-labelledby="panelsStayOpen-headingTwo">
                                                                                     <div class="accordion-body">
+                                                                                        <form class="row gx-3 align-items-end" role="form" action="${contextPath}/rmsbookingDetail/createManualTest" method="post" enctype="multipart/form-data">
                                                                                         <div class="row">
                                                                                             <input type="hidden" class="form-control" id="bookId" name="bookId" value="${bookId}">
                                                                                             <input type="hidden" class="form-control" id="motherboardId" name="motherboardId" value="${mibItemId}">
                                                                                             <div class="col-sm-6">
                                                                                                 <label for="status" class="form-label">Status</label>
                                                                                                 <div>
-                                                                                                    <input type="text" class="form-control" id="labelStatus" name="labelStatus" value="${item.status}" readonly>
-                                                                                                    <input type="hidden" class="form-control" id="mibItemId" name="mibItemId" value="${item.id}">
+                                                                                                    <input type="text" class="form-control" id="labelStatus" name="labelStatus" value="${currentStatus}" readonly>
+                                                                                                    <input type="hidden" class="form-control" name="mbItemId" id="mbItemId" value="${itemIdMB}">
+                                                                                                    <input type="hidden" class="form-control" name="lcItemId" id="lcItemId" value="${itemIdLC}">
+                                                                                                    <input type="hidden" class="form-control" name="groupId" id="groupId" value="${groupId}">
                                                                                                 </div>
                                                                                             </div>
                                                                                             <div class="col-sm-3">
@@ -1812,7 +1816,7 @@
                                                                                                     </c:when>
                                                                                                     <c:otherwise>
                                                                                                         <div class="input input-group">
-                                                                                                            <input type="number" class="form-control" name="totalQty" id="totalQty">
+                                                                                                            <input type="number" class="form-control" name="totalQty" id="totalQty" required>
                                                                                                         </div>
                                                                                                     </c:otherwise>
                                                                                                 </c:choose>
@@ -1820,12 +1824,14 @@
                                                                                             <div class="col-sm-2">
                                                                                                 <div class="p-3 d-flex justify-content-end">
                                                                                                     <!--<a href="https://mysed-rel-app05/HEATS-mini/manual_test_before_loading.php?id=${item.id}" class="leads rounded-3 d-xxl-flex d-none">-->
-                                                                                                    <a href="http://zbqb9x-7jwwld4:85//Tutorial/sample-heat/manual_test_before_loading.php?id=${item.id}" class="leads rounded-3 d-xxl-flex d-none ${manualbutton}">
+<!--                                                                                                    <a href="http://zbqb9x-7jwwld4:85//Tutorial/sample-heat/manual_test_before_loading.php?id=${item.id}" class="leads rounded-3 d-xxl-flex d-none ${manualbutton}">
                                                                                                         <i class="bi bi-box-arrow-right" style="color:#ffffff"></i>&nbsp;&nbsp;Inspect Manual Test
-                                                                                                    </a>
+                                                                                                    </a>-->
+                                                                                                    <button type="submit" id="saveManual" class="btn btn-primary me-2 float-end ${manualbutton}">Save Manual</button>
                                                                                                 </div>
                                                                                             </div>
                                                                                         </div>
+                                                                                        </form>
                                                                                     </div>
                                                                                 </div>
                                                                             </div>

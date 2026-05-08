@@ -25,6 +25,9 @@ public class ItemFunctionalTest {
     private String winQty;
     private String winStatus;
     private String winUpload;
+    private String bibDaqQty;
+    private String bibDaqStatus;
+    private String bibDaqUpload;
     private String remark;
     private String finalStatus;
     private String createdBy;
@@ -69,6 +72,30 @@ public class ItemFunctionalTest {
 
     public void setBibUpload(String bibUpload) {
         this.bibUpload = bibUpload;
+    }
+
+    public String getBibDaqQty() {
+        return bibDaqQty;
+    }
+
+    public void setBibDaqQty(String bibDaqQty) {
+        this.bibDaqQty = bibDaqQty;
+    }
+
+    public String getBibDaqStatus() {
+        return bibDaqStatus;
+    }
+
+    public void setBibDaqStatus(String bibDaqStatus) {
+        this.bibDaqStatus = bibDaqStatus;
+    }
+
+    public String getBibDaqUpload() {
+        return bibDaqUpload;
+    }
+
+    public void setBibDaqUpload(String bibDaqUpload) {
+        this.bibDaqUpload = bibDaqUpload;
     }
 
     public String getManStatus() {
