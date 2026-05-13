@@ -1141,5 +1141,61 @@ public class RmsBookingHardwareDAO {
         }
         return queryResult;
     }
+    
+    public String getMbMibItemIdFromGroupId(String groupId) {
+        String data = "";
+        String sql = "SELECT it.id AS item_id FROM rms_booking_hardware_group rms " +
+                        "INNER JOIN item it ON it.spts_pkid = rms.item_pkid " +
+                        "INNER JOIN item_activity_config ac ON ac.mib_item_id = it.id " +
+                        "WHERE rms.item_type = 'BIB' AND rms.group_id = '"+groupId+"' ";
+        try {
+            PreparedStatement ps = conn.prepareStatement(sql);
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                data = rs.getString("item_id");
+            }
+            rs.close();
+            ps.close();
+        } catch (SQLException e) {
+            LOGGER.error(e.getMessage());
+        } finally {
+            if (conn != null) {
+                try {
+                    conn.close();
+                } catch (SQLException e) {
+                    LOGGER.error(e.getMessage());
+                }
+            }
+        }
+        return data;
+    }
+    
+    public String getLcMibItemIdFromGroupId(String groupId) {
+        String data = "";
+        String sql = "SELECT it.id AS item_id FROM rms_booking_hardware_group rms " +
+                        "INNER JOIN item it ON it.spts_pkid = rms.item_pkid " +
+                        "INNER JOIN item_activity_config ac ON ac.mib_item_id = it.id " +
+                        "WHERE rms.item_type = 'BIB Card' AND rms.group_id = '"+groupId+"' GROUP BY item_id ";
+        try {
+            PreparedStatement ps = conn.prepareStatement(sql);
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                data = rs.getString("item_id");
+            }
+            rs.close();
+            ps.close();
+        } catch (SQLException e) {
+            LOGGER.error(e.getMessage());
+        } finally {
+            if (conn != null) {
+                try {
+                    conn.close();
+                } catch (SQLException e) {
+                    LOGGER.error(e.getMessage());
+                }
+            }
+        }
+        return data;
+    }
 
 }

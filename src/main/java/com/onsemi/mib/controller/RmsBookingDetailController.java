@@ -9,6 +9,7 @@ import com.onsemi.mib.dao.ItemActivityConfigDAO;
 import com.onsemi.mib.dao.ItemDAO;
 import com.onsemi.mib.dao.ItemHardwareDAO;
 import com.onsemi.mib.dao.ItemHardwareMovementDAO;
+import com.onsemi.mib.dao.ItemMaverickDAO;
 import com.onsemi.mib.dao.ItemTransactionDAO;
 import com.onsemi.mib.dao.ManualTestDAO;
 import com.onsemi.mib.dao.ParameterDetailsDAO;
@@ -35,6 +36,7 @@ import com.onsemi.mib.model.Item;
 import com.onsemi.mib.model.ItemActivityConfig;
 import com.onsemi.mib.model.ItemHardware;
 import com.onsemi.mib.model.ItemHardwareMovement;
+import com.onsemi.mib.model.ItemMaverick;
 import com.onsemi.mib.model.ItemTransaction;
 import com.onsemi.mib.model.ManualTest;
 import com.onsemi.mib.model.ParameterDetails;
@@ -3268,6 +3270,56 @@ public class RmsBookingDetailController {
         }
         return target_location;
     }
+    
+    @RequestMapping(value = "/updateStatusFailed/{groupid}", method = RequestMethod.GET)
+    public String updateStatusFailed(
+            Model model,
+            @ModelAttribute UserSession userSession,
+            @PathVariable("groupid") String groupid) {
+
+        String username = userSession.getFullname();
+        String manual = "Manual";
+        String status = "Failed Functional Test - Manual Test - Waiting Maverick CA";
+        
+        RmsBookingHardwareDAO rmsdao = new RmsBookingHardwareDAO();
+        String lcItemId = rmsdao.getLcMibItemIdFromGroupId(groupid);
+        rmsdao = new RmsBookingHardwareDAO();
+        String mbItemId = rmsdao.getMbMibItemIdFromGroupId(groupid);
+        
+        // UPDATE DATA rms_booking_hardware - START
+        RmsBookingHardware rmsbook = new RmsBookingHardware();
+        String[] parts = groupid.split("/");
+        String bookId = parts[0]; 
+        String pkid = parts[1];
+        
+        rmsbook.setBookingPkid(bookId);
+        rmsbook.setSubStatus(status);
+        rmsbook.setPkid(pkid);
+        rmsdao = new RmsBookingHardwareDAO();
+        rmsdao.updateRmsBookingHardwareSubStatusByPkidAndBookingPkid(rmsbook);
+        // UPDATE DATA rms_booking_hardware - END
+        
+        // UPDATE DATA rms_functional_test - START
+        ManualTestDAO testdao = new ManualTestDAO();
+        Integer qty = testdao.getQuantityBeforeLoading(lcItemId);
+        
+        RmsBookingFunctionalTest rmsfun = new RmsBookingFunctionalTest();
+        rmsfun.setManualQty(String.valueOf(qty));
+        rmsfun.setManualStatus("Fail");
+        rmsfun.setRemark("");
+        rmsfun.setFinalStatus(status);
+        rmsfun.setFlag("0");
+        
+        RmsBookingFunctionalTestDAO rmsfuncdao = new RmsBookingFunctionalTestDAO();
+        rmsfuncdao.updateManualTest(rmsfun);
+        // UPDATE DATA rms_functional_test - END
+        
+        // PLEASE CHECK IF THERE IS ANYTHING LEFT NOT UPDATED HERE
+        
+        // UPDATE MAVERICK INFORMATION FOR MANUAL TEST FAILED
+        updateMaverickAndEmail(mbItemId, username, manual);
+        return "redirect:/groupDetail/" + groupid;
+    }
 
     // FUNCTION NK DAPATKAN SEMUA MAKLUMAT TEST CONFIG
     private ItemActivityConfig getMaklumatTest(String itemId) {
@@ -3285,6 +3337,91 @@ public class RmsBookingDetailController {
             item.setWinchesterChamberLeakageTest(itemact.getWinchesterChamberLeakageTest());
         }
         return item;
+    }
+    
+    public void updateMaverickAndEmail(String mibItemId, String username, String jenis) {
+
+        String module = "Hardware Registration";
+        String sub = "";
+        String status = "Failed Functional Test";
+
+        switch (jenis) {
+            case "Leakage":
+                sub = "Leakage Test";
+                break;
+            case "Manual":
+                sub = "Manual Test";
+                break;
+            case "BIB":
+                sub = "BIB Test";
+                break;
+            case "DAQ":
+                sub = "BIB DAQ Test";
+                break;
+            case "Power":
+                sub = "Power Supply Leakage Test";
+                break;
+            case "Winchester":
+                sub = "Winchester Chamber Leakage Test";
+                break;
+            default:
+                break;
+        }
+
+        ItemMaverick maverick = new ItemMaverick();
+        maverick.setMibItemId(mibItemId);
+        maverick.setModule(module);
+        maverick.setSubmodule(sub);
+        maverick.setStatus(status + " - " + sub);
+        maverick.setFlag("0");
+        maverick.setCreatedBy(username);
+        ItemMaverickDAO maverickD = new ItemMaverickDAO();
+        QueryResult maverickAdd = maverickD.insertItemMaverick(maverick);
+
+        EmailVmFailDAO userDao = new EmailVmFailDAO();
+        List<EmailVmFail> userRecipientsList = userDao.getEmailVmFailList();
+
+        String[] to = new String[userRecipientsList.size()];
+        for (int i = 0; i < userRecipientsList.size(); i++) {
+            to[i] = userRecipientsList.get(i).getEmail();
+        }
+
+        //get current date and time
+        LocalDateTime instance = LocalDateTime.now();
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm");
+        String formattedString = formatter.format(instance); //15-02-2022 12:43
+
+        //gethostname
+        HostnameDAO hostnameD = new HostnameDAO();
+        Hostname h = hostnameD.getHostnameFlagZero();
+        String hostname = h.getHostname();
+
+        ItemDAO itemD = new ItemDAO();
+        Item item2 = itemD.getHardwareDetail(mibItemId);
+
+        //send INFORMATION email
+        LOGGER.info("######################### START MAVERICK EMAIL ########################### ");
+        EmailSender emailSender = new EmailSender();
+        emailSender.htmlEmailTable(
+                servletContext,
+                "", //user name requestor
+                to, //to
+                //                        emailTo,
+                "Hardware Registration - " + status + " [" + sub + "]", //subject
+                "<br />"
+                + "Please be informed that the hardware below failed the functional test inspection."
+                + "<br /> "
+                + "<br /> "
+                + "Item ID: " + item2.getItemId()
+                + "<br /> "
+                + "Inspection Date: " + formattedString
+                + "<br /> "
+                + "<br /> "
+                + "Please click <a href=\"http://" + hostname + "/HEATS/hw/item/add2/" + mibItemId + " \">HERE</a> for more detail."
+                + "<br /> "
+                + "<br />Thank you." //msg
+        );
+
     }
 
     //function for hw released

@@ -925,5 +925,32 @@ public class ManualTestDAO {
         }
         return queryResult;
     }
+    
+    public Integer getQuantityBeforeLoading(String mibItemId) {
+        Integer count = 0;
+        try {
+            PreparedStatement ps = conn.prepareStatement(
+                    "SELECT qty FROM item_manual_test_before WHERE mib_item_id = '" + mibItemId + "'"
+            );
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                count = rs.getInt("count");
+            }
+            rs.close();
+
+            ps.close();
+        } catch (SQLException e) {
+            LOGGER.error(e.getMessage());
+        } finally {
+            if (conn != null) {
+                try {
+                    conn.close();
+                } catch (SQLException e) {
+                    LOGGER.error(e.getMessage());
+                }
+            }
+        }
+        return count;
+    }
 
 }
