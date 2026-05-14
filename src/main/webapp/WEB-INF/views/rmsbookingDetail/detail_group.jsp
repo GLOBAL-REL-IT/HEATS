@@ -82,6 +82,16 @@
                 transition: transform 0.2s ease-in-out;
                 ;
             }
+            .email-btn {
+                padding: 12px 24px;
+                /*background-color: #6200ee;*/
+                background-color: #EE4B00;
+                color: white;
+                border: none;
+                border-radius: 4px;
+                cursor: pointer;
+                font-weight: 500;
+            }
         </style>
     </s:layout-component>
     <s:layout-component name="page_container">
@@ -2184,23 +2194,7 @@
 
                 const checkStatus = "${currentStatus}";
                 
-                console.log("KITA TENGOK STATUS SINI :::: "+checkStatus);
-
-//                if (checkStatus === "Pending Functional Test - Leakage Test") {
-//                    divLeak.classList.remove('collapsed');
-//                } else if (checkStatus === "Pending Functional Test - Manual Test") {
-//                    divMan.classList.remove('collapsed');
-//                } else if (checkStatus === "Pending Functional Test - BIB Test") {
-//                    divBib.classList.remove('collapsed');
-//                } else if (checkStatus === "Pending Functional Test - BIB DAQ Test") {
-//                    divDaq.classList.remove('collapsed');
-//                } else if (checkStatus === "Pending Functional Test - Power Supply Leakage Test") {
-//                    divPs.classList.remove('collapsed');
-//                } else if (checkStatus === "Pending Functional Test - Winchester Chamber Leakage Test") {
-//                    divWin.classList.remove('collapsed');
-//                } else {
-//                    console.log("LATEST STATUS ::: "+checkStatus);
-//                }
+//                console.log("KITA TENGOK STATUS SINI :::: "+checkStatus);
 
                 $('.js-example-basic-multiple').select2();
                 var valueJsonPcb = ${valueJsonPcb};
@@ -3156,7 +3150,7 @@
                 pcbAttach.hidden = false;
             } else {
                 pcbAttach.hidden = true;
-                handleRadioChange(); // Set initial state based on default checked radio
+                handleRadioChange();
             }
             if (handleFail.checked) {
                 handleRejectCriteria.disabled = false;
@@ -3165,7 +3159,7 @@
                 handleAttach.hidden = false;
             } else {
                 handleAttach.hidden = true;
-                handleRadioChange(); // Set initial state based on default checked radio
+                handleRadioChange();
             }
             if (metalFrameFail.checked) {
                 metalFrameRejectCriteria.disabled = false;
@@ -3174,7 +3168,7 @@
                 metalFrameAttach.hidden = false;
             } else {
                 metalFrameAttach.hidden = true;
-                handleRadioChange(); // Set initial state based on default checked radio
+                handleRadioChange();
             }
             if (hardwareFasternersFail.checked) {
                 hardwareFasternersRejectCriteria.disabled = false;
@@ -3183,7 +3177,7 @@
                 hardwareFasternersAttach.hidden = false;
             } else {
                 hardwareFasternersAttach.hidden = true;
-                handleRadioChange(); // Set initial state based on default checked radio
+                handleRadioChange();
             }
             if (clipHolderFail.checked) {
                 clipHolderRejectCriteria.disabled = false;
@@ -3192,7 +3186,7 @@
                 clipHolderAttach.hidden = false;
             } else {
                 clipHolderAttach.hidden = true;
-                handleRadioChange(); // Set initial state based on default checked radio
+                handleRadioChange();
             }
             if (pcbEdgeFingerFail.checked) {
                 pcbEdgeFingerRejectCriteria.disabled = false;
@@ -3201,7 +3195,7 @@
                 pcbEdgeFingerAttach.hidden = false;
             } else {
                 pcbEdgeFingerAttach.hidden = true;
-                handleRadioChange(); // Set initial state based on default checked radio
+                handleRadioChange();
             }
             if (connectorFail.checked) {
                 connectorRejectCriteria.disabled = false;
@@ -3210,7 +3204,7 @@
                 connectorAttach.hidden = false;
             } else {
                 connectorAttach.hidden = true;
-                handleRadioChange(); // Set initial state based on default checked radio
+                handleRadioChange();
             }
             if (dutSocketsFail.checked) {
                 dutSocketsRejectCriteria.disabled = false;
@@ -3219,7 +3213,7 @@
                 dutSocketsAttach.hidden = false;
             } else {
                 dutSocketsAttach.hidden = true;
-                handleRadioChange(); // Set initial state based on default checked radio
+                handleRadioChange();
             }
             if (edgeMbBananaFail.checked) {
                 edgeMbBananaRejectCriteria.disabled = false;
@@ -3228,7 +3222,7 @@
                 edgeMbBananaAttach.hidden = false;
             } else {
                 edgeMbBananaAttach.hidden = true;
-                handleRadioChange(); // Set initial state based on default checked radio
+                handleRadioChange();
             }
             if (electComponentFail.checked) {
                 electComponentRejectCriteria.disabled = false;
@@ -3237,7 +3231,7 @@
                 electComponentAttach.hidden = false;
             } else {
                 electComponentAttach.hidden = true;
-                handleRadioChange(); // Set initial state based on default checked radio
+                handleRadioChange();
             }
             if (solderJointFail.checked) {
                 solderJointRejectCriteria.disabled = false;
@@ -3246,7 +3240,7 @@
                 solderJointAttach.hidden = false;
             } else {
                 solderJointAttach.hidden = true;
-                handleRadioChange(); // Set initial state based on default checked radio
+                handleRadioChange();
             }
             if (winConnectorFail.checked) {
                 winConnectorRejectCriteria.disabled = false;
@@ -3255,7 +3249,7 @@
                 winConnectorAttach.hidden = false;
             } else {
                 winConnectorAttach.hidden = true;
-                handleRadioChange(); // Set initial state based on default checked radio
+                handleRadioChange();
             }
             if (teflonConnectorFail.checked) {
                 teflonConnectorRejectCriteria.disabled = false;
@@ -3264,7 +3258,7 @@
                 teflonConnectorAttach.hidden = false;
             } else {
                 teflonConnectorAttach.hidden = true;
-                handleRadioChange(); // Set initial state based on default checked radio
+                handleRadioChange();
             }
             if (pogoReceptaclesPinFail.checked) {
                 pogoReceptaclesPinRejectCriteria.disabled = false;
@@ -3273,7 +3267,7 @@
                 pogoReceptaclesPinAttach.hidden = false;
             } else {
                 pogoReceptaclesPinAttach.hidden = true;
-                handleRadioChange(); // Set initial state based on default checked radio
+                handleRadioChange();
             }
             if (cableWiredCopperWireFail.checked) {
                 cableWiredCopperWireRejectCriteria.disabled = false;
@@ -3282,7 +3276,7 @@
                 cableWiredCopperWireAttach.hidden = false;
             } else {
                 cableWiredCopperWireAttach.hidden = true;
-                handleRadioChange(); // Set initial state based on default checked radio
+                handleRadioChange();
             }
             if (labelIdentificationFail.checked) {
                 labelIdentificationRejectCriteria.disabled = false;
@@ -3291,7 +3285,23 @@
                 labelIdentificationAttach.hidden = false;
             } else {
                 labelIdentificationAttach.hidden = true;
-                handleRadioChange(); // Set initial state based on default checked radio
+                handleRadioChange();
+            }
+            
+            function sendMailMb(e) {
+                var groupId = $(e).attr("infoGroupId");
+                var deleteUrl = "${contextPath}/rmsbookingDetail/sendEmail/MB/" + groupId;
+                var deleteMsg = "Do you confirm to send email to Motherboard Technician about this error?";
+                $("#confirmation_modal .modal-body").html(deleteMsg);
+                $("#modal_button").attr("href", deleteUrl);
+            }
+            
+            function sendMailLc(e) {
+                var groupId = $(e).attr("infoGroupId");
+                var deleteUrl = "${contextPath}/rmsbookingDetail/sendEmail/LC/" + groupId;
+                var deleteMsg = "Do you confirm to send email to Motherboard Technician about this error?";
+                $("#confirmation_modal .modal-body").html(deleteMsg);
+                $("#modal_button").attr("href", deleteUrl);
             }
         </script>
     </s:layout-component>

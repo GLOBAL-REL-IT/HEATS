@@ -170,4 +170,65 @@ public class EmailVmFailDAO {
         }
         return emailvmFailList;
     }
+    
+    public List<EmailVmFail> getEmailMotherboardTechnicianMb() {
+        String sql = "SELECT * FROM email_config WHERE module = 'Motherboard Config' ORDER BY id ASC";
+        List<EmailVmFail> emailList = new ArrayList<EmailVmFail>();
+        try {
+            PreparedStatement ps = conn.prepareStatement(sql);
+            EmailVmFail emailData;
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                emailData = new EmailVmFail();
+                emailData.setId(rs.getString("id"));
+                emailData.setUserName(rs.getString("name"));
+                emailData.setEmail(rs.getString("email"));
+                emailList.add(emailData);
+            }
+            rs.close();
+            ps.close();
+        } catch (SQLException e) {
+            LOGGER.error(e.getMessage());
+        } finally {
+            if (conn != null) {
+                try {
+                    conn.close();
+                } catch (SQLException e) {
+                    LOGGER.error(e.getMessage());
+                }
+            }
+        }
+        return emailList;
+    }
+    
+    public List<EmailVmFail> getEmailMotherboardTechnicianLc() {
+        String sql = "SELECT * FROM email_config WHERE module = 'Load Card Config' ORDER BY id ASC";
+        List<EmailVmFail> emailList = new ArrayList<EmailVmFail>();
+        try {
+            PreparedStatement ps = conn.prepareStatement(sql);
+            EmailVmFail emailData;
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                emailData = new EmailVmFail();
+                emailData.setId(rs.getString("id"));
+                emailData.setUserName(rs.getString("name"));
+                emailData.setEmail(rs.getString("email"));
+                emailList.add(emailData);
+            }
+            rs.close();
+            ps.close();
+        } catch (SQLException e) {
+            LOGGER.error(e.getMessage());
+        } finally {
+            if (conn != null) {
+                try {
+                    conn.close();
+                } catch (SQLException e) {
+                    LOGGER.error(e.getMessage());
+                }
+            }
+        }
+        return emailList;
+    }
+
 }

@@ -1225,7 +1225,7 @@ public class RmsBookingDetailController {
                     model.addAttribute("configMotherboard", "TRIGGERERROR");
                     model.addAttribute("itemIdMB", itemIdMB);
                     model.addAttribute("itemIdLC", itemIdLC);
-                    model.addAttribute("message", "MB Configuration Error [" + itemIdMB + "]" + ": The BIB Activity Config for " + boardName + " was not found!");
+                    model.addAttribute("message", "<button type=\"submit\" class=\"email-btn\" infoGroupId=\""+itemIdMB+"\\"+groupId+"\" onclick=\"sendMailMb(this)\" data-bs-toggle=\"modal\" data-bs-target=\"#confirmation_modal\" >Send Email</button>&emsp;MB Configuration Error [" + itemIdMB + "]" + "<br/>The BIB Activity Config for " + boardName + " was not found!");
                 }
 
                 if (checkLc == 0) {
@@ -1245,7 +1245,7 @@ public class RmsBookingDetailController {
                         daqTest = itemactlc.getBibDaqTest();
                         manTest = itemactlc.getManualTest();
                     } else {
-                        model.addAttribute("message", "LC Configuration Error [" + itemIdLC + "]" + ": The BIB Activity Config for " + loadcardName + " was not found!");
+                        model.addAttribute("message", "<button type=\"submit\" class=\"email-btn\" infoGroupId=\""+itemIdLC+"\\"+groupId+"\" onclick=\"sendMailLc(this)\" data-bs-toggle=\"modal\" data-bs-target=\"#confirmation_modal\" >Send Email</button>&emsp;LC Configuration Error [" + itemIdLC + "]" + " <br/>The BIB Activity Config for " + loadcardName + " was not found!");
                     }
                 }
                 model.addAttribute("itemIdMB", itemIdMB);
@@ -4525,6 +4525,73 @@ public class RmsBookingDetailController {
 //        path = "redirect:/rmsbookingDetail/groupDetail/"+groupId;
         return path;
     }
+    
+    @RequestMapping(value = "/sendEmail/{jenis}/{itemId}/{bookId}/{pkid}", method = {RequestMethod.GET, RequestMethod.POST})
+    public String sendEmailConfig(Model model,
+            HttpServletRequest request,
+            RedirectAttributes redirectAttrs,
+            @ModelAttribute UserSession userSession,
+            @PathVariable("jenis") String jenis,
+            @PathVariable("itemId") String itemId,
+            @PathVariable("bookId") String bookId,
+            @PathVariable("pkid") String pkid,
+            @RequestParam(required = false) String recallRemarks) throws IOException {
+        
+        String path = "redirect:/rmsbookingDetail/groupDetail/" + bookId + "/" + pkid;
+        String tajukEmail = "";
+        String emailBody = "";
+        
+        EmailVmFailDAO userDao = new EmailVmFailDAO();
+        List<EmailVmFail> emailList = null;
+        switch (jenis) {
+            case "MB": 
+                tajukEmail = "Item Activity Config Missing (Motherboard)";
+                emailList = userDao.getEmailMotherboardTechnicianMb();
+                break;
+            case "LC": 
+                tajukEmail = "Item Activity Config Missing (Load Card)";
+                emailList = userDao.getEmailMotherboardTechnicianLc();
+                break;
+            default:
+                break;
+        }
+        
+        String[] to = new String[emailList.size()];
+        for (int i = 0; i < emailList.size(); i++) {
+            to[i] = emailList.get(i).getEmail();
+        }
+        
+        Item item = new Item();
+        ItemDAO itemdao = new ItemDAO();
+        String itemName = itemdao.getItemIdById(itemId);
+        emailBody = itemName + " [" + itemId + "]";
+        
+        HostnameDAO hostnameD = new HostnameDAO();
+        Hostname h = hostnameD.getHostnameFlagZero();
+        String hostname = h.getHostname();
+
+        EmailSender emailSender = new EmailSender();
+        emailSender.htmlEmailFT(
+                servletContext,
+                "",
+                to,
+                tajukEmail,
+                "<br />"
+                + "Please be informed that the item below missing Item Activity Configuration."
+                + "<br /> "
+                + "<br /> "
+                + "Detail: " + emailBody
+                + "<br /> "
+                + "<br /> "
+//                + "Please click <a href=\"http://" + hostname + "/HEATS/rmsbookingDetail/groupDetail/" + bookId + "/" + pkid + " \">HERE</a> for more detail."
+                + "Please click <a href=\"http://" + hostname + "/HEATS/hw/item/addActivity/" + itemId + " \">HERE</a> for more detail."
+                + "<br /> "
+                + "<br />Thank you."
+        );
+        redirectAttrs.addFlashAttribute("success", "Email notification successfully sent!");
+        
+        return path;
+    }
 
     private String saveToMaverickFunctionalTest(String jenistest, String user, String groupId, String hardwareId) {
         String data = "";
@@ -4653,5 +4720,5 @@ public class RmsBookingDetailController {
             // BOLE UPDATE NANTI
         }
     }
-
+    
 }

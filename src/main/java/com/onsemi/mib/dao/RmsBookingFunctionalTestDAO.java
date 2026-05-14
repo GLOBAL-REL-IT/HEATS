@@ -192,7 +192,7 @@ public class RmsBookingFunctionalTestDAO {
         QueryResult queryResult = new QueryResult();
         try {
             PreparedStatement ps = conn.prepareStatement(
-                    "UPDATE rms_booking_functional_test SET ps_qty=?, ps_status=?, ps_upload=?, remark=?, final_status=?, flag=?, ps_hwid WHERE group_id = ? "
+                    "UPDATE rms_booking_functional_test SET ps_qty=?, ps_status=?, ps_upload=?, remark=?, final_status=?, flag=?, ps_hwid=? WHERE group_id=? "
             );
             ps.setString(1, book.getPsQty());
             ps.setString(2, book.getPsStatus());
