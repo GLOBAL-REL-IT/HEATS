@@ -702,7 +702,8 @@
                                                                         language: {
                                                                             info: "Showing _TOTAL_ total records",
                                                                         },
-                                                                        dom: 'Bfrtip',
+//                                                                        dom: 'Bfrtip',
+                                                                        dom: '<"top"Bfi>rt<"bottom"p><"clear">',
                                                                         buttons: ["copy", "csv", "print"],
                                                                         columnDefs: [{
                                                                                 targets: [0, 1, 3, 4], visible: false
