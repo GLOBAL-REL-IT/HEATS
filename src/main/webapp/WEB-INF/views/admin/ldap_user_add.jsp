@@ -281,7 +281,8 @@
                             lengthMenu: "Display _MENU_ Records Per Page",
                             info: "Showing Page _PAGE_ of _PAGES_",
                         },
-                        dom: "Blfrtip",
+//                        dom: "Blfrtip",
+                        dom: '<"top"Blfi>rt<"bottom"p><"clear">',
                         buttons: ["copy", "csv", "pdf", "print"],
                     });
                 });

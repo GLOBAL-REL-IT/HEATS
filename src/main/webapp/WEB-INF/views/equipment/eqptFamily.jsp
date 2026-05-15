@@ -315,7 +315,8 @@
 //                                                                                info: "Showing Page _PAGE_ of _PAGES_",
                                                                                 info: "Showing _START_ to _END_ of _TOTAL_ total records",
                                                                             },
-                                                                            dom: "Blfrtip",
+//                                                                            dom: "Blfrtip",
+                                                                            dom: '<"top"Blfi>rt<"bottom"p><"clear">',
                                                                             buttons: ["copy", "csv", "pdf", "print"],
                                                                             "rowCallback": function (row, data, index) {
                                                                                 // 'data' is an array of values for the current row
