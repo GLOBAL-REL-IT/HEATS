@@ -3965,6 +3965,103 @@
                                                     <div class="card mb-4">
                                                         <div class="card-body">
                                                             <div class="accordion" id="accordionPanelsStayOpenExample">
+                                                                <c:if test="${leakCheck eq 'Yes'}">
+                                                                    <div class="accordion-item">
+                                                                        <h2 class="accordion-header" id="panelsStayOpen-headingThree">
+                                                                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                                                                                    data-bs-target="#panelsStayOpen-collapseThree" aria-expanded="false"
+                                                                                    aria-controls="panelsStayOpen-collapseThree">
+                                                                                Leakage Test
+                                                                            </button>
+                                                                        </h2>
+                                                                        <div id="panelsStayOpen-collapseThree" class="accordion-collapse collapse ${leakshow}"
+                                                                             aria-labelledby="panelsStayOpen-headingThree">
+                                                                            <div class="accordion-body">
+                                                                                <form class="row gx-3 " role="form" action="${contextPath}/hw/item/save/leakTest" method="post" enctype="multipart/form-data" novalidate>
+                                                                                    <div class="col-xl-1 col-sm-12 col-12">
+                                                                                        <div class="mb-3">
+                                                                                            <label for="quantity" class="form-label">Quantity</label>
+                                                                                            <div class="input input-group">
+                                                                                                <input type="number" class="form-control" id="totalQty" name="totalQty" placeholder="" value="${dataTest.leakQty}" min="1" required>
+                                                                                                <input type="hidden" class="form-control" id="mibItemId" name="mibItemId" placeholder="" value="${item.id}">
+                                                                                            </div>
+                                                                                        </div>
+                                                                                    </div>
+                                                                                    <div class="form-group required col-xl-2 col-sm-12 col-12">
+                                                                                        <div class="mb-3">
+                                                                                            <label for="leakResult" class="form-label">Leakage Result</label>
+                                                                                            <div class="input input-group">
+                                                                                                <select class="select-single js-states form-control" id="leakResult" name="leakResult"
+                                                                                                        title="Select Leakage Result" data-live-search="true" style="width: 100%" required>
+                                                                                                    <option></option>
+                                                                                                    <c:forEach items="${leakResultData}" var="invInner">
+                                                                                                        <option value="${invInner.name}" ${invInner.selected}>${invInner.name}</option>
+                                                                                                    </c:forEach>
+                                                                                                </select>
+                                                                                            </div>
+                                                                                        </div>
+                                                                                    </div>
+                                                                                    <div class="form-group col-xl-4 col-sm-12 col-12">
+                                                                                        <div class="mb-3">
+                                                                                            <label for="leakUpload" class="form-label">Upload Result</label>
+                                                                                            <div class="input input-group">
+                                                                                                <input class="form-control" type="file" id="leakUpload" name="leakUpload">
+                                                                                            </div>
+                                                                                        </div>
+                                                                                    </div>
+
+                                                                                    <c:if test="${not empty dataTest.leakUpload}">
+                                                                                        <div class="row gx-4">
+                                                                                            <div class="col-xl-2 col-sm-12 col-12">
+                                                                                                <div class="mb-2">
+                                                                                                    <a class="form-label" href="${contextPath}/hw/item/ft/leaktest/${item.id}" id="leakTestAttach" name="leakTestAttach"> Download Attachment</a>
+                                                                                                </div>
+                                                                                            </div>
+                                                                                        </div>
+                                                                                    </c:if>
+
+                                                                                    <div class="col-md-12">
+                                                                                        <button type="submit" id="submit" class="btn btn-primary float-end ${leakbutton}">Save</button>
+                                                                                    </div>
+                                                                                </form>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                </c:if>
+                                                                <c:if test="${manCheck eq 'Yes'}">
+                                                                    <div class="accordion-item">
+                                                                        <h2 class="accordion-header" id="panelsStayOpen-headingTwo">
+                                                                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                                                                                    data-bs-target="#panelsStayOpen-collapseTwo" aria-expanded="false"
+                                                                                    aria-controls="panelsStayOpen-collapseTwo">
+                                                                                Manual Test
+                                                                            </button>
+                                                                        </h2>
+                                                                        <div id="panelsStayOpen-collapseTwo" class="accordion-collapse collapse ${manshow}" aria-labelledby="panelsStayOpen-headingTwo">
+                                                                            <div class="accordion-body">
+                                                                                <div class="row">
+                                                                                    <div class="col-sm-6">
+                                                                                        <label for="status" class="form-label">Status</label>
+                                                                                        <div>
+                                                                                            <input type="text" class="form-control" id="labelStatus" name="labelStatus" placeholder="" value="${item.status}" readonly>
+                                                                                            <input type="hidden" class="form-control" id="mibItemId" name="mibItemId" placeholder="" value="${item.id}">
+                                                                                        </div>
+                                                                                    </div>
+                                                                                    <div class="col-sm-4">
+                                                                                    </div>
+                                                                                    <div class="col-sm-2">
+                                                                                        <div class="p-3 d-flex justify-content-end">
+                                                                                            <a href="https://mysed-rel-app05/HEATS-mini/manual_test.php?id=${item.id}" class="leads rounded-3 d-xxl-flex d-none">
+                                                                                            <!--<a href="http://zbqb9x-7jwwld4:85//Tutorial/sample-heat/manual_test.php?id=${item.id}" class="leads rounded-3 d-xxl-flex d-none">-->
+                                                                                                <i class="bi bi-box-arrow-right" style="color:#ffffff"></i>&nbsp;&nbsp;Inspect Manual Test
+                                                                                            </a>
+                                                                                        </div>
+                                                                                    </div>
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                </c:if>
                                                                 <c:if test="${bibCheck eq 'Yes'}">
                                                                     <div class="accordion-item">
                                                                         <h2 class="accordion-header" id="panelsStayOpen-headingOne">
@@ -4026,70 +4123,34 @@
                                                                         </div>
                                                                     </div>
                                                                 </c:if>
-                                                                <c:if test="${manCheck eq 'Yes'}">
+                                                                <c:if test="${bibDaqCheck eq 'Yes'}">
                                                                     <div class="accordion-item">
-                                                                        <h2 class="accordion-header" id="panelsStayOpen-headingTwo">
-                                                                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
-                                                                                    data-bs-target="#panelsStayOpen-collapseTwo" aria-expanded="false"
-                                                                                    aria-controls="panelsStayOpen-collapseTwo">
-                                                                                Manual Test
+                                                                        <h2 class="accordion-header" id="panelsStayOpen-headingSix">
+                                                                            <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#panelsStayOpen-collapseSix" aria-expanded="false" aria-controls="panelsStayOpen-collapseSix">
+                                                                                BIB DAQ Test
                                                                             </button>
                                                                         </h2>
-                                                                        <div id="panelsStayOpen-collapseTwo" class="accordion-collapse collapse ${manshow}" aria-labelledby="panelsStayOpen-headingTwo">
+                                                                        <div id="panelsStayOpen-collapseSix" class="accordion-collapse collapse ${bibdaqshow}"
+                                                                             aria-labelledby="panelsStayOpen-headingSix">
                                                                             <div class="accordion-body">
-                                                                                <div class="row">
-                                                                                    <div class="col-sm-6">
-                                                                                        <label for="status" class="form-label">Status</label>
-                                                                                        <div>
-                                                                                            <input type="text" class="form-control" id="labelStatus" name="labelStatus" placeholder="" value="${item.status}" readonly>
-                                                                                            <input type="hidden" class="form-control" id="mibItemId" name="mibItemId" placeholder="" value="${item.id}">
-                                                                                        </div>
-                                                                                    </div>
-                                                                                    <div class="col-sm-4">
-                                                                                    </div>
-                                                                                    <div class="col-sm-2">
-                                                                                        <div class="p-3 d-flex justify-content-end">
-                                                                                            <a href="https://mysed-rel-app05/HEATS-mini/manual_test.php?id=${item.id}" class="leads rounded-3 d-xxl-flex d-none">
-                                                                                            <!--<a href="http://zbqb9x-7jwwld4:85//Tutorial/sample-heat/manual_test.php?id=${item.id}" class="leads rounded-3 d-xxl-flex d-none">-->
-                                                                                                <i class="bi bi-box-arrow-right" style="color:#ffffff"></i>&nbsp;&nbsp;Inspect Manual Test
-                                                                                            </a>
-                                                                                        </div>
-                                                                                    </div>
-                                                                                </div>
-                                                                            </div>
-                                                                        </div>
-                                                                    </div>
-                                                                </c:if>
-                                                                <c:if test="${leakCheck eq 'Yes'}">
-                                                                    <div class="accordion-item">
-                                                                        <h2 class="accordion-header" id="panelsStayOpen-headingThree">
-                                                                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
-                                                                                    data-bs-target="#panelsStayOpen-collapseThree" aria-expanded="false"
-                                                                                    aria-controls="panelsStayOpen-collapseThree">
-                                                                                Leakage Test
-                                                                            </button>
-                                                                        </h2>
-                                                                        <div id="panelsStayOpen-collapseThree" class="accordion-collapse collapse ${leakshow}"
-                                                                             aria-labelledby="panelsStayOpen-headingThree">
-                                                                            <div class="accordion-body">
-                                                                                <form class="row gx-3 " role="form" action="${contextPath}/hw/item/save/leakTest" method="post" enctype="multipart/form-data" novalidate>
+                                                                                <form class="row gx-3 " role="form" action="${contextPath}/hw/item/save/bibDaqTest" method="post" enctype="multipart/form-data" novalidate>
                                                                                     <div class="col-xl-1 col-sm-12 col-12">
                                                                                         <div class="mb-3">
                                                                                             <label for="quantity" class="form-label">Quantity</label>
                                                                                             <div class="input input-group">
-                                                                                                <input type="number" class="form-control" id="totalQty" name="totalQty" placeholder="" value="${dataTest.leakQty}" min="1" required>
+                                                                                                <input type="number" class="form-control" id="totalQty" name="totalQty" placeholder="" value="${dataTest.bibDaqQty}" min="1" required>
                                                                                                 <input type="hidden" class="form-control" id="mibItemId" name="mibItemId" placeholder="" value="${item.id}">
                                                                                             </div>
                                                                                         </div>
                                                                                     </div>
                                                                                     <div class="form-group required col-xl-2 col-sm-12 col-12">
                                                                                         <div class="mb-3">
-                                                                                            <label for="leakResult" class="form-label">Leakage Result</label>
+                                                                                            <label for="bibDaqResult" class="form-label">BIB Result</label>
                                                                                             <div class="input input-group">
-                                                                                                <select class="select-single js-states form-control" id="leakResult" name="leakResult"
-                                                                                                        title="Select Leakage Result" data-live-search="true" style="width: 100%" required>
+                                                                                                <select class="select-single js-states form-control" id="bibDaqResult" name="bibDaqResult"
+                                                                                                        title="Select Item Usage" data-live-search="true" style="width: 100%" required>
                                                                                                     <option></option>
-                                                                                                    <c:forEach items="${leakResultData}" var="invInner">
+                                                                                                    <c:forEach items="${daqResultData}" var="invInner">
                                                                                                         <option value="${invInner.name}" ${invInner.selected}>${invInner.name}</option>
                                                                                                     </c:forEach>
                                                                                                 </select>
@@ -4098,25 +4159,25 @@
                                                                                     </div>
                                                                                     <div class="form-group col-xl-4 col-sm-12 col-12">
                                                                                         <div class="mb-3">
-                                                                                            <label for="leakUpload" class="form-label">Upload Result</label>
+                                                                                            <label for="bibDaqUpload" class="form-label">Upload Result</label>
                                                                                             <div class="input input-group">
-                                                                                                <input class="form-control" type="file" id="leakUpload" name="leakUpload">
+                                                                                                <input class="form-control" type="file" id="bibDaqUpload" name="bibDaqUpload">
                                                                                             </div>
                                                                                         </div>
                                                                                     </div>
 
-                                                                                    <c:if test="${not empty dataTest.leakUpload}">
+                                                                                    <c:if test="${not empty dataTest.bibDaqUpload}">
                                                                                         <div class="row gx-4">
                                                                                             <div class="col-xl-2 col-sm-12 col-12">
                                                                                                 <div class="mb-2">
-                                                                                                    <a class="form-label" href="${contextPath}/hw/item/ft/leaktest/${item.id}" id="leakTestAttach" name="leakTestAttach"> Download Attachment</a>
+                                                                                                    <a class="form-label" href="${contextPath}/hw/item/ft/bibdaqtest/${item.id}" id="daqTestAttach" name="daqTestAttach"> Download Attachment</a>
                                                                                                 </div>
                                                                                             </div>
                                                                                         </div>
                                                                                     </c:if>
 
                                                                                     <div class="col-md-12">
-                                                                                        <button type="submit" id="submit" class="btn btn-primary float-end ${leakbutton}">Save</button>
+                                                                                        <button type="submit" id="submit" class="btn btn-primary float-end ${bibdaqbutton}">Save</button>
                                                                                     </div>
                                                                                 </form>
                                                                             </div>
