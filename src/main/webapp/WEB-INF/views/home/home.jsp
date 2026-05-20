@@ -148,6 +148,7 @@
                                             <th>RMS Status</th>
                                             <th>Event Begin Status</th>
                                             <th>Days to Event Start</th>
+                                            <th>Booking Status</th>
                                             <th>Priority</th>
                                             <th>Manage</th>
                                         </tr>
@@ -166,6 +167,16 @@
                                     <td style="color: red;"><c:out value="${parameterMaster.rmsStatus}"/></td>
                                     <td style="color: red;"><c:out value="${parameterMaster.eventBeginStatus}"/></td>
                                     <td style="color: red;"><c:out value="${parameterMaster.daysToEventStart}"/></td>
+                                    <c:choose>
+                                        <c:when test="${parameterMaster.totalBooking == 0}">
+                                            <td><span style="display:none;">0</span>
+                                                <i class="bi bi-x-circle h3" style="color: red;" title="No CBMS Booking"></i></td>
+                                            </c:when>
+                                            <c:otherwise>
+                                            <td> <span style="display:none;">1</span>
+                                                <i class="bi bi-check2-circle h3" style="color: green;"></i></td>
+                                        </c:otherwise>
+                                    </c:choose>
                                     <td style="color: red;font-size: 1.2em;"><span class="badge bg-danger"><c:out value="${parameterMaster.priority}"/></span></td>
                                         </c:if>
                                         <c:if test="${parameterMaster.priority == '999'}">
@@ -179,6 +190,16 @@
                                     <td><c:out value="${parameterMaster.rmsStatus}"/></td>
                                     <td><c:out value="${parameterMaster.eventBeginStatus}"/></td>
                                     <td><c:out value="${parameterMaster.daysToEventStart}"/></td>
+                                    <c:choose>
+                                        <c:when test="${parameterMaster.totalBooking == 0}">
+                                            <td><span style="display:none;">0</span>
+                                                <i class="bi bi-x-circle h3" style="color: red;" title="No CBMS Booking"></i></td>
+                                        </c:when>
+                                        <c:otherwise>
+                                            <td> <span style="display:none;">1</span>
+                                                <i class="bi bi-check2-circle h3" style="color: green;"></i></td>
+                                        </c:otherwise>
+                                    </c:choose>
                                     <td><c:out value=""/></td>
                                         </c:if>
                                     <td align="center">

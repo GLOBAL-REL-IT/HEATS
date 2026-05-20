@@ -99,7 +99,7 @@ public class ItemController {
     private static final Logger LOGGER = LoggerFactory.getLogger(ItemController.class);
     String[] args = {};
 
-    private static final String UPLOADED_FOLDER = "\\\\mysed-rel-app05\\f$\\HEATS\\VI-Attachment\\"; //server
+    private static final String UPLOADED_FOLDER = "\\\\mysed-rel-app05\\f$\\HEATS\\VI-Attachment\\HW_Registration\\"; //server
     private static final String FOLDER_TEST = "\\\\mysed-rel-app05\\f$\\HEATS\\FT\\"; //server
 
     private static final int BUFFER_SIZE = 4096;
