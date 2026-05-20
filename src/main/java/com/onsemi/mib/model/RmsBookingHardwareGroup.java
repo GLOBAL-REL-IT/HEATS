@@ -18,6 +18,34 @@ public class RmsBookingHardwareGroup {
 
     private String itemType;
 
+    private String unloadingDate;
+    private String returnBy;
+    private String returnDate;
+
+    public String getUnloadingDate() {
+        return unloadingDate;
+    }
+
+    public void setUnloadingDate(String unloadingDate) {
+        this.unloadingDate = unloadingDate;
+    }
+
+    public String getReturnBy() {
+        return returnBy;
+    }
+
+    public void setReturnBy(String returnBy) {
+        this.returnBy = returnBy;
+    }
+
+    public String getReturnDate() {
+        return returnDate;
+    }
+
+    public void setReturnDate(String returnDate) {
+        this.returnDate = returnDate;
+    }
+
     public String getItemType() {
         return itemType;
     }

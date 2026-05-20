@@ -32,6 +32,88 @@ public class RmsBookingDetail {
     private String returnDate;
     private String returnRemarks;
 
+    private String hardwareId;
+    private String hardwareGroupStatus;
+    private String unloadingDate;
+    private String groupId;
+    private String bookingHwGroupId;
+    private String hardwareReturnBy;
+    private String hardwareReturnDate;
+    private String lcQty;
+    private String pcQty;
+
+    public String getHardwareId() {
+        return hardwareId;
+    }
+
+    public void setHardwareId(String hardwareId) {
+        this.hardwareId = hardwareId;
+    }
+
+    public String getHardwareGroupStatus() {
+        return hardwareGroupStatus;
+    }
+
+    public void setHardwareGroupStatus(String hardwareGroupStatus) {
+        this.hardwareGroupStatus = hardwareGroupStatus;
+    }
+
+    public String getUnloadingDate() {
+        return unloadingDate;
+    }
+
+    public void setUnloadingDate(String unloadingDate) {
+        this.unloadingDate = unloadingDate;
+    }
+
+    public String getGroupId() {
+        return groupId;
+    }
+
+    public void setGroupId(String groupId) {
+        this.groupId = groupId;
+    }
+
+    public String getBookingHwGroupId() {
+        return bookingHwGroupId;
+    }
+
+    public void setBookingHwGroupId(String bookingHwGroupId) {
+        this.bookingHwGroupId = bookingHwGroupId;
+    }
+
+    public String getHardwareReturnBy() {
+        return hardwareReturnBy;
+    }
+
+    public void setHardwareReturnBy(String hardwareReturnBy) {
+        this.hardwareReturnBy = hardwareReturnBy;
+    }
+
+    public String getHardwareReturnDate() {
+        return hardwareReturnDate;
+    }
+
+    public void setHardwareReturnDate(String hardwareReturnDate) {
+        this.hardwareReturnDate = hardwareReturnDate;
+    }
+
+    public String getLcQty() {
+        return lcQty;
+    }
+
+    public void setLcQty(String lcQty) {
+        this.lcQty = lcQty;
+    }
+
+    public String getPcQty() {
+        return pcQty;
+    }
+
+    public void setPcQty(String pcQty) {
+        this.pcQty = pcQty;
+    }
+
     public String getReturnBy() {
         return returnBy;
     }
