@@ -105,76 +105,78 @@
                                                     <th>RMS Status</th>
                                                     <th>Event Begin Status</th>
                                                     <th>Days to Event Start</th>
+                                                    <th>Booking Status</th>
                                                     <th>Priority</th>
                                                     <th>Manage</th>
                                                 </tr>
                                             </thead>
                                             <tbody>
-                                                <c:forEach items="${booking}" var="parameterMaster" varStatus="parameterMasterLoop">
-                                                    <tr>
-                                                        <c:if test="${parameterMaster.priority != '999'}">
-                                                            <td style="color: red;"><c:out value="${parameterMasterLoop.index+1}"/></td>
-                                                            <td style="color: red;" id="modal_delete_info_${parameterMaster.id}"><c:out value="${parameterMaster.rmsNo}"/></td>
-                                                            <td style="color: red;"><c:out value="${parameterMaster.event}"/></td>
-                                                            <td style="color: red;"><c:out value="${parameterMaster.actStartDate}"/></td>
-                                                            <td style="color: red;"><c:out value="${parameterMaster.device}"/></td>
-                                                            <td style="color: red;"><c:out value="${parameterMaster.packages}"/></td>
-                                                            <td style="color: red;"><c:out value="${parameterMaster.eventStartDate}"/></td>
-                                                            <td style="color: red;"><c:out value="${parameterMaster.rmsStatus}"/></td>
-                                                            <td style="color: red;"><c:out value="${parameterMaster.eventBeginStatus}"/></td>
-                                                            <td style="color: red;"><c:out value="${parameterMaster.daysToEventStart}"/></td>
-                                                            <td style="color: red;font-size: 1.2em;"><span class="badge bg-danger"><c:out value="${parameterMaster.priority}"/></span></td>
-                                                            </c:if>
-                                                            <c:if test="${parameterMaster.priority == '999'}">
-                                                            <td><c:out value="${parameterMasterLoop.index+1}"/></td>
-                                                            <td id="modal_delete_info_${parameterMaster.id}"><c:out value="${parameterMaster.rmsNo}"/></td>
-                                                            <td><c:out value="${parameterMaster.event}"/></td>
-                                                            <td><c:out value="${parameterMaster.actStartDate}"/></td>
-                                                            <td><c:out value="${parameterMaster.device}"/></td>
-                                                            <td><c:out value="${parameterMaster.packages}"/></td>
-                                                            <td><c:out value="${parameterMaster.eventStartDate}"/></td>
-                                                            <td><c:out value="${parameterMaster.rmsStatus}"/></td>
-                                                            <td><c:out value="${parameterMaster.eventBeginStatus}"/></td>
-                                                            <td><c:out value="${parameterMaster.daysToEventStart}"/></td>
-                                                            <td><c:out value=""/></td>
-                                                        </c:if>
-                                                        <td align="center">
-                                                            <a modaldeleteid="${parameterMaster.id}" type="button" data-bs-toggle="offcanvas" title="Set Priority"
-                                                               data-bs-target="#staticBackdrop" aria-controls="staticBackdrop" onclick="getData(this);">
-                                                                <i class="bi bi-list-ol h3"></i>
-                                                            </a>
-                                                            <c:if test="${parameterMaster.totalBooking == '1'}">
-                                                                <a href="${contextPath}/rmsbookingDetail/detail/${parameterMaster.id}" class="table-link" title="Manage">
-                                                                    <i class="bi bi-box-arrow-in-right h3"></i>
-                                                                </a>
-                                                            </c:if>
-                                                            <c:if test="${parameterMaster.totalBooking == '0'}">
-                                                                <a modaldeleteid="${parameterMaster.id}" modalRms="${parameterMaster.rmsNo}" modalEvent="${parameterMaster.event}" type="button" title="No CBMS Booking" data-bs-toggle="modal" data-bs-target="#email_modal" class="table-link" onclick="sendEmail(this);">
-                                                                    <i class="bi bi-exclamation-octagon h3" style="color: red;"></i>
-                                                                </a>
-<!--                                                                <div class="modal fade" id="exampleModalLg" tabindex="-1" aria-labelledby="exampleModalLgLabel"
-                                                                     aria-hidden="true">
-                                                                    <div class="modal-dialog modal-lg">
-                                                                        <div class="modal-content">
-                                                                            <div class="modal-header">
-                                                                                <h5 class="modal-title h4" id="exampleModalLgLabel">
-                                                                                    No CBMS Booking
-                                                                                </h5>
-                                                                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                                                                            </div>
-                                                                            <div class="modal-body"><p style="vertical-align: middle;">This RMS_Event does not have an associated booking in CBMS. 
-                                                                                    Please contact the Capacity Planner to complete the booking in CBMS before proceeding.</p></div>
-                                                                            <div class="modal-footer">
-                                                                                <button type="button" class="btn btn-dark" data-bs-dismiss="modal">Cancel</button>
-                                                                                <a id="modal_button" href="${contextPath}/rmsbookingDetail/sendEmailBooking/${parameterMaster.id}" class="btn btn-primary"><i class="bi bi-envelope"></i> Send Email to Planner</a>
-                                                                            </div>
-                                                                        </div>
-                                                                    </div>
-                                                                </div>-->
-                                                            </c:if>
-                                                        </td>
-                                                    </tr>
-                                                </c:forEach>
+                                            <c:forEach items="${booking}" var="parameterMaster" varStatus="parameterMasterLoop">
+                                                <tr>
+                                                <c:if test="${parameterMaster.priority != '999'}">
+                                                    <td style="color: red;"><c:out value="${parameterMasterLoop.index+1}"/></td>
+                                                    <td style="color: red;" id="modal_delete_info_${parameterMaster.id}"><c:out value="${parameterMaster.rmsNo}"/></td>
+                                                    <td style="color: red;"><c:out value="${parameterMaster.event}"/></td>
+                                                    <td style="color: red;"><c:out value="${parameterMaster.actStartDate}"/></td>
+                                                    <td style="color: red;"><c:out value="${parameterMaster.device}"/></td>
+                                                    <td style="color: red;"><c:out value="${parameterMaster.packages}"/></td>
+                                                    <td style="color: red;"><c:out value="${parameterMaster.eventStartDate}"/></td>
+                                                    <td style="color: red;"><c:out value="${parameterMaster.rmsStatus}"/></td>
+                                                    <td style="color: red;"><c:out value="${parameterMaster.eventBeginStatus}"/></td>
+                                                    <td style="color: red;"><c:out value="${parameterMaster.daysToEventStart}"/></td>
+                                                    <c:choose>
+                                                        <c:when test="${parameterMaster.totalBooking == 0}">
+                                                            <td><span style="display:none;">0</span>
+                                                                <i class="bi bi-x-circle h3" style="color: red;" title="No CBMS Booking"></i></td>
+                                                        </c:when>
+                                                        <c:otherwise>
+                                                            <td> <span style="display:none;">1</span>
+                                                                <i class="bi bi-check2-circle h3" style="color: green;"></i></td>
+                                                        </c:otherwise>
+                                                    </c:choose>
+                                                    <td style="color: red;font-size: 1.2em;"><span class="badge bg-danger"><c:out value="${parameterMaster.priority}"/></span></td>
+                                                </c:if>
+                                                <c:if test="${parameterMaster.priority == '999'}">
+                                                    <td><c:out value="${parameterMasterLoop.index+1}"/></td>
+                                                    <td id="modal_delete_info_${parameterMaster.id}"><c:out value="${parameterMaster.rmsNo}"/></td>
+                                                    <td><c:out value="${parameterMaster.event}"/></td>
+                                                    <td><c:out value="${parameterMaster.actStartDate}"/></td>
+                                                    <td><c:out value="${parameterMaster.device}"/></td>
+                                                    <td><c:out value="${parameterMaster.packages}"/></td>
+                                                    <td><c:out value="${parameterMaster.eventStartDate}"/></td>
+                                                    <td><c:out value="${parameterMaster.rmsStatus}"/></td>
+                                                    <td><c:out value="${parameterMaster.eventBeginStatus}"/></td>
+                                                    <td><c:out value="${parameterMaster.daysToEventStart}"/></td>
+                                                    <c:choose>
+                                                        <c:when test="${parameterMaster.totalBooking == 0}">
+                                                            <td><span style="display:none;">0</span>
+                                                                <i class="bi bi-x-circle h3" style="color: red;" title="No CBMS Booking"></i></td>
+                                                        </c:when>
+                                                        <c:otherwise>
+                                                            <td> <span style="display:none;">1</span>
+                                                                <i class="bi bi-check2-circle h3" style="color: green;"></i></td>
+                                                        </c:otherwise>
+                                                    </c:choose>
+                                                    <td><c:out value=""/></td>
+                                                </c:if>
+                                                <td align="center">
+                                                    <a modaldeleteid="${parameterMaster.id}" type="button" data-bs-toggle="offcanvas" title="Set Priority"
+                                                       data-bs-target="#staticBackdrop" aria-controls="staticBackdrop" onclick="getData(this);">
+                                                        <i class="bi bi-list-ol h3"></i>
+                                                    </a>
+                                                <c:if test="${parameterMaster.totalBooking == '1'}">
+                                                    <a href="${contextPath}/rmsbookingDetail/detail/${parameterMaster.id}" class="table-link" title="Manage">
+                                                        <i class="bi bi-box-arrow-in-right h3"></i>
+                                                    </a>
+                                                </c:if>
+                                                <c:if test="${parameterMaster.totalBooking == '0'}">
+                                                    <a modaldeleteid="${parameterMaster.id}" modalRms="${parameterMaster.rmsNo}" modalEvent="${parameterMaster.event}" type="button" title="No CBMS Booking" data-bs-toggle="modal" data-bs-target="#email_modal" class="table-link" onclick="sendEmail(this);">
+                                                        <i class="bi bi-exclamation-octagon h3" style="color: red;"></i>
+                                                    </a>
+                                                </c:if>
+                                                </td>
+                                                </tr>
+                                            </c:forEach>
                                             </tbody>
                                         </table>
                                     </div>
@@ -295,67 +297,67 @@
     </s:layout-component>
     <s:layout-component name="page_js_inline">
         <script>
-            function getData(e) {
-                var id = $(e).attr("modaldeleteid");
-                $.ajax({
-                    url: '${contextPath}/rmsbookingDetail/priorityDetail', // Replace with your controller URL
-                    type: 'GET',
-                    data: {id: id},
-                    dataType: 'json',
-                    success: function (data) {
-                        // Populate form fields with received data
-                        $("#rmsNo").val(data.rmsNo);
-                        $("#id").val(data.id);
-                        $("#event").val(data.event);
-                        $("#remarks").val(data.priorityRemarks);
-                        if (data.priority !== "999") {
-                            $("#priorityRead").val(data.priority);
-                        } else {
-                            $("#priorityRead").val("");
-                        }
-                        $('#priority').val(data.priority).trigger('change');
-                    },
-                    error: function (jqXHR, textStatus, errorThrown) {
-                        console.error("Error loading data: " + textStatus, errorThrown);
-                    }
-                });
-            }
-            
-            function sendEmail(e) {
-                var modaldeleteid = $(e).attr("modaldeleteid");
-                var modalRms = $(e).attr("modalRms");
-                var modalEvent = $(e).attr("modalEvent");
-                var deleteUrl = "${contextPath}/rmsbookingDetail/sendEmailBooking/" + modaldeleteid;
-                var deleteMsg = modalRms + "_" + modalEvent + " does not have an associated booking in CBMS. Please contact the Capacity Planner to complete the booking in CBMS before proceeding.";
-                $("#email_modal .modal-body").html(deleteMsg);
-                $("#modal_email_button").attr("href", deleteUrl);
-            }
+                                    function getData(e) {
+                                        var id = $(e).attr("modaldeleteid");
+                                        $.ajax({
+                                            url: '${contextPath}/rmsbookingDetail/priorityDetail', // Replace with your controller URL
+                                            type: 'GET',
+                                            data: {id: id},
+                                            dataType: 'json',
+                                            success: function (data) {
+                                                // Populate form fields with received data
+                                                $("#rmsNo").val(data.rmsNo);
+                                                $("#id").val(data.id);
+                                                $("#event").val(data.event);
+                                                $("#remarks").val(data.priorityRemarks);
+                                                if (data.priority !== "999") {
+                                                    $("#priorityRead").val(data.priority);
+                                                } else {
+                                                    $("#priorityRead").val("");
+                                                }
+                                                $('#priority').val(data.priority).trigger('change');
+                                            },
+                                            error: function (jqXHR, textStatus, errorThrown) {
+                                                console.error("Error loading data: " + textStatus, errorThrown);
+                                            }
+                                        });
+                                    }
 
-            function modalDeletePriority() {
-                var id = $('#id');
-                var priorityRead = $('#priorityRead');
-                var deleteUrl = "${contextPath}/rmsbookingDetail/cancelPriority/" + id.val();
-                var deleteMsg = "Are you sure want to remove priority for this RMS_Event?";
-                $("#delete_modal .modal-body").html(deleteMsg);
-                $("#modal_delete_button").attr("href", deleteUrl);
-            }
+                                    function sendEmail(e) {
+                                        var modaldeleteid = $(e).attr("modaldeleteid");
+                                        var modalRms = $(e).attr("modalRms");
+                                        var modalEvent = $(e).attr("modalEvent");
+                                        var deleteUrl = "${contextPath}/rmsbookingDetail/sendEmailBooking/" + modaldeleteid;
+                                        var deleteMsg = modalRms + "_" + modalEvent + " does not have an associated booking in CBMS. Please contact the Capacity Planner to complete the booking in CBMS before proceeding.";
+                                        $("#email_modal .modal-body").html(deleteMsg);
+                                        $("#modal_email_button").attr("href", deleteUrl);
+                                    }
 
-            $(function () {
-                $("#customButtons1").DataTable({
-                    lengthMenu: [
-                        [10, 25, 50],
-                        [10, 25, 50, "All"],
-                    ],
-                    language: {
-                        lengthMenu: "Display _MENU_ Records Per Page",
+                                    function modalDeletePriority() {
+                                        var id = $('#id');
+                                        var priorityRead = $('#priorityRead');
+                                        var deleteUrl = "${contextPath}/rmsbookingDetail/cancelPriority/" + id.val();
+                                        var deleteMsg = "Are you sure want to remove priority for this RMS_Event?";
+                                        $("#delete_modal .modal-body").html(deleteMsg);
+                                        $("#modal_delete_button").attr("href", deleteUrl);
+                                    }
+
+                                    $(function () {
+                                        $("#customButtons1").DataTable({
+                                            lengthMenu: [
+                                                [10, 25, 50],
+                                                [10, 25, 50, "All"],
+                                            ],
+                                            language: {
+                                                lengthMenu: "Display _MENU_ Records Per Page",
 //                        info: "Showing Page _PAGE_ of _PAGES_",
-                        info: "Showing _START_ to _END_ of _TOTAL_ total records",
-                    },
+                                                info: "Showing _START_ to _END_ of _TOTAL_ total records",
+                                            },
 //                    dom: "Blfrtip",
-                    dom: '<"top"Blfi>rt<"bottom"p><"clear">',
-                    buttons: ["copy", "csv", "pdf", "print"],
-                });
-            });
+                                            dom: '<"top"Blfi>rt<"bottom"p><"clear">',
+                                            buttons: ["copy", "csv", "pdf", "print"],
+                                        });
+                                    });
         </script>
     </s:layout-component>
 </s:layout-render>

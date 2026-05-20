@@ -330,7 +330,7 @@
                                                                 <div class="input input-group">
                                                                     <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
                                                                     <input type="number" class="form-control" id="minQty" name="minQty"
-                                                                           placeholder="" value="" required>
+                                                                           placeholder="" value="" min="0" required>
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -340,7 +340,7 @@
                                                                 <div class="input input-group">
                                                                     <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
                                                                     <input type="number" class="form-control" id="maxQty" name="maxQty"
-                                                                           placeholder="" value="" required>
+                                                                           placeholder="" value="" min="0" required>
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -385,7 +385,7 @@
                                                                 <div class="input input-group">
                                                                     <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
                                                                     <input type="number" class="form-control" id="onHandQty" name="onHandQty"
-                                                                           placeholder="" value="" required>
+                                                                           placeholder="" value="" min="0" required>
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -395,7 +395,7 @@
                                                                 <div class="input input-group">
                                                                     <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
                                                                     <input type="number" class="form-control" id="productionQty" name="productionQty"
-                                                                           placeholder="" value="">
+                                                                           placeholder="" value="" min="0">
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -405,7 +405,7 @@
                                                                 <div class="input input-group">
                                                                     <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
                                                                     <input type="number" class="form-control" id="productionStagingQty" name="productionStagingQty"
-                                                                           placeholder="" value="">
+                                                                           placeholder="" value="" min="0">
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -415,7 +415,7 @@
                                                                 <div class="input input-group">
                                                                     <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
                                                                     <input type="number" class="form-control" id="repairQty" name="repairQty"
-                                                                           placeholder="" value="">
+                                                                           placeholder="" value="" min="0">
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -425,7 +425,7 @@
                                                                 <div class="input input-group">
                                                                     <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
                                                                     <input type="number" class="form-control" id="quarantineQty" name="quarantineQty"
-                                                                           placeholder="" value="">
+                                                                           placeholder="" value="" min="0">
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -435,7 +435,7 @@
                                                                 <div class="input input-group">
                                                                     <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
                                                                     <input type="number" class="form-control" id="externalCleanQty" name="externalCleanQty"
-                                                                           placeholder="" value="">
+                                                                           placeholder="" value="" min="0">
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -445,7 +445,7 @@
                                                                 <div class="input input-group">
                                                                     <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
                                                                     <input type="number" class="form-control" id="externalRecleanQty" name="externalRecleanQty"
-                                                                           placeholder="" value="">
+                                                                           placeholder="" value="" min="0">
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -455,7 +455,7 @@
                                                                 <div class="input input-group">
                                                                     <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
                                                                     <input type="number" class="form-control" id="internalCleanQty" name="internalCleanQty"
-                                                                           placeholder="" value="">
+                                                                           placeholder="" value="" min="0"> 
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -465,7 +465,7 @@
                                                                 <div class="input input-group">
                                                                     <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
                                                                     <input type="number" class="form-control" id="internalRecleanQty" name="internalRecleanQty"
-                                                                           placeholder="" value="">
+                                                                           placeholder="" value="" min="0">
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -475,7 +475,7 @@
                                                                 <div class="input input-group">
                                                                     <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
                                                                     <input type="number" class="form-control" id="otherQty" name="otherQty"
-                                                                           placeholder="" value="">
+                                                                           placeholder="" value="" min="0">
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -485,7 +485,7 @@
                                                                 <div class="input input-group">
                                                                     <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
                                                                     <input type="number" class="form-control" id="vendorQty" name="vendorQty"
-                                                                           placeholder="" value="">
+                                                                           placeholder="" value="" min="0">
                                                                 </div>
                                                             </div>
                                                         </div><div class="col-xl-2 col-sm-12 col-12">
@@ -494,7 +494,7 @@
                                                                 <div class="input input-group">
                                                                     <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
                                                                     <input type="number" class="form-control" id="otherOnsemiQty" name="otherOnsemiQty"
-                                                                           placeholder="" value="">
+                                                                           placeholder="" value="" min="0">
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -504,7 +504,7 @@
                                                                 <div class="input input-group">
                                                                     <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
                                                                     <input type="number" class="form-control" id="storageFactoryQty" name="storageFactoryQty"
-                                                                           placeholder="" value="">
+                                                                           placeholder="" value="" min="0">
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -700,7 +700,7 @@
                                                                 <div class="input input-group">
                                                                     <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
                                                                     <input type="number" class="form-control" id="minQty" name="minQty"
-                                                                           placeholder="" value="" required>
+                                                                           placeholder="" value="" min="0" required>
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -710,7 +710,7 @@
                                                                 <div class="input input-group">
                                                                     <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
                                                                     <input type="number" class="form-control" id="maxQty" name="maxQty"
-                                                                           placeholder="" value="" required>
+                                                                           placeholder="" value="" min="0" required>
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -750,7 +750,7 @@
                                                                 <div class="input input-group">
                                                                     <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
                                                                     <input type="number" class="form-control" id="onHandQty" name="onHandQty"
-                                                                           placeholder="" value="" required>
+                                                                           placeholder="" value="" min="0" required>
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -760,7 +760,7 @@
                                                                 <div class="input input-group">
                                                                     <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
                                                                     <input type="number" class="form-control" id="productionQty" name="productionQty"
-                                                                           placeholder="" value="">
+                                                                           placeholder="" value="" min="0">
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -770,7 +770,7 @@
                                                                 <div class="input input-group">
                                                                     <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
                                                                     <input type="number" class="form-control" id="productionStagingQty" name="productionStagingQty"
-                                                                           placeholder="" value="">
+                                                                           placeholder="" value="" min="0">
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -780,7 +780,7 @@
                                                                 <div class="input input-group">
                                                                     <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
                                                                     <input type="number" class="form-control" id="repairQty" name="repairQty"
-                                                                           placeholder="" value="">
+                                                                           placeholder="" value="" min="0">
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -790,7 +790,7 @@
                                                                 <div class="input input-group">
                                                                     <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
                                                                     <input type="number" class="form-control" id="quarantineQty" name="quarantineQty"
-                                                                           placeholder="" value="">
+                                                                           placeholder="" value="" min="0">
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -800,7 +800,7 @@
                                                                 <div class="input input-group">
                                                                     <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
                                                                     <input type="number" class="form-control" id="externalCleanQty" name="externalCleanQty"
-                                                                           placeholder="" value="">
+                                                                           placeholder="" value="" min="0">
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -810,7 +810,7 @@
                                                                 <div class="input input-group">
                                                                     <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
                                                                     <input type="number" class="form-control" id="externalRecleanQty" name="externalRecleanQty"
-                                                                           placeholder="" value="">
+                                                                           placeholder="" value="" min="0">
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -820,7 +820,7 @@
                                                                 <div class="input input-group">
                                                                     <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
                                                                     <input type="number" class="form-control" id="internalCleanQty" name="internalCleanQty"
-                                                                           placeholder="" value="">
+                                                                           placeholder="" value="" min="0">
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -830,7 +830,7 @@
                                                                 <div class="input input-group">
                                                                     <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
                                                                     <input type="number" class="form-control" id="internalRecleanQty" name="internalRecleanQty"
-                                                                           placeholder="" value="">
+                                                                           placeholder="" value="" min="0">
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -840,7 +840,7 @@
                                                                 <div class="input input-group">
                                                                     <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
                                                                     <input type="number" class="form-control" id="otherQty" name="otherQty"
-                                                                           placeholder="" value="">
+                                                                           placeholder="" value="" min="0">
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -850,7 +850,7 @@
                                                                 <div class="input input-group">
                                                                     <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
                                                                     <input type="number" class="form-control" id="vendorQty" name="vendorQty"
-                                                                           placeholder="" value="">
+                                                                           placeholder="" value="" min="0">
                                                                 </div>
                                                             </div>
                                                         </div><div class="visually-hidden col-xl-2 col-sm-12 col-12">
@@ -859,7 +859,7 @@
                                                                 <div class="input input-group">
                                                                     <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
                                                                     <input type="number" class="form-control" id="otherOnsemiQty" name="otherOnsemiQty"
-                                                                           placeholder="" value="">
+                                                                           placeholder="" value="" min="0">
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -869,7 +869,7 @@
                                                                 <div class="input input-group">
                                                                     <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
                                                                     <input type="number" class="form-control" id="storageFactoryQty" name="storageFactoryQty"
-                                                                           placeholder="" value="">
+                                                                           placeholder="" value="" min="0">
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -1086,7 +1086,7 @@
                                                                 <div class="input input-group">
                                                                     <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
                                                                     <input type="number" class="form-control" id="minQty" name="minQty"
-                                                                           placeholder="" value="" required>
+                                                                           placeholder="" value="" min="0" required>
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -1096,7 +1096,7 @@
                                                                 <div class="input input-group">
                                                                     <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
                                                                     <input type="number" class="form-control" id="maxQty" name="maxQty"
-                                                                           placeholder="" value="" required>
+                                                                           placeholder="" value="" min="0" required>
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -1136,7 +1136,7 @@
                                                                 <div class="input input-group">
                                                                     <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
                                                                     <input type="number" class="form-control" id="onHandQty" name="onHandQty"
-                                                                           placeholder="" value="" required>
+                                                                           placeholder="" value="" min="0" required>
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -1146,7 +1146,7 @@
                                                                 <div class="input input-group">
                                                                     <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
                                                                     <input type="number" class="form-control" id="productionQty" name="productionQty"
-                                                                           placeholder="" value="">
+                                                                           placeholder="" value="" min="0">
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -1156,7 +1156,7 @@
                                                                 <div class="input input-group">
                                                                     <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
                                                                     <input type="number" class="form-control" id="productionStagingQty" name="productionStagingQty"
-                                                                           placeholder="" value="">
+                                                                           placeholder="" value="" min="0">
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -1166,7 +1166,7 @@
                                                                 <div class="input input-group">
                                                                     <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
                                                                     <input type="number" class="form-control" id="repairQty" name="repairQty"
-                                                                           placeholder="" value="">
+                                                                           placeholder="" value="" min="0">
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -1176,7 +1176,7 @@
                                                                 <div class="input input-group">
                                                                     <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
                                                                     <input type="number" class="form-control" id="quarantineQty" name="quarantineQty"
-                                                                           placeholder="" value="">
+                                                                           placeholder="" value="" min="0">
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -1186,7 +1186,7 @@
                                                                 <div class="input input-group">
                                                                     <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
                                                                     <input type="number" class="form-control" id="externalCleanQty" name="externalCleanQty"
-                                                                           placeholder="" value="">
+                                                                           placeholder="" value="" min="0">
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -1196,7 +1196,7 @@
                                                                 <div class="input input-group">
                                                                     <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
                                                                     <input type="number" class="form-control" id="externalRecleanQty" name="externalRecleanQty"
-                                                                           placeholder="" value="">
+                                                                           placeholder="" value="" min="0">
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -1206,7 +1206,7 @@
                                                                 <div class="input input-group">
                                                                     <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
                                                                     <input type="number" class="form-control" id="internalCleanQty" name="internalCleanQty"
-                                                                           placeholder="" value="">
+                                                                           placeholder="" value="" min="0">
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -1216,7 +1216,7 @@
                                                                 <div class="input input-group">
                                                                     <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
                                                                     <input type="number" class="form-control" id="internalRecleanQty" name="internalRecleanQty"
-                                                                           placeholder="" value="">
+                                                                           placeholder="" value="" min="0">
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -1226,7 +1226,7 @@
                                                                 <div class="input input-group">
                                                                     <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
                                                                     <input type="number" class="form-control" id="otherQty" name="otherQty"
-                                                                           placeholder="" value="">
+                                                                           placeholder="" value="" min="0">
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -1236,7 +1236,7 @@
                                                                 <div class="input input-group">
                                                                     <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
                                                                     <input type="number" class="form-control" id="vendorQty" name="vendorQty"
-                                                                           placeholder="" value="">
+                                                                           placeholder="" value="" min="0">
                                                                 </div>
                                                             </div>
                                                         </div><div class="col-xl-2 col-sm-12 col-12">
@@ -1245,7 +1245,7 @@
                                                                 <div class="input input-group">
                                                                     <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
                                                                     <input type="number" class="form-control" id="otherOnsemiQty" name="otherOnsemiQty"
-                                                                           placeholder="" value="">
+                                                                           placeholder="" value="" min="0">
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -1255,7 +1255,7 @@
                                                                 <div class="input input-group">
                                                                     <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
                                                                     <input type="number" class="form-control" id="storageFactoryQty" name="storageFactoryQty"
-                                                                           placeholder="" value="">
+                                                                           placeholder="" value="" min="0">
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -1456,7 +1456,7 @@
                                                                 <div class="input input-group">
                                                                     <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
                                                                     <input type="number" class="form-control" id="minQty" name="minQty"
-                                                                           placeholder="" value="" required>
+                                                                           placeholder="" value="" min="0" required>
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -1466,7 +1466,7 @@
                                                                 <div class="input input-group">
                                                                     <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
                                                                     <input type="number" class="form-control" id="maxQty" name="maxQty"
-                                                                           placeholder="" value="" required>
+                                                                           placeholder="" value="" min="0" required>
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -1506,7 +1506,7 @@
                                                                 <div class="input input-group">
                                                                     <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
                                                                     <input type="number" class="form-control" id="onHandQty" name="onHandQty"
-                                                                           placeholder="" value="" required>
+                                                                           placeholder="" value="" min="0" required>
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -1516,7 +1516,7 @@
                                                                 <div class="input input-group">
                                                                     <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
                                                                     <input type="number" class="form-control" id="productionQty" name="productionQty"
-                                                                           placeholder="" value="">
+                                                                           placeholder="" value="" min="0">
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -1526,7 +1526,7 @@
                                                                 <div class="input input-group">
                                                                     <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
                                                                     <input type="number" class="form-control" id="productionStagingQty" name="productionStagingQty"
-                                                                           placeholder="" value="">
+                                                                           placeholder="" value="" min="0">
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -1536,7 +1536,7 @@
                                                                 <div class="input input-group">
                                                                     <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
                                                                     <input type="number" class="form-control" id="repairQty" name="repairQty"
-                                                                           placeholder="" value="">
+                                                                           placeholder="" value="" min="0">
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -1546,7 +1546,7 @@
                                                                 <div class="input input-group">
                                                                     <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
                                                                     <input type="number" class="form-control" id="quarantineQty" name="quarantineQty"
-                                                                           placeholder="" value="">
+                                                                           placeholder="" value="" min="0">
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -1556,7 +1556,7 @@
                                                                 <div class="input input-group">
                                                                     <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
                                                                     <input type="number" class="form-control" id="externalCleanQty" name="externalCleanQty"
-                                                                           placeholder="" value="">
+                                                                           placeholder="" value="" min="0">
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -1566,7 +1566,7 @@
                                                                 <div class="input input-group">
                                                                     <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
                                                                     <input type="number" class="form-control" id="externalRecleanQty" name="externalRecleanQty"
-                                                                           placeholder="" value="">
+                                                                           placeholder="" value="" min="0">
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -1576,7 +1576,7 @@
                                                                 <div class="input input-group">
                                                                     <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
                                                                     <input type="number" class="form-control" id="internalCleanQty" name="internalCleanQty"
-                                                                           placeholder="" value="">
+                                                                           placeholder="" value="" min="0">
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -1586,7 +1586,7 @@
                                                                 <div class="input input-group">
                                                                     <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
                                                                     <input type="number" class="form-control" id="internalRecleanQty" name="internalRecleanQty"
-                                                                           placeholder="" value="">
+                                                                           placeholder="" value="" min="0">
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -1596,7 +1596,7 @@
                                                                 <div class="input input-group">
                                                                     <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
                                                                     <input type="number" class="form-control" id="otherQty" name="otherQty"
-                                                                           placeholder="" value="">
+                                                                           placeholder="" value="" min="0">
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -1606,7 +1606,7 @@
                                                                 <div class="input input-group">
                                                                     <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
                                                                     <input type="number" class="form-control" id="vendorQty" name="vendorQty"
-                                                                           placeholder="" value="">
+                                                                           placeholder="" value="" min="0">
                                                                 </div>
                                                             </div>
                                                         </div><div class="col-xl-2 col-sm-12 col-12">
@@ -1615,7 +1615,7 @@
                                                                 <div class="input input-group">
                                                                     <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
                                                                     <input type="number" class="form-control" id="otherOnsemiQty" name="otherOnsemiQty"
-                                                                           placeholder="" value="">
+                                                                           placeholder="" value="" min="0">
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -1625,7 +1625,7 @@
                                                                 <div class="input input-group">
                                                                     <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
                                                                     <input type="number" class="form-control" id="storageFactoryQty" name="storageFactoryQty"
-                                                                           placeholder="" value="">
+                                                                           placeholder="" value="" min="0">
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -1821,7 +1821,7 @@
                                                                 <div class="input input-group">
                                                                     <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
                                                                     <input type="number" class="form-control" id="minQty" name="minQty"
-                                                                           placeholder="" value="" required>
+                                                                           placeholder="" value="" min="0" required>
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -1831,7 +1831,7 @@
                                                                 <div class="input input-group">
                                                                     <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
                                                                     <input type="number" class="form-control" id="maxQty" name="maxQty"
-                                                                           placeholder="" value="" required>
+                                                                           placeholder="" value="" min="0" required>
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -1871,7 +1871,7 @@
                                                                 <div class="input input-group">
                                                                     <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
                                                                     <input type="number" class="form-control" id="onHandQty" name="onHandQty"
-                                                                           placeholder="" value="" required>
+                                                                           placeholder="" value="" min="0" required>
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -1881,7 +1881,7 @@
                                                                 <div class="input input-group">
                                                                     <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
                                                                     <input type="number" class="form-control" id="productionQty" name="productionQty"
-                                                                           placeholder="" value="">
+                                                                           placeholder="" value="" min="0">
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -1891,7 +1891,7 @@
                                                                 <div class="input input-group">
                                                                     <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
                                                                     <input type="number" class="form-control" id="productionStagingQty" name="productionStagingQty"
-                                                                           placeholder="" value="">
+                                                                           placeholder="" value="" min="0">
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -1901,7 +1901,7 @@
                                                                 <div class="input input-group">
                                                                     <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
                                                                     <input type="number" class="form-control" id="repairQty" name="repairQty"
-                                                                           placeholder="" value="">
+                                                                           placeholder="" value="" min="0">
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -1911,7 +1911,7 @@
                                                                 <div class="input input-group">
                                                                     <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
                                                                     <input type="number" class="form-control" id="quarantineQty" name="quarantineQty"
-                                                                           placeholder="" value="">
+                                                                           placeholder="" value="" min="0">
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -1921,7 +1921,7 @@
                                                                 <div class="input input-group">
                                                                     <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
                                                                     <input type="number" class="form-control" id="externalCleanQty" name="externalCleanQty"
-                                                                           placeholder="" value="">
+                                                                           placeholder="" value="" min="0">
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -1931,7 +1931,7 @@
                                                                 <div class="input input-group">
                                                                     <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
                                                                     <input type="number" class="form-control" id="externalRecleanQty" name="externalRecleanQty"
-                                                                           placeholder="" value="">
+                                                                           placeholder="" value="" min="0">
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -1941,7 +1941,7 @@
                                                                 <div class="input input-group">
                                                                     <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
                                                                     <input type="number" class="form-control" id="internalCleanQty" name="internalCleanQty"
-                                                                           placeholder="" value="">
+                                                                           placeholder="" value="" min="0">
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -1951,7 +1951,7 @@
                                                                 <div class="input input-group">
                                                                     <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
                                                                     <input type="number" class="form-control" id="internalRecleanQty" name="internalRecleanQty"
-                                                                           placeholder="" value="">
+                                                                           placeholder="" value="" min="0">
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -1961,7 +1961,7 @@
                                                                 <div class="input input-group">
                                                                     <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
                                                                     <input type="number" class="form-control" id="otherQty" name="otherQty"
-                                                                           placeholder="" value="">
+                                                                           placeholder="" value="" min="0">
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -1971,7 +1971,7 @@
                                                                 <div class="input input-group">
                                                                     <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
                                                                     <input type="number" class="form-control" id="vendorQty" name="vendorQty"
-                                                                           placeholder="" value="">
+                                                                           placeholder="" value="" min="0">
                                                                 </div>
                                                             </div>
                                                         </div><div class="visually-hidden col-xl-2 col-sm-12 col-12">
@@ -1980,7 +1980,7 @@
                                                                 <div class="input input-group">
                                                                     <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
                                                                     <input type="number" class="form-control" id="otherOnsemiQty" name="otherOnsemiQty"
-                                                                           placeholder="" value="">
+                                                                           placeholder="" value="" min="0">
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -1990,7 +1990,7 @@
                                                                 <div class="input input-group">
                                                                     <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
                                                                     <input type="number" class="form-control" id="storageFactoryQty" name="storageFactoryQty"
-                                                                           placeholder="" value="">
+                                                                           placeholder="" value="" min="0">
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -2161,7 +2161,7 @@
                                                                 <div class="input input-group">
                                                                     <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
                                                                     <input type="number" class="form-control" id="minQty" name="minQty"
-                                                                           placeholder="" value="" required>
+                                                                           placeholder="" value="" min="0" required>
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -2171,7 +2171,7 @@
                                                                 <div class="input input-group">
                                                                     <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
                                                                     <input type="number" class="form-control" id="maxQty" name="maxQty"
-                                                                           placeholder="" value="" required>
+                                                                           placeholder="" value="" min="0" required>
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -2211,7 +2211,7 @@
                                                                 <div class="input input-group">
                                                                     <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
                                                                     <input type="number" class="form-control" id="onHandQty" name="onHandQty"
-                                                                           placeholder="" value="" required>
+                                                                           placeholder="" value="" min="0" required>
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -2221,7 +2221,7 @@
                                                                 <div class="input input-group">
                                                                     <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
                                                                     <input type="number" class="form-control" id="productionQty" name="productionQty"
-                                                                           placeholder="" value="">
+                                                                           placeholder="" value="" min="0">
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -2231,7 +2231,7 @@
                                                                 <div class="input input-group">
                                                                     <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
                                                                     <input type="number" class="form-control" id="productionStagingQty" name="productionStagingQty"
-                                                                           placeholder="" value="">
+                                                                           placeholder="" value="" min="0">
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -2241,7 +2241,7 @@
                                                                 <div class="input input-group">
                                                                     <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
                                                                     <input type="number" class="form-control" id="repairQty" name="repairQty"
-                                                                           placeholder="" value="">
+                                                                           placeholder="" value="" min="0">
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -2251,7 +2251,7 @@
                                                                 <div class="input input-group">
                                                                     <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
                                                                     <input type="number" class="form-control" id="quarantineQty" name="quarantineQty"
-                                                                           placeholder="" value="">
+                                                                           placeholder="" value="" min="0">
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -2261,7 +2261,7 @@
                                                                 <div class="input input-group">
                                                                     <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
                                                                     <input type="number" class="form-control" id="externalCleanQty" name="externalCleanQty"
-                                                                           placeholder="" value="">
+                                                                           placeholder="" value="" min="0">
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -2271,7 +2271,7 @@
                                                                 <div class="input input-group">
                                                                     <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
                                                                     <input type="number" class="form-control" id="externalRecleanQty" name="externalRecleanQty"
-                                                                           placeholder="" value="">
+                                                                           placeholder="" value="" min="0">
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -2281,7 +2281,7 @@
                                                                 <div class="input input-group">
                                                                     <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
                                                                     <input type="number" class="form-control" id="internalCleanQty" name="internalCleanQty"
-                                                                           placeholder="" value="">
+                                                                           placeholder="" value="" min="0">
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -2291,7 +2291,7 @@
                                                                 <div class="input input-group">
                                                                     <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
                                                                     <input type="number" class="form-control" id="internalRecleanQty" name="internalRecleanQty"
-                                                                           placeholder="" value="">
+                                                                           placeholder="" value="" min="0">
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -2301,7 +2301,7 @@
                                                                 <div class="input input-group">
                                                                     <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
                                                                     <input type="number" class="form-control" id="otherQty" name="otherQty"
-                                                                           placeholder="" value="">
+                                                                           placeholder="" value="" min="0">
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -2311,7 +2311,7 @@
                                                                 <div class="input input-group">
                                                                     <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
                                                                     <input type="number" class="form-control" id="vendorQty" name="vendorQty"
-                                                                           placeholder="" value="">
+                                                                           placeholder="" value="" min="0">
                                                                 </div>
                                                             </div>
                                                         </div><div class="col-xl-2 col-sm-12 col-12">
@@ -2320,7 +2320,7 @@
                                                                 <div class="input input-group">
                                                                     <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
                                                                     <input type="number" class="form-control" id="otherOnsemiQty" name="otherOnsemiQty"
-                                                                           placeholder="" value="">
+                                                                           placeholder="" value="" min="0">
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -2330,7 +2330,7 @@
                                                                 <div class="input input-group">
                                                                     <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
                                                                     <input type="number" class="form-control" id="storageFactoryQty" name="storageFactoryQty"
-                                                                           placeholder="" value="">
+                                                                           placeholder="" value="" min="0">
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -2507,7 +2507,7 @@
                                                                 <div class="input input-group">
                                                                     <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
                                                                     <input type="number" class="form-control" id="minQty" name="minQty"
-                                                                           placeholder="" value="" required>
+                                                                           placeholder="" value="" min="0" required>
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -2517,7 +2517,7 @@
                                                                 <div class="input input-group">
                                                                     <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
                                                                     <input type="number" class="form-control" id="maxQty" name="maxQty"
-                                                                           placeholder="" value="" required>
+                                                                           placeholder="" value="" min="0" required>
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -2557,7 +2557,7 @@
                                                                 <div class="input input-group">
                                                                     <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
                                                                     <input type="number" class="form-control" id="onHandQty" name="onHandQty"
-                                                                           placeholder="" value="" required>
+                                                                           placeholder="" value="" min="0" required>
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -2567,7 +2567,7 @@
                                                                 <div class="input input-group">
                                                                     <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
                                                                     <input type="number" class="form-control" id="productionQty" name="productionQty"
-                                                                           placeholder="" value="">
+                                                                           placeholder="" value="" min="0">
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -2577,7 +2577,7 @@
                                                                 <div class="input input-group">
                                                                     <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
                                                                     <input type="number" class="form-control" id="productionStagingQty" name="productionStagingQty"
-                                                                           placeholder="" value="">
+                                                                           placeholder="" value="" min="0">
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -2587,7 +2587,7 @@
                                                                 <div class="input input-group">
                                                                     <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
                                                                     <input type="number" class="form-control" id="repairQty" name="repairQty"
-                                                                           placeholder="" value="">
+                                                                           placeholder="" value="" min="0">
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -2597,7 +2597,7 @@
                                                                 <div class="input input-group">
                                                                     <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
                                                                     <input type="number" class="form-control" id="quarantineQty" name="quarantineQty"
-                                                                           placeholder="" value="">
+                                                                           placeholder="" value="" min="0">
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -2607,7 +2607,7 @@
                                                                 <div class="input input-group">
                                                                     <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
                                                                     <input type="number" class="form-control" id="externalCleanQty" name="externalCleanQty"
-                                                                           placeholder="" value="">
+                                                                           placeholder="" value="" min="0">
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -2617,7 +2617,7 @@
                                                                 <div class="input input-group">
                                                                     <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
                                                                     <input type="number" class="form-control" id="externalRecleanQty" name="externalRecleanQty"
-                                                                           placeholder="" value="">
+                                                                           placeholder="" value="" min="0">
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -2627,7 +2627,7 @@
                                                                 <div class="input input-group">
                                                                     <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
                                                                     <input type="number" class="form-control" id="internalCleanQty" name="internalCleanQty"
-                                                                           placeholder="" value="">
+                                                                           placeholder="" value="" min="0">
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -2637,7 +2637,7 @@
                                                                 <div class="input input-group">
                                                                     <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
                                                                     <input type="number" class="form-control" id="internalRecleanQty" name="internalRecleanQty"
-                                                                           placeholder="" value="">
+                                                                           placeholder="" value="" min="0">
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -2647,7 +2647,7 @@
                                                                 <div class="input input-group">
                                                                     <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
                                                                     <input type="number" class="form-control" id="otherQty" name="otherQty"
-                                                                           placeholder="" value="">
+                                                                           placeholder="" value="" min="0">
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -2657,7 +2657,7 @@
                                                                 <div class="input input-group">
                                                                     <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
                                                                     <input type="number" class="form-control" id="vendorQty" name="vendorQty"
-                                                                           placeholder="" value="">
+                                                                           placeholder="" value="" min="0">
                                                                 </div>
                                                             </div>
                                                         </div><div class="visually-hidden col-xl-2 col-sm-12 col-12">
@@ -2666,7 +2666,7 @@
                                                                 <div class="input input-group">
                                                                     <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
                                                                     <input type="number" class="form-control" id="otherOnsemiQty" name="otherOnsemiQty"
-                                                                           placeholder="" value="">
+                                                                           placeholder="" value="" min="0">
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -2676,7 +2676,7 @@
                                                                 <div class="input input-group">
                                                                     <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
                                                                     <input type="number" class="form-control" id="storageFactoryQty" name="storageFactoryQty"
-                                                                           placeholder="" value="">
+                                                                           placeholder="" value="" min="0">
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -2864,7 +2864,7 @@
                                                                 <div class="input input-group">
                                                                     <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
                                                                     <input type="number" class="form-control" id="minQty" name="minQty"
-                                                                           placeholder="" value="" required>
+                                                                           placeholder="" value="" min="0" required>
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -2874,7 +2874,7 @@
                                                                 <div class="input input-group">
                                                                     <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
                                                                     <input type="number" class="form-control" id="maxQty" name="maxQty"
-                                                                           placeholder="" value="" required>
+                                                                           placeholder="" value="" min="0" required>
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -2914,7 +2914,7 @@
                                                                 <div class="input input-group">
                                                                     <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
                                                                     <input type="number" class="form-control" id="onHandQty" name="onHandQty"
-                                                                           placeholder="" value="" required>
+                                                                           placeholder="" value="" min="0" required>
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -2924,7 +2924,7 @@
                                                                 <div class="input input-group">
                                                                     <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
                                                                     <input type="number" class="form-control" id="productionQty" name="productionQty"
-                                                                           placeholder="" value="">
+                                                                           placeholder="" value="" min="0">
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -2934,7 +2934,7 @@
                                                                 <div class="input input-group">
                                                                     <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
                                                                     <input type="number" class="form-control" id="productionStagingQty" name="productionStagingQty"
-                                                                           placeholder="" value="">
+                                                                           placeholder="" value="" min="0">
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -2944,7 +2944,7 @@
                                                                 <div class="input input-group">
                                                                     <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
                                                                     <input type="number" class="form-control" id="repairQty" name="repairQty"
-                                                                           placeholder="" value="">
+                                                                           placeholder="" value="" min="0">
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -2954,7 +2954,7 @@
                                                                 <div class="input input-group">
                                                                     <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
                                                                     <input type="number" class="form-control" id="quarantineQty" name="quarantineQty"
-                                                                           placeholder="" value="">
+                                                                           placeholder="" value="" min="0">
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -2964,7 +2964,7 @@
                                                                 <div class="input input-group">
                                                                     <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
                                                                     <input type="number" class="form-control" id="externalCleanQty" name="externalCleanQty"
-                                                                           placeholder="" value="">
+                                                                           placeholder="" value="" min="0">
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -2974,7 +2974,7 @@
                                                                 <div class="input input-group">
                                                                     <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
                                                                     <input type="number" class="form-control" id="externalRecleanQty" name="externalRecleanQty"
-                                                                           placeholder="" value="">
+                                                                           placeholder="" value="" min="0">
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -2984,7 +2984,7 @@
                                                                 <div class="input input-group">
                                                                     <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
                                                                     <input type="number" class="form-control" id="internalCleanQty" name="internalCleanQty"
-                                                                           placeholder="" value="">
+                                                                           placeholder="" value="" min="0">
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -2994,7 +2994,7 @@
                                                                 <div class="input input-group">
                                                                     <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
                                                                     <input type="number" class="form-control" id="internalRecleanQty" name="internalRecleanQty"
-                                                                           placeholder="" value="">
+                                                                           placeholder="" value="" min="0">
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -3004,7 +3004,7 @@
                                                                 <div class="input input-group">
                                                                     <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
                                                                     <input type="number" class="form-control" id="otherQty" name="otherQty"
-                                                                           placeholder="" value="">
+                                                                           placeholder="" value="" min="0">
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -3014,7 +3014,7 @@
                                                                 <div class="input input-group">
                                                                     <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
                                                                     <input type="number" class="form-control" id="vendorQty" name="vendorQty"
-                                                                           placeholder="" value="">
+                                                                           placeholder="" value="" min="0">
                                                                 </div>
                                                             </div>
                                                         </div><div class="visually-hidden col-xl-2 col-sm-12 col-12">
@@ -3023,7 +3023,7 @@
                                                                 <div class="input input-group">
                                                                     <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
                                                                     <input type="number" class="form-control" id="otherOnsemiQty" name="otherOnsemiQty"
-                                                                           placeholder="" value="">
+                                                                           placeholder="" value="" min="0">
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -3033,7 +3033,7 @@
                                                                 <div class="input input-group">
                                                                     <!--<span class="input-group-text"><i class="bi bi-briefcase"></i></span>-->
                                                                     <input type="number" class="form-control" id="storageFactoryQty" name="storageFactoryQty"
-                                                                           placeholder="" value="">
+                                                                           placeholder="" value="" min="0">
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -3233,7 +3233,7 @@
                                                                 <label for="minQty" class="form-label">Min. Qty</label>
                                                                 <div class="input input-group">
                                                                     <input type="number" class="form-control" id="minQty" name="minQty"
-                                                                           placeholder="" value="" required>
+                                                                           placeholder="" value="" min="0" required>
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -3242,7 +3242,7 @@
                                                                 <label for="maxQty" class="form-label">Max. Qty</label>
                                                                 <div class="input input-group">
                                                                     <input type="number" class="form-control" id="maxQty" name="maxQty"
-                                                                           placeholder="" value="" required>
+                                                                           placeholder="" value="" min="0" required>
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -3284,7 +3284,7 @@
                                                                 <label for="onHandQty" class="form-label">On Hand Qty</label>
                                                                 <div class="input input-group">
                                                                     <input type="number" class="form-control" id="onHandQty" name="onHandQty"
-                                                                           placeholder="" value="" required>
+                                                                           placeholder="" value="" min="0" required>
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -3293,7 +3293,7 @@
                                                                 <label for="productionQty" class="form-label">Prod. Qty</label>
                                                                 <div class="input input-group">
                                                                     <input type="number" class="form-control" id="productionQty" name="productionQty"
-                                                                           placeholder="" value="">
+                                                                           placeholder="" value="" min="0">
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -3302,7 +3302,7 @@
                                                                 <label for="productionStagingQty" class="form-label">Prod. Staging Qty</label>
                                                                 <div class="input input-group">
                                                                     <input type="number" class="form-control" id="productionStagingQty" name="productionStagingQty"
-                                                                           placeholder="" value="">
+                                                                           placeholder="" value="" min="0">
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -3311,7 +3311,7 @@
                                                                 <label for="repairQty" class="form-label">Repair Qty</label>
                                                                 <div class="input input-group">
                                                                     <input type="number" class="form-control" id="repairQty" name="repairQty"
-                                                                           placeholder="" value="">
+                                                                           placeholder="" value="" min="0">
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -3320,7 +3320,7 @@
                                                                 <label for="quarantineQty" class="form-label">Quarantine Qty</label>
                                                                 <div class="input input-group">
                                                                     <input type="number" class="form-control" id="quarantineQty" name="quarantineQty"
-                                                                           placeholder="" value="">
+                                                                           placeholder="" value="" min="0">
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -3329,7 +3329,7 @@
                                                                 <label for="externalCleanQty" class="form-label">Ext Clean Qty</label>
                                                                 <div class="input input-group">
                                                                     <input type="number" class="form-control" id="externalCleanQty" name="externalCleanQty"
-                                                                           placeholder="" value="">
+                                                                           placeholder="" value="" min="0">
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -3338,7 +3338,7 @@
                                                                 <label for="externalRecleanQty" class="form-label">Ext Re-clean Qty</label>
                                                                 <div class="input input-group">
                                                                     <input type="number" class="form-control" id="externalRecleanQty" name="externalRecleanQty"
-                                                                           placeholder="" value="">
+                                                                           placeholder="" value="" min="0">
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -3347,7 +3347,7 @@
                                                                 <label for="internalCleanQty" class="form-label">Int. Clean Qty</label>
                                                                 <div class="input input-group">
                                                                     <input type="number" class="form-control" id="internalCleanQty" name="internalCleanQty"
-                                                                           placeholder="" value="">
+                                                                           placeholder="" value="" min="0">
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -3356,7 +3356,7 @@
                                                                 <label for="internalRecleanQty" class="form-label">Int. Re-Clean Qty</label>
                                                                 <div class="input input-group">
                                                                     <input type="number" class="form-control" id="internalRecleanQty" name="internalRecleanQty"
-                                                                           placeholder="" value="">
+                                                                           placeholder="" value="" min="0">
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -3365,7 +3365,7 @@
                                                                 <label for="otherQty" class="form-label">Other Qty</label>
                                                                 <div class="input input-group">
                                                                     <input type="number" class="form-control" id="otherQty" name="otherQty"
-                                                                           placeholder="" value="">
+                                                                           placeholder="" value="" min="0">
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -3374,7 +3374,7 @@
                                                                 <label for="vendorQty" class="form-label">Vendor Qty</label>
                                                                 <div class="input input-group">
                                                                     <input type="number" class="form-control" id="vendorQty" name="vendorQty"
-                                                                           placeholder="" value="">
+                                                                           placeholder="" value="" min="0">
                                                                 </div>
                                                             </div>
                                                         </div><div class="col-xl-2 col-sm-12 col-12">
@@ -3382,7 +3382,7 @@
                                                                 <label for="otherOnsemiQty" class="form-label">Other onsemi Qty</label>
                                                                 <div class="input input-group">
                                                                     <input type="number" class="form-control" id="otherOnsemiQty" name="otherOnsemiQty"
-                                                                           placeholder="" value="">
+                                                                           placeholder="" value="" min="0">
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -3391,7 +3391,7 @@
                                                                 <label for="storageFactoryQty" class="form-label">Storage Factory Qty</label>
                                                                 <div class="input input-group">
                                                                     <input type="number" class="form-control" id="storageFactoryQty" name="storageFactoryQty"
-                                                                           placeholder="" value="">
+                                                                           placeholder="" value="" min="0">
                                                                 </div>
                                                             </div>
                                                         </div>
