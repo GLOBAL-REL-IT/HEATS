@@ -654,9 +654,13 @@ public class RmsBookingDetailController {
             if (count == 0) { //add new record
                 rmsHD = new RmsBookingHardwareDAO();
                 QueryResult q = rmsHD.insertRmsBookingHardware(rmsH);
-            } else if (count == 1) { //update existing hardware
+            } else if (count == 1) {
                 rmsHD = new RmsBookingHardwareDAO();
-                QueryResult q = rmsHD.updateRmsBookingHardwareByPkidAndBookingPkid(rmsH);
+                int countFlagZero = rmsHD.getCountBookingIdFlagZero(Integer.toString(getItemByParamV.getJSONObject(i).getInt("booking_pkid")), Integer.toString(getItemByParamV.getJSONObject(i).getInt("pkid")));
+                if (countFlagZero == 1) { //only update existing hardware with flag zero  4.6.2026
+                    rmsHD = new RmsBookingHardwareDAO();
+                    QueryResult q = rmsHD.updateRmsBookingHardwareByPkidAndBookingPkid(rmsH);
+                }
             }
 
 //            System.out.println(getItemByParamV.getJSONObject(i));
@@ -1225,7 +1229,7 @@ public class RmsBookingDetailController {
                     model.addAttribute("configMotherboard", "TRIGGERERROR");
                     model.addAttribute("itemIdMB", itemIdMB);
                     model.addAttribute("itemIdLC", itemIdLC);
-                    model.addAttribute("message", "<button type=\"submit\" class=\"email-btn\" infoGroupId=\""+itemIdMB+"\\"+groupId+"\" onclick=\"sendMailMb(this)\" data-bs-toggle=\"modal\" data-bs-target=\"#confirmation_modal\" >Send Email</button>&emsp;MB Configuration Error [" + itemIdMB + "]" + "<br/>The BIB Activity Config for " + boardName + " was not found!");
+                    model.addAttribute("message", "<button type=\"submit\" class=\"email-btn\" infoGroupId=\"" + itemIdMB + "\\" + groupId + "\" onclick=\"sendMailMb(this)\" data-bs-toggle=\"modal\" data-bs-target=\"#confirmation_modal\" >Send Email</button>&emsp;MB Configuration Error [" + itemIdMB + "]" + "<br/>The BIB Activity Config for " + boardName + " was not found!");
                 }
 
                 if (checkLc == 0) {
@@ -1245,7 +1249,7 @@ public class RmsBookingDetailController {
                         daqTest = itemactlc.getBibDaqTest();
                         manTest = itemactlc.getManualTest();
                     } else {
-                        model.addAttribute("message", "<button type=\"submit\" class=\"email-btn\" infoGroupId=\""+itemIdLC+"\\"+groupId+"\" onclick=\"sendMailLc(this)\" data-bs-toggle=\"modal\" data-bs-target=\"#confirmation_modal\" >Send Email</button>&emsp;LC Configuration Error [" + itemIdLC + "]" + " <br/>The BIB Activity Config for " + loadcardName + " was not found!");
+                        model.addAttribute("message", "<button type=\"submit\" class=\"email-btn\" infoGroupId=\"" + itemIdLC + "\\" + groupId + "\" onclick=\"sendMailLc(this)\" data-bs-toggle=\"modal\" data-bs-target=\"#confirmation_modal\" >Send Email</button>&emsp;LC Configuration Error [" + itemIdLC + "]" + " <br/>The BIB Activity Config for " + loadcardName + " was not found!");
                     }
                 }
                 model.addAttribute("itemIdMB", itemIdMB);
@@ -3270,7 +3274,7 @@ public class RmsBookingDetailController {
         }
         return target_location;
     }
-    
+
     @RequestMapping(value = "/updateStatusFailed/{groupid}", method = RequestMethod.GET)
     public String updateStatusFailed(
             Model model,
@@ -3280,42 +3284,41 @@ public class RmsBookingDetailController {
         String username = userSession.getFullname();
         String manual = "Manual";
         String status = "Failed Functional Test - Manual Test - Waiting Maverick CA";
-        
+
         RmsBookingHardwareDAO rmsdao = new RmsBookingHardwareDAO();
         String lcItemId = rmsdao.getLcMibItemIdFromGroupId(groupid);
         rmsdao = new RmsBookingHardwareDAO();
         String mbItemId = rmsdao.getMbMibItemIdFromGroupId(groupid);
-        
+
         // UPDATE DATA rms_booking_hardware - START
         RmsBookingHardware rmsbook = new RmsBookingHardware();
         String[] parts = groupid.split("/");
-        String bookId = parts[0]; 
+        String bookId = parts[0];
         String pkid = parts[1];
-        
+
         rmsbook.setBookingPkid(bookId);
         rmsbook.setSubStatus(status);
         rmsbook.setPkid(pkid);
         rmsdao = new RmsBookingHardwareDAO();
         rmsdao.updateRmsBookingHardwareSubStatusByPkidAndBookingPkid(rmsbook);
         // UPDATE DATA rms_booking_hardware - END
-        
+
         // UPDATE DATA rms_functional_test - START
         ManualTestDAO testdao = new ManualTestDAO();
         Integer qty = testdao.getQuantityBeforeLoading(lcItemId);
-        
+
         RmsBookingFunctionalTest rmsfun = new RmsBookingFunctionalTest();
         rmsfun.setManualQty(String.valueOf(qty));
         rmsfun.setManualStatus("Fail");
         rmsfun.setRemark("");
         rmsfun.setFinalStatus(status);
         rmsfun.setFlag("0");
-        
+
         RmsBookingFunctionalTestDAO rmsfuncdao = new RmsBookingFunctionalTestDAO();
         rmsfuncdao.updateManualTest(rmsfun);
         // UPDATE DATA rms_functional_test - END
-        
+
         // PLEASE CHECK IF THERE IS ANYTHING LEFT NOT UPDATED HERE
-        
         // UPDATE MAVERICK INFORMATION FOR MANUAL TEST FAILED
         updateMaverickAndEmail(mbItemId, username, manual);
         return "redirect:/groupDetail/" + groupid;
@@ -3338,7 +3341,7 @@ public class RmsBookingDetailController {
         }
         return item;
     }
-    
+
     public void updateMaverickAndEmail(String mibItemId, String username, String jenis) {
 
         String module = "Hardware Registration";
@@ -4526,7 +4529,7 @@ public class RmsBookingDetailController {
 //        path = "redirect:/rmsbookingDetail/groupDetail/"+groupId;
         return path;
     }
-    
+
     @RequestMapping(value = "/sendEmail/{jenis}/{itemId}/{bookId}/{pkid}", method = {RequestMethod.GET, RequestMethod.POST})
     public String sendEmailConfig(Model model,
             HttpServletRequest request,
@@ -4537,36 +4540,36 @@ public class RmsBookingDetailController {
             @PathVariable("bookId") String bookId,
             @PathVariable("pkid") String pkid,
             @RequestParam(required = false) String recallRemarks) throws IOException {
-        
+
         String path = "redirect:/rmsbookingDetail/groupDetail/" + bookId + "/" + pkid;
         String tajukEmail = "";
         String emailBody = "";
-        
+
         EmailVmFailDAO userDao = new EmailVmFailDAO();
         List<EmailVmFail> emailList = null;
         switch (jenis) {
-            case "MB": 
+            case "MB":
                 tajukEmail = "Item Activity Config Missing (Motherboard)";
                 emailList = userDao.getEmailMotherboardTechnicianMb();
                 break;
-            case "LC": 
+            case "LC":
                 tajukEmail = "Item Activity Config Missing (Load Card)";
                 emailList = userDao.getEmailMotherboardTechnicianLc();
                 break;
             default:
                 break;
         }
-        
+
         String[] to = new String[emailList.size()];
         for (int i = 0; i < emailList.size(); i++) {
             to[i] = emailList.get(i).getEmail();
         }
-        
+
         Item item = new Item();
         ItemDAO itemdao = new ItemDAO();
         String itemName = itemdao.getItemIdById(itemId);
         emailBody = itemName + " [" + itemId + "]";
-        
+
         HostnameDAO hostnameD = new HostnameDAO();
         Hostname h = hostnameD.getHostnameFlagZero();
         String hostname = h.getHostname();
@@ -4584,13 +4587,13 @@ public class RmsBookingDetailController {
                 + "Detail: " + emailBody
                 + "<br /> "
                 + "<br /> "
-//                + "Please click <a href=\"http://" + hostname + "/HEATS/rmsbookingDetail/groupDetail/" + bookId + "/" + pkid + " \">HERE</a> for more detail."
+                //                + "Please click <a href=\"http://" + hostname + "/HEATS/rmsbookingDetail/groupDetail/" + bookId + "/" + pkid + " \">HERE</a> for more detail."
                 + "Please click <a href=\"http://" + hostname + "/HEATS/hw/item/addActivity/" + itemId + " \">HERE</a> for more detail."
                 + "<br /> "
                 + "<br />Thank you."
         );
         redirectAttrs.addFlashAttribute("success", "Email notification successfully sent!");
-        
+
         return path;
     }
 
@@ -4721,5 +4724,5 @@ public class RmsBookingDetailController {
             // BOLE UPDATE NANTI
         }
     }
-    
+
 }

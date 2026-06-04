@@ -108,6 +108,7 @@ public class RmsBookingDetailUnloadingController {
     ServletContext servletContext;
 
     private static final String UPLOADED_FOLDER = "\\\\mysed-rel-app05\\f$\\HEATS\\VI-Attachment\\After_Loading\\"; //server
+    private static final String UPLOADED_FOLDER_IONIC = "\\\\mysed-rel-app05\\f$\\HEATS\\Ionic-Attachment\\"; //server
     private static final String FOLDER_TEST_AL = "\\\\mysed-rel-app05\\f$\\HEATS\\FTAL\\"; //server
     private static final String FOLDER_TEST_BL = "\\\\mysed-rel-app05\\f$\\HEATS\\FTBL\\"; //server
 
@@ -137,49 +138,53 @@ public class RmsBookingDetailUnloadingController {
         return "rmsbookingDetailUnloading/rmsbookingDetailUnloading";
     }
 
-    @RequestMapping(value = "/priorityDetail", method = {RequestMethod.GET, RequestMethod.POST})
+    @RequestMapping(value = "/rmsDetailForHwReturn", method = {RequestMethod.GET, RequestMethod.POST})
     @ResponseBody
-    public RmsBookingDetail getPriorityDetail(
+    public RmsBookingDetail rmsDetailForHwReturn(
             @ModelAttribute UserSession userSession,
             Model model,
             HttpServletRequest request,
-            @RequestParam(required = false) String id
+            @RequestParam(required = false) String groupId
     ) throws IOException {
 
 //        LOGGER.info("id: " + id);
         RmsBookingDetailDAO rmsd = new RmsBookingDetailDAO();
-        RmsBookingDetail rms = rmsd.getRmsBookingDetail(id);
+        RmsBookingDetail rms = rmsd.getRmsBookingDetailWithHwGroupAfterLoadingByGroupId(groupId);
 
         return rms;
     }
 
-    @RequestMapping(value = "/savePriority", method = {RequestMethod.GET, RequestMethod.POST})
+    @RequestMapping(value = "/updateReturn", method = {RequestMethod.GET, RequestMethod.POST})
     public String itemSave(
             Model model,
             Locale locale,
             RedirectAttributes redirectAttrs,
             @ModelAttribute UserSession userSession,
-            @RequestParam(required = false) String id,
-            @RequestParam(required = false) String priority,
-            @RequestParam(required = false) String remarks
+            @RequestParam(required = false) String groupId,
+            @RequestParam(required = false) String bookingHwGroupId,
+            @RequestParam(required = false) String itemId
     ) throws IOException {
 
-        RmsBookingDetailDAO rmsD = new RmsBookingDetailDAO();
-        RmsBookingDetail rms1 = rmsD.getRmsBookingDetail(id);
-
-        RmsBookingDetail rms = new RmsBookingDetail();
-        rms.setId(id);
-        rms.setPriority(priority);
-        rms.setPriorityRemarks(remarks);
-        rms.setPriorityBy(userSession.getFullname());
-        rmsD = new RmsBookingDetailDAO();
-        QueryResult q = rmsD.updateRmsBookingDetailForPriority(rms);
+        RmsBookingHardwareGroup rms = new RmsBookingHardwareGroup();
+        rms.setId(bookingHwGroupId);
+        rms.setReturnBy(userSession.getFullname());
+        RmsBookingHardwareGroupDAO rmsD = new RmsBookingHardwareGroupDAO();
+        QueryResult q = rmsD.updateRmsBookingHardwareGroupReturnByAndReturnDate(rms);
         if (q.getResult() > 0) {
-            redirectAttrs.addFlashAttribute("success", "Succesfully add priority for " + rms1.getRmsNo() + "_" + rms1.getEvent());
+
+            //add log
+            RmsBookingHardwareGroupLog log = new RmsBookingHardwareGroupLog();
+            log.setGroupId(groupId);
+            log.setDetail("Return to MB Room / Ionic Area");
+            log.setCreatedBy(userSession.getFullname());
+            RmsBookingHardwareGroupLogDAO logD = new RmsBookingHardwareGroupLogDAO();
+            QueryResult logQ = logD.insertRmsBookingHardwareGroupLog(log);
+
+            redirectAttrs.addFlashAttribute("success", "Pls Return the HW to MB Room / Ionic Area");
         } else {
-            redirectAttrs.addFlashAttribute("error", "Failed to add priority for " + rms1.getRmsNo() + "_" + rms1.getEvent() + ". Pls contact system admin.");
+            redirectAttrs.addFlashAttribute("error", "Failed to update. Pls contact system admin.");
         }
-        return "redirect:/rmsbookingDetail";
+        return "redirect:/rmsbookingDetailUnloading";
     }
 
     @RequestMapping(value = "/cancelPriority/{id}", method = {RequestMethod.GET, RequestMethod.POST})

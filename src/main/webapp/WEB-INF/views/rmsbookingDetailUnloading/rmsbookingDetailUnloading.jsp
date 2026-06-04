@@ -79,9 +79,9 @@
         <div class="content-wrapper">
             <div class="row gx-4">
                 <nav class="navbar bg-body-tertiary">
-<!--                    <div class="container-fluid justify-content-start">
-                        <a href="${contextPath}/rmsbookingDetail/rmsReleased" class="btn btn-success me-2" role="button"><i class='bi bi-arrow-bar-right'></i>&nbsp;&nbsp;RMS Released to Production</a>
-                    </div>-->
+                    <!--                    <div class="container-fluid justify-content-start">
+                                            <a href="${contextPath}/rmsbookingDetail/rmsReleased" class="btn btn-success me-2" role="button"><i class='bi bi-arrow-bar-right'></i>&nbsp;&nbsp;RMS Released to Production</a>
+                                        </div>-->
                 </nav>
                 <div class="col-sm-12 col-12">
                     <div class="card mb-4">
@@ -112,30 +112,37 @@
                                             <c:forEach items="${booking}" var="parameterMaster" varStatus="parameterMasterLoop">
                                                 <tr>
                                                     <td><c:out value="${parameterMasterLoop.index+1}"/></td>
-                                                    <td id="modal_delete_info_${parameterMaster.id}"><c:out value="${parameterMaster.rmsNo}"/></td>
-                                                    <td><c:out value="${parameterMaster.event}"/></td>
-                                                    <td><c:out value="${parameterMaster.hardwareId}"/></td>
-                                                    <td><c:out value="${parameterMaster.lcQty}"/></td>
-                                                    <td><c:out value="${parameterMaster.pcQty}"/></td>
-                                                    <td><c:out value="${parameterMaster.unloadingDate}"/></td>
-                                                    <td><c:out value="${parameterMaster.hardwareReturnBy}"/></td>
-                                                    <td><c:out value="${parameterMaster.hardwareReturnDate}"/></td>
-                                                    <td><c:out value="${parameterMaster.hardwareGroupStatus}"/></td>
+                                                <td id="modal_delete_info_${parameterMaster.id}"><c:out value="${parameterMaster.rmsNo}"/></td>
+                                                <td><c:out value="${parameterMaster.event}"/></td>
+                                                <td><c:out value="${parameterMaster.hardwareId}"/></td>
+                                                <td><c:out value="${parameterMaster.lcQty}"/></td>
+                                                <td><c:out value="${parameterMaster.pcQty}"/></td>
+                                                <td><c:out value="${parameterMaster.unloadingDate}"/></td>
+                                                <td><c:out value="${parameterMaster.hardwareReturnBy}"/></td>
+                                                <td><c:out value="${parameterMaster.hardwareReturnDate}"/></td>
+                                                <td><c:out value="${parameterMaster.hardwareGroupStatus}"/></td>
                                                 <td align="center">
-                                                    <a modaldeleteid="${parameterMaster.id}" type="button" data-bs-toggle="offcanvas" title="Set Priority"
-                                                       data-bs-target="#staticBackdrop" aria-controls="staticBackdrop" onclick="getData(this);">
-                                                        <i class="bi bi-list-ol h3"></i>
-                                                    </a>
-                                                <c:if test="${parameterMaster.totalBooking == '1'}">
-                                                    <a href="${contextPath}/rmsbookingDetail/detail/${parameterMaster.id}" class="table-link" title="Manage">
-                                                        <i class="bi bi-box-arrow-in-right h3"></i>
-                                                    </a>
-                                                </c:if>
-                                                <c:if test="${parameterMaster.totalBooking == '0'}">
-                                                    <a modaldeleteid="${parameterMaster.id}" modalRms="${parameterMaster.rmsNo}" modalEvent="${parameterMaster.event}" type="button" title="No CBMS Booking" data-bs-toggle="modal" data-bs-target="#email_modal" class="table-link" onclick="sendEmail(this);">
-                                                        <i class="bi bi-exclamation-octagon h3" style="color: red;"></i>
-                                                    </a>
-                                                </c:if>
+                                                <c:set var="name" value="${parameterMaster.hardwareReturnDate}"/>
+                                                <c:choose>
+                                                    <c:when test="${empty name}">
+                                                        <a modaldeleteid="${parameterMaster.groupId}" type="button" data-bs-toggle="offcanvas" title="Return HW to MB Room/Ionic Area"
+                                                           data-bs-target="#staticBackdrop" aria-controls="staticBackdrop" onclick="getData(this);">
+                                                            <i class="bi bi-box-arrow-in-down-left h3"></i>
+                                                        </a>
+                                                        <a class="table-link" title="Manage" >
+                                                            <i class="bi bi-box-arrow-in-right h3" style="color: lightgrey;"></i>
+                                                        </a>
+                                                    </c:when>
+                                                    <c:otherwise>
+                                                        <a modaldeleteid="${parameterMaster.groupId}" title="Return HW to MB Room/Ionic Area">
+                                                            <i class="bi bi-box-arrow-in-down-left h3" style="color: lightgrey;"></i>
+                                                        </a>
+                                                        <a href="${contextPath}/rmsbookingDetailUnloading/groupDetail/${parameterMaster.bookingPkid}/${parameterMaster.bookingHwPkid}" class="table-link" title="Manage">
+                                                            <i class="bi bi-box-arrow-in-right h3"></i>
+                                                        </a>
+                                                    </c:otherwise>
+                                                </c:choose>
+
                                                 </td>
                                                 </tr>
                                             </c:forEach>
@@ -159,19 +166,20 @@
             <div class="offcanvas offcanvas-start" data-bs-backdrop="static" tabindex="-1" id="staticBackdrop"
                  aria-labelledby="staticBackdropLabel">
                 <div class="offcanvas-header">
-                    <h5 class="offcanvas-title" id="staticBackdropLabel">Set Priority</h5>
+                    <h5 class="offcanvas-title" id="staticBackdropLabel">Return HW to MB Room/Ionic Area</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
                 </div>
                 <div class="offcanvas-body">
                     <div>
-                        <form class="row g-3 align-items-center" role="form" action="${contextPath}/rmsbookingDetail/savePriority" method="post">
+                        <form id="add_group_form" class="row g-3 align-items-center" role="form" action="${contextPath}/rmsbookingDetailUnloading/updateReturn" method="post">
                             <div class="row mb-3">
                                 <div class="col-xl-12 col-sm-12 col-12">
                                     <div class="mb-1">
                                         <label for="itemId" class="form-label">RMS</label>
                                         <div class="input input-group">
                                             <input type="text" class="form-control" id="rmsNo" name="rmsNo" placeholder="" value="" disabled>
-                                            <input type="hidden" class="form-control" id="id" name="id" placeholder="" value="">
+                                            <input type="hidden" class="form-control" id="groupId" name="groupId" placeholder="" value="">
+                                            <input type="hidden" class="form-control" id="bookingHwGroupId" name="bookingHwGroupId" placeholder="" value="">
                                         </div>
                                     </div>
                                 </div>
@@ -179,7 +187,7 @@
                             <div class="row mb-3">
                                 <div class="col-xl-12 col-sm-12 col-12">
                                     <div class="mb-1">
-                                        <label for="itemId" class="form-label">Event</label>
+                                        <label for="event" class="form-label">Event</label>
                                         <div class="input input-group">
                                             <input type="text" class="form-control" id="event" name="event" placeholder="" value="" disabled>
                                         </div>
@@ -187,11 +195,19 @@
                                 </div>
                             </div>
                             <div class="row mb-3">
-                                <div class="col-xl-12 col-sm-12 col-12">
+                                <div class="col-xl-6 col-sm-6 col-6">
                                     <div class="mb-1">
-                                        <label for="itemId" class="form-label">Priority</label>
+                                        <label for="lcQty" class="form-label">Load Card Qty</label>
                                         <div class="input input-group">
-                                            <input type="text" class="form-control" id="priorityRead" name="priorityRead" placeholder="" value="" disabled>
+                                            <input type="text" class="form-control" id="lcQty" name="lcQty" placeholder="" value="" disabled>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-xl-6 col-sm-6 col-6">
+                                    <div class="mb-1">
+                                        <label for="pcQty" class="form-label">Program Card Qty</label>
+                                        <div class="input input-group">
+                                            <input type="text" class="form-control" id="pcQty" name="pcQty" placeholder="" value="" disabled>
                                         </div>
                                     </div>
                                 </div>
@@ -199,32 +215,18 @@
                             <div class="row mb-3">
                                 <div class="col-xl-12 col-sm-12 col-12">
                                     <div class="mb-1">
-                                        <label for="model" class="form-label">Priority</label>
+                                        <label for="itemId" class="form-label">Scan BIB ID</label>
                                         <div class="input input-group">
-                                            <select class="input input-group" id="priority" name="priority" style="width: 100%">
-                                                <!--<option></option>-->
-                                                <c:forEach items="${priorityList}" var="invInner">
-                                                    <option value="${invInner.name}" ${invInner.selected}>${invInner.name}</option>
-                                                </c:forEach>
-                                            </select>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="row mb-3">
-                                <div class="col-xl-12 col-sm-12 col-12">
-                                    <div class="mb-1">
-                                        <label for="itemId" class="form-label">Remarks</label>
-                                        <div class="input input-group">
-                                            <textarea class="form-control" rows="5" id="remarks" name="remarks"></textarea>
+                                            <input type="text" class="form-control" id="itemId" name="itemId" placeholder="" value="">
+                                            <input type="hidden" class="form-control" id="hardwareId" name="hardwareId" placeholder="" value="">
                                         </div>
                                     </div>
                                 </div>
                             </div>
                             <div class="col-md-12">
-                                <a title="Delete Priority" data-bs-toggle="modal" data-bs-target="#delete_modal" class="table-link danger group_delete" onclick="modalDeletePriority();">
-                                    <i class="bi bi-trash h3" style="color:red"></i>
-                                </a>
+                                <!--                                <a title="Delete Priority" data-bs-toggle="modal" data-bs-target="#delete_modal" class="table-link danger group_delete" onclick="modalDeletePriority();">
+                                                                    <i class="bi bi-trash h3" style="color:red"></i>
+                                                                </a>-->
                                 <button type="submit" id="submit" id="submit" class="btn btn-primary float-end">Save</button>
                             </div>
                         </form>
@@ -256,70 +258,60 @@
         <!-- Bootstrap Select JS -->
         <script src="${contextPath}/resources/statflow/vendor/bs-select/bs-select.min.js"></script>
         <script src="${contextPath}/resources/statflow/vendor/bs-select/bs-select-custom.js"></script>
+        <script src="${contextPath}/resources/validation/jquery.validate.min.js"></script>
     </s:layout-component>
     <s:layout-component name="page_js_inline">
         <script>
-                                    function getData(e) {
-                                        var id = $(e).attr("modaldeleteid");
-                                        $.ajax({
-                                            url: '${contextPath}/rmsbookingDetail/priorityDetail', // Replace with your controller URL
-                                            type: 'GET',
-                                            data: {id: id},
-                                            dataType: 'json',
-                                            success: function (data) {
-                                                // Populate form fields with received data
-                                                $("#rmsNo").val(data.rmsNo);
-                                                $("#id").val(data.id);
-                                                $("#event").val(data.event);
-                                                $("#remarks").val(data.priorityRemarks);
-                                                if (data.priority !== "999") {
-                                                    $("#priorityRead").val(data.priority);
-                                                } else {
-                                                    $("#priorityRead").val("");
-                                                }
-                                                $('#priority').val(data.priority).trigger('change');
-                                            },
-                                            error: function (jqXHR, textStatus, errorThrown) {
-                                                console.error("Error loading data: " + textStatus, errorThrown);
-                                            }
-                                        });
-                                    }
 
-                                    function sendEmail(e) {
-                                        var modaldeleteid = $(e).attr("modaldeleteid");
-                                        var modalRms = $(e).attr("modalRms");
-                                        var modalEvent = $(e).attr("modalEvent");
-                                        var deleteUrl = "${contextPath}/rmsbookingDetail/sendEmailBooking/" + modaldeleteid;
-                                        var deleteMsg = modalRms + "_" + modalEvent + " does not have an associated booking in CBMS. Please contact the Capacity Planner to complete the booking in CBMS before proceeding.";
-                                        $("#email_modal .modal-body").html(deleteMsg);
-                                        $("#modal_email_button").attr("href", deleteUrl);
-                                    }
+                                                               $(document).ready(function () {
+                                                                   var validator = $("#add_group_form").validate({
+                                                                       rules: {
+                                                                           itemId: {
+                                                                               required: true,
+                                                                               equalTo: "#hardwareId"
+                                                                           }
+                                                                       }
+                                                                   });
+                                                               });
 
-                                    function modalDeletePriority() {
-                                        var id = $('#id');
-                                        var priorityRead = $('#priorityRead');
-                                        var deleteUrl = "${contextPath}/rmsbookingDetail/cancelPriority/" + id.val();
-                                        var deleteMsg = "Are you sure want to remove priority for this RMS_Event?";
-                                        $("#delete_modal .modal-body").html(deleteMsg);
-                                        $("#modal_delete_button").attr("href", deleteUrl);
-                                    }
+                                                               function getData(e) {
+                                                                   var groupId = $(e).attr("modaldeleteid");
+                                                                   $.ajax({
+                                                                       url: '${contextPath}/rmsbookingDetailUnloading/rmsDetailForHwReturn', // Replace with your controller URL
+                                                                       type: 'GET',
+                                                                       data: {groupId: groupId},
+                                                                       dataType: 'json',
+                                                                       success: function (data) {
+                                                                           // Populate form fields with received data
+                                                                           $("#rmsNo").val(data.rmsNo);
+                                                                           $("#bookingHwGroupId").val(data.bookingHwGroupId);
+                                                                           $("#groupId").val(data.groupId);
+                                                                           $("#event").val(data.event);
+                                                                           $("#lcQty").val(data.lcQty);
+                                                                           $("#pcQty").val(data.pcQty);
+                                                                           $("#hardwareId").val(data.hardwareId);
+                                                                       },
+                                                                       error: function (jqXHR, textStatus, errorThrown) {
+                                                                           console.error("Error loading data: " + textStatus, errorThrown);
+                                                                       }
+                                                                   });
+                                                               }
 
-                                    $(function () {
-                                        $("#customButtons1").DataTable({
-                                            lengthMenu: [
-                                                [10, 25, 50],
-                                                [10, 25, 50, "All"],
-                                            ],
-                                            language: {
-                                                lengthMenu: "Display _MENU_ Records Per Page",
-//                        info: "Showing Page _PAGE_ of _PAGES_",
-                                                info: "Showing _START_ to _END_ of _TOTAL_ total records",
-                                            },
+                                                               $(function () {
+                                                                   $("#customButtons1").DataTable({
+                                                                       lengthMenu: [
+                                                                           [10, 25, 50],
+                                                                           [10, 25, 50, "All"],
+                                                                       ],
+                                                                       language: {
+                                                                           lengthMenu: "Display _MENU_ Records Per Page",
+                                                                           info: "Showing _START_ to _END_ of _TOTAL_ total records",
+                                                                       },
 //                    dom: "Blfrtip",
-                                            dom: '<"top"Blfi>rt<"bottom"p><"clear">',
-                                            buttons: ["copy", "csv", "pdf", "print"],
-                                        });
-                                    });
+                                                                       dom: '<"top"Blfi>rt<"bottom"p><"clear">',
+                                                                       buttons: ["copy", "csv", "pdf", "print"],
+                                                                   });
+                                                               });
         </script>
     </s:layout-component>
 </s:layout-render>

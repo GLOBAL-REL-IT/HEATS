@@ -156,6 +156,31 @@ public class RmsBookingHardwareGroupDAO {
         return queryResult;
     }
 
+    public QueryResult updateRmsBookingHardwareGroupReturnByAndReturnDate(RmsBookingHardwareGroup rmsbookingHardwareGroup) {
+        QueryResult queryResult = new QueryResult();
+        try {
+            PreparedStatement ps = conn.prepareStatement(
+                    "UPDATE rms_booking_hardware_group SET return_by = ?, return_date = NOW() WHERE id = ?"
+            );
+            ps.setString(1, rmsbookingHardwareGroup.getReturnBy());
+            ps.setString(2, rmsbookingHardwareGroup.getId());
+            queryResult.setResult(ps.executeUpdate());
+            ps.close();
+        } catch (SQLException e) {
+            queryResult.setErrorMessage(e.getMessage());
+            LOGGER.error(e.getMessage());
+        } finally {
+            if (conn != null) {
+                try {
+                    conn.close();
+                } catch (SQLException e) {
+                    LOGGER.error(e.getMessage());
+                }
+            }
+        }
+        return queryResult;
+    }
+
     public QueryResult deleteRmsBookingHardwareGroup(String rmsbookingHardwareGroupId) {
         QueryResult queryResult = new QueryResult();
         try {

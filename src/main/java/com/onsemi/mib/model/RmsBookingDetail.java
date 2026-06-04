@@ -36,11 +36,20 @@ public class RmsBookingDetail {
     private String hardwareGroupStatus;
     private String unloadingDate;
     private String groupId;
+    private String BookingHwPkid;
     private String bookingHwGroupId;
     private String hardwareReturnBy;
     private String hardwareReturnDate;
     private String lcQty;
     private String pcQty;
+
+    public String getBookingHwPkid() {
+        return BookingHwPkid;
+    }
+
+    public void setBookingHwPkid(String BookingHwPkid) {
+        this.BookingHwPkid = BookingHwPkid;
+    }
 
     public String getHardwareId() {
         return hardwareId;

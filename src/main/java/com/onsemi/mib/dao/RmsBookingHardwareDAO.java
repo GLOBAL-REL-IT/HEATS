@@ -883,6 +883,32 @@ public class RmsBookingHardwareDAO {
         return count;
     }
 
+    public Integer getCountBookingIdFlagZero(String bookingId, String pkid) {
+        Integer count = null;
+        try {
+            PreparedStatement ps = conn.prepareStatement(
+                    "SELECT COUNT(*) AS count FROM rms_booking_hardware inc WHERE inc.booking_pkid = '" + bookingId + "' AND inc.pkid = '" + pkid + "' AND inc.flag = '0'"
+            );
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                count = rs.getInt("count");
+            }
+            rs.close();
+            ps.close();
+        } catch (SQLException e) {
+            LOGGER.error(e.getMessage());
+        } finally {
+            if (conn != null) {
+                try {
+                    conn.close();
+                } catch (SQLException e) {
+                    LOGGER.error(e.getMessage());
+                }
+            }
+        }
+        return count;
+    }
+
     public Integer getCountHwWithRemarksByBookingPkid(String bookingPkid) {
         Integer count = null;
         try {
@@ -1141,13 +1167,13 @@ public class RmsBookingHardwareDAO {
         }
         return queryResult;
     }
-    
+
     public String getMbMibItemIdFromGroupId(String groupId) {
         String data = "";
-        String sql = "SELECT it.id AS item_id FROM rms_booking_hardware_group rms " +
-                        "INNER JOIN item it ON it.spts_pkid = rms.item_pkid " +
-                        "INNER JOIN item_activity_config ac ON ac.mib_item_id = it.id " +
-                        "WHERE rms.item_type = 'BIB' AND rms.group_id = '"+groupId+"' ";
+        String sql = "SELECT it.id AS item_id FROM rms_booking_hardware_group rms "
+                + "INNER JOIN item it ON it.spts_pkid = rms.item_pkid "
+                + "INNER JOIN item_activity_config ac ON ac.mib_item_id = it.id "
+                + "WHERE rms.item_type = 'BIB' AND rms.group_id = '" + groupId + "' ";
         try {
             PreparedStatement ps = conn.prepareStatement(sql);
             ResultSet rs = ps.executeQuery();
@@ -1169,13 +1195,13 @@ public class RmsBookingHardwareDAO {
         }
         return data;
     }
-    
+
     public String getLcMibItemIdFromGroupId(String groupId) {
         String data = "";
-        String sql = "SELECT it.id AS item_id FROM rms_booking_hardware_group rms " +
-                        "INNER JOIN item it ON it.spts_pkid = rms.item_pkid " +
-                        "INNER JOIN item_activity_config ac ON ac.mib_item_id = it.id " +
-                        "WHERE rms.item_type = 'BIB Card' AND rms.group_id = '"+groupId+"' GROUP BY item_id ";
+        String sql = "SELECT it.id AS item_id FROM rms_booking_hardware_group rms "
+                + "INNER JOIN item it ON it.spts_pkid = rms.item_pkid "
+                + "INNER JOIN item_activity_config ac ON ac.mib_item_id = it.id "
+                + "WHERE rms.item_type = 'BIB Card' AND rms.group_id = '" + groupId + "' GROUP BY item_id ";
         try {
             PreparedStatement ps = conn.prepareStatement(sql);
             ResultSet rs = ps.executeQuery();

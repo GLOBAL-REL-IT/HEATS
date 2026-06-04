@@ -924,7 +924,7 @@ public class RmsBookingDetailDAO {
     }
 
     public List<RmsBookingDetail> getRmsBookingDetailListWithHwGroupAfterLoading() {
-        String sql = "SELECT de.id, de.booking_pkid, de.rms_no, de.`event`, de.device, de.packages, gr.hardware_id, gr.`status`, DATE_FORMAT(gr.unloading_date,'%d-%M-%Y') AS unloadingDate, "
+        String sql = "SELECT de.id, de.booking_pkid, hw.pkid, de.rms_no, de.`event`, de.device, de.packages, gr.hardware_id, gr.`status`, DATE_FORMAT(gr.unloading_date,'%d-%M-%Y') AS unloadingDate, "
                 + "gr.group_id, gr.id AS bookingHwGroupId, hw.lc_qty, hw.pc_qty, gr.return_by, DATE_FORMAT(gr.return_date,'%d-%M-%Y') AS returnDate "
                 + "FROM rms_booking_detail de "
                 + "LEFT JOIN rms_booking_hardware_group gr ON SUBSTRING_INDEX(gr.group_id,'/',1) = de.booking_pkid "
@@ -939,6 +939,7 @@ public class RmsBookingDetailDAO {
                 rmsbookingDetail = new RmsBookingDetail();
                 rmsbookingDetail.setId(rs.getString("id"));
                 rmsbookingDetail.setBookingPkid(rs.getString("booking_pkid"));
+                rmsbookingDetail.setBookingHwPkid(rs.getString("pkid"));
                 rmsbookingDetail.setRmsNo(rs.getString("rms_no"));
                 rmsbookingDetail.setEvent(rs.getString("event"));
                 rmsbookingDetail.setDevice(rs.getString("device"));
@@ -968,5 +969,50 @@ public class RmsBookingDetailDAO {
             }
         }
         return rmsbookingDetailList;
+    }
+
+    public RmsBookingDetail getRmsBookingDetailWithHwGroupAfterLoadingByGroupId(String groupId) {
+        String sql = "SELECT de.id, de.booking_pkid, de.rms_no, de.`event`, de.device, de.packages, gr.hardware_id, gr.`status`, DATE_FORMAT(gr.unloading_date,'%d-%M-%Y') AS unloadingDate, "
+                + "gr.group_id, gr.id AS bookingHwGroupId, hw.lc_qty, hw.pc_qty, gr.return_by, DATE_FORMAT(gr.return_date,'%d-%M-%Y') AS returnDate "
+                + "FROM rms_booking_detail de "
+                + "LEFT JOIN rms_booking_hardware_group gr ON SUBSTRING_INDEX(gr.group_id,'/',1) = de.booking_pkid "
+                + "LEFT JOIN rms_booking_hardware hw ON hw.pkid = SUBSTRING_INDEX(gr.group_id,'/',-1) "
+                + "WHERE gr.group_id = '" + groupId + "' AND gr.item_type = 'BIB'";
+        RmsBookingDetail rmsbookingDetail = null;
+        try {
+            PreparedStatement ps = conn.prepareStatement(sql);
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                rmsbookingDetail = new RmsBookingDetail();
+                rmsbookingDetail.setId(rs.getString("id"));
+                rmsbookingDetail.setBookingPkid(rs.getString("booking_pkid"));
+                rmsbookingDetail.setRmsNo(rs.getString("rms_no"));
+                rmsbookingDetail.setEvent(rs.getString("event"));
+                rmsbookingDetail.setDevice(rs.getString("device"));
+                rmsbookingDetail.setPackages(rs.getString("packages"));
+                rmsbookingDetail.setHardwareId(rs.getString("hardware_id"));
+                rmsbookingDetail.setHardwareGroupStatus(rs.getString("status"));
+                rmsbookingDetail.setUnloadingDate(rs.getString("unloadingDate"));
+                rmsbookingDetail.setGroupId(rs.getString("group_id"));
+                rmsbookingDetail.setBookingHwGroupId(rs.getString("bookingHwGroupId"));
+                rmsbookingDetail.setHardwareReturnBy(rs.getString("return_by"));
+                rmsbookingDetail.setHardwareReturnDate(rs.getString("returnDate"));
+                rmsbookingDetail.setLcQty(rs.getString("lc_qty"));
+                rmsbookingDetail.setPcQty(rs.getString("pc_qty"));
+            }
+            rs.close();
+            ps.close();
+        } catch (SQLException e) {
+            LOGGER.error(e.getMessage());
+        } finally {
+            if (conn != null) {
+                try {
+                    conn.close();
+                } catch (SQLException e) {
+                    LOGGER.error(e.getMessage());
+                }
+            }
+        }
+        return rmsbookingDetail;
     }
 }
