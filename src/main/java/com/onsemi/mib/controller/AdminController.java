@@ -2327,5 +2327,11 @@ public class AdminController {
 
         return status;
     }
+    
+    @RequestMapping(value = "/scan", method = RequestMethod.GET)
+    public String scanQr(Model model) {
+        LOGGER.info("KITA MASUK KE PAGE YANG BETUL");
+        return "/admin/scan";
+    }
 
 }

@@ -1,15 +1,6 @@
 package com.onsemi.mib.pdf;
 
 import com.itextpdf.text.BaseColor;
-import java.io.ByteArrayOutputStream;
-import java.io.OutputStream;
-import java.util.Map;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
-import org.springframework.web.servlet.view.AbstractView;
-
 import com.itextpdf.text.Document;
 import com.itextpdf.text.DocumentException;
 import com.itextpdf.text.Element;
@@ -26,10 +17,16 @@ import com.itextpdf.text.pdf.PdfPTable;
 import com.itextpdf.text.pdf.PdfPageEventHelper;
 import com.itextpdf.text.pdf.PdfTemplate;
 import com.itextpdf.text.pdf.PdfWriter;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
+import java.util.Map;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.ServletContext;
 import org.apache.commons.io.IOUtils;
+import org.springframework.web.servlet.view.AbstractView;
 
 public abstract class AbstractITextPdfViewPotrait extends AbstractView {
 
@@ -67,8 +64,8 @@ public abstract class AbstractITextPdfViewPotrait extends AbstractView {
         Image image = Image.getInstance(bytes);
         event.setHeaderLogo(image);
         //Add Text
-        event.setHeader("REL LAB HW & EQPMT ACTIVITY TRACKING SYSTEM");
-        event.setFooter("Copyright © 2026, ON Semiconductor.");
+        event.setHeader("RELIABILITY LAB HARDWARE & EQUIPMENT ACTIVITY TRACKING SYSTEM");
+        event.setFooter("Copyright © 2026, onsemi.");
         // Build PDF
         buildPdfDocument(model, document, writer, request, response);
         document.close();
@@ -206,7 +203,7 @@ public abstract class AbstractITextPdfViewPotrait extends AbstractView {
                 Float borderWidth = 1.8f;
                 // Table Header
                 PdfPTable tableHeader = new PdfPTable(4);
-                tableHeader.setWidths(new float[]{6.7f, 6.0f, 5.8f, 1.0f});
+                tableHeader.setWidths(new float[]{4.7f, 11.0f, 2.8f, 1.0f});
                 tableHeader.setTotalWidth(527);
                 tableHeader.setLockedWidth(true);
                 // Set Logo

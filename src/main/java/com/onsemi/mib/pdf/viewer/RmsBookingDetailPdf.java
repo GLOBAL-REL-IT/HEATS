@@ -41,10 +41,11 @@ public class RmsBookingDetailPdf extends AbstractITextPdfViewPotrait {
     protected void buildPdfDocument(Map<String, Object> model, Document document, PdfWriter writer, HttpServletRequest request, HttpServletResponse response) throws Exception {
 
         RmsBookingDetail rmsDetail = (RmsBookingDetail) model.get("rmsBookingDetail");
-        
+
         String baseUrl = request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort() + request.getContextPath();
-        String tajukReport = "HW Prep For Loading Module - Detail";
-        String linkUtama = baseUrl+"/rmsbookingDetail/detail/"+rmsDetail.getId();
+        String tajukReport = "Hardware Preparation For Loading";
+//        String linkUtama = baseUrl + "/rmsbookingDetail/detail/" + rmsDetail.getId();
+        String linkUtama = "/detail/" + rmsDetail.getId();
 
         RmsBookingDetailDAO detaildao = new RmsBookingDetailDAO();
         String bookid = detaildao.getBookingId(rmsDetail.getId());
@@ -53,7 +54,7 @@ public class RmsBookingDetailPdf extends AbstractITextPdfViewPotrait {
         String rms_event = rms + "_" + event;
         String device = rmsDetail.getDevice();
         String pakej = rmsDetail.getPackages();
-        
+
         RmsBookingHardwareDAO rmsHD = new RmsBookingHardwareDAO();
         RmsBookingHardware rmsRemarks = rmsHD.getRmsBookingHardwareRemarksByBookingPkid(bookid);
         String remark = rmsRemarks.getItemId();
@@ -61,10 +62,10 @@ public class RmsBookingDetailPdf extends AbstractITextPdfViewPotrait {
         // DEFINE ALL THE FONT HERE - START
         Font titleFont = FontFactory.getFont(FontFactory.HELVETICA_BOLD, 14, BaseColor.DARK_GRAY);
         Font labelFont = FontFactory.getFont(FontFactory.HELVETICA_BOLD, 9, BaseColor.BLACK);
-        Font valueFont = FontFactory.getFont(FontFactory.HELVETICA, 10, BaseColor.DARK_GRAY);
-        
-        Font headerFont = FontFactory.getFont(FontFactory.HELVETICA_BOLD, 10, BaseColor.DARK_GRAY);
-        Font cellFont = FontFactory.getFont(FontFactory.HELVETICA, 9);
+        Font valueFont = FontFactory.getFont(FontFactory.HELVETICA, 7, BaseColor.DARK_GRAY);
+
+        Font headerFont = FontFactory.getFont(FontFactory.HELVETICA_BOLD, 9, BaseColor.DARK_GRAY);
+        Font qrLabelFont = FontFactory.getFont(FontFactory.HELVETICA_BOLD, 7, BaseColor.BLACK);
         // DEFINE ALL THE FONT HERE - END
 
         // 001 HEADER TABLE (TITLE + QR) 
@@ -80,15 +81,55 @@ public class RmsBookingDetailPdf extends AbstractITextPdfViewPotrait {
 
         // 001-002 RIGHT: QR CODE
         String qrText = linkUtama;
-        BarcodeQRCode qrCode = new BarcodeQRCode(qrText, 222, 222, null);
-        Image qrImage = qrCode.getImage();
-        qrImage.scaleAbsolute(40, 40);
 
-        PdfPCell qrCell = new PdfPCell(qrImage, false);
-        qrCell.setHorizontalAlignment(Element.ALIGN_RIGHT);
+        // Create QR label
+        PdfPCell labelCell = new PdfPCell(new Phrase(rms_event, qrLabelFont));
+        labelCell.setHorizontalAlignment(Element.ALIGN_CENTER);
+        labelCell.setBorder(Rectangle.NO_BORDER);
+        labelCell.setPaddingBottom(2);
+
+        // QR image
+//        BarcodeQRCode qrCode = new BarcodeQRCode(qrText, 222, 222, null);
+//        Image qrImage = qrCode.getImage();
+//        qrImage.scaleAbsolute(40, 40);
+        
+        BarcodeQRCode qrCode = new BarcodeQRCode(qrText, 300, 300, null);
+        Image qrImage = qrCode.getImage();
+        qrImage.scaleToFit(40, 40);
+
+        PdfPCell imageCell = new PdfPCell(qrImage, false);
+        imageCell.setHorizontalAlignment(Element.ALIGN_CENTER);
+        imageCell.setBorder(Rectangle.NO_BORDER);
+
+        // Wrap label + QR inside a small table
+        PdfPTable qrWrapper = new PdfPTable(1);
+        qrWrapper.setWidthPercentage(100);
+        qrWrapper.addCell(labelCell);
+        qrWrapper.addCell(imageCell);
+
+        // Put wrapper into your main cell
+        PdfPCell qrCell = new PdfPCell(qrWrapper);
         qrCell.setBorder(Rectangle.NO_BORDER);
-        qrCell.setPadding(5);
+        qrCell.setHorizontalAlignment(Element.ALIGN_RIGHT);
+
         headerTable.addCell(qrCell);
+
+        PdfPCell labelCell2 = new PdfPCell(new Phrase("RMS_EVENT", qrLabelFont));
+        labelCell2.setHorizontalAlignment(Element.ALIGN_CENTER);
+        labelCell2.setBorder(Rectangle.NO_BORDER);
+        labelCell2.setPaddingBottom(1);
+
+        PdfPCell imgCell2 = new PdfPCell(qrImage, false);
+        imgCell2.setHorizontalAlignment(Element.ALIGN_CENTER);
+        imgCell2.setBorder(Rectangle.NO_BORDER);
+
+        PdfPTable qrWrap2 = new PdfPTable(1);
+        qrWrap2.setWidthPercentage(100);
+        qrWrap2.addCell(labelCell2);
+        qrWrap2.addCell(imgCell2);
+
+        qrCell = new PdfPCell(qrWrap2);
+        qrCell.setBorderColor(BaseColor.GRAY);
 
         document.add(headerTable);
         document.add(Chunk.NEWLINE);
@@ -112,15 +153,15 @@ public class RmsBookingDetailPdf extends AbstractITextPdfViewPotrait {
         document.add(table);
 
         // 003 ===== MAIN CONTAINER (40% / 60%) =====
-        PdfPTable mainTable = new PdfPTable(2);
+        PdfPTable mainTable = new PdfPTable(1);
         mainTable.setWidthPercentage(100);
-        mainTable.setWidths(new float[]{40, 60}); // key requirement
+        mainTable.setWidths(new float[]{100}); // key requirement
 
         // 003-001 LEFT TABLE (Support Item)
         PdfPTable leftTable = new PdfPTable(4);
         leftTable.setWidthPercentage(100);
-        leftTable.setWidths(new float[]{10, 40, 30, 20});
-        
+        leftTable.setWidths(new float[]{5, 30, 55, 10});
+
         // TABLE TITLE
         PdfPCell leftTitle = new PdfPCell(new Phrase("Support Item", headerFont));
         leftTitle.setColspan(4);
@@ -144,7 +185,7 @@ public class RmsBookingDetailPdf extends AbstractITextPdfViewPotrait {
 
         rmsHD = new RmsBookingHardwareDAO();
         List<RmsBookingHardware> otherList = rmsHD.getRmsBookingHardwareListForOtherHwByBookingPkid(bookid);
-        
+
         int counter = 1;
         for (RmsBookingHardware data : otherList) {
             String checkFlag = data.getFlag();
@@ -156,27 +197,27 @@ public class RmsBookingDetailPdf extends AbstractITextPdfViewPotrait {
                 cell01.setVerticalAlignment(Element.ALIGN_MIDDLE);
                 cell01.setBorderColor(BaseColor.GRAY);
                 leftTable.addCell(cell01);
-                
+
                 PdfPCell cell02 = new PdfPCell(new Phrase(data.getItemType(), valueFont));
                 cell02.setVerticalAlignment(Element.ALIGN_MIDDLE);
                 cell02.setBorderColor(BaseColor.GRAY);
                 leftTable.addCell(cell02);
-                
+
                 PdfPCell cell03 = new PdfPCell(new Phrase(data.getItemId(), valueFont));
                 cell03.setVerticalAlignment(Element.ALIGN_MIDDLE);
                 cell03.setBorderColor(BaseColor.GRAY);
                 leftTable.addCell(cell03);
-                
+
                 PdfPCell cell04 = new PdfPCell(new Phrase(data.getQty(), valueFont));
                 cell04.setHorizontalAlignment(Element.ALIGN_CENTER);
                 cell04.setVerticalAlignment(Element.ALIGN_MIDDLE);
                 cell04.setBorderColor(BaseColor.GRAY);
                 leftTable.addCell(cell04);
-                
+
                 counter++;
             }
         }
-        
+
         PdfPCell leftWrapper = new PdfPCell(leftTable);
         leftWrapper.setPadding(5);
         leftWrapper.setBorder(Rectangle.NO_BORDER);
@@ -185,7 +226,7 @@ public class RmsBookingDetailPdf extends AbstractITextPdfViewPotrait {
         // 003-002 RIGHT TABLE (Motherboard)
         PdfPTable rightTable = new PdfPTable(6);
         rightTable.setWidthPercentage(100);
-        rightTable.setWidths(new float[]{10, 25, 25, 12, 12, 16});
+        rightTable.setWidths(new float[]{5, 20, 46, 10, 10, 9});
 
         // Title
         PdfPCell rightTitle = new PdfPCell(new Phrase("Motherboard", headerFont));
@@ -200,15 +241,19 @@ public class RmsBookingDetailPdf extends AbstractITextPdfViewPotrait {
         rightTable.addCell(noCell2);
         rightTable.addCell(new PdfPCell(new Phrase("Item Type", headerFont)));
         rightTable.addCell(new PdfPCell(new Phrase("Item ID", headerFont)));
-        rightTable.addCell(new PdfPCell(new Phrase("LC Qty", headerFont)));
-        rightTable.addCell(new PdfPCell(new Phrase("PC Qty", headerFont)));
+        PdfPCell noCell5 = new PdfPCell(new Phrase("LC Qty", headerFont));
+        noCell5.setHorizontalAlignment(Element.ALIGN_CENTER);
+        rightTable.addCell(noCell5);
+        PdfPCell noCell6 = new PdfPCell(new Phrase("PC Qty", headerFont));
+        noCell6.setHorizontalAlignment(Element.ALIGN_CENTER);
+        rightTable.addCell(noCell6);
         PdfPCell qrLabelCell = new PdfPCell(new Phrase("QR", headerFont));
         qrLabelCell.setHorizontalAlignment(Element.ALIGN_CENTER);
         rightTable.addCell(qrLabelCell);
 
         rmsHD = new RmsBookingHardwareDAO();
         List<RmsBookingHardware> BibList = rmsHD.getRmsBookingHardwareListForMotherboardByBookingPkid(bookid);
-        
+
         int counter2 = 1;
         for (RmsBookingHardware data : BibList) {
             String checkFlag = data.getFlag();
@@ -241,19 +286,22 @@ public class RmsBookingDetailPdf extends AbstractITextPdfViewPotrait {
                 qty2.setVerticalAlignment(Element.ALIGN_MIDDLE);
                 qty2.setBorderColor(BaseColor.GRAY);
                 rightTable.addCell(qty2);
-                
+
                 String pkid = data.getPkid();
-                String qrmb = baseUrl+"/rmsbookingDetail/groupDetail/"+bookid+"/"+pkid;
-                qrCode = new BarcodeQRCode(qrmb, 100, 100, null);
+//                String qrmb = baseUrl + "/rmsbookingDetail/groupDetail/" + bookid + "/" + pkid;
+                String qrmb = "/groupDetail/" + bookid + "/" + pkid;
+                
+                qrCode = new BarcodeQRCode(qrmb, 300, 300, null);
                 qrImage = qrCode.getImage();
-                qrImage.scaleAbsolute(40, 40);
+                qrImage.scaleToFit(440, 40);
+
 
                 qrCell = new PdfPCell(qrImage, false);
                 qrCell.setHorizontalAlignment(Element.ALIGN_RIGHT);
                 qrCell.setPadding(1);
                 qrCell.setBorderColor(BaseColor.GRAY);
                 rightTable.addCell(qrCell);
-                
+
                 counter2++;
             }
         }
@@ -296,7 +344,7 @@ public class RmsBookingDetailPdf extends AbstractITextPdfViewPotrait {
         inner.addCell(ll);
 
         PdfPCell box = new PdfPCell(new Phrase(value, valueFont));
-        box.setMinimumHeight(50);
+        box.setMinimumHeight(30);
         box.setBackgroundColor(new BaseColor(245, 245, 245));
         box.setBorderColor(BaseColor.GRAY);
         box.setPadding(8);
