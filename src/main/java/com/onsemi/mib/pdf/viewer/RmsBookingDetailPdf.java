@@ -154,19 +154,23 @@ public class RmsBookingDetailPdf extends AbstractITextPdfViewPotrait {
                 PdfPCell cell01 = new PdfPCell(new Phrase(Integer.toString(counter), valueFont));
                 cell01.setHorizontalAlignment(Element.ALIGN_CENTER);
                 cell01.setVerticalAlignment(Element.ALIGN_MIDDLE);
+                cell01.setBorderColor(BaseColor.GRAY);
                 leftTable.addCell(cell01);
                 
                 PdfPCell cell02 = new PdfPCell(new Phrase(data.getItemType(), valueFont));
                 cell02.setVerticalAlignment(Element.ALIGN_MIDDLE);
+                cell02.setBorderColor(BaseColor.GRAY);
                 leftTable.addCell(cell02);
                 
                 PdfPCell cell03 = new PdfPCell(new Phrase(data.getItemId(), valueFont));
                 cell03.setVerticalAlignment(Element.ALIGN_MIDDLE);
+                cell03.setBorderColor(BaseColor.GRAY);
                 leftTable.addCell(cell03);
                 
                 PdfPCell cell04 = new PdfPCell(new Phrase(data.getQty(), valueFont));
                 cell04.setHorizontalAlignment(Element.ALIGN_CENTER);
                 cell04.setVerticalAlignment(Element.ALIGN_MIDDLE);
+                cell04.setBorderColor(BaseColor.GRAY);
                 leftTable.addCell(cell04);
                 
                 counter++;
@@ -214,23 +218,28 @@ public class RmsBookingDetailPdf extends AbstractITextPdfViewPotrait {
                 PdfPCell count1 = new PdfPCell(new Phrase(Integer.toString(counter2), valueFont));
                 count1.setHorizontalAlignment(Element.ALIGN_CENTER);
                 count1.setVerticalAlignment(Element.ALIGN_MIDDLE);
+                count1.setBorderColor(BaseColor.GRAY);
                 rightTable.addCell(count1);
 
                 PdfPCell cellType = new PdfPCell(new Phrase(data.getItemType(), valueFont));
                 cellType.setVerticalAlignment(Element.ALIGN_MIDDLE);
+                cellType.setBorderColor(BaseColor.GRAY);
                 rightTable.addCell(cellType);
 
                 PdfPCell cellItemId = new PdfPCell(new Phrase(data.getItemId(), valueFont));
                 cellItemId.setVerticalAlignment(Element.ALIGN_MIDDLE);
+                cellItemId.setBorderColor(BaseColor.GRAY);
                 rightTable.addCell(cellItemId);
 
                 PdfPCell qty1 = new PdfPCell(new Phrase(data.getLcQty(), valueFont));
                 qty1.setHorizontalAlignment(Element.ALIGN_CENTER);
                 qty1.setVerticalAlignment(Element.ALIGN_MIDDLE);
+                qty1.setBorderColor(BaseColor.GRAY);
                 rightTable.addCell(qty1);
                 PdfPCell qty2 = new PdfPCell(new Phrase(data.getPcQty(), valueFont));
                 qty2.setHorizontalAlignment(Element.ALIGN_CENTER);
                 qty2.setVerticalAlignment(Element.ALIGN_MIDDLE);
+                qty2.setBorderColor(BaseColor.GRAY);
                 rightTable.addCell(qty2);
                 
                 String pkid = data.getPkid();
@@ -242,6 +251,7 @@ public class RmsBookingDetailPdf extends AbstractITextPdfViewPotrait {
                 qrCell = new PdfPCell(qrImage, false);
                 qrCell.setHorizontalAlignment(Element.ALIGN_RIGHT);
                 qrCell.setPadding(1);
+                qrCell.setBorderColor(BaseColor.GRAY);
                 rightTable.addCell(qrCell);
                 
                 counter2++;
@@ -288,6 +298,7 @@ public class RmsBookingDetailPdf extends AbstractITextPdfViewPotrait {
         PdfPCell box = new PdfPCell(new Phrase(value, valueFont));
         box.setMinimumHeight(50);
         box.setBackgroundColor(new BaseColor(245, 245, 245));
+        box.setBorderColor(BaseColor.GRAY);
         box.setPadding(8);
         inner.addCell(box);
 
