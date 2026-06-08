@@ -96,6 +96,7 @@
                 <nav class="navbar bg-body-tertiary">
                     <div class="container-fluid justify-content-start">
                         <a href="${contextPath}/rmsbookingDetail" class="btn btn-outline-warning me-2" role="button"><i class='bi bi-arrow-bar-left'></i>&nbsp;&nbsp;Back</a>
+                        <a href="${contextPath}/rmsbookingDetail/viewmbtt/${id}" class="btn btn-outline-info me-2" role="button"><i class="bi bi-qr-code-scan"></i>&nbsp;&nbsp;MBTT</a>
                     </div>
                 </nav>
                 <div class="col-sm-12 col-12">

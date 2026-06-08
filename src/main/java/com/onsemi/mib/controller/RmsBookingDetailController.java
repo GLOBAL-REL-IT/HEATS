@@ -4597,6 +4597,42 @@ public class RmsBookingDetailController {
         return path;
     }
 
+    @RequestMapping(value = "/viewmbtt/{bookId}", method = RequestMethod.GET)
+    public String viewmbtt(
+            Model model,
+            HttpServletRequest request,
+            @PathVariable("bookId") String bookId
+    ) throws UnsupportedEncodingException {
+        String pdfUrl = URLEncoder.encode(request.getContextPath() + "/rmsbookingDetail/viewMbttPdf/" + bookId, "UTF-8");
+        String backUrl = servletContext.getContextPath() + "/rmsbookingDetail/detail/"+bookId;
+        
+        LOGGER.info("pdfUrl 11 >>> "+pdfUrl);
+        String baru = "/HEATS/rmsbookingDetail/viewMbttPdf/288";
+        pdfUrl = URLEncoder.encode(baru, "UTF-8");
+        
+        LOGGER.info("URL LAIN :: "+baru);
+        LOGGER.info("pdfUrl 22 >>> "+pdfUrl);
+        LOGGER.info("backUrl >>> "+backUrl);
+        
+        model.addAttribute("pdfUrl", pdfUrl);
+        model.addAttribute("backUrl", backUrl);
+        model.addAttribute("pageTitle", "Motherboard Trip Ticket II");
+        return "pdf/viewer";
+    }
+    
+    @RequestMapping(value = "/viewMbttPdf/{bookId}", method = {RequestMethod.GET, RequestMethod.POST})
+    public ModelAndView viewMbttPdf(
+            Model model,
+            @ModelAttribute UserSession userSession,
+            @PathVariable("bookId") String bookId) {
+        
+        LOGGER.info("KITA MASUK KE FUNCTION SINI");
+        
+        RmsBookingDetailDAO rmsdao = new RmsBookingDetailDAO();
+        RmsBookingDetail rmsBookingDetail = rmsdao.getRmsBookingDetail(bookId);
+        return new ModelAndView("rmsBookingDetailPdf", "rmsBookingDetail", rmsBookingDetail);
+    }
+
     private String saveToMaverickFunctionalTest(String jenistest, String user, String groupId, String hardwareId) {
         String data = "";
 

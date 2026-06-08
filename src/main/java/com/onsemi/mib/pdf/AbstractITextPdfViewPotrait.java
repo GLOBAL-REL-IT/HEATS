@@ -61,14 +61,14 @@ public abstract class AbstractITextPdfViewPotrait extends AbstractView {
         // Add Logo
         ServletContext context = getServletContext();
         //String file = "/resources/img/cmts_all.png";
-        String file = "/resources/img/warehouse.png";
+        String file = "/resources/img/heat.png";
         InputStream is = context.getResourceAsStream(file);
         byte[] bytes = IOUtils.toByteArray(is);
         Image image = Image.getInstance(bytes);
         event.setHeaderLogo(image);
         //Add Text
-        event.setHeader("SENDAYAN STORAGE AND RETENTION MANAGEMENT SYSTEM");
-        event.setFooter("Copyright © 2025, ON Semiconductor.");
+        event.setHeader("REL LAB HW & EQPMT ACTIVITY TRACKING SYSTEM");
+        event.setFooter("Copyright © 2026, ON Semiconductor.");
         // Build PDF
         buildPdfDocument(model, document, writer, request, response);
         document.close();

@@ -1015,4 +1015,30 @@ public class RmsBookingDetailDAO {
         }
         return rmsbookingDetail;
     }
+    
+    public String getBookingId(String id) {
+        String data = "";
+        String sql = "SELECT booking_pkid FROM rms_booking_detail WHERE id = '" + id + "' ";
+        try {
+            PreparedStatement ps = conn.prepareStatement(sql);
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                data = rs.getString("booking_pkid");
+            }
+            rs.close();
+            ps.close();
+        } catch (SQLException e) {
+            LOGGER.error(e.getMessage());
+        } finally {
+            if (conn != null) {
+                try {
+                    conn.close();
+                } catch (SQLException e) {
+                    LOGGER.error(e.getMessage());
+                }
+            }
+        }
+        return data;
+    }
+
 }
