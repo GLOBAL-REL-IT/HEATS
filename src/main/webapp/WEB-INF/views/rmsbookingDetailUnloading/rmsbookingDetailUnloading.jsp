@@ -104,48 +104,50 @@
                                                     <th>Unloading Date</th>
                                                     <th>Return By</th>
                                                     <th>Return Date</th>
-                                                    <th>Status</th>
+                                                    <th>HW Status</th>
+                                                    <th>Progress Status</th>
                                                     <th>Manage</th>
                                                 </tr>
                                             </thead>
                                             <tbody>
-                                            <c:forEach items="${booking}" var="parameterMaster" varStatus="parameterMasterLoop">
-                                                <tr>
-                                                    <td><c:out value="${parameterMasterLoop.index+1}"/></td>
-                                                <td id="modal_delete_info_${parameterMaster.id}"><c:out value="${parameterMaster.rmsNo}"/></td>
-                                                <td><c:out value="${parameterMaster.event}"/></td>
-                                                <td><c:out value="${parameterMaster.hardwareId}"/></td>
-                                                <td><c:out value="${parameterMaster.lcQty}"/></td>
-                                                <td><c:out value="${parameterMaster.pcQty}"/></td>
-                                                <td><c:out value="${parameterMaster.unloadingDate}"/></td>
-                                                <td><c:out value="${parameterMaster.hardwareReturnBy}"/></td>
-                                                <td><c:out value="${parameterMaster.hardwareReturnDate}"/></td>
-                                                <td><c:out value="${parameterMaster.hardwareGroupStatus}"/></td>
-                                                <td align="center">
-                                                <c:set var="name" value="${parameterMaster.hardwareReturnDate}"/>
-                                                <c:choose>
-                                                    <c:when test="${empty name}">
-                                                        <a modaldeleteid="${parameterMaster.groupId}" type="button" data-bs-toggle="offcanvas" title="Return HW to MB Room/Ionic Area"
-                                                           data-bs-target="#staticBackdrop" aria-controls="staticBackdrop" onclick="getData(this);">
-                                                            <i class="bi bi-box-arrow-in-down-left h3"></i>
-                                                        </a>
-                                                        <a class="table-link" title="Manage" >
-                                                            <i class="bi bi-box-arrow-in-right h3" style="color: lightgrey;"></i>
-                                                        </a>
-                                                    </c:when>
-                                                    <c:otherwise>
-                                                        <a modaldeleteid="${parameterMaster.groupId}" title="Return HW to MB Room/Ionic Area">
-                                                            <i class="bi bi-box-arrow-in-down-left h3" style="color: lightgrey;"></i>
-                                                        </a>
-                                                        <a href="${contextPath}/rmsbookingDetailUnloading/groupDetail/${parameterMaster.bookingPkid}/${parameterMaster.bookingHwPkid}" class="table-link" title="Manage">
-                                                            <i class="bi bi-box-arrow-in-right h3"></i>
-                                                        </a>
-                                                    </c:otherwise>
-                                                </c:choose>
+                                                <c:forEach items="${booking}" var="parameterMaster" varStatus="parameterMasterLoop">
+                                                    <tr>
+                                                        <td><c:out value="${parameterMasterLoop.index+1}"/></td>
+                                                        <td id="modal_delete_info_${parameterMaster.id}"><c:out value="${parameterMaster.rmsNo}"/></td>
+                                                        <td><c:out value="${parameterMaster.event}"/></td>
+                                                        <td><c:out value="${parameterMaster.hardwareId}"/></td>
+                                                        <td><c:out value="${parameterMaster.lcQty}"/></td>
+                                                        <td><c:out value="${parameterMaster.pcQty}"/></td>
+                                                        <td><c:out value="${parameterMaster.unloadingDate}"/></td>
+                                                        <td><c:out value="${parameterMaster.hardwareReturnBy}"/></td>
+                                                        <td><c:out value="${parameterMaster.hardwareReturnDate}"/></td>
+                                                        <td><c:out value="${parameterMaster.bookingHwStatus}"/></td>
+                                                        <td><c:out value="${parameterMaster.bookingHwSubStatus}"/></td>
+                                                        <td align="center">
+                                                            <c:set var="name" value="${parameterMaster.hardwareReturnDate}"/>
+                                                            <c:choose>
+                                                                <c:when test="${empty name}">
+                                                                    <a modaldeleteid="${parameterMaster.groupId}" type="button" data-bs-toggle="offcanvas" title="Return HW to MB Room/Ionic Area"
+                                                                       data-bs-target="#staticBackdrop" aria-controls="staticBackdrop" onclick="getData(this);">
+                                                                        <i class="bi bi-box-arrow-in-down-left h3"></i>
+                                                                    </a>
+                                                                    <a class="table-link" title="Manage" >
+                                                                        <i class="bi bi-box-arrow-in-right h3" style="color: lightgrey;"></i>
+                                                                    </a>
+                                                                </c:when>
+                                                                <c:otherwise>
+                                                                    <a modaldeleteid="${parameterMaster.groupId}" title="Return HW to MB Room/Ionic Area">
+                                                                        <i class="bi bi-box-arrow-in-down-left h3" style="color: lightgrey;"></i>
+                                                                    </a>
+                                                                    <a href="${contextPath}/rmsbookingDetailUnloading/groupDetail/${parameterMaster.bookingPkid}/${parameterMaster.bookingHwPkid}" class="table-link" title="Manage">
+                                                                        <i class="bi bi-box-arrow-in-right h3"></i>
+                                                                    </a>
+                                                                </c:otherwise>
+                                                            </c:choose>
 
-                                                </td>
-                                                </tr>
-                                            </c:forEach>
+                                                        </td>
+                                                    </tr>
+                                                </c:forEach>
                                             </tbody>
                                         </table>
                                     </div>
@@ -175,7 +177,7 @@
                             <div class="row mb-3">
                                 <div class="col-xl-12 col-sm-12 col-12">
                                     <div class="mb-1">
-                                        <label for="itemId" class="form-label">RMS</label>
+                                        <label for="rmsNo" class="form-label">RMS</label>
                                         <div class="input input-group">
                                             <input type="text" class="form-control" id="rmsNo" name="rmsNo" placeholder="" value="" disabled>
                                             <input type="hidden" class="form-control" id="groupId" name="groupId" placeholder="" value="">
@@ -189,7 +191,8 @@
                                     <div class="mb-1">
                                         <label for="event" class="form-label">Event</label>
                                         <div class="input input-group">
-                                            <input type="text" class="form-control" id="event" name="event" placeholder="" value="" disabled>
+                                            <input type="text" class="form-control" id="event2" name="event2" placeholder="" value="" disabled>
+                                            <input type="hidden" class="form-control" id="event" name="event" placeholder="" value="">
                                         </div>
                                     </div>
                                 </div>
@@ -262,6 +265,13 @@
     </s:layout-component>
     <s:layout-component name="page_js_inline">
         <script>
+            
+            const myOffcanvas = document.getElementById('staticBackdrop');
+
+myOffcanvas.addEventListener('shown.bs.offcanvas', () => {
+  const myInput = document.getElementById('itemId');
+  myInput.focus();
+});
 
                                                                $(document).ready(function () {
                                                                    var validator = $("#add_group_form").validate({
@@ -287,6 +297,7 @@
                                                                            $("#bookingHwGroupId").val(data.bookingHwGroupId);
                                                                            $("#groupId").val(data.groupId);
                                                                            $("#event").val(data.event);
+                                                                           $("#event2").val(data.event);
                                                                            $("#lcQty").val(data.lcQty);
                                                                            $("#pcQty").val(data.pcQty);
                                                                            $("#hardwareId").val(data.hardwareId);

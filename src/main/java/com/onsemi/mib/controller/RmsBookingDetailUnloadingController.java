@@ -1,7 +1,6 @@
 package com.onsemi.mib.controller;
 
 import com.google.gson.Gson;
-import com.onsemi.mib.dao.EmailHwReplacementDAO;
 import com.onsemi.mib.dao.EmailHwReturnFromStagingDAO;
 import com.onsemi.mib.dao.EmailVmFailDAO;
 import com.onsemi.mib.dao.HostnameDAO;
@@ -24,10 +23,11 @@ import com.onsemi.mib.dao.RmsBookingFunctionalTestDAO;
 import com.onsemi.mib.dao.RmsBookingHardwareDAO;
 import com.onsemi.mib.dao.RmsBookingHardwareGroupDAO;
 import com.onsemi.mib.dao.RmsBookingHardwareGroupLogDAO;
+import com.onsemi.mib.dao.RmsBookingIonicConfigDAO;
+import com.onsemi.mib.dao.RmsBookingIonicDAO;
 import com.onsemi.mib.dao.RmsBookingLogDAO;
 import com.onsemi.mib.dao.RmsBookingMaverickDAO;
 import com.onsemi.mib.dao.RmsBookingVisualInspectionDAO;
-import com.onsemi.mib.model.EmailHwReplacement;
 import com.onsemi.mib.model.EmailHwReturnFromStaging;
 import com.onsemi.mib.model.EmailVmFail;
 import com.onsemi.mib.model.Hostname;
@@ -45,17 +45,17 @@ import com.onsemi.mib.model.RmsBookingFunctionalTest;
 import com.onsemi.mib.model.RmsBookingHardware;
 import com.onsemi.mib.model.RmsBookingHardwareGroup;
 import com.onsemi.mib.model.RmsBookingHardwareGroupLog;
+import com.onsemi.mib.model.RmsBookingIonic;
+import com.onsemi.mib.model.RmsBookingIonicConfig;
 import com.onsemi.mib.model.RmsBookingLog;
 import com.onsemi.mib.model.RmsBookingMaverick;
 import com.onsemi.mib.model.RmsBookingVisualInspection;
 import com.onsemi.mib.model.UserSession;
 import com.onsemi.mib.tools.EmailSender;
-import com.onsemi.mib.tools.HimsRetrieve;
 import com.onsemi.mib.tools.QueryResult;
 import com.onsemi.mib.tools.SPTSResponse;
 import com.onsemi.mib.tools.SPTSStatus;
 import com.onsemi.mib.tools.SPTSWebService;
-import com.onsemi.mib.tools.SpmlUtil;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -63,14 +63,10 @@ import java.io.OutputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.sql.SQLException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.time.temporal.ChronoUnit;
-import java.util.ArrayList;
 import java.util.Date;
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletResponse;
@@ -130,11 +126,6 @@ public class RmsBookingDetailUnloadingController {
 
         model.addAttribute("countBooking", countBooking);
 
-        ParameterDetailsDAO pD = new ParameterDetailsDAO();
-        List<ParameterDetails> priorityList = pD.getGroupParameterDetailListForPriorityBooking("", "019");
-
-        model.addAttribute("priorityList", priorityList);
-
         return "rmsbookingDetailUnloading/rmsbookingDetailUnloading";
     }
 
@@ -162,15 +153,48 @@ public class RmsBookingDetailUnloadingController {
             @ModelAttribute UserSession userSession,
             @RequestParam(required = false) String groupId,
             @RequestParam(required = false) String bookingHwGroupId,
-            @RequestParam(required = false) String itemId
+            @RequestParam(required = false) String itemId,
+            @RequestParam(required = false) String event
     ) throws IOException {
 
         RmsBookingHardwareGroup rms = new RmsBookingHardwareGroup();
-        rms.setId(bookingHwGroupId);
+        rms.setGroupId(groupId);
         rms.setReturnBy(userSession.getFullname());
         RmsBookingHardwareGroupDAO rmsD = new RmsBookingHardwareGroupDAO();
-        QueryResult q = rmsD.updateRmsBookingHardwareGroupReturnByAndReturnDate(rms);
+        QueryResult q = rmsD.updateRmsBookingHardwareGroupReturnByAndReturnDateByGroupId(rms);
         if (q.getResult() > 0) {
+
+            //update substatus in rms_booking_hardware table
+            LOGGER.info("groupId: " + groupId);
+            LOGGER.info("event: " + event);
+            String[] groupIdSplit = groupId.split("/");
+            String bookingPkid = groupIdSplit[0];
+            String mbBookingPkid = groupIdSplit[1];
+
+            RmsBookingHardwareDAO rmsBookingHD = new RmsBookingHardwareDAO();
+            int countBookingHwPkid = rmsBookingHD.getCountBookingPkidAndPkidForMotherboard(bookingPkid, mbBookingPkid);
+            if (countBookingHwPkid == 1) {
+                rmsBookingHD = new RmsBookingHardwareDAO();
+                RmsBookingHardware MbDetail = rmsBookingHD.getRmsBookingHardwareByBookingPkidAndPkid(bookingPkid, mbBookingPkid);
+
+                //get ionic config
+                String subStatus = "";
+
+                RmsBookingIonicConfigDAO ionicConfigD = new RmsBookingIonicConfigDAO();
+                Integer countIonic = ionicConfigD.getCountByEvent(event);
+
+                if (countIonic == 0) {
+                    subStatus = "Pending VM";
+                } else {
+                    subStatus = "Pending Ionic Test";
+                }
+
+                RmsBookingHardware hwBook = new RmsBookingHardware();
+                hwBook.setId(MbDetail.getId());
+                hwBook.setSubStatus(subStatus);
+                rmsBookingHD = new RmsBookingHardwareDAO();
+                QueryResult qHwBook = rmsBookingHD.updateRmsBookingHardwareSubStatusById(hwBook);
+            }
 
             //add log
             RmsBookingHardwareGroupLog log = new RmsBookingHardwareGroupLog();
@@ -187,662 +211,6 @@ public class RmsBookingDetailUnloadingController {
         return "redirect:/rmsbookingDetailUnloading";
     }
 
-    @RequestMapping(value = "/cancelPriority/{id}", method = {RequestMethod.GET, RequestMethod.POST})
-    public String cancelPriority(Model model,
-            HttpServletRequest request,
-            RedirectAttributes redirectAttrs,
-            @PathVariable("id") String id) {
-
-        RmsBookingDetailDAO rmsD = new RmsBookingDetailDAO();
-        RmsBookingDetail rms1 = rmsD.getRmsBookingDetail(id);
-
-        RmsBookingDetail rms = new RmsBookingDetail();
-        rms.setId(id);
-        rms.setPriority("999");
-        rms.setPriorityRemarks(null);
-        rms.setPriorityBy(null);
-        rmsD = new RmsBookingDetailDAO();
-        QueryResult q = rmsD.updateRmsBookingDetailForPriority(rms);
-        if (q.getResult() > 0) {
-            redirectAttrs.addFlashAttribute("success", "Succesfully removed priority for " + rms1.getRmsNo() + "_" + rms1.getEvent());
-        } else {
-            redirectAttrs.addFlashAttribute("error", "Failed to remove priority for " + rms1.getRmsNo() + "_" + rms1.getEvent() + ". Pls contact system admin.");
-        }
-        return "redirect:/rmsbookingDetail";
-    }
-
-    @RequestMapping(value = "/detail/{id}", method = RequestMethod.GET)
-    public String detail(Model model,
-            @PathVariable("id") String id,
-            @ModelAttribute UserSession userSession) throws IOException {
-
-        model.addAttribute("userItemSfRecall", userSession.getItemSfRecall());
-
-        //to cross check with existing hardware booked
-        List<String> list = new ArrayList<>();
-
-        RmsBookingDetailDAO rmsd = new RmsBookingDetailDAO();
-        RmsBookingDetail rms = rmsd.getRmsBookingDetail(id);
-        model.addAttribute("rms", rms);
-
-        int onhandQty = 0;
-        int requestQty = 0;
-        int bookingPkid = 0;
-
-        //add hardware detail from spts
-//        int bookingPkid = Integer.parseInt(rms.getBookingPkid());
-        try {
-            bookingPkid = Integer.parseInt(rms.getBookingPkid());
-        } catch (NumberFormatException e) {
-            // Handle the error or set a default value
-            bookingPkid = 0;
-        }
-
-        JSONArray getItemByParamV = SPTSWebService.getBookingDetailByPKID(bookingPkid);
-        for (int i = 0; i < getItemByParamV.length(); i++) {
-
-//            LOGGER.info("1st step: " + LocalDateTime.now());
-            list.add(Integer.toString(getItemByParamV.getJSONObject(i).getInt("pkid")));
-
-            String itemType = "";
-            if (getItemByParamV.getJSONObject(i).getString("field_name").contains("Motherboard")) {
-                itemType = "Motherboard";
-            } else if (getItemByParamV.getJSONObject(i).getString("field_name").contains("Tester")) {
-                itemType = "Tester";
-            } else if (getItemByParamV.getJSONObject(i).getString("field_name").contains("Remarks")) {
-                itemType = "Remarks";
-            } else if (getItemByParamV.getJSONObject(i).getString("field_name").contains("PowerSupply")) {
-                itemType = "Power Supply";
-            } else if (getItemByParamV.getJSONObject(i).getString("field_name").contains("ProgramCard")) {
-                itemType = "Program Card";
-            } else if (getItemByParamV.getJSONObject(i).getString("field_name").contains("LoadCard")) {
-                itemType = "Load Card";
-            } else if (getItemByParamV.getJSONObject(i).getString("field_name").contains("DUTCard")) {
-                itemType = "DUT Card";
-            } else if (getItemByParamV.getJSONObject(i).getString("field_name").contains("Solder")) {
-                itemType = "Solder Type";
-            } else {
-                itemType = "";
-            }
-
-            RmsBookingHardware rmsH = new RmsBookingHardware();
-            rmsH.setBookingPkid(Integer.toString(getItemByParamV.getJSONObject(i).getInt("booking_pkid")));
-            rmsH.setPkid(Integer.toString(getItemByParamV.getJSONObject(i).getInt("pkid")));
-            rmsH.setItemType(itemType);
-            if (getItemByParamV.getJSONObject(i).has("field_value")) {
-                Object assembly = getItemByParamV.getJSONObject(i).get("field_value");
-                if (assembly instanceof String) {
-                    rmsH.setItemId(getItemByParamV.getJSONObject(i).getString("field_value"));
-                } else {
-                    rmsH.setItemId(Integer.toString(getItemByParamV.getJSONObject(i).getInt("field_value")));
-                }
-            }
-            if (getItemByParamV.getJSONObject(i).has("field_quantity")) {
-                rmsH.setQty(Integer.toString(getItemByParamV.getJSONObject(i).getInt("field_quantity")));
-                requestQty = getItemByParamV.getJSONObject(i).getInt("field_quantity");
-            } else {
-                requestQty = 0;
-            }
-            rmsH.setReadiness(Boolean.toString(getItemByParamV.getJSONObject(i).getBoolean("field_readiness")));
-            rmsH.setFlag("0");
-            rmsH.setCreatedBy(userSession.getFullname());
-            rmsH.setModifiedBy(userSession.getFullname());
-
-            //get itempkid and check qty if available or not (for bib and bibcard only)
-//            LOGGER.info("rmsH.getItemType(): " + rmsH.getItemType());
-//            LOGGER.info("rmsH.getItemId(): " + rmsH.getItemId());
-            if ("Motherboard".equals(rmsH.getItemType()) || "Load Card".equals(rmsH.getItemType()) || "Program Card".equals(rmsH.getItemType())) {
-                if (!"NA".equals(rmsH.getItemId())) {
-
-                    JSONObject paramV = new JSONObject();
-                    paramV.put("itemID", rmsH.getItemId());
-                    JSONArray getItemByParam = SPTSWebService.getItemByParam(paramV);
-                    for (int x = 0; x < getItemByParam.length(); x++) {
-
-                        rmsH.setItemPkid(Integer.toString(getItemByParam.getJSONObject(x).getInt("PKID")));
-                        onhandQty = getItemByParam.getJSONObject(x).getInt("OnHandQty");
-                        if (onhandQty >= requestQty) {
-                            rmsH.setStatus("Available");
-                            if ("Motherboard".equals(rmsH.getItemType())) {
-                                //check status if requested for replacement or not
-                                RmsBookingHardwareDAO rmsBH = new RmsBookingHardwareDAO();
-                                int count = rmsBH.getCountBookingId(Integer.toString(getItemByParamV.getJSONObject(i).getInt("booking_pkid")), Integer.toString(getItemByParamV.getJSONObject(i).getInt("pkid")));
-//                                LOGGER.info("countbookingwithbookingpkidandpkid: " + count);
-                                if (count == 1) {
-                                    rmsBH = new RmsBookingHardwareDAO();
-                                    RmsBookingHardware rmsB = rmsBH.getRmsBookingHardwareByPkid(Integer.toString(getItemByParamV.getJSONObject(i).getInt("pkid")));
-//                                    LOGGER.info("rmsB.getSubStatus(): " + rmsB.getSubStatus());
-                                    rmsH.setSubStatus(rmsB.getSubStatus());
-                                } else {
-                                    rmsH.setSubStatus("Pending HW Registration");
-                                }
-                            }
-                        } else {
-                            //check status if requested for replacement or not
-                            RmsBookingHardwareDAO rmsBH = new RmsBookingHardwareDAO();
-                            int count = rmsBH.getCountBookingId(Integer.toString(getItemByParamV.getJSONObject(i).getInt("booking_pkid")), Integer.toString(getItemByParamV.getJSONObject(i).getInt("pkid")));
-                            if (count == 1) {
-                                rmsBH = new RmsBookingHardwareDAO();
-                                RmsBookingHardware rmsB = rmsBH.getRmsBookingHardwareByPkid(Integer.toString(getItemByParamV.getJSONObject(i).getInt("pkid")));
-                                if (rmsB.getStatus().contains("Request for Replacement") || rmsB.getStatus().contains("Recall from Storage Factory")) {
-                                    rmsH.setStatus(rmsB.getStatus());
-                                } else {
-                                    rmsH.setStatus("Not Available - " + getItemByParam.getJSONObject(x).getString("StatusName"));
-                                }
-                            } else {
-                                rmsH.setStatus("Not Available - " + getItemByParam.getJSONObject(x).getString("StatusName"));
-                            }
-                        }
-                        if (getItemByParam.getJSONObject(x).has("StorageFactoryQty")) {
-//                            LOGGER.info("StorageFactoryQty: " + getItemByParam.getJSONObject(x).getInt("StorageFactoryQty"));
-                            if (getItemByParam.getJSONObject(x).getInt("StorageFactoryQty") > 0) {
-                                rmsH.setRecall("Yes");
-                            } else {
-                                rmsH.setRecall("No");
-                            }
-                        } else {
-                            rmsH.setRecall("No");
-                        }
-
-                    }
-                } else {
-                    rmsH.setItemPkid("0");
-                    rmsH.setStatus("NA");
-                    rmsH.setRecall("No");
-                }
-            } else {
-                rmsH.setItemPkid("0");
-                rmsH.setStatus("NA");
-                rmsH.setRecall("No");
-            }
-
-            RmsBookingHardwareDAO rmsHD = new RmsBookingHardwareDAO();
-            int count = rmsHD.getCountBookingId(Integer.toString(getItemByParamV.getJSONObject(i).getInt("booking_pkid")), Integer.toString(getItemByParamV.getJSONObject(i).getInt("pkid")));
-            if (count == 0) { //add new record
-                rmsHD = new RmsBookingHardwareDAO();
-                QueryResult q = rmsHD.insertRmsBookingHardware(rmsH);
-            } else if (count == 1) { //update existing hardware
-                rmsHD = new RmsBookingHardwareDAO();
-                QueryResult q = rmsHD.updateRmsBookingHardwareByPkidAndBookingPkid(rmsH);
-            }
-
-//            System.out.println(getItemByParamV.getJSONObject(i));
-        }
-        //update inactive/replaced hardware 
-        RmsBookingHardwareDAO rmsH = new RmsBookingHardwareDAO();
-        List<RmsBookingHardware> hw = rmsH.getRmsBookingHardwareListByBookingPkidWithFlagZero(Integer.toString(bookingPkid));
-        for (int i = 0; i < hw.size(); i++) {
-            if (!list.contains(hw.get(i).getPkid())) {
-
-                RmsBookingHardware h = new RmsBookingHardware();
-                h.setId(hw.get(i).getId());
-                h.setFlag("99");
-                h.setStatus("Removed");
-                h.setSubStatus(null);
-                h.setModifiedBy("HEATS");
-                rmsH = new RmsBookingHardwareDAO();
-                QueryResult q = rmsH.updateRmsBookingHardwareForFlagAndStatusById(h);
-                LOGGER.info("pkid removed: " + hw.get(i).getPkid());
-            }
-        }
-
-        // to show/hide release button
-        String releaseButton = "";
-        RmsBookingHardwareDAO rmsHD = new RmsBookingHardwareDAO();
-        int countBib = rmsHD.getCountMotherboardByBookingPkidAndFlagNot99(Integer.toString(bookingPkid));
-
-        rmsHD = new RmsBookingHardwareDAO();
-        int countBibPendingRelease = rmsHD.getCountMotherboardByBookingPkidAndPendingRelease(Integer.toString(bookingPkid));
-        LOGGER.info("countBib: " + countBib);
-        LOGGER.info("countBibPendingRelease: " + countBibPendingRelease);
-
-        if (countBib == countBibPendingRelease) {
-            releaseButton = "Enable";
-        } else {
-            releaseButton = "Disable";
-        }
-        model.addAttribute("releaseButton", releaseButton);
-
-        //get motherboard detail
-        rmsHD = new RmsBookingHardwareDAO();
-        List<RmsBookingHardware> BibList = rmsHD.getRmsBookingHardwareListForMotherboardByBookingPkid(Integer.toString(bookingPkid));
-        model.addAttribute("BibList", BibList);
-
-        //get other hw detail
-        rmsHD = new RmsBookingHardwareDAO();
-        List<RmsBookingHardware> otherList = rmsHD.getRmsBookingHardwareListForOtherHwByBookingPkid(Integer.toString(bookingPkid));
-        model.addAttribute("otherList", otherList);
-
-        //get all hw detail for request replacement form
-        rmsHD = new RmsBookingHardwareDAO();
-        List<RmsBookingHardware> hwList = rmsHD.getRmsBookingHardwareListByBookingPkidWithFlagZeroForHwReplacement(Integer.toString(bookingPkid));
-        model.addAttribute("hwList", hwList);
-
-        RmsBookingDetailHwReplacementDAO hwReplaceD = new RmsBookingDetailHwReplacementDAO();
-        List<RmsBookingDetailHwReplacement> listHwReplace = hwReplaceD.getRmsBookingDetailHwReplacementListByBookingPkid(Integer.toString(bookingPkid));
-        model.addAttribute("listHwReplace", listHwReplace);
-
-        hwReplaceD = new RmsBookingDetailHwReplacementDAO();
-        int countHwReplace = hwReplaceD.getCountBookingId(Integer.toString(bookingPkid));
-        model.addAttribute("countHwReplace", countHwReplace);
-
-        hwReplaceD = new RmsBookingDetailHwReplacementDAO();
-        int countHwReplaceFlagZero = hwReplaceD.getCountFlagZero();
-        model.addAttribute("countHwReplaceFlagZero", countHwReplaceFlagZero);
-
-        //get booking remarks
-        rmsHD = new RmsBookingHardwareDAO();
-        int countRemarks = rmsHD.getCountHwWithRemarksByBookingPkid(Integer.toString(bookingPkid));
-        if (countRemarks == 0) {
-            model.addAttribute("rmsRemarks", "");
-        } else {
-            rmsHD = new RmsBookingHardwareDAO();
-            RmsBookingHardware rmsRemarks = rmsHD.getRmsBookingHardwareRemarksByBookingPkid(Integer.toString(bookingPkid));
-            model.addAttribute("rmsRemarks", rmsRemarks.getItemId());
-        }
-
-        return "rmsbookingDetail/detail";
-    }
-
-    @RequestMapping(value = "/addHwReplacement", method = RequestMethod.POST)
-    public String addHwReplacement(
-            Model model,
-            Locale locale,
-            RedirectAttributes redirectAttrs,
-            @ModelAttribute UserSession userSession,
-            @RequestParam(required = false) String id3,
-            @RequestParam(required = false) String hwReplacement,
-            @RequestParam(required = false) String remarks
-    ) {
-        RmsBookingHardwareDAO rmsBD = new RmsBookingHardwareDAO();
-        RmsBookingHardware bookH = rmsBD.getRmsBookingHardwareByPkid(hwReplacement);
-
-        RmsBookingDetailHwReplacement replace = new RmsBookingDetailHwReplacement();
-        replace.setBookingPkid(bookH.getBookingPkid());
-        replace.setBookingHwPkid(hwReplacement);
-        replace.setItemPkid(bookH.getItemPkid());
-        replace.setItemId(bookH.getItemId());
-        replace.setRemarks(remarks);
-        replace.setCreatedBy(userSession.getFullname());
-        replace.setFlag("0");
-        RmsBookingDetailHwReplacementDAO replaceD = new RmsBookingDetailHwReplacementDAO();
-        QueryResult queryResult = replaceD.insertRmsBookingDetailHwReplacement(replace);
-
-        if (queryResult.getResult() == 1) {
-
-            redirectAttrs.addFlashAttribute("success", "Item succesfully added into the list");
-        } else {
-            redirectAttrs.addFlashAttribute("error", "Failed to add item into the list. pls contact system admin.");
-        }
-        return "redirect:/rmsbookingDetail/detail/" + id3 + "?saved=1";
-    }
-
-    @RequestMapping(value = "/deleteHwReplacement/{id}/{bookingDetailId}", method = RequestMethod.GET)
-    public String deleteHwId(
-            Model model,
-            Locale locale,
-            RedirectAttributes redirectAttrs,
-            @PathVariable("id") String id,
-            @PathVariable("bookingDetailId") String bookingDetailId
-    ) {
-
-        RmsBookingDetailHwReplacementDAO hwD = new RmsBookingDetailHwReplacementDAO();
-        RmsBookingDetailHwReplacement hw = hwD.getRmsBookingDetailHwReplacement(id);
-
-        hwD = new RmsBookingDetailHwReplacementDAO();
-        QueryResult queryResult = hwD.deleteRmsBookingDetailHwReplacement(id);
-
-        if (queryResult.getResult() == 1) {
-            redirectAttrs.addFlashAttribute("success", hw.getItemId() + " is successfully deleted.");
-        } else {
-            redirectAttrs.addFlashAttribute("error", "Failed to delete " + hw.getItemId() + ". Pls contact system admin.");
-        }
-        return "redirect:/rmsbookingDetail/detail/" + bookingDetailId + "?saved=1";
-    }
-
-    @RequestMapping(value = "/sendEmailReplacementByGroup/{bookingPkid}", method = {RequestMethod.GET, RequestMethod.POST})
-    public String sendEmailReplacementByGroup(
-            Model model,
-            Locale locale,
-            RedirectAttributes redirectAttrs,
-            @ModelAttribute UserSession userSession,
-            @PathVariable("bookingPkid") String bookingPkid
-    ) {
-
-        RmsBookingDetailDAO rmsD = new RmsBookingDetailDAO();
-        RmsBookingDetail rms = rmsD.getRmsBookingDetailByBookingPkid(bookingPkid);
-
-        RmsBookingDetailHwReplacementDAO replaceD = new RmsBookingDetailHwReplacementDAO();
-        List<RmsBookingDetailHwReplacement> replace = replaceD.getRmsBookingDetailHwReplacementListByBookingPkid(bookingPkid);
-
-        String text = "";
-
-        //update rmsBookingHardware table
-        for (int i = 0; i < replace.size(); i++) {
-
-            int index = i + 1;
-            text = text + "<tr align = \"center\">";
-            text = text + "<td>" + index + "</td>";
-            text = text + "<td>" + replace.get(i).getItemType() + "</td>";
-            text = text + "<td>" + replace.get(i).getItemId() + "</td>"; //
-            text = text + "<td>" + replace.get(i).getQty() + "</td>"; //
-            text = text + "<td>" + replace.get(i).getCreatedBy() + "</td>"; //
-            text = text + "<td>" + replace.get(i).getRemarks() + "</td>"; //
-            text = text + "</tr>";
-
-            //update flag
-            RmsBookingDetailHwReplacement replace2 = new RmsBookingDetailHwReplacement();
-            replace2.setFlag("1");
-            replace2.setId(replace.get(i).getId());
-            replaceD = new RmsBookingDetailHwReplacementDAO();
-            QueryResult queryResult = replaceD.updateRmsBookingDetailHwReplacementFlag(replace2);
-
-//            LOGGER.info("replace.get(i).getBookingHwId(): " + replace.get(i).getBookingHwId());
-            RmsBookingHardware h = new RmsBookingHardware();
-            h.setRequestReplacementRemarks(replace.get(i).getRemarks());
-            h.setStatus("Request for Replacement");
-            h.setRequestReplacementBy(userSession.getFullname());
-            h.setId(replace.get(i).getBookingHwId());
-            RmsBookingHardwareDAO hD = new RmsBookingHardwareDAO();
-            QueryResult q = hD.updateRmsBookingHardwareForRequestReplacement(h);
-
-            if (q.getResult().equals("0")) {
-                redirectAttrs.addFlashAttribute("error", "Failed to update bookingHwId: " + replace.get(i).getBookingHwId() + ". Pls contact system admin.");
-                return "redirect:/rmsbookingDetail/detail/" + rms.getId();
-            }
-        }
-        //send email
-        EmailHwReplacementDAO userDao = new EmailHwReplacementDAO();
-        List<EmailHwReplacement> userRecipientsList = userDao.getEmailHwReplacementList();
-
-        String[] to = new String[userRecipientsList.size()];
-        for (int x = 0; x < userRecipientsList.size(); x++) {
-            to[x] = userRecipientsList.get(x).getEmail();
-        }
-
-        //get current date and time
-        LocalDateTime instance = LocalDateTime.now();
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm");
-        String formattedString = formatter.format(instance); //15-02-2022 12:43
-
-        //gethostname
-        HostnameDAO hostnameD = new HostnameDAO();
-        Hostname host = hostnameD.getHostnameFlagZero();
-        String hostname = host.getHostname();
-
-        //send INFORMATION email
-        LOGGER.info("######################### START EMAIL TO PIC ########################### ");
-        EmailSender emailSender = new EmailSender();
-//        emailSender.htmlEmailTable(
-        emailSender.htmlEmailTableForHwReplacement(
-                servletContext,
-                "", //user name requestor
-                to, //to
-                //                        emailTo,
-                "HW Prep for Loading - Request for HW replacement", //subject
-                "<br />"
-                + "This is an urgent request to please replace the hardware listed below in the CBMS application at the earliest."
-                + "<br /> "
-                + "<br /> "
-                + "RMS No: " + rms.getRmsNo()
-                + "<br /> "
-                + "RMS Event: " + rms.getEvent()
-                + "<br /> "
-                + "Requested Date: " + formattedString
-                + "<br /> "
-                + "<br /> "
-                + "Please click <a href=\"http://" + hostname + "/HEATS/rmsbookingDetail/detail/" + rms.getId() + " \">HERE</a> for more detail."
-                + "<br /> "
-                + "<br /> "
-                + "<style>table, th, td {border: 1px solid black; border-collapse: collapse;} th {background-color: #f06a0a;color: white;}</style>"
-                + "<table style=\"width:100%\">" //tbl
-                + "<tr>"
-                + "<th>No.</th> "
-                + "<th>Item Type</th> "
-                + "<th>Item ID</th>"
-                + "<th>Qty</th>"
-                + "<th>Requested By</th>"
-                + "<th>Remarks</th>"
-                + "</tr>"
-                //                + table(bookingPkid)
-                + text
-                + "</table>"
-                + "<br /> "
-                + "<br />Thank you." //msg
-        );
-        redirectAttrs.addFlashAttribute("success", "Email sent to planner.");
-        return "redirect:/rmsbookingDetail/detail/" + rms.getId();
-
-    }
-
-    @RequestMapping(value = "/sendEmailBooking/{id}", method = {RequestMethod.GET, RequestMethod.POST})
-    public String sendEmailBooking(
-            Model model,
-            Locale locale,
-            RedirectAttributes redirectAttrs,
-            @ModelAttribute UserSession userSession,
-            @PathVariable("id") String id
-    ) {
-
-        RmsBookingDetailDAO rmsD = new RmsBookingDetailDAO();
-        RmsBookingDetail rms = rmsD.getRmsBookingDetail(id);
-
-        String text = "";
-
-        //send email
-        EmailHwReplacementDAO userDao = new EmailHwReplacementDAO();
-        List<EmailHwReplacement> userRecipientsList = userDao.getEmailHwReplacementList();
-
-        String[] to = new String[userRecipientsList.size()];
-        for (int x = 0; x < userRecipientsList.size(); x++) {
-            to[x] = userRecipientsList.get(x).getEmail();
-        }
-
-        //get current date and time
-        LocalDateTime instance = LocalDateTime.now();
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm");
-        String formattedString = formatter.format(instance); //15-02-2022 12:43
-
-        //gethostname
-        HostnameDAO hostnameD = new HostnameDAO();
-        Hostname host = hostnameD.getHostnameFlagZero();
-        String hostname = host.getHostname();
-
-        //send INFORMATION email
-        LOGGER.info("######################### START EMAIL TO PIC ########################### ");
-        EmailSender emailSender = new EmailSender();
-//        emailSender.htmlEmailTable(
-        emailSender.htmlEmailTableForHwReplacement(
-                servletContext,
-                "", //user name requestor
-                to, //to
-                //                        emailTo,
-                "HW Prep for Loading - Request for CBMS Booking", //subject
-                "<br />"
-                + "This is to highlight that the RMS_Event below currently has no booking in CBMS. Kindly prioritize and complete the CBMS booking as soon as possible, as this is required for MB team to proceed."
-                + "<br /> "
-                + "<br /> "
-                + "RMS No: " + rms.getRmsNo()
-                + "<br /> "
-                + "RMS Event: " + rms.getEvent()
-                + "<br /> "
-                + "Est Event Start Date: " + rms.getEventStartDate()
-                + "<br /> "
-                + "Requested By: " + userSession.getFullname()
-                + "<br /> "
-                + "Requested Date: " + formattedString
-                + "<br /> "
-                + "<br /> "
-                + "Please click <a href=\"http://" + hostname + "/HEATS/rmsbookingDetail\">HERE</a> for more detail."
-                + "<br /> "
-                + "<br />Thank you." //msg
-        );
-        redirectAttrs.addFlashAttribute("success", "Email sent to planner.");
-//        return "redirect:/rmsbookingDetail/detail/" + rms.getId();
-        return "redirect:/rmsbookingDetail";
-
-    }
-
-    @RequestMapping(value = "/emailBody", method = {RequestMethod.GET, RequestMethod.POST})
-    @ResponseBody
-    public RmsBookingHardware emailBody(
-            @ModelAttribute UserSession userSession,
-            Model model,
-            HttpServletRequest request,
-            @RequestParam(required = false) String id
-    ) throws IOException {
-
-//        LOGGER.info("id: " + id);
-        RmsBookingHardwareDAO rmsHD = new RmsBookingHardwareDAO();
-        RmsBookingHardware rms = rmsHD.getRmsBookingHardware(id);
-        LOGGER.info("itemId: " + rms.getItemId());
-
-        return rms;
-    }
-
-    @RequestMapping(value = "/sendEmailReplacement", method = RequestMethod.POST)
-    public String sendEmailReplacement(
-            Model model,
-            Locale locale,
-            RedirectAttributes redirectAttrs,
-            @ModelAttribute UserSession userSession,
-            @RequestParam(required = false) String id2,
-            @RequestParam(required = false) String itemType,
-            @RequestParam(required = false) String itemId2,
-            @RequestParam(required = false) String remarks
-    ) {
-
-        RmsBookingHardwareDAO hD = new RmsBookingHardwareDAO();
-        RmsBookingHardware hw = hD.getRmsBookingHardware(id2);
-
-        RmsBookingHardware h = new RmsBookingHardware();
-        h.setRequestReplacementRemarks(remarks);
-        h.setStatus("Request for Replacement");
-        h.setRequestReplacementBy(userSession.getFullname());
-        h.setId(id2);
-        hD = new RmsBookingHardwareDAO();
-        QueryResult q = hD.updateRmsBookingHardwareForRequestReplacement(h);
-
-        RmsBookingDetailDAO rmsD = new RmsBookingDetailDAO();
-        RmsBookingDetail rms = rmsD.getRmsBookingDetailByBookingPkid(hw.getBookingPkid());
-
-        if (q.getResult().equals("0")) {
-            redirectAttrs.addFlashAttribute("error", "Failed to send email to planner. Pls contact system admin.");
-            return "redirect:/rmsbookingDetail/detail/" + rms.getId();
-        } else {
-
-            //send email
-            EmailHwReplacementDAO userDao = new EmailHwReplacementDAO();
-            List<EmailHwReplacement> userRecipientsList = userDao.getEmailHwReplacementList();
-
-            String[] to = new String[userRecipientsList.size()];
-            for (int i = 0; i < userRecipientsList.size(); i++) {
-                to[i] = userRecipientsList.get(i).getEmail();
-            }
-
-            //get current date and time
-            LocalDateTime instance = LocalDateTime.now();
-            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm");
-            String formattedString = formatter.format(instance); //15-02-2022 12:43
-
-            //gethostname
-            HostnameDAO hostnameD = new HostnameDAO();
-            Hostname host = hostnameD.getHostnameFlagZero();
-            String hostname = host.getHostname();
-
-            //send INFORMATION email
-            LOGGER.info("######################### START EMAIL TO PIC ########################### ");
-            EmailSender emailSender = new EmailSender();
-            emailSender.htmlEmailTable(
-                    servletContext,
-                    "", //user name requestor
-                    to, //to
-                    //                        emailTo,
-                    "HW Prep for Loading - Request for HW replacement", //subject
-                    "<br />"
-                    + "Please be informed that the hardware below has been requested for replacement"
-                    + "<br /> "
-                    + "<br /> "
-                    + "RMS No: " + rms.getRmsNo()
-                    + "<br /> "
-                    + "RMS Event: " + rms.getEvent()
-                    + "<br /> "
-                    + "Item Type: " + hw.getItemType()
-                    + "<br /> "
-                    + "Item ID: " + hw.getItemId()
-                    + "<br /> "
-                    + "Item Status: " + hw.getStatus()
-                    + "<br /> "
-                    + "Requested Date: " + formattedString
-                    + "<br /> "
-                    + "Remarks: " + remarks
-                    + "<br /> "
-                    + "<br /> "
-                    + "Please click <a href=\"http://" + hostname + "/HEATS/rmsbookingDetail/detail/" + rms.getId() + " \">HERE</a> for more detail."
-                    + "<br /> "
-                    + "<br />Thank you." //msg
-            );
-
-            redirectAttrs.addFlashAttribute("success", "Email sent to planner.");
-            return "redirect:/rmsbookingDetail/detail/" + rms.getId();
-        }
-    }
-
-    @RequestMapping(value = "/emailBodyByBookingkid", method = {RequestMethod.GET, RequestMethod.POST})
-    @ResponseBody
-    public List<RmsBookingHardware> emailBodyByBookingkid(
-            @ModelAttribute UserSession userSession,
-            Model model,
-            HttpServletRequest request,
-            @RequestParam(required = false) String bookingPkid
-    ) throws IOException {
-
-//        LOGGER.info("id: " + id);
-        RmsBookingHardwareDAO rmsHD = new RmsBookingHardwareDAO();
-        List<RmsBookingHardware> rms = rmsHD.getRmsBookingHardwareListByBookingPkidWithFlagZeroForHwReplacement(bookingPkid);
-//        LOGGER.info("itemId: " + rms.getItemId());
-
-        return rms;
-    }
-
-    @RequestMapping(value = "/retrieveSF/{invId}/{pkid}/{id}/{rmsBookingId}", method = {RequestMethod.GET, RequestMethod.POST})
-    public String retrieveSF(
-            Model model,
-            Locale locale,
-            RedirectAttributes redirectAttrs,
-            @ModelAttribute UserSession userSession,
-            @PathVariable("invId") String invId,
-            @PathVariable("pkid") String pkid,
-            @PathVariable("id") String id,
-            @PathVariable("rmsBookingId") String rmsBookingId
-    ) throws ClassNotFoundException, SQLException {
-
-        LOGGER.info("invId: " + invId);
-        LOGGER.info("pkid: " + pkid);
-        LOGGER.info("id: " + id);
-        LOGGER.info("rmsBookingId: " + rmsBookingId);
-
-        String himsRetrieve = HimsRetrieve.himsRetrieve(servletContext, userSession, invId);
-
-        if (himsRetrieve.contains("Successfully")) {
-            LOGGER.info("+++++++Retrieve Success+++++++");
-            redirectAttrs.addFlashAttribute("success", "Item successfully recall from Storage Factory");
-
-            //update item status
-            RmsBookingHardware h = new RmsBookingHardware();
-            h.setId(id);
-            h.setStatus("Recall from Storage Factory");
-            h.setRecallSfBy(userSession.getFullname());
-            RmsBookingHardwareDAO hD = new RmsBookingHardwareDAO();
-            QueryResult q = hD.updateRmsBookingHardwareForRecallSf(h);
-
-        } else {
-            LOGGER.info("+++++++Retrieve Failed+++++++");
-            redirectAttrs.addFlashAttribute("error", "Failed to recall from Storage Factory. Pls contact system admin for more detail");
-        }
-        return "redirect:/rmsbookingDetail/detail/" + rmsBookingId;
-    }
-
     //group
     @RequestMapping(value = "/groupDetail/{bookingId}/{itemPkid}", method = RequestMethod.GET)
     public String groupDetail(Model model,
@@ -852,12 +220,6 @@ public class RmsBookingDetailUnloadingController {
             @ModelAttribute UserSession userSession) throws IOException {
 
         String currentStatus = "";
-        String leakTest = "";
-        String manTest = "";
-        String bibTest = "";
-        String daqTest = "";
-        String psTest = "";
-        String winTest = "";
 
         String teActive = "";
         String teActiveTab = "";
@@ -874,10 +236,16 @@ public class RmsBookingDetailUnloadingController {
         RmsBookingHardware h = hD.getRmsBookingHardwareByPkid(itemPkid);
         model.addAttribute("motherboardId", h.getItemId());
         model.addAttribute("subStatus", h.getSubStatus());
+        model.addAttribute("status", h.getStatus());
 
         RmsBookingHardwareGroupDAO h2D = new RmsBookingHardwareGroupDAO();
         List<RmsBookingHardwareGroup> hwGroupList = h2D.getRmsBookingHardwareGroupListByGroupId(groupId);
         model.addAttribute("hwGroupList", hwGroupList);
+
+        h2D = new RmsBookingHardwareGroupDAO();
+        RmsBookingHardwareGroup hwGroup = h2D.getUnloadingDateByGroupId(groupId);
+        String unloadingDate = hwGroup.getUnloadingDate();
+        model.addAttribute("unloadingDate", unloadingDate);
 
         //get booking remarks
         RmsBookingHardwareDAO rmsHD = new RmsBookingHardwareDAO();
@@ -891,277 +259,17 @@ public class RmsBookingDetailUnloadingController {
         }
 
         currentStatus = h.getSubStatus();
-        String itemIdMB = "";
-        String mbSptsPkid = "";
-        String itemIdLC = "";
-
-        String statusLeak = "";
-        String statusMan = "";
-        String statusBib = "";
-        String statusBibD = "";
-        String statusPs = "";
-        String statusWin = "";
-
-        if (currentStatus.equalsIgnoreCase("Pending Functional Test")) {
-            // CHECK AND UPDATE THE FIRST TEST
-//            currentStatus = checkStatusFTestBeforeLoading(bookingId, itemPkid);
-
-            RmsBookingHardwareDAO bookdao = new RmsBookingHardwareDAO();
-            Integer checkMb = bookdao.checkMotherboardData(bookingId);
-            bookdao = new RmsBookingHardwareDAO();
-            Integer checkLc = bookdao.checkCardData(bookingId);
-
-            if (checkMb == 0) {
-                redirectAttrs.addFlashAttribute("error", "No motherboard configured");
-            } else {
-                // SINI ADA MB
-                bookdao = new RmsBookingHardwareDAO();
-                mbSptsPkid = bookdao.getSptsPkidForItemIdMb(bookingId, itemPkid);
-                ItemDAO itemdao = new ItemDAO();
-                itemIdMB = itemdao.getMibItemIdBySptsPkId(mbSptsPkid);
-                itemdao = new ItemDAO();
-                String boardName = itemdao.getItemIdById(itemIdMB);
-                ItemActivityConfigDAO itemactdao = new ItemActivityConfigDAO();
-                ItemActivityConfig itemactmb = itemactdao.getItemActivityByItemId(itemIdMB);
-                if (itemactmb != null) {
-                    leakTest = itemactmb.getLeakageTest();
-                    psTest = itemactmb.getPsLeakageTest();
-                    winTest = itemactmb.getWinchesterChamberLeakageTest();
-                    model.addAttribute("configMotherboard", "");
-                } else {
-                    model.addAttribute("configMotherboard", "TRIGGERERROR");
-                    model.addAttribute("itemIdMB", itemIdMB);
-                    model.addAttribute("itemIdLC", itemIdLC);
-                    model.addAttribute("message", "<button type=\"submit\" class=\"email-btn\" infoGroupId=\"" + itemIdMB + "\\" + groupId + "\" onclick=\"sendMailMb(this)\" data-bs-toggle=\"modal\" data-bs-target=\"#confirmation_modal\" >Send Email</button>&emsp;MB Configuration Error [" + itemIdMB + "]" + "<br/>The BIB Activity Config for " + boardName + " was not found!");
-                }
-
-                if (checkLc == 0) {
-                    // SINI TAKDE LC
-                    model.addAttribute("message", "No Load Card Information Found");
-                } else {
-                    // SINI DUA2 ADA
-                    bookdao = new RmsBookingHardwareDAO();
-                    itemIdLC = bookdao.getSptsPkidForItemIdLC(bookingId);
-                    itemdao = new ItemDAO();
-                    String loadcardName = itemdao.getItemIdById(itemIdLC);
-                    itemactdao = new ItemActivityConfigDAO();
-                    ItemActivityConfig itemactlc = itemactdao.getItemActivityByItemId(itemIdLC);
-
-                    if (itemactlc != null) {
-                        bibTest = itemactlc.getBibTest();
-                        daqTest = itemactlc.getBibDaqTest();
-                        manTest = itemactlc.getManualTest();
-                    } else {
-                        model.addAttribute("message", "<button type=\"submit\" class=\"email-btn\" infoGroupId=\"" + itemIdLC + "\\" + groupId + "\" onclick=\"sendMailLc(this)\" data-bs-toggle=\"modal\" data-bs-target=\"#confirmation_modal\" >Send Email</button>&emsp;LC Configuration Error [" + itemIdLC + "]" + " <br/>The BIB Activity Config for " + loadcardName + " was not found!");
-                    }
-                }
-                model.addAttribute("itemIdMB", itemIdMB);
-                model.addAttribute("itemIdLC", itemIdLC);
-            }
-
-            if (leakTest.contains("Yes")) {
-                currentStatus = "Pending Functional Test - Leakage Test";
-            } else if (manTest.contains("Yes")) {
-                currentStatus = "Pending Functional Test - Manual Test";
-            } else if (bibTest.contains("Yes")) {
-                currentStatus = "Pending Functional Test - BIB Test";
-            } else if (daqTest.contains("Yes")) {
-                currentStatus = "Pending Functional Test - BIB DAQ Test";
-            } else if (psTest.contains("Yes")) {
-                currentStatus = "Pending Functional Test - Power Supply Leakage Test";
-            } else if (winTest.contains("Yes")) {
-                currentStatus = "Pending Functional Test - Winchester Chamber Leakage Test";
-            } else {
-                currentStatus = "Pending Release to Production";
-            }
-        } else {
-            // DO NOTHING HERE
-            if (currentStatus.equals("Pending HW Registration")) {
-                model.addAttribute("configMotherboard", "HW");
-                model.addAttribute("message", "Please Complete Hardware Registration First");
-            } else if (currentStatus.equals("Pending VM")) {
-                model.addAttribute("configMotherboard", "VM");
-                model.addAttribute("message", "Please Complete Visual Inspection First");
-            } else if (currentStatus.contains("Pending Functional Test") || currentStatus.contains("Pending Release to Production") || currentStatus.contains("Failed")) {
-                RmsBookingHardwareDAO bookdao = new RmsBookingHardwareDAO();
-                Integer checkMb = bookdao.checkMotherboardData(bookingId);
-                bookdao = new RmsBookingHardwareDAO();
-                Integer checkLc = bookdao.checkCardData(bookingId);
-
-                if (checkMb == 0) {
-                    redirectAttrs.addFlashAttribute("error", "No motherboard configured");
-                } else {
-                    // SINI ADA MB
-                    bookdao = new RmsBookingHardwareDAO();
-                    mbSptsPkid = bookdao.getSptsPkidForItemIdMb(bookingId, itemPkid);
-                    ItemDAO itemdao = new ItemDAO();
-                    itemIdMB = itemdao.getMibItemIdBySptsPkId(mbSptsPkid);
-                    ItemActivityConfigDAO itemactdao = new ItemActivityConfigDAO();
-                    ItemActivityConfig itemactmb = itemactdao.getItemActivityByItemId(itemIdMB);
-                    if (itemactmb != null) {
-                        leakTest = itemactmb.getLeakageTest();
-                        psTest = itemactmb.getPsLeakageTest();
-                        winTest = itemactmb.getWinchesterChamberLeakageTest();
-                        model.addAttribute("configMotherboard", "");
-                    } else {
-                        model.addAttribute("configMotherboard", "TRIGGERERROR");
-                        model.addAttribute("itemIdMB", itemIdMB);
-                        model.addAttribute("itemIdLC", itemIdLC);
-                        redirectAttrs.addFlashAttribute("error", "No motherboard configuration configured");
-                    }
-
-                    if (checkLc == 0) {
-                        // SINI TAKDE LC
-                        redirectAttrs.addFlashAttribute("error", "No load card configured");
-                    } else {
-                        // SINI DUA2 ADA
-                        bookdao = new RmsBookingHardwareDAO();
-                        itemIdLC = bookdao.getSptsPkidForItemIdLC(bookingId);
-                        itemactdao = new ItemActivityConfigDAO();
-                        ItemActivityConfig itemactlc = itemactdao.getItemActivityByItemId(itemIdLC);
-
-                        if (itemactlc != null) {
-                            bibTest = itemactlc.getBibTest();
-                            daqTest = itemactlc.getBibDaqTest();
-                            manTest = itemactlc.getManualTest();
-                        } else {
-                            redirectAttrs.addFlashAttribute("error", "No load card configuration configured");
-                        }
-                    }
-                    model.addAttribute("itemIdMB", itemIdMB);
-                    model.addAttribute("itemIdLC", itemIdLC);
-                }
-
-                RmsBookingFunctionalTestDAO ftestdao2 = new RmsBookingFunctionalTestDAO();
-                RmsBookingFunctionalTest testResult = new RmsBookingFunctionalTest();
-                testResult = ftestdao2.getFuncTestResult(groupId);
-                model.addAttribute("testResult", testResult);
-
-                if (testResult == null) {
-                    // NOTHING TO UPDATE HERE
-                } else {
-//                    statusLeak = testResult.getLeakStatus();
-//                    statusMan = testResult.getManualStatus();
-//                    statusBib = testResult.getBibStatus();
-//                    statusBibD = testResult.getBibDaqStatus();
-//                    statusPs = testResult.getPsStatus();
-//                    statusWin = testResult.getPsStatus();
-                    statusLeak = SpmlUtil.nullToEmptyString(testResult.getLeakStatus());
-                    statusMan = SpmlUtil.nullToEmptyString(testResult.getManualStatus());
-                    statusBib = SpmlUtil.nullToEmptyString(testResult.getBibStatus());
-                    statusBibD = SpmlUtil.nullToEmptyString(testResult.getBibDaqStatus());
-                    statusPs = SpmlUtil.nullToEmptyString(testResult.getPsStatus());
-                    statusWin = SpmlUtil.nullToEmptyString(testResult.getPsStatus());
-                }
-                String check01 = "disabled";    // LEAKAGE
-                String check02 = "disabled";    // MANUAL
-                String check03 = "disabled";    // BIB 
-                String check04 = "disabled";    // BIB DAQ
-                String check05 = "disabled";    // PS
-                String check06 = "disabled";    // WINCHESTER
-                String edit01 = "visually-hidden";
-                String edit02 = "visually-hidden";
-                String edit03 = "visually-hidden";
-                String edit04 = "visually-hidden";
-                String edit05 = "visually-hidden";
-                String edit06 = "visually-hidden";
-
-                if (currentStatus.contains("Failed")) {
-                    model.addAttribute("leakbutton", "disabled");
-                    model.addAttribute("manualbutton", "disabled");
-                    model.addAttribute("bibbutton", "disabled");
-                    model.addAttribute("bibdaqbutton", "disabled");
-                    model.addAttribute("psbutton", "disabled");
-                    model.addAttribute("winbutton", "disabled");
-                } else {
-                    if (currentStatus.contains("Leakage")) {
-                        check01 = "";
-                        edit01 = "";
-                    } else if (currentStatus.contains("BIB Test")) {
-                        check03 = "";
-                        edit03 = "";
-                    } else if (currentStatus.contains("BIB DAQ")) {
-                        check04 = "";
-                        edit04 = "";
-                    } else if (currentStatus.contains("Manual")) {
-                        check02 = "";
-                        edit02 = "";
-                    } else if (currentStatus.contains("Winchester")) {
-                        check06 = "";
-                        edit06 = "";
-                    } else if (currentStatus.contains("Power")) {
-                        check05 = "";
-                        edit05 = "";
-                    }
-                }
-
-                model.addAttribute("leakbutton", check01);
-                model.addAttribute("manualbutton", check02);
-                model.addAttribute("bibbutton", check03);
-                model.addAttribute("bibdaqbutton", check04);
-                model.addAttribute("psbutton", check05);
-                model.addAttribute("winbutton", check06);
-                model.addAttribute("editleakbutton", edit01);
-                model.addAttribute("editmanualbutton", edit02);
-                model.addAttribute("editbibbutton", edit03);
-                model.addAttribute("editbibdaqbutton", edit04);
-                model.addAttribute("editpsbutton", edit05);
-                model.addAttribute("editwinbutton", edit06);
-            } else {
-
-            }
-        }
-
-        if (statusLeak.equals("Fail")) {
-            model.addAttribute("leakbutton", "disabled");
-            model.addAttribute("editleakbutton", "disabled");
-        } else if (statusLeak.equals("Pass")) {
-            model.addAttribute("leakbutton", "disabled");
-            model.addAttribute("editleakbutton", "enabled");
-        } else {
-
-        }
-
-        model.addAttribute("bookId", bookingId);
-        model.addAttribute("mibItemId", itemPkid);
-
-        model.addAttribute("leakCheck", leakTest);
-        model.addAttribute("manCheck", manTest);
-        model.addAttribute("bibCheck", bibTest);
-        model.addAttribute("daqCheck", daqTest);
-        model.addAttribute("psCheck", psTest);
-        model.addAttribute("winCheck", winTest);
-
-        ParameterDetailsDAO pDx = new ParameterDetailsDAO();
-        List<ParameterDetails> bibResultData = pDx.getGroupParameterDetailList(statusBib, "016");
-        model.addAttribute("bibResultData", bibResultData);
-
-        pDx = new ParameterDetailsDAO();
-        List<ParameterDetails> bibDaqResultData = pDx.getGroupParameterDetailList(statusBibD, "016");
-        model.addAttribute("bibDaqResultData", bibDaqResultData);
-
-        pDx = new ParameterDetailsDAO();
-        List<ParameterDetails> leakResultData = pDx.getGroupParameterDetailList(statusLeak, "016");
-        model.addAttribute("leakResultData", leakResultData);
-
-        pDx = new ParameterDetailsDAO();
-        List<ParameterDetails> psResultData = pDx.getGroupParameterDetailList(statusPs, "016");
-        model.addAttribute("psResultData", psResultData);
-
-        pDx = new ParameterDetailsDAO();
-        List<ParameterDetails> winResultData = pDx.getGroupParameterDetailList(statusWin, "016");
-        model.addAttribute("winResultData", winResultData);
 
         //vm tab
-        RmsBookingVisualInspection itemVm = new RmsBookingVisualInspection();
-
         RmsBookingVisualInspectionDAO vmD = new RmsBookingVisualInspectionDAO();
-        int count = vmD.getCountByGroupIdWithModuleBeforeLoading(groupId);
-        if (count == 1) {
-            vmD = new RmsBookingVisualInspectionDAO();
-            itemVm = vmD.getRmsBookingVisualInspectionByGroupId(groupId);
+        RmsBookingVisualInspection itemVm = vmD.getRmsBookingVisualInspectionByGroupIdAndStatus(groupId, h.getStatus());
+
+        if (itemVm != null) {
+            model.addAttribute("itemVm", itemVm);
+        } else {
+            itemVm = new RmsBookingVisualInspection();
+            model.addAttribute("itemVm", itemVm);
         }
-        model.addAttribute("itemVm", itemVm);
 
         if (itemVm.getPcbHardwareId() != null && !"".equals(itemVm.getPcbHardwareId())) {
             String[] pcbHardwareIdList = itemVm.getPcbHardwareId().split(",");
@@ -1329,7 +437,74 @@ public class RmsBookingDetailUnloadingController {
         List<ParameterDetails> labelIdentificationReject = pD.getGroupParameterDetailList(itemVm.getLabelIdentificationReject(), "023");
         model.addAttribute("labelIdentificationReject", labelIdentificationReject);
 
-        if (currentStatus.contains("HW Registration")) {
+        //get ionic config
+        String hasIonic = "";
+        String ionicPassValue = "0";
+
+        RmsBookingIonicConfigDAO ionicConfigD = new RmsBookingIonicConfigDAO();
+        Integer countIonicConfig = ionicConfigD.getCountByEvent(rms.getEvent());
+
+        if (countIonicConfig == 0) {
+            hasIonic = "No";
+            model.addAttribute("ionicPassValue", ionicPassValue);
+        } else {
+            ionicConfigD = new RmsBookingIonicConfigDAO();
+            RmsBookingIonicConfig ionicConfig = ionicConfigD.getRmsBookingIonicConfigByEvent(rms.getEvent());
+            ionicPassValue = ionicConfig.getPassValue();
+            model.addAttribute("ionicPassValue", ionicPassValue);
+            hasIonic = "Yes";
+        }
+
+        //get ionic data
+        RmsBookingIonicDAO ioncD = new RmsBookingIonicDAO();
+        RmsBookingIonic ionic = ioncD.getRmsBookingIonicbyGroupId(groupId);
+
+        if (ionic != null) {
+            model.addAttribute("ionic", ionic);
+        } else {
+            model.addAttribute("ionic", new RmsBookingIonic());
+        }
+
+        //check which tab should active
+        if (currentStatus.contains("Ionic")) {
+            String ionicActive = "active";
+            String ionicActiveTab = "show active";
+//            String requiredDisable = "required";
+//            String disabledUpload = "";
+            model.addAttribute("requiredDisable", !currentStatus.contains("Failed") ? "required" : "disabled");
+            model.addAttribute("disabledUpload", !currentStatus.contains("Failed") ? "" : "disabled");
+            model.addAttribute("ionicActive", ionicActive);
+            model.addAttribute("ionicActiveTab", ionicActiveTab);
+//            model.addAttribute("requiredDisable", requiredDisable);
+//            model.addAttribute("disabledUpload", disabledUpload);
+        } else {
+            String ionicActive = "";
+            String ionicActiveTab = "";
+            String requiredDisable = "disabled";
+            String disabledUpload = "disabled";
+            model.addAttribute("ionicActive", ionicActive);
+            model.addAttribute("ionicActiveTab", ionicActiveTab);
+            model.addAttribute("requiredDisable", requiredDisable);
+            model.addAttribute("disabledUpload", disabledUpload);
+        }
+        if (currentStatus.contains("VM") || currentStatus.contains("Visual Inspection")) {
+            String vmActive = "active";
+            String vmActiveTab = "show active";
+//            String buttonVm = "";
+            model.addAttribute("vmActive", vmActive);
+            model.addAttribute("vmActiveTab", vmActiveTab);
+//            model.addAttribute("buttonVm", buttonVm);
+            model.addAttribute("buttonVm", !currentStatus.contains("Failed") ? "" : "disabled");
+        } else {
+            String vmActive = "";
+            String vmActiveTab = "";
+            String buttonVm = "disabled";
+            model.addAttribute("vmActive", vmActive);
+            model.addAttribute("vmActiveTab", vmActiveTab);
+            model.addAttribute("buttonVm", buttonVm);
+        }
+
+        if (!currentStatus.contains("Ionic") && !currentStatus.contains("VM") && !currentStatus.contains("Visual Inspection")) { //default active HW tab
             String hwActive = "active";
             String hwActiveTab = "show active";
             model.addAttribute("hwActive", hwActive);
@@ -1340,225 +515,104 @@ public class RmsBookingDetailUnloadingController {
             model.addAttribute("hwActive", hwActive);
             model.addAttribute("hwActiveTab", hwActiveTab);
         }
-        if (currentStatus.contains("VM") || currentStatus.contains("Visual Inspection")) {
-            String vmActive = "active";
-            String vmActiveTab = "show active";
-            model.addAttribute("vmActive", vmActive);
-            model.addAttribute("vmActiveTab", vmActiveTab);
-        } else {
-            String vmActive = "";
-            String vmActiveTab = "";
-            model.addAttribute("vmActive", vmActive);
-            model.addAttribute("vmActiveTab", vmActiveTab);
-        }
-//        if (h.getSubStatus().contains("Test")) {
-//            String teActive = "active";
-//            String teActiveTab = "show active";
-//            model.addAttribute("teActive", teActive);
-//            model.addAttribute("teActiveTab", teActiveTab);
-//        } else {
-//            String teActive = "";
-//            String teActiveTab = "";
-//            model.addAttribute("teActive", teActive);
-//            model.addAttribute("teActiveTab", teActiveTab);
-//        }
 
-        if (currentStatus.contains("Test")) {
-            teActive = "active";
-            teActiveTab = "show active";
-            if (currentStatus.contains("- Leakage Test")) {
-                model.addAttribute("leakshow", teActiveTab);
-            } else if (currentStatus.contains("Manual")) {
-                model.addAttribute("manshow", teActiveTab);
-            } else if (currentStatus.contains("BIB Test")) {
-                model.addAttribute("bibshow", teActiveTab);
-            } else if (currentStatus.contains("BIB DAQ")) {
-                model.addAttribute("bibDshow", teActiveTab);
-            } else if (currentStatus.contains("Power Supply")) {
-                model.addAttribute("psshow", teActiveTab);
-            } else if (currentStatus.contains("Winchester")) {
-                model.addAttribute("winshow", teActiveTab);
-            }
-        } else {
-            // DO NOTHING HERE
-        }
         model.addAttribute("currentStatus", currentStatus);
         model.addAttribute("teActive", teActive);
         model.addAttribute("teActiveTab", teActiveTab);
 
-        return "rmsbookingDetail/detail_group";
+        return "rmsbookingDetailUnloading/detail_group";
     }
 
-    @RequestMapping(value = "/registerHwId", method = RequestMethod.POST)
-    public String registerHwId(
+    @RequestMapping(value = "/ionic/save", method = {RequestMethod.GET, RequestMethod.POST})
+    public String ionicSave(
             Model model,
             Locale locale,
             RedirectAttributes redirectAttrs,
             @ModelAttribute UserSession userSession,
+            @RequestParam(required = false) String hwStatus,
             @RequestParam(required = false) String groupId,
-            @RequestParam(required = false) String bookingPkid,
-            @RequestParam(required = false) String motherboardId,
-            @RequestParam(required = false) String hwId
-    ) {
+            @RequestParam(required = false) String bibResult,
+            @RequestParam(required = false) String bibStatus,
+            @RequestParam(required = false) MultipartFile bibUpload,
+            @RequestParam(required = false) String bibCardResult,
+            @RequestParam(required = false) String bibCardStatus,
+            @RequestParam(required = false) MultipartFile bibCardUpload
+    ) throws IOException {
 
-        //check hardware status first - must be available
-        ItemHardwareDAO itemHwD = new ItemHardwareDAO();
-        int countHwId = itemHwD.getCountAvailableHardwareId(hwId);
-        if (countHwId == 0) {
-            LOGGER.info("hwID status != Available");
-            redirectAttrs.addFlashAttribute("error", hwId + " are not available. Pls register with another Hardware ID");
-            return "redirect:/rmsbookingDetail/groupDetail/" + groupId;
-        } else {
-            //check if active in rmsBookingHardwareGroup table (flag != 99)
-            RmsBookingHardwareGroupDAO hwGroupD = new RmsBookingHardwareGroupDAO();
-//            int count = hwGroupD.getCountHwWithFlagNE99(hwId);
-            int count = hwGroupD.getCountHwWithFlagNE99And2(hwId); //to include flag = 2 6.5.2026
-            if (count > 0) {
-                LOGGER.info("hwID already active in rmsBookingHardwareGroup");
-                redirectAttrs.addFlashAttribute("error", hwId + " already registered. Pls register with another Hardware ID");
-                return "redirect:/rmsbookingDetail/groupDetail/" + groupId;
-            } else {
-                //1st step to check qty requested. only can register if less than requested qty
-                itemHwD = new ItemHardwareDAO();
-                ItemHardware itemHw = itemHwD.getItemHardwareByHardwareId(hwId);
-                ItemDAO itemD = new ItemDAO();
-                Item item = itemD.getHardwareDetail(itemHw.getMibItemId());
-                RmsBookingHardwareDAO rmsBookingHD = new RmsBookingHardwareDAO();
-                int countRmsBookingHw = rmsBookingHD.getCountBookingPkidAndItemPkid(bookingPkid, item.getSptsPkid());
-                if (countRmsBookingHw == 1) {
-                    //get total qty per itemPkid and bookingPkid requested from booking_hardware table
-                    rmsBookingHD = new RmsBookingHardwareDAO();
-                    RmsBookingHardware rmsBookingH = rmsBookingHD.getRmsBookingHardwareByBookingPkidAndItemPKid(bookingPkid, item.getSptsPkid());
-                    int requestedQty = Integer.parseInt(rmsBookingH.getQty());
+        String finalStatus = "";
+        String stringPathBib = "";
+        String stringPathBibCard = "";
+        String emailBodyFail = "";
 
-                    //get total qty register under same itemID and booking id (split from group id)
-                    hwGroupD = new RmsBookingHardwareGroupDAO();
-                    int totalQtyRegistered = hwGroupD.getCountHwWithinSameBookingPkidAndItemPkid(bookingPkid, item.getSptsPkid());
+        RmsBookingIonic ionic = new RmsBookingIonic();
+        ionic.setGroupId(groupId);
+        ionic.setModule(hwStatus);
+        ionic.setBibResult(bibResult);
+        ionic.setBibStatus(bibStatus);
+        ionic.setBibCardResult(bibCardResult);
+        ionic.setBibCardStatus(bibCardStatus);
 
-//                    LOGGER.info("totalQtyRegistered: " + totalQtyRegistered);
-//                    LOGGER.info("requestedQty: " + requestedQty);
-                    if (totalQtyRegistered >= requestedQty) {
-                        LOGGER.info("totalQtyRegistered >= requestedQty");
-
-                        redirectAttrs.addFlashAttribute("error", " You’ve already registered all the hardware allowed under Item ID: " + rmsBookingH.getItemId() + ". Total requested qty: " + requestedQty);
-                        return "redirect:/rmsbookingDetail/groupDetail/" + groupId;
-                    } else {
-                        //check if itemType = BIB. must be same with selected BIB Item ID
-                        if ("BIB".equals(item.getItemType())) {
-                            if (!motherboardId.equals(hwId)) {
-                                LOGGER.info("BIB Hardware ID not same with group BIB Item ID");
-                                redirectAttrs.addFlashAttribute("error", "Invalid Entry: This motherboard Hardware ID is not part of the selected hardware group.");
-                                return "redirect:/rmsbookingDetail/groupDetail/" + groupId;
-                            }
-                        }
-
-                        //proceed to save to rms booking hardware group table
-                        RmsBookingDetailDAO rmsBookingDAO = new RmsBookingDetailDAO();
-                        RmsBookingDetail rmsBooking = rmsBookingDAO.getRmsBookingDetailByBookingPkid(bookingPkid);
-
-                        RmsBookingHardwareGroup hwGroup = new RmsBookingHardwareGroup();
-                        hwGroup.setGroupId(groupId);
-                        hwGroup.setItemPkid(item.getSptsPkid());
-                        hwGroup.setItemId(item.getItemId());
-                        hwGroup.setItemType(item.getItemType());
-                        hwGroup.setHardwarePkid(itemHw.getSptsPkid());
-                        hwGroup.setHardwareId(hwId);
-                        hwGroup.setRmsNo(rmsBooking.getRmsNo());
-                        hwGroup.setEvent(rmsBooking.getEvent());
-                        hwGroup.setSptsStatus(itemHw.getStatus());
-                        hwGroup.setStatus("New");
-                        hwGroup.setCreatedBy(userSession.getFullname());
-                        hwGroup.setFlag("0");
-                        hwGroupD = new RmsBookingHardwareGroupDAO();
-                        QueryResult q = hwGroupD.insertRmsBookingHardwareGroup(hwGroup);
-                        if (q.getResult() > 0) {
-
-                            //update lc_qty/pc_qty at rmsbookinghardware table
-                            String lcQty = "";
-                            String pcQty = "";
-
-                            String[] MbBookingHwPkid = groupId.split("/");
-                            String mbBookingPkid = MbBookingHwPkid[1];
-
-                            rmsBookingHD = new RmsBookingHardwareDAO();
-                            int countBookingHwPkid = rmsBookingHD.getCountBookingPkidAndPkidForMotherboard(bookingPkid, mbBookingPkid);
-                            if (countBookingHwPkid == 1) {
-                                rmsBookingHD = new RmsBookingHardwareDAO();
-                                RmsBookingHardware MbDetail = rmsBookingHD.getRmsBookingHardwareByBookingPkidAndPkid(bookingPkid, mbBookingPkid);
-
-                                if (MbDetail.getLcQty() == null || "".equals(MbDetail.getLcQty())) {
-                                    lcQty = "0";
-                                } else {
-                                    lcQty = MbDetail.getLcQty();
-                                }
-                                if (MbDetail.getPcQty() == null || "".equals(MbDetail.getPcQty())) {
-                                    pcQty = "0";
-                                } else {
-                                    pcQty = MbDetail.getPcQty();
-                                }
-                                if ("Load Card".equals(rmsBookingH.getItemType())) {
-                                    lcQty = String.valueOf(Integer.parseInt(lcQty) + 1);
-                                } else if ("Program Card".equals(rmsBookingH.getItemType())) {
-                                    pcQty = String.valueOf(Integer.parseInt(pcQty) + 1);
-                                }
-
-                                RmsBookingHardware hw = new RmsBookingHardware();
-                                hw.setLcQty(lcQty);
-                                hw.setPcQty(pcQty);
-                                hw.setBookingPkid(bookingPkid);
-                                hw.setPkid(mbBookingPkid);
-                                rmsBookingHD = new RmsBookingHardwareDAO();
-                                QueryResult qHw = rmsBookingHD.updateRmsBookingHardwareLcQtyAndPcQtyByBookingPkidAndPkid(hw);
-                            }
-
-                            //add log
-                            RmsBookingHardwareGroupLog log = new RmsBookingHardwareGroupLog();
-                            log.setGroupId(groupId);
-                            log.setDetail("Register Item ID: " + item.getItemId());
-                            log.setCreatedBy(userSession.getFullname());
-                            RmsBookingHardwareGroupLogDAO logD = new RmsBookingHardwareGroupLogDAO();
-                            QueryResult logQ = logD.insertRmsBookingHardwareGroupLog(log);
-
-                            redirectAttrs.addFlashAttribute("success", hwId + " is successfully registered.");
-                            return "redirect:/rmsbookingDetail/groupDetail/" + groupId;
-                        } else {
-                            LOGGER.info("Failed to insert into rmsBookingHardwareGroup table");
-                            redirectAttrs.addFlashAttribute("error", "Failed to register. Pls contact system admin.");
-                            return "redirect:/rmsbookingDetail/groupDetail/" + groupId;
-                        }
-                    }
-                } else {
-                    LOGGER.info("No itemID under this bookingPkid");
-                    redirectAttrs.addFlashAttribute("error", hwId + " not available. Pls register with another Hardware ID");
-                    return "redirect:/rmsbookingDetail/groupDetail/" + groupId;
-                }
-            }
+        if ("FAIL".equals(bibStatus)) {
+            emailBodyFail = "Bib Result : " + bibResult + "<br /> ";
         }
-    }
+        if ("FAIL".equals(bibCardStatus)) {
+            emailBodyFail = "Bib Card Result : " + bibCardResult + "<br /> ";
+        }
 
-    @RequestMapping(value = "/deleteHwId/{id}", method = RequestMethod.GET)
-    public String deleteHwId(
-            Model model,
-            Locale locale,
-            @ModelAttribute UserSession userSession,
-            RedirectAttributes redirectAttrs,
-            @PathVariable("id") String id
-    ) {
-        RmsBookingHardwareGroupDAO hwD = new RmsBookingHardwareGroupDAO();
-        RmsBookingHardwareGroup hw = hwD.getRmsBookingHardwareGroup(id);
+        if ("FAIL".equals(bibStatus) || "FAIL".equals(bibCardStatus)) {
+            finalStatus = "FAIL";
+            ionic.setFlag("99");
+        } else {
+            finalStatus = "PASS";
+            ionic.setFlag("0");
+        }
+        ionic.setStatus(finalStatus);
+        ionic.setCreatedBy(userSession.getFullname());
 
-        hwD = new RmsBookingHardwareGroupDAO();
-        QueryResult queryResult = hwD.deleteRmsBookingHardwareGroup(id);
+        RmsBookingIonicDAO ionicD = new RmsBookingIonicDAO();
+        QueryResult q = ionicD.insertRmsBookingIonic(ionic);
+        if (!"0".equals(q.getGeneratedKey())) {
 
-        if (queryResult.getResult() == 1) {
+            ionic = new RmsBookingIonic();
+            LOGGER.info("bibUpload: " + bibUpload);
 
-            String[] groupId = hw.getGroupId().split("/");
-            String bookingPkid = groupId[0];
-            String mbBookingPkid = groupId[1];
+            //check if user upload any attachment
+//            if (!pcbRejectUpload.isEmpty()) {
+            if (!bibUpload.isEmpty()) {
+                try {
+                    // Get the file and save it somewhere
+                    byte[] bytesPcb = bibUpload.getBytes();
+                    Path pathBib = Paths.get(UPLOADED_FOLDER_IONIC + q.getGeneratedKey() + "_bib_" + bibUpload.getOriginalFilename());
+                    Files.write(pathBib, bytesPcb);
+                    stringPathBib = pathBib.toString();
+                    LOGGER.info("pathBib : " + pathBib);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                ionic.setBibUpload(stringPathBib);
+            }
+            if (!bibCardUpload.isEmpty()) {
+                LOGGER.info("bibCardUpload : " + bibCardUpload);
+                try {
+                    // Get the file and save it somewhere
+                    byte[] bytesHandle = bibCardUpload.getBytes();
+                    Path pathBibCard = Paths.get(UPLOADED_FOLDER_IONIC + q.getGeneratedKey() + "_bibCard_" + bibCardUpload.getOriginalFilename());
+                    Files.write(pathBibCard, bytesHandle);
+                    stringPathBibCard = pathBibCard.toString();
+                    LOGGER.info("pathBibCard : " + pathBibCard);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                ionic.setBibCardUpload(stringPathBibCard);
+            }
+            ionic.setId(q.getGeneratedKey());
+            ionicD = new RmsBookingIonicDAO();
+            QueryResult q3 = ionicD.updateRmsBookingIonicForUploadFile(ionic);
 
-            //update lc_qty/pc_qty at rmsbookinghardware table
-            String lcQty = "";
-            String pcQty = "";
+            //update substatus in rmsBookingHardware table
+            String[] groupIdSplit = groupId.split("/");
+            String bookingPkid = groupIdSplit[0];
+            String mbBookingPkid = groupIdSplit[1];
 
             RmsBookingHardwareDAO rmsBookingHD = new RmsBookingHardwareDAO();
             int countBookingHwPkid = rmsBookingHD.getCountBookingPkidAndPkidForMotherboard(bookingPkid, mbBookingPkid);
@@ -1566,142 +620,165 @@ public class RmsBookingDetailUnloadingController {
                 rmsBookingHD = new RmsBookingHardwareDAO();
                 RmsBookingHardware MbDetail = rmsBookingHD.getRmsBookingHardwareByBookingPkidAndPkid(bookingPkid, mbBookingPkid);
 
-                if (MbDetail.getLcQty() == null || "".equals(MbDetail.getLcQty())) {
-                    lcQty = "0";
+                RmsBookingHardware hwBook = new RmsBookingHardware();
+                hwBook.setId(MbDetail.getId());
+                if ("FAIL".equals(finalStatus)) {
+                    hwBook.setSubStatus("Failed Ionic Test (Waiting Maverick CA)");
                 } else {
-                    lcQty = MbDetail.getLcQty();
+                    hwBook.setSubStatus("Pending VM");
                 }
-                if (MbDetail.getPcQty() == null || "".equals(MbDetail.getPcQty())) {
-                    pcQty = "0";
-                } else {
-                    pcQty = MbDetail.getPcQty();
-                }
-
                 rmsBookingHD = new RmsBookingHardwareDAO();
-                RmsBookingHardware hardware = rmsBookingHD.getRmsBookingHardwareByBookingPkidAndItemPKid(bookingPkid, hw.getItemPkid());
-
-                if ("Load Card".equals(hardware.getItemType())) {
-                    lcQty = String.valueOf(Integer.parseInt(lcQty) - 1);
-                } else if ("Program Card".equals(hardware.getItemType())) {
-                    pcQty = String.valueOf(Integer.parseInt(pcQty) - 1);
-                }
-
-                RmsBookingHardware hw1 = new RmsBookingHardware();
-                hw1.setLcQty(lcQty);
-                hw1.setPcQty(pcQty);
-                hw1.setBookingPkid(bookingPkid);
-                hw1.setPkid(mbBookingPkid);
-                rmsBookingHD = new RmsBookingHardwareDAO();
-                QueryResult qHw = rmsBookingHD.updateRmsBookingHardwareLcQtyAndPcQtyByBookingPkidAndPkid(hw1);
+                QueryResult qHwBook = rmsBookingHD.updateRmsBookingHardwareSubStatusById(hwBook);
             }
 
             //add log
             RmsBookingHardwareGroupLog log = new RmsBookingHardwareGroupLog();
-            log.setGroupId(hw.getGroupId());
-            log.setDetail("Removed Item ID: " + hw.getItemId());
+            log.setGroupId(groupId);
+            log.setDetail("Ionic Test Completed (" + finalStatus + ")");
             log.setCreatedBy(userSession.getFullname());
             RmsBookingHardwareGroupLogDAO logD = new RmsBookingHardwareGroupLogDAO();
             QueryResult logQ = logD.insertRmsBookingHardwareGroupLog(log);
 
-            redirectAttrs.addFlashAttribute("success", hw.getHardwareId() + " is successfully deleted.");
-        } else {
-            redirectAttrs.addFlashAttribute("error", "Failed to delete " + hw.getHardwareId() + ". Pls contact system admin.");
-        }
-        return "redirect:/rmsbookingDetail/groupDetail/" + hw.getGroupId();
-    }
+            if ("FAIL".equals(finalStatus)) {
 
-    @RequestMapping(value = "/finalize/{bookingPkid}/{pkid}", method = RequestMethod.GET)
-    public String finalize(
-            Model model,
-            Locale locale,
-            RedirectAttributes redirectAttrs,
-            @ModelAttribute UserSession userSession,
-            @PathVariable("bookingPkid") String bookingPkid,
-            @PathVariable("pkid") String pkid
-    ) {
+                //save to maverick table
+                RmsBookingMaverick maverick = new RmsBookingMaverick();
+                maverick.setGroupId(groupId);
+                maverick.setModule(hwStatus);
+                maverick.setSubmodule("Ionic Test");
+                maverick.setStatus("Failed Ionic Test");
+                maverick.setFlag("0");
+                maverick.setCreatedBy(userSession.getFullname());
+                RmsBookingMaverickDAO maverickD = new RmsBookingMaverickDAO();
+                QueryResult maverickAdd = maverickD.insertRmsBookingMaverick(maverick);
 
-        RmsBookingHardwareDAO booking = new RmsBookingHardwareDAO();
-        int countBookingHardware = booking.getCountBookingPkidAndPkidForMotherboard(bookingPkid, pkid);
+                EmailVmFailDAO userDao = new EmailVmFailDAO();
+                List<EmailVmFail> userRecipientsList = userDao.getEmailVmFailList();
 
-        if (countBookingHardware == 1) {
-            //update sub status to 'Pending VM'
-            RmsBookingHardware bookHardware = new RmsBookingHardware();
-            bookHardware.setBookingPkid(bookingPkid);
-            bookHardware.setPkid(pkid);
-            bookHardware.setSubStatus("Pending VM");
-            booking = new RmsBookingHardwareDAO();
-            QueryResult q = booking.updateRmsBookingHardwareSubStatusByPkidAndBookingPkid(bookHardware);
-            if (q.getResult() == 1) {
+                String[] to = new String[userRecipientsList.size()];
+                for (int i = 0; i < userRecipientsList.size(); i++) {
+                    to[i] = userRecipientsList.get(i).getEmail();
+                }
 
-                String groupId = bookingPkid + "/" + pkid;
+                //get current date and time
+                LocalDateTime instance = LocalDateTime.now();
+                DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm");
+                String formattedString = formatter.format(instance); //15-02-2022 12:43
 
-                //add log
-                RmsBookingHardwareGroupLog log = new RmsBookingHardwareGroupLog();
-                log.setGroupId(groupId);
-                log.setDetail("Finalized");
-                log.setCreatedBy(userSession.getFullname());
-                RmsBookingHardwareGroupLogDAO logD = new RmsBookingHardwareGroupLogDAO();
-                QueryResult logQ = logD.insertRmsBookingHardwareGroupLog(log);
+                //gethostname
+                HostnameDAO hostnameD = new HostnameDAO();
+                Hostname h = hostnameD.getHostnameFlagZero();
+                String hostname = h.getHostname();
 
-                redirectAttrs.addFlashAttribute("success", "Finalization successful. Proceed to the next step (VM) when ready.");
-                return "redirect:/rmsbookingDetail/groupDetail/" + bookingPkid + "/" + pkid;
+                RmsBookingDetailDAO rmsBookingD = new RmsBookingDetailDAO();
+                RmsBookingDetail rmsBooking = rmsBookingD.getRmsBookingDetailByBookingPkid(bookingPkid);
+
+                rmsBookingHD = new RmsBookingHardwareDAO();
+                RmsBookingHardware MbDetail = rmsBookingHD.getRmsBookingHardwareByBookingPkidAndPkid(bookingPkid, mbBookingPkid);
+
+                //send INFORMATION email
+                LOGGER.info("######################### START EMAIL TO PIC ########################### ");
+                EmailSender emailSender = new EmailSender();
+                emailSender.htmlEmailTable(
+                        servletContext,
+                        "", //user name requestor
+                        to, //to
+                        //                        emailTo,
+                        hwStatus + " - Failed Ionic Test", //subject
+                        "<br />"
+                        + "Please be informed that the item below failed the Ionic Test."
+                        + "<br /> "
+                        + "<br /> "
+                        + "RMS No: " + rmsBooking.getRmsNo()
+                        + "<br /> "
+                        + "Event: " + rmsBooking.getEvent()
+                        + "<br /> "
+                        + "Motherboard ID: " + MbDetail.getItemId()
+                        + "<br /> "
+                        + "Inspection Date: " + formattedString
+                        + "<br /> "
+                        + "<br /> "
+                        + "Detail: <br />" + emailBodyFail
+                        + "<br /> "
+                        + "Please click <a href=\"http://" + hostname + "/HEATS/rmsbookingDetailUnloading/groupDetail/" + groupId + " \">HERE</a> for more detail."
+                        + "<br /> "
+                        + "<br />Thank you." //msg
+                );
+
+                redirectAttrs.addFlashAttribute("error", "Ionic Test Fail. Pls go to Maverick Module for Corrective Action.");
+                return "redirect:/rmsbookingDetailUnloading/groupDetail/" + groupId;
             } else {
-                redirectAttrs.addFlashAttribute("error", "Failed to finalize. Pls contact system admin.");
-                return "redirect:/rmsbookingDetail/groupDetail/" + bookingPkid + "/" + pkid;
+                redirectAttrs.addFlashAttribute("success", "Ionic Test Pass. Pls Proceed with VM");
+                return "redirect:/rmsbookingDetailUnloading/groupDetail/" + groupId;
             }
 
         } else {
-            redirectAttrs.addFlashAttribute("error", "Failed to finalize. Pls contact system admin.");
-            return "redirect:/rmsbookingDetail/groupDetail/" + bookingPkid + "/" + pkid;
+            redirectAttrs.addFlashAttribute("error", "Failed to save Ionic Test Result. Pls Contact System Admin");
+            return "redirect:/rmsbookingDetailUnloading/groupDetail/" + groupId;
         }
-
     }
 
-    @RequestMapping(value = "/undoFinalize/{bookingPkid}/{pkid}", method = RequestMethod.GET)
-    public String undoFinalize(
-            Model model,
-            Locale locale,
-            RedirectAttributes redirectAttrs,
-            @ModelAttribute UserSession userSession,
-            @PathVariable("bookingPkid") String bookingPkid,
-            @PathVariable("pkid") String pkid
-    ) {
+    @RequestMapping(value = "/ionic/downloadAttach/{id}/{type}", method = RequestMethod.GET)
+    public void downloadAttachmentIonic(HttpServletRequest request,
+            @PathVariable("type") String type,
+            @PathVariable("id") String id,
+            HttpServletResponse response) throws IOException {
 
-        RmsBookingHardwareDAO booking = new RmsBookingHardwareDAO();
-        int countBookingHardware = booking.getCountBookingPkidAndPkidForMotherboard(bookingPkid, pkid);
+        LOGGER.info("id: " + id);
+        LOGGER.info("type: " + type);
 
-        if (countBookingHardware == 1) {
-            //update sub status to 'Pending VM'
-            RmsBookingHardware bookHardware = new RmsBookingHardware();
-            bookHardware.setBookingPkid(bookingPkid);
-            bookHardware.setPkid(pkid);
-            bookHardware.setSubStatus("Pending HW Registration");
-            booking = new RmsBookingHardwareDAO();
-            QueryResult q = booking.updateRmsBookingHardwareSubStatusByPkidAndBookingPkid(bookHardware);
-            if (q.getResult() == 1) {
+        RmsBookingIonicDAO ionicD = new RmsBookingIonicDAO();
+        RmsBookingIonic ionic = ionicD.getRmsBookingIonic(id);
 
-                String groupId = bookingPkid + "/" + pkid;
-
-                //add log
-                RmsBookingHardwareGroupLog log = new RmsBookingHardwareGroupLog();
-                log.setGroupId(groupId);
-                log.setDetail("Revert Finalization");
-                log.setCreatedBy(userSession.getFullname());
-                RmsBookingHardwareGroupLogDAO logD = new RmsBookingHardwareGroupLogDAO();
-                QueryResult logQ = logD.insertRmsBookingHardwareGroupLog(log);
-
-                redirectAttrs.addFlashAttribute("success", "Undo successful. This item group is now open for modifications.");
-                return "redirect:/rmsbookingDetail/groupDetail/" + bookingPkid + "/" + pkid;
-            } else {
-                redirectAttrs.addFlashAttribute("error", "Failed to undo the finalization. Pls contact system admin.");
-                return "redirect:/rmsbookingDetail/groupDetail/" + bookingPkid + "/" + pkid;
-            }
-
-        } else {
-            redirectAttrs.addFlashAttribute("error", "Failed to undo the finalization. Pls contact system admin.");
-            return "redirect:/rmsbookingDetail/groupDetail/" + bookingPkid + "/" + pkid;
+        String attachment = "";
+        switch (type) {
+            case "bib":
+                attachment = ionic.getBibUpload();
+                break;
+            case "bibCard":
+                attachment = ionic.getBibCardUpload();
+                break;
+            default:
+                attachment = "";
+                break;
         }
 
+        // construct the complete absolute path of the file
+        String fullPath = attachment;
+        File downloadFile = new File(fullPath);
+        FileInputStream inputStream = new FileInputStream(downloadFile);
+
+        // get MIME type of the file
+        String mimeType = servletContext.getMimeType(fullPath);
+        if (mimeType == null) {
+            // set to binary type if MIME mapping not found
+            mimeType = "application/octet-stream";
+        }
+        System.out.println("MIME type: " + mimeType);
+
+        // set content attributes for the response
+        response.setContentType(mimeType);
+        response.setContentLength((int) downloadFile.length());
+
+        // set headers for the response
+        String headerKey = "Content-Disposition";
+        String headerValue = String.format("attachment; filename=\"%s\"",
+                downloadFile.getName());
+        response.setHeader(headerKey, headerValue);
+
+        // get output stream of the response
+        OutputStream outStream = response.getOutputStream();
+
+        byte[] buffer = new byte[BUFFER_SIZE];
+        int bytesRead = -1;
+
+        // write bytes read from the input stream into the output stream
+        while ((bytesRead = inputStream.read(buffer)) != -1) {
+            outStream.write(buffer, 0, bytesRead);
+        }
+
+        inputStream.close();
+        outStream.close();
     }
 
     @RequestMapping(value = "/vm/save", method = {RequestMethod.GET, RequestMethod.POST})
@@ -1710,6 +787,7 @@ public class RmsBookingDetailUnloadingController {
             Locale locale,
             RedirectAttributes redirectAttrs,
             @ModelAttribute UserSession userSession,
+            @RequestParam(required = false) String hwStatus,
             @RequestParam(required = false) String groupId,
             @RequestParam(required = false) String itemStatus,
             @RequestParam(required = false) String pcb,
@@ -1833,7 +911,7 @@ public class RmsBookingDetailUnloadingController {
 //        LOGGER.info("Arrays.toString(pcbHardwareId): " + Arrays.toString(pcbHardwareId));
         RmsBookingVisualInspection itemVm = new RmsBookingVisualInspection();
         itemVm.setGroupId(groupId);
-        itemVm.setModule("Before Loading");
+        itemVm.setModule(hwStatus);
         itemVm.setPcb(pcb);
         itemVm.setPcbHardwareId(pcbHardwareId);
         itemVm.setHandleHardwareId(handleHardwareId);
@@ -2251,7 +1329,7 @@ public class RmsBookingDetailUnloadingController {
                 //save to maverick table
                 RmsBookingMaverick maverick = new RmsBookingMaverick();
                 maverick.setGroupId(groupId);
-                maverick.setModule("Before Loading");
+                maverick.setModule(hwStatus);
                 maverick.setSubmodule("Visual Inspection");
                 maverick.setStatus("Failed Visual Inspection");
                 maverick.setFlag("0");
@@ -2291,7 +1369,7 @@ public class RmsBookingDetailUnloadingController {
                         "", //user name requestor
                         to, //to
                         //                        emailTo,
-                        "Item Registration - Failed Visual Inspection", //subject
+                        hwStatus + " - Failed Visual Inspection", //subject
                         "<br />"
                         + "Please be informed that the item below failed the visual inspection."
                         + "<br /> "
@@ -2307,21 +1385,21 @@ public class RmsBookingDetailUnloadingController {
                         + "<br /> "
                         + "Detail: <br />" + emailBodyFail
                         + "<br /> "
-                        + "Please click <a href=\"http://" + hostname + "/HEATS/rmsbookingDetail/groupDetail/" + groupId + " \">HERE</a> for more detail."
+                        + "Please click <a href=\"http://" + hostname + "/HEATS/rmsbookingDetailUnloading/groupDetail/" + groupId + " \">HERE</a> for more detail."
                         + "<br /> "
                         + "<br />Thank you." //msg
                 );
 
                 redirectAttrs.addFlashAttribute("error", "Visual Inspection Fail. Pls go to Maverick Module for Corrective Action.");
-                return "redirect:/rmsbookingDetail/groupDetail/" + groupId;
+                return "redirect:/rmsbookingDetailUnloading/groupDetail/" + groupId;
             } else {
                 redirectAttrs.addFlashAttribute("success", "Visual Inspection Pass.");
-                return "redirect:/rmsbookingDetail/groupDetail/" + groupId;
+                return "redirect:/rmsbookingDetailUnloading/groupDetail/" + groupId;
             }
 
         } else {
             redirectAttrs.addFlashAttribute("error", "Failed to save Visual Inspection. Pls Contact System Admin");
-            return "redirect:/rmsbookingDetail/groupDetail/" + groupId;
+            return "redirect:/rmsbookingDetailUnloading/groupDetail/" + groupId;
         }
     }
 

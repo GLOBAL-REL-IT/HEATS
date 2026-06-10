@@ -42,6 +42,24 @@ public class RmsBookingDetail {
     private String hardwareReturnDate;
     private String lcQty;
     private String pcQty;
+    private String bookingHwStatus;
+    private String bookingHwSubStatus;
+
+    public String getBookingHwStatus() {
+        return bookingHwStatus;
+    }
+
+    public void setBookingHwStatus(String bookingHwStatus) {
+        this.bookingHwStatus = bookingHwStatus;
+    }
+
+    public String getBookingHwSubStatus() {
+        return bookingHwSubStatus;
+    }
+
+    public void setBookingHwSubStatus(String bookingHwSubStatus) {
+        this.bookingHwSubStatus = bookingHwSubStatus;
+    }
 
     public String getBookingHwPkid() {
         return BookingHwPkid;
