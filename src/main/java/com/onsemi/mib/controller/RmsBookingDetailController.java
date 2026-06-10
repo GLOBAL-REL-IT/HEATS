@@ -4606,13 +4606,8 @@ public class RmsBookingDetailController {
         String pdfUrl = URLEncoder.encode(request.getContextPath() + "/rmsbookingDetail/viewMbttPdf/" + bookId, "UTF-8");
         String backUrl = servletContext.getContextPath() + "/rmsbookingDetail/detail/"+bookId;
         
-        LOGGER.info("pdfUrl 11 >>> "+pdfUrl);
-        String baru = "/HEATS/rmsbookingDetail/viewMbttPdf/288";
+        String baru = "/HEATS/rmsbookingDetail/viewMbttPdf/"+bookId;
         pdfUrl = URLEncoder.encode(baru, "UTF-8");
-        
-        LOGGER.info("URL LAIN :: "+baru);
-        LOGGER.info("pdfUrl 22 >>> "+pdfUrl);
-        LOGGER.info("backUrl >>> "+backUrl);
         
         model.addAttribute("pdfUrl", pdfUrl);
         model.addAttribute("backUrl", backUrl);
@@ -4625,8 +4620,6 @@ public class RmsBookingDetailController {
             Model model,
             @ModelAttribute UserSession userSession,
             @PathVariable("bookId") String bookId) {
-        
-        LOGGER.info("KITA MASUK KE FUNCTION SINI");
         
         RmsBookingDetailDAO rmsdao = new RmsBookingDetailDAO();
         RmsBookingDetail rmsBookingDetail = rmsdao.getRmsBookingDetail(bookId);

@@ -16,12 +16,12 @@ import org.apache.commons.lang3.StringUtils;
 public class DAOGenerator {
 
     public static void main(String[] args) {
-        String table = "equipment_global_family";
+        String table = "rms_booking_functional_test";
         String sql = "SELECT * FROM " + table + " LIMIT 1";
         try {
             Class.forName("com.mysql.cj.jdbc.Driver");
             Connection conn = null;
-            conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/mib?serverTimezone=UTC&useLegacyDatetimeCode=false", "root", "root");
+            conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/mib?serverTimezone=UTC&useLegacyDatetimeCode=false", "apps", "mysql@2023");
             if (conn != null) {
                 String className = className(table) + "DAO";
                 String modelName = modelName(table);
@@ -306,7 +306,7 @@ public class DAOGenerator {
         String b = "";
         for (int i = 0; i < a.length; i++) {
             if (i == 0) {
-                 b += StringUtils.capitalize(a[i]); //added 18092025
+                b += StringUtils.capitalize(a[i]); //added 18092025
             } else {
                 b += StringUtils.capitalize(a[i]);
             }
@@ -319,7 +319,7 @@ public class DAOGenerator {
         String b = "";
         for (int i = 0; i < a.length; i++) {
             if (i == 0) {
-                  b += a[i];
+                b += a[i];
             } else if (i == 1) {
                 b += a[i];
             } else {
@@ -328,4 +328,5 @@ public class DAOGenerator {
         }
         return b;
     }
+
 }

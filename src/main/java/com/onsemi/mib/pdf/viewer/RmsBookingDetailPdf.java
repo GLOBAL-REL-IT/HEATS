@@ -26,8 +26,10 @@ import com.onsemi.mib.model.RmsBookingHardware;
 import com.onsemi.mib.pdf.AbstractITextPdfViewPotrait;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+//import org.supercsv.cellprocessor.Optional;
 
 /**
  *
@@ -54,10 +56,16 @@ public class RmsBookingDetailPdf extends AbstractITextPdfViewPotrait {
         String rms_event = rms + "_" + event;
         String device = rmsDetail.getDevice();
         String pakej = rmsDetail.getPackages();
+        String remark = "";
 
         RmsBookingHardwareDAO rmsHD = new RmsBookingHardwareDAO();
         RmsBookingHardware rmsRemarks = rmsHD.getRmsBookingHardwareRemarksByBookingPkid(bookid);
-        String remark = rmsRemarks.getItemId();
+        
+        if (rmsRemarks == null) {
+            remark = "-";
+        } else {
+            remark = rmsRemarks.getItemId();
+        }
 
         // DEFINE ALL THE FONT HERE - START
         Font titleFont = FontFactory.getFont(FontFactory.HELVETICA_BOLD, 14, BaseColor.DARK_GRAY);
