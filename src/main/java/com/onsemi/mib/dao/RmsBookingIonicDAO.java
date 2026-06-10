@@ -266,4 +266,31 @@ public class RmsBookingIonicDAO {
         }
         return rmsbookingIonicList;
     }
+    
+    public Integer getCountByGroupId(String groupId) {
+        Integer count = null;
+        try {
+            PreparedStatement ps = conn.prepareStatement(
+                    "SELECT COUNT(*) AS count FROM rms_booking_ionic inc WHERE inc.group_id = '" + groupId + "' AND inc.module LIKE 'After Loading%'"
+            );
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                count = rs.getInt("count");
+            }
+            rs.close();
+
+            ps.close();
+        } catch (SQLException e) {
+            LOGGER.error(e.getMessage());
+        } finally {
+            if (conn != null) {
+                try {
+                    conn.close();
+                } catch (SQLException e) {
+                    LOGGER.error(e.getMessage());
+                }
+            }
+        }
+        return count;
+    }
 }
