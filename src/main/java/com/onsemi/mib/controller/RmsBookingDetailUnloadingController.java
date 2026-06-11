@@ -165,8 +165,6 @@ public class RmsBookingDetailUnloadingController {
         if (q.getResult() > 0) {
 
             //update substatus in rms_booking_hardware table
-            LOGGER.info("groupId: " + groupId);
-            LOGGER.info("event: " + event);
             String[] groupIdSplit = groupId.split("/");
             String bookingPkid = groupIdSplit[0];
             String mbBookingPkid = groupIdSplit[1];
@@ -259,6 +257,50 @@ public class RmsBookingDetailUnloadingController {
         }
 
         currentStatus = h.getSubStatus();
+
+        //get ionic config
+        String ionicPassValue = "0";
+
+        RmsBookingIonicConfigDAO ionicConfigD = new RmsBookingIonicConfigDAO();
+        Integer countIonicConfig = ionicConfigD.getCountByEvent(rms.getEvent());
+
+        if (countIonicConfig == 0) {
+            model.addAttribute("ionicPassValue", ionicPassValue);
+        } else {
+            ionicConfigD = new RmsBookingIonicConfigDAO();
+            RmsBookingIonicConfig ionicConfig = ionicConfigD.getRmsBookingIonicConfigByEvent(rms.getEvent());
+            ionicPassValue = ionicConfig.getPassValue();
+            model.addAttribute("ionicPassValue", ionicPassValue);
+        }
+
+        //get ionic data
+        RmsBookingIonicDAO ioncD = new RmsBookingIonicDAO();
+        RmsBookingIonic ionic = ioncD.getRmsBookingIonicbyGroupId(groupId);
+
+        if (ionic != null) {
+            model.addAttribute("ionic", ionic);
+        } else {
+            model.addAttribute("ionic", new RmsBookingIonic());
+        }
+
+        //check if other HW with same bookingID and module has done ionic test or not (to bypass ionic test)
+        ioncD = new RmsBookingIonicDAO();
+        Integer countPrevIonic = ioncD.getCountBookingIdFromGroupIdAndModule(bookingId, h.getStatus());
+        if (countPrevIonic == 0) {
+            model.addAttribute("countPrevIonic", "disabled"); //disabled checkbox if no ionic test for same bookingId
+        } else {
+            ioncD = new RmsBookingIonicDAO();
+            RmsBookingIonic currentIonic = ioncD.getRmsBookingIonicbyGroupIdAndModule(groupId, h.getStatus()); //disabled checkbox if same groupId
+            if (currentIonic == null) {
+                model.addAttribute("countPrevIonic", ""); //open checkbox if no data for same groupId
+            } else {
+                if ("BYPASS".equals(currentIonic.getStatus())) {
+                    model.addAttribute("countPrevIonic", "checked disabled"); //disabled and checked the checkbox if same groupId and status Bypass
+                } else {
+                    model.addAttribute("countPrevIonic", "disabled"); //disabled checkbox if same groupId
+                }
+            }
+        }
 
         //vm tab
         RmsBookingVisualInspectionDAO vmD = new RmsBookingVisualInspectionDAO();
@@ -437,46 +479,14 @@ public class RmsBookingDetailUnloadingController {
         List<ParameterDetails> labelIdentificationReject = pD.getGroupParameterDetailList(itemVm.getLabelIdentificationReject(), "023");
         model.addAttribute("labelIdentificationReject", labelIdentificationReject);
 
-        //get ionic config
-        String hasIonic = "";
-        String ionicPassValue = "0";
-
-        RmsBookingIonicConfigDAO ionicConfigD = new RmsBookingIonicConfigDAO();
-        Integer countIonicConfig = ionicConfigD.getCountByEvent(rms.getEvent());
-
-        if (countIonicConfig == 0) {
-            hasIonic = "No";
-            model.addAttribute("ionicPassValue", ionicPassValue);
-        } else {
-            ionicConfigD = new RmsBookingIonicConfigDAO();
-            RmsBookingIonicConfig ionicConfig = ionicConfigD.getRmsBookingIonicConfigByEvent(rms.getEvent());
-            ionicPassValue = ionicConfig.getPassValue();
-            model.addAttribute("ionicPassValue", ionicPassValue);
-            hasIonic = "Yes";
-        }
-
-        //get ionic data
-        RmsBookingIonicDAO ioncD = new RmsBookingIonicDAO();
-        RmsBookingIonic ionic = ioncD.getRmsBookingIonicbyGroupId(groupId);
-
-        if (ionic != null) {
-            model.addAttribute("ionic", ionic);
-        } else {
-            model.addAttribute("ionic", new RmsBookingIonic());
-        }
-
         //check which tab should active
         if (currentStatus.contains("Ionic")) {
             String ionicActive = "active";
             String ionicActiveTab = "show active";
-//            String requiredDisable = "required";
-//            String disabledUpload = "";
             model.addAttribute("requiredDisable", !currentStatus.contains("Failed") ? "required" : "disabled");
             model.addAttribute("disabledUpload", !currentStatus.contains("Failed") ? "" : "disabled");
             model.addAttribute("ionicActive", ionicActive);
             model.addAttribute("ionicActiveTab", ionicActiveTab);
-//            model.addAttribute("requiredDisable", requiredDisable);
-//            model.addAttribute("disabledUpload", disabledUpload);
         } else {
             String ionicActive = "";
             String ionicActiveTab = "";
@@ -490,10 +500,8 @@ public class RmsBookingDetailUnloadingController {
         if (currentStatus.contains("VM") || currentStatus.contains("Visual Inspection")) {
             String vmActive = "active";
             String vmActiveTab = "show active";
-//            String buttonVm = "";
             model.addAttribute("vmActive", vmActive);
             model.addAttribute("vmActiveTab", vmActiveTab);
-//            model.addAttribute("buttonVm", buttonVm);
             model.addAttribute("buttonVm", !currentStatus.contains("Failed") ? "" : "disabled");
         } else {
             String vmActive = "";
@@ -562,6 +570,9 @@ public class RmsBookingDetailUnloadingController {
         if ("FAIL".equals(bibStatus) || "FAIL".equals(bibCardStatus)) {
             finalStatus = "FAIL";
             ionic.setFlag("99");
+        } else if ("BYPASS".equals(bibStatus) || "BYPASS".equals(bibCardStatus)) {
+            finalStatus = "BYPASS";
+            ionic.setFlag("0");
         } else {
             finalStatus = "PASS";
             ionic.setFlag("0");
@@ -574,7 +585,6 @@ public class RmsBookingDetailUnloadingController {
         if (!"0".equals(q.getGeneratedKey())) {
 
             ionic = new RmsBookingIonic();
-            LOGGER.info("bibUpload: " + bibUpload);
 
             //check if user upload any attachment
 //            if (!pcbRejectUpload.isEmpty()) {
@@ -585,21 +595,18 @@ public class RmsBookingDetailUnloadingController {
                     Path pathBib = Paths.get(UPLOADED_FOLDER_IONIC + q.getGeneratedKey() + "_bib_" + bibUpload.getOriginalFilename());
                     Files.write(pathBib, bytesPcb);
                     stringPathBib = pathBib.toString();
-                    LOGGER.info("pathBib : " + pathBib);
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
                 ionic.setBibUpload(stringPathBib);
             }
             if (!bibCardUpload.isEmpty()) {
-                LOGGER.info("bibCardUpload : " + bibCardUpload);
                 try {
                     // Get the file and save it somewhere
                     byte[] bytesHandle = bibCardUpload.getBytes();
                     Path pathBibCard = Paths.get(UPLOADED_FOLDER_IONIC + q.getGeneratedKey() + "_bibCard_" + bibCardUpload.getOriginalFilename());
                     Files.write(pathBibCard, bytesHandle);
                     stringPathBibCard = pathBibCard.toString();
-                    LOGGER.info("pathBibCard : " + pathBibCard);
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
@@ -723,9 +730,6 @@ public class RmsBookingDetailUnloadingController {
             @PathVariable("type") String type,
             @PathVariable("id") String id,
             HttpServletResponse response) throws IOException {
-
-        LOGGER.info("id: " + id);
-        LOGGER.info("type: " + type);
 
         RmsBookingIonicDAO ionicD = new RmsBookingIonicDAO();
         RmsBookingIonic ionic = ionicD.getRmsBookingIonic(id);
@@ -907,7 +911,6 @@ public class RmsBookingDetailUnloadingController {
 //                    break;
 //            }
 //        }
-        LOGGER.info("pcbHardwareId[]: " + pcbHardwareId);
 //        LOGGER.info("Arrays.toString(pcbHardwareId): " + Arrays.toString(pcbHardwareId));
         RmsBookingVisualInspection itemVm = new RmsBookingVisualInspection();
         itemVm.setGroupId(groupId);
@@ -1076,7 +1079,6 @@ public class RmsBookingDetailUnloadingController {
         if (!"0".equals(q.getGeneratedKey())) {
 
             itemVm = new RmsBookingVisualInspection();
-            LOGGER.info("pcbRejectUpload: " + pcbRejectUpload);
 
             //check if user upload any attachment
 //            if (!pcbRejectUpload.isEmpty()) {
@@ -1087,7 +1089,6 @@ public class RmsBookingDetailUnloadingController {
                     Path pathPcb = Paths.get(UPLOADED_FOLDER + q.getGeneratedKey() + "_pcb_" + pcbRejectUpload.getOriginalFilename());
                     Files.write(pathPcb, bytesPcb);
                     stringPathPcb = pathPcb.toString();
-                    LOGGER.info("pathPcb : " + pathPcb);
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
@@ -1100,7 +1101,6 @@ public class RmsBookingDetailUnloadingController {
                     Path pathHandle = Paths.get(UPLOADED_FOLDER + q.getGeneratedKey() + "_handle_" + handleRejectUpload.getOriginalFilename());
                     Files.write(pathHandle, bytesHandle);
                     stringPathHandle = pathHandle.toString();
-                    LOGGER.info("pathHandle : " + pathHandle);
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
@@ -1113,7 +1113,6 @@ public class RmsBookingDetailUnloadingController {
                     Path pathMetalFrame = Paths.get(UPLOADED_FOLDER + q.getGeneratedKey() + "_metalFrame_" + metalFrameRejectUpload.getOriginalFilename());
                     Files.write(pathMetalFrame, bytesMetalFrame);
                     stringPathmetalFrame = pathMetalFrame.toString();
-                    LOGGER.info("pathMetalFrame : " + pathMetalFrame);
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
@@ -1126,7 +1125,6 @@ public class RmsBookingDetailUnloadingController {
                     Path pathHardwareFasterners = Paths.get(UPLOADED_FOLDER + q.getGeneratedKey() + "_hardwareFasteners_" + hardwareFasternersRejectUpload.getOriginalFilename());
                     Files.write(pathHardwareFasterners, bytesHardwareFasterners);
                     stringPathHardwareFasterners = pathHardwareFasterners.toString();
-                    LOGGER.info("pathHardwareFasterners : " + pathHardwareFasterners);
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
@@ -1139,7 +1137,6 @@ public class RmsBookingDetailUnloadingController {
                     Path pathClipHolder = Paths.get(UPLOADED_FOLDER + q.getGeneratedKey() + "_clipHolder_" + clipHolderRejectUpload.getOriginalFilename());
                     Files.write(pathClipHolder, bytesClipHolder);
                     stringPathclipHolder = pathClipHolder.toString();
-                    LOGGER.info("pathClipHolder : " + pathClipHolder);
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
@@ -1153,7 +1150,6 @@ public class RmsBookingDetailUnloadingController {
                     Path pathPcbEdgeFinger = Paths.get(UPLOADED_FOLDER + q.getGeneratedKey() + "_pcbEdgeFinger_" + pcbEdgeFingerRejectUpload.getOriginalFilename());
                     Files.write(pathPcbEdgeFinger, bytesPcbEdgeFinger);
                     stringPathPcbEdgeFinger = pathPcbEdgeFinger.toString();
-                    LOGGER.info("pathPcbEdgeFinger : " + pathPcbEdgeFinger);
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
@@ -1166,7 +1162,6 @@ public class RmsBookingDetailUnloadingController {
                     Path pathConnector = Paths.get(UPLOADED_FOLDER + q.getGeneratedKey() + "_connector_" + connectorRejectUpload.getOriginalFilename());
                     Files.write(pathConnector, bytesConnector);
                     stringPathConnector = pathConnector.toString();
-                    LOGGER.info("pathConnector : " + pathConnector);
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
@@ -1179,7 +1174,6 @@ public class RmsBookingDetailUnloadingController {
                     Path pathDutSockets = Paths.get(UPLOADED_FOLDER + q.getGeneratedKey() + "_dutSockets_" + dutSocketsRejectUpload.getOriginalFilename());
                     Files.write(pathDutSockets, bytesDutSockets);
                     stringPathDutSockets = pathDutSockets.toString();
-                    LOGGER.info("pathDutSockets : " + pathDutSockets);
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
@@ -1192,7 +1186,6 @@ public class RmsBookingDetailUnloadingController {
                     Path pathEdgeMbBanana = Paths.get(UPLOADED_FOLDER + q.getGeneratedKey() + "_edgeMbBanana_" + edgeMbBananaRejectUpload.getOriginalFilename());
                     Files.write(pathEdgeMbBanana, bytesEdgeMbBanana);
                     stringPathEdgeMbBanana = pathEdgeMbBanana.toString();
-                    LOGGER.info("pathEdgeMbBanana : " + pathEdgeMbBanana);
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
@@ -1205,7 +1198,6 @@ public class RmsBookingDetailUnloadingController {
                     Path pathElectComponent = Paths.get(UPLOADED_FOLDER + q.getGeneratedKey() + "_electComponent_" + electComponentRejectUpload.getOriginalFilename());
                     Files.write(pathElectComponent, bytesElectComponent);
                     stringPathElectComponent = pathElectComponent.toString();
-                    LOGGER.info("pathElectComponent : " + pathElectComponent);
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
@@ -1218,7 +1210,6 @@ public class RmsBookingDetailUnloadingController {
                     Path pathSolderJoint = Paths.get(UPLOADED_FOLDER + q.getGeneratedKey() + "_solderJoint_" + solderJointRejectUpload.getOriginalFilename());
                     Files.write(pathSolderJoint, bytesSolderJoint);
                     stringPathSolderJoint = pathSolderJoint.toString();
-                    LOGGER.info("pathSolderJoint : " + pathSolderJoint);
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
@@ -1232,7 +1223,6 @@ public class RmsBookingDetailUnloadingController {
                     Path pathWinConnector = Paths.get(UPLOADED_FOLDER + q.getGeneratedKey() + "_winConnector_" + winConnectorRejectUpload.getOriginalFilename());
                     Files.write(pathWinConnector, bytesWinConnector);
                     stringPathWinConnector = pathWinConnector.toString();
-                    LOGGER.info("pathWinConnector : " + pathWinConnector);
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
@@ -1245,7 +1235,6 @@ public class RmsBookingDetailUnloadingController {
                     Path pathTeflonConnector = Paths.get(UPLOADED_FOLDER + q.getGeneratedKey() + "_teflonConnector_" + teflonConnectorRejectUpload.getOriginalFilename());
                     Files.write(pathTeflonConnector, bytesTeflonConnector);
                     stringPathTeflonConnector = pathTeflonConnector.toString();
-                    LOGGER.info("pathTeflonConnector : " + pathTeflonConnector);
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
@@ -1258,7 +1247,6 @@ public class RmsBookingDetailUnloadingController {
                     Path pathPogoConnector = Paths.get(UPLOADED_FOLDER + q.getGeneratedKey() + "_pogoReceptaclesPin_" + pogoReceptaclesPinRejectUpload.getOriginalFilename());
                     Files.write(pathPogoConnector, bytesPogoConnector);
                     stringPathPogoReceptaclesPin = pathPogoConnector.toString();
-                    LOGGER.info("pathPogoConnector : " + pathPogoConnector);
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
@@ -1271,7 +1259,6 @@ public class RmsBookingDetailUnloadingController {
                     Path pathCableConnector = Paths.get(UPLOADED_FOLDER + q.getGeneratedKey() + "_cableWiredCopperWire_" + cableWiredCopperWireRejectUpload.getOriginalFilename());
                     Files.write(pathCableConnector, bytesCableConnector);
                     stringPathCableWiredCopperWire = pathCableConnector.toString();
-                    LOGGER.info("pathCableConnector : " + pathCableConnector);
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
@@ -1284,7 +1271,6 @@ public class RmsBookingDetailUnloadingController {
                     Path pathLabelConnector = Paths.get(UPLOADED_FOLDER + q.getGeneratedKey() + "_labelIdentification_" + labelIdentificationRejectUpload.getOriginalFilename());
                     Files.write(pathLabelConnector, bytesLabelConnector);
                     stringPathLabelIdentification = pathLabelConnector.toString();
-                    LOGGER.info("pathLabelConnector : " + pathLabelConnector);
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
@@ -1503,202 +1489,6 @@ public class RmsBookingDetailUnloadingController {
 
         inputStream.close();
         outStream.close();
-    }
-
-    @RequestMapping(value = "/save", method = RequestMethod.POST)
-    public String save(
-            Model model,
-            Locale locale,
-            RedirectAttributes redirectAttrs,
-            @ModelAttribute UserSession userSession,
-            @RequestParam(required = false) String bookingPkid,
-            @RequestParam(required = false) String rmsNo,
-            @RequestParam(required = false) String event,
-            @RequestParam(required = false) String device,
-            @RequestParam(required = false) String packages,
-            @RequestParam(required = false) String eventStartDate,
-            @RequestParam(required = false) String rmsStatus,
-            @RequestParam(required = false) String eventBeginStatus,
-            @RequestParam(required = false) String eventEndStatus,
-            @RequestParam(required = false) String noCurrentFtp,
-            @RequestParam(required = false) String equipmentLocation,
-            @RequestParam(required = false) String estStartDate,
-            @RequestParam(required = false) String actStartDate,
-            @RequestParam(required = false) String daysToEventStart,
-            @RequestParam(required = false) String folFilename,
-            @RequestParam(required = false) String totalBooking,
-            @RequestParam(required = false) String createdDate,
-            @RequestParam(required = false) String modifiedDate,
-            @RequestParam(required = false) String status,
-            @RequestParam(required = false) String priority,
-            @RequestParam(required = false) String priorityRemarks,
-            @RequestParam(required = false) String priorityBy,
-            @RequestParam(required = false) String priorityDate,
-            @RequestParam(required = false) String flag
-    ) {
-        RmsBookingDetail rmsbookingDetail = new RmsBookingDetail();
-        rmsbookingDetail.setBookingPkid(bookingPkid);
-        rmsbookingDetail.setRmsNo(rmsNo);
-        rmsbookingDetail.setEvent(event);
-        rmsbookingDetail.setDevice(device);
-        rmsbookingDetail.setPackages(packages);
-        rmsbookingDetail.setEventStartDate(eventStartDate);
-        rmsbookingDetail.setRmsStatus(rmsStatus);
-        rmsbookingDetail.setEventBeginStatus(eventBeginStatus);
-        rmsbookingDetail.setEventEndStatus(eventEndStatus);
-        rmsbookingDetail.setNoCurrentFtp(noCurrentFtp);
-        rmsbookingDetail.setEquipmentLocation(equipmentLocation);
-        rmsbookingDetail.setEstStartDate(estStartDate);
-        rmsbookingDetail.setActStartDate(actStartDate);
-        rmsbookingDetail.setDaysToEventStart(daysToEventStart);
-        rmsbookingDetail.setFolFilename(folFilename);
-        rmsbookingDetail.setTotalBooking(totalBooking);
-        rmsbookingDetail.setCreatedDate(createdDate);
-        rmsbookingDetail.setModifiedDate(modifiedDate);
-        rmsbookingDetail.setStatus(status);
-        rmsbookingDetail.setPriority(priority);
-        rmsbookingDetail.setPriorityRemarks(priorityRemarks);
-        rmsbookingDetail.setPriorityBy(priorityBy);
-        rmsbookingDetail.setPriorityDate(priorityDate);
-        rmsbookingDetail.setFlag(flag);
-        RmsBookingDetailDAO rmsbookingDetailDAO = new RmsBookingDetailDAO();
-        QueryResult queryResult = rmsbookingDetailDAO.insertRmsBookingDetail(rmsbookingDetail);
-        args = new String[1];
-        args[0] = bookingPkid + " - " + rmsNo;
-        if (queryResult.getGeneratedKey().equals("0")) {
-            model.addAttribute("error", messageSource.getMessage("general.label.save.error", args, locale));
-            model.addAttribute("rmsbookingDetail", rmsbookingDetail);
-            return "rmsbookingDetail/add";
-        } else {
-            redirectAttrs.addFlashAttribute("success", messageSource.getMessage("general.label.save.success", args, locale));
-            return "redirect:/rmsbookingDetail/edit/" + queryResult.getGeneratedKey();
-        }
-    }
-
-    @RequestMapping(value = "/edit/{rmsbookingDetailId}", method = RequestMethod.GET)
-    public String edit(
-            Model model,
-            @PathVariable("rmsbookingDetailId") String rmsbookingDetailId
-    ) {
-        RmsBookingDetailDAO rmsbookingDetailDAO = new RmsBookingDetailDAO();
-        RmsBookingDetail rmsbookingDetail = rmsbookingDetailDAO.getRmsBookingDetail(rmsbookingDetailId);
-        model.addAttribute("rmsbookingDetail", rmsbookingDetail);
-        return "rmsbookingDetail/edit";
-    }
-
-    @RequestMapping(value = "/update", method = RequestMethod.POST)
-    public String update(
-            Model model,
-            Locale locale,
-            RedirectAttributes redirectAttrs,
-            @ModelAttribute UserSession userSession,
-            @RequestParam(required = false) String id,
-            @RequestParam(required = false) String bookingPkid,
-            @RequestParam(required = false) String rmsNo,
-            @RequestParam(required = false) String event,
-            @RequestParam(required = false) String device,
-            @RequestParam(required = false) String packages,
-            @RequestParam(required = false) String eventStartDate,
-            @RequestParam(required = false) String rmsStatus,
-            @RequestParam(required = false) String eventBeginStatus,
-            @RequestParam(required = false) String eventEndStatus,
-            @RequestParam(required = false) String noCurrentFtp,
-            @RequestParam(required = false) String equipmentLocation,
-            @RequestParam(required = false) String estStartDate,
-            @RequestParam(required = false) String actStartDate,
-            @RequestParam(required = false) String daysToEventStart,
-            @RequestParam(required = false) String folFilename,
-            @RequestParam(required = false) String totalBooking,
-            @RequestParam(required = false) String createdDate,
-            @RequestParam(required = false) String modifiedDate,
-            @RequestParam(required = false) String status,
-            @RequestParam(required = false) String priority,
-            @RequestParam(required = false) String priorityRemarks,
-            @RequestParam(required = false) String priorityBy,
-            @RequestParam(required = false) String priorityDate,
-            @RequestParam(required = false) String flag
-    ) {
-        RmsBookingDetail rmsbookingDetail = new RmsBookingDetail();
-        rmsbookingDetail.setId(id);
-        rmsbookingDetail.setBookingPkid(bookingPkid);
-        rmsbookingDetail.setRmsNo(rmsNo);
-        rmsbookingDetail.setEvent(event);
-        rmsbookingDetail.setDevice(device);
-        rmsbookingDetail.setPackages(packages);
-        rmsbookingDetail.setEventStartDate(eventStartDate);
-        rmsbookingDetail.setRmsStatus(rmsStatus);
-        rmsbookingDetail.setEventBeginStatus(eventBeginStatus);
-        rmsbookingDetail.setEventEndStatus(eventEndStatus);
-        rmsbookingDetail.setNoCurrentFtp(noCurrentFtp);
-        rmsbookingDetail.setEquipmentLocation(equipmentLocation);
-        rmsbookingDetail.setEstStartDate(estStartDate);
-        rmsbookingDetail.setActStartDate(actStartDate);
-        rmsbookingDetail.setDaysToEventStart(daysToEventStart);
-        rmsbookingDetail.setFolFilename(folFilename);
-        rmsbookingDetail.setTotalBooking(totalBooking);
-        rmsbookingDetail.setCreatedDate(createdDate);
-        rmsbookingDetail.setModifiedDate(modifiedDate);
-        rmsbookingDetail.setStatus(status);
-        rmsbookingDetail.setPriority(priority);
-        rmsbookingDetail.setPriorityRemarks(priorityRemarks);
-        rmsbookingDetail.setPriorityBy(priorityBy);
-        rmsbookingDetail.setPriorityDate(priorityDate);
-        rmsbookingDetail.setFlag(flag);
-        RmsBookingDetailDAO rmsbookingDetailDAO = new RmsBookingDetailDAO();
-        QueryResult queryResult = rmsbookingDetailDAO.updateRmsBookingDetail(rmsbookingDetail);
-        args = new String[1];
-        args[0] = bookingPkid + " - " + rmsNo;
-        if (queryResult.getResult() == 1) {
-            redirectAttrs.addFlashAttribute("success", messageSource.getMessage("general.label.update.success", args, locale));
-        } else {
-            redirectAttrs.addFlashAttribute("error", messageSource.getMessage("general.label.update.error", args, locale));
-        }
-        return "redirect:/rmsbookingDetail/edit/" + id;
-    }
-
-    @RequestMapping(value = "/delete/{rmsbookingDetailId}", method = RequestMethod.GET)
-    public String delete(
-            Model model,
-            Locale locale,
-            RedirectAttributes redirectAttrs,
-            @PathVariable("rmsbookingDetailId") String rmsbookingDetailId
-    ) {
-        RmsBookingDetailDAO rmsbookingDetailDAO = new RmsBookingDetailDAO();
-        RmsBookingDetail rmsbookingDetail = rmsbookingDetailDAO.getRmsBookingDetail(rmsbookingDetailId);
-        rmsbookingDetailDAO = new RmsBookingDetailDAO();
-        QueryResult queryResult = rmsbookingDetailDAO.deleteRmsBookingDetail(rmsbookingDetailId);
-        args = new String[1];
-        args[0] = rmsbookingDetail.getBookingPkid() + " - " + rmsbookingDetail.getRmsNo();
-        if (queryResult.getResult() == 1) {
-            redirectAttrs.addFlashAttribute("success", messageSource.getMessage("general.label.delete.success", args, locale));
-        } else {
-            redirectAttrs.addFlashAttribute("error", messageSource.getMessage("general.label.delete.error", args, locale));
-        }
-        return "redirect:/rmsbookingDetail";
-    }
-
-    @RequestMapping(value = "/view/{rmsbookingDetailId}", method = RequestMethod.GET)
-    public String view(
-            Model model,
-            HttpServletRequest request,
-            @PathVariable("rmsbookingDetailId") String rmsbookingDetailId
-    ) throws UnsupportedEncodingException {
-        String pdfUrl = URLEncoder.encode(request.getContextPath() + "/rmsbookingDetail/viewRmsBookingDetailPdf/" + rmsbookingDetailId, "UTF-8");
-        String backUrl = servletContext.getContextPath() + "/rmsbookingDetail";
-        model.addAttribute("pdfUrl", pdfUrl);
-        model.addAttribute("backUrl", backUrl);
-        model.addAttribute("pageTitle", "general.label.rmsbookingDetail");
-        return "pdf/viewer";
-    }
-
-    @RequestMapping(value = "/viewRmsBookingDetailPdf/{rmsbookingDetailId}", method = RequestMethod.GET)
-    public ModelAndView viewRmsBookingDetailPdf(
-            Model model,
-            @PathVariable("rmsbookingDetailId") String rmsbookingDetailId
-    ) {
-        RmsBookingDetailDAO rmsbookingDetailDAO = new RmsBookingDetailDAO();
-        RmsBookingDetail rmsbookingDetail = rmsbookingDetailDAO.getRmsBookingDetail(rmsbookingDetailId);
-        return new ModelAndView("rmsbookingDetailPdf", "rmsbookingDetail", rmsbookingDetail);
     }
 
     @RequestMapping(value = "/ftest/save/{jenis}", method = {RequestMethod.GET, RequestMethod.POST})

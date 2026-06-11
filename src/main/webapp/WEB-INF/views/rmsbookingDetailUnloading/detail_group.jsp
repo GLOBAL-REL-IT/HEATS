@@ -250,23 +250,23 @@
                                                                         </tr>
                                                                     </thead>
                                                                     <tbody>
-                                                                        <c:forEach items="${hwGroupList}" var="parameterMaster" varStatus="parameterMasterLoop">
-                                                                            <tr>
-                                                                                <td><c:out value="${parameterMasterLoop.index+1}"/></td>
-                                                                                <td id="modal_delete_info_${parameterMaster.id}"><c:out value="${parameterMaster.hardwareId}"/></td>
-                                                                                <td><c:out value="${parameterMaster.itemType}"/></td>
-                                                                                <td><c:out value="${parameterMaster.itemId}"/></td>
-                                                                                <td><c:out value="${parameterMaster.createdBy}"/></td>
-                                                                                <td><c:out value="${parameterMaster.createdDate}"/></td>
-                                                                                <!--                                                                                <td align="center">
-                                                                                <c:if test="${subStatus == 'Pending HW Registration'}">
-                                                                                    <a modaldeleteid="${parameterMaster.id}" type ="button" title="Delete" data-bs-toggle="modal" data-bs-target="#delete_modal" class="table-link danger group_delete" onclick="modalDelete(this);">
-                                                                                        <i class="bi bi-trash h3" style="color:red"></i>
-                                                                                    </a> 
-                                                                                </c:if>
-                                                                            </td>-->
-                                                                            </tr>
-                                                                        </c:forEach>
+                                                                    <c:forEach items="${hwGroupList}" var="parameterMaster" varStatus="parameterMasterLoop">
+                                                                        <tr>
+                                                                            <td><c:out value="${parameterMasterLoop.index+1}"/></td>
+                                                                        <td id="modal_delete_info_${parameterMaster.id}"><c:out value="${parameterMaster.hardwareId}"/></td>
+                                                                        <td><c:out value="${parameterMaster.itemType}"/></td>
+                                                                        <td><c:out value="${parameterMaster.itemId}"/></td>
+                                                                        <td><c:out value="${parameterMaster.createdBy}"/></td>
+                                                                        <td><c:out value="${parameterMaster.createdDate}"/></td>
+                                                                        <!--                                                                                <td align="center">
+                                                                        <c:if test="${subStatus == 'Pending HW Registration'}">
+                                                                            <a modaldeleteid="${parameterMaster.id}" type ="button" title="Delete" data-bs-toggle="modal" data-bs-target="#delete_modal" class="table-link danger group_delete" onclick="modalDelete(this);">
+                                                                                <i class="bi bi-trash h3" style="color:red"></i>
+                                                                            </a> 
+                                                                        </c:if>
+                                                                    </td>-->
+                                                                        </tr>
+                                                                    </c:forEach>
                                                                     </tbody>
                                                                 </table>
                                                             </div>
@@ -289,6 +289,14 @@
                                                                 <input type="hidden" class="form-control" id="motherboardId" name="motherboardId" placeholder="" value="${motherboardId}">
                                                                 <input type="hidden" class="form-control" id="passValue" name="passValue" value="${ionicPassValue}">
                                                                 <input type="hidden" class="form-control" id="hwStatus" name="hwStatus" value="${status}">
+                                                                <div class="row">
+                                                                    <div class="form-check">
+                                                                        <input class="form-check-input" type="checkbox" value="" id="bypassIonic" name="bypassIonic" ${countPrevIonic}>
+                                                                        <label class="form-check-label" for="bypassIonic">
+                                                                            Bypass Ionic Test. Proceed with Clean & Bake
+                                                                        </label>
+                                                                    </div>
+                                                                </div>
                                                                 <div class="row">
                                                                     <div class="col-xl-1 col-sm-12">
                                                                         <div class="mb-3">
@@ -385,26 +393,26 @@
                                                                             <input type="hidden" class="form-control" id="hwStatus" name="hwStatus" value="${status}">
                                                                             <input class="form-check-input" type="radio" name="pcb" id="pcb1"
                                                                                    value="Pass" <c:if test="${itemVm.pcb == 'Pass'}">checked</c:if> required>
-                                                                                   <label class="form-check-label" for="inlineRadio1">Pass</label>
-                                                                            </div>
-                                                                            <div class="form-check form-check-inline">
-                                                                                <input class="form-check-input" type="radio" name="pcb" id="pcb2"
-                                                                                       value="Fail" <c:if test="${itemVm.pcb == 'Fail'}">checked</c:if> >
-                                                                                <label class="form-check-label" for="inlineRadio2">Fail</label>
-                                                                            </div>
-                                                                            <div class="form-check form-check-inline">
-                                                                                <input class="form-check-input" type="radio" name="pcb" id="pcb3"
-                                                                                       value="NA" <c:if test="${itemVm.pcb == 'NA'}">checked</c:if> >
-                                                                                <label class="form-check-label" for="inlineRadio3">NA</label>
-                                                                            </div>
+                                                                            <label class="form-check-label" for="inlineRadio1">Pass</label>
+                                                                        </div>
+                                                                        <div class="form-check form-check-inline">
+                                                                            <input class="form-check-input" type="radio" name="pcb" id="pcb2"
+                                                                                   value="Fail" <c:if test="${itemVm.pcb == 'Fail'}">checked</c:if> >
+                                                                            <label class="form-check-label" for="inlineRadio2">Fail</label>
+                                                                        </div>
+                                                                        <div class="form-check form-check-inline">
+                                                                            <input class="form-check-input" type="radio" name="pcb" id="pcb3"
+                                                                                   value="NA" <c:if test="${itemVm.pcb == 'NA'}">checked</c:if> >
+                                                                            <label class="form-check-label" for="inlineRadio3">NA</label>
                                                                         </div>
                                                                     </div>
                                                                 </div>
-                                                                <div class="col-xl-12 col-sm-12 col-12">
-                                                                    <div class="mb-2">
-                                                                        <label for="pcbHardwareId" class="form-label">Reject Hardware ID</label>
-                                                                        <div class="input input-group">
-                                                                            <select class="js-example-basic-multiple" id="pcbHardwareId" name="pcbHardwareId" multiple="multiple" title="" data-live-search="true" style="width: 100%">
+                                                            </div>
+                                                            <div class="col-xl-12 col-sm-12 col-12">
+                                                                <div class="mb-2">
+                                                                    <label for="pcbHardwareId" class="form-label">Reject Hardware ID</label>
+                                                                    <div class="input input-group">
+                                                                        <select class="js-example-basic-multiple" id="pcbHardwareId" name="pcbHardwareId" multiple="multiple" title="" data-live-search="true" style="width: 100%">
                                                                             <c:forEach items="${hwGroupList}" var="invInner">
                                                                                 <option value="${invInner.hardwareId}">${invInner.hardwareId}</option>
                                                                             </c:forEach>
@@ -463,26 +471,26 @@
                                                                         <div class="form-check form-check-inline">
                                                                             <input class="form-check-input" type="radio" name="handle" id="handle1"
                                                                                    value="Pass" <c:if test="${itemVm.handle == 'Pass'}">checked</c:if> required>
-                                                                                   <label class="form-check-label" for="handle1">Pass</label>
-                                                                            </div>
-                                                                            <div class="form-check form-check-inline">
-                                                                                <input class="form-check-input" type="radio" name="handle" id="handle2"
-                                                                                       value="Fail" <c:if test="${itemVm.handle == 'Fail'}">checked</c:if> >
-                                                                                <label class="form-check-label" for="handle2">Fail</label>
-                                                                            </div>
-                                                                            <div class="form-check form-check-inline">
-                                                                                <input class="form-check-input" type="radio" name="handle" id="handle3"
-                                                                                       value="NA" <c:if test="${itemVm.handle == 'NA'}">checked</c:if> >
-                                                                                <label class="form-check-label" for="handle3">NA</label>
-                                                                            </div>
+                                                                            <label class="form-check-label" for="handle1">Pass</label>
+                                                                        </div>
+                                                                        <div class="form-check form-check-inline">
+                                                                            <input class="form-check-input" type="radio" name="handle" id="handle2"
+                                                                                   value="Fail" <c:if test="${itemVm.handle == 'Fail'}">checked</c:if> >
+                                                                            <label class="form-check-label" for="handle2">Fail</label>
+                                                                        </div>
+                                                                        <div class="form-check form-check-inline">
+                                                                            <input class="form-check-input" type="radio" name="handle" id="handle3"
+                                                                                   value="NA" <c:if test="${itemVm.handle == 'NA'}">checked</c:if> >
+                                                                            <label class="form-check-label" for="handle3">NA</label>
                                                                         </div>
                                                                     </div>
                                                                 </div>
-                                                                <div class="col-xl-12 col-sm-12 col-12">
-                                                                    <div class="mb-2">
-                                                                        <label for="handleHardwareId" class="form-label">Reject Hardware ID</label>
-                                                                        <div class="input input-group">
-                                                                            <select class="js-example-basic-multiple" id="handleHardwareId" name="handleHardwareId" multiple="multiple" title="" data-live-search="true" style="width: 100%">
+                                                            </div>
+                                                            <div class="col-xl-12 col-sm-12 col-12">
+                                                                <div class="mb-2">
+                                                                    <label for="handleHardwareId" class="form-label">Reject Hardware ID</label>
+                                                                    <div class="input input-group">
+                                                                        <select class="js-example-basic-multiple" id="handleHardwareId" name="handleHardwareId" multiple="multiple" title="" data-live-search="true" style="width: 100%">
                                                                             <c:forEach items="${hwGroupList}" var="invInner">
                                                                                 <option value="${invInner.hardwareId}">${invInner.hardwareId}</option>
                                                                             </c:forEach>
@@ -541,26 +549,26 @@
                                                                         <div class="form-check form-check-inline">
                                                                             <input class="form-check-input" type="radio" name="metalFrame" id="metalFrame1"
                                                                                    value="Pass" <c:if test="${itemVm.metalFrame == 'Pass'}">checked</c:if> required>
-                                                                                   <label class="form-check-label" for="metalFrame1">Pass</label>
-                                                                            </div>
-                                                                            <div class="form-check form-check-inline">
-                                                                                <input class="form-check-input" type="radio" name="metalFrame" id="metalFrame2"
-                                                                                       value="Fail" <c:if test="${itemVm.metalFrame == 'Fail'}">checked</c:if> >
-                                                                                <label class="form-check-label" for="metalFrame2">Fail</label>
-                                                                            </div>
-                                                                            <div class="form-check form-check-inline">
-                                                                                <input class="form-check-input" type="radio" name="metalFrame" id="metalFrame3"
-                                                                                       value="NA" <c:if test="${itemVm.metalFrame == 'NA'}">checked</c:if> >
-                                                                                <label class="form-check-label" for="metalFrame">NA</label>
-                                                                            </div>
+                                                                            <label class="form-check-label" for="metalFrame1">Pass</label>
+                                                                        </div>
+                                                                        <div class="form-check form-check-inline">
+                                                                            <input class="form-check-input" type="radio" name="metalFrame" id="metalFrame2"
+                                                                                   value="Fail" <c:if test="${itemVm.metalFrame == 'Fail'}">checked</c:if> >
+                                                                            <label class="form-check-label" for="metalFrame2">Fail</label>
+                                                                        </div>
+                                                                        <div class="form-check form-check-inline">
+                                                                            <input class="form-check-input" type="radio" name="metalFrame" id="metalFrame3"
+                                                                                   value="NA" <c:if test="${itemVm.metalFrame == 'NA'}">checked</c:if> >
+                                                                            <label class="form-check-label" for="metalFrame">NA</label>
                                                                         </div>
                                                                     </div>
                                                                 </div>
-                                                                <div class="col-xl-12 col-sm-12 col-12">
-                                                                    <div class="mb-2">
-                                                                        <label for="metalFrameHardwareId" class="form-label">Reject Hardware ID</label>
-                                                                        <div class="input input-group">
-                                                                            <select class="js-example-basic-multiple" id="metalFrameHardwareId" name="metalFrameHardwareId" multiple="multiple" title="" data-live-search="true" style="width: 100%">
+                                                            </div>
+                                                            <div class="col-xl-12 col-sm-12 col-12">
+                                                                <div class="mb-2">
+                                                                    <label for="metalFrameHardwareId" class="form-label">Reject Hardware ID</label>
+                                                                    <div class="input input-group">
+                                                                        <select class="js-example-basic-multiple" id="metalFrameHardwareId" name="metalFrameHardwareId" multiple="multiple" title="" data-live-search="true" style="width: 100%">
                                                                             <c:forEach items="${hwGroupList}" var="invInner">
                                                                                 <option value="${invInner.hardwareId}">${invInner.hardwareId}</option>
                                                                             </c:forEach>
@@ -620,26 +628,26 @@
                                                                         <div class="form-check form-check-inline">
                                                                             <input class="form-check-input" type="radio" name="hardwareFasterners" id="hardwareFasterners1"
                                                                                    value="Pass" <c:if test="${itemVm.hardwareFasterners == 'Pass'}">checked</c:if> required>
-                                                                                   <label class="form-check-label" for="hardwareFasterners1">Pass</label>
-                                                                            </div>
-                                                                            <div class="form-check form-check-inline">
-                                                                                <input class="form-check-input" type="radio" name="hardwareFasterners" id="hardwareFasterners2"
-                                                                                       value="Fail" <c:if test="${itemVm.hardwareFasterners == 'Fail'}">checked</c:if> >
-                                                                                <label class="form-check-label" for="hardwareFasterners2">Fail</label>
-                                                                            </div>
-                                                                            <div class="form-check form-check-inline">
-                                                                                <input class="form-check-input" type="radio" name="hardwareFasterners" id="hardwareFasterners3"
-                                                                                       value="NA" <c:if test="${itemVm.hardwareFasterners == 'NA'}">checked</c:if> >
-                                                                                <label class="form-check-label" for="hardwareFasterners3">NA</label>
-                                                                            </div>
+                                                                            <label class="form-check-label" for="hardwareFasterners1">Pass</label>
+                                                                        </div>
+                                                                        <div class="form-check form-check-inline">
+                                                                            <input class="form-check-input" type="radio" name="hardwareFasterners" id="hardwareFasterners2"
+                                                                                   value="Fail" <c:if test="${itemVm.hardwareFasterners == 'Fail'}">checked</c:if> >
+                                                                            <label class="form-check-label" for="hardwareFasterners2">Fail</label>
+                                                                        </div>
+                                                                        <div class="form-check form-check-inline">
+                                                                            <input class="form-check-input" type="radio" name="hardwareFasterners" id="hardwareFasterners3"
+                                                                                   value="NA" <c:if test="${itemVm.hardwareFasterners == 'NA'}">checked</c:if> >
+                                                                            <label class="form-check-label" for="hardwareFasterners3">NA</label>
                                                                         </div>
                                                                     </div>
                                                                 </div>
-                                                                <div class="col-xl-12 col-sm-12 col-12">
-                                                                    <div class="mb-2">
-                                                                        <label for="hardwareFasternersHardwareId" class="form-label">Reject Hardware ID</label>
-                                                                        <div class="input input-group">
-                                                                            <select class="js-example-basic-multiple" id="hardwareFasternersHardwareId" name="hardwareFasternersHardwareId" multiple="multiple" title="" data-live-search="true" style="width: 100%">
+                                                            </div>
+                                                            <div class="col-xl-12 col-sm-12 col-12">
+                                                                <div class="mb-2">
+                                                                    <label for="hardwareFasternersHardwareId" class="form-label">Reject Hardware ID</label>
+                                                                    <div class="input input-group">
+                                                                        <select class="js-example-basic-multiple" id="hardwareFasternersHardwareId" name="hardwareFasternersHardwareId" multiple="multiple" title="" data-live-search="true" style="width: 100%">
                                                                             <c:forEach items="${hwGroupList}" var="invInner">
                                                                                 <option value="${invInner.hardwareId}">${invInner.hardwareId}</option>
                                                                             </c:forEach>
@@ -699,26 +707,26 @@
                                                                         <div class="form-check form-check-inline">
                                                                             <input class="form-check-input" type="radio" name="clipHolder" id="clipHolder1"
                                                                                    value="Pass" <c:if test="${itemVm.clipHolder == 'Pass'}">checked</c:if> required>
-                                                                                   <label class="form-check-label" for="clipHolder1">Pass</label>
-                                                                            </div>
-                                                                            <div class="form-check form-check-inline">
-                                                                                <input class="form-check-input" type="radio" name="clipHolder" id="clipHolder2"
-                                                                                       value="Fail" <c:if test="${itemVm.clipHolder == 'Fail'}">checked</c:if> >
-                                                                                <label class="form-check-label" for="clipHolder2">Fail</label>
-                                                                            </div>
-                                                                            <div class="form-check form-check-inline">
-                                                                                <input class="form-check-input" type="radio" name="clipHolder" id="clipHolder3"
-                                                                                       value="NA" <c:if test="${itemVm.clipHolder == 'NA'}">checked</c:if> >
-                                                                                <label class="form-check-label" for="clipHolder3">NA</label>
-                                                                            </div>
+                                                                            <label class="form-check-label" for="clipHolder1">Pass</label>
+                                                                        </div>
+                                                                        <div class="form-check form-check-inline">
+                                                                            <input class="form-check-input" type="radio" name="clipHolder" id="clipHolder2"
+                                                                                   value="Fail" <c:if test="${itemVm.clipHolder == 'Fail'}">checked</c:if> >
+                                                                            <label class="form-check-label" for="clipHolder2">Fail</label>
+                                                                        </div>
+                                                                        <div class="form-check form-check-inline">
+                                                                            <input class="form-check-input" type="radio" name="clipHolder" id="clipHolder3"
+                                                                                   value="NA" <c:if test="${itemVm.clipHolder == 'NA'}">checked</c:if> >
+                                                                            <label class="form-check-label" for="clipHolder3">NA</label>
                                                                         </div>
                                                                     </div>
                                                                 </div>
-                                                                <div class="col-xl-12 col-sm-12 col-12">
-                                                                    <div class="mb-2">
-                                                                        <label for="clipHolderHardwareId" class="form-label">Reject Hardware ID</label>
-                                                                        <div class="input input-group">
-                                                                            <select class="js-example-basic-multiple" id="clipHolderHardwareId" name="clipHolderHardwareId" multiple="multiple" title="" data-live-search="true" style="width: 100%">
+                                                            </div>
+                                                            <div class="col-xl-12 col-sm-12 col-12">
+                                                                <div class="mb-2">
+                                                                    <label for="clipHolderHardwareId" class="form-label">Reject Hardware ID</label>
+                                                                    <div class="input input-group">
+                                                                        <select class="js-example-basic-multiple" id="clipHolderHardwareId" name="clipHolderHardwareId" multiple="multiple" title="" data-live-search="true" style="width: 100%">
                                                                             <c:forEach items="${hwGroupList}" var="invInner">
                                                                                 <option value="${invInner.hardwareId}">${invInner.hardwareId}</option>
                                                                             </c:forEach>
@@ -778,26 +786,26 @@
                                                                         <div class="form-check form-check-inline">
                                                                             <input class="form-check-input" type="radio" name="pcbEdgeFinger" id="pcbEdgeFinger1"
                                                                                    value="Pass" <c:if test="${itemVm.pcbEdgeFinger == 'Pass'}">checked</c:if> required>
-                                                                                   <label class="form-check-label" for="pcbEdgeFinger1">Pass</label>
-                                                                            </div>
-                                                                            <div class="form-check form-check-inline">
-                                                                                <input class="form-check-input" type="radio" name="pcbEdgeFinger" id="pcbEdgeFinger2"
-                                                                                       value="Fail" <c:if test="${itemVm.pcbEdgeFinger == 'Fail'}">checked</c:if> >
-                                                                                <label class="form-check-label" for="pcbEdgeFinger2">Fail</label>
-                                                                            </div>
-                                                                            <div class="form-check form-check-inline">
-                                                                                <input class="form-check-input" type="radio" name="pcbEdgeFinger" id="pcbEdgeFinger3"
-                                                                                       value="NA" <c:if test="${itemVm.pcbEdgeFinger == 'NA'}">checked</c:if> >
-                                                                                <label class="form-check-label" for="pcbEdgeFinger3">NA</label>
-                                                                            </div>
+                                                                            <label class="form-check-label" for="pcbEdgeFinger1">Pass</label>
+                                                                        </div>
+                                                                        <div class="form-check form-check-inline">
+                                                                            <input class="form-check-input" type="radio" name="pcbEdgeFinger" id="pcbEdgeFinger2"
+                                                                                   value="Fail" <c:if test="${itemVm.pcbEdgeFinger == 'Fail'}">checked</c:if> >
+                                                                            <label class="form-check-label" for="pcbEdgeFinger2">Fail</label>
+                                                                        </div>
+                                                                        <div class="form-check form-check-inline">
+                                                                            <input class="form-check-input" type="radio" name="pcbEdgeFinger" id="pcbEdgeFinger3"
+                                                                                   value="NA" <c:if test="${itemVm.pcbEdgeFinger == 'NA'}">checked</c:if> >
+                                                                            <label class="form-check-label" for="pcbEdgeFinger3">NA</label>
                                                                         </div>
                                                                     </div>
                                                                 </div>
-                                                                <div class="col-xl-12 col-sm-12 col-12">
-                                                                    <div class="mb-2">
-                                                                        <label for="pcbEdgeFingerHardwareId" class="form-label">Reject Hardware ID</label>
-                                                                        <div class="input input-group">
-                                                                            <select class="js-example-basic-multiple" id="pcbEdgeFingerHardwareId" name="pcbEdgeFingerHardwareId" multiple="multiple" title="" data-live-search="true" style="width: 100%">
+                                                            </div>
+                                                            <div class="col-xl-12 col-sm-12 col-12">
+                                                                <div class="mb-2">
+                                                                    <label for="pcbEdgeFingerHardwareId" class="form-label">Reject Hardware ID</label>
+                                                                    <div class="input input-group">
+                                                                        <select class="js-example-basic-multiple" id="pcbEdgeFingerHardwareId" name="pcbEdgeFingerHardwareId" multiple="multiple" title="" data-live-search="true" style="width: 100%">
                                                                             <c:forEach items="${hwGroupList}" var="invInner">
                                                                                 <option value="${invInner.hardwareId}">${invInner.hardwareId}</option>
                                                                             </c:forEach>
@@ -858,26 +866,26 @@
                                                                         <div class="form-check form-check-inline">
                                                                             <input class="form-check-input" type="radio" name="connector" id="connector1"
                                                                                    value="Pass" <c:if test="${itemVm.connector == 'Pass'}">checked</c:if> required>
-                                                                                   <label class="form-check-label" for="connector1">Pass</label>
-                                                                            </div>
-                                                                            <div class="form-check form-check-inline">
-                                                                                <input class="form-check-input" type="radio" name="connector" id="connector2"
-                                                                                       value="Fail" <c:if test="${itemVm.connector == 'Fail'}">checked</c:if> >
-                                                                                <label class="form-check-label" for="connector2">Fail</label>
-                                                                            </div>
-                                                                            <div class="form-check form-check-inline">
-                                                                                <input class="form-check-input" type="radio" name="connector" id="connector3"
-                                                                                       value="NA" <c:if test="${itemVm.connector == 'NA'}">checked</c:if> >
-                                                                                <label class="form-check-label" for="connector3">NA</label>
-                                                                            </div>
+                                                                            <label class="form-check-label" for="connector1">Pass</label>
+                                                                        </div>
+                                                                        <div class="form-check form-check-inline">
+                                                                            <input class="form-check-input" type="radio" name="connector" id="connector2"
+                                                                                   value="Fail" <c:if test="${itemVm.connector == 'Fail'}">checked</c:if> >
+                                                                            <label class="form-check-label" for="connector2">Fail</label>
+                                                                        </div>
+                                                                        <div class="form-check form-check-inline">
+                                                                            <input class="form-check-input" type="radio" name="connector" id="connector3"
+                                                                                   value="NA" <c:if test="${itemVm.connector == 'NA'}">checked</c:if> >
+                                                                            <label class="form-check-label" for="connector3">NA</label>
                                                                         </div>
                                                                     </div>
                                                                 </div>
-                                                                <div class="col-xl-12 col-sm-12 col-12">
-                                                                    <div class="mb-2">
-                                                                        <label for="connectorHardwareId" class="form-label">Reject Hardware ID</label>
-                                                                        <div class="input input-group">
-                                                                            <select class="js-example-basic-multiple" id="connectorHardwareId" name="connectorHardwareId" multiple="multiple" title="" data-live-search="true" style="width: 100%">
+                                                            </div>
+                                                            <div class="col-xl-12 col-sm-12 col-12">
+                                                                <div class="mb-2">
+                                                                    <label for="connectorHardwareId" class="form-label">Reject Hardware ID</label>
+                                                                    <div class="input input-group">
+                                                                        <select class="js-example-basic-multiple" id="connectorHardwareId" name="connectorHardwareId" multiple="multiple" title="" data-live-search="true" style="width: 100%">
                                                                             <c:forEach items="${hwGroupList}" var="invInner">
                                                                                 <option value="${invInner.hardwareId}">${invInner.hardwareId}</option>
                                                                             </c:forEach>
@@ -939,26 +947,26 @@
                                                                         <div class="form-check form-check-inline">
                                                                             <input class="form-check-input" type="radio" name="dutSockets" id="dutSockets1"
                                                                                    value="Pass" <c:if test="${itemVm.dutSockets == 'Pass'}">checked</c:if> required>
-                                                                                   <label class="form-check-label" for="dutSockets1">Pass</label>
-                                                                            </div>
-                                                                            <div class="form-check form-check-inline">
-                                                                                <input class="form-check-input" type="radio" name="dutSockets" id="dutSockets2"
-                                                                                       value="Fail" <c:if test="${itemVm.dutSockets == 'Fail'}">checked</c:if> >
-                                                                                <label class="form-check-label" for="dutSockets2">Fail</label>
-                                                                            </div>
-                                                                            <div class="form-check form-check-inline">
-                                                                                <input class="form-check-input" type="radio" name="dutSockets" id="dutSockets3"
-                                                                                       value="NA" <c:if test="${itemVm.dutSockets == 'NA'}">checked</c:if> >
-                                                                                <label class="form-check-label" for="dutSockets3">NA</label>
-                                                                            </div>
+                                                                            <label class="form-check-label" for="dutSockets1">Pass</label>
+                                                                        </div>
+                                                                        <div class="form-check form-check-inline">
+                                                                            <input class="form-check-input" type="radio" name="dutSockets" id="dutSockets2"
+                                                                                   value="Fail" <c:if test="${itemVm.dutSockets == 'Fail'}">checked</c:if> >
+                                                                            <label class="form-check-label" for="dutSockets2">Fail</label>
+                                                                        </div>
+                                                                        <div class="form-check form-check-inline">
+                                                                            <input class="form-check-input" type="radio" name="dutSockets" id="dutSockets3"
+                                                                                   value="NA" <c:if test="${itemVm.dutSockets == 'NA'}">checked</c:if> >
+                                                                            <label class="form-check-label" for="dutSockets3">NA</label>
                                                                         </div>
                                                                     </div>
                                                                 </div>
-                                                                <div class="col-xl-12 col-sm-12 col-12">
-                                                                    <div class="mb-2">
-                                                                        <label for="dutSocketsHardwareId" class="form-label">Reject Hardware ID</label>
-                                                                        <div class="input input-group">
-                                                                            <select class="js-example-basic-multiple" id="dutSocketsHardwareId" name="dutSocketsHardwareId" multiple="multiple" title="" data-live-search="true" style="width: 100%">
+                                                            </div>
+                                                            <div class="col-xl-12 col-sm-12 col-12">
+                                                                <div class="mb-2">
+                                                                    <label for="dutSocketsHardwareId" class="form-label">Reject Hardware ID</label>
+                                                                    <div class="input input-group">
+                                                                        <select class="js-example-basic-multiple" id="dutSocketsHardwareId" name="dutSocketsHardwareId" multiple="multiple" title="" data-live-search="true" style="width: 100%">
                                                                             <c:forEach items="${hwGroupList}" var="invInner">
                                                                                 <option value="${invInner.hardwareId}">${invInner.hardwareId}</option>
                                                                             </c:forEach>
@@ -1019,26 +1027,26 @@
                                                                         <div class="form-check form-check-inline">
                                                                             <input class="form-check-input" type="radio" name="edgeMbBanana" id="edgeMbBanana1"
                                                                                    value="Pass" <c:if test="${itemVm.edgeMbBanana == 'Pass'}">checked</c:if> required>
-                                                                                   <label class="form-check-label" for="edgeMbBanana1">Pass</label>
-                                                                            </div>
-                                                                            <div class="form-check form-check-inline">
-                                                                                <input class="form-check-input" type="radio" name="edgeMbBanana" id="edgeMbBanana2"
-                                                                                       value="Fail" <c:if test="${itemVm.edgeMbBanana == 'Fail'}">checked</c:if> >
-                                                                                <label class="form-check-label" for="edgeMbBanana2">Fail</label>
-                                                                            </div>
-                                                                            <div class="form-check form-check-inline">
-                                                                                <input class="form-check-input" type="radio" name="edgeMbBanana" id="edgeMbBanana3"
-                                                                                       value="NA" <c:if test="${itemVm.edgeMbBanana == 'NA'}">checked</c:if> >
-                                                                                <label class="form-check-label" for="edgeMbBanana3">NA</label>
-                                                                            </div>
+                                                                            <label class="form-check-label" for="edgeMbBanana1">Pass</label>
+                                                                        </div>
+                                                                        <div class="form-check form-check-inline">
+                                                                            <input class="form-check-input" type="radio" name="edgeMbBanana" id="edgeMbBanana2"
+                                                                                   value="Fail" <c:if test="${itemVm.edgeMbBanana == 'Fail'}">checked</c:if> >
+                                                                            <label class="form-check-label" for="edgeMbBanana2">Fail</label>
+                                                                        </div>
+                                                                        <div class="form-check form-check-inline">
+                                                                            <input class="form-check-input" type="radio" name="edgeMbBanana" id="edgeMbBanana3"
+                                                                                   value="NA" <c:if test="${itemVm.edgeMbBanana == 'NA'}">checked</c:if> >
+                                                                            <label class="form-check-label" for="edgeMbBanana3">NA</label>
                                                                         </div>
                                                                     </div>
                                                                 </div>
-                                                                <div class="col-xl-12 col-sm-12 col-12">
-                                                                    <div class="mb-2">
-                                                                        <label for="edgeMbBananaHardwareId" class="form-label">Reject Hardware ID</label>
-                                                                        <div class="input input-group">
-                                                                            <select class="js-example-basic-multiple" id="edgeMbBananaHardwareId" name="edgeMbBananaHardwareId" multiple="multiple" title="" data-live-search="true" style="width: 100%">
+                                                            </div>
+                                                            <div class="col-xl-12 col-sm-12 col-12">
+                                                                <div class="mb-2">
+                                                                    <label for="edgeMbBananaHardwareId" class="form-label">Reject Hardware ID</label>
+                                                                    <div class="input input-group">
+                                                                        <select class="js-example-basic-multiple" id="edgeMbBananaHardwareId" name="edgeMbBananaHardwareId" multiple="multiple" title="" data-live-search="true" style="width: 100%">
                                                                             <c:forEach items="${hwGroupList}" var="invInner">
                                                                                 <option value="${invInner.hardwareId}">${invInner.hardwareId}</option>
                                                                             </c:forEach>
@@ -1099,26 +1107,26 @@
                                                                         <div class="form-check form-check-inline">
                                                                             <input class="form-check-input" type="radio" name="electComponent" id="electComponent1"
                                                                                    value="Pass" <c:if test="${itemVm.electComponent == 'Pass'}">checked</c:if> required>
-                                                                                   <label class="form-check-label" for="electComponent1">Pass</label>
-                                                                            </div>
-                                                                            <div class="form-check form-check-inline">
-                                                                                <input class="form-check-input" type="radio" name="electComponent" id="electComponent2"
-                                                                                       value="Fail" <c:if test="${itemVm.electComponent == 'Fail'}">checked</c:if> >
-                                                                                <label class="form-check-label" for="electComponent2">Fail</label>
-                                                                            </div>
-                                                                            <div class="form-check form-check-inline">
-                                                                                <input class="form-check-input" type="radio" name="electComponent" id="electComponent3"
-                                                                                       value="NA" <c:if test="${itemVm.electComponent == 'NA'}">checked</c:if> >
-                                                                                <label class="form-check-label" for="electComponent3">NA</label>
-                                                                            </div>
+                                                                            <label class="form-check-label" for="electComponent1">Pass</label>
+                                                                        </div>
+                                                                        <div class="form-check form-check-inline">
+                                                                            <input class="form-check-input" type="radio" name="electComponent" id="electComponent2"
+                                                                                   value="Fail" <c:if test="${itemVm.electComponent == 'Fail'}">checked</c:if> >
+                                                                            <label class="form-check-label" for="electComponent2">Fail</label>
+                                                                        </div>
+                                                                        <div class="form-check form-check-inline">
+                                                                            <input class="form-check-input" type="radio" name="electComponent" id="electComponent3"
+                                                                                   value="NA" <c:if test="${itemVm.electComponent == 'NA'}">checked</c:if> >
+                                                                            <label class="form-check-label" for="electComponent3">NA</label>
                                                                         </div>
                                                                     </div>
                                                                 </div>
-                                                                <div class="col-xl-12 col-sm-12 col-12">
-                                                                    <div class="mb-2">
-                                                                        <label for="electComponentHardwareId" class="form-label">Reject Hardware ID</label>
-                                                                        <div class="input input-group">
-                                                                            <select class="js-example-basic-multiple" id="electComponentHardwareId" name="electComponentHardwareId" multiple="multiple" title="" data-live-search="true" style="width: 100%">
+                                                            </div>
+                                                            <div class="col-xl-12 col-sm-12 col-12">
+                                                                <div class="mb-2">
+                                                                    <label for="electComponentHardwareId" class="form-label">Reject Hardware ID</label>
+                                                                    <div class="input input-group">
+                                                                        <select class="js-example-basic-multiple" id="electComponentHardwareId" name="electComponentHardwareId" multiple="multiple" title="" data-live-search="true" style="width: 100%">
                                                                             <c:forEach items="${hwGroupList}" var="invInner">
                                                                                 <option value="${invInner.hardwareId}">${invInner.hardwareId}</option>
                                                                             </c:forEach>
@@ -1179,26 +1187,26 @@
                                                                         <div class="form-check form-check-inline">
                                                                             <input class="form-check-input" type="radio" name="solderJoint" id="solderJoint1"
                                                                                    value="Pass" <c:if test="${itemVm.solderJoint == 'Pass'}">checked</c:if> required>
-                                                                                   <label class="form-check-label" for="solderJoint1">Pass</label>
-                                                                            </div>
-                                                                            <div class="form-check form-check-inline">
-                                                                                <input class="form-check-input" type="radio" name="solderJoint" id="solderJoint2"
-                                                                                       value="Fail" <c:if test="${itemVm.solderJoint == 'Fail'}">checked</c:if> >
-                                                                                <label class="form-check-label" for="solderJoint2">Fail</label>
-                                                                            </div>
-                                                                            <div class="form-check form-check-inline">
-                                                                                <input class="form-check-input" type="radio" name="solderJoint" id="solderJoint3"
-                                                                                       value="NA" <c:if test="${itemVm.solderJoint == 'NA'}">checked</c:if> >
-                                                                                <label class="form-check-label" for="solderJoint3">NA</label>
-                                                                            </div>
+                                                                            <label class="form-check-label" for="solderJoint1">Pass</label>
+                                                                        </div>
+                                                                        <div class="form-check form-check-inline">
+                                                                            <input class="form-check-input" type="radio" name="solderJoint" id="solderJoint2"
+                                                                                   value="Fail" <c:if test="${itemVm.solderJoint == 'Fail'}">checked</c:if> >
+                                                                            <label class="form-check-label" for="solderJoint2">Fail</label>
+                                                                        </div>
+                                                                        <div class="form-check form-check-inline">
+                                                                            <input class="form-check-input" type="radio" name="solderJoint" id="solderJoint3"
+                                                                                   value="NA" <c:if test="${itemVm.solderJoint == 'NA'}">checked</c:if> >
+                                                                            <label class="form-check-label" for="solderJoint3">NA</label>
                                                                         </div>
                                                                     </div>
                                                                 </div>
-                                                                <div class="col-xl-12 col-sm-12 col-12">
-                                                                    <div class="mb-2">
-                                                                        <label for="solderJointHardwareId" class="form-label">Reject Hardware ID</label>
-                                                                        <div class="input input-group">
-                                                                            <select class="js-example-basic-multiple" id="solderJointHardwareId" name="solderJointHardwareId" multiple="multiple" title="" data-live-search="true" style="width: 100%">
+                                                            </div>
+                                                            <div class="col-xl-12 col-sm-12 col-12">
+                                                                <div class="mb-2">
+                                                                    <label for="solderJointHardwareId" class="form-label">Reject Hardware ID</label>
+                                                                    <div class="input input-group">
+                                                                        <select class="js-example-basic-multiple" id="solderJointHardwareId" name="solderJointHardwareId" multiple="multiple" title="" data-live-search="true" style="width: 100%">
                                                                             <c:forEach items="${hwGroupList}" var="invInner">
                                                                                 <option value="${invInner.hardwareId}">${invInner.hardwareId}</option>
                                                                             </c:forEach>
@@ -1259,26 +1267,26 @@
                                                                         <div class="form-check form-check-inline">
                                                                             <input class="form-check-input" type="radio" name="winConnector" id="winConnector1"
                                                                                    value="Pass" <c:if test="${itemVm.winConnector == 'Pass'}">checked</c:if> required>
-                                                                                   <label class="form-check-label" for="winConnector1">Pass</label>
-                                                                            </div>
-                                                                            <div class="form-check form-check-inline">
-                                                                                <input class="form-check-input" type="radio" name="winConnector" id="winConnector2"
-                                                                                       value="Fail" <c:if test="${itemVm.winConnector == 'Fail'}">checked</c:if> >
-                                                                                <label class="form-check-label" for="winConnector2">Fail</label>
-                                                                            </div>
-                                                                            <div class="form-check form-check-inline">
-                                                                                <input class="form-check-input" type="radio" name="winConnector" id="winConnector3"
-                                                                                       value="NA" <c:if test="${itemVm.winConnector == 'NA'}">checked</c:if> >
-                                                                                <label class="form-check-label" for="winConnector3">NA</label>
-                                                                            </div>
+                                                                            <label class="form-check-label" for="winConnector1">Pass</label>
+                                                                        </div>
+                                                                        <div class="form-check form-check-inline">
+                                                                            <input class="form-check-input" type="radio" name="winConnector" id="winConnector2"
+                                                                                   value="Fail" <c:if test="${itemVm.winConnector == 'Fail'}">checked</c:if> >
+                                                                            <label class="form-check-label" for="winConnector2">Fail</label>
+                                                                        </div>
+                                                                        <div class="form-check form-check-inline">
+                                                                            <input class="form-check-input" type="radio" name="winConnector" id="winConnector3"
+                                                                                   value="NA" <c:if test="${itemVm.winConnector == 'NA'}">checked</c:if> >
+                                                                            <label class="form-check-label" for="winConnector3">NA</label>
                                                                         </div>
                                                                     </div>
                                                                 </div>
-                                                                <div class="col-xl-12 col-sm-12 col-12">
-                                                                    <div class="mb-2">
-                                                                        <label for="winConnectorHardwareId" class="form-label">Reject Hardware ID</label>
-                                                                        <div class="input input-group">
-                                                                            <select class="js-example-basic-multiple" id="winConnectorHardwareId" name="winConnectorHardwareId" multiple="multiple" title="" data-live-search="true" style="width: 100%">
+                                                            </div>
+                                                            <div class="col-xl-12 col-sm-12 col-12">
+                                                                <div class="mb-2">
+                                                                    <label for="winConnectorHardwareId" class="form-label">Reject Hardware ID</label>
+                                                                    <div class="input input-group">
+                                                                        <select class="js-example-basic-multiple" id="winConnectorHardwareId" name="winConnectorHardwareId" multiple="multiple" title="" data-live-search="true" style="width: 100%">
                                                                             <c:forEach items="${hwGroupList}" var="invInner">
                                                                                 <option value="${invInner.hardwareId}">${invInner.hardwareId}</option>
                                                                             </c:forEach>
@@ -1339,26 +1347,26 @@
                                                                         <div class="form-check form-check-inline">
                                                                             <input class="form-check-input" type="radio" name="teflonConnector" id="teflonConnector1"
                                                                                    value="Pass" <c:if test="${itemVm.teflonConnector == 'Pass'}">checked</c:if> required>
-                                                                                   <label class="form-check-label" for="teflonConnector1">Pass</label>
-                                                                            </div>
-                                                                            <div class="form-check form-check-inline">
-                                                                                <input class="form-check-input" type="radio" name="teflonConnector" id="teflonConnector2"
-                                                                                       value="Fail" <c:if test="${itemVm.teflonConnector == 'Fail'}">checked</c:if> >
-                                                                                <label class="form-check-label" for="teflonConnector2">Fail</label>
-                                                                            </div>
-                                                                            <div class="form-check form-check-inline">
-                                                                                <input class="form-check-input" type="radio" name="teflonConnector" id="teflonConnector3"
-                                                                                       value="NA" <c:if test="${itemVm.teflonConnector == 'NA'}">checked</c:if> >
-                                                                                <label class="form-check-label" for="teflonConnector3">NA</label>
-                                                                            </div>
+                                                                            <label class="form-check-label" for="teflonConnector1">Pass</label>
+                                                                        </div>
+                                                                        <div class="form-check form-check-inline">
+                                                                            <input class="form-check-input" type="radio" name="teflonConnector" id="teflonConnector2"
+                                                                                   value="Fail" <c:if test="${itemVm.teflonConnector == 'Fail'}">checked</c:if> >
+                                                                            <label class="form-check-label" for="teflonConnector2">Fail</label>
+                                                                        </div>
+                                                                        <div class="form-check form-check-inline">
+                                                                            <input class="form-check-input" type="radio" name="teflonConnector" id="teflonConnector3"
+                                                                                   value="NA" <c:if test="${itemVm.teflonConnector == 'NA'}">checked</c:if> >
+                                                                            <label class="form-check-label" for="teflonConnector3">NA</label>
                                                                         </div>
                                                                     </div>
                                                                 </div>
-                                                                <div class="col-xl-12 col-sm-12 col-12">
-                                                                    <div class="mb-2">
-                                                                        <label for="teflonConnectorHardwareId" class="form-label">Reject Hardware ID</label>
-                                                                        <div class="input input-group">
-                                                                            <select class="js-example-basic-multiple" id="teflonConnectorHardwareId" name="teflonConnectorHardwareId" multiple="multiple" title="" data-live-search="true" style="width: 100%">
+                                                            </div>
+                                                            <div class="col-xl-12 col-sm-12 col-12">
+                                                                <div class="mb-2">
+                                                                    <label for="teflonConnectorHardwareId" class="form-label">Reject Hardware ID</label>
+                                                                    <div class="input input-group">
+                                                                        <select class="js-example-basic-multiple" id="teflonConnectorHardwareId" name="teflonConnectorHardwareId" multiple="multiple" title="" data-live-search="true" style="width: 100%">
                                                                             <c:forEach items="${hwGroupList}" var="invInner">
                                                                                 <option value="${invInner.hardwareId}">${invInner.hardwareId}</option>
                                                                             </c:forEach>
@@ -1419,26 +1427,26 @@
                                                                         <div class="form-check form-check-inline">
                                                                             <input class="form-check-input" type="radio" name="pogoReceptaclesPin" id="pogoReceptaclesPin1"
                                                                                    value="Pass" <c:if test="${itemVm.pogoReceptaclesPin == 'Pass'}">checked</c:if> required>
-                                                                                   <label class="form-check-label" for="pogoReceptaclesPin1">Pass</label>
-                                                                            </div>
-                                                                            <div class="form-check form-check-inline">
-                                                                                <input class="form-check-input" type="radio" name="pogoReceptaclesPin" id="pogoReceptaclesPin2"
-                                                                                       value="Fail" <c:if test="${itemVm.pogoReceptaclesPin == 'Fail'}">checked</c:if> >
-                                                                                <label class="form-check-label" for="pogoReceptaclesPin2">Fail</label>
-                                                                            </div>
-                                                                            <div class="form-check form-check-inline">
-                                                                                <input class="form-check-input" type="radio" name="pogoReceptaclesPin" id="pogoReceptaclesPin3"
-                                                                                       value="NA" <c:if test="${itemVm.pogoReceptaclesPin == 'NA'}">checked</c:if> >
-                                                                                <label class="form-check-label" for="pogoReceptaclesPin3">NA</label>
-                                                                            </div>
+                                                                            <label class="form-check-label" for="pogoReceptaclesPin1">Pass</label>
+                                                                        </div>
+                                                                        <div class="form-check form-check-inline">
+                                                                            <input class="form-check-input" type="radio" name="pogoReceptaclesPin" id="pogoReceptaclesPin2"
+                                                                                   value="Fail" <c:if test="${itemVm.pogoReceptaclesPin == 'Fail'}">checked</c:if> >
+                                                                            <label class="form-check-label" for="pogoReceptaclesPin2">Fail</label>
+                                                                        </div>
+                                                                        <div class="form-check form-check-inline">
+                                                                            <input class="form-check-input" type="radio" name="pogoReceptaclesPin" id="pogoReceptaclesPin3"
+                                                                                   value="NA" <c:if test="${itemVm.pogoReceptaclesPin == 'NA'}">checked</c:if> >
+                                                                            <label class="form-check-label" for="pogoReceptaclesPin3">NA</label>
                                                                         </div>
                                                                     </div>
                                                                 </div>
-                                                                <div class="col-xl-12 col-sm-12 col-12">
-                                                                    <div class="mb-2">
-                                                                        <label for="pogoReceptaclesPinHardwareId" class="form-label">Reject Hardware ID</label>
-                                                                        <div class="input input-group">
-                                                                            <select class="js-example-basic-multiple" id="pogoReceptaclesPinHardwareId" name="pogoReceptaclesPinHardwareId" multiple="multiple" title="" data-live-search="true" style="width: 100%">
+                                                            </div>
+                                                            <div class="col-xl-12 col-sm-12 col-12">
+                                                                <div class="mb-2">
+                                                                    <label for="pogoReceptaclesPinHardwareId" class="form-label">Reject Hardware ID</label>
+                                                                    <div class="input input-group">
+                                                                        <select class="js-example-basic-multiple" id="pogoReceptaclesPinHardwareId" name="pogoReceptaclesPinHardwareId" multiple="multiple" title="" data-live-search="true" style="width: 100%">
                                                                             <c:forEach items="${hwGroupList}" var="invInner">
                                                                                 <option value="${invInner.hardwareId}">${invInner.hardwareId}</option>
                                                                             </c:forEach>
@@ -1500,26 +1508,26 @@
                                                                         <div class="form-check form-check-inline">
                                                                             <input class="form-check-input" type="radio" name="cableWiredCopperWire" id="cableWiredCopperWire1"
                                                                                    value="Pass" <c:if test="${itemVm.cableWiredCopperWire == 'Pass'}">checked</c:if> required>
-                                                                                   <label class="form-check-label" for="cableWiredCopperWire1">Pass</label>
-                                                                            </div>
-                                                                            <div class="form-check form-check-inline">
-                                                                                <input class="form-check-input" type="radio" name="cableWiredCopperWire" id="cableWiredCopperWire2"
-                                                                                       value="Fail" <c:if test="${itemVm.cableWiredCopperWire == 'Fail'}">checked</c:if> >
-                                                                                <label class="form-check-label" for="cableWiredCopperWire2">Fail</label>
-                                                                            </div>
-                                                                            <div class="form-check form-check-inline">
-                                                                                <input class="form-check-input" type="radio" name="cableWiredCopperWire" id="cableWiredCopperWire3"
-                                                                                       value="NA" <c:if test="${itemVm.cableWiredCopperWire == 'NA'}">checked</c:if> >
-                                                                                <label class="form-check-label" for="cableWiredCopperWire3">NA</label>
-                                                                            </div>
+                                                                            <label class="form-check-label" for="cableWiredCopperWire1">Pass</label>
+                                                                        </div>
+                                                                        <div class="form-check form-check-inline">
+                                                                            <input class="form-check-input" type="radio" name="cableWiredCopperWire" id="cableWiredCopperWire2"
+                                                                                   value="Fail" <c:if test="${itemVm.cableWiredCopperWire == 'Fail'}">checked</c:if> >
+                                                                            <label class="form-check-label" for="cableWiredCopperWire2">Fail</label>
+                                                                        </div>
+                                                                        <div class="form-check form-check-inline">
+                                                                            <input class="form-check-input" type="radio" name="cableWiredCopperWire" id="cableWiredCopperWire3"
+                                                                                   value="NA" <c:if test="${itemVm.cableWiredCopperWire == 'NA'}">checked</c:if> >
+                                                                            <label class="form-check-label" for="cableWiredCopperWire3">NA</label>
                                                                         </div>
                                                                     </div>
                                                                 </div>
-                                                                <div class="col-xl-12 col-sm-12 col-12">
-                                                                    <div class="mb-2">
-                                                                        <label for="cableWiredCopperWireHardwareId" class="form-label">Reject Hardware ID</label>
-                                                                        <div class="input input-group">
-                                                                            <select class="js-example-basic-multiple" id="cableWiredCopperWireHardwareId" name="cableWiredCopperWireHardwareId" multiple="multiple" title="" data-live-search="true" style="width: 100%">
+                                                            </div>
+                                                            <div class="col-xl-12 col-sm-12 col-12">
+                                                                <div class="mb-2">
+                                                                    <label for="cableWiredCopperWireHardwareId" class="form-label">Reject Hardware ID</label>
+                                                                    <div class="input input-group">
+                                                                        <select class="js-example-basic-multiple" id="cableWiredCopperWireHardwareId" name="cableWiredCopperWireHardwareId" multiple="multiple" title="" data-live-search="true" style="width: 100%">
                                                                             <c:forEach items="${hwGroupList}" var="invInner">
                                                                                 <option value="${invInner.hardwareId}">${invInner.hardwareId}</option>
                                                                             </c:forEach>
@@ -1580,26 +1588,26 @@
                                                                         <div class="form-check form-check-inline">
                                                                             <input class="form-check-input" type="radio" name="labelIdentification" id="labelIdentification1"
                                                                                    value="Pass" <c:if test="${itemVm.labelIdentification == 'Pass'}">checked</c:if> required>
-                                                                                   <label class="form-check-label" for="labelIdentification1">Pass</label>
-                                                                            </div>
-                                                                            <div class="form-check form-check-inline">
-                                                                                <input class="form-check-input" type="radio" name="labelIdentification" id="labelIdentification2"
-                                                                                       value="Fail" <c:if test="${itemVm.labelIdentification == 'Fail'}">checked</c:if> >
-                                                                                <label class="form-check-label" for="labelIdentification2">Fail</label>
-                                                                            </div>
-                                                                            <div class="form-check form-check-inline">
-                                                                                <input class="form-check-input" type="radio" name="labelIdentification" id="labelIdentification3"
-                                                                                       value="NA" <c:if test="${itemVm.labelIdentification == 'NA'}">checked</c:if> >
-                                                                                <label class="form-check-label" for="labelIdentification3">NA</label>
-                                                                            </div>
+                                                                            <label class="form-check-label" for="labelIdentification1">Pass</label>
+                                                                        </div>
+                                                                        <div class="form-check form-check-inline">
+                                                                            <input class="form-check-input" type="radio" name="labelIdentification" id="labelIdentification2"
+                                                                                   value="Fail" <c:if test="${itemVm.labelIdentification == 'Fail'}">checked</c:if> >
+                                                                            <label class="form-check-label" for="labelIdentification2">Fail</label>
+                                                                        </div>
+                                                                        <div class="form-check form-check-inline">
+                                                                            <input class="form-check-input" type="radio" name="labelIdentification" id="labelIdentification3"
+                                                                                   value="NA" <c:if test="${itemVm.labelIdentification == 'NA'}">checked</c:if> >
+                                                                            <label class="form-check-label" for="labelIdentification3">NA</label>
                                                                         </div>
                                                                     </div>
                                                                 </div>
-                                                                <div class="col-xl-12 col-sm-12 col-12">
-                                                                    <div class="mb-2">
-                                                                        <label for="labelIdentificationHardwareId" class="form-label">Reject Hardware ID</label>
-                                                                        <div class="input input-group">
-                                                                            <select class="js-example-basic-multiple" id="labelIdentificationHardwareId" name="labelIdentificationHardwareId" multiple="multiple" title="" data-live-search="true" style="width: 100%">
+                                                            </div>
+                                                            <div class="col-xl-12 col-sm-12 col-12">
+                                                                <div class="mb-2">
+                                                                    <label for="labelIdentificationHardwareId" class="form-label">Reject Hardware ID</label>
+                                                                    <div class="input input-group">
+                                                                        <select class="js-example-basic-multiple" id="labelIdentificationHardwareId" name="labelIdentificationHardwareId" multiple="multiple" title="" data-live-search="true" style="width: 100%">
                                                                             <c:forEach items="${hwGroupList}" var="invInner">
                                                                                 <option value="${invInner.hardwareId}">${invInner.hardwareId}</option>
                                                                             </c:forEach>
@@ -2147,6 +2155,22 @@
     </s:layout-component>
     <s:layout-component name="page_js_inline">
         <script>
+
+
+                                                                                                    $("#bypassIonic").change(function () {
+                                                                                                        if ($(this).is(":checked")) {
+                                                                                                            $("#bibResult").val("0");
+                                                                                                            $("#bibStatus").val("BYPASS");
+                                                                                                            $("#bibCardResult").val("0");
+                                                                                                            $("#bibCardStatus").val("BYPASS");
+                                                                                                        } else {
+                                                                                                            $("#bibResult").val("");
+                                                                                                            $("#bibStatus").val("");
+                                                                                                            $("#bibCardResult").val("");
+                                                                                                            $("#bibCardStatus").val("");
+                                                                                                        }
+                                                                                                    });
+
 
 
 

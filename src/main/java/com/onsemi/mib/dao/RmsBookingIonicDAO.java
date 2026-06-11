@@ -188,9 +188,47 @@ public class RmsBookingIonicDAO {
         }
         return rmsbookingIonic;
     }
-    
+
     public RmsBookingIonic getRmsBookingIonicbyGroupId(String groupId) {
         String sql = "SELECT * FROM rms_booking_ionic WHERE group_id = '" + groupId + "'";
+        RmsBookingIonic rmsbookingIonic = null;
+        try {
+            PreparedStatement ps = conn.prepareStatement(sql);
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                rmsbookingIonic = new RmsBookingIonic();
+                rmsbookingIonic.setId(rs.getString("id"));
+                rmsbookingIonic.setGroupId(rs.getString("group_id"));
+                rmsbookingIonic.setModule(rs.getString("module"));
+                rmsbookingIonic.setBibResult(rs.getString("bib_result"));
+                rmsbookingIonic.setBibStatus(rs.getString("bib_status"));
+                rmsbookingIonic.setBibUpload(rs.getString("bib_upload"));
+                rmsbookingIonic.setBibCardResult(rs.getString("bib_card_result"));
+                rmsbookingIonic.setBibCardStatus(rs.getString("bib_card_status"));
+                rmsbookingIonic.setBibCardUpload(rs.getString("bib_card_upload"));
+                rmsbookingIonic.setStatus(rs.getString("status"));
+                rmsbookingIonic.setFlag(rs.getString("flag"));
+                rmsbookingIonic.setCreatedBy(rs.getString("created_by"));
+                rmsbookingIonic.setCreatedDate(rs.getString("created_date"));
+            }
+            rs.close();
+            ps.close();
+        } catch (SQLException e) {
+            LOGGER.error(e.getMessage());
+        } finally {
+            if (conn != null) {
+                try {
+                    conn.close();
+                } catch (SQLException e) {
+                    LOGGER.error(e.getMessage());
+                }
+            }
+        }
+        return rmsbookingIonic;
+    }
+
+    public RmsBookingIonic getRmsBookingIonicbyGroupIdAndModule(String groupId, String status) {
+        String sql = "SELECT * FROM rms_booking_ionic WHERE group_id = '" + groupId + "' AND module = '" + status + "'";
         RmsBookingIonic rmsbookingIonic = null;
         try {
             PreparedStatement ps = conn.prepareStatement(sql);
@@ -266,12 +304,39 @@ public class RmsBookingIonicDAO {
         }
         return rmsbookingIonicList;
     }
-    
-    public Integer getCountByGroupId(String groupId) {
+
+    public Integer getCountByGroupIdAndModule(String groupId, String status) {
         Integer count = null;
         try {
             PreparedStatement ps = conn.prepareStatement(
-                    "SELECT COUNT(*) AS count FROM rms_booking_ionic inc WHERE inc.group_id = '" + groupId + "' AND inc.module LIKE 'After Loading%'"
+                    "SELECT COUNT(*) AS count FROM rms_booking_ionic inc WHERE inc.group_id = '" + groupId + "' AND ion.module = '" + status + "'"
+            );
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                count = rs.getInt("count");
+            }
+            rs.close();
+
+            ps.close();
+        } catch (SQLException e) {
+            LOGGER.error(e.getMessage());
+        } finally {
+            if (conn != null) {
+                try {
+                    conn.close();
+                } catch (SQLException e) {
+                    LOGGER.error(e.getMessage());
+                }
+            }
+        }
+        return count;
+    }
+
+    public Integer getCountBookingIdFromGroupIdAndModule(String bookingId, String status) {
+        Integer count = null;
+        try {
+            PreparedStatement ps = conn.prepareStatement(
+                    "SELECT COUNT(ion.id) as count FROM rms_booking_ionic ion WHERE SUBSTRING_INDEX(ion.group_id,'/',1) = '" + bookingId + "' AND ion.module = '" + status + "'"
             );
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
