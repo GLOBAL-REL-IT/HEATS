@@ -186,37 +186,12 @@
             <scope>compile</scope>
         </dependency>
         
-        <!-- iText 9 Layout Module -->
-<!--        <dependency>
-            <groupId>com.itextpdf</groupId>
-            <artifactId>layout</artifactId>
-            <version>9.6.0</version>
-            <scope>compile</scope>
-        </dependency>-->
-
-         <!--iText 9 Kernel Module (Upgraded to 9.6.0 to match layout)--> 
-<!--        <dependency>
-            <groupId>com.itextpdf</groupId>
-            <artifactId>kernel</artifactId>
-            <version>9.6.0</version>
-            <scope>compile</scope>
-        </dependency>-->
-
-         <!--iText 9 IO Module (Mandatory core sub-dependency)--> 
-<!--        <dependency>
-            <groupId>com.itextpdf</groupId>
-            <artifactId>io</artifactId>
-            <version>9.6.0</version>
-            <scope>compile</scope>
-        </dependency>-->
-        
-         <!--File Upload--> 
+        <!-- File Upload -->
         <dependency>
             <groupId>commons-fileupload</groupId>
             <artifactId>commons-fileupload</artifactId>
             <version>1.2.2</version>
         </dependency>
-        
         <!--        <dependency>
             <groupId>commons-io</groupId>
             <artifactId>commons-io</artifactId>
