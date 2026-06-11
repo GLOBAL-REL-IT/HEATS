@@ -924,12 +924,12 @@ public class RmsBookingDetailDAO {
     }
 
     public List<RmsBookingDetail> getRmsBookingDetailListWithHwGroupAfterLoading() {
-        String sql = "SELECT de.id, de.booking_pkid, hw.pkid, de.rms_no, de.`event`, de.device, de.packages, gr.hardware_id, gr.`status`, DATE_FORMAT(gr.unloading_date,'%d-%M-%Y') AS unloadingDate, "
+        String sql = "SELECT de.id, de.booking_pkid, hw.pkid, de.rms_no, de.`event`, de.device, de.packages, gr.hardware_id, hw.`status`, hw.sub_status, DATE_FORMAT(gr.unloading_date,'%d-%M-%Y') AS unloadingDate, "
                 + "gr.group_id, gr.id AS bookingHwGroupId, hw.lc_qty, hw.pc_qty, gr.return_by, DATE_FORMAT(gr.return_date,'%d-%M-%Y') AS returnDate "
                 + "FROM rms_booking_detail de "
                 + "LEFT JOIN rms_booking_hardware_group gr ON SUBSTRING_INDEX(gr.group_id,'/',1) = de.booking_pkid "
                 + "LEFT JOIN rms_booking_hardware hw ON hw.pkid = SUBSTRING_INDEX(gr.group_id,'/',-1) "
-                + "WHERE gr.item_type = 'BIB' AND gr.`status` LIKE 'Return from Production%' AND gr.flag = '2'";
+                + "WHERE hw.item_type = 'Motherboard' AND hw.`status` LIKE 'Return from Production%' AND gr.flag = '2' AND gr.item_type = 'BIB'";
         List<RmsBookingDetail> rmsbookingDetailList = new ArrayList<RmsBookingDetail>();
         try {
             PreparedStatement ps = conn.prepareStatement(sql);
@@ -945,7 +945,8 @@ public class RmsBookingDetailDAO {
                 rmsbookingDetail.setDevice(rs.getString("device"));
                 rmsbookingDetail.setPackages(rs.getString("packages"));
                 rmsbookingDetail.setHardwareId(rs.getString("hardware_id"));
-                rmsbookingDetail.setHardwareGroupStatus(rs.getString("status"));
+                rmsbookingDetail.setBookingHwStatus(rs.getString("status"));
+                rmsbookingDetail.setBookingHwSubStatus(rs.getString("sub_status"));
                 rmsbookingDetail.setUnloadingDate(rs.getString("unloadingDate"));
                 rmsbookingDetail.setGroupId(rs.getString("group_id"));
                 rmsbookingDetail.setBookingHwGroupId(rs.getString("bookingHwGroupId"));
@@ -1015,7 +1016,7 @@ public class RmsBookingDetailDAO {
         }
         return rmsbookingDetail;
     }
-    
+
     public String getBookingId(String id) {
         String data = "";
         String sql = "SELECT booking_pkid FROM rms_booking_detail WHERE id = '" + id + "' ";
