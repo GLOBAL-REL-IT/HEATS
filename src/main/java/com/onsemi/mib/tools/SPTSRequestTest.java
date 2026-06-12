@@ -4,7 +4,9 @@ import java.io.IOException;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
 import java.util.Date;
+import org.apache.commons.lang3.StringEscapeUtils;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import static org.json.JSONObject.NULL;
@@ -517,7 +519,7 @@ public class SPTSRequestTest {
 //            System.out.println(getEqptBookedFOLFilesByPkid.getJSONObject(i));
 //        }
 //        System.out.println("COUNT Eqpt Booked FOL Files By Pkid..." + getEqptBookedFOLFilesByPkid.length());
-        System.out.println("GET BOOKED EQUIPMENT...");
+        System.out.println("GET BOOKED EQUIPMENT..." + LocalDateTime.now());
 //        JSONObject params0 = new JSONObject();
 //        String equipmentID = "H3T 1";
         JSONObject param = new JSONObject();
@@ -530,13 +532,39 @@ public class SPTSRequestTest {
 //        param.put("active", "1");
 //        JSONArray getItemByParam = SPTSWebService.getEqptByPkid(param);
         JSONObject paramV = new JSONObject();
-        paramV.put("equipmentFamilyName", "(Blue M) Banana");
-        JSONArray getItemByParamV = SPTSWebService.getGlobalFamilyNameByParam(paramV);
-        for (int i = 0; i < getItemByParamV.length(); i++) {
-            System.out.println(getItemByParamV.getJSONObject(i));
+        paramV.put("itemPKID", "69924");
+        JSONArray getItemHwByParam = SPTSWebService.getHardwareIdByParam(paramV);
+        for (int i = 0; i < getItemHwByParam.length(); i++) {
+            System.out.println(getItemHwByParam.getJSONObject(i));
         }
-        System.out.println("COUNT BOOKED EQUIPMENT..." + getItemByParamV.length());
+        System.out.println("COUNT BOOKED EQUIPMENT..." + getItemHwByParam.length() + " currenttime: " + LocalDateTime.now());
 
+//        JSONObject params2 = new JSONObject();
+//        DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");
+//        Date date = new Date();
+//        String formattedDate = dateFormat.format(date);
+//        String date1 = formattedDate.substring(0, 10);
+//        String time = formattedDate.substring(11, 23);
+//        String completeDateTime = date1 + "T" + time;
+//        params2.put("dateTime", completeDateTime);
+//        params2.put("itemsPKID", "69690");
+//        params2.put("transType", "19");
+//        params2.put("transQty", "1");
+//        params2.put("remarks", "Send to Storage Factory through HIMS");
+//        SPTSResponse TransPkid = SPTSWebService.insertTransaction(params2);
+//        System.out.println("transPKID: " + TransPkid.getResponseId());
+//
+//        if (TransPkid.getResponseId() > 0) {
+//            //insert sfitem spts
+//            JSONObject params3 = new JSONObject();
+//            params3.put("itemPKID", "69690");
+//            params3.put("transactionPKID", TransPkid.getResponseId());
+//            params3.put("sfItemStatus", "0");
+//            params3.put("sfRack", "");
+//            params3.put("sfShelf", "");
+//            SPTSResponse sfPkid = SPTSWebService.insertSFItem(params3);
+//            System.out.println("sfPKID: " + sfPkid.getResponseId());
+//        }
 //        int itempkid = getItemByParam.getJSONObject(0).getInt("PKID");
 //        LOGGER.info("itempkid............." + itempkid);
 //        System.out.println("itempkid............." + itempkid);
