@@ -12,8 +12,6 @@ import com.onsemi.mib.dao.ItemMaverickDAO;
 import com.onsemi.mib.dao.ItemTransactionDAO;
 import com.onsemi.mib.dao.ManualTestDAO;
 import com.onsemi.mib.dao.ParameterDetailsDAO;
-import java.io.UnsupportedEncodingException;
-import java.net.URLEncoder;
 import java.util.List;
 import java.util.Locale;
 import javax.servlet.http.HttpServletRequest;
@@ -86,7 +84,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.SessionAttributes;
 import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 @Controller
