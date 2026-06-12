@@ -554,7 +554,9 @@ public class RmsBookingDetailController {
                 itemType = "DUT Card";
             } else if (getItemByParamV.getJSONObject(i).getString("field_name").contains("Solder")) {
                 itemType = "Solder Type";
-            } else {
+            } else if (getItemByParamV.getJSONObject(i).getString("field_name").contains("Tool ID")) {
+                itemType = "Tool ID";
+            }else {
                 itemType = "";
             }
 
