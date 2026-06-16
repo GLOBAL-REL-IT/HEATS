@@ -281,6 +281,33 @@ public class RmsBookingDetailDAO {
         return queryResult;
     }
 
+    public QueryResult updateRmsBookingDetailForStatusAndFlagAndReleaseDateBy(RmsBookingDetail rmsbookingDetail) {
+        QueryResult queryResult = new QueryResult();
+        try {
+            PreparedStatement ps = conn.prepareStatement(
+                    "UPDATE rms_booking_detail SET modified_date = NOW(), status = ?, flag = ?, released_by = ?, released_date = NOW() WHERE id = ?"
+            );
+            ps.setString(1, rmsbookingDetail.getStatus());
+            ps.setString(2, rmsbookingDetail.getFlag());
+            ps.setString(3, rmsbookingDetail.getReleasedBy());
+            ps.setString(4, rmsbookingDetail.getId());
+            queryResult.setResult(ps.executeUpdate());
+            ps.close();
+        } catch (SQLException e) {
+            queryResult.setErrorMessage(e.getMessage());
+            LOGGER.error(e.getMessage());
+        } finally {
+            if (conn != null) {
+                try {
+                    conn.close();
+                } catch (SQLException e) {
+                    LOGGER.error(e.getMessage());
+                }
+            }
+        }
+        return queryResult;
+    }
+
     public QueryResult updateRmsBookingDetailForReturn(RmsBookingDetail rmsbookingDetail) {
         QueryResult queryResult = new QueryResult();
         try {

@@ -3683,8 +3683,9 @@ public class RmsBookingDetailController {
         rms.setId(id);
         rms.setStatus("Released to Production");
         rms.setFlag("1");
+        rms.setReleasedBy(userSession.getFullname());
         rmsD = new RmsBookingDetailDAO();
-        QueryResult q = rmsD.updateRmsBookingDetailForStatusAndFlag(rms);
+        QueryResult q = rmsD.updateRmsBookingDetailForStatusAndFlagAndReleaseDateBy(rms);
         if (q.getResult() > 0) {
 
             //update log

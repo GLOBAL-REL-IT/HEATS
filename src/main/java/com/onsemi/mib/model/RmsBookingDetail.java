@@ -45,6 +45,25 @@ public class RmsBookingDetail {
     private String bookingHwStatus;
     private String bookingHwSubStatus;
 
+    private String releasedDate;
+    private String releasedBy;
+
+    public String getReleasedDate() {
+        return releasedDate;
+    }
+
+    public void setReleasedDate(String releasedDate) {
+        this.releasedDate = releasedDate;
+    }
+
+    public String getReleasedBy() {
+        return releasedBy;
+    }
+
+    public void setReleasedBy(String releasedBy) {
+        this.releasedBy = releasedBy;
+    }
+
     public String getBookingHwStatus() {
         return bookingHwStatus;
     }
