@@ -216,9 +216,6 @@ public class RmsBookingDetailUnloadingController {
 
         String currentStatus = "";
 
-        String teActive = "";
-        String teActiveTab = "";
-
         String groupId = bookingId + "/" + itemPkid;
         model.addAttribute("groupId", groupId);
         model.addAttribute("userItemSfRecall", userSession.getItemSfRecall());
@@ -509,7 +506,31 @@ public class RmsBookingDetailUnloadingController {
             model.addAttribute("buttonVm", buttonVm);
         }
 
-        if (!currentStatus.contains("Ionic") && !currentStatus.contains("VM") && !currentStatus.contains("Visual Inspection")) { //default active HW tab
+        if (currentStatus.contains("Pending Functional Test")) {
+            String teActive = "active";
+            String teActiveTab = "show active";
+            model.addAttribute("teActive", teActive);
+            model.addAttribute("teActiveTab", teActiveTab);
+        } else {
+            String teActive = "";
+            String teActiveTab = "";
+            model.addAttribute("teActive", teActive);
+            model.addAttribute("teActiveTab", teActiveTab);
+        }
+
+        if (currentStatus.contains("Pending Production Disposition")) { //active tab after HAST complete functional test
+            String haActive = "active";
+            String haActiveTab = "show active";
+            model.addAttribute("haActive", haActive);
+            model.addAttribute("haActiveTab", haActiveTab);
+        } else {
+            model.addAttribute("haActive", rms.getEvent().contains("HAST") ? "" : "disabled"); //disabled tab if event != HAST
+            model.addAttribute("haActiveTab", rms.getEvent().contains("HAST") ? "" : "disabled");
+            model.addAttribute("haColorStyle", rms.getEvent().contains("HAST") ? "" : "style=\"color:DarkGray\""); //gray tab if event != HAST
+        }
+
+        if (!currentStatus.contains("Ionic") && !currentStatus.contains("VM") && !currentStatus.contains("Visual Inspection")
+                && !currentStatus.contains("Pending Functional Test") && !currentStatus.contains("Pending Production Disposition")) { //default active HW tab
             String hwActive = "active";
             String hwActiveTab = "show active";
             model.addAttribute("hwActive", hwActive);
@@ -522,8 +543,6 @@ public class RmsBookingDetailUnloadingController {
         }
 
         model.addAttribute("currentStatus", currentStatus);
-        model.addAttribute("teActive", teActive);
-        model.addAttribute("teActiveTab", teActiveTab);
 
         return "rmsbookingDetailUnloading/detail_group";
     }

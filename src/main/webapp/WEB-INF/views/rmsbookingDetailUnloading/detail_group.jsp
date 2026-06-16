@@ -223,6 +223,10 @@
                                         <a class="nav-link ${teActive}" id="tab-fourAAA" data-bs-toggle="tab" href="#fourAAA" role="tab"
                                            aria-controls="fourAAA" aria-selected="false"><i class="bi bi-clipboard-check"></i>Functional Test</a>
                                     </li>
+                                    <li class="nav-item" role="presentation" style="border:1px; border-right-style: ridge;">
+                                        <a class="nav-link ${haActive}" id="tab-fiveAAA" ${haColorStyle} data-bs-toggle="tab" href="#fiveAAA" role="tab"
+                                           aria-controls="fiveAAA" aria-selected="false"><i class="bi bi-shuffle"></i>Release or Return (HAST Only)</a>
+                                    </li>
                                 </ul>
                                 <div class="tab-content" id="customTabContent">
                                     <div class="tab-pane fade ${hwActiveTab}" id="oneAAA" role="tabpanel">
@@ -1664,7 +1668,6 @@
                                                 </div>
                                             </form>
                                         </div>
-
                                     </div>
                                     <div class="tab-pane fade ${teActiveTab}" id="fourAAA" role="tabpanel">
                                         <div class="row gx-4">
@@ -2112,6 +2115,48 @@
                                                     </div>
                                                 </div>
                                             </div>
+                                        </div>
+                                    </div>
+                                    <div class="tab-pane fade ${haActiveTab}" id="fiveAAA" role="tabpanel">
+                                        <div class="row gx-4">
+                                            <form class="row gx-3 needs-validation" role="form" action="${contextPath}/rmsbookingDetailUnloading/releaseOrReturn/save" method="post" novalidate>
+                                                <div class="col-sm-6 col-12">
+                                                    <div class="card mb-2">
+                                                        <div class="card-body">
+                                                            <div class="col-xl-6 col-sm-8 col-12">
+                                                                <div class="mb-2">
+                                                                    <label class="form-label" for="pcb">Production Disposition</label>
+                                                                    <div class="m-0">
+                                                                        <div class="form-check form-check-inline">
+                                                                            <input type="hidden" class="form-control" id="groupId" name="groupId" placeholder="" value="${groupId}">
+                                                                            <input type="hidden" class="form-control" id="bookingPkid" name="bookingPkid" placeholder="" value="${rms.bookingPkid}">
+                                                                            <input type="hidden" class="form-control" id="hwStatus" name="hwStatus" value="${status}">
+                                                                            <input class="form-check-input" type="radio" name="releaseOrReturn" id="releaseOrReturn1" required>
+                                                                            <label class="form-check-label" for="releaseOrReturn1" required>Released to Production</label>
+                                                                        </div>
+                                                                        <div class="form-check form-check-inline">
+                                                                            <input class="form-check-input" type="radio" name="releaseOrReturn" id="releaseOrReturn2" required>
+                                                                            <label class="form-check-label" for="releaseOrReturn2">Return from Production Staging (Return to Inventory)</label>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-xl-12 col-sm-12 col-12">
+                                                                <div class="mb-2">
+                                                                    <label for="pcbHardwareId" class="form-label">Remarks</label>
+                                                                    <div class="input input-group">
+                                                                         <textarea class="form-control" rows="3" id="releaseOrReturnRemarks" name="releaseOrReturnRemarks" required></textarea>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <!-- Form actions start -->
+                                                <div class="col-md-12">
+                                                    <button type="submit" id="submitHa" name="submitHa" class="btn btn-primary float-end ${buttonHa}">Save</button>
+                                                </div>
+                                            </form>
                                         </div>
                                     </div>
                                 </div>
