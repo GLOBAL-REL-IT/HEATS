@@ -260,11 +260,13 @@ public class RmsBookingDetailUnloadingController {
 
         if (countIonicConfig == 0) {
             model.addAttribute("ionicPassValue", ionicPassValue);
+            model.addAttribute("ionicColorStyle", "style=\"color:DarkGray\""); //gray tab if event not in ionic config
         } else {
             ionicConfigD = new RmsBookingIonicConfigDAO();
             RmsBookingIonicConfig ionicConfig = ionicConfigD.getRmsBookingIonicConfigByEvent(rms.getEvent());
             ionicPassValue = ionicConfig.getPassValue();
             model.addAttribute("ionicPassValue", ionicPassValue);
+            model.addAttribute("ionicColorStyle", "");
         }
 
         //get ionic data
@@ -486,8 +488,11 @@ public class RmsBookingDetailUnloadingController {
             String ionicActiveTab = "";
             String requiredDisable = "disabled";
             String disabledUpload = "disabled";
-            model.addAttribute("ionicActive", ionicActive);
-            model.addAttribute("ionicActiveTab", ionicActiveTab);
+//            countIonicConfig == 0
+            model.addAttribute("ionicActive", countIonicConfig != 0 ? "" : "disabled"); //disabled tab if not in ionic config
+            model.addAttribute("ionicActiveTab", countIonicConfig != 0 ? "" : "disabled"); //disabled tab if not in ionic config
+//            model.addAttribute("ionicActive", ionicActive);
+//            model.addAttribute("ionicActiveTab", ionicActiveTab);
             model.addAttribute("requiredDisable", requiredDisable);
             model.addAttribute("disabledUpload", disabledUpload);
         }

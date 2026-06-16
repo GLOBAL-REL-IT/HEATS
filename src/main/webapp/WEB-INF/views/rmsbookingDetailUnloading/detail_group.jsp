@@ -209,10 +209,10 @@
                                 <ul class="fs-6 nav nav-tabs justify-content-center" id="customTab4" role="tablist">
                                     <li class="nav-item" role="presentation" style="border:1px; border-right-style: ridge;">
                                         <a class="nav-link ${hwActive}" id="tab-oneAAA" data-bs-toggle="tab" href="#oneAAA" role="tab"
-                                           aria-controls="oneAAA" aria-selected="true" ><i class="bi bi-person-badge"></i>HW List</a>
+                                           aria-controls="oneAAA" aria-selected="true" ><i class="bi bi-list-ol"></i>HW List</a>
                                     </li>
                                     <li class="nav-item" role="presentation" style="border:1px; border-right-style: ridge;">
-                                        <a class="nav-link ${ionicActive}" id="tab-twoAAA" data-bs-toggle="tab" href="#twoAAA" role="tab"
+                                        <a class="nav-link ${ionicActive}" id="tab-twoAAA" ${ionicColorStyle} data-bs-toggle="tab" href="#twoAAA" role="tab"
                                            aria-controls="twoAAA" aria-selected="true" ><i class="bi bi-moisture"></i>Ionic Test</a>
                                     </li>
                                     <li class="nav-item" role="presentation" style="border:1px; border-right-style: ridge;">
@@ -225,7 +225,7 @@
                                     </li>
                                     <li class="nav-item" role="presentation" style="border:1px; border-right-style: ridge;">
                                         <a class="nav-link ${haActive}" id="tab-fiveAAA" ${haColorStyle} data-bs-toggle="tab" href="#fiveAAA" role="tab"
-                                           aria-controls="fiveAAA" aria-selected="false"><i class="bi bi-shuffle"></i>Release or Return (HAST Only)</a>
+                                           aria-controls="fiveAAA" aria-selected="false"><i class="bi bi-shuffle"></i>Release or Return (HAST)</a>
                                     </li>
                                 </ul>
                                 <div class="tab-content" id="customTabContent">
