@@ -30,7 +30,6 @@ import com.onsemi.mib.dao.RmsBookingVisualInspectionDAO;
 import com.onsemi.mib.model.EmailHwReplacement;
 import com.onsemi.mib.model.EmailHwReturnFromStaging;
 import com.onsemi.mib.model.EmailVmFail;
-import com.onsemi.mib.model.Hardware;
 import com.onsemi.mib.model.Hostname;
 import com.onsemi.mib.model.Item;
 import com.onsemi.mib.model.ItemActivityConfig;
@@ -1333,7 +1332,7 @@ public class RmsBookingDetailController {
 
                 RmsBookingFunctionalTestDAO ftestdao2 = new RmsBookingFunctionalTestDAO();
                 RmsBookingFunctionalTest testResult = new RmsBookingFunctionalTest();
-                testResult = ftestdao2.getFuncTestResult(groupId);
+                testResult = ftestdao2.getFuncTestResultbe4Load(groupId);
                 model.addAttribute("testResult", testResult);
 
                 if (testResult == null) {
@@ -3346,7 +3345,7 @@ public class RmsBookingDetailController {
 
     public void updateMaverickAndEmail(String mibItemId, String username, String jenis) {
 
-        String module = "Hardware Registration";
+        String module = "Before Loading";
         String sub = "";
         String status = "Failed Functional Test";
 
@@ -4748,6 +4747,7 @@ public class RmsBookingDetailController {
             RmsBookingFunctionalTest ftest = new RmsBookingFunctionalTest();
             ftest.setGroupId(groupId);
             ftest.setCreatedBy(username);
+            ftest.setModule("Before Loading");
             ftest.setFinalStatus("Pending Functional Test");
             ftest.setFlag("0");
             testdao = new RmsBookingFunctionalTestDAO();

@@ -368,7 +368,7 @@ public class RmsBookingDetailUnloadingController {
             } else if (currentStatus.equals("Pending VM")) {
                 model.addAttribute("configMotherboard", "VM");
                 model.addAttribute("message", "Please Complete Visual Inspection First");
-            } else if (currentStatus.contains("Pending Functional Test") || currentStatus.contains("Pending Release to Production") || currentStatus.contains("Failed")) {
+            } else if (currentStatus.contains("Pending Functional Test") || currentStatus.contains("Failed") || currentStatus.contains("Closed")) {
                 RmsBookingHardwareDAO bookdao = new RmsBookingHardwareDAO();
                 Integer checkMb = bookdao.checkMotherboardData(bookingId);
                 bookdao = new RmsBookingHardwareDAO();
