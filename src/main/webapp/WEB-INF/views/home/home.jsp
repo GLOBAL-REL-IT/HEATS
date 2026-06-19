@@ -297,24 +297,67 @@
                     <!-- Card start -->
                     <div class="card mb-4">
                         <div class="card-header">
-                            <h5 class="card-title">RMS <span style="color:#D97D55">Return from</span> Loading (LRT) <span class="h6" style="color:red">(0)</span></h5>
+                            <h5 class="card-title">RMS <span style="color:#D97D55">Return from</span> Loading (LRT) <span class="h6" style="color:red">(${countBookingReturnProduction})</span></h5>
                         </div>
                         <div class="card-body">
                             <div class="table-responsive">
                                 <table id="scrollVerticalAfterLoading" class="table pending custom-table">
                                     <thead>
                                         <tr>
-                                            <th>RMS No</th>
-                                            <th>Event Start Date</th>
-                                            <th>Event End Date</th>
-                                            <th>Device</th>
-                                            <th>Package</th>
-                                            <th>Event</th>
-                                            <th>RMS Status</th>
-                                        </tr>
+                                                    <th>No</th>
+                                                    <th>RMS No</th>
+                                                    <th>Event</th>
+                                                    <th>BIB ID</th>
+                                                    <th>LC Qty</th>
+                                                    <th>PC Qty</th>
+                                                    <th>Unloading Date</th>
+                                                    <th>Return By</th>
+                                                    <th>Return Date</th>
+                                                    <th>HW Status</th>
+                                                    <th>Progress Status</th>
+                                                    <th>Manage</th>
+                                                </tr>
                                     </thead>
                                     <tbody>
-                                    </tbody>
+                                                <c:forEach items="${bookingReturnProduction}" var="parameterMaster" varStatus="parameterMasterLoop">
+                                                    <tr>
+                                                        <td><c:out value="${parameterMasterLoop.index+1}"/></td>
+                                                        <td id="modal_delete_info_${parameterMaster.id}"><c:out value="${parameterMaster.rmsNo}"/></td>
+                                                        <td><c:out value="${parameterMaster.event}"/></td>
+                                                        <td><c:out value="${parameterMaster.hardwareId}"/></td>
+                                                        <td><c:out value="${parameterMaster.lcQty}"/></td>
+                                                        <td><c:out value="${parameterMaster.pcQty}"/></td>
+                                                        <td><c:out value="${parameterMaster.unloadingDate}"/></td>
+                                                        <td><c:out value="${parameterMaster.hardwareReturnBy}"/></td>
+                                                        <td><c:out value="${parameterMaster.hardwareReturnDate}"/></td>
+                                                        <td><c:out value="${parameterMaster.bookingHwStatus}"/></td>
+                                                        <td><c:out value="${parameterMaster.bookingHwSubStatus}"/></td>
+                                                        <td align="center">
+                                                            <c:set var="name" value="${parameterMaster.hardwareReturnDate}"/>
+                                                            <c:choose>
+                                                                <c:when test="${empty name}">
+                                                                    <a modaldeleteid="${parameterMaster.groupId}" type="button" data-bs-toggle="offcanvas" title="Return HW to MB Room/Ionic Area"
+                                                                       data-bs-target="#staticBackdrop" aria-controls="staticBackdrop" onclick="getData(this);">
+                                                                        <i class="bi bi-box-arrow-in-down-left h3"></i>
+                                                                    </a>
+                                                                    <a class="table-link" title="Manage" >
+                                                                        <i class="bi bi-box-arrow-in-right h3" style="color: lightgrey;"></i>
+                                                                    </a>
+                                                                </c:when>
+                                                                <c:otherwise>
+                                                                    <a modaldeleteid="${parameterMaster.groupId}" title="Return HW to MB Room/Ionic Area">
+                                                                        <i class="bi bi-box-arrow-in-down-left h3" style="color: lightgrey;"></i>
+                                                                    </a>
+                                                                    <a href="${contextPath}/rmsbookingDetailUnloading/groupDetail/${parameterMaster.bookingPkid}/${parameterMaster.bookingHwPkid}" class="table-link" title="Manage">
+                                                                        <i class="bi bi-box-arrow-in-right h3"></i>
+                                                                    </a>
+                                                                </c:otherwise>
+                                                            </c:choose>
+
+                                                        </td>
+                                                    </tr>
+                                                </c:forEach>
+                                            </tbody>
                                 </table>
                             </div>
                         </div>

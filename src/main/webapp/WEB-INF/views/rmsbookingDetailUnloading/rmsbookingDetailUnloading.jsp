@@ -110,7 +110,7 @@
                                                 </tr>
                                             </thead>
                                             <tbody>
-                                                <c:forEach items="${booking}" var="parameterMaster" varStatus="parameterMasterLoop">
+                                                <c:forEach items="${bookingReturnProduction}" var="parameterMaster" varStatus="parameterMasterLoop">
                                                     <tr>
                                                         <td><c:out value="${parameterMasterLoop.index+1}"/></td>
                                                         <td id="modal_delete_info_${parameterMaster.id}"><c:out value="${parameterMaster.rmsNo}"/></td>

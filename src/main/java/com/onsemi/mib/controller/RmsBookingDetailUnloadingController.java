@@ -115,14 +115,14 @@ public class RmsBookingDetailUnloadingController {
     ) throws IOException {
 
         RmsBookingDetailDAO rmsD = new RmsBookingDetailDAO();
-        List<RmsBookingDetail> booking = rmsD.getRmsBookingDetailListWithHwGroupAfterLoading();
+        List<RmsBookingDetail> bookingReturnProduction = rmsD.getRmsBookingDetailListWithHwGroupAfterLoading();
 
-        model.addAttribute("booking", booking);
+        model.addAttribute("bookingReturnProduction", bookingReturnProduction);
 
-        rmsD = new RmsBookingDetailDAO();
-        int countBooking = rmsD.getCountBookingFlagZero();
+        RmsBookingHardwareDAO rmsB = new RmsBookingHardwareDAO();
+        int countBookingReturnProduction = rmsB.getCountMotherboardReturnFromProduction();
 
-        model.addAttribute("countBooking", countBooking);
+        model.addAttribute("countBookingReturnProduction", countBookingReturnProduction);
 
         return "rmsbookingDetailUnloading/rmsbookingDetailUnloading";
     }
@@ -154,9 +154,9 @@ public class RmsBookingDetailUnloadingController {
             @RequestParam(required = false) String itemId,
             @RequestParam(required = false) String event
     ) throws IOException {
-        
+
         LOGGER.info("SINI KITA NK BUAT UNTUK UDPATE THE RETURN DATA");
-        LOGGER.info("APA GROUP YANG KITA BAWA >>> "+groupId);
+        LOGGER.info("APA GROUP YANG KITA BAWA >>> " + groupId);
 
         RmsBookingHardwareGroup rms = new RmsBookingHardwareGroup();
         rms.setGroupId(groupId);
@@ -274,9 +274,9 @@ public class RmsBookingDetailUnloadingController {
         String statusBibD = "";
         String statusPs = "";
         String statusWin = "";
-        
-        LOGGER.info("SINI NK TENGOK STATUS ::: "+h.getStatus());
-        LOGGER.info("SINI NK TENGOK SUB STATUS KITA :::: "+h.getSubStatus());
+
+        LOGGER.info("SINI NK TENGOK STATUS ::: " + h.getStatus());
+        LOGGER.info("SINI NK TENGOK SUB STATUS KITA :::: " + h.getSubStatus());
 
         if (currentStatus.equalsIgnoreCase("Pending Functional Test")) {
             // CHECK AND UPDATE THE FIRST TEST
@@ -318,9 +318,9 @@ public class RmsBookingDetailUnloadingController {
                     model.addAttribute("message", "No Load Card Information Found");
                 } else {
                     LOGGER.info("44444");
-                    LOGGER.info("bookingId >> "+bookingId);
-                    LOGGER.info("NK TENGOK OAD CARD DIA    "+itemIdLC);
-                    LOGGER.info("CHECK GROUP DIA, BETUL KE ::  " +groupId);
+                    LOGGER.info("bookingId >> " + bookingId);
+                    LOGGER.info("NK TENGOK OAD CARD DIA    " + itemIdLC);
+                    LOGGER.info("CHECK GROUP DIA, BETUL KE ::  " + groupId);
                     // SINI DUA2 ADA
                     bookdao = new RmsBookingHardwareDAO();
                     itemIdLC = bookdao.getSptsPkidForItemIdLC(bookingId);
@@ -340,8 +340,8 @@ public class RmsBookingDetailUnloadingController {
                 model.addAttribute("itemIdMB", itemIdMB);
                 model.addAttribute("itemIdLC", itemIdLC);
             }
-            
-            LOGGER.info("DIA TENGOK YANG DEKAT PERTAMA NI :: "+currentStatus);
+
+            LOGGER.info("DIA TENGOK YANG DEKAT PERTAMA NI :: " + currentStatus);
 
             if (leakTest.contains("Yes")) {
                 currentStatus = "Pending Functional Test - Leakage Test";
@@ -358,7 +358,7 @@ public class RmsBookingDetailUnloadingController {
             } else {
                 currentStatus = "Pending Release to Production";
             }
-            LOGGER.info("DAH NAK KELUAR DARI YANG PERTAMA >>>> "+currentStatus);
+            LOGGER.info("DAH NAK KELUAR DARI YANG PERTAMA >>>> " + currentStatus);
         } else {
             LOGGER.info("MASUK KEDUA");
             // DO NOTHING HERE
@@ -587,7 +587,7 @@ public class RmsBookingDetailUnloadingController {
         //vm tab
         LOGGER.info("SINI BARU NK MASUK VM");
         RmsBookingVisualInspectionDAO vmD = new RmsBookingVisualInspectionDAO();
-        LOGGER.info("DA LEPAS DEKAT SINI dengan STATUS >>>> "+h.getStatus());
+        LOGGER.info("DA LEPAS DEKAT SINI dengan STATUS >>>> " + h.getStatus());
         RmsBookingVisualInspection itemVm = vmD.getRmsBookingVisualInspectionByGroupIdAndStatus(groupId, h.getStatus());
 
         if (itemVm != null) {
@@ -783,7 +783,7 @@ public class RmsBookingDetailUnloadingController {
             model.addAttribute("ionicActiveTab", countIonicConfig != 0 ? "" : "disabled"); //disabled tab if not in ionic config
 //            model.addAttribute("ionicActive", ionicActive);
 //            model.addAttribute("ionicActiveTab", ionicActiveTab);
-             model.addAttribute("requiredDisable", requiredDisable);
+            model.addAttribute("requiredDisable", requiredDisable);
             model.addAttribute("disabledUpload", disabledUpload);
         }
         if (currentStatus.contains("VM") || currentStatus.contains("Visual Inspection")) {
@@ -825,9 +825,9 @@ public class RmsBookingDetailUnloadingController {
             model.addAttribute("hwActive", hwActive);
             model.addAttribute("hwActiveTab", hwActiveTab);
         }
-        
-        LOGGER.info("currentStatus "+currentStatus);
-        
+
+        LOGGER.info("currentStatus " + currentStatus);
+
         if (currentStatus.contains("Pending Functional Test")) {
             LOGGER.info("AKTIF - SINI MASUK NK CHECK FUNCTIONLA TEST");
             teActive = "active";
@@ -1843,7 +1843,7 @@ public class RmsBookingDetailUnloadingController {
 //        String goReady = "Pending Release to Production";
         String goReady = "Closed";
         String goHast = "";
-        
+
         String logStatus = "";
         String logIdGuna = "";
 
@@ -1870,7 +1870,7 @@ public class RmsBookingDetailUnloadingController {
         Integer checkMb = bookdao.checkMotherboardData(bookId);
         bookdao = new RmsBookingHardwareDAO();
         Integer checkLc = bookdao.checkCardData(bookId);
-        
+
         // SINI DAPATKAN INFO SAMADA HAST ATAU BUKAN
         String event = "";
 
@@ -2199,15 +2199,15 @@ public class RmsBookingDetailUnloadingController {
         } else {
 
         }
-        
+
         // FUNCTION TO CHECK IF THE FUNCTIONAL TEST IS COMPLETED - START
         if (newStatus == goReady) {
             if (event == "HAST") {
-                
+
             } else {
                 // RIGHT NOW HARDCODE - PLEASE UPDATE LATER
                 String sptsStatus = "Good";
-                
+
                 RmsBookingHardwareGroupDAO groupD = new RmsBookingHardwareGroupDAO();
                 groupD.updateGroupStatusToClosed(newStatus, sptsStatus, groupId);
             }
@@ -2215,14 +2215,14 @@ public class RmsBookingDetailUnloadingController {
             // SKIP EVERYTHING SINCE FUNCTIONAL TEST IS NOT COMPLETED
         }
         // FUNCTION TO CHECK IF THE FUNCTIONAL TEST IS COMPLETED - END
-        
+
         RmsBookingHardwareGroupLog log2 = new RmsBookingHardwareGroupLog();
         log2.setGroupId(groupId);
         log2.setDetail(logStatus);
         log2.setCreatedBy(userSession.getFullname());
         RmsBookingHardwareGroupLogDAO logD2 = new RmsBookingHardwareGroupLogDAO();
         QueryResult logQ2 = logD2.insertRmsBookingHardwareGroupLog(log2);
-        
+
         return target_location;
     }
 

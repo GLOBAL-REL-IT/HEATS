@@ -7,6 +7,7 @@ import com.onsemi.mib.dao.LDAPUserDAO;
 import com.onsemi.mib.dao.ParameterDetailsDAO;
 import com.onsemi.mib.dao.RetrieveDAO;
 import com.onsemi.mib.dao.RmsBookingDetailDAO;
+import com.onsemi.mib.dao.RmsBookingHardwareDAO;
 import com.onsemi.mib.dao.RmsBookingLogDAO;
 import com.onsemi.mib.dao.SRInventoryMgtDAO;
 import com.onsemi.mib.model.Hostname;
@@ -464,6 +465,16 @@ public class HomeController {
             rmsD = new RmsBookingDetailDAO();
             int countBookingReleased = rmsD.getCountBookingReleasedProduction();
             model.addAttribute("countBookingReleased", countBookingReleased);
+
+            rmsD = new RmsBookingDetailDAO();
+            List<RmsBookingDetail> bookingReturnProduction = rmsD.getRmsBookingDetailListWithHwGroupAfterLoading();
+
+            model.addAttribute("bookingReturnProduction", bookingReturnProduction);
+
+            RmsBookingHardwareDAO rmsB = new RmsBookingHardwareDAO();
+            int countBookingReturnProduction = rmsB.getCountMotherboardReturnFromProduction();
+
+            model.addAttribute("countBookingReturnProduction", countBookingReturnProduction);
 
             List<LDAPUser> ldapUserList = new ArrayList<LDAPUser>();
 

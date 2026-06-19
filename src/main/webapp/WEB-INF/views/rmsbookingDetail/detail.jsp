@@ -96,7 +96,7 @@
                 <nav class="navbar bg-body-tertiary">
                     <div class="container-fluid justify-content-start">
                         <a href="${contextPath}/rmsbookingDetail" class="btn btn-outline-warning me-2" role="button"><i class='bi bi-arrow-bar-left'></i>&nbsp;&nbsp;Back</a>
-                        <a href="${contextPath}/rmsbookingDetail/viewmbtt/${id}" class="btn btn-outline-info me-2" role="button"><i class="bi bi-qr-code-scan"></i>&nbsp;&nbsp;MBTT</a>
+                        <a href="${contextPath}/rmsbookingDetail/viewmbtt/${id}" class="btn btn-outline-info me-2" role="button"><i class="bi bi-qr-code-scan"></i>&nbsp;&nbsp;Trip Ticket</a>
                     </div>
                 </nav>
                 <div class="col-sm-12 col-12">
@@ -104,7 +104,7 @@
                         <div class="card-header">
                             <h5 class="card-title d-flex justify-content-between align-items-center">
                                 <div>
-                                    HW Prep For Loading Module - <span style="color:#D97D55">Detail</span>
+                                    Hardware Preparation For Loading - <span style="color:#D97D55">Detail</span>
                                 </div>
                                 <c:choose>
                                     <c:when test="${not empty rms.priority && rms.priority != '999'}">

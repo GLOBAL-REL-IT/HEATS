@@ -1066,6 +1066,32 @@ public class RmsBookingHardwareDAO {
         return count;
     }
 
+    public Integer getCountMotherboardReturnFromProduction() {
+        Integer count = null;
+        try {
+            PreparedStatement ps = conn.prepareStatement(
+                    "SELECT COUNT(*) AS count FROM rms_booking_hardware inc WHERE inc.item_type = 'Motherboard' AND inc.sub_status LIKE 'Return from Production%' AND inc.flag = '2'"
+            );
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                count = rs.getInt("count");
+            }
+            rs.close();
+            ps.close();
+        } catch (SQLException e) {
+            LOGGER.error(e.getMessage());
+        } finally {
+            if (conn != null) {
+                try {
+                    conn.close();
+                } catch (SQLException e) {
+                    LOGGER.error(e.getMessage());
+                }
+            }
+        }
+        return count;
+    }
+
     public Integer checkMotherboardData(String bookingId) {
         Integer count = 0;
         String sql = "SELECT COUNT(*) as count FROM rms_booking_hardware WHERE booking_pkid = '" + bookingId + "' AND item_type = 'Motherboard'";
@@ -1250,9 +1276,9 @@ public class RmsBookingHardwareDAO {
         }
         return data;
     }
-    
+
     public List<RmsBookingHardware> getRmsHardwareList(String id) {
-        String sql = "SELECT * FROM rms_booking_hardware WHERE booking_pkid = '"+id+ "' AND status = 'Available' ";
+        String sql = "SELECT * FROM rms_booking_hardware WHERE booking_pkid = '" + id + "' AND status = 'Available' ";
         List<RmsBookingHardware> rmsbookingHardwareList = new ArrayList<RmsBookingHardware>();
         try {
             PreparedStatement ps = conn.prepareStatement(sql);
