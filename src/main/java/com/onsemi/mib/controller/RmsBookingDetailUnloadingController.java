@@ -3,7 +3,6 @@ package com.onsemi.mib.controller;
 import com.google.gson.Gson;
 import com.onsemi.mib.dao.EmailHwReturnFromStagingDAO;
 import com.onsemi.mib.dao.EmailVmFailDAO;
-import com.onsemi.mib.dao.FunctionalTestDAO;
 import com.onsemi.mib.dao.HostnameDAO;
 import com.onsemi.mib.dao.ItemActivityConfigDAO;
 import com.onsemi.mib.dao.ItemDAO;
@@ -29,7 +28,6 @@ import com.onsemi.mib.dao.RmsBookingMaverickDAO;
 import com.onsemi.mib.dao.RmsBookingVisualInspectionDAO;
 import com.onsemi.mib.model.EmailHwReturnFromStaging;
 import com.onsemi.mib.model.EmailVmFail;
-import com.onsemi.mib.model.FunctionalTestLog;
 import com.onsemi.mib.model.Hostname;
 import com.onsemi.mib.model.Item;
 import com.onsemi.mib.model.ItemActivityConfig;
@@ -1844,10 +1842,9 @@ public class RmsBookingDetailUnloadingController {
         String gotoWin = "Pending Functional Test - Winchester Chamber Leakage Test";
 //        String goReady = "Pending Release to Production";
         String goReady = "Closed";
-        String goHastAgain = "";
+        String goHast = "";
         
         String logStatus = "";
-        String logModule = "";
         String logIdGuna = "";
 
         String checkLeak = "No";
@@ -1951,8 +1948,7 @@ public class RmsBookingDetailUnloadingController {
                 // UPDATE rms_booking_hardware_group by hardwareId
                 saveToMaverickFunctionalTest("Leakage", username, groupId, leakHardware);
                 newStatus = "Failed Functional Test - Leakage Test";
-                logStatus = newStatus;
-                logModule = "Unloading - Functional Test - Leakage Test";
+                logStatus = "Unloading - FT - Leakage Test - Failed";
             } else {
                 if (checkManual.equals("Yes")) {
                     newStatus = gotoMn;
@@ -1979,8 +1975,7 @@ public class RmsBookingDetailUnloadingController {
                 } else {
                     booking.updateRmsBookingHardwareSubStatusByPkidAndBookingPkid(bookHardware);
                 }
-                logStatus = "Passed Functional Test - Leakage Test";
-                logModule = "Unloading - Functional Test - Leakage Test";
+                logStatus = "Unloading - FT - Leakage Test - Passed";
             }
             RmsBookingFunctionalTest ftest = new RmsBookingFunctionalTest();
             ftest.setFinalStatus(newStatus);
@@ -2014,8 +2009,7 @@ public class RmsBookingDetailUnloadingController {
             if (bibResult.equals("Fail")) {
                 saveToMaverickFunctionalTest("BIB", username, groupId, bibHardware);
                 newStatus = "Failed Functional Test - BIB Test";
-                logStatus = newStatus;
-                logModule = "Unloading - Functional Test - BIB Test";
+                logStatus = "Unloading - FT - BIB Test - Failed";
             } else {
                 if (checkDaq.equals("Yes")) {
                     newStatus = gotoDaq;
@@ -2038,8 +2032,7 @@ public class RmsBookingDetailUnloadingController {
                 } else {
                     booking.updateRmsBookingHardwareSubStatusByPkidAndBookingPkid(bookHardware);
                 }
-                logStatus = "Passed Functional Test - BIB Test";
-                logModule = "Unloading - Functional Test - BIB Test";
+                logStatus = "Unloading - FT - BIB Test - Passed";
             }
             RmsBookingFunctionalTest ftest = new RmsBookingFunctionalTest();
             ftest.setFinalStatus(newStatus);
@@ -2071,8 +2064,7 @@ public class RmsBookingDetailUnloadingController {
             if (bibDaqResult.equals("Fail")) {
                 saveToMaverickFunctionalTest("BIBDAQ", username, groupId, bibDaqHardware);
                 newStatus = "Failed Functional Test - BIB DAQ Test";
-                logStatus = newStatus;
-                logModule = "Unloading - Functional Test - BIB DAQ Test";
+                logStatus = "Unloading - FT - BIB DAQ Test - Failed";
             } else {
                 if (checkPs.equals("Yes")) {
                     newStatus = gotoPS;
@@ -2093,8 +2085,7 @@ public class RmsBookingDetailUnloadingController {
                 } else {
                     booking.updateRmsBookingHardwareSubStatusByPkidAndBookingPkid(bookHardware);
                 }
-                logStatus = "Passed Functional Test - BIB DAQ Test";
-                logModule = "Unloading - Functional Test - BIB DAQ Test";
+                logStatus = "Unloading - FT - BIB DAQ Test - Passed";
             }
             RmsBookingFunctionalTest ftest = new RmsBookingFunctionalTest();
             ftest.setFinalStatus(newStatus);
@@ -2125,8 +2116,7 @@ public class RmsBookingDetailUnloadingController {
             if (psResult.equals("Fail")) {
                 saveToMaverickFunctionalTest("Power", username, groupId, psHardware);
                 newStatus = "Failed Functional Test - Power Supply Leakage Test";
-                logStatus = newStatus;
-                logModule = "Unloading - Functional Test - Power Supply Leakage Test";
+                logStatus = "Unloading - FT - Power Supply Leakage Test - Failed";
             } else {
                 if (checkWin.equals("Yes")) {
                     newStatus = gotoWin;
@@ -2145,8 +2135,7 @@ public class RmsBookingDetailUnloadingController {
                 } else {
                     booking.updateRmsBookingHardwareSubStatusByPkidAndBookingPkid(bookHardware);
                 }
-                logStatus = "Passed Functional Test - Power Supply Leakage Test";
-                logModule = "Unloading - Functional Test - Power Supply Leakage Test";
+                logStatus = "Unloading - FT - Power Supply Leakage Test - Passed";
             }
             RmsBookingFunctionalTest ftest = new RmsBookingFunctionalTest();
             ftest.setFinalStatus(newStatus);
@@ -2178,8 +2167,7 @@ public class RmsBookingDetailUnloadingController {
                 // MASUK MAVERICK
                 saveToMaverickFunctionalTest("Winchester", username, groupId, winHardware);
                 newStatus = "Failed Functional Test - Winchester Chamber Leakage Test";
-                logStatus = newStatus;
-                logModule = "Unloading - Functional Test - Winchester Chamber Leakage Test";
+                logStatus = "Unloading - FT - Winchester Chamber Leakage Test - Failed";
             } else {
                 // UPDATE STATUS
                 newStatus = goReady;
@@ -2195,8 +2183,7 @@ public class RmsBookingDetailUnloadingController {
                 } else {
                     booking.updateRmsBookingHardwareSubStatusByPkidAndBookingPkid(bookHardware);
                 }
-                logStatus = "Passed Functional Test - Winchester Chamber Leakage Test";
-                logModule = "Unloading - Functional Test - Winchester Chamber Leakage Test";
+                logStatus = "Unloading - FT - Winchester Chamber Leakage Test - Passed";
             }
             RmsBookingFunctionalTest ftest = new RmsBookingFunctionalTest();
             ftest.setFinalStatus(newStatus);
@@ -2218,21 +2205,23 @@ public class RmsBookingDetailUnloadingController {
             if (event == "HAST") {
                 
             } else {
+                // RIGHT NOW HARDCODE - PLEASE UPDATE LATER
+                String sptsStatus = "Good";
                 
+                RmsBookingHardwareGroupDAO groupD = new RmsBookingHardwareGroupDAO();
+                groupD.updateGroupStatusToClosed(newStatus, sptsStatus, groupId);
             }
         } else {
             // SKIP EVERYTHING SINCE FUNCTIONAL TEST IS NOT COMPLETED
         }
         // FUNCTION TO CHECK IF THE FUNCTIONAL TEST IS COMPLETED - END
         
-        FunctionalTestLog ftlog = new FunctionalTestLog();
-        ftlog.setMibItemId("");
-        ftlog.setGroupId(groupId);
-        ftlog.setModule(logModule);
-        ftlog.setStatus(logStatus);
-        ftlog.setCreatedBy(username);
-        FunctionalTestDAO dao = new FunctionalTestDAO();
-        dao.insertFunctionalTestLog(ftlog);
+        RmsBookingHardwareGroupLog log2 = new RmsBookingHardwareGroupLog();
+        log2.setGroupId(groupId);
+        log2.setDetail(logStatus);
+        log2.setCreatedBy(userSession.getFullname());
+        RmsBookingHardwareGroupLogDAO logD2 = new RmsBookingHardwareGroupLogDAO();
+        QueryResult logQ2 = logD2.insertRmsBookingHardwareGroupLog(log2);
         
         return target_location;
     }
@@ -3672,7 +3661,7 @@ public class RmsBookingDetailUnloadingController {
     public void checkInsertFunctionalTestResult(String groupId, String username) {
 
         RmsBookingFunctionalTestDAO testdao = new RmsBookingFunctionalTestDAO();
-        Integer checkData = testdao.getCountTestResultByGroupId(groupId);
+        Integer checkData = testdao.getCountTestResultByGroupIdUnload(groupId);
 
         if (checkData == 0) {
             // INSERT BARU
