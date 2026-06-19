@@ -261,7 +261,7 @@
                                         <div class="static-fields">
                                             <div>
                                                 <label for="inputDUT">DUT #:</label>
-                                                <input type="number" id="inputDUT" name="inputDUT" required min="1" value="${dut}">
+                                                <input type="number" id="inputDUT" name="inputDUT" min="1" value="${dut}">
                                                 <button type="button" class="add-row-btn" onclick="addRow()">Add Component</button>
                                             </div>
                                         </div>
@@ -346,7 +346,7 @@
     <s:layout-component name="page_js_inline">
         <script>
             $(document).ready(function () {
-
+                
             });
 
             function toggleVisibility() {
