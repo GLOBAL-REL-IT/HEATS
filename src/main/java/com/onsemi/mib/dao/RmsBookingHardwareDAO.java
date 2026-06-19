@@ -805,6 +805,33 @@ public class RmsBookingHardwareDAO {
         return queryResult;
     }
 
+    public QueryResult updateRmsBookingHardwareUnloading(RmsBookingHardware rmsbookingHardware) {
+        QueryResult queryResult = new QueryResult();
+        try {
+            PreparedStatement ps = conn.prepareStatement(
+                    "UPDATE rms_booking_hardware SET sub_status = ?, flag = ? WHERE booking_pkid = ? AND pkid = ?"
+            );
+            ps.setString(1, rmsbookingHardware.getSubStatus());
+            ps.setString(2, rmsbookingHardware.getFlag());
+            ps.setString(3, rmsbookingHardware.getBookingPkid());
+            ps.setString(4, rmsbookingHardware.getPkid());
+            queryResult.setResult(ps.executeUpdate());
+            ps.close();
+        } catch (SQLException e) {
+            queryResult.setErrorMessage(e.getMessage());
+            LOGGER.error(e.getMessage());
+        } finally {
+            if (conn != null) {
+                try {
+                    conn.close();
+                } catch (SQLException e) {
+                    LOGGER.error(e.getMessage());
+                }
+            }
+        }
+        return queryResult;
+    }
+
     public QueryResult updateRmsBookingHardwareSubStatusById(RmsBookingHardware rmsbookingHardware) {
         QueryResult queryResult = new QueryResult();
         try {

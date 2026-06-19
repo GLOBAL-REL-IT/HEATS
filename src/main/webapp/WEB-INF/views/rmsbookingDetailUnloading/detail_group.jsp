@@ -1702,7 +1702,7 @@
                                                                                 </h2>
                                                                                 <div id="panelsStayOpen-collapseThree" class="accordion-collapse collapse ${leakshow}" aria-labelledby="panelsStayOpen-headingThree">
                                                                                     <div class="accordion-body">
-                                                                                        <form class="row gx-3 align-items-end" role="form" action="${contextPath}/rmsbookingDetail/ftest/save/leakTest" method="post" enctype="multipart/form-data" novalidate>
+                                                                                        <form class="row gx-3 align-items-end" role="form" action="${contextPath}/rmsbookingDetailUnloading/ftest/save/leakTest" method="post" enctype="multipart/form-data" novalidate>
                                                                                             <input type="hidden" class="form-control" id="bookId" name="bookId" value="${bookId}">
                                                                                             <input type="hidden" class="form-control" id="motherboardId" name="motherboardId" value="${mibItemId}">
                                                                                             <div class="col-xl-1 col-sm-12">
@@ -1775,7 +1775,7 @@
                                                                                 </h2>
                                                                                 <div id="panelsStayOpen-collapseTwo" class="accordion-collapse collapse ${manshow}" aria-labelledby="panelsStayOpen-headingTwo">
                                                                                     <div class="accordion-body">
-                                                                                        <form class="row gx-3 align-items-end" role="form" action="${contextPath}/rmsbookingDetail/createManualTest" method="post" enctype="multipart/form-data">
+                                                                                        <form class="row gx-3 align-items-end" role="form" action="${contextPath}/rmsbookingDetailUnloading/createManualTest" method="post" enctype="multipart/form-data">
                                                                                             <div class="row">
                                                                                                 <input type="hidden" class="form-control" id="bookId" name="bookId" value="${bookId}">
                                                                                                 <input type="hidden" class="form-control" id="motherboardId" name="motherboardId" value="${mibItemId}">
@@ -1829,7 +1829,7 @@
                                                                                 </h2>
                                                                                 <div id="panelsStayOpen-collapseOne" class="accordion-collapse collapse ${bibshow}" aria-labelledby="panelsStayOpen-headingOne">
                                                                                     <div class="accordion-body">
-                                                                                        <form class="row gx-3 align-items-end" role="form" action="${contextPath}/rmsbookingDetail/ftest/save/bibTest" method="post" enctype="multipart/form-data" novalidate>
+                                                                                        <form class="row gx-3 align-items-end" role="form" action="${contextPath}/rmsbookingDetailUnloading/ftest/save/bibTest" method="post" enctype="multipart/form-data" novalidate>
                                                                                             <input type="hidden" class="form-control" id="bookId" name="bookId" value="${bookId}">
                                                                                             <input type="hidden" class="form-control" id="motherboardId" name="motherboardId" value="${mibItemId}">
                                                                                             <div class="col-xl-1 col-sm-12">
@@ -1899,7 +1899,7 @@
                                                                                 </h2>
                                                                                 <div id="panelsStayOpen-collapseSix" class="accordion-collapse collapse ${bibDshow}" aria-labelledby="panelsStayOpen-headingSix">
                                                                                     <div class="accordion-body">
-                                                                                        <form class="row gx-3 align-items-end" role="form" action="${contextPath}/rmsbookingDetail/ftest/save/bibDaqTest" method="post" enctype="multipart/form-data" novalidate>
+                                                                                        <form class="row gx-3 align-items-end" role="form" action="${contextPath}/rmsbookingDetailUnloading/ftest/save/bibDaqTest" method="post" enctype="multipart/form-data" novalidate>
                                                                                             <input type="hidden" class="form-control" id="bookId" name="bookId" value="${bookId}">
                                                                                             <input type="hidden" class="form-control" id="motherboardId" name="motherboardId" value="${mibItemId}">
                                                                                             <div class="col-xl-1 col-sm-12">
@@ -1972,7 +1972,7 @@
                                                                                 <div id="panelsStayOpen-collapseFour" class="accordion-collapse collapse ${psshow}"
                                                                                      aria-labelledby="panelsStayOpen-headingFour">
                                                                                     <div class="accordion-body">
-                                                                                        <form class="row gx-3 align-items-end" role="form" action="${contextPath}/rmsbookingDetail/ftest/save/psTest" method="post" enctype="multipart/form-data" novalidate>
+                                                                                        <form class="row gx-3 align-items-end" role="form" action="${contextPath}/rmsbookingDetailUnloading/ftest/save/psTest" method="post" enctype="multipart/form-data" novalidate>
                                                                                             <input type="hidden" class="form-control" id="bookId" name="bookId" value="${bookId}">
                                                                                             <input type="hidden" class="form-control" id="motherboardId" name="motherboardId" value="${mibItemId}">
                                                                                             <div class="col-xl-1 col-sm-12 col-12">
@@ -2046,7 +2046,7 @@
                                                                                 <div id="panelsStayOpen-collapseFive" class="accordion-collapse collapse ${winshow}"
                                                                                      aria-labelledby="panelsStayOpen-headingFive">
                                                                                     <div class="accordion-body">
-                                                                                        <form class="row gx-3 align-items-end" role="form" action="${contextPath}/rmsbookingDetail/ftest/save/winTest" method="post" enctype="multipart/form-data" novalidate>
+                                                                                        <form class="row gx-3 align-items-end" role="form" action="${contextPath}/rmsbookingDetailUnloading/ftest/save/winTest" method="post" enctype="multipart/form-data" novalidate>
                                                                                             <input type="hidden" class="form-control" id="bookId" name="bookId" value="${bookId}">
                                                                                             <input type="hidden" class="form-control" id="motherboardId" name="motherboardId" value="${mibItemId}">
                                                                                             <div class="col-xl-1 col-sm-12">
@@ -2502,7 +2502,7 @@
                                                                                                     function modalDelete(e) {
                                                                                                         var deleteId = $(e).attr("modaldeleteid");
                                                                                                         var deleteInfo = $("#modal_delete_info_" + deleteId).html();
-                                                                                                        var deleteUrl = "${contextPath}/rmsbookingDetail/deleteHwId/" + deleteId;
+                                                                                                        var deleteUrl = "${contextPath}/rmsbookingDetailUnloading/deleteHwId/" + deleteId;
                                                                                                         var deleteMsg = "<f:message key='general.label.delete.confirmation'><f:param value='" + deleteInfo + "'/></f:message>";
                                                                                                         $("#delete_modal .modal-body").html(deleteMsg);
                                                                                                         $("#modal_delete_button").attr("href", deleteUrl);
@@ -2510,7 +2510,7 @@
 
                                                                                                     function modalFinalize(e) {
                                                                                                         var groupId = $(e).attr("modaldeleteid");
-                                                                                                        var deleteUrl = "${contextPath}/rmsbookingDetail/finalize/" + groupId;
+                                                                                                        var deleteUrl = "${contextPath}/rmsbookingDetailUnloading/finalize/" + groupId;
                                                                                                         var deleteMsg = "Do you confirm that all information is complete and ready to finalize?";
                                                                                                         $("#confirmation_modal .modal-body").html(deleteMsg);
                                                                                                         $("#modal_button").attr("href", deleteUrl);
@@ -2518,7 +2518,7 @@
 
                                                                                                     function modalUndoFinalize(e) {
                                                                                                         var groupId = $(e).attr("modaldeleteid");
-                                                                                                        var deleteUrl = "${contextPath}/rmsbookingDetail/undoFinalize/" + groupId;
+                                                                                                        var deleteUrl = "${contextPath}/rmsbookingDetailUnloading/undoFinalize/" + groupId;
                                                                                                         var deleteMsg = "Do you confirm to undo the finalization?";
                                                                                                         $("#confirmation_modal .modal-body").html(deleteMsg);
                                                                                                         $("#modal_button").attr("href", deleteUrl);
@@ -3370,7 +3370,7 @@
 
                                                                                                     function sendMailMb(e) {
                                                                                                         var groupId = $(e).attr("infoGroupId");
-                                                                                                        var deleteUrl = "${contextPath}/rmsbookingDetail/sendEmail/MB/" + groupId;
+                                                                                                        var deleteUrl = "${contextPath}/rmsbookingDetailUnloading/sendEmail/MB/" + groupId;
                                                                                                         var deleteMsg = "Do you confirm to send email to Motherboard Technician about this error?";
                                                                                                         $("#confirmation_modal .modal-body").html(deleteMsg);
                                                                                                         $("#modal_button").attr("href", deleteUrl);
@@ -3378,7 +3378,7 @@
 
                                                                                                     function sendMailLc(e) {
                                                                                                         var groupId = $(e).attr("infoGroupId");
-                                                                                                        var deleteUrl = "${contextPath}/rmsbookingDetail/sendEmail/LC/" + groupId;
+                                                                                                        var deleteUrl = "${contextPath}/rmsbookingDetailUnloading/sendEmail/LC/" + groupId;
                                                                                                         var deleteMsg = "Do you confirm to send email to Motherboard Technician about this error?";
                                                                                                         $("#confirmation_modal .modal-body").html(deleteMsg);
                                                                                                         $("#modal_button").attr("href", deleteUrl);

@@ -10,6 +10,7 @@ package com.onsemi.mib.model;
  */
 public class RmsBookingFunctionalTest {
     private String id;
+    private String module;
     private String groupId;
     private String leakHwid;
     private String leakQty;
@@ -45,6 +46,14 @@ public class RmsBookingFunctionalTest {
 
     public void setId(String id) {
         this.id = id;
+    }
+
+    public String getModule() {
+        return module;
+    }
+
+    public void setModule(String module) {
+        this.module = module;
     }
 
     public String getGroupId() {

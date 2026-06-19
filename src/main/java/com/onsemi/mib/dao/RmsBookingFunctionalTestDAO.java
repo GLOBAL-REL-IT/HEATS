@@ -36,13 +36,14 @@ public class RmsBookingFunctionalTestDAO {
         QueryResult queryResult = new QueryResult();
         try {
             PreparedStatement ps = conn.prepareStatement(
-                    "INSERT INTO rms_booking_functional_test (group_id, final_status, created_by, created_date, flag) "
-                            + "VALUES (?, ?, ?, NOW(), ?)", Statement.RETURN_GENERATED_KEYS
+                    "INSERT INTO rms_booking_functional_test (group_id, final_status, created_by, created_date, flag, module) "
+                            + "VALUES (?, ?, ?, NOW(), ?, ?)", Statement.RETURN_GENERATED_KEYS
             );
             ps.setString(1, book.getGroupId());
             ps.setString(2, book.getFinalStatus());
             ps.setString(3, book.getCreatedBy());
             ps.setString(4, book.getFlag());
+            ps.setString(5, book.getModule());
 
             queryResult.setResult(ps.executeUpdate());
             ResultSet rs = ps.getGeneratedKeys();
@@ -277,7 +278,7 @@ public class RmsBookingFunctionalTestDAO {
         Integer count = 0;
         try {
             PreparedStatement ps = conn.prepareStatement(
-                    "SELECT COUNT(*) AS count FROM rms_booking_functional_test WHERE group_id = '" + groupId + "' "
+                    "SELECT COUNT(*) AS count FROM rms_booking_functional_test WHERE group_id = '" + groupId + "' AND module = 'Before Loading' "
             );
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
@@ -299,10 +300,89 @@ public class RmsBookingFunctionalTestDAO {
         return count;
     }
     
-    public RmsBookingFunctionalTest getFuncTestResult(String groupId) {
+    public Integer getCountTestResultByGroupIdUnload(String groupId) {
+        Integer count = 0;
+        try {
+            PreparedStatement ps = conn.prepareStatement(
+                    "SELECT COUNT(*) AS count FROM rms_booking_functional_test WHERE group_id = '" + groupId + "' AND module = 'Unloading'"
+            );
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                count = rs.getInt("count");
+            }
+            rs.close();
+            ps.close();
+        } catch (SQLException e) {
+            LOGGER.error(e.getMessage());
+        } finally {
+            if (conn != null) {
+                try {
+                    conn.close();
+                } catch (SQLException e) {
+                    LOGGER.error(e.getMessage());
+                }
+            }
+        }
+        return count;
+    }
+    
+    public RmsBookingFunctionalTest getFuncTestResultbe4Load(String groupId) {
         RmsBookingFunctionalTest testResult = null;
-        String sql = "SELECT * FROM rms_booking_functional_test WHERE group_id = '"+groupId+"' ";
+        String sql = "SELECT * FROM rms_booking_functional_test WHERE group_id = '"+groupId+"' AND module = 'Before Loading' ";
         
+        try {
+            PreparedStatement ps = conn.prepareStatement(sql);
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                testResult = new RmsBookingFunctionalTest();
+                testResult.setGroupId(rs.getString("group_id"));
+                testResult.setLeakHwid(rs.getString("leak_hwid"));
+                testResult.setLeakQty(rs.getString("leak_qty"));
+                testResult.setLeakStatus(rs.getString("leak_status"));
+                testResult.setLeakUpload(rs.getString("leak_upload"));
+                testResult.setManualQty(rs.getString("manual_qty"));
+                testResult.setManualStatus(rs.getString("manual_status"));
+                testResult.setBibHwid(rs.getString("bib_hwid"));
+                testResult.setBibQty(rs.getString("bib_qty"));
+                testResult.setBibStatus(rs.getString("bib_status"));
+                testResult.setBibUpload(rs.getString("bib_upload"));
+                testResult.setBibDaqHwid(rs.getString("bib_daq_hwid"));
+                testResult.setBibDaqQty(rs.getString("bib_daq_qty"));
+                testResult.setBibDaqStatus(rs.getString("bib_daq_status"));
+                testResult.setBibDaqUpload(rs.getString("bib_daq_upload"));
+                testResult.setPsHwid(rs.getString("ps_hwid"));
+                testResult.setPsQty(rs.getString("ps_qty"));
+                testResult.setPsStatus(rs.getString("ps_status"));
+                testResult.setPsUpload(rs.getString("ps_upload"));
+                testResult.setWinHwid(rs.getString("win_hwid"));
+                testResult.setWinQty(rs.getString("win_qty"));
+                testResult.setWinStatus(rs.getString("win_status"));
+                testResult.setWinUpload(rs.getString("win_upload"));
+                testResult.setCreatedBy(rs.getString("created_by"));
+                testResult.setCreatedDate(rs.getString("created_date"));
+                testResult.setFinalStatus(rs.getString("final_status"));
+                testResult.setFlag(rs.getString("flag"));
+                testResult.setRemark(rs.getString("remark"));
+            }
+            rs.close();
+            ps.close();
+        } catch (SQLException e) {
+            LOGGER.error(e.getMessage());
+        } finally {
+            if (conn != null) {
+                try {
+                    conn.close();
+                } catch (SQLException e) {
+                    LOGGER.error(e.getMessage());
+                }
+            }
+        }
+        return testResult;
+    }
+    
+    public RmsBookingFunctionalTest getFuncTestResultUnloading(String groupId) {
+        RmsBookingFunctionalTest testResult = null;
+        String sql = "SELECT * FROM rms_booking_functional_test WHERE group_id = '"+groupId+"' AND module = 'Unloading' ";
         
         try {
             PreparedStatement ps = conn.prepareStatement(sql);

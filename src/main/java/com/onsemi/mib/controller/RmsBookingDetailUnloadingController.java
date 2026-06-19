@@ -3,6 +3,7 @@ package com.onsemi.mib.controller;
 import com.google.gson.Gson;
 import com.onsemi.mib.dao.EmailHwReturnFromStagingDAO;
 import com.onsemi.mib.dao.EmailVmFailDAO;
+import com.onsemi.mib.dao.FunctionalTestDAO;
 import com.onsemi.mib.dao.HostnameDAO;
 import com.onsemi.mib.dao.ItemActivityConfigDAO;
 import com.onsemi.mib.dao.ItemDAO;
@@ -28,6 +29,7 @@ import com.onsemi.mib.dao.RmsBookingMaverickDAO;
 import com.onsemi.mib.dao.RmsBookingVisualInspectionDAO;
 import com.onsemi.mib.model.EmailHwReturnFromStaging;
 import com.onsemi.mib.model.EmailVmFail;
+import com.onsemi.mib.model.FunctionalTestLog;
 import com.onsemi.mib.model.Hostname;
 import com.onsemi.mib.model.Item;
 import com.onsemi.mib.model.ItemActivityConfig;
@@ -54,6 +56,7 @@ import com.onsemi.mib.tools.QueryResult;
 import com.onsemi.mib.tools.SPTSResponse;
 import com.onsemi.mib.tools.SPTSStatus;
 import com.onsemi.mib.tools.SPTSWebService;
+import com.onsemi.mib.tools.SpmlUtil;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -153,6 +156,9 @@ public class RmsBookingDetailUnloadingController {
             @RequestParam(required = false) String itemId,
             @RequestParam(required = false) String event
     ) throws IOException {
+        
+        LOGGER.info("SINI KITA NK BUAT UNTUK UDPATE THE RETURN DATA");
+        LOGGER.info("APA GROUP YANG KITA BAWA >>> "+groupId);
 
         RmsBookingHardwareGroup rms = new RmsBookingHardwareGroup();
         rms.setGroupId(groupId);
@@ -215,6 +221,15 @@ public class RmsBookingDetailUnloadingController {
             @ModelAttribute UserSession userSession) throws IOException {
 
         String currentStatus = "";
+        String leakTest = "";
+        String manTest = "";
+        String bibTest = "";
+        String daqTest = "";
+        String psTest = "";
+        String winTest = "";
+
+        String teActive = "";
+        String teActiveTab = "";
 
         String groupId = bookingId + "/" + itemPkid;
         model.addAttribute("groupId", groupId);
@@ -251,6 +266,279 @@ public class RmsBookingDetailUnloadingController {
         }
 
         currentStatus = h.getSubStatus();
+        String itemIdMB = "";
+        String mbSptsPkid = "";
+        String itemIdLC = "";
+
+        String statusLeak = "";
+        String statusMan = "";
+        String statusBib = "";
+        String statusBibD = "";
+        String statusPs = "";
+        String statusWin = "";
+        
+        LOGGER.info("SINI NK TENGOK STATUS ::: "+h.getStatus());
+        LOGGER.info("SINI NK TENGOK SUB STATUS KITA :::: "+h.getSubStatus());
+
+        if (currentStatus.equalsIgnoreCase("Pending Functional Test")) {
+            // CHECK AND UPDATE THE FIRST TEST
+            RmsBookingHardwareDAO bookdao = new RmsBookingHardwareDAO();
+            Integer checkMb = bookdao.checkMotherboardData(bookingId);
+            bookdao = new RmsBookingHardwareDAO();
+            Integer checkLc = bookdao.checkCardData(bookingId);
+
+            if (checkMb == 0) {
+                redirectAttrs.addFlashAttribute("error", "No motherboard configured");
+            } else {
+                LOGGER.info("SINI ADA MB, CHECK UNTUK LOAD CARD PLAK");
+                // SINI ADA MB
+                bookdao = new RmsBookingHardwareDAO();
+                mbSptsPkid = bookdao.getSptsPkidForItemIdMb(bookingId, itemPkid);
+                ItemDAO itemdao = new ItemDAO();
+                itemIdMB = itemdao.getMibItemIdBySptsPkId(mbSptsPkid);
+                itemdao = new ItemDAO();
+                String boardName = itemdao.getItemIdById(itemIdMB);
+                ItemActivityConfigDAO itemactdao = new ItemActivityConfigDAO();
+                ItemActivityConfig itemactmb = itemactdao.getItemActivityByItemId(itemIdMB);
+                if (itemactmb != null) {
+                    LOGGER.info("1111");
+                    leakTest = itemactmb.getLeakageTest();
+                    psTest = itemactmb.getPsLeakageTest();
+                    winTest = itemactmb.getWinchesterChamberLeakageTest();
+                    model.addAttribute("configMotherboard", "");
+                } else {
+                    LOGGER.info("2222");
+                    model.addAttribute("configMotherboard", "TRIGGERERROR");
+                    model.addAttribute("itemIdMB", itemIdMB);
+                    model.addAttribute("itemIdLC", itemIdLC);
+                    model.addAttribute("message", "<button type=\"submit\" class=\"email-btn\" infoGroupId=\"" + itemIdMB + "\\" + groupId + "\" onclick=\"sendMailMb(this)\" data-bs-toggle=\"modal\" data-bs-target=\"#confirmation_modal\" >Send Email</button>&emsp;MB Configuration Error [" + itemIdMB + "]" + "<br/>The BIB Activity Config for " + boardName + " was not found!");
+                }
+
+                if (checkLc == 0) {
+                    LOGGER.info("3333");
+                    // SINI TAKDE LC
+                    model.addAttribute("message", "No Load Card Information Found");
+                } else {
+                    LOGGER.info("44444");
+                    LOGGER.info("bookingId >> "+bookingId);
+                    LOGGER.info("NK TENGOK OAD CARD DIA    "+itemIdLC);
+                    LOGGER.info("CHECK GROUP DIA, BETUL KE ::  " +groupId);
+                    // SINI DUA2 ADA
+                    bookdao = new RmsBookingHardwareDAO();
+                    itemIdLC = bookdao.getSptsPkidForItemIdLC(bookingId);
+                    itemdao = new ItemDAO();
+                    String loadcardName = itemdao.getItemIdById(itemIdLC);
+                    itemactdao = new ItemActivityConfigDAO();
+                    ItemActivityConfig itemactlc = itemactdao.getItemActivityByItemId(itemIdLC);
+
+                    if (itemactlc != null) {
+                        bibTest = itemactlc.getBibTest();
+                        daqTest = itemactlc.getBibDaqTest();
+                        manTest = itemactlc.getManualTest();
+                    } else {
+                        model.addAttribute("message", "<button type=\"submit\" class=\"email-btn\" infoGroupId=\"" + itemIdLC + "\\" + groupId + "\" onclick=\"sendMailLc(this)\" data-bs-toggle=\"modal\" data-bs-target=\"#confirmation_modal\" >Send Email</button>&emsp;LC Configuration Error [" + itemIdLC + "]" + " <br/>The BIB Activity Config for " + loadcardName + " was not found!");
+                    }
+                }
+                model.addAttribute("itemIdMB", itemIdMB);
+                model.addAttribute("itemIdLC", itemIdLC);
+            }
+            
+            LOGGER.info("DIA TENGOK YANG DEKAT PERTAMA NI :: "+currentStatus);
+
+            if (leakTest.contains("Yes")) {
+                currentStatus = "Pending Functional Test - Leakage Test";
+            } else if (manTest.contains("Yes")) {
+                currentStatus = "Pending Functional Test - Manual Test";
+            } else if (bibTest.contains("Yes")) {
+                currentStatus = "Pending Functional Test - BIB Test";
+            } else if (daqTest.contains("Yes")) {
+                currentStatus = "Pending Functional Test - BIB DAQ Test";
+            } else if (psTest.contains("Yes")) {
+                currentStatus = "Pending Functional Test - Power Supply Leakage Test";
+            } else if (winTest.contains("Yes")) {
+                currentStatus = "Pending Functional Test - Winchester Chamber Leakage Test";
+            } else {
+                currentStatus = "Pending Release to Production";
+            }
+            LOGGER.info("DAH NAK KELUAR DARI YANG PERTAMA >>>> "+currentStatus);
+        } else {
+            LOGGER.info("MASUK KEDUA");
+            // DO NOTHING HERE
+            if (currentStatus.equals("Pending HW Registration")) {
+                model.addAttribute("configMotherboard", "HW");
+                model.addAttribute("message", "Please Complete Hardware Registration First");
+            } else if (currentStatus.equals("Pending VM")) {
+                model.addAttribute("configMotherboard", "VM");
+                model.addAttribute("message", "Please Complete Visual Inspection First");
+            } else if (currentStatus.contains("Pending Functional Test") || currentStatus.contains("Pending Release to Production") || currentStatus.contains("Failed")) {
+                RmsBookingHardwareDAO bookdao = new RmsBookingHardwareDAO();
+                Integer checkMb = bookdao.checkMotherboardData(bookingId);
+                bookdao = new RmsBookingHardwareDAO();
+                Integer checkLc = bookdao.checkCardData(bookingId);
+
+                if (checkMb == 0) {
+                    redirectAttrs.addFlashAttribute("error", "No motherboard configured");
+                } else {
+                    // SINI ADA MB
+                    bookdao = new RmsBookingHardwareDAO();
+                    mbSptsPkid = bookdao.getSptsPkidForItemIdMb(bookingId, itemPkid);
+                    ItemDAO itemdao = new ItemDAO();
+                    itemIdMB = itemdao.getMibItemIdBySptsPkId(mbSptsPkid);
+                    ItemActivityConfigDAO itemactdao = new ItemActivityConfigDAO();
+                    ItemActivityConfig itemactmb = itemactdao.getItemActivityByItemId(itemIdMB);
+                    if (itemactmb != null) {
+                        leakTest = itemactmb.getLeakageTest();
+                        psTest = itemactmb.getPsLeakageTest();
+                        winTest = itemactmb.getWinchesterChamberLeakageTest();
+                        model.addAttribute("configMotherboard", "");
+                    } else {
+                        model.addAttribute("configMotherboard", "TRIGGERERROR");
+                        model.addAttribute("itemIdMB", itemIdMB);
+                        model.addAttribute("itemIdLC", itemIdLC);
+                        redirectAttrs.addFlashAttribute("error", "No motherboard configuration configured");
+                    }
+
+                    if (checkLc == 0) {
+                        // SINI TAKDE LC
+                        redirectAttrs.addFlashAttribute("error", "No load card configured");
+                    } else {
+                        // SINI DUA2 ADA
+                        bookdao = new RmsBookingHardwareDAO();
+                        itemIdLC = bookdao.getSptsPkidForItemIdLC(bookingId);
+                        itemactdao = new ItemActivityConfigDAO();
+                        ItemActivityConfig itemactlc = itemactdao.getItemActivityByItemId(itemIdLC);
+
+                        if (itemactlc != null) {
+                            bibTest = itemactlc.getBibTest();
+                            daqTest = itemactlc.getBibDaqTest();
+                            manTest = itemactlc.getManualTest();
+                        } else {
+                            redirectAttrs.addFlashAttribute("error", "No load card configuration configured");
+                        }
+                    }
+                    model.addAttribute("itemIdMB", itemIdMB);
+                    model.addAttribute("itemIdLC", itemIdLC);
+                }
+
+                RmsBookingFunctionalTestDAO ftestdao2 = new RmsBookingFunctionalTestDAO();
+                RmsBookingFunctionalTest testResult = new RmsBookingFunctionalTest();
+                testResult = ftestdao2.getFuncTestResultUnloading(groupId);
+                model.addAttribute("testResult", testResult);
+
+                if (testResult == null) {
+                    // NOTHING TO UPDATE HERE
+                } else {
+//                    statusLeak = testResult.getLeakStatus();
+//                    statusMan = testResult.getManualStatus();
+//                    statusBib = testResult.getBibStatus();
+//                    statusBibD = testResult.getBibDaqStatus();
+//                    statusPs = testResult.getPsStatus();
+//                    statusWin = testResult.getPsStatus();
+                    statusLeak = SpmlUtil.nullToEmptyString(testResult.getLeakStatus());
+                    statusMan = SpmlUtil.nullToEmptyString(testResult.getManualStatus());
+                    statusBib = SpmlUtil.nullToEmptyString(testResult.getBibStatus());
+                    statusBibD = SpmlUtil.nullToEmptyString(testResult.getBibDaqStatus());
+                    statusPs = SpmlUtil.nullToEmptyString(testResult.getPsStatus());
+                    statusWin = SpmlUtil.nullToEmptyString(testResult.getPsStatus());
+                }
+                String check01 = "disabled";    // LEAKAGE
+                String check02 = "disabled";    // MANUAL
+                String check03 = "disabled";    // BIB 
+                String check04 = "disabled";    // BIB DAQ
+                String check05 = "disabled";    // PS
+                String check06 = "disabled";    // WINCHESTER
+                String edit01 = "visually-hidden";
+                String edit02 = "visually-hidden";
+                String edit03 = "visually-hidden";
+                String edit04 = "visually-hidden";
+                String edit05 = "visually-hidden";
+                String edit06 = "visually-hidden";
+
+                if (currentStatus.contains("Failed")) {
+                    model.addAttribute("leakbutton", "disabled");
+                    model.addAttribute("manualbutton", "disabled");
+                    model.addAttribute("bibbutton", "disabled");
+                    model.addAttribute("bibdaqbutton", "disabled");
+                    model.addAttribute("psbutton", "disabled");
+                    model.addAttribute("winbutton", "disabled");
+                } else {
+                    if (currentStatus.contains("Leakage")) {
+                        check01 = "";
+                        edit01 = "";
+                    } else if (currentStatus.contains("BIB Test")) {
+                        check03 = "";
+                        edit03 = "";
+                    } else if (currentStatus.contains("BIB DAQ")) {
+                        check04 = "";
+                        edit04 = "";
+                    } else if (currentStatus.contains("Manual")) {
+                        check02 = "";
+                        edit02 = "";
+                    } else if (currentStatus.contains("Winchester")) {
+                        check06 = "";
+                        edit06 = "";
+                    } else if (currentStatus.contains("Power")) {
+                        check05 = "";
+                        edit05 = "";
+                    }
+                }
+
+                model.addAttribute("leakbutton", check01);
+                model.addAttribute("manualbutton", check02);
+                model.addAttribute("bibbutton", check03);
+                model.addAttribute("bibdaqbutton", check04);
+                model.addAttribute("psbutton", check05);
+                model.addAttribute("winbutton", check06);
+                model.addAttribute("editleakbutton", edit01);
+                model.addAttribute("editmanualbutton", edit02);
+                model.addAttribute("editbibbutton", edit03);
+                model.addAttribute("editbibdaqbutton", edit04);
+                model.addAttribute("editpsbutton", edit05);
+                model.addAttribute("editwinbutton", edit06);
+            } else {
+
+            }
+        }
+
+        if (statusLeak.equals("Fail")) {
+            model.addAttribute("leakbutton", "disabled");
+            model.addAttribute("editleakbutton", "disabled");
+        } else if (statusLeak.equals("Pass")) {
+            model.addAttribute("leakbutton", "disabled");
+            model.addAttribute("editleakbutton", "enabled");
+        } else {
+
+        }
+
+        model.addAttribute("bookId", bookingId);
+        model.addAttribute("mibItemId", itemPkid);
+
+        model.addAttribute("leakCheck", leakTest);
+        model.addAttribute("manCheck", manTest);
+        model.addAttribute("bibCheck", bibTest);
+        model.addAttribute("daqCheck", daqTest);
+        model.addAttribute("psCheck", psTest);
+        model.addAttribute("winCheck", winTest);
+
+        ParameterDetailsDAO pDx = new ParameterDetailsDAO();
+        List<ParameterDetails> bibResultData = pDx.getGroupParameterDetailList(statusBib, "016");
+        model.addAttribute("bibResultData", bibResultData);
+
+        pDx = new ParameterDetailsDAO();
+        List<ParameterDetails> bibDaqResultData = pDx.getGroupParameterDetailList(statusBibD, "016");
+        model.addAttribute("bibDaqResultData", bibDaqResultData);
+
+        pDx = new ParameterDetailsDAO();
+        List<ParameterDetails> leakResultData = pDx.getGroupParameterDetailList(statusLeak, "016");
+        model.addAttribute("leakResultData", leakResultData);
+
+        pDx = new ParameterDetailsDAO();
+        List<ParameterDetails> psResultData = pDx.getGroupParameterDetailList(statusPs, "016");
+        model.addAttribute("psResultData", psResultData);
+
+        pDx = new ParameterDetailsDAO();
+        List<ParameterDetails> winResultData = pDx.getGroupParameterDetailList(statusWin, "016");
+        model.addAttribute("winResultData", winResultData);
 
         //get ionic config
         String ionicPassValue = "0";
@@ -299,7 +587,9 @@ public class RmsBookingDetailUnloadingController {
         }
 
         //vm tab
+        LOGGER.info("SINI BARU NK MASUK VM");
         RmsBookingVisualInspectionDAO vmD = new RmsBookingVisualInspectionDAO();
+        LOGGER.info("DA LEPAS DEKAT SINI dengan STATUS >>>> "+h.getStatus());
         RmsBookingVisualInspection itemVm = vmD.getRmsBookingVisualInspectionByGroupIdAndStatus(groupId, h.getStatus());
 
         if (itemVm != null) {
@@ -483,7 +773,9 @@ public class RmsBookingDetailUnloadingController {
             model.addAttribute("disabledUpload", !currentStatus.contains("Failed") ? "" : "disabled");
             model.addAttribute("ionicActive", ionicActive);
             model.addAttribute("ionicActiveTab", ionicActiveTab);
+            LOGGER.info("IONIC ACTIVE - ionicActiveTab");
         } else {
+            LOGGER.info("IONIC TAK AKTIF - ionicActiveTab");
             String ionicActive = "";
             String ionicActiveTab = "";
             String requiredDisable = "disabled";
@@ -493,7 +785,7 @@ public class RmsBookingDetailUnloadingController {
             model.addAttribute("ionicActiveTab", countIonicConfig != 0 ? "" : "disabled"); //disabled tab if not in ionic config
 //            model.addAttribute("ionicActive", ionicActive);
 //            model.addAttribute("ionicActiveTab", ionicActiveTab);
-            model.addAttribute("requiredDisable", requiredDisable);
+             model.addAttribute("requiredDisable", requiredDisable);
             model.addAttribute("disabledUpload", disabledUpload);
         }
         if (currentStatus.contains("VM") || currentStatus.contains("Visual Inspection")) {
@@ -509,18 +801,6 @@ public class RmsBookingDetailUnloadingController {
             model.addAttribute("vmActive", vmActive);
             model.addAttribute("vmActiveTab", vmActiveTab);
             model.addAttribute("buttonVm", buttonVm);
-        }
-
-        if (currentStatus.contains("Pending Functional Test")) {
-            String teActive = "active";
-            String teActiveTab = "show active";
-            model.addAttribute("teActive", teActive);
-            model.addAttribute("teActiveTab", teActiveTab);
-        } else {
-            String teActive = "";
-            String teActiveTab = "";
-            model.addAttribute("teActive", teActive);
-            model.addAttribute("teActiveTab", teActiveTab);
         }
 
         if (currentStatus.contains("Pending Production Disposition")) { //active tab after HAST complete functional test
@@ -541,12 +821,41 @@ public class RmsBookingDetailUnloadingController {
             model.addAttribute("hwActive", hwActive);
             model.addAttribute("hwActiveTab", hwActiveTab);
         } else {
+            LOGGER.info("IONIC NOT ACTIVE AGAIN - haActiveTab");
             String hwActive = "";
             String hwActiveTab = "";
             model.addAttribute("hwActive", hwActive);
             model.addAttribute("hwActiveTab", hwActiveTab);
         }
-
+        
+        LOGGER.info("currentStatus "+currentStatus);
+        
+        if (currentStatus.contains("Pending Functional Test")) {
+            LOGGER.info("AKTIF - SINI MASUK NK CHECK FUNCTIONLA TEST");
+            teActive = "active";
+            teActiveTab = "show active";
+            if (currentStatus.contains("- Leakage Test")) {
+                model.addAttribute("leakshow", teActiveTab);
+            } else if (currentStatus.contains("Manual")) {
+                model.addAttribute("manshow", teActiveTab);
+            } else if (currentStatus.contains("BIB Test")) {
+                model.addAttribute("bibshow", teActiveTab);
+            } else if (currentStatus.contains("BIB DAQ")) {
+                model.addAttribute("bibDshow", teActiveTab);
+            } else if (currentStatus.contains("Power Supply")) {
+                model.addAttribute("psshow", teActiveTab);
+            } else if (currentStatus.contains("Winchester")) {
+                model.addAttribute("winshow", teActiveTab);
+            }
+            model.addAttribute("teActive", teActive);
+            model.addAttribute("teActiveTab", teActiveTab);
+        } else {
+            LOGGER.info("TAK AKTIF - SINI TAKDE LA KOT FUNCTIONAL TEST");
+            teActive = "";
+            teActiveTab = "";
+            model.addAttribute("teActive", teActive);
+            model.addAttribute("teActiveTab", teActiveTab);
+        }
         model.addAttribute("currentStatus", currentStatus);
 
         return "rmsbookingDetailUnloading/detail_group";
@@ -917,22 +1226,6 @@ public class RmsBookingDetailUnloadingController {
         String stringPathLabelIdentification = "";
         String emailBodyFail = "";
 
-//        if (null == itemStatus) {
-//            itemVm.setModule("Before Loading");
-//        } else {
-//            switch (itemStatus) {
-//                case "Pending Visual Inspection":
-//                    itemVm.setModule("Item Registration");
-//                    break;
-//                case "Pending Visual Inspection (from Maverick)":
-//                    itemVm.setModule("Item Registration (2nd Visual Inspection");
-//                    break;
-//                default:
-//                    itemVm.setModule("Item Registration");
-//                    break;
-//            }
-//        }
-//        LOGGER.info("Arrays.toString(pcbHardwareId): " + Arrays.toString(pcbHardwareId));
         RmsBookingVisualInspection itemVm = new RmsBookingVisualInspection();
         itemVm.setGroupId(groupId);
         itemVm.setModule(hwStatus);
@@ -1549,7 +1842,13 @@ public class RmsBookingDetailUnloadingController {
         String gotoDaq = "Pending Functional Test - BIB DAQ Test";
         String gotoPS = "Pending Functional Test - Power Supply Leakage Test";
         String gotoWin = "Pending Functional Test - Winchester Chamber Leakage Test";
-        String goReady = "Pending Release to Production";
+//        String goReady = "Pending Release to Production";
+        String goReady = "Closed";
+        String goHastAgain = "";
+        
+        String logStatus = "";
+        String logModule = "";
+        String logIdGuna = "";
 
         String checkLeak = "No";
         String checkManual = "No";
@@ -1567,12 +1866,16 @@ public class RmsBookingDetailUnloadingController {
         String username = userSession.getFullname();
         String newStatus = "";
         String latestResult = "";
-        String target_location = "redirect:/rmsbookingDetail/groupDetail/" + bookId + "/" + motherboardId;
+        String flag = "";
+        String target_location = "redirect:/rmsbookingDetailUnloading/groupDetail/" + bookId + "/" + motherboardId;
 
         RmsBookingHardwareDAO bookdao = new RmsBookingHardwareDAO();
         Integer checkMb = bookdao.checkMotherboardData(bookId);
         bookdao = new RmsBookingHardwareDAO();
         Integer checkLc = bookdao.checkCardData(bookId);
+        
+        // SINI DAPATKAN INFO SAMADA HAST ATAU BUKAN
+        String event = "";
 
         if (checkMb == 0) {
             redirectAttrs.addFlashAttribute("error", "No motherboard configured");
@@ -1648,6 +1951,8 @@ public class RmsBookingDetailUnloadingController {
                 // UPDATE rms_booking_hardware_group by hardwareId
                 saveToMaverickFunctionalTest("Leakage", username, groupId, leakHardware);
                 newStatus = "Failed Functional Test - Leakage Test";
+                logStatus = newStatus;
+                logModule = "Unloading - Functional Test - Leakage Test";
             } else {
                 if (checkManual.equals("Yes")) {
                     newStatus = gotoMn;
@@ -1668,7 +1973,14 @@ public class RmsBookingDetailUnloadingController {
                 bookHardware.setPkid(motherboardId);
                 bookHardware.setSubStatus(newStatus);
                 RmsBookingHardwareDAO booking = new RmsBookingHardwareDAO();
-                booking.updateRmsBookingHardwareSubStatusByPkidAndBookingPkid(bookHardware);
+                if (newStatus.equalsIgnoreCase("Closed")) {
+                    bookHardware.setFlag("3");
+                    booking.updateRmsBookingHardwareUnloading(bookHardware);
+                } else {
+                    booking.updateRmsBookingHardwareSubStatusByPkidAndBookingPkid(bookHardware);
+                }
+                logStatus = "Passed Functional Test - Leakage Test";
+                logModule = "Unloading - Functional Test - Leakage Test";
             }
             RmsBookingFunctionalTest ftest = new RmsBookingFunctionalTest();
             ftest.setFinalStatus(newStatus);
@@ -1702,6 +2014,8 @@ public class RmsBookingDetailUnloadingController {
             if (bibResult.equals("Fail")) {
                 saveToMaverickFunctionalTest("BIB", username, groupId, bibHardware);
                 newStatus = "Failed Functional Test - BIB Test";
+                logStatus = newStatus;
+                logModule = "Unloading - Functional Test - BIB Test";
             } else {
                 if (checkDaq.equals("Yes")) {
                     newStatus = gotoDaq;
@@ -1718,7 +2032,14 @@ public class RmsBookingDetailUnloadingController {
                 bookHardware.setPkid(motherboardId);
                 bookHardware.setSubStatus(newStatus);
                 RmsBookingHardwareDAO booking = new RmsBookingHardwareDAO();
-                booking.updateRmsBookingHardwareSubStatusByPkidAndBookingPkid(bookHardware);
+                if (newStatus.equalsIgnoreCase("Closed")) {
+                    bookHardware.setFlag("3");
+                    booking.updateRmsBookingHardwareUnloading(bookHardware);
+                } else {
+                    booking.updateRmsBookingHardwareSubStatusByPkidAndBookingPkid(bookHardware);
+                }
+                logStatus = "Passed Functional Test - BIB Test";
+                logModule = "Unloading - Functional Test - BIB Test";
             }
             RmsBookingFunctionalTest ftest = new RmsBookingFunctionalTest();
             ftest.setFinalStatus(newStatus);
@@ -1750,6 +2071,8 @@ public class RmsBookingDetailUnloadingController {
             if (bibDaqResult.equals("Fail")) {
                 saveToMaverickFunctionalTest("BIBDAQ", username, groupId, bibDaqHardware);
                 newStatus = "Failed Functional Test - BIB DAQ Test";
+                logStatus = newStatus;
+                logModule = "Unloading - Functional Test - BIB DAQ Test";
             } else {
                 if (checkPs.equals("Yes")) {
                     newStatus = gotoPS;
@@ -1764,7 +2087,14 @@ public class RmsBookingDetailUnloadingController {
                 bookHardware.setPkid(motherboardId);
                 bookHardware.setSubStatus(newStatus);
                 RmsBookingHardwareDAO booking = new RmsBookingHardwareDAO();
-                booking.updateRmsBookingHardwareSubStatusByPkidAndBookingPkid(bookHardware);
+                if (newStatus.equalsIgnoreCase("Closed")) {
+                    bookHardware.setFlag("3");
+                    booking.updateRmsBookingHardwareUnloading(bookHardware);
+                } else {
+                    booking.updateRmsBookingHardwareSubStatusByPkidAndBookingPkid(bookHardware);
+                }
+                logStatus = "Passed Functional Test - BIB DAQ Test";
+                logModule = "Unloading - Functional Test - BIB DAQ Test";
             }
             RmsBookingFunctionalTest ftest = new RmsBookingFunctionalTest();
             ftest.setFinalStatus(newStatus);
@@ -1795,6 +2125,8 @@ public class RmsBookingDetailUnloadingController {
             if (psResult.equals("Fail")) {
                 saveToMaverickFunctionalTest("Power", username, groupId, psHardware);
                 newStatus = "Failed Functional Test - Power Supply Leakage Test";
+                logStatus = newStatus;
+                logModule = "Unloading - Functional Test - Power Supply Leakage Test";
             } else {
                 if (checkWin.equals("Yes")) {
                     newStatus = gotoWin;
@@ -1807,7 +2139,14 @@ public class RmsBookingDetailUnloadingController {
                 bookHardware.setPkid(motherboardId);
                 bookHardware.setSubStatus(newStatus);
                 RmsBookingHardwareDAO booking = new RmsBookingHardwareDAO();
-                booking.updateRmsBookingHardwareSubStatusByPkidAndBookingPkid(bookHardware);
+                if (newStatus.equalsIgnoreCase("Closed")) {
+                    bookHardware.setFlag("3");
+                    booking.updateRmsBookingHardwareUnloading(bookHardware);
+                } else {
+                    booking.updateRmsBookingHardwareSubStatusByPkidAndBookingPkid(bookHardware);
+                }
+                logStatus = "Passed Functional Test - Power Supply Leakage Test";
+                logModule = "Unloading - Functional Test - Power Supply Leakage Test";
             }
             RmsBookingFunctionalTest ftest = new RmsBookingFunctionalTest();
             ftest.setFinalStatus(newStatus);
@@ -1839,6 +2178,8 @@ public class RmsBookingDetailUnloadingController {
                 // MASUK MAVERICK
                 saveToMaverickFunctionalTest("Winchester", username, groupId, winHardware);
                 newStatus = "Failed Functional Test - Winchester Chamber Leakage Test";
+                logStatus = newStatus;
+                logModule = "Unloading - Functional Test - Winchester Chamber Leakage Test";
             } else {
                 // UPDATE STATUS
                 newStatus = goReady;
@@ -1848,7 +2189,14 @@ public class RmsBookingDetailUnloadingController {
                 bookHardware.setPkid(motherboardId);
                 bookHardware.setSubStatus(newStatus);
                 RmsBookingHardwareDAO booking = new RmsBookingHardwareDAO();
-                booking.updateRmsBookingHardwareSubStatusByPkidAndBookingPkid(bookHardware);
+                if (newStatus.equalsIgnoreCase("Closed")) {
+                    bookHardware.setFlag("3");
+                    booking.updateRmsBookingHardwareUnloading(bookHardware);
+                } else {
+                    booking.updateRmsBookingHardwareSubStatusByPkidAndBookingPkid(bookHardware);
+                }
+                logStatus = "Passed Functional Test - Winchester Chamber Leakage Test";
+                logModule = "Unloading - Functional Test - Winchester Chamber Leakage Test";
             }
             RmsBookingFunctionalTest ftest = new RmsBookingFunctionalTest();
             ftest.setFinalStatus(newStatus);
@@ -1864,6 +2212,28 @@ public class RmsBookingDetailUnloadingController {
         } else {
 
         }
+        
+        // FUNCTION TO CHECK IF THE FUNCTIONAL TEST IS COMPLETED - START
+        if (newStatus == goReady) {
+            if (event == "HAST") {
+                
+            } else {
+                
+            }
+        } else {
+            // SKIP EVERYTHING SINCE FUNCTIONAL TEST IS NOT COMPLETED
+        }
+        // FUNCTION TO CHECK IF THE FUNCTIONAL TEST IS COMPLETED - END
+        
+        FunctionalTestLog ftlog = new FunctionalTestLog();
+        ftlog.setMibItemId("");
+        ftlog.setGroupId(groupId);
+        ftlog.setModule(logModule);
+        ftlog.setStatus(logStatus);
+        ftlog.setCreatedBy(username);
+        FunctionalTestDAO dao = new FunctionalTestDAO();
+        dao.insertFunctionalTestLog(ftlog);
+        
         return target_location;
     }
 
@@ -1936,7 +2306,7 @@ public class RmsBookingDetailUnloadingController {
 
     public void updateMaverickAndEmail(String mibItemId, String username, String jenis) {
 
-        String module = "Hardware Registration";
+        String module = "Unloading";
         String sub = "";
         String status = "Failed Functional Test";
 
@@ -2516,7 +2886,8 @@ public class RmsBookingDetailUnloadingController {
         RmsBookingVisualInspection itemVm = new RmsBookingVisualInspection();
 
         RmsBookingVisualInspectionDAO vmD = new RmsBookingVisualInspectionDAO();
-        int count = vmD.getCountByGroupIdWithModuleBeforeLoading(groupId);
+//        int count = vmD.getCountByGroupIdWithModuleBeforeLoading(groupId);
+        int count = vmD.getCountByGroupIdWithModuleAfterLoading(groupId);
         if (count == 1) {
             vmD = new RmsBookingVisualInspectionDAO();
             itemVm = vmD.getRmsBookingVisualInspectionByGroupId(groupId);
@@ -3065,8 +3436,8 @@ public class RmsBookingDetailUnloadingController {
         String path = "";
 
         // SINI KITA HARDCODE UNTUK PERGI KE PHP PROUJECT LINK FOR HEATS
-//        String link = "http://zbqb9x-7jwwld4:86/Tutorial/sample-heat/manual_test_before_loading.php?id=" + lcItemId + "&groupId=" + groupId;
-        String link = "https://mysed-rel-app05/HEATS-mini/manual_test_before_loading.php?id=" + lcItemId + "&groupId=" + groupId;
+//        String link = "http://zbqb9x-7jwwld4:86/Tutorial/sample-heat/manual_test_after_loading.php?id=" + lcItemId + "&groupId=" + groupId;
+        String link = "https://mysed-rel-app05/HEATS-mini/manual_test_after_loading.php?id=" + lcItemId + "&groupId=" + groupId;
         model.addAttribute("link", link);
 
         ManualTestDAO testdao = new ManualTestDAO();
@@ -3197,7 +3568,7 @@ public class RmsBookingDetailUnloadingController {
         String mbBookingPkid = MbBookingHwPkid[1];
 
         String emailBodyFail = "";
-        String currentmodule = "Before Loading";
+        String currentmodule = "Unloading";
         String currentsubmodule = "Functional Test";
         String tajukEmail = "Failed Functional Test";
 
@@ -3308,6 +3679,7 @@ public class RmsBookingDetailUnloadingController {
             RmsBookingFunctionalTest ftest = new RmsBookingFunctionalTest();
             ftest.setGroupId(groupId);
             ftest.setCreatedBy(username);
+            ftest.setModule("Unloading");
             ftest.setFinalStatus("Pending Functional Test");
             ftest.setFlag("0");
             testdao = new RmsBookingFunctionalTestDAO();

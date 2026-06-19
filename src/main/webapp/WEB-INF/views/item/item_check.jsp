@@ -155,7 +155,7 @@
                                     </div>
                                 </div>
                                 <div class="row mb-4">
-                                    <label class="col-sm-2 col-md-1 col-form-label fw-semibold" for="itemId">item ID</label>
+                                    <label class="col-sm-2 col-md-1 col-form-label fw-semibold" for="itemId">Item ID</label>
                                     <div class="col-sm-9 col-md-10">
                                         <div class="row g-2">
                                             <div class="col-sm-6">
