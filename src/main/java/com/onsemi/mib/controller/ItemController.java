@@ -4628,6 +4628,7 @@ public class ItemController {
         // /winTest
         String username = userSession.getFullname();
         String newStatus = "";
+        String logStatus = "";
         checkInsertFunctionalTest(mibItemId, username);
         String target_location = "redirect:/hw/item/add2/" + mibItemId;
 
@@ -4688,8 +4689,10 @@ public class ItemController {
                         insertSPTSData(mibItemId, username);
                         target_location = "redirect:/hw/item/pending";
                     }
+                    logStatus = "Registration - FT - BIB Test - Passed";
                 } else {
                     newStatus = "Failed Functional Test - BIB Test - Waiting Maverick CA";
+                    logStatus = "Registration - FT - BIB Test - Failed";
                     updateMaverickAndEmail(mibItemId, username, "BIB");
                 }
                 item0.setStatus(newStatus);
@@ -4744,9 +4747,11 @@ public class ItemController {
                         insertSPTSData(mibItemId, username);
                         target_location = "redirect:/hw/item/pending";
                     }
+                    logStatus = "Registration - FT - BIB DAQ Test - Passed";
                 } else {
                     newStatus = "Failed Functional Test - BIB DAQ Test - Waiting Maverick CA";
                     updateMaverickAndEmail(mibItemId, username, "BIB");
+                    logStatus = "Registration - FT - BIB DAQ Test - Failed";
                 }
                 item0.setStatus(newStatus);
 
@@ -4806,9 +4811,11 @@ public class ItemController {
                         insertSPTSData(mibItemId, username);
                         target_location = "redirect:/hw/item/pending";
                     }
+                    logStatus = "Registration - FT - Leakage Test - Passed";
                 } else {
                     newStatus = "Failed Functional Test - Leakage Test - Waiting Maverick CA";
                     updateMaverickAndEmail(mibItemId, username, "Leakage");
+                    logStatus = "Registration - FT - Leakage Test - Failed";
                 }
                 item0.setStatus(newStatus);
 
@@ -4860,9 +4867,11 @@ public class ItemController {
                         insertSPTSData(mibItemId, username);
                         target_location = "redirect:/hw/item/pending";
                     }
+                    logStatus = "Registration - FT - Power Supply Leakage Test - Passed";
                 } else {
                     newStatus = "Failed Functional Test - Power Supply Test - Waiting Maverick CA";
                     updateMaverickAndEmail(mibItemId, username, "Power");
+                    logStatus = "Registration - FT - Power Supply Leakage Test - Failed";
                 }
                 item0.setStatus(newStatus);
 
@@ -4909,9 +4918,11 @@ public class ItemController {
                     newStatus = "Good";
                     insertSPTSData(mibItemId, username);
                     target_location = "redirect:/hw/item/pending";
+                    logStatus = "Registration - FT - Winchester Chamber Leakage Test - Passed";
                 } else {
                     newStatus = "Failed Functional Test - Winchester Chamber Leakage Test - Waiting Maverick CA";
                     updateMaverickAndEmail(mibItemId, username, "Winchester");
+                    logStatus = "Registration - FT - Winchester Chamber Leakage Test - Failed";
                 }
                 item0.setStatus(newStatus);
 
@@ -4936,6 +4947,14 @@ public class ItemController {
         } else {
             LOGGER.info("6666");
         }
+        
+        ItemLog log = new ItemLog();
+        log.setItemId(mibItemId);
+        log.setDetail(logStatus);
+        log.setCreatedBy(userSession.getFullname());
+        ItemLogDAO logD = new ItemLogDAO();
+        QueryResult logQ = logD.insertItemLog(log);
+        
         LOGGER.info("KITA RETURN KE MANA NI "+target_location);
         return target_location;
     }

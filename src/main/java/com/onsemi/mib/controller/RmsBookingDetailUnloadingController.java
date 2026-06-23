@@ -2219,7 +2219,7 @@ public class RmsBookingDetailUnloadingController {
         log2.setDetail(logStatus);
         log2.setCreatedBy(userSession.getFullname());
         RmsBookingHardwareGroupLogDAO logD2 = new RmsBookingHardwareGroupLogDAO();
-        QueryResult logQ2 = logD2.insertRmsBookingHardwareGroupLog(log2);
+        logD2.insertRmsBookingHardwareGroupLog(log2);
 
         return target_location;
     }
