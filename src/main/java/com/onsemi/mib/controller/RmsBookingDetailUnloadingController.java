@@ -460,7 +460,7 @@ public class RmsBookingDetailUnloadingController {
                     model.addAttribute("psbutton", "disabled");
                     model.addAttribute("winbutton", "disabled");
                 } else {
-                    if (currentStatus.contains("Leakage")) {
+                    if (currentStatus.contains("- Leakage")) {
                         check01 = "";
                         edit01 = "";
                     } else if (currentStatus.contains("BIB Test")) {
@@ -1810,8 +1810,6 @@ public class RmsBookingDetailUnloadingController {
             RedirectAttributes redirectAttrs,
             @ModelAttribute UserSession userSession,
             @PathVariable("jenis") String jenis,
-            //            @PathVariable("bookId") String bookId,
-            //            @PathVariable("itemPkid") String itemPkid,
             @RequestParam(required = false) String bookId,
             @RequestParam(required = false) String motherboardId,
             @RequestParam(required = false) String itemPkid,

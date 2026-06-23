@@ -3468,7 +3468,7 @@ public class ItemController {
             model.addAttribute("teActive", teActive);
             model.addAttribute("teActiveTab", teActiveTab);
 
-            if (item.getStatus().contains("Leakage")) {
+            if (item.getStatus().contains("- Leakage")) {
                 model.addAttribute("leakshow", teActiveTab);
 //                model.addAttribute("leakbutton",buttonDisabled);
                 model.addAttribute("manbutton", buttonDisabled);
@@ -3763,7 +3763,7 @@ public class ItemController {
             model.addAttribute("teActive", teActive);
             model.addAttribute("teActiveTab", teActiveTab);
 
-            if (item.getStatus().contains("Leakage")) {
+            if (item.getStatus().contains("- Leakage")) {
                 model.addAttribute("leakshow", teActiveTab);
 //                model.addAttribute("leakbutton",buttonDisabled);
                 model.addAttribute("manbutton", buttonDisabled);

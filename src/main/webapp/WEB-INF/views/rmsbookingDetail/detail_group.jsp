@@ -110,7 +110,7 @@
                         <div class="card-header">
                             <h5 class="card-title d-flex justify-content-between align-items-center">
                                 <div>
-                                    HW Prep For Loading Module - <span style="color:#D97D55">Detail (${motherboardId})</span>
+                                    Hardware Preparation For Loading - <span style="color:#D97D55">Detail (${motherboardId})</span>
                                 </div>
                                 <c:choose>
                                     <c:when test="${not empty rms.priority && rms.priority != '999'}">

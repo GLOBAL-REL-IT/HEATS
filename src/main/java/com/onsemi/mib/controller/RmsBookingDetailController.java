@@ -1372,7 +1372,7 @@ public class RmsBookingDetailController {
                     model.addAttribute("psbutton", "disabled");
                     model.addAttribute("winbutton", "disabled");
                 } else {
-                    if (currentStatus.contains("Leakage")) {
+                    if (currentStatus.contains("- Leakage")) {
                         check01 = "";
                         edit01 = "";
                     } else if (currentStatus.contains("BIB Test")) {
@@ -1664,7 +1664,7 @@ public class RmsBookingDetailController {
         if (currentStatus.contains("Test")) {
             teActive = "active";
             teActiveTab = "show active";
-            if (currentStatus.contains("- Leakage Test")) {
+            if (currentStatus.contains("- Leakage")) {
                 model.addAttribute("leakshow", teActiveTab);
             } else if (currentStatus.contains("Manual")) {
                 model.addAttribute("manshow", teActiveTab);
@@ -2928,8 +2928,6 @@ public class RmsBookingDetailController {
             RedirectAttributes redirectAttrs,
             @ModelAttribute UserSession userSession,
             @PathVariable("jenis") String jenis,
-            //            @PathVariable("bookId") String bookId,
-            //            @PathVariable("itemPkid") String itemPkid,
             @RequestParam(required = false) String bookId,
             @RequestParam(required = false) String motherboardId,
             @RequestParam(required = false) String itemPkid,

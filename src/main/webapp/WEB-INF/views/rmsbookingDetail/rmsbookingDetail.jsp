@@ -86,7 +86,7 @@
                 <div class="col-sm-12 col-12">
                     <div class="card mb-4">
                         <div class="card-header">
-                            <h5 class="card-title">HW Preparation For Loading</h5>
+                            <h5 class="card-title">Hardware Preparation  For Loading</h5>
                         </div>
                         <div class="card-body">
                             <div class="row gx-3">
