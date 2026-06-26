@@ -532,8 +532,8 @@ public class SPTSRequestTest {
 //        param.put("active", "1");
 //        JSONArray getItemByParam = SPTSWebService.getEqptByPkid(param);
         JSONObject paramV = new JSONObject();
-        paramV.put("itemPKID", "69924");
-        JSONArray getItemHwByParam = SPTSWebService.getHardwareIdByParam(paramV);
+        paramV.put("pkid", "69924");
+        JSONArray getItemHwByParam = SPTSWebService.getBookingDetailByPKID(59646);
         for (int i = 0; i < getItemHwByParam.length(); i++) {
             System.out.println(getItemHwByParam.getJSONObject(i));
         }

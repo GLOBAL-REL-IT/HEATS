@@ -467,6 +467,13 @@
                                                                 <i class="bi bi-box-arrow-in-right h3" style="color:orangered"></i>
                                                             </a>
                                                         </c:if>
+                                                        <c:if test="${parameterMaster.subStatus == 'Pending Release to Production'}">
+                                                            <a modaldeleteid="${parameterMaster.id}" type ="button" title="Release to Production" data-bs-toggle="modal" data-bs-target="#confirmation_modal" 
+                                                               class="btn btn-success float-start" onclick="modalReleaseSingle(this);">
+                                                                <i class="bi bi-check-circle-fill h3" style="color:green"></i>
+                                                            </a>
+                                                            
+                                                        </c:if>
                                                     </td>
                                                 </c:if>
                                                 </tr>
@@ -719,6 +726,14 @@
                                         var id = $(e).attr("modaldeleteid");
                                         var deleteUrl = "${contextPath}/rmsbookingDetail/release/" + id;
                                         var deleteMsg = "Are you sure want to release this RMS_Event to production?";
+                                        $("#confirmation_modal .modal-body").html(deleteMsg);
+                                        $("#modal_button").attr("href", deleteUrl);
+                                    }
+                                    
+                                    function modalReleaseSingle(e) {
+                                        var id = $(e).attr("modaldeleteid");
+                                        var deleteUrl = "${contextPath}/rmsbookingDetail/releaseSingle/" + id;
+                                        var deleteMsg = "Are you sure want to release this motherboard to production?";
                                         $("#confirmation_modal .modal-body").html(deleteMsg);
                                         $("#modal_button").attr("href", deleteUrl);
                                     }

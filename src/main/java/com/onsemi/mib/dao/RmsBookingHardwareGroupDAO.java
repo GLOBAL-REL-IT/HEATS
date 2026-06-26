@@ -206,6 +206,32 @@ public class RmsBookingHardwareGroupDAO {
         return queryResult;
     }
 
+    public QueryResult updateRmsBookingHardwareGroupFlagAndStatusByGroupId(RmsBookingHardwareGroup rmsbookingHardwareGroup) {
+        QueryResult queryResult = new QueryResult();
+        try {
+            PreparedStatement ps = conn.prepareStatement(
+                    "UPDATE rms_booking_hardware_group SET flag = ?, status = ? WHERE group_id = ?"
+            );
+            ps.setString(1, rmsbookingHardwareGroup.getFlag());
+            ps.setString(2, rmsbookingHardwareGroup.getStatus());
+            ps.setString(3, rmsbookingHardwareGroup.getGroupId());
+            queryResult.setResult(ps.executeUpdate());
+            ps.close();
+        } catch (SQLException e) {
+            queryResult.setErrorMessage(e.getMessage());
+            LOGGER.error(e.getMessage());
+        } finally {
+            if (conn != null) {
+                try {
+                    conn.close();
+                } catch (SQLException e) {
+                    LOGGER.error(e.getMessage());
+                }
+            }
+        }
+        return queryResult;
+    }
+
     public QueryResult deleteRmsBookingHardwareGroup(String rmsbookingHardwareGroupId) {
         QueryResult queryResult = new QueryResult();
         try {
@@ -422,6 +448,49 @@ public class RmsBookingHardwareGroupDAO {
         return rmsbookingHardwareGroupList;
     }
 
+    public List<RmsBookingHardwareGroup> getRmsBookingHardwareGroupListByGroupIdFlagZero(String groupId) {
+        String sql = "SELECT g.*, DATE_FORMAT(g.created_date,'%d-%M-%Y') AS createdDate "
+                + "FROM rms_booking_hardware_group g  "
+                + "WHERE g.group_id = '" + groupId + "' AND g.flag = '0' "
+                + "ORDER BY g.hardware_id, g.item_id ASC";
+        List<RmsBookingHardwareGroup> rmsbookingHardwareGroupList = new ArrayList<RmsBookingHardwareGroup>();
+        try {
+            PreparedStatement ps = conn.prepareStatement(sql);
+            RmsBookingHardwareGroup rmsbookingHardwareGroup;
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                rmsbookingHardwareGroup = new RmsBookingHardwareGroup();
+                rmsbookingHardwareGroup.setId(rs.getString("id"));
+                rmsbookingHardwareGroup.setGroupId(rs.getString("group_id"));
+                rmsbookingHardwareGroup.setItemPkid(rs.getString("item_pkid"));
+                rmsbookingHardwareGroup.setItemId(rs.getString("item_id"));
+                rmsbookingHardwareGroup.setHardwarePkid(rs.getString("hardware_pkid"));
+                rmsbookingHardwareGroup.setHardwareId(rs.getString("hardware_id"));
+                rmsbookingHardwareGroup.setRmsNo(rs.getString("rms_no"));
+                rmsbookingHardwareGroup.setEvent(rs.getString("event"));
+                rmsbookingHardwareGroup.setSptsStatus(rs.getString("spts_status"));
+                rmsbookingHardwareGroup.setStatus(rs.getString("status"));
+                rmsbookingHardwareGroup.setCreatedBy(rs.getString("created_by"));
+                rmsbookingHardwareGroup.setCreatedDate(rs.getString("createdDate"));
+                rmsbookingHardwareGroup.setFlag(rs.getString("flag"));
+                rmsbookingHardwareGroupList.add(rmsbookingHardwareGroup);
+            }
+            rs.close();
+            ps.close();
+        } catch (SQLException e) {
+            LOGGER.error(e.getMessage());
+        } finally {
+            if (conn != null) {
+                try {
+                    conn.close();
+                } catch (SQLException e) {
+                    LOGGER.error(e.getMessage());
+                }
+            }
+        }
+        return rmsbookingHardwareGroupList;
+    }
+
     public List<RmsBookingHardwareGroup> getRmsBookingHardwareGroupListByBookingPkidWithFlagOne(String bookingPkid) {
         String sql = "SELECT g.*, DATE_FORMAT(g.created_date,'%d-%M-%Y') AS createdDate "
                 + "FROM rms_booking_hardware_group g  "
@@ -546,11 +615,11 @@ public class RmsBookingHardwareGroupDAO {
         return count;
     }
 
-    public Integer getCountHwWithFlagNE99And2(String hwId) {
+    public Integer getCountHwWithFlagNE99And2And3(String hwId) {
         Integer count = null;
         try {
             PreparedStatement ps = conn.prepareStatement(
-                    "SELECT COUNT(*) AS count FROM rms_booking_hardware_group inc WHERE inc.hardware_id = '" + hwId + "' AND inc.flag NOT IN ('99', '2')"
+                    "SELECT COUNT(*) AS count FROM rms_booking_hardware_group inc WHERE inc.hardware_id = '" + hwId + "' AND inc.flag NOT IN ('99', '2','3')"
             );
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {

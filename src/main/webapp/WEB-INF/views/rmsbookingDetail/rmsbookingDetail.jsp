@@ -72,6 +72,17 @@
                 background-color: #f06a0a;
                 color: #FFFFFF;
             }
+            .btn-duck-green {
+                background-color: #415243;  /* duck green tone */
+                border-color: #415243;
+                color: #ffffff;
+            }
+
+            .btn-duck-green:hover {
+                background-color: #253627;  /* darker on hover */
+                border-color: #253627;
+                color: #e1f7e4;
+            }
         </style>
     </s:layout-component>
     <s:layout-component name="page_container">
@@ -80,13 +91,13 @@
             <div class="row gx-4">
                 <nav class="navbar bg-body-tertiary">
                     <div class="container-fluid justify-content-start">
-                        <a href="${contextPath}/rmsbookingDetail/rmsReleased" class="btn btn-success me-2" role="button"><i class='bi bi-arrow-bar-right'></i>&nbsp;&nbsp;RMS Released to Production</a>
+                        <a href="${contextPath}/rmsbookingDetail/rmsReleased" class="btn btn-duck-green me-2" role="button"><i class='bi bi-arrow-bar-right'></i>&nbsp;&nbsp;RMS Released to Production</a>
                     </div>
                 </nav>
                 <div class="col-sm-12 col-12">
                     <div class="card mb-4">
                         <div class="card-header">
-                            <h5 class="card-title">Hardware Preparation  For Loading</h5>
+                            <h5 class="card-title">Hardware Preparation For Loading</h5>
                         </div>
                         <div class="card-body">
                             <div class="row gx-3">
@@ -111,72 +122,72 @@
                                                 </tr>
                                             </thead>
                                             <tbody>
-                                            <c:forEach items="${booking}" var="parameterMaster" varStatus="parameterMasterLoop">
-                                                <tr>
-                                                <c:if test="${parameterMaster.priority != '999'}">
-                                                    <td style="color: red;"><c:out value="${parameterMasterLoop.index+1}"/></td>
-                                                    <td style="color: red;" id="modal_delete_info_${parameterMaster.id}"><c:out value="${parameterMaster.rmsNo}"/></td>
-                                                    <td style="color: red;"><c:out value="${parameterMaster.event}"/></td>
-                                                    <td style="color: red;"><c:out value="${parameterMaster.actStartDate}"/></td>
-                                                    <td style="color: red;"><c:out value="${parameterMaster.device}"/></td>
-                                                    <td style="color: red;"><c:out value="${parameterMaster.packages}"/></td>
-                                                    <td style="color: red;"><c:out value="${parameterMaster.eventStartDate}"/></td>
-                                                    <td style="color: red;"><c:out value="${parameterMaster.rmsStatus}"/></td>
-                                                    <td style="color: red;"><c:out value="${parameterMaster.eventBeginStatus}"/></td>
-                                                    <td style="color: red;"><c:out value="${parameterMaster.daysToEventStart}"/></td>
-                                                    <c:choose>
-                                                        <c:when test="${parameterMaster.totalBooking == 0}">
-                                                            <td><span style="display:none;">0</span>
-                                                                <i class="bi bi-x-circle h3" style="color: red;" title="No CBMS Booking"></i></td>
-                                                        </c:when>
-                                                        <c:otherwise>
-                                                            <td> <span style="display:none;">1</span>
-                                                                <i class="bi bi-check2-circle h3" style="color: green;"></i></td>
-                                                        </c:otherwise>
-                                                    </c:choose>
-                                                    <td style="color: red;font-size: 1.2em;"><span class="badge bg-danger"><c:out value="${parameterMaster.priority}"/></span></td>
-                                                </c:if>
-                                                <c:if test="${parameterMaster.priority == '999'}">
-                                                    <td><c:out value="${parameterMasterLoop.index+1}"/></td>
-                                                    <td id="modal_delete_info_${parameterMaster.id}"><c:out value="${parameterMaster.rmsNo}"/></td>
-                                                    <td><c:out value="${parameterMaster.event}"/></td>
-                                                    <td><c:out value="${parameterMaster.actStartDate}"/></td>
-                                                    <td><c:out value="${parameterMaster.device}"/></td>
-                                                    <td><c:out value="${parameterMaster.packages}"/></td>
-                                                    <td><c:out value="${parameterMaster.eventStartDate}"/></td>
-                                                    <td><c:out value="${parameterMaster.rmsStatus}"/></td>
-                                                    <td><c:out value="${parameterMaster.eventBeginStatus}"/></td>
-                                                    <td><c:out value="${parameterMaster.daysToEventStart}"/></td>
-                                                    <c:choose>
-                                                        <c:when test="${parameterMaster.totalBooking == 0}">
-                                                            <td><span style="display:none;">0</span>
-                                                                <i class="bi bi-x-circle h3" style="color: red;" title="No CBMS Booking"></i></td>
-                                                        </c:when>
-                                                        <c:otherwise>
-                                                            <td> <span style="display:none;">1</span>
-                                                                <i class="bi bi-check2-circle h3" style="color: green;"></i></td>
-                                                        </c:otherwise>
-                                                    </c:choose>
-                                                    <td><c:out value=""/></td>
-                                                </c:if>
-                                                <td align="center">
-                                                    <a modaldeleteid="${parameterMaster.id}" type="button" data-bs-toggle="offcanvas" title="Set Priority"
-                                                       data-bs-target="#staticBackdrop" aria-controls="staticBackdrop" onclick="getData(this);">
-                                                        <i class="bi bi-list-ol h3"></i>
-                                                    </a>
-                                                <c:if test="${parameterMaster.totalBooking == '1'}">
-                                                    <a href="${contextPath}/rmsbookingDetail/detail/${parameterMaster.id}" class="table-link" title="Manage">
-                                                        <i class="bi bi-box-arrow-in-right h3"></i>
-                                                    </a>
-                                                </c:if>
-                                                <c:if test="${parameterMaster.totalBooking == '0'}">
-                                                    <a modaldeleteid="${parameterMaster.id}" modalRms="${parameterMaster.rmsNo}" modalEvent="${parameterMaster.event}" type="button" title="No CBMS Booking" data-bs-toggle="modal" data-bs-target="#email_modal" class="table-link" onclick="sendEmail(this);">
-                                                        <i class="bi bi-exclamation-octagon h3" style="color: red;"></i>
-                                                    </a>
-                                                </c:if>
-                                                </td>
-                                                </tr>
-                                            </c:forEach>
+                                                <c:forEach items="${booking}" var="parameterMaster" varStatus="parameterMasterLoop">
+                                                    <tr>
+                                                        <c:if test="${parameterMaster.priority != '999'}">
+                                                            <td style="color: red;"><c:out value="${parameterMasterLoop.index+1}"/></td>
+                                                            <td style="color: red;" id="modal_delete_info_${parameterMaster.id}"><c:out value="${parameterMaster.rmsNo}"/></td>
+                                                            <td style="color: red;"><c:out value="${parameterMaster.event}"/></td>
+                                                            <td style="color: red;"><c:out value="${parameterMaster.actStartDate}"/></td>
+                                                            <td style="color: red;"><c:out value="${parameterMaster.device}"/></td>
+                                                            <td style="color: red;"><c:out value="${parameterMaster.packages}"/></td>
+                                                            <td style="color: red;"><c:out value="${parameterMaster.eventStartDate}"/></td>
+                                                            <td style="color: red;"><c:out value="${parameterMaster.rmsStatus}"/></td>
+                                                            <td style="color: red;"><c:out value="${parameterMaster.eventBeginStatus}"/></td>
+                                                            <td style="color: red;"><c:out value="${parameterMaster.daysToEventStart}"/></td>
+                                                            <c:choose>
+                                                                <c:when test="${parameterMaster.totalBooking == 0}">
+                                                                    <td><span style="display:none;">0</span>
+                                                                        <i class="bi bi-x-circle h3" style="color: red;" title="No CBMS Booking"></i></td>
+                                                                    </c:when>
+                                                                    <c:otherwise>
+                                                                    <td> <span style="display:none;">1</span>
+                                                                        <i class="bi bi-check2-circle h3" style="color: green;"></i></td>
+                                                                    </c:otherwise>
+                                                                </c:choose>
+                                                            <td style="color: red;font-size: 1.2em;"><span class="badge bg-danger"><c:out value="${parameterMaster.priority}"/></span></td>
+                                                            </c:if>
+                                                            <c:if test="${parameterMaster.priority == '999'}">
+                                                            <td><c:out value="${parameterMasterLoop.index+1}"/></td>
+                                                            <td id="modal_delete_info_${parameterMaster.id}"><c:out value="${parameterMaster.rmsNo}"/></td>
+                                                            <td><c:out value="${parameterMaster.event}"/></td>
+                                                            <td><c:out value="${parameterMaster.actStartDate}"/></td>
+                                                            <td><c:out value="${parameterMaster.device}"/></td>
+                                                            <td><c:out value="${parameterMaster.packages}"/></td>
+                                                            <td><c:out value="${parameterMaster.eventStartDate}"/></td>
+                                                            <td><c:out value="${parameterMaster.rmsStatus}"/></td>
+                                                            <td><c:out value="${parameterMaster.eventBeginStatus}"/></td>
+                                                            <td><c:out value="${parameterMaster.daysToEventStart}"/></td>
+                                                            <c:choose>
+                                                                <c:when test="${parameterMaster.totalBooking == 0}">
+                                                                    <td><span style="display:none;">0</span>
+                                                                        <i class="bi bi-x-circle h3" style="color: red;" title="No CBMS Booking"></i></td>
+                                                                    </c:when>
+                                                                    <c:otherwise>
+                                                                    <td> <span style="display:none;">1</span>
+                                                                        <i class="bi bi-check2-circle h3" style="color: green;"></i></td>
+                                                                    </c:otherwise>
+                                                                </c:choose>
+                                                            <td><c:out value=""/></td>
+                                                        </c:if>
+                                                        <td align="center">
+                                                            <a modaldeleteid="${parameterMaster.id}" type="button" data-bs-toggle="offcanvas" title="Set Priority"
+                                                               data-bs-target="#staticBackdrop" aria-controls="staticBackdrop" onclick="getData(this);">
+                                                                <i class="bi bi-list-ol h3"></i>
+                                                            </a>
+                                                            <c:if test="${parameterMaster.totalBooking == '1'}">
+                                                                <a href="${contextPath}/rmsbookingDetail/detail/${parameterMaster.id}" class="table-link" title="Manage">
+                                                                    <i class="bi bi-box-arrow-in-right h3"></i>
+                                                                </a>
+                                                            </c:if>
+                                                            <c:if test="${parameterMaster.totalBooking == '0'}">
+                                                                <a modaldeleteid="${parameterMaster.id}" modalRms="${parameterMaster.rmsNo}" modalEvent="${parameterMaster.event}" type="button" title="No CBMS Booking" data-bs-toggle="modal" data-bs-target="#email_modal" class="table-link" onclick="sendEmail(this);">
+                                                                    <i class="bi bi-exclamation-octagon h3" style="color: red;"></i>
+                                                                </a>
+                                                            </c:if>
+                                                        </td>
+                                                    </tr>
+                                                </c:forEach>
                                             </tbody>
                                         </table>
                                     </div>
