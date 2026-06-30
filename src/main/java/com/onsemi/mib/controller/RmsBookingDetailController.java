@@ -1318,7 +1318,8 @@ public class RmsBookingDetailController {
             } else if (currentStatus.equals("Pending VM")) {
                 model.addAttribute("configMotherboard", "VM");
                 model.addAttribute("message", "Please Complete Visual Inspection First");
-            } else if (currentStatus.contains("Pending Functional Test") || currentStatus.contains("Pending Release to Production") || currentStatus.contains("Failed")) {
+            // ADD MORE STATUS UNDER HERE UNTUK LIHAT LAGI RESULT UNTUK FUNCTIONAL TEST
+            } else if (currentStatus.contains("Pending Functional Test") || currentStatus.contains("Pending Release to Production") || currentStatus.contains("Failed") || currentStatus.equalsIgnoreCase("Released to Production") || currentStatus.equalsIgnoreCase("Closed")) {
                 RmsBookingHardwareDAO bookdao = new RmsBookingHardwareDAO();
                 Integer checkMb = bookdao.checkMotherboardData(bookingId);
                 bookdao = new RmsBookingHardwareDAO();
@@ -1402,6 +1403,7 @@ public class RmsBookingDetailController {
                 String edit05 = "visually-hidden";
                 String edit06 = "visually-hidden";
 
+                // ADD MORE CHECKING ON THE STATUS TO CONTROL THE EDIT BUTTON - TODO
                 if (currentStatus.contains("Failed")) {
                     model.addAttribute("leakbutton", "disabled");
                     model.addAttribute("manualbutton", "disabled");
@@ -1428,9 +1430,11 @@ public class RmsBookingDetailController {
                     } else if (currentStatus.contains("Power")) {
                         check05 = "";
                         edit05 = "";
+                    } else {
+                        // UPDATE NOTHING HERE, ALL DISABLED
                     }
                 }
-
+                
                 model.addAttribute("leakbutton", check01);
                 model.addAttribute("manualbutton", check02);
                 model.addAttribute("bibbutton", check03);
@@ -1448,15 +1452,15 @@ public class RmsBookingDetailController {
             }
         }
 
-        if (statusLeak.equals("Fail")) {
-            model.addAttribute("leakbutton", "disabled");
-            model.addAttribute("editleakbutton", "disabled");
-        } else if (statusLeak.equals("Pass")) {
-            model.addAttribute("leakbutton", "disabled");
-            model.addAttribute("editleakbutton", "enabled");
-        } else {
-
-        }
+//        if (statusLeak.equals("Fail")) {
+//            model.addAttribute("leakbutton", "disabled");
+//            model.addAttribute("editleakbutton", "disabled");
+//        } else if (statusLeak.equals("Pass")) {
+//            model.addAttribute("leakbutton", "disabled");
+//            model.addAttribute("editleakbutton", "enabled");
+//        } else {
+//
+//        }
 
         model.addAttribute("bookId", bookingId);
         model.addAttribute("mibItemId", itemPkid);
@@ -3114,8 +3118,10 @@ public class RmsBookingDetailController {
                 bookHardware.setBookingPkid(bookId);
                 bookHardware.setPkid(motherboardId);
                 bookHardware.setSubStatus(newStatus);
+                bookHardware.setFlag("1");
                 RmsBookingHardwareDAO booking = new RmsBookingHardwareDAO();
-                booking.updateRmsBookingHardwareSubStatusByPkidAndBookingPkid(bookHardware);
+//                booking.updateRmsBookingHardwareSubStatusByPkidAndBookingPkid(bookHardware);
+                booking.updateRmsBookingHardwareLoading(bookHardware);
                 logStatus = "Loading - FT - Leakage Test - Passed";
             }
             RmsBookingFunctionalTest ftest = new RmsBookingFunctionalTest();
@@ -3132,7 +3138,6 @@ public class RmsBookingDetailController {
         } else if (jenis.equals("manTest")) {
 
         } else if (jenis.equals("bibTest")) {
-            LOGGER.info("KENA MASUK DEKAT SINI ********************** ");
             if (bibUpload != null) {
                 try {
                     byte[] bytesConnector = bibUpload.getBytes();
@@ -3167,19 +3172,14 @@ public class RmsBookingDetailController {
                 bookHardware.setBookingPkid(bookId);
                 bookHardware.setPkid(motherboardId);
                 bookHardware.setSubStatus(newStatus);
+                bookHardware.setFlag("1");
                 RmsBookingHardwareDAO booking = new RmsBookingHardwareDAO();
-                booking.updateRmsBookingHardwareSubStatusByPkidAndBookingPkid(bookHardware);
-                LOGGER.info("SINI KITA UPDATE STATUS DLU SBB ADA LAGI");
+//                booking.updateRmsBookingHardwareSubStatusByPkidAndBookingPkid(bookHardware);
+                booking.updateRmsBookingHardwareLoading(bookHardware);
                 logStatus = "Loading - FT - BIB Test - Passed";
             }
             RmsBookingFunctionalTest ftest = new RmsBookingFunctionalTest();
             
-            LOGGER.info("tenngok data dekat sini :::: ");
-            LOGGER.info("newStatus >> "+newStatus);
-            LOGGER.info("bibHardware >> "+bibHardware);
-            LOGGER.info("totalQty >> "+totalQty);
-            LOGGER.info("bibResult >> "+bibResult);
-            LOGGER.info("linkUpload >> "+linkUpload);
             ftest.setFinalStatus(newStatus);
             ftest.setBibHwid(bibHardware);
             ftest.setBibQty(totalQty);
@@ -3190,8 +3190,6 @@ public class RmsBookingDetailController {
             ftest.setGroupId(groupId);
             RmsBookingFunctionalTestDAO ftestdao = new RmsBookingFunctionalTestDAO();
             ftestdao.updateBibTest(ftest);
-            
-            LOGGER.info("NK TENGOK DIA UPDATE KE DEKAT SINI");
         } else if (jenis.equals("bibDaqTest")) {
             if (bibDaqUpload != null) {
                 try {
@@ -3225,8 +3223,10 @@ public class RmsBookingDetailController {
                 bookHardware.setBookingPkid(bookId);
                 bookHardware.setPkid(motherboardId);
                 bookHardware.setSubStatus(newStatus);
+                bookHardware.setFlag("1");
                 RmsBookingHardwareDAO booking = new RmsBookingHardwareDAO();
-                booking.updateRmsBookingHardwareSubStatusByPkidAndBookingPkid(bookHardware);
+//                booking.updateRmsBookingHardwareSubStatusByPkidAndBookingPkid(bookHardware);
+                booking.updateRmsBookingHardwareLoading(bookHardware);
                 logStatus = "Loading - FT - BIB DAQ Test - Passed";
             }
             RmsBookingFunctionalTest ftest = new RmsBookingFunctionalTest();
@@ -3270,8 +3270,10 @@ public class RmsBookingDetailController {
                 bookHardware.setBookingPkid(bookId);
                 bookHardware.setPkid(motherboardId);
                 bookHardware.setSubStatus(newStatus);
+                bookHardware.setFlag("1");
                 RmsBookingHardwareDAO booking = new RmsBookingHardwareDAO();
-                booking.updateRmsBookingHardwareSubStatusByPkidAndBookingPkid(bookHardware);
+//                booking.updateRmsBookingHardwareSubStatusByPkidAndBookingPkid(bookHardware);
+                booking.updateRmsBookingHardwareLoading(bookHardware);
                 logStatus = "Loading - FT - Power Supply Leakage Test - Passed";
             }
             RmsBookingFunctionalTest ftest = new RmsBookingFunctionalTest();
@@ -3313,8 +3315,10 @@ public class RmsBookingDetailController {
                 bookHardware.setBookingPkid(bookId);
                 bookHardware.setPkid(motherboardId);
                 bookHardware.setSubStatus(newStatus);
+                bookHardware.setFlag("1");
                 RmsBookingHardwareDAO booking = new RmsBookingHardwareDAO();
-                booking.updateRmsBookingHardwareSubStatusByPkidAndBookingPkid(bookHardware);
+//                booking.updateRmsBookingHardwareSubStatusByPkidAndBookingPkid(bookHardware);
+                booking.updateRmsBookingHardwareLoading(bookHardware);
                 logStatus = "Loading - FT - Winchester Chamber Leakage Test - Passed";
             }
             RmsBookingFunctionalTest ftest = new RmsBookingFunctionalTest();
@@ -5567,8 +5571,10 @@ public class RmsBookingDetailController {
         bookHardware.setBookingPkid(bookingPkid);
         bookHardware.setPkid(mbBookingPkid);
         bookHardware.setSubStatus(emailBodyFail);
+        bookHardware.setFlag("-1");
         RmsBookingHardwareDAO booking = new RmsBookingHardwareDAO();
-        booking.updateRmsBookingHardwareSubStatusByPkidAndBookingPkid(bookHardware);
+//        booking.updateRmsBookingHardwareSubStatusByPkidAndBookingPkid(bookHardware);
+        booking.updateRmsBookingHardwareLoading(bookHardware);
         // UPDATE SUB STATUS rms_booking_hardware END
 
         // UPDATE STATUS FOR EACH HARDWARE ID IN rms_booking_hardware_group START

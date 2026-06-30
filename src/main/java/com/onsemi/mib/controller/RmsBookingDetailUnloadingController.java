@@ -136,7 +136,6 @@ public class RmsBookingDetailUnloadingController {
             @RequestParam(required = false) String groupId
     ) throws IOException {
 
-//        LOGGER.info("id: " + id);
         RmsBookingDetailDAO rmsd = new RmsBookingDetailDAO();
         RmsBookingDetail rms = rmsd.getRmsBookingDetailWithHwGroupAfterLoadingByGroupId(groupId);
 
@@ -154,9 +153,6 @@ public class RmsBookingDetailUnloadingController {
             @RequestParam(required = false) String itemId,
             @RequestParam(required = false) String event
     ) throws IOException {
-
-        LOGGER.info("SINI KITA NK BUAT UNTUK UDPATE THE RETURN DATA");
-        LOGGER.info("APA GROUP YANG KITA BAWA >>> " + groupId);
 
         RmsBookingHardwareGroup rms = new RmsBookingHardwareGroup();
         rms.setGroupId(groupId);
@@ -275,9 +271,6 @@ public class RmsBookingDetailUnloadingController {
         String statusPs = "";
         String statusWin = "";
 
-        LOGGER.info("SINI NK TENGOK STATUS ::: " + h.getStatus());
-        LOGGER.info("SINI NK TENGOK SUB STATUS KITA :::: " + h.getSubStatus());
-
         if (currentStatus.equalsIgnoreCase("Pending Functional Test")) {
             // CHECK AND UPDATE THE FIRST TEST
             RmsBookingHardwareDAO bookdao = new RmsBookingHardwareDAO();
@@ -288,7 +281,6 @@ public class RmsBookingDetailUnloadingController {
             if (checkMb == 0) {
                 redirectAttrs.addFlashAttribute("error", "No motherboard configured");
             } else {
-                LOGGER.info("SINI ADA MB, CHECK UNTUK LOAD CARD PLAK");
                 // SINI ADA MB
                 bookdao = new RmsBookingHardwareDAO();
                 mbSptsPkid = bookdao.getSptsPkidForItemIdMb(bookingId, itemPkid);
@@ -299,13 +291,11 @@ public class RmsBookingDetailUnloadingController {
                 ItemActivityConfigDAO itemactdao = new ItemActivityConfigDAO();
                 ItemActivityConfig itemactmb = itemactdao.getItemActivityByItemId(itemIdMB);
                 if (itemactmb != null) {
-                    LOGGER.info("1111");
                     leakTest = itemactmb.getLeakageTest();
                     psTest = itemactmb.getPsLeakageTest();
                     winTest = itemactmb.getWinchesterChamberLeakageTest();
                     model.addAttribute("configMotherboard", "");
                 } else {
-                    LOGGER.info("2222");
                     model.addAttribute("configMotherboard", "TRIGGERERROR");
                     model.addAttribute("itemIdMB", itemIdMB);
                     model.addAttribute("itemIdLC", itemIdLC);
@@ -313,14 +303,9 @@ public class RmsBookingDetailUnloadingController {
                 }
 
                 if (checkLc == 0) {
-                    LOGGER.info("3333");
                     // SINI TAKDE LC
                     model.addAttribute("message", "No Load Card Information Found");
                 } else {
-                    LOGGER.info("44444");
-                    LOGGER.info("bookingId >> " + bookingId);
-                    LOGGER.info("NK TENGOK OAD CARD DIA    " + itemIdLC);
-                    LOGGER.info("CHECK GROUP DIA, BETUL KE ::  " + groupId);
                     // SINI DUA2 ADA
                     bookdao = new RmsBookingHardwareDAO();
                     itemIdLC = bookdao.getSptsPkidForItemIdLC(bookingId);
@@ -341,8 +326,6 @@ public class RmsBookingDetailUnloadingController {
                 model.addAttribute("itemIdLC", itemIdLC);
             }
 
-            LOGGER.info("DIA TENGOK YANG DEKAT PERTAMA NI :: " + currentStatus);
-
             if (leakTest.contains("Yes")) {
                 currentStatus = "Pending Functional Test - Leakage Test";
             } else if (manTest.contains("Yes")) {
@@ -358,10 +341,7 @@ public class RmsBookingDetailUnloadingController {
             } else {
                 currentStatus = "Pending Release to Production";
             }
-            LOGGER.info("DAH NAK KELUAR DARI YANG PERTAMA >>>> " + currentStatus);
         } else {
-            LOGGER.info("MASUK KEDUA");
-            // DO NOTHING HERE
             if (currentStatus.equals("Pending HW Registration")) {
                 model.addAttribute("configMotherboard", "HW");
                 model.addAttribute("message", "Please Complete Hardware Registration First");
@@ -478,6 +458,8 @@ public class RmsBookingDetailUnloadingController {
                     } else if (currentStatus.contains("Power")) {
                         check05 = "";
                         edit05 = "";
+                    } else {
+                        
                     }
                 }
 
@@ -498,15 +480,15 @@ public class RmsBookingDetailUnloadingController {
             }
         }
 
-        if (statusLeak.equals("Fail")) {
-            model.addAttribute("leakbutton", "disabled");
-            model.addAttribute("editleakbutton", "disabled");
-        } else if (statusLeak.equals("Pass")) {
-            model.addAttribute("leakbutton", "disabled");
-            model.addAttribute("editleakbutton", "enabled");
-        } else {
-
-        }
+//        if (statusLeak.equals("Fail")) {
+//            model.addAttribute("leakbutton", "disabled");
+//            model.addAttribute("editleakbutton", "disabled");
+//        } else if (statusLeak.equals("Pass")) {
+//            model.addAttribute("leakbutton", "disabled");
+//            model.addAttribute("editleakbutton", "enabled");
+//        } else {
+//
+//        }
 
         model.addAttribute("bookId", bookingId);
         model.addAttribute("mibItemId", itemPkid);
@@ -585,9 +567,7 @@ public class RmsBookingDetailUnloadingController {
         }
 
         //vm tab
-        LOGGER.info("SINI BARU NK MASUK VM");
         RmsBookingVisualInspectionDAO vmD = new RmsBookingVisualInspectionDAO();
-        LOGGER.info("DA LEPAS DEKAT SINI dengan STATUS >>>> " + h.getStatus());
         RmsBookingVisualInspection itemVm = vmD.getRmsBookingVisualInspectionByGroupIdAndStatus(groupId, h.getStatus());
 
         if (itemVm != null) {
@@ -771,9 +751,7 @@ public class RmsBookingDetailUnloadingController {
             model.addAttribute("disabledUpload", !currentStatus.contains("Failed") ? "" : "disabled");
             model.addAttribute("ionicActive", ionicActive);
             model.addAttribute("ionicActiveTab", ionicActiveTab);
-            LOGGER.info("IONIC ACTIVE - ionicActiveTab");
         } else {
-            LOGGER.info("IONIC TAK AKTIF - ionicActiveTab");
             String ionicActive = "";
             String ionicActiveTab = "";
             String requiredDisable = "disabled";
@@ -819,17 +797,13 @@ public class RmsBookingDetailUnloadingController {
             model.addAttribute("hwActive", hwActive);
             model.addAttribute("hwActiveTab", hwActiveTab);
         } else {
-            LOGGER.info("IONIC NOT ACTIVE AGAIN - haActiveTab");
             String hwActive = "";
             String hwActiveTab = "";
             model.addAttribute("hwActive", hwActive);
             model.addAttribute("hwActiveTab", hwActiveTab);
         }
 
-        LOGGER.info("currentStatus " + currentStatus);
-
         if (currentStatus.contains("Pending Functional Test")) {
-            LOGGER.info("AKTIF - SINI MASUK NK CHECK FUNCTIONLA TEST");
             teActive = "active";
             teActiveTab = "show active";
             if (currentStatus.contains("- Leakage Test")) {
@@ -848,7 +822,6 @@ public class RmsBookingDetailUnloadingController {
             model.addAttribute("teActive", teActive);
             model.addAttribute("teActiveTab", teActiveTab);
         } else {
-            LOGGER.info("TAK AKTIF - SINI TAKDE LA KOT FUNCTIONAL TEST");
             teActive = "";
             teActiveTab = "";
             model.addAttribute("teActive", teActive);
@@ -1971,7 +1944,7 @@ public class RmsBookingDetailUnloadingController {
                     bookHardware.setFlag("3");
                     booking.updateRmsBookingHardwareUnloading(bookHardware);
                 } else {
-                    booking.updateRmsBookingHardwareSubStatusByPkidAndBookingPkid(bookHardware);
+                    booking.updateRmsBookingHardwareUnloadingLoop(bookHardware);
                 }
                 logStatus = "Unloading - FT - Leakage Test - Passed";
             }
@@ -2028,7 +2001,7 @@ public class RmsBookingDetailUnloadingController {
                     bookHardware.setFlag("3");
                     booking.updateRmsBookingHardwareUnloading(bookHardware);
                 } else {
-                    booking.updateRmsBookingHardwareSubStatusByPkidAndBookingPkid(bookHardware);
+                    booking.updateRmsBookingHardwareUnloadingLoop(bookHardware);
                 }
                 logStatus = "Unloading - FT - BIB Test - Passed";
             }
@@ -2081,7 +2054,7 @@ public class RmsBookingDetailUnloadingController {
                     bookHardware.setFlag("3");
                     booking.updateRmsBookingHardwareUnloading(bookHardware);
                 } else {
-                    booking.updateRmsBookingHardwareSubStatusByPkidAndBookingPkid(bookHardware);
+                    booking.updateRmsBookingHardwareUnloadingLoop(bookHardware);
                 }
                 logStatus = "Unloading - FT - BIB DAQ Test - Passed";
             }
@@ -2131,7 +2104,7 @@ public class RmsBookingDetailUnloadingController {
                     bookHardware.setFlag("3");
                     booking.updateRmsBookingHardwareUnloading(bookHardware);
                 } else {
-                    booking.updateRmsBookingHardwareSubStatusByPkidAndBookingPkid(bookHardware);
+                    booking.updateRmsBookingHardwareUnloadingLoop(bookHardware);
                 }
                 logStatus = "Unloading - FT - Power Supply Leakage Test - Passed";
             }
@@ -2179,7 +2152,7 @@ public class RmsBookingDetailUnloadingController {
                     bookHardware.setFlag("3");
                     booking.updateRmsBookingHardwareUnloading(bookHardware);
                 } else {
-                    booking.updateRmsBookingHardwareSubStatusByPkidAndBookingPkid(bookHardware);
+                    booking.updateRmsBookingHardwareUnloadingLoop(bookHardware);
                 }
                 logStatus = "Unloading - FT - Winchester Chamber Leakage Test - Passed";
             }
