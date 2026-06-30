@@ -2206,7 +2206,7 @@ public class RmsBookingDetailUnloadingController {
         String username = userSession.getFullname();
         String manual = "Manual";
         String status = "Failed Functional Test - Manual Test - Waiting Maverick CA";
-
+        
         RmsBookingHardwareDAO rmsdao = new RmsBookingHardwareDAO();
         String lcItemId = rmsdao.getLcMibItemIdFromGroupId(groupid);
         rmsdao = new RmsBookingHardwareDAO();
@@ -2217,12 +2217,28 @@ public class RmsBookingDetailUnloadingController {
         String[] parts = groupid.split("/");
         String bookId = parts[0];
         String pkid = parts[1];
+        
+        rmsdao = new RmsBookingHardwareDAO();
+        String latestStatus = rmsdao.getLatestStatus(bookId, pkid);
 
         rmsbook.setBookingPkid(bookId);
         rmsbook.setSubStatus(status);
         rmsbook.setPkid(pkid);
+        rmsbook.setFlag("-1");
+        // DEKAT SINI NK KENA CHECK HAST
+        RmsBookingDetailDAO detaildao = new RmsBookingDetailDAO();
+        String event = detaildao.getBookingEvent(bookId);
         rmsdao = new RmsBookingHardwareDAO();
-        rmsdao.updateRmsBookingHardwareSubStatusByPkidAndBookingPkid(rmsbook);
+        if (event.equalsIgnoreCase("HAST")) {
+            // IF BELUM COMPLETE
+            if (latestStatus.contains("Complete Final SI")) {
+                rmsdao.updateRmsBookingHardwareUnloading(rmsbook);
+            } else {
+                rmsdao.updateRmsBookingHardwareUnloadingLoop(rmsbook);
+            }
+        } else {
+            rmsdao.updateRmsBookingHardwareUnloading(rmsbook);
+        }
         // UPDATE DATA rms_booking_hardware - END
 
         // UPDATE DATA rms_functional_test - START

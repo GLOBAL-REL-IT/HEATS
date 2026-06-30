@@ -1069,4 +1069,29 @@ public class RmsBookingDetailDAO {
         return data;
     }
 
+    public String getBookingEvent(String bookpkid) {
+        String data = "";
+        String sql = "SELECT event FROM rms_booking_detail WHERE booking_pkid = '" + bookpkid + "' ";
+        try {
+            PreparedStatement ps = conn.prepareStatement(sql);
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                data = rs.getString("event");
+            }
+            rs.close();
+            ps.close();
+        } catch (SQLException e) {
+            LOGGER.error(e.getMessage());
+        } finally {
+            if (conn != null) {
+                try {
+                    conn.close();
+                } catch (SQLException e) {
+                    LOGGER.error(e.getMessage());
+                }
+            }
+        }
+        return data;
+    }
+
 }

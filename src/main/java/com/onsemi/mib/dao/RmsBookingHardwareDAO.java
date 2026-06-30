@@ -1538,6 +1538,31 @@ public class RmsBookingHardwareDAO {
         }
         return data;
     }
+    
+    public String getLatestStatus(String bookingId, String pkId) {
+        String data = "";
+        String sql = "SELECT status FROM rms_booking_hardware WHERE booking_pkid = '" + bookingId + "' AND item_type = 'Motherboard' AND pkid = '" + pkId + "'";
+        try {
+            PreparedStatement ps = conn.prepareStatement(sql);
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                data = rs.getString("status");
+            }
+            rs.close();
+            ps.close();
+        } catch (SQLException e) {
+            LOGGER.error(e.getMessage());
+        } finally {
+            if (conn != null) {
+                try {
+                    conn.close();
+                } catch (SQLException e) {
+                    LOGGER.error(e.getMessage());
+                }
+            }
+        }
+        return data;
+    }
 
     public QueryResult updateRmsBookingHardwareFunctionalTestStatus(String status, String bookId) {
         QueryResult queryResult = new QueryResult();
