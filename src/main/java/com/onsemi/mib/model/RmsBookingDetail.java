@@ -48,6 +48,34 @@ public class RmsBookingDetail {
     private String releasedDate;
     private String releasedBy;
 
+    private String itemId;
+    private String itemPkid;
+    private String bookingHwId;
+
+    public String getBookingHwId() {
+        return bookingHwId;
+    }
+
+    public void setBookingHwId(String bookingHwId) {
+        this.bookingHwId = bookingHwId;
+    }
+
+    public String getItemPkid() {
+        return itemPkid;
+    }
+
+    public void setItemPkid(String itemPkid) {
+        this.itemPkid = itemPkid;
+    }
+
+    public String getItemId() {
+        return itemId;
+    }
+
+    public void setItemId(String itemId) {
+        this.itemId = itemId;
+    }
+
     public String getReleasedDate() {
         return releasedDate;
     }

@@ -458,13 +458,24 @@ public class HomeController {
             model.addAttribute("priorityList", priorityList);
 
             //rms released to production
+//            rmsD = new RmsBookingDetailDAO();
+//            List<RmsBookingDetail> bookingReleased = rmsD.getRmsBookingDetailListReleased();
+//            model.addAttribute("bookingReleased", bookingReleased);
             rmsD = new RmsBookingDetailDAO();
-            List<RmsBookingDetail> bookingReleased = rmsD.getRmsBookingDetailListReleased();
+            List<RmsBookingDetail> bookingReleased = rmsD.getRmsBookingDetailListReleasedSingleBib();
             model.addAttribute("bookingReleased", bookingReleased);
 
             rmsD = new RmsBookingDetailDAO();
             int countBookingReleased = rmsD.getCountBookingReleasedProduction();
             model.addAttribute("countBookingReleased", countBookingReleased);
+
+            rmsD = new RmsBookingDetailDAO();
+            List<RmsBookingDetail> bookingRecall = rmsD.getRmsBookingDetailListRecallSingleBib();
+            model.addAttribute("bookingRecall", bookingRecall);
+
+            rmsD = new RmsBookingDetailDAO();
+            int countBookingRecall = rmsD.getCountBookingRecallBeforeLoading();
+            model.addAttribute("countBookingRecall", countBookingRecall);
 
             rmsD = new RmsBookingDetailDAO();
             List<RmsBookingDetail> bookingReturnProduction = rmsD.getRmsBookingDetailListWithHwGroupAfterLoading();

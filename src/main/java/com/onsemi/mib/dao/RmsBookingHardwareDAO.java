@@ -185,6 +185,64 @@ public class RmsBookingHardwareDAO {
         return queryResult;
     }
 
+    public QueryResult updateRmsBookingHardwareForFlagAndStatusAndReleaseDateById(RmsBookingHardware rmsbookingHardware) {
+        QueryResult queryResult = new QueryResult();
+        try {
+            PreparedStatement ps = conn.prepareStatement(
+                    "UPDATE rms_booking_hardware SET  flag = ?, status = ?, modified_date = NOW(), modified_by = ?, sub_status = ?, released_date = NOW(), released_by = ? WHERE id = ?"
+            );
+            ps.setString(1, rmsbookingHardware.getFlag());
+            ps.setString(2, rmsbookingHardware.getStatus());
+            ps.setString(3, rmsbookingHardware.getModifiedBy());
+            ps.setString(4, rmsbookingHardware.getSubStatus());
+            ps.setString(5, rmsbookingHardware.getReleaseBy());
+            ps.setString(6, rmsbookingHardware.getId());
+            queryResult.setResult(ps.executeUpdate());
+            ps.close();
+        } catch (SQLException e) {
+            queryResult.setErrorMessage(e.getMessage());
+            LOGGER.error(e.getMessage());
+        } finally {
+            if (conn != null) {
+                try {
+                    conn.close();
+                } catch (SQLException e) {
+                    LOGGER.error(e.getMessage());
+                }
+            }
+        }
+        return queryResult;
+    }
+    
+    public QueryResult updateRmsBookingHardwareForFlagAndStatusAndReturnDateById(RmsBookingHardware rmsbookingHardware) {
+        QueryResult queryResult = new QueryResult();
+        try {
+            PreparedStatement ps = conn.prepareStatement(
+                    "UPDATE rms_booking_hardware SET flag = ?, status = ?, modified_date = NOW(), modified_by = ?, sub_status = ?, return_date = NOW(), return_by = ? WHERE id = ?"
+            );
+            ps.setString(1, rmsbookingHardware.getFlag());
+            ps.setString(2, rmsbookingHardware.getStatus());
+            ps.setString(3, rmsbookingHardware.getModifiedBy());
+            ps.setString(4, rmsbookingHardware.getSubStatus());
+            ps.setString(5, rmsbookingHardware.getReturnBy());
+            ps.setString(6, rmsbookingHardware.getId());
+            queryResult.setResult(ps.executeUpdate());
+            ps.close();
+        } catch (SQLException e) {
+            queryResult.setErrorMessage(e.getMessage());
+            LOGGER.error(e.getMessage());
+        } finally {
+            if (conn != null) {
+                try {
+                    conn.close();
+                } catch (SQLException e) {
+                    LOGGER.error(e.getMessage());
+                }
+            }
+        }
+        return queryResult;
+    }
+
     public QueryResult updateRmsBookingHardwareForFlagAndStatusByBookingId(RmsBookingHardware rmsbookingHardware) {
         QueryResult queryResult = new QueryResult();
         try {
@@ -319,7 +377,7 @@ public class RmsBookingHardwareDAO {
         }
         return rmsbookingHardware;
     }
-    
+
     public RmsBookingHardware getRmsBookingHardwareByBookingPkidForProgramCardFlagZero(String bookingPkid) {
         String sql = "SELECT ha.* FROM rms_booking_hardware ha WHERE ha.booking_pkid = '" + bookingPkid + "' AND ha.flag = '0' AND status != 'NA' AND ha.item_type = 'Program Card'";
         RmsBookingHardware rmsbookingHardware = null;

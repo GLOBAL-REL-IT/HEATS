@@ -642,6 +642,92 @@ public class RmsBookingDetailDAO {
         return rmsbookingDetailList;
     }
 
+    public List<RmsBookingDetail> getRmsBookingDetailListReleasedSingleBib() {
+        String sql = "SELECT de.id, de.booking_pkid, de.rms_no, de.`event`, DATE_FORMAT(ha.released_date,'%d-%M-%Y') AS releasedDate, ha.released_by, "
+                + "ha.id AS bookingHwId, ha.item_id, ha.item_pkid, ha.lc_qty, ha.pc_qty, ha.sub_status, ha.pkid "
+                + "FROM rms_booking_detail de LEFT JOIN rms_booking_hardware ha ON de.booking_pkid = ha.booking_pkid "
+                + "WHERE ha.item_type = 'Motherboard' AND ha.sub_status = 'Released to Production' AND ha.flag = '1'";
+        List<RmsBookingDetail> rmsbookingDetailList = new ArrayList<RmsBookingDetail>();
+        try {
+            PreparedStatement ps = conn.prepareStatement(sql);
+            RmsBookingDetail rmsbookingDetail;
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                rmsbookingDetail = new RmsBookingDetail();
+                rmsbookingDetail.setId(rs.getString("id"));
+                rmsbookingDetail.setBookingPkid(rs.getString("booking_pkid"));
+                rmsbookingDetail.setRmsNo(rs.getString("rms_no"));
+                rmsbookingDetail.setEvent(rs.getString("event"));
+                rmsbookingDetail.setReleasedDate(rs.getString("releasedDate"));
+                rmsbookingDetail.setReleasedBy(rs.getString("released_by"));
+                rmsbookingDetail.setBookingHwId(rs.getString("bookingHwId"));
+                rmsbookingDetail.setItemId(rs.getString("item_id"));
+                rmsbookingDetail.setItemPkid(rs.getString("item_pkid"));
+                rmsbookingDetail.setBookingHwPkid(rs.getString("pkid"));
+                rmsbookingDetail.setLcQty(rs.getString("lc_qty"));
+                rmsbookingDetail.setPcQty(rs.getString("pc_qty"));
+                rmsbookingDetail.setStatus(rs.getString("sub_status"));
+                rmsbookingDetailList.add(rmsbookingDetail);
+            }
+            rs.close();
+            ps.close();
+        } catch (SQLException e) {
+            LOGGER.error(e.getMessage());
+        } finally {
+            if (conn != null) {
+                try {
+                    conn.close();
+                } catch (SQLException e) {
+                    LOGGER.error(e.getMessage());
+                }
+            }
+        }
+        return rmsbookingDetailList;
+    }
+
+    public List<RmsBookingDetail> getRmsBookingDetailListRecallSingleBib() {
+        String sql = "SELECT de.id, de.booking_pkid, de.rms_no, de.`event`, DATE_FORMAT(ha.return_date,'%d-%M-%Y') AS returnDate, ha.return_by, ha.id AS bookingHwId, ha.item_id, ha.item_pkid, ha.lc_qty, ha.pc_qty, ha.sub_status, ha.pkid "
+                + "FROM rms_booking_detail de LEFT JOIN rms_booking_hardware ha ON de.booking_pkid = ha.booking_pkid "
+                + "WHERE ha.item_type = 'Motherboard' AND ha.sub_status = 'Pending Release to Production' AND ha.flag = '0' "
+                + "AND de.`status` = 'Released to Production' AND de.flag = '1'";
+        List<RmsBookingDetail> rmsbookingDetailList = new ArrayList<RmsBookingDetail>();
+        try {
+            PreparedStatement ps = conn.prepareStatement(sql);
+            RmsBookingDetail rmsbookingDetail;
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                rmsbookingDetail = new RmsBookingDetail();
+                rmsbookingDetail.setId(rs.getString("id"));
+                rmsbookingDetail.setBookingPkid(rs.getString("booking_pkid"));
+                rmsbookingDetail.setRmsNo(rs.getString("rms_no"));
+                rmsbookingDetail.setEvent(rs.getString("event"));
+                rmsbookingDetail.setReturnDate(rs.getString("returnDate"));
+                rmsbookingDetail.setReturnBy(rs.getString("return_by"));
+                rmsbookingDetail.setBookingHwId(rs.getString("bookingHwId"));
+                rmsbookingDetail.setItemId(rs.getString("item_id"));
+                rmsbookingDetail.setItemPkid(rs.getString("item_pkid"));
+                rmsbookingDetail.setBookingHwPkid(rs.getString("pkid"));
+                rmsbookingDetail.setLcQty(rs.getString("lc_qty"));
+                rmsbookingDetail.setPcQty(rs.getString("pc_qty"));
+                rmsbookingDetail.setStatus(rs.getString("sub_status"));
+                rmsbookingDetailList.add(rmsbookingDetail);
+            }
+            rs.close();
+            ps.close();
+        } catch (SQLException e) {
+            LOGGER.error(e.getMessage());
+        } finally {
+            if (conn != null) {
+                try {
+                    conn.close();
+                } catch (SQLException e) {
+                    LOGGER.error(e.getMessage());
+                }
+            }
+        }
+        return rmsbookingDetailList;
+    }
+
     public Integer getCountBookingId(String bookingId) {
         Integer count = null;
         try {
@@ -781,7 +867,36 @@ public class RmsBookingDetailDAO {
         Integer count = null;
         try {
             PreparedStatement ps = conn.prepareStatement(
-                    "SELECT COUNT(*) AS count FROM rms_booking_detail inc WHERE inc.flag = '0' And status = 'Released to Production' "
+                    "SELECT COUNT(*) AS count FROM rms_booking_detail inc WHERE inc.flag = '1' And status = 'Released to Production' "
+            );
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                count = rs.getInt("count");
+            }
+            rs.close();
+
+            ps.close();
+        } catch (SQLException e) {
+            LOGGER.error(e.getMessage());
+        } finally {
+            if (conn != null) {
+                try {
+                    conn.close();
+                } catch (SQLException e) {
+                    LOGGER.error(e.getMessage());
+                }
+            }
+        }
+        return count;
+    }
+
+    public Integer getCountBookingRecallBeforeLoading() {
+        Integer count = null;
+        try {
+            PreparedStatement ps = conn.prepareStatement(
+                    "SELECT COUNT(de.*) AS count FROM rms_booking_detail de LEFT JOIN rms_booking_hardware ha ON de.booking_pkid = ha.booking_pkid "
+                    + "WHERE ha.item_type = 'Motherboard' AND ha.sub_status = 'Pending Release to Production' AND ha.flag = '0' "
+                    + "AND de.`status` = 'Released to Production' AND de.flag = '1'"
             );
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {

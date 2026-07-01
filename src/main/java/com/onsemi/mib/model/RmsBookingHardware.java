@@ -29,6 +29,44 @@ public class RmsBookingHardware {
     private String lcQty;
     private String pcQty;
 
+    private String releaseBy;
+    private String releaseDate;
+
+    private String returnDate;
+    private String returnBy;
+
+    public String getReturnDate() {
+        return returnDate;
+    }
+
+    public void setReturnDate(String returnDate) {
+        this.returnDate = returnDate;
+    }
+
+    public String getReturnBy() {
+        return returnBy;
+    }
+
+    public void setReturnBy(String returnBy) {
+        this.returnBy = returnBy;
+    }
+
+    public String getReleaseBy() {
+        return releaseBy;
+    }
+
+    public void setReleaseBy(String releaseBy) {
+        this.releaseBy = releaseBy;
+    }
+
+    public String getReleaseDate() {
+        return releaseDate;
+    }
+
+    public void setReleaseDate(String releaseDate) {
+        this.releaseDate = releaseDate;
+    }
+
     public String getLcQty() {
         return lcQty;
     }

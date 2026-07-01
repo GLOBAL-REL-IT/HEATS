@@ -83,6 +83,17 @@
                 border-color: #253627;
                 color: #e1f7e4;
             }
+            .btn-red {
+                background-color: #9c2438;  /* duck green tone */
+                border-color: #9c2438;
+                color: #ffffff;
+            }
+
+            .btn-red:hover {
+                background-color: #540512;  /* darker on hover */
+                border-color: #540512;
+                color: #e1f7e4;
+            }
         </style>
     </s:layout-component>
     <s:layout-component name="page_container">
@@ -91,7 +102,8 @@
             <div class="row gx-4">
                 <nav class="navbar bg-body-tertiary">
                     <div class="container-fluid justify-content-start">
-                        <a href="${contextPath}/rmsbookingDetail/rmsReleased" class="btn btn-duck-green me-2" role="button"><i class='bi bi-arrow-bar-right'></i>&nbsp;&nbsp;RMS Released to Production</a>
+                        <a href="${contextPath}/rmsbookingDetail/rmsReleasedSingle" class="btn btn-duck-green me-2" role="button"><i class='bi bi-arrow-bar-right'></i>&nbsp;&nbsp;RMS Released to Production</a>
+                        <a href="${contextPath}/rmsbookingDetail/rmsRecallSingle" class="btn btn-red me-2" role="button"><i class='bi bi-arrow-counterclockwise'></i>&nbsp;&nbsp;Hardware Return Before Loading (Defective)</a>
                     </div>
                 </nav>
                 <div class="col-sm-12 col-12">
