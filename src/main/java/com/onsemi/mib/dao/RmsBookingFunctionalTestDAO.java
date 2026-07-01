@@ -21,7 +21,7 @@ import org.slf4j.LoggerFactory;
  * @author zbqb9x
  */
 public class RmsBookingFunctionalTestDAO {
-    
+
     private static final Logger LOGGER = LoggerFactory.getLogger(RmsBookingFunctionalTestDAO.class);
     private final Connection conn;
     private final DataSource dataSource;
@@ -31,13 +31,13 @@ public class RmsBookingFunctionalTestDAO {
         this.conn = db.getConnection();
         this.dataSource = db.getDataSource();
     }
-    
+
     public QueryResult insertRmsBookingFunctionalTest(RmsBookingFunctionalTest book) {
         QueryResult queryResult = new QueryResult();
         try {
             PreparedStatement ps = conn.prepareStatement(
                     "INSERT INTO rms_booking_functional_test (group_id, final_status, created_by, created_date, flag, module) "
-                            + "VALUES (?, ?, ?, NOW(), ?, ?)", Statement.RETURN_GENERATED_KEYS
+                    + "VALUES (?, ?, ?, NOW(), ?, ?)", Statement.RETURN_GENERATED_KEYS
             );
             ps.setString(1, book.getGroupId());
             ps.setString(2, book.getFinalStatus());
@@ -66,7 +66,7 @@ public class RmsBookingFunctionalTestDAO {
         }
         return queryResult;
     }
-    
+
     public QueryResult updateBibTest(RmsBookingFunctionalTest book) {
         QueryResult queryResult = new QueryResult();
         try {
@@ -97,7 +97,7 @@ public class RmsBookingFunctionalTestDAO {
         }
         return queryResult;
     }
-    
+
     public QueryResult updateManualTest(RmsBookingFunctionalTest book) {
         QueryResult queryResult = new QueryResult();
         try {
@@ -126,7 +126,7 @@ public class RmsBookingFunctionalTestDAO {
         }
         return queryResult;
     }
-    
+
     public QueryResult updateLeakageTest(RmsBookingFunctionalTest book) {
         QueryResult queryResult = new QueryResult();
         try {
@@ -157,7 +157,7 @@ public class RmsBookingFunctionalTestDAO {
         }
         return queryResult;
     }
-    
+
     public QueryResult updateBibDaqTest(RmsBookingFunctionalTest book) {
         QueryResult queryResult = new QueryResult();
         try {
@@ -188,7 +188,7 @@ public class RmsBookingFunctionalTestDAO {
         }
         return queryResult;
     }
-    
+
     public QueryResult updatePowerTest(RmsBookingFunctionalTest book) {
         QueryResult queryResult = new QueryResult();
         try {
@@ -219,7 +219,7 @@ public class RmsBookingFunctionalTestDAO {
         }
         return queryResult;
     }
-    
+
     public QueryResult updateWinchesterTest(RmsBookingFunctionalTest book) {
         QueryResult queryResult = new QueryResult();
         try {
@@ -250,7 +250,7 @@ public class RmsBookingFunctionalTestDAO {
         }
         return queryResult;
     }
-    
+
     public QueryResult deleteItemFunctionalTest(String id) {
         QueryResult queryResult = new QueryResult();
         try {
@@ -273,7 +273,7 @@ public class RmsBookingFunctionalTestDAO {
         }
         return queryResult;
     }
-    
+
     public Integer getCountTestResultByGroupId(String groupId) {
         Integer count = 0;
         try {
@@ -299,7 +299,33 @@ public class RmsBookingFunctionalTestDAO {
         }
         return count;
     }
-    
+
+    public Integer getCountTestResultByGroupIdWithFinalStatusPendingReleaseToProduction(String groupId) {
+        Integer count = 0;
+        try {
+            PreparedStatement ps = conn.prepareStatement(
+                    "SELECT COUNT(*) AS count FROM rms_booking_functional_test WHERE group_id = '" + groupId + "' AND module = 'Before Loading' AND final_status = 'Pending Release to Production'"
+            );
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                count = rs.getInt("count");
+            }
+            rs.close();
+            ps.close();
+        } catch (SQLException e) {
+            LOGGER.error(e.getMessage());
+        } finally {
+            if (conn != null) {
+                try {
+                    conn.close();
+                } catch (SQLException e) {
+                    LOGGER.error(e.getMessage());
+                }
+            }
+        }
+        return count;
+    }
+
     public Integer getCountTestResultByGroupIdUnload(String groupId) {
         Integer count = 0;
         try {
@@ -325,11 +351,11 @@ public class RmsBookingFunctionalTestDAO {
         }
         return count;
     }
-    
+
     public RmsBookingFunctionalTest getFuncTestResultbe4Load(String groupId) {
         RmsBookingFunctionalTest testResult = null;
-        String sql = "SELECT * FROM rms_booking_functional_test WHERE group_id = '"+groupId+"' AND module = 'Before Loading' ";
-        
+        String sql = "SELECT * FROM rms_booking_functional_test WHERE group_id = '" + groupId + "' AND module = 'Before Loading' ";
+
         try {
             PreparedStatement ps = conn.prepareStatement(sql);
             ResultSet rs = ps.executeQuery();
@@ -379,11 +405,11 @@ public class RmsBookingFunctionalTestDAO {
         }
         return testResult;
     }
-    
+
     public RmsBookingFunctionalTest getFuncTestResultUnloading(String groupId) {
         RmsBookingFunctionalTest testResult = null;
-        String sql = "SELECT * FROM rms_booking_functional_test WHERE group_id = '"+groupId+"' AND module = 'Unloading' ";
-        
+        String sql = "SELECT * FROM rms_booking_functional_test WHERE group_id = '" + groupId + "' AND module = 'Unloading' ";
+
         try {
             PreparedStatement ps = conn.prepareStatement(sql);
             ResultSet rs = ps.executeQuery();
@@ -433,5 +459,5 @@ public class RmsBookingFunctionalTestDAO {
         }
         return testResult;
     }
-    
+
 }

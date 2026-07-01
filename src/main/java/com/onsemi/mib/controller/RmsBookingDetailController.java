@@ -1318,7 +1318,7 @@ public class RmsBookingDetailController {
             } else if (currentStatus.equals("Pending VM")) {
                 model.addAttribute("configMotherboard", "VM");
                 model.addAttribute("message", "Please Complete Visual Inspection First");
-            // ADD MORE STATUS UNDER HERE UNTUK LIHAT LAGI RESULT UNTUK FUNCTIONAL TEST
+                // ADD MORE STATUS UNDER HERE UNTUK LIHAT LAGI RESULT UNTUK FUNCTIONAL TEST
             } else if (currentStatus.contains("Pending Functional Test") || currentStatus.contains("Pending Release to Production") || currentStatus.contains("Failed") || currentStatus.equalsIgnoreCase("Released to Production") || currentStatus.equalsIgnoreCase("Closed")) {
                 RmsBookingHardwareDAO bookdao = new RmsBookingHardwareDAO();
                 Integer checkMb = bookdao.checkMotherboardData(bookingId);
@@ -1434,7 +1434,7 @@ public class RmsBookingDetailController {
                         // UPDATE NOTHING HERE, ALL DISABLED
                     }
                 }
-                
+
                 model.addAttribute("leakbutton", check01);
                 model.addAttribute("manualbutton", check02);
                 model.addAttribute("bibbutton", check03);
@@ -1461,7 +1461,6 @@ public class RmsBookingDetailController {
 //        } else {
 //
 //        }
-
         model.addAttribute("bookId", bookingId);
         model.addAttribute("mibItemId", itemPkid);
 
@@ -1959,6 +1958,8 @@ public class RmsBookingDetailController {
             @PathVariable("bookingPkid") String bookingPkid,
             @PathVariable("pkid") String pkid
     ) {
+        String status = "";
+        String groupId = bookingPkid + "/" + pkid;
 
         RmsBookingHardwareDAO booking = new RmsBookingHardwareDAO();
         int countBookingHardware = booking.getCountBookingPkidAndPkidForMotherboard(bookingPkid, pkid);
@@ -1968,13 +1969,22 @@ public class RmsBookingDetailController {
             RmsBookingHardware bookHardware = new RmsBookingHardware();
             bookHardware.setBookingPkid(bookingPkid);
             bookHardware.setPkid(pkid);
-            //check if VM and FT already done and pass, then proceed with Pending Release to Production
-            bookHardware.setSubStatus("Pending VM");
+            //check if VM and FT already done and pass, then proceed with Pending Release to Production 1 July 2026
+            RmsBookingVisualInspectionDAO viD = new RmsBookingVisualInspectionDAO();
+            int countVmPass = viD.getCountByGroupIdWithModuleBeforeLoadingWithFinalStatusPass(groupId);
+
+            RmsBookingFunctionalTestDAO ftD = new RmsBookingFunctionalTestDAO();
+            int countFtPass = ftD.getCountTestResultByGroupIdWithFinalStatusPendingReleaseToProduction(groupId);
+            if (countVmPass > 0 && countFtPass > 0) {
+                status = "Pending Release to Production";
+            } else {
+                status = "Pending VM";
+            }
+//            bookHardware.setSubStatus("Pending VM");
+            bookHardware.setSubStatus(status);
             booking = new RmsBookingHardwareDAO();
             QueryResult q = booking.updateRmsBookingHardwareSubStatusByPkidAndBookingPkid(bookHardware);
             if (q.getResult() == 1) {
-
-                String groupId = bookingPkid + "/" + pkid;
 
                 //add log
                 RmsBookingHardwareGroupLog log = new RmsBookingHardwareGroupLog();
