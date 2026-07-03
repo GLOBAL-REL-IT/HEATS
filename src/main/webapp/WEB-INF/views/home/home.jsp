@@ -384,7 +384,7 @@
                                                             <c:choose>
                                                                 <c:when test="${empty name}">
                                                                     <a modaldeleteid="${parameterMaster.groupId}" type="button" data-bs-toggle="offcanvas" title="Return HW to MB Room/Ionic Area"
-                                                                       data-bs-target="#staticBackdrop" aria-controls="staticBackdrop" onclick="getData(this);">
+                                                                       data-bs-target="#staticBackdropReturnHw" aria-controls="staticBackdropReturnHw" onclick="getDataReturnHw(this);">
                                                                         <i class="bi bi-box-arrow-in-down-left h3"></i>
                                                                     </a>
                                                                     <a class="table-link" title="Manage" >
@@ -643,6 +643,78 @@
               </div>
             </div>
           </div>
+                                
+            <div class="offcanvas offcanvas-returnHw" data-bs-backdrop="static" tabindex="-1" id="staticBackdropReturnHw"
+                 aria-labelledby="staticBackdropReturnHwLabel">
+                <div class="offcanvas-header">
+                    <h5 class="offcanvas-title" id="staticBackdropReturnHwLabel">Return HW to MB Room/Ionic Area</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+                </div>
+                <div class="offcanvas-body">
+                    <div>
+                        <form id="add_group_form" class="row g-3 align-items-center" role="form" action="${contextPath}/rmsbookingDetailUnloading/updateReturn" method="post">
+                            <div class="row mb-3">
+                                <div class="col-xl-12 col-sm-12 col-12">
+                                    <div class="mb-1">
+                                        <label for="rmsNo" class="form-label">RMS</label>
+                                        <div class="input input-group">
+                                            <input type="text" class="form-control" id="rmsNo" name="rmsNo" placeholder="" value="" disabled>
+                                            <input type="hidden" class="form-control" id="groupId" name="groupId" placeholder="" value="">
+                                            <input type="hidden" class="form-control" id="bookingHwGroupId" name="bookingHwGroupId" placeholder="" value="">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row mb-3">
+                                <div class="col-xl-12 col-sm-12 col-12">
+                                    <div class="mb-1">
+                                        <label for="event" class="form-label">Event</label>
+                                        <div class="input input-group">
+                                            <input type="text" class="form-control" id="event2" name="event2" placeholder="" value="" disabled>
+                                            <input type="hidden" class="form-control" id="event" name="event" placeholder="" value="">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row mb-3">
+                                <div class="col-xl-6 col-sm-6 col-6">
+                                    <div class="mb-1">
+                                        <label for="lcQty" class="form-label">Load Card Qty</label>
+                                        <div class="input input-group">
+                                            <input type="text" class="form-control" id="lcQty" name="lcQty" placeholder="" value="" disabled>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-xl-6 col-sm-6 col-6">
+                                    <div class="mb-1">
+                                        <label for="pcQty" class="form-label">Program Card Qty</label>
+                                        <div class="input input-group">
+                                            <input type="text" class="form-control" id="pcQty" name="pcQty" placeholder="" value="" disabled>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row mb-3">
+                                <div class="col-xl-12 col-sm-12 col-12">
+                                    <div class="mb-1">
+                                        <label for="itemId" class="form-label">Scan BIB ID</label>
+                                        <div class="input input-group">
+                                            <input type="text" class="form-control" id="itemId" name="itemId" placeholder="" value="">
+                                            <input type="hidden" class="form-control" id="hardwareId" name="hardwareId" placeholder="" value="">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-12">
+                                <!--                                <a title="Delete Priority" data-bs-toggle="modal" data-bs-target="#delete_modal" class="table-link danger group_delete" onclick="modalDeletePriority();">
+                                                                    <i class="bi bi-trash h3" style="color:red"></i>
+                                                                </a>-->
+                                <button type="submit" id="submit" id="submit" class="btn btn-primary float-end">Save</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
 
         </div>
     </s:layout-component>
@@ -674,7 +746,41 @@
             
              $(document).ready(function () {
                 $('.js-example-basic-single').select2();
+                
+                 var validator = $("#add_group_form").validate({
+                   rules: {
+                       itemId: {
+                           required: true,
+                           equalTo: "#hardwareId"
+                       }
+                   }
+               });
             });
+
+           function getDataReturnHw(e) {
+               var groupId = $(e).attr("modaldeleteid");
+               $.ajax({
+                   url: '${contextPath}/rmsbookingDetailUnloading/rmsDetailForHwReturn', // Replace with your controller URL
+                   type: 'GET',
+                   data: {groupId: groupId},
+                   dataType: 'json',
+                   success: function (data) {
+                       // Populate form fields with received data
+                       $("#rmsNo").val(data.rmsNo);
+                       $("#bookingHwGroupId").val(data.bookingHwGroupId);
+                       $("#groupId").val(data.groupId);
+                       $("#event").val(data.event);
+                       $("#event2").val(data.event);
+                       $("#lcQty").val(data.lcQty);
+                       $("#pcQty").val(data.pcQty);
+                       $("#hardwareId").val(data.hardwareId);
+                   },
+                   error: function (jqXHR, textStatus, errorThrown) {
+                       console.error("Error loading data: " + textStatus, errorThrown);
+                   }
+               });
+           }
+
             
             function modalDelete() {
                 var id = $('#id');
