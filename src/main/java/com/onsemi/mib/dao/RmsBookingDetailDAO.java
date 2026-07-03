@@ -894,7 +894,7 @@ public class RmsBookingDetailDAO {
         Integer count = null;
         try {
             PreparedStatement ps = conn.prepareStatement(
-                    "SELECT COUNT(de.*) AS count FROM rms_booking_detail de LEFT JOIN rms_booking_hardware ha ON de.booking_pkid = ha.booking_pkid "
+                    "SELECT COUNT(*) AS count FROM rms_booking_detail de LEFT JOIN rms_booking_hardware ha ON de.booking_pkid = ha.booking_pkid "
                     + "WHERE ha.item_type = 'Motherboard' AND ha.sub_status = 'Pending Release to Production' AND ha.flag = '0' "
                     + "AND de.`status` = 'Released to Production' AND de.flag = '1'"
             );
