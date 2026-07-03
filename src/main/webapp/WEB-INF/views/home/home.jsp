@@ -658,7 +658,7 @@
                                     <div class="mb-1">
                                         <label for="rmsNo" class="form-label">RMS</label>
                                         <div class="input input-group">
-                                            <input type="text" class="form-control" id="rmsNo" name="rmsNo" placeholder="" value="" disabled>
+                                            <input type="text" class="form-control" id="rmsNoReturn" name="rmsNoReturn" placeholder="" value="" disabled>
                                             <input type="hidden" class="form-control" id="groupId" name="groupId" placeholder="" value="">
                                             <input type="hidden" class="form-control" id="bookingHwGroupId" name="bookingHwGroupId" placeholder="" value="">
                                         </div>
@@ -773,7 +773,7 @@ myOffcanvas.addEventListener('shown.bs.offcanvas', () => {
                    dataType: 'json',
                    success: function (data) {
                        // Populate form fields with received data
-                       $("#rmsNo").val(data.rmsNo);
+                       $("#rmsNoReturn").val(data.rmsNo);
                        $("#bookingHwGroupId").val(data.bookingHwGroupId);
                        $("#groupId").val(data.groupId);
                        $("#event").val(data.event);
