@@ -644,7 +644,7 @@
             </div>
           </div>
                                 
-            <div class="offcanvas offcanvas-returnHw" data-bs-backdrop="static" tabindex="-1" id="staticBackdropReturnHw"
+            <div class="offcanvas offcanvas-start" data-bs-backdrop="static" tabindex="-1" id="staticBackdropReturnHw"
                  aria-labelledby="staticBackdropReturnHwLabel">
                 <div class="offcanvas-header">
                     <h5 class="offcanvas-title" id="staticBackdropReturnHwLabel">Return HW to MB Room/Ionic Area</h5>
@@ -743,6 +743,13 @@
     </s:layout-component>
     <s:layout-component name="page_js_inline">
         <script>
+            
+                        const myOffcanvas = document.getElementById('staticBackdropReturnHw');
+
+myOffcanvas.addEventListener('shown.bs.offcanvas', () => {
+  const myInput = document.getElementById('itemId');
+  myInput.focus();
+});
             
              $(document).ready(function () {
                 $('.js-example-basic-single').select2();
