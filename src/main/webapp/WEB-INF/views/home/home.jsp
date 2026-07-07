@@ -299,7 +299,7 @@
                         </div>
                         <div class="card-body">
                             <div class="table-responsive">
-                                <table id="scrollVerticalReleasedLoading" class="table pending custom-table">
+                                <table id="scrollVerticalRecall" class="table pending custom-table">
                                     <thead>
                                         <tr>
                                              <th>No</th>
@@ -853,6 +853,15 @@ myOffcanvas.addEventListener('shown.bs.offcanvas', () => {
             
             $(function () {
                 $("#scrollVerticalReleasedLoading").DataTable({
+                    scrollY: "200px",
+                    scrollCollapse: false,
+                    paging: false,
+                    bInfo: false,
+                });
+            });
+            
+            $(function () {
+                $("#scrollVerticalRecall").DataTable({
                     scrollY: "200px",
                     scrollCollapse: false,
                     paging: false,

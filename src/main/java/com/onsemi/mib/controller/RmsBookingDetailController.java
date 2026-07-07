@@ -5920,7 +5920,7 @@ public class RmsBookingDetailController {
             rmsH.setModifiedBy(userSession.getFullname());
 
             String bookingPkidAndItemTypeAndItemId = rmsH.getBookingPkid() + "_" + rmsH.getItemType() + "_" + rmsH.getItemId();
-            LOGGER.info("bookingPkidAndItemTypeAndItemId : " + bookingPkidAndItemTypeAndItemId);
+//            LOGGER.info("bookingPkidAndItemTypeAndItemId : " + bookingPkidAndItemTypeAndItemId);
 
             list.add(bookingPkidAndItemTypeAndItemId);
 
@@ -6646,7 +6646,7 @@ public class RmsBookingDetailController {
         model.addAttribute("teActive", teActive);
         model.addAttribute("teActiveTab", teActiveTab);
 
-        return "rmsbookingDetail/detail_group";
+        return "rmsbookingDetail/detail_group_recall";
     }
 
     @RequestMapping(value = "/createManualTest", method = {RequestMethod.GET, RequestMethod.POST})
