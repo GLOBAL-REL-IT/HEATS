@@ -1974,13 +1974,18 @@ public class RmsBookingDetailController {
             int countVmPass = viD.getCountByGroupIdWithModuleBeforeLoadingWithFinalStatusPass(groupId);
 
             RmsBookingFunctionalTestDAO ftD = new RmsBookingFunctionalTestDAO();
-            int countFtPass = ftD.getCountTestResultByGroupIdWithFinalStatusPendingReleaseToProduction(groupId);
-            if (countVmPass > 0 && countFtPass > 0) {
-                status = "Pending Release to Production";
-            } else {
+            int countFtPass = ftD.getCountTestResultByGroupId(groupId);
+            if (countVmPass == 0) {
                 status = "Pending VM";
+            } else {
+                if (countFtPass == 0) {
+                    status = "Pending Functional Test";
+                } else {
+                    ftD = new RmsBookingFunctionalTestDAO();
+                    RmsBookingFunctionalTest rmsF = ftD.getFuncTestResultbe4Load(groupId);
+                    status = rmsF.getFinalStatus();
+                }
             }
-//            bookHardware.setSubStatus("Pending VM");
             bookHardware.setSubStatus(status);
             booking = new RmsBookingHardwareDAO();
             QueryResult q = booking.updateRmsBookingHardwareSubStatusByPkidAndBookingPkid(bookHardware);
@@ -5828,7 +5833,7 @@ public class RmsBookingDetailController {
 //        return "redirect:/rmsbookingDetail/detail/" + id;
         return "redirect:/rmsbookingDetail";
     }
-    
+
     @RequestMapping(value = "/rmsRecall", method = RequestMethod.GET)
     public String rmsRecall(
             Model model,
@@ -5842,7 +5847,7 @@ public class RmsBookingDetailController {
 
         return "rmsbookingDetail/rms_released_single";
     }
-    
+
     @RequestMapping(value = "rmsRecall/detail/{id}", method = RequestMethod.GET)
     public String rmsRecallDetail(Model model,
             @PathVariable("id") String id,
@@ -6100,7 +6105,7 @@ public class RmsBookingDetailController {
 
         return "rmsbookingDetail/detail_recall";
     }
-    
+
     @RequestMapping(value = "/rmsRecall/groupDetail/{bookingId}/{itemPkid}", method = RequestMethod.GET)
     public String rmsRecallGroupDetail(Model model,
             @PathVariable("bookingId") String bookingId,
