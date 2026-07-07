@@ -1667,7 +1667,7 @@ public class RmsBookingDetailController {
         List<ParameterDetails> labelIdentificationReject = pD.getGroupParameterDetailList(itemVm.getLabelIdentificationReject(), "023");
         model.addAttribute("labelIdentificationReject", labelIdentificationReject);
 
-        if (currentStatus.contains("HW Registration")) {
+        if (currentStatus.contains("HW Registration") || currentStatus.contains("Released to Production")) {
             String hwActive = "active";
             String hwActiveTab = "show active";
             model.addAttribute("hwActive", hwActive);
@@ -1762,11 +1762,13 @@ public class RmsBookingDetailController {
                 ItemDAO itemD = new ItemDAO();
                 Item item = itemD.getHardwareDetail(itemHw.getMibItemId());
                 RmsBookingHardwareDAO rmsBookingHD = new RmsBookingHardwareDAO();
-                int countRmsBookingHw = rmsBookingHD.getCountBookingPkidAndItemPkid(bookingPkid, item.getSptsPkid());
+//                int countRmsBookingHw = rmsBookingHD.getCountBookingPkidAndItemPkid(bookingPkid, item.getSptsPkid());
+                int countRmsBookingHw = rmsBookingHD.getCountBookingPkidAndItemPkidForBibCard(bookingPkid, item.getSptsPkid()); //change 7 July 2026
                 if (countRmsBookingHw == 1) {
                     //get total qty per itemPkid and bookingPkid requested from booking_hardware table
                     rmsBookingHD = new RmsBookingHardwareDAO();
-                    RmsBookingHardware rmsBookingH = rmsBookingHD.getRmsBookingHardwareByBookingPkidAndItemPKid(bookingPkid, item.getSptsPkid());
+//                    RmsBookingHardware rmsBookingH = rmsBookingHD.getRmsBookingHardwareByBookingPkidAndItemPKid(bookingPkid, item.getSptsPkid());
+                    RmsBookingHardware rmsBookingH = rmsBookingHD.getRmsBookingHardwareByBookingPkidAndItemPKidBibCard(bookingPkid, item.getSptsPkid()); //change 7 July 2026
                     int requestedQty = Integer.parseInt(rmsBookingH.getQty());
 
                     //get total qty register under same itemID and booking id (split from group id)
@@ -1916,7 +1918,8 @@ public class RmsBookingDetailController {
                 }
 
                 rmsBookingHD = new RmsBookingHardwareDAO();
-                RmsBookingHardware hardware = rmsBookingHD.getRmsBookingHardwareByBookingPkidAndItemPKid(bookingPkid, hw.getItemPkid());
+//                RmsBookingHardware hardware = rmsBookingHD.getRmsBookingHardwareByBookingPkidAndItemPKid(bookingPkid, hw.getItemPkid());
+                RmsBookingHardware hardware = rmsBookingHD.getRmsBookingHardwareByBookingPkidAndItemPKidBibCard(bookingPkid, hw.getItemPkid()); //update 7 July 2026
 
                 if ("Load Card".equals(hardware.getItemType())) {
                     lcQty = String.valueOf(Integer.parseInt(lcQty) - 1);
@@ -3007,8 +3010,8 @@ public class RmsBookingDetailController {
             @RequestParam(required = false) String winHardware,
             HttpServletResponse response
     ) throws IOException {
-        
-        LOGGER.info("ahoi >>> "+jenis);
+
+        LOGGER.info("ahoi >>> " + jenis);
 
         String gotoMn = "Pending Functional Test - Manual Test";
         String gotoBib = "Pending Functional Test - BIB Test";
@@ -4629,27 +4632,36 @@ public class RmsBookingDetailController {
                     }
                 }
                 //update rms_booking_detail//update status
-                RmsBookingDetail rms = new RmsBookingDetail();
-                rms.setId(rms1.getId());
-                rms.setStatus("Released to Production");
-                rms.setFlag("1");
-                rms.setReleasedBy(userSession.getFullname());
-                rmsD = new RmsBookingDetailDAO();
-                QueryResult q = rmsD.updateRmsBookingDetailForStatusAndFlagAndReleaseDateBy(rms);
-                if (q.getResult() > 0) {
+               
+                rmsHD = new RmsBookingHardwareDAO();
+                int countOtherBib = rmsHD.getCountMotherboardByBookingPkidAndFlagZero(bookingH.getBookingPkid());
+                if (countOtherBib == 0) {  //only update if other BIB flag != 0
+                    RmsBookingDetail rms = new RmsBookingDetail();
+                    rms.setId(rms1.getId());
+                    rms.setStatus("Released to Production");
+                    rms.setFlag("1");
+                    rms.setReleasedBy(userSession.getFullname());
+                    rmsD = new RmsBookingDetailDAO();
+                    QueryResult q = rmsD.updateRmsBookingDetailForStatusAndFlagAndReleaseDateBy(rms);
+                    if (q.getResult() > 0) {
 
-                    //update log
-                    RmsBookingLog log = new RmsBookingLog();
-                    log.setBookingId(id);
-                    log.setDetail("Released to Production");
-                    log.setCreatedBy(userSession.getFullname());
-                    RmsBookingLogDAO logD = new RmsBookingLogDAO();
-                    QueryResult logQ = logD.insertRmsBookingLog(log);
+                        //update log
+                        RmsBookingLog log = new RmsBookingLog();
+                        log.setBookingId(id);
+                        log.setDetail("Released to Production");
+                        log.setCreatedBy(userSession.getFullname());
+                        RmsBookingLogDAO logD = new RmsBookingLogDAO();
+                        QueryResult logQ = logD.insertRmsBookingLog(log);
 
-                    redirectAttrs.addFlashAttribute("success", "Successfully Release to Production");
+                        redirectAttrs.addFlashAttribute("success", "Successfully Release to Production");
+                    } else {
+                        redirectAttrs.addFlashAttribute("error", "Failed to Release to Production. Pls contact system admin.");
+                    }
                 } else {
-                    redirectAttrs.addFlashAttribute("error", "Failed to Release to Production. Pls contact system admin.");
+                    // do not update rms_booking_detail. maintain flag zero to still appear in main page.
+                    redirectAttrs.addFlashAttribute("success", "Successfully Release to Production");
                 }
+
             } else {
                 LOGGER.info("Fail to insert transaction for Motherboard Item ID: " + bookingH.getItemId());
 
@@ -4753,15 +4765,24 @@ public class RmsBookingDetailController {
         }
 
         currentStatus = h.getSubStatus();
+        String itemIdMB = "";
+        String mbSptsPkid = "";
+        String itemIdLC = "";
+
+        String statusLeak = "";
+        String statusMan = "";
+        String statusBib = "";
+        String statusBibD = "";
+        String statusPs = "";
+        String statusWin = "";
 
         if (currentStatus.equalsIgnoreCase("Pending Functional Test")) {
             // CHECK AND UPDATE THE FIRST TEST
 //            currentStatus = checkStatusFTestBeforeLoading(bookingId, itemPkid);
 
-            String itemIdMB = "";
-            String mbSptsPkid = "";
-            String itemIdLC = "";
-
+//            String itemIdMB = "";
+//            String mbSptsPkid = "";
+//            String itemIdLC = "";
             RmsBookingHardwareDAO bookdao = new RmsBookingHardwareDAO();
             Integer checkMb = bookdao.checkMotherboardData(bookingId);
             bookdao = new RmsBookingHardwareDAO();
@@ -4825,7 +4846,144 @@ public class RmsBookingDetailController {
                 currentStatus = "Pending Release to Production";
             }
         } else {
-            // DO NOTHING HERE
+            if (currentStatus.equals("Pending HW Registration")) {
+                model.addAttribute("configMotherboard", "HW");
+                model.addAttribute("message", "Please Complete Hardware Registration First");
+            } else if (currentStatus.equals("Pending VM")) {
+                model.addAttribute("configMotherboard", "VM");
+                model.addAttribute("message", "Please Complete Visual Inspection First");
+                // ADD MORE STATUS UNDER HERE UNTUK LIHAT LAGI RESULT UNTUK FUNCTIONAL TEST
+            } else if (currentStatus.contains("Pending Functional Test") || currentStatus.contains("Pending Release to Production") || currentStatus.contains("Failed") || currentStatus.equalsIgnoreCase("Released to Production") || currentStatus.equalsIgnoreCase("Closed")) {
+                RmsBookingHardwareDAO bookdao = new RmsBookingHardwareDAO();
+                Integer checkMb = bookdao.checkMotherboardData(bookingId);
+                bookdao = new RmsBookingHardwareDAO();
+                Integer checkLc = bookdao.checkCardData(bookingId);
+
+                if (checkMb == 0) {
+                    redirectAttrs.addFlashAttribute("error", "No motherboard configured");
+                } else {
+                    // SINI ADA MB
+                    bookdao = new RmsBookingHardwareDAO();
+                    mbSptsPkid = bookdao.getSptsPkidForItemIdMb(bookingId, itemPkid);
+                    ItemDAO itemdao = new ItemDAO();
+                    itemIdMB = itemdao.getMibItemIdBySptsPkId(mbSptsPkid);
+                    ItemActivityConfigDAO itemactdao = new ItemActivityConfigDAO();
+                    ItemActivityConfig itemactmb = itemactdao.getItemActivityByItemId(itemIdMB);
+                    if (itemactmb != null) {
+                        leakTest = itemactmb.getLeakageTest();
+                        psTest = itemactmb.getPsLeakageTest();
+                        winTest = itemactmb.getWinchesterChamberLeakageTest();
+                        model.addAttribute("configMotherboard", "");
+                    } else {
+                        model.addAttribute("configMotherboard", "TRIGGERERROR");
+                        model.addAttribute("itemIdMB", itemIdMB);
+                        model.addAttribute("itemIdLC", itemIdLC);
+                        redirectAttrs.addFlashAttribute("error", "No motherboard configuration configured");
+                    }
+
+                    if (checkLc == 0) {
+                        // SINI TAKDE LC
+                        redirectAttrs.addFlashAttribute("error", "No load card configured");
+                    } else {
+                        // SINI DUA2 ADA
+                        bookdao = new RmsBookingHardwareDAO();
+                        itemIdLC = bookdao.getSptsPkidForItemIdLC(bookingId);
+                        itemactdao = new ItemActivityConfigDAO();
+                        ItemActivityConfig itemactlc = itemactdao.getItemActivityByItemId(itemIdLC);
+
+                        if (itemactlc != null) {
+                            bibTest = itemactlc.getBibTest();
+                            daqTest = itemactlc.getBibDaqTest();
+                            manTest = itemactlc.getManualTest();
+                        } else {
+                            redirectAttrs.addFlashAttribute("error", "No load card configuration configured");
+                        }
+                    }
+                    model.addAttribute("itemIdMB", itemIdMB);
+                    model.addAttribute("itemIdLC", itemIdLC);
+                }
+
+                RmsBookingFunctionalTestDAO ftestdao2 = new RmsBookingFunctionalTestDAO();
+                RmsBookingFunctionalTest testResult = ftestdao2.getFuncTestResultbe4Load(groupId);
+//                testResult = ftestdao2.getFuncTestResultbe4Load(groupId);
+                model.addAttribute("testResult", testResult);
+
+                if (testResult == null) {
+                    // NOTHING TO UPDATE HERE
+                } else {
+//                    statusLeak = testResult.getLeakStatus();
+//                    statusMan = testResult.getManualStatus();
+//                    statusBib = testResult.getBibStatus();
+//                    statusBibD = testResult.getBibDaqStatus();
+//                    statusPs = testResult.getPsStatus();
+//                    statusWin = testResult.getPsStatus();
+                    statusLeak = SpmlUtil.nullToEmptyString(testResult.getLeakStatus());
+                    statusMan = SpmlUtil.nullToEmptyString(testResult.getManualStatus());
+                    statusBib = SpmlUtil.nullToEmptyString(testResult.getBibStatus());
+                    statusBibD = SpmlUtil.nullToEmptyString(testResult.getBibDaqStatus());
+                    statusPs = SpmlUtil.nullToEmptyString(testResult.getPsStatus());
+                    statusWin = SpmlUtil.nullToEmptyString(testResult.getPsStatus());
+                }
+                String check01 = "disabled";    // LEAKAGE
+                String check02 = "disabled";    // MANUAL
+                String check03 = "disabled";    // BIB 
+                String check04 = "disabled";    // BIB DAQ
+                String check05 = "disabled";    // PS
+                String check06 = "disabled";    // WINCHESTER
+                String edit01 = "visually-hidden";
+                String edit02 = "visually-hidden";
+                String edit03 = "visually-hidden";
+                String edit04 = "visually-hidden";
+                String edit05 = "visually-hidden";
+                String edit06 = "visually-hidden";
+
+                // ADD MORE CHECKING ON THE STATUS TO CONTROL THE EDIT BUTTON - TODO
+                if (currentStatus.contains("Failed")) {
+                    model.addAttribute("leakbutton", "disabled");
+                    model.addAttribute("manualbutton", "disabled");
+                    model.addAttribute("bibbutton", "disabled");
+                    model.addAttribute("bibdaqbutton", "disabled");
+                    model.addAttribute("psbutton", "disabled");
+                    model.addAttribute("winbutton", "disabled");
+                } else {
+                    if (currentStatus.contains("- Leakage")) {
+                        check01 = "";
+                        edit01 = "";
+                    } else if (currentStatus.contains("BIB Test")) {
+                        check03 = "";
+                        edit03 = "";
+                    } else if (currentStatus.contains("BIB DAQ")) {
+                        check04 = "";
+                        edit04 = "";
+                    } else if (currentStatus.contains("Manual")) {
+                        check02 = "";
+                        edit02 = "";
+                    } else if (currentStatus.contains("Winchester")) {
+                        check06 = "";
+                        edit06 = "";
+                    } else if (currentStatus.contains("Power")) {
+                        check05 = "";
+                        edit05 = "";
+                    } else {
+                        // UPDATE NOTHING HERE, ALL DISABLED
+                    }
+                }
+
+                model.addAttribute("leakbutton", check01);
+                model.addAttribute("manualbutton", check02);
+                model.addAttribute("bibbutton", check03);
+                model.addAttribute("bibdaqbutton", check04);
+                model.addAttribute("psbutton", check05);
+                model.addAttribute("winbutton", check06);
+                model.addAttribute("editleakbutton", edit01);
+                model.addAttribute("editmanualbutton", edit02);
+                model.addAttribute("editbibbutton", edit03);
+                model.addAttribute("editbibdaqbutton", edit04);
+                model.addAttribute("editpsbutton", edit05);
+                model.addAttribute("editwinbutton", edit06);
+            } else {
+                LOGGER.info("TAKKAN MASUK SINI WEA");
+            }
         }
 
         model.addAttribute("leakCheck", leakTest);
@@ -5032,7 +5190,7 @@ public class RmsBookingDetailController {
         List<ParameterDetails> labelIdentificationReject = pD.getGroupParameterDetailList(itemVm.getLabelIdentificationReject(), "023");
         model.addAttribute("labelIdentificationReject", labelIdentificationReject);
 
-        if (currentStatus.contains("HW Registration")) {
+        if (currentStatus.contains("HW Registration") || currentStatus.contains("Released to Production") || currentStatus.contains("Pending Release to Production")) {
             String hwActive = "active";
             String hwActiveTab = "show active";
             model.addAttribute("hwActive", hwActive);
@@ -5851,7 +6009,7 @@ public class RmsBookingDetailController {
 
         model.addAttribute("booking", booking);
 
-        return "rmsbookingDetail/rms_released_single";
+        return "rmsbookingDetail/rms_recall_single";
     }
 
     @RequestMapping(value = "rmsRecall/detail/{id}", method = RequestMethod.GET)
@@ -6600,7 +6758,7 @@ public class RmsBookingDetailController {
         List<ParameterDetails> labelIdentificationReject = pD.getGroupParameterDetailList(itemVm.getLabelIdentificationReject(), "023");
         model.addAttribute("labelIdentificationReject", labelIdentificationReject);
 
-        if (currentStatus.contains("HW Registration")) {
+        if (currentStatus.contains("HW Registration") || currentStatus.contains("Pending Release to Production") || currentStatus.contains("Released to Production")) {
             String hwActive = "active";
             String hwActiveTab = "show active";
             model.addAttribute("hwActive", hwActive);

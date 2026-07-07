@@ -463,14 +463,14 @@
                                                             </a>
                                                         </c:if>
                                                         <c:if test="${parameterMaster.status == 'Available'}">
-                                                            <a href="${contextPath}/rmsbookingDetail/groupDetail/${parameterMaster.bookingPkid}/${parameterMaster.pkid}" class="table-link" title="Manage">
+                                                            <a href="${contextPath}/rmsbookingDetail/rmsRecall/groupDetail/${parameterMaster.bookingPkid}/${parameterMaster.pkid}" class="table-link" title="Manage">
                                                                 <i class="bi bi-box-arrow-in-right h3" style="color:orangered"></i>
                                                             </a>
                                                         </c:if>
                                                         <c:if test="${parameterMaster.subStatus == 'Pending Release to Production'}">
-                                                            <a modaldeleteid="${parameterMaster.id}" type ="button" title="Release to Production" data-bs-toggle="modal" data-bs-target="#confirmation_modal" 
-                                                               class="btn btn-success float-start" onclick="modalReleaseSingle(this);">
-                                                                <i class="bi bi-check-circle-fill h3" style="color:green"></i>
+                                                           <a modaldeleteid="${parameterMaster.id}" type ="button" title="Release to Production" data-bs-toggle="modal" data-bs-target="#confirmation_modal" 
+                                                                onclick="modalReleaseSingle(this);">
+                                                                <i class="bi bi-check-circle h3" style="color:green"></i>
                                                             </a>
                                                             
                                                         </c:if>

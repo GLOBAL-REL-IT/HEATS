@@ -213,7 +213,7 @@ public class RmsBookingHardwareDAO {
         }
         return queryResult;
     }
-    
+
     public QueryResult updateRmsBookingHardwareForFlagAndStatusAndReturnDateById(RmsBookingHardware rmsbookingHardware) {
         QueryResult queryResult = new QueryResult();
         try {
@@ -422,6 +422,48 @@ public class RmsBookingHardwareDAO {
 
     public RmsBookingHardware getRmsBookingHardwareByBookingPkidAndItemPKid(String bookingPkid, String itemPkid) {
         String sql = "SELECT * FROM rms_booking_hardware WHERE booking_pkid = '" + bookingPkid + "' AND item_pkid = '" + itemPkid + "' AND status = 'Available'";
+        RmsBookingHardware rmsbookingHardware = null;
+        try {
+            PreparedStatement ps = conn.prepareStatement(sql);
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                rmsbookingHardware = new RmsBookingHardware();
+                rmsbookingHardware.setId(rs.getString("id"));
+                rmsbookingHardware.setBookingPkid(rs.getString("booking_pkid"));
+                rmsbookingHardware.setPkid(rs.getString("pkid"));
+                rmsbookingHardware.setItemType(rs.getString("item_type"));
+                rmsbookingHardware.setItemId(rs.getString("item_id"));
+                rmsbookingHardware.setItemPkid(rs.getString("item_pkid"));
+                rmsbookingHardware.setQty(rs.getString("qty"));
+                rmsbookingHardware.setReadiness(rs.getString("readiness"));
+                rmsbookingHardware.setStatus(rs.getString("status"));
+                rmsbookingHardware.setRecall(rs.getString("recall"));
+                rmsbookingHardware.setFlag(rs.getString("flag"));
+                rmsbookingHardware.setCreatedDate(rs.getString("created_date"));
+                rmsbookingHardware.setCreatedBy(rs.getString("created_by"));
+                rmsbookingHardware.setModifiedDate(rs.getString("modified_date"));
+                rmsbookingHardware.setModifiedBy(rs.getString("modified_by"));
+                rmsbookingHardware.setLcQty(rs.getString("lc_qty"));
+                rmsbookingHardware.setPcQty(rs.getString("pc_qty"));
+            }
+            rs.close();
+            ps.close();
+        } catch (SQLException e) {
+            LOGGER.error(e.getMessage());
+        } finally {
+            if (conn != null) {
+                try {
+                    conn.close();
+                } catch (SQLException e) {
+                    LOGGER.error(e.getMessage());
+                }
+            }
+        }
+        return rmsbookingHardware;
+    }
+
+    public RmsBookingHardware getRmsBookingHardwareByBookingPkidAndItemPKidBibCard(String bookingPkid, String itemPkid) {
+        String sql = "SELECT * FROM rms_booking_hardware WHERE booking_pkid = '" + bookingPkid + "' AND item_pkid = '" + itemPkid + "' AND status IN ('Available','Released to Production')";
         RmsBookingHardware rmsbookingHardware = null;
         try {
             PreparedStatement ps = conn.prepareStatement(sql);
@@ -1101,7 +1143,7 @@ public class RmsBookingHardwareDAO {
         }
         return queryResult;
     }
-    
+
     public QueryResult updateRmsBookingHardwareSubStatusById(RmsBookingHardware rmsbookingHardware) {
         QueryResult queryResult = new QueryResult();
         try {
@@ -1336,6 +1378,32 @@ public class RmsBookingHardwareDAO {
         return count;
     }
 
+    public Integer getCountBookingPkidAndItemPkidForBibCard(String bookingPkid, String itemPkid) {
+        Integer count = null;
+        try {
+            PreparedStatement ps = conn.prepareStatement(
+                    "SELECT COUNT(*) AS count FROM rms_booking_hardware inc WHERE inc.booking_pkid = '" + bookingPkid + "' AND inc.item_pkid = '" + itemPkid + "' AND inc.status IN ('Available','Released to Production')"
+            );
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                count = rs.getInt("count");
+            }
+            rs.close();
+            ps.close();
+        } catch (SQLException e) {
+            LOGGER.error(e.getMessage());
+        } finally {
+            if (conn != null) {
+                try {
+                    conn.close();
+                } catch (SQLException e) {
+                    LOGGER.error(e.getMessage());
+                }
+            }
+        }
+        return count;
+    }
+
     public Integer getCountBookingPkidAndPkidForMotherboard(String bookingPkid, String pkid) {
         Integer count = null;
         try {
@@ -1367,6 +1435,32 @@ public class RmsBookingHardwareDAO {
         try {
             PreparedStatement ps = conn.prepareStatement(
                     "SELECT COUNT(*) AS count FROM rms_booking_hardware inc WHERE inc.booking_pkid = '" + bookingPkid + "' AND inc.item_type = 'Motherboard' AND inc.flag != '99'"
+            );
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                count = rs.getInt("count");
+            }
+            rs.close();
+            ps.close();
+        } catch (SQLException e) {
+            LOGGER.error(e.getMessage());
+        } finally {
+            if (conn != null) {
+                try {
+                    conn.close();
+                } catch (SQLException e) {
+                    LOGGER.error(e.getMessage());
+                }
+            }
+        }
+        return count;
+    }
+
+    public Integer getCountMotherboardByBookingPkidAndFlagZero(String bookingPkid) {
+        Integer count = null;
+        try {
+            PreparedStatement ps = conn.prepareStatement(
+                    "SELECT COUNT(*) AS count FROM rms_booking_hardware inc WHERE inc.booking_pkid = '" + bookingPkid + "' AND inc.item_type = 'Motherboard' AND inc.flag = '0'"
             );
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
@@ -1543,7 +1637,7 @@ public class RmsBookingHardwareDAO {
         }
         return data;
     }
-    
+
     public String getLatestStatus(String bookingId, String pkId) {
         String data = "";
         String sql = "SELECT status FROM rms_booking_hardware WHERE booking_pkid = '" + bookingId + "' AND item_type = 'Motherboard' AND pkid = '" + pkId + "'";

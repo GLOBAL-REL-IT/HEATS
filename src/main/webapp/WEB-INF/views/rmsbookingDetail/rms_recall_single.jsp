@@ -120,7 +120,7 @@
                                                         <td><c:out value="${parameterMaster.returnBy}"/></td>
                                                         <td><c:out value="${parameterMaster.status}"/></td>
                                                         <td align="center">
-                                                            <a href="${contextPath}/rmsbookingDetail/rmsRecallSingle/detail/${parameterMaster.id}" class="table-link" title="Manage">
+                                                            <a href="${contextPath}/rmsbookingDetail/rmsRecall/detail/${parameterMaster.id}" class="table-link" title="Manage">
                                                                 <i class="bi bi-box-arrow-in-right h3"></i>
                                                             </a>
                                                         </td>

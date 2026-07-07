@@ -91,7 +91,8 @@
             <div class="row gx-4">
                 <nav class="navbar bg-body-tertiary">
                     <div class="container-fluid justify-content-start">
-                        <a href="${contextPath}/rmsbookingDetail/rmsReleased/detail/${rms.id}" class="btn btn-outline-warning me-2" role="button">
+                        <!--<a href="${contextPath}/rmsbookingDetail/rmsReleased/detail/${rms.id}" class="btn btn-outline-warning me-2" role="button">-->
+                            <a href="${contextPath}/rmsbookingDetail/rmsReleasedSingle" class="btn btn-outline-warning me-2" role="button">
                             <i class='bi bi-arrow-bar-left'></i>&nbsp;&nbsp;Back</a>
                     </div>
                 </nav>
@@ -2006,7 +2007,7 @@
                                     <div class="mb-1">
                                         <label for="recallRemarks" class="form-label">Remarks</label>
                                         <div class="input input-group">
-                                            <input type="text" class="form-control" id="bookingHwId" name="bookingHwId" placeholder="" value="${bookingHwId}">
+                                            <input type="hidden" class="form-control" id="bookingHwId" name="bookingHwId" placeholder="" value="${bookingHwId}">
                                             <textarea class="form-control" rows="5" id="recallRemarks" name="recallRemarks"></textarea>
                                         </div>
                                     </div>

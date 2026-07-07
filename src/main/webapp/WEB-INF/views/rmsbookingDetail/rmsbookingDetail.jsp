@@ -103,7 +103,7 @@
                 <nav class="navbar bg-body-tertiary">
                     <div class="container-fluid justify-content-start">
                         <a href="${contextPath}/rmsbookingDetail/rmsReleasedSingle" class="btn btn-duck-green me-2" role="button"><i class='bi bi-arrow-bar-right'></i>&nbsp;&nbsp;RMS Released to Production</a>
-                        <a href="${contextPath}/rmsbookingDetail/rmsRecallSingle" class="btn btn-red me-2" role="button"><i class='bi bi-arrow-counterclockwise'></i>&nbsp;&nbsp;Hardware Return Before Loading (Defective)</a>
+                        <a href="${contextPath}/rmsbookingDetail/rmsRecall" class="btn btn-red me-2" role="button"><i class='bi bi-arrow-counterclockwise'></i>&nbsp;&nbsp;Hardware Return Before Loading (Defective)</a>
                     </div>
                 </nav>
                 <div class="col-sm-12 col-12">
