@@ -153,7 +153,7 @@ public class SPTSStatus {
                 sptsStatus = "Out for Production from Staging";
                 break;
             case 28:
-                sptsStatus = "Retur from Production to Staging";
+                sptsStatus = "Return from Production to Staging";
                 break;
             default:
                 sptsStatus = "Good";
