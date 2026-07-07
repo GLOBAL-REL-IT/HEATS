@@ -71,7 +71,7 @@ public class RmsBookingFunctionalTestDAO {
         QueryResult queryResult = new QueryResult();
         try {
             PreparedStatement ps = conn.prepareStatement(
-                    "UPDATE rms_booking_functional_test SET bib_qty = ?, bib_status = ?, bib_upload = ?, remark = ?, final_status = ?, flag = ?, bib_hwid = ? WHERE group_id = ? "
+                    "UPDATE rms_booking_functional_test SET bib_qty = ?, bib_status = ?, bib_upload = ?, remark = ?, final_status = ?, flag = ?, bib_hwid = ? WHERE group_id = ? AND module = ?"
             );
             ps.setString(1, book.getBibQty());
             ps.setString(2, book.getBibStatus());
@@ -81,6 +81,7 @@ public class RmsBookingFunctionalTestDAO {
             ps.setString(6, book.getFlag());
             ps.setString(7, book.getBibHwid());
             ps.setString(8, book.getGroupId());
+            ps.setString(9, book.getModule());
             queryResult.setResult(ps.executeUpdate());
             ps.close();
         } catch (SQLException e) {
@@ -102,7 +103,7 @@ public class RmsBookingFunctionalTestDAO {
         QueryResult queryResult = new QueryResult();
         try {
             PreparedStatement ps = conn.prepareStatement(
-                    "UPDATE rms_booking_functional_test SET manual_status=?, manual_qty=?, remark=?, final_status=?, flag=? WHERE group_id = ? "
+                    "UPDATE rms_booking_functional_test SET manual_status=?, manual_qty=?, remark=?, final_status=?, flag=? WHERE group_id = ? AND module = ? "
             );
             ps.setString(1, book.getManualStatus());
             ps.setString(2, book.getManualQty());
@@ -110,6 +111,7 @@ public class RmsBookingFunctionalTestDAO {
             ps.setString(4, book.getFinalStatus());
             ps.setString(5, book.getFlag());
             ps.setString(6, book.getGroupId());
+            ps.setString(7, book.getModule());
             queryResult.setResult(ps.executeUpdate());
             ps.close();
         } catch (SQLException e) {
@@ -131,7 +133,7 @@ public class RmsBookingFunctionalTestDAO {
         QueryResult queryResult = new QueryResult();
         try {
             PreparedStatement ps = conn.prepareStatement(
-                    "UPDATE rms_booking_functional_test SET leak_qty=?, leak_status=?, leak_upload=?, remark=?, final_status=?, flag=?, leak_hwid=? WHERE group_id = ? "
+                    "UPDATE rms_booking_functional_test SET leak_qty=?, leak_status=?, leak_upload=?, remark=?, final_status=?, flag=?, leak_hwid=? WHERE group_id = ? AND module = ? "
             );
             ps.setString(1, book.getLeakQty());
             ps.setString(2, book.getLeakStatus());
@@ -141,6 +143,7 @@ public class RmsBookingFunctionalTestDAO {
             ps.setString(6, book.getFlag());
             ps.setString(7, book.getLeakHwid());
             ps.setString(8, book.getGroupId());
+            ps.setString(9, book.getModule());
             queryResult.setResult(ps.executeUpdate());
             ps.close();
         } catch (SQLException e) {
@@ -162,7 +165,7 @@ public class RmsBookingFunctionalTestDAO {
         QueryResult queryResult = new QueryResult();
         try {
             PreparedStatement ps = conn.prepareStatement(
-                    "UPDATE rms_booking_functional_test SET bib_daq_qty = ?, bib_daq_status = ?, bib_daq_upload = ?, remark = ?, final_status = ?, flag = ?, bib_daq_hwid = ? WHERE group_id = ? "
+                    "UPDATE rms_booking_functional_test SET bib_daq_qty = ?, bib_daq_status = ?, bib_daq_upload = ?, remark = ?, final_status = ?, flag = ?, bib_daq_hwid = ? WHERE group_id = ? AND module = ? "
             );
             ps.setString(1, book.getBibDaqQty());
             ps.setString(2, book.getBibDaqStatus());
@@ -172,6 +175,7 @@ public class RmsBookingFunctionalTestDAO {
             ps.setString(6, book.getFlag());
             ps.setString(7, book.getBibDaqHwid());
             ps.setString(8, book.getGroupId());
+            ps.setString(9, book.getModule());
             queryResult.setResult(ps.executeUpdate());
             ps.close();
         } catch (SQLException e) {
@@ -193,7 +197,7 @@ public class RmsBookingFunctionalTestDAO {
         QueryResult queryResult = new QueryResult();
         try {
             PreparedStatement ps = conn.prepareStatement(
-                    "UPDATE rms_booking_functional_test SET ps_qty=?, ps_status=?, ps_upload=?, remark=?, final_status=?, flag=?, ps_hwid=? WHERE group_id=? "
+                    "UPDATE rms_booking_functional_test SET ps_qty=?, ps_status=?, ps_upload=?, remark=?, final_status=?, flag=?, ps_hwid=? WHERE group_id= ? AND module = ? "
             );
             ps.setString(1, book.getPsQty());
             ps.setString(2, book.getPsStatus());
@@ -203,6 +207,7 @@ public class RmsBookingFunctionalTestDAO {
             ps.setString(6, book.getFlag());
             ps.setString(7, book.getPsHwid());
             ps.setString(8, book.getGroupId());
+            ps.setString(9, book.getModule());
             queryResult.setResult(ps.executeUpdate());
             ps.close();
         } catch (SQLException e) {
@@ -224,7 +229,7 @@ public class RmsBookingFunctionalTestDAO {
         QueryResult queryResult = new QueryResult();
         try {
             PreparedStatement ps = conn.prepareStatement(
-                    "UPDATE rms_booking_functional_test SET win_qty=?, win_status=?, win_upload=?, remark=?, final_status=?, flag=?, win_hwid=? WHERE group_id = ? "
+                    "UPDATE rms_booking_functional_test SET win_qty=?, win_status=?, win_upload=?, remark=?, final_status=?, flag=?, win_hwid=? WHERE group_id = ? AND module = ? "
             );
             ps.setString(1, book.getWinQty());
             ps.setString(2, book.getWinStatus());
@@ -234,6 +239,7 @@ public class RmsBookingFunctionalTestDAO {
             ps.setString(6, book.getFlag());
             ps.setString(7, book.getWinHwid());
             ps.setString(8, book.getGroupId());
+            ps.setString(9, book.getModule());
             queryResult.setResult(ps.executeUpdate());
             ps.close();
         } catch (SQLException e) {

@@ -188,7 +188,48 @@ public class ManualTestDAO {
         ManualTest test = null;
         try {
             PreparedStatement ps = conn.prepareStatement(
-                    "INSERT INTO item_manual_test_before_result (mib_item_id, l1_id, l2_id, component_type, component_name, component_value, lower_limit, upper_limit, percentage, status, created_by, created_date, flag) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, NOW(), ?)", Statement.RETURN_GENERATED_KEYS
+                    "INSERT INTO item_manual_test_result (mib_item_id, l1_id, l2_id, component_type, component_name, component_value, lower_limit, upper_limit, percentage, status, created_by, created_date, flag, module) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, NOW(), ?, 'Before Loading')", Statement.RETURN_GENERATED_KEYS
+            );
+            ps.setString(1, itemId);
+            ps.setString(2, qtyId);
+            ps.setString(3, dutId);
+            ps.setString(4, ctype);
+            ps.setString(5, cpntName);
+            ps.setString(6, cpntValue);
+            ps.setString(7, lower);
+            ps.setString(8, upper);
+            ps.setString(9, percentage);
+            ps.setString(10, status);
+            ps.setString(11, user);
+            ps.setString(12, flag);
+            queryResult.setResult(ps.executeUpdate());
+            ResultSet rs = ps.getGeneratedKeys();
+            if (rs.next()) {
+                queryResult.setGeneratedKey(Integer.toString(rs.getInt(1)));
+            }
+            rs.close();
+            ps.close();
+        } catch (SQLException e) {
+            LOGGER.error(e.getMessage());
+        } finally {
+            if (conn != null) {
+                try {
+                    conn.close();
+                } catch (SQLException e) {
+                    LOGGER.error(e.getMessage());
+                }
+            }
+        }
+        return queryResult;
+    }
+    
+    public QueryResult insertManualUnloading(String itemId, String qtyId, String dutId, String ctype, String cpntName, String cpntValue, String lower, String upper, String percentage, String status, String user, String flag) {
+        QueryResult queryResult = new QueryResult();
+        String sql = "";
+        ManualTest test = null;
+        try {
+            PreparedStatement ps = conn.prepareStatement(
+                    "INSERT INTO item_manual_test_result (mib_item_id, l1_id, l2_id, component_type, component_name, component_value, lower_limit, upper_limit, percentage, status, created_by, created_date, flag, module) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, NOW(), ?, 'Unloading')", Statement.RETURN_GENERATED_KEYS
             );
             ps.setString(1, itemId);
             ps.setString(2, qtyId);
@@ -233,16 +274,6 @@ public class ManualTestDAO {
             while (rs.next()) {
                 manualtest = new ManualTest();
                 manualtest.setId(rs.getString("id"));
-//                itemactivityConfig.setMibItemId(rs.getString("mib_item_id"));
-//                itemactivityConfig.setVi(rs.getString("vi"));
-//                itemactivityConfig.setBibTest(rs.getString("bib_test"));
-//                itemactivityConfig.setManualTest(rs.getString("manual_test"));
-//                itemactivityConfig.setLeakageTest(rs.getString("leakage_test"));
-//                itemactivityConfig.setPsLeakageTest(rs.getString("ps_leakage_test"));
-//                itemactivityConfig.setCreatedBy(rs.getString("created_by"));
-//                itemactivityConfig.setCreatedDate(rs.getString("created_date"));
-//                itemactivityConfig.setStatus(rs.getString("status"));
-//                itemactivityConfig.setFlag(rs.getString("flag"));
                 manualList.add(manualtest);
             }
             rs.close();
@@ -297,7 +328,6 @@ public class ManualTestDAO {
             PreparedStatement ps = conn.prepareStatement(
                     "UPDATE item_manual_test SET config_id = ? WHERE id = ?"
             );
-//            ps.setString(1, itemactivityConfig.getMibItemId());
             ps.setString(1, configId);
             ps.setString(2, manualId);
             queryResult.setResult(ps.executeUpdate());
@@ -424,7 +454,6 @@ public class ManualTestDAO {
                 count = rs.getInt("count");
             }
             rs.close();
-
             ps.close();
         } catch (SQLException e) {
             LOGGER.error(e.getMessage());
@@ -451,7 +480,6 @@ public class ManualTestDAO {
                 count = rs.getInt("count");
             }
             rs.close();
-
             ps.close();
         } catch (SQLException e) {
             LOGGER.error(e.getMessage());
@@ -502,7 +530,7 @@ public class ManualTestDAO {
     }
     
     public List<ManualTest> getAllComponentConfigBeforeLoading(String mibItemId) {
-        String sql = "SELECT * FROM item_manual_test_before_result WHERE mib_item_id = '" + mibItemId + "' AND flag = '1' GROUP BY component_name ";
+        String sql = "SELECT * FROM item_manual_test_result WHERE mib_item_id = '" + mibItemId + "' AND flag = '1' AND module = 'Before Loading' GROUP BY component_name ";
         List<ManualTest> manualList = new ArrayList<ManualTest>();
         try {
             PreparedStatement ps = conn.prepareStatement(sql);
@@ -539,7 +567,7 @@ public class ManualTestDAO {
         QueryResult queryResult = new QueryResult();
         try {
             PreparedStatement ps = conn.prepareStatement(
-                    "INSERT INTO item_manual_test_before (mib_item_id, config_id, qty, dut, component, created_by, created_date, flag) VALUES (?, ?, ?, ?, ?, ?, NOW(), ?)", Statement.RETURN_GENERATED_KEYS
+                    "INSERT INTO item_manual_test_prod (mib_item_id, config_id, qty, dut, component, created_by, created_date, flag, module) VALUES (?, ?, ?, ?, ?, ?, NOW(), ?, 'Before Loading')", Statement.RETURN_GENERATED_KEYS
             );
             ps.setString(1, itemId);
             ps.setString(2, configId);
@@ -573,7 +601,7 @@ public class ManualTestDAO {
         QueryResult queryResult = new QueryResult();
         try {
             PreparedStatement ps = conn.prepareStatement(
-                    "INSERT INTO item_manual_test_before_sub (mib_item_id, pk_id, dut, comp_type, comp_name, comp_value, percentage, lower, upper, created_by, created_date, flag) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, NOW(), ?)", Statement.RETURN_GENERATED_KEYS
+                    "INSERT INTO item_manual_test_sub (mib_item_id, pk_id, dut, comp_type, comp_name, comp_value, percentage, lower, upper, created_by, created_date, flag) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, NOW(), ?)", Statement.RETURN_GENERATED_KEYS
             );
             ps.setString(1, itemId);
             ps.setString(2, pkId);
@@ -611,7 +639,7 @@ public class ManualTestDAO {
         QueryResult queryResult = new QueryResult();
         try {
             PreparedStatement ps = conn.prepareStatement(
-                    "INSERT INTO item_manual_test_after (mib_item_id, qty, dut, component, created_by, created_date, flag) VALUES (?, ?, ?, ?, ?, NOW(), ?)", Statement.RETURN_GENERATED_KEYS
+                    "INSERT INTO item_manual_test_prod (mib_item_id, qty, dut, component, created_by, created_date, flag, module) VALUES (?, ?, ?, ?, ?, NOW(), ?, 'Unloading')", Statement.RETURN_GENERATED_KEYS
             );
             ps.setString(1, itemId);
             ps.setString(2, qty);
@@ -644,7 +672,7 @@ public class ManualTestDAO {
         QueryResult queryResult = new QueryResult();
         try {
             PreparedStatement ps = conn.prepareStatement(
-                    "INSERT INTO item_manual_test_after_sub (mib_item_id, pk_id, dut, comp_name, comp_value, percentage, lower, upper, created_by, created_date, flag) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, NOW(), ?)", Statement.RETURN_GENERATED_KEYS
+                    "INSERT INTO item_manual_test_sub (mib_item_id, pk_id, dut, comp_name, comp_value, percentage, lower, upper, created_by, created_date, flag) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, NOW(), ?)", Statement.RETURN_GENERATED_KEYS
             );
             ps.setString(1, itemId);
             ps.setString(2, pkId);
@@ -678,7 +706,7 @@ public class ManualTestDAO {
     }
 
     public ManualTest getComponentConfigBefore(String configId) {
-        String sql = "SELECT * FROM item_manual_test_before WHERE config_id = '" + configId + "'";
+        String sql = "SELECT * FROM item_manual_test_prod WHERE config_id = '" + configId + "' AND module = 'Before Loading' ";
         ManualTest manual = null;
         try {
             PreparedStatement ps = conn.prepareStatement(sql);
@@ -708,7 +736,7 @@ public class ManualTestDAO {
     }
 
     public ManualTest getComponentConfigBeforeByItemId(String configId) {
-        String sql = "SELECT * FROM item_manual_test_before WHERE mib_item_id = '" + configId + "'";
+        String sql = "SELECT * FROM item_manual_test_prod WHERE mib_item_id = '" + configId + "' AND module = 'Before Loading' ";
         ManualTest manual = null;
         try {
             PreparedStatement ps = conn.prepareStatement(sql);
@@ -742,7 +770,7 @@ public class ManualTestDAO {
         QueryResult queryResult = new QueryResult();
         try {
             PreparedStatement ps = conn.prepareStatement(
-                    "UPDATE item_manual_test_before SET config_id = ? WHERE id = ?"
+                    "UPDATE item_manual_test_prod SET config_id = ? WHERE id = ? AND module = 'Before Loading' "
             );
             ps.setString(1, configId);
             ps.setString(2, manualId);
@@ -764,7 +792,7 @@ public class ManualTestDAO {
     }
 
     public List<ManualTest> getAllComponentConfigBefore(String mibItemId) {
-        String sql = "SELECT * FROM item_manual_test_before_sub WHERE mib_item_id = '" + mibItemId + "' AND flag = '1' ";
+        String sql = "SELECT * FROM item_manual_test_sub WHERE mib_item_id = '" + mibItemId + "' AND flag = '1' ";
         List<ManualTest> manualList = new ArrayList<ManualTest>();
         try {
             PreparedStatement ps = conn.prepareStatement(sql);
@@ -801,7 +829,33 @@ public class ManualTestDAO {
         Integer count = 0;
         try {
             PreparedStatement ps = conn.prepareStatement(
-                    "SELECT COUNT(*) AS count FROM item_manual_test_before WHERE mib_item_id = '" + mibItemId + "'"
+                    "SELECT COUNT(*) AS count FROM item_manual_test_prod WHERE mib_item_id = '" + mibItemId + "' AND module = 'Before Loading' "
+            );
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                count = rs.getInt("count");
+            }
+            rs.close();
+            ps.close();
+        } catch (SQLException e) {
+            LOGGER.error(e.getMessage());
+        } finally {
+            if (conn != null) {
+                try {
+                    conn.close();
+                } catch (SQLException e) {
+                    LOGGER.error(e.getMessage());
+                }
+            }
+        }
+        return count;
+    }
+
+    public Integer getManualTestCurrentRecordUnloading(String mibItemId) {
+        Integer count = 0;
+        try {
+            PreparedStatement ps = conn.prepareStatement(
+                    "SELECT COUNT(*) AS count FROM item_manual_test_prod WHERE mib_item_id = '" + mibItemId + "' AND module = 'Unloading' "
             );
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
@@ -827,14 +881,39 @@ public class ManualTestDAO {
         Integer count = 0;
         try {
             PreparedStatement ps = conn.prepareStatement(
-                    "SELECT id FROM item_manual_test_before WHERE mib_item_id = '" + mibItemId + "'"
+                    "SELECT id FROM item_manual_test_prod WHERE mib_item_id = '" + mibItemId + "' AND module = 'Before Loading' "
             );
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
                 count = rs.getInt("id");
             }
             rs.close();
-
+            ps.close();
+        } catch (SQLException e) {
+            LOGGER.error(e.getMessage());
+        } finally {
+            if (conn != null) {
+                try {
+                    conn.close();
+                } catch (SQLException e) {
+                    LOGGER.error(e.getMessage());
+                }
+            }
+        }
+        return count;
+    }
+    
+    public Integer getConfigIdByItemIdUnloading(String mibItemId) {
+        Integer count = 0;
+        try {
+            PreparedStatement ps = conn.prepareStatement(
+                    "SELECT id FROM item_manual_test_prod WHERE mib_item_id = '" + mibItemId + "' AND module = 'Unloading' "
+            );
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                count = rs.getInt("id");
+            }
+            rs.close();
             ps.close();
         } catch (SQLException e) {
             LOGGER.error(e.getMessage());
@@ -854,14 +933,13 @@ public class ManualTestDAO {
         Integer count = 0;
         try {
             PreparedStatement ps = conn.prepareStatement(
-                    "SELECT COUNT(*) AS count FROM item_manual_test_before_sub WHERE mib_item_id = '" + mibItemId + "'"
+                    "SELECT COUNT(*) AS count FROM item_manual_test_sub WHERE mib_item_id = '" + mibItemId + "'"
             );
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
                 count = rs.getInt("count");
             }
             rs.close();
-
             ps.close();
         } catch (SQLException e) {
             LOGGER.error(e.getMessage());
@@ -881,7 +959,7 @@ public class ManualTestDAO {
         QueryResult queryResult = new QueryResult();
         try {
             PreparedStatement ps = conn.prepareStatement(
-                    "UPDATE item_manual_test_before SET qty = ?, dut = ?, component = ? WHERE id = ?"
+                    "UPDATE item_manual_test_prod SET qty = ?, dut = ?, component = ? WHERE id = ?"
             );
             ps.setString(1, qty);
             ps.setString(2, dut);
@@ -906,7 +984,7 @@ public class ManualTestDAO {
     
     public QueryResult removeCurrentDataBefore(String configId, String itemId) {
         QueryResult queryResult = new QueryResult();
-        String sql = "UPDATE item_manual_test_before_sub SET flag = '0' WHERE mib_item_id = '"+itemId+"' AND pk_id = '"+configId+"' ";
+        String sql = "UPDATE item_manual_test_sub SET flag = '0' WHERE mib_item_id = '"+itemId+"' AND pk_id = '"+configId+"' ";
         try {
             PreparedStatement ps = conn.prepareStatement(sql);
             queryResult.setResult(ps.executeUpdate());
@@ -930,14 +1008,39 @@ public class ManualTestDAO {
         Integer count = 0;
         try {
             PreparedStatement ps = conn.prepareStatement(
-                    "SELECT qty FROM item_manual_test_before WHERE mib_item_id = '" + mibItemId + "'"
+                    "SELECT qty FROM item_manual_test_prod WHERE mib_item_id = '" + mibItemId + "' AND module = 'Before Loading' "
             );
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
                 count = rs.getInt("count");
             }
             rs.close();
-
+            ps.close();
+        } catch (SQLException e) {
+            LOGGER.error(e.getMessage());
+        } finally {
+            if (conn != null) {
+                try {
+                    conn.close();
+                } catch (SQLException e) {
+                    LOGGER.error(e.getMessage());
+                }
+            }
+        }
+        return count;
+    }
+    
+    public Integer getQuantityUnloading(String mibItemId) {
+        Integer count = 0;
+        try {
+            PreparedStatement ps = conn.prepareStatement(
+                    "SELECT qty FROM item_manual_test_prod WHERE mib_item_id = '" + mibItemId + "' AND module = 'Unloading' "
+            );
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                count = rs.getInt("count");
+            }
+            rs.close();
             ps.close();
         } catch (SQLException e) {
             LOGGER.error(e.getMessage());

@@ -58,7 +58,7 @@
                 box-shadow: none;
             }
             .form-group.required .form-label:after {
-                content:"*";
+                content:" *";
                 color:red;
             }
             .img3 {
@@ -1705,7 +1705,7 @@
                                                                                         <form class="row gx-3 align-items-end" role="form" action="${contextPath}/rmsbookingDetailUnloading/ftest/save/leakTest" method="post" enctype="multipart/form-data" novalidate>
                                                                                             <input type="hidden" class="form-control" id="bookId" name="bookId" value="${bookId}">
                                                                                             <input type="hidden" class="form-control" id="motherboardId" name="motherboardId" value="${mibItemId}">
-                                                                                            <div class="col-xl-1 col-sm-12">
+                                                                                            <div class="form-group required col-xl-1 col-sm-12">
                                                                                                 <div class="mb-3">
                                                                                                     <label for="quantity" class="form-label">Quantity</label>
                                                                                                     <div class="input input-group">
@@ -1791,7 +1791,7 @@
                                                                                                 <div class="col-sm-3">
                                                                                                 </div>
                                                                                                 <div class="col-sm-1">
-                                                                                                    <label>Quantity</label>
+                                                                                                    <label>Quantity <span style="color:red;">*</span></label>
                                                                                                     <c:choose>
                                                                                                         <c:when test="${not empty testResult.manualQty}">
                                                                                                             <div class="input input-group">
@@ -1832,7 +1832,7 @@
                                                                                         <form class="row gx-3 align-items-end" role="form" action="${contextPath}/rmsbookingDetailUnloading/ftest/save/bibTest" method="post" enctype="multipart/form-data" novalidate>
                                                                                             <input type="hidden" class="form-control" id="bookId" name="bookId" value="${bookId}">
                                                                                             <input type="hidden" class="form-control" id="motherboardId" name="motherboardId" value="${mibItemId}">
-                                                                                            <div class="col-xl-1 col-sm-12">
+                                                                                            <div class="form-group required col-xl-1 col-sm-12">
                                                                                                 <div class="mb-3">
                                                                                                     <label for="quantity" class="form-label">Quantity</label>
                                                                                                     <div class="input input-group">
@@ -1902,7 +1902,7 @@
                                                                                         <form class="row gx-3 align-items-end" role="form" action="${contextPath}/rmsbookingDetailUnloading/ftest/save/bibDaqTest" method="post" enctype="multipart/form-data" novalidate>
                                                                                             <input type="hidden" class="form-control" id="bookId" name="bookId" value="${bookId}">
                                                                                             <input type="hidden" class="form-control" id="motherboardId" name="motherboardId" value="${mibItemId}">
-                                                                                            <div class="col-xl-1 col-sm-12">
+                                                                                            <div class="form-group required col-xl-1 col-sm-12">
                                                                                                 <div class="mb-3">
                                                                                                     <label for="quantity" class="form-label">Quantity</label>
                                                                                                     <div class="input input-group">
@@ -1975,7 +1975,7 @@
                                                                                         <form class="row gx-3 align-items-end" role="form" action="${contextPath}/rmsbookingDetailUnloading/ftest/save/psTest" method="post" enctype="multipart/form-data" novalidate>
                                                                                             <input type="hidden" class="form-control" id="bookId" name="bookId" value="${bookId}">
                                                                                             <input type="hidden" class="form-control" id="motherboardId" name="motherboardId" value="${mibItemId}">
-                                                                                            <div class="col-xl-1 col-sm-12 col-12">
+                                                                                            <div class="form-group required col-xl-1 col-sm-12 col-12">
                                                                                                 <div class="mb-3">
                                                                                                     <label for="quantity" class="form-label">Quantity</label>
                                                                                                     <div class="input input-group">
@@ -2049,7 +2049,7 @@
                                                                                         <form class="row gx-3 align-items-end" role="form" action="${contextPath}/rmsbookingDetailUnloading/ftest/save/winTest" method="post" enctype="multipart/form-data" novalidate>
                                                                                             <input type="hidden" class="form-control" id="bookId" name="bookId" value="${bookId}">
                                                                                             <input type="hidden" class="form-control" id="motherboardId" name="motherboardId" value="${mibItemId}">
-                                                                                            <div class="col-xl-1 col-sm-12">
+                                                                                            <div class="form-group required col-xl-1 col-sm-12">
                                                                                                 <div class="mb-3">
                                                                                                     <label for="quantity" class="form-label">Quantity</label>
                                                                                                     <div class="input input-group">

@@ -1942,9 +1942,9 @@ public class RmsBookingDetailUnloadingController {
                 RmsBookingHardwareDAO booking = new RmsBookingHardwareDAO();
                 if (newStatus.equalsIgnoreCase("Closed")) {
                     bookHardware.setFlag("3");
-                    booking.updateRmsBookingHardwareUnloading(bookHardware);
+                    booking.updateRmsBookingHardwareStatus(bookHardware);
                 } else {
-                    booking.updateRmsBookingHardwareUnloadingLoop(bookHardware);
+                    booking.updateRmsBookingHardwareStatus(bookHardware);
                 }
                 logStatus = "Unloading - FT - Leakage Test - Passed";
             }
@@ -1957,6 +1957,7 @@ public class RmsBookingDetailUnloadingController {
             ftest.setRemark("");
             ftest.setFlag("0");
             ftest.setGroupId(groupId);
+            ftest.setModule("Unloading");
             RmsBookingFunctionalTestDAO ftestdao = new RmsBookingFunctionalTestDAO();
             ftestdao.updateLeakageTest(ftest);
         } else if (jenis.equals("manTest")) {
@@ -1999,9 +2000,9 @@ public class RmsBookingDetailUnloadingController {
                 RmsBookingHardwareDAO booking = new RmsBookingHardwareDAO();
                 if (newStatus.equalsIgnoreCase("Closed")) {
                     bookHardware.setFlag("3");
-                    booking.updateRmsBookingHardwareUnloading(bookHardware);
+                    booking.updateRmsBookingHardwareStatus(bookHardware);
                 } else {
-                    booking.updateRmsBookingHardwareUnloadingLoop(bookHardware);
+                    booking.updateRmsBookingHardwareStatus(bookHardware);
                 }
                 logStatus = "Unloading - FT - BIB Test - Passed";
             }
@@ -2014,6 +2015,7 @@ public class RmsBookingDetailUnloadingController {
             ftest.setRemark("");
             ftest.setFlag("0");
             ftest.setGroupId(groupId);
+            ftest.setModule("Unloading");
             RmsBookingFunctionalTestDAO ftestdao = new RmsBookingFunctionalTestDAO();
             ftestdao.updateBibTest(ftest);
         } else if (jenis.equals("bibDaqTest")) {
@@ -2052,9 +2054,9 @@ public class RmsBookingDetailUnloadingController {
                 RmsBookingHardwareDAO booking = new RmsBookingHardwareDAO();
                 if (newStatus.equalsIgnoreCase("Closed")) {
                     bookHardware.setFlag("3");
-                    booking.updateRmsBookingHardwareUnloading(bookHardware);
+                    booking.updateRmsBookingHardwareStatus(bookHardware);
                 } else {
-                    booking.updateRmsBookingHardwareUnloadingLoop(bookHardware);
+                    booking.updateRmsBookingHardwareStatus(bookHardware);
                 }
                 logStatus = "Unloading - FT - BIB DAQ Test - Passed";
             }
@@ -2067,6 +2069,7 @@ public class RmsBookingDetailUnloadingController {
             ftest.setRemark("");
             ftest.setFlag("0");
             ftest.setGroupId(groupId);
+            ftest.setModule("Unloading");
             RmsBookingFunctionalTestDAO ftestdao = new RmsBookingFunctionalTestDAO();
             ftestdao.updateBibDaqTest(ftest);
         } else if (jenis.equals("psTest")) {
@@ -2102,9 +2105,9 @@ public class RmsBookingDetailUnloadingController {
                 RmsBookingHardwareDAO booking = new RmsBookingHardwareDAO();
                 if (newStatus.equalsIgnoreCase("Closed")) {
                     bookHardware.setFlag("3");
-                    booking.updateRmsBookingHardwareUnloading(bookHardware);
+                    booking.updateRmsBookingHardwareStatus(bookHardware);
                 } else {
-                    booking.updateRmsBookingHardwareUnloadingLoop(bookHardware);
+                    booking.updateRmsBookingHardwareStatus(bookHardware);
                 }
                 logStatus = "Unloading - FT - Power Supply Leakage Test - Passed";
             }
@@ -2117,6 +2120,7 @@ public class RmsBookingDetailUnloadingController {
             ftest.setRemark("");
             ftest.setFlag("0");
             ftest.setGroupId(groupId);
+            ftest.setModule("Unloading");
             RmsBookingFunctionalTestDAO ftestdao = new RmsBookingFunctionalTestDAO();
             ftestdao.updatePowerTest(ftest);
         } else if (jenis.equals("winTest")) {
@@ -2150,9 +2154,9 @@ public class RmsBookingDetailUnloadingController {
                 RmsBookingHardwareDAO booking = new RmsBookingHardwareDAO();
                 if (newStatus.equalsIgnoreCase("Closed")) {
                     bookHardware.setFlag("3");
-                    booking.updateRmsBookingHardwareUnloading(bookHardware);
+                    booking.updateRmsBookingHardwareStatus(bookHardware);
                 } else {
-                    booking.updateRmsBookingHardwareUnloadingLoop(bookHardware);
+                    booking.updateRmsBookingHardwareStatus(bookHardware);
                 }
                 logStatus = "Unloading - FT - Winchester Chamber Leakage Test - Passed";
             }
@@ -2165,6 +2169,7 @@ public class RmsBookingDetailUnloadingController {
             ftest.setRemark("");
             ftest.setFlag("0");
             ftest.setGroupId(groupId);
+            ftest.setModule("Unloading");
             RmsBookingFunctionalTestDAO ftestdao = new RmsBookingFunctionalTestDAO();
             ftestdao.updateWinchesterTest(ftest);
         } else {
@@ -2174,11 +2179,18 @@ public class RmsBookingDetailUnloadingController {
         // FUNCTION TO CHECK IF THE FUNCTIONAL TEST IS COMPLETED - START
         if (newStatus == goReady) {
             if (event == "HAST") {
-
+                newStatus = "Pending Release Or Return";
+                
+                RmsBookingHardwareGroup rmsgroup = new RmsBookingHardwareGroup();
+                rmsgroup.setStatus(newStatus);
+                rmsgroup.setGroupId(groupId);
+                rmsgroup.setFlag("2");
+                
+                RmsBookingHardwareGroupDAO groupD = new RmsBookingHardwareGroupDAO();
+                groupD.updateRmsBookingHardwareGroupFlagAndStatusByGroupId(rmsgroup);
             } else {
                 // RIGHT NOW HARDCODE - PLEASE UPDATE LATER
                 String sptsStatus = "Good";
-
                 RmsBookingHardwareGroupDAO groupD = new RmsBookingHardwareGroupDAO();
                 groupD.updateGroupStatusToClosed(newStatus, sptsStatus, groupId);
             }
@@ -2232,12 +2244,12 @@ public class RmsBookingDetailUnloadingController {
         if (event.equalsIgnoreCase("HAST")) {
             // IF BELUM COMPLETE
             if (latestStatus.contains("Complete Final SI")) {
-                rmsdao.updateRmsBookingHardwareUnloading(rmsbook);
+                rmsdao.updateRmsBookingHardwareStatus(rmsbook);
             } else {
-                rmsdao.updateRmsBookingHardwareUnloadingLoop(rmsbook);
+                rmsdao.updateRmsBookingHardwareStatus(rmsbook);
             }
         } else {
-            rmsdao.updateRmsBookingHardwareUnloading(rmsbook);
+            rmsdao.updateRmsBookingHardwareStatus(rmsbook);
         }
         // UPDATE DATA rms_booking_hardware - END
 

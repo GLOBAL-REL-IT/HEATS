@@ -1311,7 +1311,6 @@ public class RmsBookingDetailController {
                 currentStatus = "Pending Release to Production";
             }
         } else {
-            // DO NOTHING HERE
             if (currentStatus.equals("Pending HW Registration")) {
                 model.addAttribute("configMotherboard", "HW");
                 model.addAttribute("message", "Please Complete Hardware Registration First");
@@ -1448,7 +1447,7 @@ public class RmsBookingDetailController {
                 model.addAttribute("editpsbutton", edit05);
                 model.addAttribute("editwinbutton", edit06);
             } else {
-
+                LOGGER.info("TAKKAN MASUK SINI WEA");
             }
         }
 
@@ -3008,6 +3007,8 @@ public class RmsBookingDetailController {
             @RequestParam(required = false) String winHardware,
             HttpServletResponse response
     ) throws IOException {
+        
+        LOGGER.info("ahoi >>> "+jenis);
 
         String gotoMn = "Pending Functional Test - Manual Test";
         String gotoBib = "Pending Functional Test - BIB Test";
@@ -3137,7 +3138,7 @@ public class RmsBookingDetailController {
                 bookHardware.setFlag("1");
                 RmsBookingHardwareDAO booking = new RmsBookingHardwareDAO();
 //                booking.updateRmsBookingHardwareSubStatusByPkidAndBookingPkid(bookHardware);
-                booking.updateRmsBookingHardwareLoading(bookHardware);
+                booking.updateRmsBookingHardwareStatus(bookHardware);
                 logStatus = "Loading - FT - Leakage Test - Passed";
             }
             RmsBookingFunctionalTest ftest = new RmsBookingFunctionalTest();
@@ -3149,6 +3150,7 @@ public class RmsBookingDetailController {
             ftest.setRemark("");
             ftest.setFlag("0");
             ftest.setGroupId(groupId);
+            ftest.setModule("Before Loading");
             RmsBookingFunctionalTestDAO ftestdao = new RmsBookingFunctionalTestDAO();
             ftestdao.updateLeakageTest(ftest);
         } else if (jenis.equals("manTest")) {
@@ -3191,7 +3193,7 @@ public class RmsBookingDetailController {
                 bookHardware.setFlag("1");
                 RmsBookingHardwareDAO booking = new RmsBookingHardwareDAO();
 //                booking.updateRmsBookingHardwareSubStatusByPkidAndBookingPkid(bookHardware);
-                booking.updateRmsBookingHardwareLoading(bookHardware);
+                booking.updateRmsBookingHardwareStatus(bookHardware);
                 logStatus = "Loading - FT - BIB Test - Passed";
             }
             RmsBookingFunctionalTest ftest = new RmsBookingFunctionalTest();
@@ -3203,6 +3205,7 @@ public class RmsBookingDetailController {
             ftest.setRemark("");
             ftest.setFlag("0");
             ftest.setGroupId(groupId);
+            ftest.setModule("Before Loading");
             RmsBookingFunctionalTestDAO ftestdao = new RmsBookingFunctionalTestDAO();
             ftestdao.updateBibTest(ftest);
         } else if (jenis.equals("bibDaqTest")) {
@@ -3241,7 +3244,7 @@ public class RmsBookingDetailController {
                 bookHardware.setFlag("1");
                 RmsBookingHardwareDAO booking = new RmsBookingHardwareDAO();
 //                booking.updateRmsBookingHardwareSubStatusByPkidAndBookingPkid(bookHardware);
-                booking.updateRmsBookingHardwareLoading(bookHardware);
+                booking.updateRmsBookingHardwareStatus(bookHardware);
                 logStatus = "Loading - FT - BIB DAQ Test - Passed";
             }
             RmsBookingFunctionalTest ftest = new RmsBookingFunctionalTest();
@@ -3253,6 +3256,7 @@ public class RmsBookingDetailController {
             ftest.setRemark("");
             ftest.setFlag("0");
             ftest.setGroupId(groupId);
+            ftest.setModule("Before Loading");
             RmsBookingFunctionalTestDAO ftestdao = new RmsBookingFunctionalTestDAO();
             ftestdao.updateBibDaqTest(ftest);
         } else if (jenis.equals("psTest")) {
@@ -3288,7 +3292,7 @@ public class RmsBookingDetailController {
                 bookHardware.setFlag("1");
                 RmsBookingHardwareDAO booking = new RmsBookingHardwareDAO();
 //                booking.updateRmsBookingHardwareSubStatusByPkidAndBookingPkid(bookHardware);
-                booking.updateRmsBookingHardwareLoading(bookHardware);
+                booking.updateRmsBookingHardwareStatus(bookHardware);
                 logStatus = "Loading - FT - Power Supply Leakage Test - Passed";
             }
             RmsBookingFunctionalTest ftest = new RmsBookingFunctionalTest();
@@ -3300,6 +3304,7 @@ public class RmsBookingDetailController {
             ftest.setRemark("");
             ftest.setFlag("0");
             ftest.setGroupId(groupId);
+            ftest.setModule("Before Loading");
             RmsBookingFunctionalTestDAO ftestdao = new RmsBookingFunctionalTestDAO();
             ftestdao.updatePowerTest(ftest);
         } else if (jenis.equals("winTest")) {
@@ -3333,7 +3338,7 @@ public class RmsBookingDetailController {
                 bookHardware.setFlag("1");
                 RmsBookingHardwareDAO booking = new RmsBookingHardwareDAO();
 //                booking.updateRmsBookingHardwareSubStatusByPkidAndBookingPkid(bookHardware);
-                booking.updateRmsBookingHardwareLoading(bookHardware);
+                booking.updateRmsBookingHardwareStatus(bookHardware);
                 logStatus = "Loading - FT - Winchester Chamber Leakage Test - Passed";
             }
             RmsBookingFunctionalTest ftest = new RmsBookingFunctionalTest();
@@ -3345,6 +3350,7 @@ public class RmsBookingDetailController {
             ftest.setRemark("");
             ftest.setFlag("0");
             ftest.setGroupId(groupId);
+            ftest.setModule("Before Loading");
             RmsBookingFunctionalTestDAO ftestdao = new RmsBookingFunctionalTestDAO();
             ftestdao.updateWinchesterTest(ftest);
         } else {
@@ -6668,8 +6674,8 @@ public class RmsBookingDetailController {
         String path = "";
 
         // SINI KITA HARDCODE UNTUK PERGI KE PHP PROUJECT LINK FOR HEATS
-//        String link = "http://zbqb9x-7jwwld4:86/Tutorial/sample-heat/manual_test_before_loading.php?id=" + lcItemId + "&groupId=" + groupId;
-        String link = "https://mysed-rel-app05/HEATS-mini/manual_test_before_loading.php?id=" + lcItemId + "&groupId=" + groupId;
+        String link = "http://zbqb9x-7jwwld4:86/Tutorial/sample-heat/manual_test_before_loading.php?id=" + lcItemId + "&groupId=" + groupId;
+//        String link = "https://mysed-rel-app05/HEATS-mini/manual_test_before_loading.php?id=" + lcItemId + "&groupId=" + groupId;
         model.addAttribute("link", link);
 
         ManualTestDAO testdao = new ManualTestDAO();
@@ -6855,7 +6861,7 @@ public class RmsBookingDetailController {
         bookHardware.setFlag("-1");
         RmsBookingHardwareDAO booking = new RmsBookingHardwareDAO();
 //        booking.updateRmsBookingHardwareSubStatusByPkidAndBookingPkid(bookHardware);
-        booking.updateRmsBookingHardwareLoading(bookHardware);
+        booking.updateRmsBookingHardwareStatus(bookHardware);
         // UPDATE SUB STATUS rms_booking_hardware END
 
         // UPDATE STATUS FOR EACH HARDWARE ID IN rms_booking_hardware_group START
