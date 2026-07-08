@@ -1323,8 +1323,10 @@ public class AdminController {
                 int saizDut = Integer.parseInt(inputDUT);
                 String user = userSession.getLoginId();
 
-                ItemActivityConfigDAO itemactdao = new ItemActivityConfigDAO();
-                String itemId = itemactdao.getItemIdByConfigId(mibItemId);
+                // ASSIGN IT USING THE MIB ITEM ID SINCE CREATE A NEW
+//                ItemActivityConfigDAO itemactdao = new ItemActivityConfigDAO();
+//                String itemId = itemactdao.getItemIdByConfigId(mibItemId);
+                String itemId = mibItemId;
 
                 ManualTestDAO test = new ManualTestDAO();
                 Integer check1 = test.getManualTestCurrentRecord(itemId);
@@ -1349,7 +1351,7 @@ public class AdminController {
                     LOGGER.info("hihihihihihihihihihihihihih");
                     test = new ManualTestDAO();
                     String configId = test.getConfigIdByItemId(itemId).toString();
-
+                    
                     if ("0".equals(configId)) {
                         test = new ManualTestDAO();
                         QueryResult q0 = test.insertManualTestBeforeLoading(itemId, itemQ.getGeneratedKey(), String.valueOf(inputQuantity), inputDUT, String.valueOf(saiz), user, flag);
