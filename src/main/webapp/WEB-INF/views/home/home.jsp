@@ -275,7 +275,7 @@
                                     <td><c:out value="${parameterMaster.lcQty}"/></td>
                                     <td><c:out value="${parameterMaster.pcQty}"/></td>
                                     <td><c:out value="${parameterMaster.releasedDate}"/></td>
-                                    <td><c:out value="${parameterMaster.releaseBy}"/></td>
+                                    <td><c:out value="${parameterMaster.releasedBy}"/></td>
                                     <td><c:out value="${parameterMaster.status}"/></td>
                                     <td align="center">
                                         <a href="${contextPath}/rmsbookingDetail/rmsReleasedSingle/groupDetail/${parameterMaster.bookingPkid}/${parameterMaster.bookingHwPkid}" class="table-link" title="Manage">
