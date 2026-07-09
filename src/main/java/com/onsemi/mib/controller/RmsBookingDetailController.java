@@ -4994,23 +4994,23 @@ public class RmsBookingDetailController {
         model.addAttribute("winCheck", winTest);
 
         ParameterDetailsDAO pDx = new ParameterDetailsDAO();
-        List<ParameterDetails> bibResultData = pDx.getGroupParameterDetailList("", "016");
+        List<ParameterDetails> bibResultData = pDx.getGroupParameterDetailList(statusBib, "016");
         model.addAttribute("bibResultData", bibResultData);
 
         pDx = new ParameterDetailsDAO();
-        List<ParameterDetails> bibDaqResultData = pDx.getGroupParameterDetailList("", "016");
+        List<ParameterDetails> bibDaqResultData = pDx.getGroupParameterDetailList(statusBibD, "016");
         model.addAttribute("bibDaqResultData", bibDaqResultData);
 
         pDx = new ParameterDetailsDAO();
-        List<ParameterDetails> leakResultData = pDx.getGroupParameterDetailList("", "016");
+        List<ParameterDetails> leakResultData = pDx.getGroupParameterDetailList(statusLeak, "016");
         model.addAttribute("leakResultData", leakResultData);
 
         pDx = new ParameterDetailsDAO();
-        List<ParameterDetails> psResultData = pDx.getGroupParameterDetailList("", "016");
+        List<ParameterDetails> psResultData = pDx.getGroupParameterDetailList(statusPs, "016");
         model.addAttribute("psResultData", psResultData);
 
         pDx = new ParameterDetailsDAO();
-        List<ParameterDetails> winResultData = pDx.getGroupParameterDetailList("", "016");
+        List<ParameterDetails> winResultData = pDx.getGroupParameterDetailList(statusWin, "016");
         model.addAttribute("winResultData", winResultData);
 
         //vm tab
@@ -6832,8 +6832,8 @@ public class RmsBookingDetailController {
         String path = "";
 
         // SINI KITA HARDCODE UNTUK PERGI KE PHP PROUJECT LINK FOR HEATS
-        String link = "http://zbqb9x-7jwwld4:86/Tutorial/sample-heat/manual_test_before_loading.php?id=" + lcItemId + "&groupId=" + groupId;
-//        String link = "https://mysed-rel-app05/HEATS-mini/manual_test_before_loading.php?id=" + lcItemId + "&groupId=" + groupId;
+//        String link = "http://zbqb9x-7jwwld4:86/HEATS-mini/manual_test_before_loading.php?id=" + lcItemId + "&groupId=" + groupId;
+        String link = "https://mysed-rel-app05/HEATS-mini/manual_test_before_loading.php?id=" + lcItemId + "&groupId=" + groupId;
         model.addAttribute("link", link);
 
         ManualTestDAO testdao = new ManualTestDAO();
@@ -6877,6 +6877,18 @@ public class RmsBookingDetailController {
             } else {
                 // WHAT NEED TO BE DONE HERE? SINCE THERE ALREADY DATA, WE SKIP INSERTING A NEW ONE
             }
+            // UPDATE RMS BOOKING FUNCTIONAL TEST - MANUAL TEST RESULT - START
+            RmsBookingFunctionalTest rmstest = new RmsBookingFunctionalTest();
+            rmstest.setManualStatus("In Progress");
+            rmstest.setManualQty(totalQty);
+            rmstest.setRemark(" ");
+            rmstest.setFinalStatus("Pending Functional Test - Manual Test");
+            rmstest.setFlag("0");
+            rmstest.setGroupId(groupId);
+            rmstest.setModule("Before Loading");
+            RmsBookingFunctionalTestDAO ftdao = new RmsBookingFunctionalTestDAO();
+            ftdao.updateManualTest(rmstest);
+            // UPDATE RMS BOOKING FUNCTIONAL TEST - MANUAL TEST RESULT - END
         } else {
             path = "redirect:/rmsbookingDetail/groupDetail/" + groupId;
             redirectAttrs.addFlashAttribute("error", "Please check the manual test configuration for the ITEM ID " + mbItemId);

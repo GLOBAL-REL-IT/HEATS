@@ -1705,20 +1705,12 @@
                                                                 <c:choose>
                                                                     <c:when test="${configMotherboard == 'TRIGGERERROR'}">
                                                                         <p>${message}</p>
-<!--                                                                        <p>${itemIdMB} - DATA MOTHERBOARD</p>
-                                                                        <p>${itemIdLC} - DATA LOAD CARD</p>-->
                                                                     </c:when>
                                                                     <c:when test="${configMotherboard == 'HW' || configMotherboard == 'VM'}">
                                                                         <p>${message}</p>
                                                                     </c:when>
                                                                     <c:otherwise>
-<!--                                                                        <p>DEKAT SINI PTT KELUAR DATA MACAM BIASA. :::: ${configMotherboard}</p>
-                                                                        <p>${itemIdMB} - DATA MOTHERBOARD</p>
-                                                                        <p>${itemIdLC} - DATA LOAD CARD</p>
-                                                                        <p>book pkid ::: ${configMotherboard}</p>-->
-                                                                        <!--<p>current status ::: ${currentStatus}</p>-->
                                                                         <p>${message}</p>
-
                                                                         <c:if test="${leakCheck eq 'Yes'}">
                                                                             <div class="accordion-item">
                                                                                 <h2 class="accordion-header" id="panelsStayOpen-headingThree">

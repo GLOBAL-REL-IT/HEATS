@@ -3424,7 +3424,7 @@ public class RmsBookingDetailUnloadingController {
         String path = "";
 
         // SINI KITA HARDCODE UNTUK PERGI KE PHP PROUJECT LINK FOR HEATS
-//        String link = "http://zbqb9x-7jwwld4:86/Tutorial/sample-heat/manual_test_after_loading.php?id=" + lcItemId + "&groupId=" + groupId;
+//        String link = "http://zbqb9x-7jwwld4:86/HEATS-mini/manual_test_after_loading.php?id=" + lcItemId + "&groupId=" + groupId;
         String link = "https://mysed-rel-app05/HEATS-mini/manual_test_after_loading.php?id=" + lcItemId + "&groupId=" + groupId;
         model.addAttribute("link", link);
 

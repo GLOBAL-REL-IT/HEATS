@@ -1669,54 +1669,44 @@
                                                             <div class="accordion" id="accordionPanelsStayOpenExample">
                                                                 <c:choose>
                                                                     <c:when test="${configMotherboard == 'TRIGGERERROR'}">
-<!--                                                                        <p>DEKAT SINI SEMUA ERROR. ${itemIdMB}</p>
-                                                                        <p>${itemIdMB} - DATA MOTHERBOARD</p>
-                                                                        <p>${itemIdLC} - DATA LOAD CARD</p>
-                                                                        <p>huhuhu ::: ${configMotherboard}</p>-->
+                                                                        
                                                                     </c:when>
                                                                     <c:otherwise>
-                                                                        <!--                                                                        <p>DEKAT SINI PTT KELUAR DATA MACAM BIASA.</p>
-                                                                                                                                                <p>${itemIdMB} - DATA MOTHERBOARD</p>
-                                                                                                                                                <p>${itemIdLC} - DATA LOAD CARD</p>
-                                                                                                                                                <p>hehehehe ::: ${configMotherboard}</p>-->
 
                                                                         <c:if test="${leakCheck eq 'Yes'}">
                                                                             <div class="accordion-item">
                                                                                 <h2 class="accordion-header" id="panelsStayOpen-headingThree">
-                                                                                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
-                                                                                            data-bs-target="#panelsStayOpen-collapseThree" aria-expanded="false"
-                                                                                            aria-controls="panelsStayOpen-collapseThree">
+                                                                                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#panelsStayOpen-collapseThree" aria-expanded="false" id="tabLeak" aria-controls="panelsStayOpen-collapseThree">
                                                                                         Leakage Test
                                                                                     </button>
                                                                                 </h2>
-                                                                                <div id="panelsStayOpen-collapseThree" class="accordion-collapse collapse ${leakshow}"
-                                                                                     aria-labelledby="panelsStayOpen-headingThree">
+                                                                                <div id="panelsStayOpen-collapseThree" class="accordion-collapse collapse ${leakshow}" aria-labelledby="panelsStayOpen-headingThree">
                                                                                     <div class="accordion-body">
-                                                                                        <form class="row gx-3 " role="form" action="${contextPath}/hw/item/save/leakTest" method="post" enctype="multipart/form-data" novalidate>
-                                                                                            <div class="col-xl-1 col-sm-12 col-12">
+                                                                                        <form class="row gx-3 align-items-end" role="form" action="${contextPath}/rmsbookingDetail/ftest/save/leakTest" method="post" enctype="multipart/form-data" novalidate>
+                                                                                            <input type="hidden" class="form-control" id="bookId" name="bookId" value="${bookId}">
+                                                                                            <input type="hidden" class="form-control" id="motherboardId" name="motherboardId" value="${mibItemId}">
+                                                                                            <div class="form-group required col-xl-1 col-sm-12">
                                                                                                 <div class="mb-3">
                                                                                                     <label for="quantity" class="form-label">Quantity</label>
                                                                                                     <div class="input input-group">
-                                                                                                        <input type="number" class="form-control" id="totalQty" name="totalQty" placeholder="" value="${dataTest.leakQty}" min="1" required>
-                                                                                                        <input type="hidden" class="form-control" id="mibItemId" name="mibItemId" placeholder="" value="${item.id}">
+                                                                                                        <input type="number" class="form-control" id="totalQty" name="totalQty" value="${testResult.leakQty}" style="width: 100%" required>
+                                                                                                        <input type="hidden" class="form-control" id="mibItemId" name="mibItemId" value="${item.id}">
                                                                                                     </div>
                                                                                                 </div>
                                                                                             </div>
                                                                                             <div class="form-group required col-xl-2 col-sm-12 col-12">
                                                                                                 <div class="mb-3">
                                                                                                     <label for="leakResult" class="form-label">Leakage Result</label>
-                                                                                                    <div class="input input-group">
-                                                                                                        <select class="select-single js-states form-control" id="leakResult" name="leakResult"
-                                                                                                                title="Select Leakage Result" data-live-search="true" style="width: 100%" required>
-                                                                                                            <option></option>
-                                                                                                            <c:forEach items="${leakResultData}" var="leakResult">
-                                                                                                                <option value="${leakResult.name}" ${leakResult.selected}>${leakResult.name}</option>
-                                                                                                            </c:forEach>
-                                                                                                        </select>
-                                                                                                    </div>
+                                                                                                    <select class="select-single js-states form-control" id="leakResult" name="leakResult"
+                                                                                                            title="Select Leakage Result" data-live-search="true" style="width: 100%" required>
+                                                                                                        <option></option>
+                                                                                                        <c:forEach items="${leakResultData}" var="leakResult">
+                                                                                                            <option value="${leakResult.name}" ${leakResult.selected}>${leakResult.name}</option>
+                                                                                                        </c:forEach>
+                                                                                                    </select>
                                                                                                 </div>
                                                                                             </div>
-                                                                                            <div class="form-group col-xl-4 col-sm-12 col-12">
+                                                                                            <div class="col-xl-3 col-sm-12">
                                                                                                 <div class="mb-3">
                                                                                                     <label for="leakUpload" class="form-label">Upload Result</label>
                                                                                                     <div class="input input-group">
@@ -1724,17 +1714,30 @@
                                                                                                     </div>
                                                                                                 </div>
                                                                                             </div>
-                                                                                            <c:if test="${not empty dataTest.leakUpload}">
-                                                                                                <div class="row gx-4">
-                                                                                                    <div class="col-xl-2 col-sm-12 col-12">
-                                                                                                        <div class="mb-2">
-                                                                                                            <a class="form-label" href="${contextPath}/hw/item/ft/leaktest/${item.id}" id="leakTestAttach" name="leakTestAttach"> Download Attachment</a>
-                                                                                                        </div>
+                                                                                            <c:if test="${not empty testResult.leakUpload}">
+                                                                                                <div class="col-xl-2 col-sm-12">
+                                                                                                    <div class="mb-3">
+                                                                                                        <a class="form-label" href="${contextPath}/hw/item/ft/leaktest/${item.id}" id="leakTestAttach" name="leakTestAttach">Download Leakage Test</a>
                                                                                                     </div>
                                                                                                 </div>
                                                                                             </c:if>
+                                                                                            <div class="col-xl-6 col-sm-12">
+                                                                                                <div class="mb-3">
+                                                                                                    <label for="leakHardware" class="form-label">Reject Hardware ID</label>
+                                                                                                    <div class="input input-group">
+                                                                                                        <select class="js-example-basic-multiple" id="leakHardware" name="leakHardware" multiple="multiple" style="width: 100%">
+                                                                                                            <c:forEach items="${hwGroupList}" var="leakHw">
+                                                                                                                <option value="${leakHw.hardwareId}">${leakHw.hardwareId}</option>
+                                                                                                            </c:forEach>
+                                                                                                        </select>
+                                                                                                    </div>
+                                                                                                </div>
+                                                                                            </div>
                                                                                             <div class="col-md-12">
-                                                                                                <button type="submit" id="submit" class="btn btn-primary float-end ${leakbutton}">Save</button>
+                                                                                                <button type="submit" id="saveLeak" class="btn btn-primary me-2 float-end ${leakbutton}">Save</button>
+                                                                                                <button type="submit" id="updateLeak" class="btn btn-primary me-2 float-end visually-hidden">Update</button>
+                                                                                                <a id="editLeak" class="btn btn-secondary me-2 float-end ${editleakbutton}" onclick="allowUpdateLeak();" role="button">Edit</a>
+                                                                                                <a id="editLeak2" class="btn btn-secondary me-2 float-end visually-hidden" onclick="allowUpdateLeak2();" role="button">Cancel</a>
                                                                                             </div>
                                                                                         </form>
                                                                                     </div>
@@ -1745,32 +1748,71 @@
                                                                             <div class="accordion-item">
                                                                                 <h2 class="accordion-header" id="panelsStayOpen-headingTwo">
                                                                                     <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
-                                                                                            data-bs-target="#panelsStayOpen-collapseTwo" aria-expanded="false"
+                                                                                            data-bs-target="#panelsStayOpen-collapseTwo" aria-expanded="false" id="tabManual"
                                                                                             aria-controls="panelsStayOpen-collapseTwo">
                                                                                         Manual Test
                                                                                     </button>
                                                                                 </h2>
                                                                                 <div id="panelsStayOpen-collapseTwo" class="accordion-collapse collapse ${manshow}" aria-labelledby="panelsStayOpen-headingTwo">
                                                                                     <div class="accordion-body">
+                                                                                        <form class="row gx-3 align-items-end" role="form" action="${contextPath}/rmsbookingDetail/createManualTest" method="post" enctype="multipart/form-data">
                                                                                         <div class="row">
-                                                                                            <div class="col-sm-6">
+                                                                                            <input type="hidden" class="form-control" id="bookId" name="bookId" value="${bookId}">
+                                                                                            <input type="hidden" class="form-control" id="motherboardId" name="motherboardId" value="${mibItemId}">
+                                                                                            <div class="form-group required col-xl-1 col-sm-12">
+                                                                                                <div class="mb-3">
+                                                                                                    <label for="quantity" class="form-label">Quantity</label>
+                                                                                                    <div class="input input-group">
+                                                                                                        <input type="number" class="form-control" id="totalQty" name="totalQty" value="${testResult.manualQty}" style="width: 100%" required>
+                                                                                                        <input type="hidden" class="form-control" id="mibItemId" name="mibItemId" value="${item.id}">
+                                                                                                    </div>
+                                                                                                </div>
+                                                                                            </div>
+                                                                                            <div class="form-group required col-xl-2 col-sm-12 col-12">
+                                                                                                <div class="mb-3">
+                                                                                                    <label for="manResult" class="form-label">Manual Test Result</label>
+                                                                                                    <div class="input input-group">
+                                                                                                        <input type="text" class="form-control" id="labelStatus" name="labelStatus" value="${testResult.manualStatus}" readonly>
+                                                                                                    </div>
+                                                                                                </div>
+                                                                                            </div>
+<!--                                                                                            <div class="col-sm-6">
                                                                                                 <label for="status" class="form-label">Status</label>
                                                                                                 <div>
-                                                                                                    <input type="text" class="form-control" id="labelStatus" name="labelStatus" placeholder="" value="${item.status}" readonly>
-                                                                                                    <input type="hidden" class="form-control" id="mibItemId" name="mibItemId" placeholder="" value="${item.id}">
+                                                                                                    <input type="text" class="form-control" id="labelStatus" name="labelStatus" value="${currentStatus}" readonly>
+                                                                                                    <input type="hidden" class="form-control" name="mbItemId" id="mbItemId" value="${itemIdMB}">
+                                                                                                    <input type="hidden" class="form-control" name="lcItemId" id="lcItemId" value="${itemIdLC}">
+                                                                                                    <input type="hidden" class="form-control" name="groupId" id="groupId" value="${groupId}">
                                                                                                 </div>
                                                                                             </div>
-                                                                                            <div class="col-sm-4">
+                                                                                            <div class="col-sm-3">
                                                                                             </div>
-                                                                                            <div class="col-sm-2">
-                                                                                                <div class="p-3 d-flex justify-content-end">
+                                                                                            <div class="col-sm-1">
+                                                                                                <label>Quantity <span style="color:red;">*</span></label>
+                                                                                                <c:choose>
+                                                                                                    <c:when test="${not empty testResult.manualQty}">
+                                                                                                        <div class="input input-group">
+                                                                                                            <input type="number" class="form-control" name="totalQty" id="totalQty" value="${testResult.manualQty}" readonly>
+                                                                                                        </div>
+                                                                                                    </c:when>
+                                                                                                    <c:otherwise>
+                                                                                                        <div class="input input-group">
+                                                                                                            <input type="number" class="form-control" name="totalQty" id="totalQty" required>
+                                                                                                        </div>
+                                                                                                    </c:otherwise>
+                                                                                                </c:choose>
+                                                                                            </div>-->
+<!--                                                                                            <div class="col-sm-2">
+                                                                                                <div class="p-3 d-flex justify-content-end">-->
                                                                                                     <!--<a href="https://mysed-rel-app05/HEATS-mini/manual_test_before_loading.php?id=${item.id}" class="leads rounded-3 d-xxl-flex d-none">-->
-                                                                                                    <a href="http://zbqb9x-7jwwld4:85//Tutorial/sample-heat/manual_test_before_loading.php?id=${item.id}" class="leads rounded-3 d-xxl-flex d-none">
+<!--                                                                                                    <a href="http://zbqb9x-7jwwld4:85//Tutorial/sample-heat/manual_test_before_loading.php?id=${item.id}" class="leads rounded-3 d-xxl-flex d-none ${manualbutton}">
                                                                                                         <i class="bi bi-box-arrow-right" style="color:#ffffff"></i>&nbsp;&nbsp;Inspect Manual Test
-                                                                                                    </a>
+                                                                                                    </a>-->
+<!--                                                                                                    <button type="submit" id="saveManual" class="btn btn-primary me-2 float-end ${manualbutton}">Save Manual</button>
                                                                                                 </div>
-                                                                                            </div>
+                                                                                            </div>-->
                                                                                         </div>
+                                                                                        </form>
                                                                                     </div>
                                                                                 </div>
                                                                             </div>
@@ -1778,30 +1820,22 @@
                                                                         <c:if test="${bibCheck eq 'Yes'}">
                                                                             <div class="accordion-item">
                                                                                 <h2 class="accordion-header" id="panelsStayOpen-headingOne">
-                                                                                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#panelsStayOpen-collapseOne" aria-expanded="false" aria-controls="panelsStayOpen-collapseOne">
+                                                                                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#panelsStayOpen-collapseOne" aria-expanded="false" aria-controls="panelsStayOpen-collapseOne" id="tabBib">
                                                                                         BIB Test
                                                                                     </button>
                                                                                 </h2>
                                                                                 <div id="panelsStayOpen-collapseOne" class="accordion-collapse collapse ${bibshow}" aria-labelledby="panelsStayOpen-headingOne">
                                                                                     <div class="accordion-body">
-                                                                                        <form class="row gx-3 align-items-end" role="form" action="${contextPath}/hw/item/save/bibTest" method="post" enctype="multipart/form-data" novalidate>
-                                                                                            <div class="col-xl-12 col-sm-12">
+                                                                                        <form class="row gx-3 align-items-end" role="form" action="${contextPath}/rmsbookingDetail/ftest/save/bibTest" method="post" enctype="multipart/form-data" novalidate>
+                                                                                            <input type="hidden" class="form-control" id="bookId" name="bookId" value="${bookId}">
+                                                                                            <input type="hidden" class="form-control" id="motherboardId" name="motherboardId" value="${mibItemId}">
+                                                                                            <div class="form-group required col-xl-1 col-sm-12">
                                                                                                 <div class="mb-3">
-                                                                                                    <label for="bibHardware" class="form-label">Reject Hardware ID</label>
+                                                                                                    <label for="quantity" class="form-label">Quantity</label>
                                                                                                     <div class="input input-group">
-                                                                                                        <select class="js-example-basic-multiple" id="bibHardware" name="bibHardware" multiple="multiple" style="width: 100%">
-                                                                                                            <c:forEach items="${hwGroupList}" var="bibHw">
-                                                                                                                <option value="${bibHw.hardwareId}">${bibHw.hardwareId}</option>
-                                                                                                            </c:forEach>
-                                                                                                        </select>
+                                                                                                        <input type="number" class="form-control" id="totalQty" name="totalQty" value="${testResult.bibQty}" style="width: 100%" required>
+                                                                                                        <input type="hidden" class="form-control" id="mibItemId" name="mibItemId" value="${item.id}">
                                                                                                     </div>
-                                                                                                </div>
-                                                                                            </div>
-                                                                                            <div class="col-xl-1 col-sm-12">
-                                                                                                <div class="mb-3">
-                                                                                                    <label for="quantity" class="form-label">Qty</label>
-                                                                                                    <input type="number" class="select-single js-states form-control" id="totalQty" name="totalQty" value="${dataTest.bibQty}" min="1" style="width: 100%" required>
-                                                                                                    <input type="hidden" id="mibItemId" name="mibItemId" value="${item.id}">
                                                                                                 </div>
                                                                                             </div>
                                                                                             <div class="form-group required col-xl-2 col-sm-12 col-12">
@@ -1823,18 +1857,101 @@
                                                                                                     </div>
                                                                                                 </div>
                                                                                             </div>
-                                                                                            <div class="col-xl-1 col-sm-12">
-                                                                                                <div class="mb-3">
-                                                                                                    <button type="submit" id="submit" class="btn btn-primary w-100 ${bibbutton}">Save</button>
-                                                                                                </div>
-                                                                                            </div>
-                                                                                            <c:if test="${not empty dataTest.bibUpload}">
+                                                                                            <c:if test="${not empty testResult.bibUpload}">
                                                                                                 <div class="col-xl-2 col-sm-12">
                                                                                                     <div class="mb-3">
-                                                                                                        <a class="btn btn-link btn-sm p-0" href="${contextPath}/hw/item/ft/bibtest/${item.id}">Download</a>
+                                                                                                        <a class="form-label" href="${contextPath}/hw/item/ft/bibtest/${item.id}" id="bibTestAttach" name="bibTestAttach">Download BIB Test</a>
                                                                                                     </div>
                                                                                                 </div>
                                                                                             </c:if>
+                                                                                            <div class="col-xl-6 col-sm-12">
+                                                                                                <div class="mb-3">
+                                                                                                    <label for="bibHardware" class="form-label">Reject Hardware ID</label>
+                                                                                                    <div class="input input-group">
+                                                                                                        <select class="js-example-basic-multiple" id="bibHardware" name="bibHardware" multiple="multiple" style="width: 100%">
+                                                                                                            <c:forEach items="${hwGroupList}" var="bibHw">
+                                                                                                                <option value="${bibHw.hardwareId}">${bibHw.hardwareId}</option>
+                                                                                                            </c:forEach>
+                                                                                                        </select>
+                                                                                                    </div>
+                                                                                                </div>
+                                                                                            </div>
+                                                                                            <div class="col-md-12">
+                                                                                                <button type="submit" id="saveBib" class="btn btn-primary float-end ${bibbutton}">Save</button>
+                                                                                                <button type="submit" id="updateBib" class="btn btn-primary me-2 float-end visually-hidden">Update</button>
+                                                                                                <a id="editBib1" class="btn btn-secondary me-2 float-end ${editbibbutton}" onclick="allowUpdateBib1();" role="button">Edit</a>
+                                                                                                <a id="editBib2" class="btn btn-secondary me-2 float-end visually-hidden" onclick="allowUpdateBib2();" role="button">Cancel</a>
+                                                                                            </div>
+                                                                                        </form>
+                                                                                    </div>
+                                                                                </div>
+                                                                            </div>
+                                                                        </c:if>
+                                                                        <c:if test="${bibDCheck eq 'Yes'}">
+                                                                            <div class="accordion-item">
+                                                                                <h2 class="accordion-header" id="panelsStayOpen-headingSix">
+                                                                                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#panelsStayOpen-collapseSix" aria-expanded="false" aria-controls="panelsStayOpen-collapseSix" id="tabBibD">
+                                                                                        BIB DAQ
+                                                                                    </button>
+                                                                                </h2>
+                                                                                <div id="panelsStayOpen-collapseSix" class="accordion-collapse collapse ${bibDshow}" aria-labelledby="panelsStayOpen-headingSix">
+                                                                                    <div class="accordion-body">
+                                                                                        <form class="row gx-3 align-items-end" role="form" action="${contextPath}/rmsbookingDetail/ftest/save/bibDaqTest" method="post" enctype="multipart/form-data" novalidate>
+                                                                                            <input type="hidden" class="form-control" id="bookId" name="bookId" value="${bookId}">
+                                                                                            <input type="hidden" class="form-control" id="motherboardId" name="motherboardId" value="${mibItemId}">
+                                                                                            <div class="form-group required col-xl-1 col-sm-12">
+                                                                                                <div class="mb-3">
+                                                                                                    <label for="quantity" class="form-label">Quantity</label>
+                                                                                                    <div class="input input-group">
+                                                                                                        <input type="number" class="form-control" id="totalQty" name="totalQty" value="${testResult.bibDaqQty}" style="width: 100%" required>
+                                                                                                        <input type="hidden" class="form-control" id="mibItemId" name="mibItemId" value="${item.id}">
+                                                                                                    </div>
+                                                                                                </div>
+                                                                                            </div>
+                                                                                            <div class="form-group required col-xl-2 col-sm-12 col-12">
+                                                                                                <div class="mb-3">
+                                                                                                    <label for="bibDaqResult" class="form-label">BIB DAQ Result</label>
+                                                                                                    <select class="select-single js-states form-control" id="bibDaqResult" name="bibDaqResult" title="Select BIB DAQ Result" data-live-search="true" style="width: 100%" required>
+                                                                                                        <option></option>
+                                                                                                        <c:forEach items="${bibDaqResultData}" var="daqResult">
+                                                                                                            <option value="${daqResult.name}" ${daqResult.selected}>${daqResult.name}</option>
+                                                                                                        </c:forEach>
+                                                                                                    </select>
+                                                                                                </div>
+                                                                                            </div>
+                                                                                            <div class="col-xl-3 col-sm-12">
+                                                                                                <div class="mb-3">
+                                                                                                    <label for="bibDaqUpload" class="form-label">Upload Result</label>
+                                                                                                    <div class="input input-group">
+                                                                                                        <input class="form-control" type="file" id="bibDaqUpload" name="bibDaqUpload">
+                                                                                                    </div>
+                                                                                                </div>
+                                                                                            </div>
+                                                                                            <c:if test="${not empty testResult.bibDaqUpload}">
+                                                                                                <div class="col-xl-2 col-sm-12">
+                                                                                                    <div class="mb-3">
+                                                                                                        <a class="form-label" href="${contextPath}/hw/item/ft/bibdaqtest/${item.id}" id="bibDaqTestAttach" name="bibDaqTestAttach">Download BIB DAQ Test</a>
+                                                                                                    </div>
+                                                                                                </div>
+                                                                                            </c:if>
+                                                                                            <div class="col-xl-6 col-sm-12">
+                                                                                                <div class="mb-3">
+                                                                                                    <label for="bibDaqHardware" class="form-label">Reject Hardware ID</label>
+                                                                                                    <div class="input input-group">
+                                                                                                        <select class="js-example-basic-multiple" id="bibDaqHardware" name="bibDaqHardware" multiple="multiple" style="width: 100%">
+                                                                                                            <c:forEach items="${hwGroupList}" var="bibHw">
+                                                                                                                <option value="${bibHw.hardwareId}">${bibHw.hardwareId}</option>
+                                                                                                            </c:forEach>
+                                                                                                        </select>
+                                                                                                    </div>
+                                                                                                </div>
+                                                                                            </div>
+                                                                                            <div class="col-md-12">
+                                                                                                <button type="submit" id="saveBibDaq" class="btn btn-primary float-end ${bibdaqbutton}">Save</button>
+                                                                                                <button type="submit" id="updateBibDaq" class="btn btn-primary me-2 float-end visually-hidden">Update</button>
+                                                                                                <a id="editBibDaq1" class="btn btn-secondary me-2 float-end ${editbibdaqbutton}" onclick="allowUpdateBibDaq1();" role="button">Edit</a>
+                                                                                                <a id="editBibDaq2" class="btn btn-secondary me-2 float-end visually-hidden" onclick="allowUpdateBibDaq2();" role="button">Cancel</a>
+                                                                                            </div>
                                                                                         </form>
                                                                                     </div>
                                                                                 </div>
@@ -1844,7 +1961,7 @@
                                                                             <div class="accordion-item">
                                                                                 <h2 class="accordion-header" id="panelsStayOpen-headingFour">
                                                                                     <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
-                                                                                            data-bs-target="#panelsStayOpen-collapseFour" aria-expanded="false"
+                                                                                            data-bs-target="#panelsStayOpen-collapseFour" aria-expanded="false" id="tabPs"
                                                                                             aria-controls="panelsStayOpen-collapseFour">
                                                                                         Power Supply Leakage Test
                                                                                     </button>
@@ -1852,31 +1969,31 @@
                                                                                 <div id="panelsStayOpen-collapseFour" class="accordion-collapse collapse ${psshow}"
                                                                                      aria-labelledby="panelsStayOpen-headingFour">
                                                                                     <div class="accordion-body">
-                                                                                        <form class="row gx-3 " role="form" action="${contextPath}/hw/item/save/psTest" method="post" enctype="multipart/form-data" novalidate>
-                                                                                            <div class="col-xl-1 col-sm-12 col-12">
+                                                                                        <form class="row gx-3 align-items-end" role="form" action="${contextPath}/rmsbookingDetail/ftest/save/psTest" method="post" enctype="multipart/form-data" novalidate>
+                                                                                            <input type="hidden" class="form-control" id="bookId" name="bookId" value="${bookId}">
+                                                                                            <input type="hidden" class="form-control" id="motherboardId" name="motherboardId" value="${mibItemId}">
+                                                                                            <div class="form-group required col-xl-1 col-sm-12 col-12">
                                                                                                 <div class="mb-3">
                                                                                                     <label for="quantity" class="form-label">Quantity</label>
                                                                                                     <div class="input input-group">
-                                                                                                        <input type="number" class="form-control" id="totalQty" name="totalQty" placeholder="" value="${dataTest.psQty}" min="1" required>
-                                                                                                        <input type="hidden" class="form-control" id="mibItemId" name="mibItemId" placeholder="" value="${item.id}">
+                                                                                                        <input type="number" class="form-control" id="totalQty" name="totalQty" value="${testResult.psQty}" style="width: 100%" required>
+                                                                                                        <input type="hidden" class="form-control" id="mibItemId" name="mibItemId" value="${item.id}">
                                                                                                     </div>
                                                                                                 </div>
                                                                                             </div>
                                                                                             <div class="form-group required col-xl-2 col-sm-12 col-12">
                                                                                                 <div class="mb-3">
                                                                                                     <label for="psResult" class="form-label">Power Supply Leakage Result</label>
-                                                                                                    <div class="input input-group">
-                                                                                                        <select class="select-single js-states form-control" id="psResult" name="psResult"
-                                                                                                                title="Select Leakage Result" data-live-search="true" style="width: 100%" >
-                                                                                                            <option></option>
-                                                                                                            <c:forEach items="${psResultData}" var="invInner">
-                                                                                                                <option value="${invInner.name}" ${invInner.selected}>${invInner.name}</option>
-                                                                                                            </c:forEach>
-                                                                                                        </select>
-                                                                                                    </div>
+                                                                                                    <select class="select-single js-states form-control" id="psResult" name="psResult"
+                                                                                                            title="Select Leakage Result" data-live-search="true" style="width: 100%" >
+                                                                                                        <option></option>
+                                                                                                        <c:forEach items="${psResultData}" var="invInner">
+                                                                                                            <option value="${invInner.name}" ${invInner.selected}>${invInner.name}</option>
+                                                                                                        </c:forEach>
+                                                                                                    </select>
                                                                                                 </div>
                                                                                             </div>
-                                                                                            <div class="form-group col-xl-4 col-sm-12 col-12">
+                                                                                            <div class="col-xl-3 col-sm-12">
                                                                                                 <div class="mb-3">
                                                                                                     <label for="psUpload" class="form-label">Upload Result</label>
                                                                                                     <div class="input input-group">
@@ -1884,21 +2001,31 @@
                                                                                                     </div>
                                                                                                 </div>
                                                                                             </div>
-
-                                                                                            <c:if test="${not empty dataTest.psUpload}">
-                                                                                                <div class="row gx-4">
-                                                                                                    <div class="col-xl-2 col-sm-12 col-12">
-                                                                                                        <div class="mb-2">
-                                                                                                            <a class="form-label" href="${contextPath}/hw/item/ft/pstest/${item.id}" id="psTestAttach" name="psTestAttach"> Download Attachment</a>
-                                                                                                        </div>
+                                                                                            <c:if test="${not empty testResult.psUpload}">
+                                                                                                <div class="col-xl-2 col-sm-12">
+                                                                                                    <div class="mb-3">
+                                                                                                        <a class="form-label" href="${contextPath}/hw/item/ft/pstest/${item.id}" id="psTestAttach" name="psTestAttach">Download Power Supply Leakage Test</a>
+                                                                                                    </div>
+                                                                                                </div>        
+                                                                                            </c:if>
+                                                                                            <div class="col-xl-6 col-sm-12">
+                                                                                                <div class="mb-3">
+                                                                                                    <label for="psHardware" class="form-label">Reject Hardware ID</label>
+                                                                                                    <div class="input input-group">
+                                                                                                        <select class="js-example-basic-multiple" id="psHardware" name="psHardware" multiple="multiple" style="width: 100%">
+                                                                                                            <c:forEach items="${hwGroupList}" var="psHw">
+                                                                                                                <option value="${psHw.hardwareId}">${psHw.hardwareId}</option>
+                                                                                                            </c:forEach>
+                                                                                                        </select>
                                                                                                     </div>
                                                                                                 </div>
-                                                                                            </c:if>
-
-                                                                                            <div class="col-md-12">
-                                                                                                <button type="submit" id="submit" class="btn btn-primary float-end ${psbutton}">Save</button>
                                                                                             </div>
-
+                                                                                            <div class="col-md-12">
+                                                                                                <button type="submit" id="savePower" class="btn btn-primary float-end ${psbutton}">Save</button>
+                                                                                                <button type="submit" id="updatePower" class="btn btn-primary me-2 float-end visually-hidden">Update</button>
+                                                                                                <a id="editPower1" class="btn btn-secondary me-2 float-end ${editpsbutton}" onclick="allowUpdatePower1();" role="button">Edit</a>
+                                                                                                <a id="editPower2" class="btn btn-secondary me-2 float-end visually-hidden" onclick="allowUpdatePower2();" role="button">Cancel</a>
+                                                                                            </div>
                                                                                         </form>
                                                                                     </div>
                                                                                 </div>
@@ -1908,7 +2035,7 @@
                                                                             <div class="accordion-item">
                                                                                 <h2 class="accordion-header" id="panelsStayOpen-headingFive">
                                                                                     <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
-                                                                                            data-bs-target="#panelsStayOpen-collapseFive" aria-expanded="false"
+                                                                                            data-bs-target="#panelsStayOpen-collapseFive" aria-expanded="false" id="tabWin"
                                                                                             aria-controls="panelsStayOpen-collapseFive">
                                                                                         Winchester Chamber Leakage Test
                                                                                     </button>
@@ -1916,31 +2043,31 @@
                                                                                 <div id="panelsStayOpen-collapseFive" class="accordion-collapse collapse ${winshow}"
                                                                                      aria-labelledby="panelsStayOpen-headingFive">
                                                                                     <div class="accordion-body">
-                                                                                        <form class="row gx-3 " role="form" action="${contextPath}/hw/item/save/winTest" method="post" enctype="multipart/form-data" novalidate>
-                                                                                            <div class="col-xl-1 col-sm-12 col-12">
+                                                                                        <form class="row gx-3 align-items-end" role="form" action="${contextPath}/rmsbookingDetail/ftest/save/winTest" method="post" enctype="multipart/form-data" novalidate>
+                                                                                            <input type="hidden" class="form-control" id="bookId" name="bookId" value="${bookId}">
+                                                                                            <input type="hidden" class="form-control" id="motherboardId" name="motherboardId" value="${mibItemId}">
+                                                                                            <div class="form-group required col-xl-1 col-sm-12">
                                                                                                 <div class="mb-3">
                                                                                                     <label for="quantity" class="form-label">Quantity</label>
                                                                                                     <div class="input input-group">
-                                                                                                        <input type="number" class="form-control" id="totalQty" name="totalQty" placeholder="" value="${dataTest.winQty}" min="1" required>
-                                                                                                        <input type="hidden" class="form-control" id="mibItemId" name="mibItemId" placeholder="" value="${item.id}">
+                                                                                                        <input type="number" class="form-control" id="totalQty" name="totalQty" value="${testResult.winQty}" style="width: 100%" required>
+                                                                                                        <input type="hidden" class="form-control" id="mibItemId" name="mibItemId" value="${item.id}">
                                                                                                     </div>
                                                                                                 </div>
                                                                                             </div>
                                                                                             <div class="form-group required col-xl-2 col-sm-12 col-12">
                                                                                                 <div class="mb-3">
                                                                                                     <label for="winResult" class="form-label">Winchester Chamber Leakage Result</label>
-                                                                                                    <div class="input input-group">
-                                                                                                        <select class="select-single js-states form-control" id="winResult" name="winResult"
-                                                                                                                title="Select Winchester Chamber Leakage Result" data-live-search="true" style="width: 100%" required>
-                                                                                                            <option></option>
-                                                                                                            <c:forEach items="${winResultData}" var="invInner">
-                                                                                                                <option value="${invInner.name}" ${invInner.selected}>${invInner.name}</option>
-                                                                                                            </c:forEach>
-                                                                                                        </select>
-                                                                                                    </div>
+                                                                                                    <select class="select-single js-states form-control" id="winResult" name="winResult"
+                                                                                                            title="Select Winchester Chamber Leakage Result" data-live-search="true" style="width: 100%" required>
+                                                                                                        <option></option>
+                                                                                                        <c:forEach items="${winResultData}" var="invInner">
+                                                                                                            <option value="${invInner.name}" ${invInner.selected}>${invInner.name}</option>
+                                                                                                        </c:forEach>
+                                                                                                    </select>
                                                                                                 </div>
                                                                                             </div>
-                                                                                            <div class="form-group col-xl-4 col-sm-12 col-12">
+                                                                                            <div class="col-xl-3 col-sm-12">
                                                                                                 <div class="mb-3">
                                                                                                     <label for="winUpload" class="form-label">Upload Result</label>
                                                                                                     <div class="input input-group">
@@ -1948,19 +2075,30 @@
                                                                                                     </div>
                                                                                                 </div>
                                                                                             </div>
-
-                                                                                            <c:if test="${not empty dataTest.winUpload}">
-                                                                                                <div class="row gx-4">
-                                                                                                    <div class="col-xl-2 col-sm-12 col-12">
-                                                                                                        <div class="mb-2">
-                                                                                                            <a class="form-label" href="${contextPath}/hw/item/ft/wintest/${item.id}" id="winTestAttach" name="winTestAttach"> Download Attachment</a>
-                                                                                                        </div>
+                                                                                            <c:if test="${not empty testResult.winUpload}">
+                                                                                                <div class="col-xl-2 col-sm-12">
+                                                                                                    <div class="mb-3">
+                                                                                                        <a class="form-label" href="${contextPath}/hw/item/ft/wintest/${item.id}" id="winTestAttach" name="winTestAttach">Download Winchester Chamber Leakage Test</a>
                                                                                                     </div>
                                                                                                 </div>
                                                                                             </c:if>
-
+                                                                                            <div class="col-xl-6 col-sm-12">
+                                                                                                <div class="mb-3">
+                                                                                                    <label for="winHardware" class="form-label">Reject Hardware ID</label>
+                                                                                                    <div class="input input-group">
+                                                                                                        <select class="js-example-basic-multiple" id="winHardware" name="winHardware" multiple="multiple" style="width: 100%">
+                                                                                                            <c:forEach items="${hwGroupList}" var="winHw">
+                                                                                                                <option value="${winHw.hardwareId}">${winHw.hardwareId}</option>
+                                                                                                            </c:forEach>
+                                                                                                        </select>
+                                                                                                    </div>
+                                                                                                </div>
+                                                                                            </div>
                                                                                             <div class="col-md-12">
-                                                                                                <button type="submit" id="submit" class="btn btn-primary float-end">Save</button>
+                                                                                                <button type="submit" id="saveWin" class="btn btn-primary float-end ${winbutton}">Save</button>
+                                                                                                <button type="submit" id="updateWin" class="btn btn-primary me-2 float-end visually-hidden">Update</button>
+                                                                                                <a id="editWin1" class="btn btn-secondary me-2 float-end ${editwinbutton}" onclick="allowUpdateWin1();" role="button">Edit</a>
+                                                                                                <a id="editWin2" class="btn btn-secondary me-2 float-end visually-hidden" onclick="allowUpdateWin2();" role="button">Cancel</a>
                                                                                             </div>
                                                                                         </form>
                                                                                     </div>
