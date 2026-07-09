@@ -643,7 +643,7 @@ public class RmsBookingDetailDAO {
     }
 
     public List<RmsBookingDetail> getRmsBookingDetailListReleasedSingleBib() {
-        String sql = "SELECT de.id, de.booking_pkid, de.rms_no, de.`event`, DATE_FORMAT(ha.released_date,'%d-%M-%Y') AS releasedDate, ha.released_by, "
+        String sql = "SELECT de.id, de.booking_pkid, de.rms_no, de.`event`, DATE_FORMAT(ha.released_date,'%d %M %Y %h:%i %p') AS releasedDate, ha.released_by, "
                 + "ha.id AS bookingHwId, ha.item_id, ha.item_pkid, ha.lc_qty, ha.pc_qty, ha.sub_status, ha.pkid "
                 + "FROM rms_booking_detail de LEFT JOIN rms_booking_hardware ha ON de.booking_pkid = ha.booking_pkid "
                 + "WHERE ha.item_type = 'Motherboard' AND ha.sub_status = 'Released to Production' AND ha.flag = '1'";
@@ -686,7 +686,8 @@ public class RmsBookingDetailDAO {
     }
 
     public List<RmsBookingDetail> getRmsBookingDetailListRecallSingleBib() {
-        String sql = "SELECT de.id, de.booking_pkid, de.rms_no, de.`event`, DATE_FORMAT(ha.return_date,'%d-%M-%Y') AS returnDate, ha.return_by, ha.id AS bookingHwId, ha.item_id, ha.item_pkid, ha.lc_qty, ha.pc_qty, ha.sub_status, ha.pkid "
+        String sql = "SELECT de.id, de.booking_pkid, de.rms_no, de.`event`, DATE_FORMAT(ha.return_date,'%d %M %Y %h:%i %p') AS returnDate, "
+                + "ha.return_by, ha.id AS bookingHwId, ha.item_id, ha.item_pkid, ha.lc_qty, ha.pc_qty, ha.sub_status, ha.pkid "
                 + "FROM rms_booking_detail de LEFT JOIN rms_booking_hardware ha ON de.booking_pkid = ha.booking_pkid "
                 + "WHERE ha.item_type = 'Motherboard' AND ha.sub_status = 'Pending Release to Production' AND ha.flag = '0' "
                 + "AND de.`status` = 'Released to Production' AND de.flag = '1'";

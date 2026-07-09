@@ -215,6 +215,22 @@
                                             </div>
                                         </div>
                                     </div>
+                                            <div class="col-xl-2 col-sm-12 col-12">
+                                        <div class="mb-1">
+                                            <label for="returnBy" class="form-label">Returned By</label>
+                                            <div class="input input-group">
+                                                <input type="text" class="form-control" id="returnBy" name="returnBy" placeholder="" value="${returnBy}" readonly>
+                                            </div>
+                                        </div>
+                                    </div>
+                                            <div class="col-xl-2 col-sm-12 col-12">
+                                        <div class="mb-1">
+                                            <label for="returnDate" class="form-label">Returned Date</label>
+                                            <div class="input input-group">
+                                                <input type="text" class="form-control" id="returnDate" name="returnDate" placeholder="" value="${returnDate}" readonly>
+                                            </div>
+                                        </div>
+                                    </div>
                                     <c:if test="${rms.priority != '999'}">
                                         <div class="col-xl-1 col-sm-12 col-12 visually-hidden">
                                             <div class="mb-1">
@@ -268,6 +284,14 @@
                                             <label for="itemId" class="form-label">Booking Remarks</label>
                                             <div class="input input-group">
                                                 <textarea class="form-control" rows="5" id="bookingRemarks" name="bookingRemarks" readonly>${rmsRemarks}</textarea>
+                                            </div>
+                                        </div>
+                                    </div>
+                                            <div class="col-xl-3 col-sm-12 col-12">
+                                        <div class="mb-1">
+                                            <label for="returnRemarks" class="form-label">Returned Remarks</label>
+                                            <div class="input input-group">
+                                                <textarea class="form-control" rows="5" id="returnRemarks" name="returnRemarks" readonly>${returnRemarks}</textarea>
                                             </div>
                                         </div>
                                     </div>

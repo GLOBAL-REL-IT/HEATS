@@ -180,7 +180,7 @@ public class EmailSender extends SpringBeanAutowiringSupport {
                 try {
                     HtmlEmail htmlEmail = new HtmlEmail();
 //                    EmailDAO emailDAO = new EmailDAO(); //original
-                    HimsEmailDAO emailDAO = new HimsEmailDAO(); 
+                    HimsEmailDAO emailDAO = new HimsEmailDAO();
                     Email email = emailDAO.getEmail();
 
                     htmlEmail.setHostName(email.getHost());
@@ -225,7 +225,7 @@ public class EmailSender extends SpringBeanAutowiringSupport {
             }
         }).start();
     }
-    
+
     public void htmlEmailManyTo(final ServletContext servletContext, final User user, final String[] to, final String subject, final String msg) {
         new Thread(new Runnable() {
             @Override
@@ -233,7 +233,7 @@ public class EmailSender extends SpringBeanAutowiringSupport {
                 try {
                     HtmlEmail htmlEmail = new HtmlEmail();
 //                    EmailDAO emailDAO = new EmailDAO();
-                    HimsEmailDAO emailDAO = new HimsEmailDAO(); 
+                    HimsEmailDAO emailDAO = new HimsEmailDAO();
                     Email email = emailDAO.getEmail();
 
                     htmlEmail.setHostName(email.getHost());
@@ -419,6 +419,53 @@ public class EmailSender extends SpringBeanAutowiringSupport {
             }
         }).start();
     }
+
+    public void htmlEmailTableWithCc(final ServletContext servletContext, final String user, final String[] to, final String subject, final String msg, final String[] cc) {
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    HtmlEmail htmlEmail = new HtmlEmail();
+                    EmailDAO emailDAO = new EmailDAO();
+                    Email email = emailDAO.getEmail();
+
+                    htmlEmail.setHostName(email.getHost());
+                    htmlEmail.setSmtpPort(email.getPort());
+                    htmlEmail.setAuthenticator(new DefaultAuthenticator(email.getUsername(), email.getPassword()));
+                    htmlEmail.setSSLOnConnect(false);
+                    htmlEmail.setDebug(true);
+
+                    htmlEmail.setFrom(email.getSender());
+                    htmlEmail.addTo(to);
+                    htmlEmail.setSubject(subject);
+                    htmlEmail.addCc(cc);
+
+                    String logo = servletContext.getRealPath(logoPath);
+                    File logoFile = new File(logo);
+                    String logoCid = htmlEmail.embed(logoFile);
+
+                    Map model = new HashMap();
+                    model.put("user", user);
+                    model.put("subject", subject);
+                    model.put("message", msg);
+                    model.put("logoCid", logoCid);
+                    Configuration freemarkerConfiguration = new Configuration(Configuration.VERSION_2_3_22);
+                    freemarkerConfiguration.setServletContextForTemplateLoading(servletContext, emailTemplate);
+                    String msgContent = FreeMarkerTemplateUtils.processTemplateIntoString(freemarkerConfiguration.getTemplate("template.html"), model);
+                    htmlEmail.setHtmlMsg(msgContent);
+                    String send = htmlEmail.send();
+                    LOGGER.info("EMAIL SENDER: " + send);
+                } catch (EmailException e) {
+                    LOGGER.error(e.getMessage());
+                } catch (IOException e) {
+                    LOGGER.error(e.getMessage());
+                } catch (TemplateException e) {
+                    LOGGER.error(e.getMessage());
+                }
+            }
+        }).start();
+    }
+
     public void htmlEmailTableForHwReplacement(final ServletContext servletContext, final String user, final String[] to, final String subject, final String msg) {
         new Thread(new Runnable() {
             @Override
@@ -437,6 +484,52 @@ public class EmailSender extends SpringBeanAutowiringSupport {
                     htmlEmail.setFrom(email.getSender());
                     htmlEmail.addTo(to);
                     htmlEmail.setSubject(subject);
+
+                    String logo = servletContext.getRealPath(logoPath);
+                    File logoFile = new File(logo);
+                    String logoCid = htmlEmail.embed(logoFile);
+
+                    Map model = new HashMap();
+                    model.put("user", user);
+                    model.put("subject", subject);
+                    model.put("message", msg);
+                    model.put("logoCid", logoCid);
+                    Configuration freemarkerConfiguration = new Configuration(Configuration.VERSION_2_3_22);
+                    freemarkerConfiguration.setServletContextForTemplateLoading(servletContext, emailTemplate);
+                    String msgContent = FreeMarkerTemplateUtils.processTemplateIntoString(freemarkerConfiguration.getTemplate("template_hw_replace.html"), model);
+                    htmlEmail.setHtmlMsg(msgContent);
+                    String send = htmlEmail.send();
+                    LOGGER.info("EMAIL SENDER: " + send);
+                } catch (EmailException e) {
+                    LOGGER.error(e.getMessage());
+                } catch (IOException e) {
+                    LOGGER.error(e.getMessage());
+                } catch (TemplateException e) {
+                    LOGGER.error(e.getMessage());
+                }
+            }
+        }).start();
+    }
+
+    public void htmlEmailTableForHwReplacementWithCc(final ServletContext servletContext, final String user, final String[] to, final String subject, final String msg, final String[] cc) {
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    HtmlEmail htmlEmail = new HtmlEmail();
+                    EmailDAO emailDAO = new EmailDAO();
+                    Email email = emailDAO.getEmail();
+
+                    htmlEmail.setHostName(email.getHost());
+                    htmlEmail.setSmtpPort(email.getPort());
+                    htmlEmail.setAuthenticator(new DefaultAuthenticator(email.getUsername(), email.getPassword()));
+                    htmlEmail.setSSLOnConnect(false);
+                    htmlEmail.setDebug(true);
+
+                    htmlEmail.setFrom(email.getSender());
+                    htmlEmail.addTo(to);
+                    htmlEmail.setSubject(subject);
+                    htmlEmail.addCc(cc);
 
                     String logo = servletContext.getRealPath(logoPath);
                     File logoFile = new File(logo);
@@ -491,7 +584,6 @@ public class EmailSender extends SpringBeanAutowiringSupport {
 //                }
 //            }
 //    }
-    
     public void htmlEmailFT(final ServletContext servletContext, final String user, final String[] to, final String subject, final String msg) {
         new Thread(new Runnable() {
             @Override
@@ -536,5 +628,5 @@ public class EmailSender extends SpringBeanAutowiringSupport {
             }
         }).start();
     }
-    
+
 }

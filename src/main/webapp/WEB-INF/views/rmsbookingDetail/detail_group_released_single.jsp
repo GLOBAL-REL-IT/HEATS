@@ -23,25 +23,55 @@
                 float:none;
                 text-align:right;
             }
-            .select2-dropdown.select2-dropdown--below{
-                /*width: 148px !important;*/
+
+
+            /* Main Select2 container */
+            .select2-container {
+                width: 100% !important;
             }
-            .select2-container--default .select2-selection--single{
-                border: 1.5px solid #000;
-                border-radius: 0.5rem;
-                box-shadow: 2.5px 3px 0 #000;
-                outline: none;
-                transition: ease 0.25s;
+
+            /* Multiple select border box */
+            .select2-container--default .select2-selection--multiple {
+                min-height: 38px !important;
+                height: auto !important;
+                overflow: visible !important;
+                padding: 4px;
+                border: 1px solid #ced4da;
+                border-radius: 4px;
             }
+
+            /* Allow selected items to wrap */
+            .select2-container--default .select2-selection--multiple .select2-selection__rendered {
+                display: flex !important;
+                flex-wrap: wrap !important;
+                gap: 3px;
+                overflow: visible !important;
+                white-space: normal !important;
+            }
+
+            /* Selected tags */
+            .select2-container--default .select2-selection--multiple .select2-selection__choice {
+                margin-top: 2px !important;
+                margin-bottom: 2px !important;
+            }
+
+            /* Search input */
+            .select2-container--default .select2-search--inline .select2-search__field {
+                margin-top: 2px !important;
+            }
+            .form-group,
+            .col-md-12,
+            div {
+                height: auto;
+            }
+
             .input {
-                /*max-width: 190px;*/
-                /*padding: 0.875rem;*/
-                /*font-size: 1rem;*/
                 border: 1.5px solid #000;
                 border-radius: 0.5rem;
                 box-shadow: 2.5px 3px 0 #000;
                 outline: none;
                 transition: ease 0.25s;
+                display: flex;
             }
             .input:focus {
                 box-shadow: 5.5px 7px 0 black;
@@ -73,7 +103,7 @@
                 width: 900px;
                 margin: 0 auto;
             }
-            .offcanvas.offcanvas-start-recall {
+            .offcanvas.offcanvas-returnHw {
                 top: 0;
                 left: 0;
                 width: 900px;
@@ -92,7 +122,7 @@
                 <nav class="navbar bg-body-tertiary">
                     <div class="container-fluid justify-content-start">
                         <!--<a href="${contextPath}/rmsbookingDetail/rmsReleased/detail/${rms.id}" class="btn btn-outline-warning me-2" role="button">-->
-                            <a href="${contextPath}/rmsbookingDetail/rmsReleasedSingle" class="btn btn-outline-warning me-2" role="button">
+                        <a href="${contextPath}/rmsbookingDetail/rmsReleasedSingle" class="btn btn-outline-warning me-2" role="button">
                             <i class='bi bi-arrow-bar-left'></i>&nbsp;&nbsp;Back</a>
                     </div>
                 </nav>
@@ -2131,7 +2161,7 @@
         </div>
         <div class="offcanvas-placeholder">
 
-            <div class="offcanvas offcanvas-start" data-bs-backdrop="static" tabindex="-1" id="staticBackdrop"
+            <div class="offcanvas offcanvas-returnHw" data-bs-backdrop="static" tabindex="-1" id="staticBackdrop"
                  aria-labelledby="staticBackdropLabel">
                 <div class="offcanvas-header">
                     <h5 class="offcanvas-title" id="staticBackdropLabel">Return to MB Room (Defective Hardware)</h5>
@@ -2145,992 +2175,1032 @@
                                     <div class="mb-1">
                                         <label for="recallRemarks" class="form-label">Remarks</label>
                                         <div class="input input-group">
+                                            <input type="hidden" class="form-control" id="id" name="id" placeholder="" value="${rms.id}">
                                             <input type="hidden" class="form-control" id="bookingHwId" name="bookingHwId" placeholder="" value="${bookingHwId}">
-                                            <textarea class="form-control" rows="5" id="recallRemarks" name="recallRemarks"></textarea>
+                                            <textarea class="form-control" rows="5" maxlength="250" id="recallRemarks" name="recallRemarks" oninput="updateCounter()"></textarea>
+                                        </div>
+                                        <div class="text-end">
+                                            <small class="text-muted">
+                                                <span id="charCount">0</span>/250 characters
+                                            </small>
                                         </div>
                                     </div>
                                 </div>
-                            </div>
-                            <div class="col-md-12">
-                                <button type="submit" id="submit" id="submit" class="btn btn-primary float-end">Save</button>
-                            </div>
+                                <div class="col-xl-12 col-sm-12 col-12">
+                                    <div class="mb-2">
+                                        <label for="emailTo" class="form-label">Email To</label>
+                                        <div class="input input-group">
+                                            <input type="text" class="form-control" id="emailTo" name="emailTo" placeholder="" value="${emailTo}" disabled>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-xl-12 col-sm-12 col-12">
+                                    <div class="mb-2">
+                                        <label for="emailCc" class="form-label">CC</label>
+                                        <div class="input input-group">
+                                            <select class="mySelect" id="emailCc" name="emailCc" multiple="multiple" title="" data-live-search="true" style="width: 100%">
+                                                <c:forEach items="${listCc}" var="group">
+                                                    <option value="${group.email}">${group.name}&nbsp;&nbsp;(${group.email})</option>
+                                                </c:forEach>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-12">
+                                    <button type="submit" id="submit" id="submit" class="btn btn-primary float-end">Submit</button>
+                                </div>
                         </form>
                     </div>
                 </div>
             </div>
         </div>
-    </s:layout-component>
-    <s:layout-component name="page_js">
-        <script src="${contextPath}/resources/vendor/DataTables/customitem/jquery-3.7.1.min.js"></script>
-        <script src="${contextPath}/resources/vendor/DataTables/customitem/dataTables.js"></script>
-        <!--<script src="${contextPath}/resources/vendor/DataTables/customitem/bootstrap.bundle.min.js"></script>-->
+    </div>
+</s:layout-component>
+<s:layout-component name="page_js">
+    <script src="${contextPath}/resources/vendor/DataTables/customitem/jquery-3.7.1.min.js"></script>
+    <script src="${contextPath}/resources/vendor/DataTables/customitem/dataTables.js"></script>
+    <!--<script src="${contextPath}/resources/vendor/DataTables/customitem/bootstrap.bundle.min.js"></script>-->
 
-        <!-- Data Tables -->
-        <script src="${contextPath}/resources/statflow/vendor/datatables/dataTables.min.js"></script>
-        <script src="${contextPath}/resources/statflow/vendor/datatables/dataTables.bootstrap.min.js"></script>
-        <script src="${contextPath}/resources/statflow/vendor/datatables/custom/custom-datatables.js"></script>
+    <!-- Data Tables -->
+    <script src="${contextPath}/resources/statflow/vendor/datatables/dataTables.min.js"></script>
+    <script src="${contextPath}/resources/statflow/vendor/datatables/dataTables.bootstrap.min.js"></script>
+    <script src="${contextPath}/resources/statflow/vendor/datatables/custom/custom-datatables.js"></script>
 
-        <!-- DataTable Buttons -->
-        <script src="${contextPath}/resources/statflow/vendor/datatables/buttons/dataTables.buttons.min.js"></script>
-        <script src="${contextPath}/resources/statflow/vendor/datatables/buttons/jszip.min.js"></script>
-        <script src="${contextPath}/resources/statflow/vendor/datatables/buttons/dataTables.buttons.min.js"></script>
-        <script src="${contextPath}/resources/statflow/vendor/datatables/buttons/pdfmake.min.js"></script>
-        <script src="${contextPath}/resources/statflow/vendor/datatables/buttons/vfs_fonts.js"></script>
-        <script src="${contextPath}/resources/statflow/vendor/datatables/buttons/buttons.html5.min.js"></script>
-        <script src="${contextPath}/resources/statflow/vendor/datatables/buttons/buttons.print.min.js"></script>
-        <script src="${contextPath}/resources/statflow/vendor/datatables/buttons/buttons.colVis.min.js"></script>
+    <!-- DataTable Buttons -->
+    <script src="${contextPath}/resources/statflow/vendor/datatables/buttons/dataTables.buttons.min.js"></script>
+    <script src="${contextPath}/resources/statflow/vendor/datatables/buttons/jszip.min.js"></script>
+    <script src="${contextPath}/resources/statflow/vendor/datatables/buttons/dataTables.buttons.min.js"></script>
+    <script src="${contextPath}/resources/statflow/vendor/datatables/buttons/pdfmake.min.js"></script>
+    <script src="${contextPath}/resources/statflow/vendor/datatables/buttons/vfs_fonts.js"></script>
+    <script src="${contextPath}/resources/statflow/vendor/datatables/buttons/buttons.html5.min.js"></script>
+    <script src="${contextPath}/resources/statflow/vendor/datatables/buttons/buttons.print.min.js"></script>
+    <script src="${contextPath}/resources/statflow/vendor/datatables/buttons/buttons.colVis.min.js"></script>
 
-        <!-- Bootstrap Select JS -->
-        <script src="${contextPath}/resources/statflow/vendor/bs-select/bs-select.min.js"></script>
-        <script src="${contextPath}/resources/statflow/vendor/bs-select/bs-select-custom.js"></script>
-    </s:layout-component>
-    <s:layout-component name="page_js_inline">
-        <script>
+    <!-- Bootstrap Select JS -->
+    <script src="${contextPath}/resources/statflow/vendor/bs-select/bs-select.min.js"></script>
+    <script src="${contextPath}/resources/statflow/vendor/bs-select/bs-select-custom.js"></script>
+</s:layout-component>
+<s:layout-component name="page_js_inline">
+    <script>
 
+        function updateCounter() {
+            const textarea = document.getElementById('recallRemarks');
+            const counter = document.getElementById('charCount');
+            counter.textContent = textarea.value.length;
+        }
 
-            $(document).ready(function () {
+        $(document).ready(function () {
 
-                $('.js-example-basic-multiple').select2();
-                var valueJsonPcb = ${valueJsonPcb};
-                $('#pcbHardwareId').val(valueJsonPcb).trigger('change');
+            var placeholder = "Email cc";
+            $(".mySelect").select2({
 
-                var valueJsonHandle = ${valueJsonHandle};
-                $('#handleHardwareId').val(valueJsonHandle).trigger('change');
-
-                var valueJsonMetalFrame = ${valueJsonMetalFrame};
-                $('#metalFrameHardwareId').val(valueJsonMetalFrame).trigger('change');
-
-                var valueJsonHardwareFasterners = ${valueJsonHardwareFasterners};
-                $('#hardwareFasternersHardwareId').val(valueJsonHardwareFasterners).trigger('change');
-
-                var valueJsonClipHolder = ${valueJsonClipHolder};
-                $('#clipHolderHardwareId').val(valueJsonClipHolder).trigger('change');
-
-                var valueJsonPcbEdgeFinger = ${valueJsonPcbEdgeFinger};
-                $('#pcbEdgeFingerHardwareId').val(valueJsonPcbEdgeFinger).trigger('change');
-
-                var valueJsonConnector = ${valueJsonConnector};
-                $('#connectorHardwareId').val(valueJsonConnector).trigger('change');
-
-                var valueJsonDutSockets = ${valueJsonDutSockets};
-                $('#dutSocketsHardwareId').val(valueJsonDutSockets).trigger('change');
-
-                var valueJsonEdgeMbBanana = ${valueJsonEdgeMbBanana};
-                $('#edgeMbBananaHardwareId').val(valueJsonEdgeMbBanana).trigger('change');
-
-                var valueJsonElectComponent = ${valueJsonElectComponent};
-                $('#electComponentHardwareId').val(valueJsonElectComponent).trigger('change');
-
-                var valueJsonSolderJoint = ${valueJsonSolderJoint};
-                $('#solderJointHardwareId').val(valueJsonSolderJoint).trigger('change');
-
-                var valueJsonWinConnector = ${valueJsonWinConnector};
-                $('#winConnectorHardwareId').val(valueJsonWinConnector).trigger('change');
-
-                var valueJsonTeflonConnector = ${valueJsonTeflonConnector};
-                $('#teflonConnectorHardwareId').val(valueJsonTeflonConnector).trigger('change');
-
-                var valueJsonPogoReceptaclesPin = ${valueJsonPogoReceptaclesPin};
-                $('#pogoReceptaclesPinHardwareId').val(valueJsonPogoReceptaclesPin).trigger('change');
-
-                var valueJsonCableWiredCopperWire = ${valueJsonCableWiredCopperWire};
-                $('#cableWiredCopperWireHardwareId').val(valueJsonCableWiredCopperWire).trigger('change');
-
-                var valueJsonLabelIdentification = ${valueJsonLabelIdentification};
-                $('#labelIdentificationHardwareId').val(valueJsonLabelIdentification).trigger('change');
-
-                var element2 = $('#viId');
-                if (element2.val()) {
-                    $("#submitVm").attr("disabled", true);
-                }
+                allowClear: true,
+                placeholder: placeholder,
+                minimumInputLength: 3,
+                page: 10
             });
 
-            $(function () {
-                $("#customButtons1").DataTable({
-                    lengthMenu: [
-                        [10, 25, 50],
-                        [10, 25, 50, "All"],
-                    ],
-                    language: {
-                        lengthMenu: "Display _MENU_ Records Per Page",
-//                        info: "Showing Page _PAGE_ of _PAGES_",
-                        info: "Showing _START_ to _END_ of _TOTAL_ total records",
-                    },
-//                    dom: "Blfrtip",
-                    dom: '<"top"Blfi>rt<"bottom"p><"clear">',
-                    buttons: ["copy", "csv", "pdf", "print"],
-                });
-            });
+            $('.js-example-basic-multiple').select2();
+            var valueJsonPcb = ${valueJsonPcb};
+            $('#pcbHardwareId').val(valueJsonPcb).trigger('change');
 
-            function modalDelete(e) {
-                var deleteId = $(e).attr("modaldeleteid");
-                var deleteInfo = $("#modal_delete_info_" + deleteId).html();
-                var deleteUrl = "${contextPath}/rmsbookingDetail/deleteHwId/" + deleteId;
-                var deleteMsg = "<f:message key='general.label.delete.confirmation'><f:param value='" + deleteInfo + "'/></f:message>";
-                $("#delete_modal .modal-body").html(deleteMsg);
-                $("#modal_delete_button").attr("href", deleteUrl);
+            var valueJsonHandle = ${valueJsonHandle};
+            $('#handleHardwareId').val(valueJsonHandle).trigger('change');
+
+            var valueJsonMetalFrame = ${valueJsonMetalFrame};
+            $('#metalFrameHardwareId').val(valueJsonMetalFrame).trigger('change');
+
+            var valueJsonHardwareFasterners = ${valueJsonHardwareFasterners};
+            $('#hardwareFasternersHardwareId').val(valueJsonHardwareFasterners).trigger('change');
+
+            var valueJsonClipHolder = ${valueJsonClipHolder};
+            $('#clipHolderHardwareId').val(valueJsonClipHolder).trigger('change');
+
+            var valueJsonPcbEdgeFinger = ${valueJsonPcbEdgeFinger};
+            $('#pcbEdgeFingerHardwareId').val(valueJsonPcbEdgeFinger).trigger('change');
+
+            var valueJsonConnector = ${valueJsonConnector};
+            $('#connectorHardwareId').val(valueJsonConnector).trigger('change');
+
+            var valueJsonDutSockets = ${valueJsonDutSockets};
+            $('#dutSocketsHardwareId').val(valueJsonDutSockets).trigger('change');
+
+            var valueJsonEdgeMbBanana = ${valueJsonEdgeMbBanana};
+            $('#edgeMbBananaHardwareId').val(valueJsonEdgeMbBanana).trigger('change');
+
+            var valueJsonElectComponent = ${valueJsonElectComponent};
+            $('#electComponentHardwareId').val(valueJsonElectComponent).trigger('change');
+
+            var valueJsonSolderJoint = ${valueJsonSolderJoint};
+            $('#solderJointHardwareId').val(valueJsonSolderJoint).trigger('change');
+
+            var valueJsonWinConnector = ${valueJsonWinConnector};
+            $('#winConnectorHardwareId').val(valueJsonWinConnector).trigger('change');
+
+            var valueJsonTeflonConnector = ${valueJsonTeflonConnector};
+            $('#teflonConnectorHardwareId').val(valueJsonTeflonConnector).trigger('change');
+
+            var valueJsonPogoReceptaclesPin = ${valueJsonPogoReceptaclesPin};
+            $('#pogoReceptaclesPinHardwareId').val(valueJsonPogoReceptaclesPin).trigger('change');
+
+            var valueJsonCableWiredCopperWire = ${valueJsonCableWiredCopperWire};
+            $('#cableWiredCopperWireHardwareId').val(valueJsonCableWiredCopperWire).trigger('change');
+
+            var valueJsonLabelIdentification = ${valueJsonLabelIdentification};
+            $('#labelIdentificationHardwareId').val(valueJsonLabelIdentification).trigger('change');
+
+            var element2 = $('#viId');
+            if (element2.val()) {
+                $("#submitVm").attr("disabled", true);
             }
+        });
 
-            function modalFinalize(e) {
-                var groupId = $(e).attr("modaldeleteid");
-                var deleteUrl = "${contextPath}/rmsbookingDetail/finalize/" + groupId;
-                var deleteMsg = "Do you confirm that all information is complete and ready to finalize?";
-                $("#confirmation_modal .modal-body").html(deleteMsg);
-                $("#modal_button").attr("href", deleteUrl);
-            }
-
-            function modalUndoFinalize(e) {
-                var groupId = $(e).attr("modaldeleteid");
-                var deleteUrl = "${contextPath}/rmsbookingDetail/undoFinalize/" + groupId;
-                var deleteMsg = "Do you confirm to undo the finalization?";
-                $("#confirmation_modal .modal-body").html(deleteMsg);
-                $("#modal_button").attr("href", deleteUrl);
-            }
-
-
-            // Fetch all the forms we want to apply custom Bootstrap validation styles to
-            const forms = document.querySelectorAll('.needs-validation');
-
-            // Loop over them and prevent submission
-            Array.prototype.slice.call(forms).forEach((form) => {
-                form.addEventListener('submit', (event) => {
-                    if (!form.checkValidity()) {
-                        event.preventDefault();
-                        event.stopPropagation();
-                    }
-                    form.classList.add('was-validated');
-                }, false);
+        $(function () {
+            $("#customButtons1").DataTable({
+                lengthMenu: [
+                    [10, 25, 50],
+                    [10, 25, 50, "All"],
+                ],
+                language: {
+                    lengthMenu: "Display _MENU_ Records Per Page",
+                    //                        info: "Showing Page _PAGE_ of _PAGES_",
+                    info: "Showing _START_ to _END_ of _TOTAL_ total records",
+                },
+                //                    dom: "Blfrtip",
+                dom: '<"top"Blfi>rt<"bottom"p><"clear">',
+                buttons: ["copy", "csv", "pdf", "print"],
             });
+        });
 
-            $(".js-example-basic-single").select2({
-                placeholder: "Choose one",
-                allowClear: true
-            });
+        function modalDelete(e) {
+            var deleteId = $(e).attr("modaldeleteid");
+            var deleteInfo = $("#modal_delete_info_" + deleteId).html();
+            var deleteUrl = "${contextPath}/rmsbookingDetail/deleteHwId/" + deleteId;
+            var deleteMsg = "<f:message key='general.label.delete.confirmation'><f:param value='" + deleteInfo + "'/></f:message>";
+            $("#delete_modal .modal-body").html(deleteMsg);
+            $("#modal_delete_button").attr("href", deleteUrl);
+        }
 
-            $(".js-example-tags").select2({
-                tags: true
-            });
-            // Get references to the elements
+        function modalFinalize(e) {
+            var groupId = $(e).attr("modaldeleteid");
+            var deleteUrl = "${contextPath}/rmsbookingDetail/finalize/" + groupId;
+            var deleteMsg = "Do you confirm that all information is complete and ready to finalize?";
+            $("#confirmation_modal .modal-body").html(deleteMsg);
+            $("#modal_button").attr("href", deleteUrl);
+        }
 
-            const pcbPass = document.getElementById('pcb1');
-            const pcbNa = document.getElementById('pcb3');
-            const pcbFail = document.getElementById('pcb2');
-            const pcbRejectCriteria = document.getElementById('pcbReject');
-            const pcbRejectQty = document.getElementById('pcbRejectQty');
-            const pcbRejectUpload = document.getElementById('pcbRejectUpload');
-            const pcbAttach = document.getElementById('pcbAttach');
-            const pcbHardwareId = document.getElementById('pcbHardwareId');
+        function modalUndoFinalize(e) {
+            var groupId = $(e).attr("modaldeleteid");
+            var deleteUrl = "${contextPath}/rmsbookingDetail/undoFinalize/" + groupId;
+            var deleteMsg = "Do you confirm to undo the finalization?";
+            $("#confirmation_modal .modal-body").html(deleteMsg);
+            $("#modal_button").attr("href", deleteUrl);
+        }
 
-            const handlePass = document.getElementById('handle1');
-            const handleNa = document.getElementById('handle3');
-            const handleFail = document.getElementById('handle2');
-            const handleRejectCriteria = document.getElementById('handleReject');
-            const handleRejectQty = document.getElementById('handleRejectQty');
-            const handleRejectUpload = document.getElementById('handleRejectUpload');
-            const handleAttach = document.getElementById('handleAttach');
-            const handleHardwareId = document.getElementById('handleHardwareId');
 
-            const metalFramePass = document.getElementById('metalFrame1');
-            const metalFrameNa = document.getElementById('metalFrame3');
-            const metalFrameFail = document.getElementById('metalFrame2');
-            const metalFrameRejectCriteria = document.getElementById('metalFrameReject');
-            const metalFrameRejectQty = document.getElementById('metalFrameRejectQty');
-            const metalFrameRejectUpload = document.getElementById('metalFrameRejectUpload');
-            const metalFrameAttach = document.getElementById('metalFrameAttach');
-            const metalFrameHardwareId = document.getElementById('metalFrameHardwareId');
+        // Fetch all the forms we want to apply custom Bootstrap validation styles to
+        const forms = document.querySelectorAll('.needs-validation');
 
-            const hardwareFasternersPass = document.getElementById('hardwareFasterners1');
-            const hardwareFasternersNa = document.getElementById('hardwareFasterners3');
-            const hardwareFasternersFail = document.getElementById('hardwareFasterners2');
-            const hardwareFasternersRejectCriteria = document.getElementById('hardwareFasternersReject');
-            const hardwareFasternersRejectQty = document.getElementById('hardwareFasternersRejectQty');
-            const hardwareFasternersRejectUpload = document.getElementById('hardwareFasternersRejectUpload');
-            const hardwareFasternersAttach = document.getElementById('hardwareFasternersAttach');
-            const hardwareFasternersHardwareId = document.getElementById('hardwareFasternersHardwareId');
-
-            const clipHolderPass = document.getElementById('clipHolder1');
-            const clipHolderNa = document.getElementById('clipHolder3');
-            const clipHolderFail = document.getElementById('clipHolder2');
-            const clipHolderRejectCriteria = document.getElementById('clipHolderReject');
-            const clipHolderRejectQty = document.getElementById('clipHolderRejectQty');
-            const clipHolderRejectUpload = document.getElementById('clipHolderRejectUpload');
-            const clipHolderAttach = document.getElementById('clipHolderAttach');
-            const clipHolderHardwareId = document.getElementById('clipHolderHardwareId');
-
-            const pcbEdgeFingerPass = document.getElementById('pcbEdgeFinger1');
-            const pcbEdgeFingerNa = document.getElementById('pcbEdgeFinger3');
-            const pcbEdgeFingerFail = document.getElementById('pcbEdgeFinger2');
-            const pcbEdgeFingerRejectCriteria = document.getElementById('pcbEdgeFingerReject');
-            const pcbEdgeFingerRejectQty = document.getElementById('pcbEdgeFingerRejectQty');
-            const pcbEdgeFingerRejectUpload = document.getElementById('pcbEdgeFingerRejectUpload');
-            const pcbEdgeFingerAttach = document.getElementById('pcbEdgeFingerAttach');
-            const pcbEdgeFingerHardwareId = document.getElementById('pcbEdgeFingerHardwareId');
-
-            const connectorPass = document.getElementById('connector1');
-            const connectorNa = document.getElementById('connector3');
-            const connectorFail = document.getElementById('connector2');
-            const connectorRejectCriteria = document.getElementById('connectorReject');
-            const connectorRejectQty = document.getElementById('connectorRejectQty');
-            const connectorRejectUpload = document.getElementById('connectorRejectUpload');
-            const connectorAttach = document.getElementById('connectorAttach');
-            const connectorHardwareId = document.getElementById('connectorHardwareId');
-
-            const dutSocketsPass = document.getElementById('dutSockets1');
-            const dutSocketsNa = document.getElementById('dutSockets3');
-            const dutSocketsFail = document.getElementById('dutSockets2');
-            const dutSocketsRejectCriteria = document.getElementById('dutSocketsReject');
-            const dutSocketsRejectQty = document.getElementById('dutSocketsRejectQty');
-            const dutSocketsRejectUpload = document.getElementById('dutSocketsRejectUpload');
-            const dutSocketsAttach = document.getElementById('dutSocketsAttach');
-            const dutSocketsHardwareId = document.getElementById('dutSocketsHardwareId');
-
-            const edgeMbBananaPass = document.getElementById('edgeMbBanana1');
-            const edgeMbBananaNa = document.getElementById('edgeMbBanana3');
-            const edgeMbBananaFail = document.getElementById('edgeMbBanana2');
-            const edgeMbBananaRejectCriteria = document.getElementById('edgeMbBananaReject');
-            const edgeMbBananaRejectQty = document.getElementById('edgeMbBananaRejectQty');
-            const edgeMbBananaRejectUpload = document.getElementById('edgeMbBananaRejectUpload');
-            const edgeMbBananaAttach = document.getElementById('edgeMbBananaAttach');
-            const edgeMbBananaHardwareId = document.getElementById('edgeMbBananaHardwareId');
-
-            const electComponentPass = document.getElementById('electComponent1');
-            const electComponentNa = document.getElementById('electComponent3');
-            const electComponentFail = document.getElementById('electComponent2');
-            const electComponentRejectCriteria = document.getElementById('electComponentReject');
-            const electComponentRejectQty = document.getElementById('electComponentRejectQty');
-            const electComponentRejectUpload = document.getElementById('electComponentRejectUpload');
-            const electComponentAttach = document.getElementById('electComponentAttach');
-            const electComponentHardwareId = document.getElementById('electComponentHardwareId');
-
-            const solderJointPass = document.getElementById('solderJoint1');
-            const solderJointNa = document.getElementById('solderJoint3');
-            const solderJointFail = document.getElementById('solderJoint2');
-            const solderJointRejectCriteria = document.getElementById('solderJointReject');
-            const solderJointRejectQty = document.getElementById('solderJointRejectQty');
-            const solderJointRejectUpload = document.getElementById('solderJointRejectUpload');
-            const solderJointAttach = document.getElementById('solderJointAttach');
-            const solderJointHardwareId = document.getElementById('solderJointHardwareId');
-
-            const winConnectorPass = document.getElementById('winConnector1');
-            const winConnectorNa = document.getElementById('winConnector3');
-            const winConnectorFail = document.getElementById('winConnector2');
-            const winConnectorRejectCriteria = document.getElementById('winConnectorReject');
-            const winConnectorRejectQty = document.getElementById('winConnectorRejectQty');
-            const winConnectorRejectUpload = document.getElementById('winConnectorRejectUpload');
-            const winConnectorAttach = document.getElementById('winConnectorAttach');
-            const winConnectorHardwareId = document.getElementById('winConnectorHardwareId');
-
-            const teflonConnectorPass = document.getElementById('teflonConnector1');
-            const teflonConnectorNa = document.getElementById('teflonConnector3');
-            const teflonConnectorFail = document.getElementById('teflonConnector2');
-            const teflonConnectorRejectCriteria = document.getElementById('teflonConnectorReject');
-            const teflonConnectorRejectQty = document.getElementById('teflonConnectorRejectQty');
-            const teflonConnectorRejectUpload = document.getElementById('teflonConnectorRejectUpload');
-            const teflonConnectorAttach = document.getElementById('teflonConnectorAttach');
-            const teflonConnectorHardwareId = document.getElementById('teflonConnectorHardwareId');
-
-            const pogoReceptaclesPinPass = document.getElementById('pogoReceptaclesPin1');
-            const pogoReceptaclesPinNa = document.getElementById('pogoReceptaclesPin3');
-            const pogoReceptaclesPinFail = document.getElementById('pogoReceptaclesPin2');
-            const pogoReceptaclesPinRejectCriteria = document.getElementById('pogoReceptaclesPinReject');
-            const pogoReceptaclesPinRejectQty = document.getElementById('pogoReceptaclesPinRejectQty');
-            const pogoReceptaclesPinRejectUpload = document.getElementById('pogoReceptaclesPinRejectUpload');
-            const pogoReceptaclesPinAttach = document.getElementById('pogoReceptaclesPinAttach');
-            const pogoReceptaclesPinHardwareId = document.getElementById('pogoReceptaclesPinHardwareId');
-
-            const cableWiredCopperWirePass = document.getElementById('cableWiredCopperWire1');
-            const cableWiredCopperWireNa = document.getElementById('cableWiredCopperWire3');
-            const cableWiredCopperWireFail = document.getElementById('cableWiredCopperWire2');
-            const cableWiredCopperWireRejectCriteria = document.getElementById('cableWiredCopperWireReject');
-            const cableWiredCopperWireRejectQty = document.getElementById('cableWiredCopperWireRejectQty');
-            const cableWiredCopperWireRejectUpload = document.getElementById('cableWiredCopperWireRejectUpload');
-            const cableWiredCopperWireAttach = document.getElementById('cableWiredCopperWireAttach');
-            const cableWiredCopperWireHardwareId = document.getElementById('cableWiredCopperWireHardwareId');
-
-            const labelIdentificationPass = document.getElementById('labelIdentification1');
-            const labelIdentificationNa = document.getElementById('labelIdentification3');
-            const labelIdentificationFail = document.getElementById('labelIdentification2');
-            const labelIdentificationRejectCriteria = document.getElementById('labelIdentificationReject');
-            const labelIdentificationRejectQty = document.getElementById('labelIdentificationRejectQty');
-            const labelIdentificationRejectUpload = document.getElementById('labelIdentificationRejectUpload');
-            const labelIdentificationAttach = document.getElementById('labelIdentificationAttach');
-            const labelIdentificationHardwareId = document.getElementById('labelIdentificationHardwareId');
-
-            function handleRadioChange() {
-                if (pcbFail.checked) {
-                    pcbRejectCriteria.disabled = false; // disable button if 'Fail' is checked
-                    pcbRejectCriteria.required = true;
-
-                    pcbRejectQty.disabled = false;
-                    pcbRejectQty.required = true;
-
-                    pcbRejectUpload.disabled = false;
-                    pcbRejectUpload.required = true;
-
-                    pcbHardwareId.disabled = false;
-                    pcbHardwareId.required = true;
-                } else {
-                    pcbRejectCriteria.disabled = true;  // enable button otherwise (e.g., if 'Pass' is checked)
-                    pcbRejectCriteria.required = false;
-                    pcbRejectCriteria.value = '';
-
-                    pcbRejectQty.disabled = true;
-                    pcbRejectQty.required = false;
-                    pcbRejectQty.value = '';
-
-                    pcbRejectUpload.disabled = true;
-                    pcbRejectUpload.required = false;
-                    pcbRejectUpload.value = '';
-
-                    pcbHardwareId.disabled = true;
-                    pcbHardwareId.required = false;
-                    pcbHardwareId.value = '';
+        // Loop over them and prevent submission
+        Array.prototype.slice.call(forms).forEach((form) => {
+            form.addEventListener('submit', (event) => {
+                if (!form.checkValidity()) {
+                    event.preventDefault();
+                    event.stopPropagation();
                 }
-                if (handleFail.checked) {
-                    handleRejectCriteria.disabled = false; // disable button if 'Fail' is checked
-                    handleRejectCriteria.required = true;
-
-                    handleRejectQty.disabled = false;
-                    handleRejectQty.required = true;
-
-                    handleRejectUpload.disabled = false;
-                    handleRejectUpload.required = true;
-
-                    handleHardwareId.disabled = false;
-                    handleHardwareId.required = true;
-                } else {
-                    handleRejectCriteria.disabled = true;  // enable button otherwise (e.g., if 'Pass' is checked)
-                    handleRejectCriteria.required = false;
-                    handleRejectCriteria.value = '';
-
-                    handleRejectQty.disabled = true;
-                    handleRejectQty.required = false;
-                    handleRejectQty.value = '';
-
-                    handleRejectUpload.disabled = true;
-                    handleRejectUpload.required = false;
-                    handleRejectUpload.value = '';
-
-                    handleHardwareId.disabled = true;
-                    handleHardwareId.required = false;
-                    handleHardwareId.value = '';
-                }
-                if (metalFrameFail.checked) {
-                    metalFrameRejectCriteria.disabled = false; // disable button if 'Fail' is checked
-                    metalFrameRejectCriteria.required = true;
-
-                    metalFrameRejectQty.disabled = false;
-                    metalFrameRejectQty.required = true;
-
-                    metalFrameRejectUpload.disabled = false;
-                    metalFrameRejectUpload.required = true;
-
-                    metalFrameHardwareId.disabled = false;
-                    metalFrameHardwareId.required = true;
-                } else {
-                    metalFrameRejectCriteria.disabled = true;  // enable button otherwise (e.g., if 'Pass' is checked)
-                    metalFrameRejectCriteria.required = false;
-                    metalFrameRejectCriteria.value = '';
-
-                    metalFrameRejectQty.disabled = true;
-                    metalFrameRejectQty.required = false;
-                    metalFrameRejectQty.value = '';
-
-                    metalFrameRejectUpload.disabled = true;
-                    metalFrameRejectUpload.required = false;
-                    metalFrameRejectUpload.value = '';
-
-                    metalFrameHardwareId.disabled = true;
-                    metalFrameHardwareId.required = false;
-                    metalFrameHardwareId.value = '';
-                }
-                if (hardwareFasternersFail.checked) {
-                    hardwareFasternersRejectCriteria.disabled = false; // disable button if 'Fail' is checked
-                    hardwareFasternersRejectCriteria.required = true;
-
-                    hardwareFasternersRejectQty.disabled = false;
-                    hardwareFasternersRejectQty.required = true;
-
-                    hardwareFasternersRejectUpload.disabled = false;
-                    hardwareFasternersRejectUpload.required = true;
-
-                    hardwareFasternersHardwareId.disabled = false;
-                    hardwareFasternersHardwareId.required = true;
-                } else {
-                    hardwareFasternersRejectCriteria.disabled = true;  // enable button otherwise (e.g., if 'Pass' is checked)
-                    hardwareFasternersRejectCriteria.required = false;
-                    hardwareFasternersRejectCriteria.value = '';
-
-                    hardwareFasternersRejectQty.disabled = true;
-                    hardwareFasternersRejectQty.required = false;
-                    hardwareFasternersRejectQty.value = '';
-
-                    hardwareFasternersRejectUpload.disabled = true;
-                    hardwareFasternersRejectUpload.required = false;
-                    hardwareFasternersRejectUpload.value = '';
-
-                    hardwareFasternersHardwareId.disabled = true;
-                    hardwareFasternersHardwareId.required = false;
-                    hardwareFasternersHardwareId.value = '';
-                }
-                if (clipHolderFail.checked) {
-                    clipHolderRejectCriteria.disabled = false; // disable button if 'Fail' is checked
-                    clipHolderRejectCriteria.required = true;
-
-                    clipHolderRejectQty.disabled = false;
-                    clipHolderRejectQty.required = true;
-
-                    clipHolderRejectUpload.disabled = false;
-                    clipHolderRejectUpload.required = true;
-
-                    clipHolderHardwareId.disabled = false;
-                    clipHolderHardwareId.required = true;
-                } else {
-                    clipHolderRejectCriteria.disabled = true;  // enable button otherwise (e.g., if 'Pass' is checked)
-                    clipHolderRejectCriteria.required = false;
-                    clipHolderRejectCriteria.value = '';
-
-                    clipHolderRejectQty.disabled = true;
-                    clipHolderRejectQty.required = false;
-                    clipHolderRejectQty.value = '';
-
-                    clipHolderRejectUpload.disabled = true;
-                    clipHolderRejectUpload.required = false;
-                    clipHolderRejectUpload.value = '';
-
-                    clipHolderHardwareId.disabled = true;
-                    clipHolderHardwareId.required = false;
-                    clipHolderHardwareId.value = '';
-                }
-                if (pcbEdgeFingerFail.checked) {
-                    pcbEdgeFingerRejectCriteria.disabled = false; // disable button if 'Fail' is checked
-                    pcbEdgeFingerRejectCriteria.required = true;
-
-                    pcbEdgeFingerRejectQty.disabled = false;
-                    pcbEdgeFingerRejectQty.required = true;
-
-                    pcbEdgeFingerRejectUpload.disabled = false;
-                    pcbEdgeFingerRejectUpload.required = true;
-
-                    pcbEdgeFingerHardwareId.disabled = false;
-                    pcbEdgeFingerHardwareId.required = true;
-                } else {
-                    pcbEdgeFingerRejectCriteria.disabled = true;  // enable button otherwise (e.g., if 'Pass' is checked)
-                    pcbEdgeFingerRejectCriteria.required = false;
-                    pcbEdgeFingerRejectCriteria.value = '';
-
-                    pcbEdgeFingerRejectQty.disabled = true;
-                    pcbEdgeFingerRejectQty.required = false;
-                    pcbEdgeFingerRejectQty.value = '';
-
-                    pcbEdgeFingerRejectUpload.disabled = true;
-                    pcbEdgeFingerRejectUpload.required = false;
-                    pcbEdgeFingerRejectUpload.value = '';
-
-                    pcbEdgeFingerHardwareId.disabled = true;
-                    pcbEdgeFingerHardwareId.required = false;
-                    pcbEdgeFingerHardwareId.value = '';
-                }
-                if (connectorFail.checked) {
-                    connectorRejectCriteria.disabled = false; // disable button if 'Fail' is checked
-                    connectorRejectCriteria.required = true;
-
-                    connectorRejectQty.disabled = false;
-                    connectorRejectQty.required = true;
-
-                    connectorRejectUpload.disabled = false;
-                    connectorRejectUpload.required = true;
-
-                    connectorHardwareId.disabled = false;
-                    connectorHardwareId.required = true;
-                } else {
-                    connectorRejectCriteria.disabled = true;  // enable button otherwise (e.g., if 'Pass' is checked)
-                    connectorRejectCriteria.required = false;
-                    connectorRejectCriteria.value = '';
-
-                    connectorRejectQty.disabled = true;
-                    connectorRejectQty.required = false;
-                    connectorRejectQty.value = '';
-
-                    connectorRejectUpload.disabled = true;
-                    connectorRejectUpload.required = false;
-                    connectorRejectUpload.value = '';
-
-                    connectorHardwareId.disabled = true;
-                    connectorHardwareId.required = false;
-                    connectorHardwareId.value = '';
-                }
-                if (dutSocketsFail.checked) {
-                    dutSocketsRejectCriteria.disabled = false; // disable button if 'Fail' is checked
-                    dutSocketsRejectCriteria.required = true;
-
-                    dutSocketsRejectQty.disabled = false;
-                    dutSocketsRejectQty.required = true;
-
-                    dutSocketsRejectUpload.disabled = false;
-                    dutSocketsRejectUpload.required = true;
-
-                    dutSocketsHardwareId.disabled = false;
-                    dutSocketsHardwareId.required = true;
-                } else {
-                    dutSocketsRejectCriteria.disabled = true;  // enable button otherwise (e.g., if 'Pass' is checked)
-                    dutSocketsRejectCriteria.required = false;
-                    dutSocketsRejectCriteria.value = '';
-
-                    dutSocketsRejectQty.disabled = true;
-                    dutSocketsRejectQty.required = false;
-                    dutSocketsRejectQty.value = '';
-
-                    dutSocketsRejectUpload.disabled = true;
-                    dutSocketsRejectUpload.required = false;
-                    dutSocketsRejectUpload.value = '';
-
-                    dutSocketsHardwareId.disabled = true;
-                    dutSocketsHardwareId.required = false;
-                    dutSocketsHardwareId.value = '';
-                }
-                if (edgeMbBananaFail.checked) {
-                    edgeMbBananaRejectCriteria.disabled = false; // disable button if 'Fail' is checked
-                    edgeMbBananaRejectCriteria.required = true;
-
-                    edgeMbBananaRejectQty.disabled = false;
-                    edgeMbBananaRejectQty.required = true;
-
-                    edgeMbBananaRejectUpload.disabled = false;
-                    edgeMbBananaRejectUpload.required = true;
-
-                    edgeMbBananaHardwareId.disabled = false;
-                    edgeMbBananaHardwareId.required = true;
-                } else {
-                    edgeMbBananaRejectCriteria.disabled = true;  // enable button otherwise (e.g., if 'Pass' is checked)
-                    edgeMbBananaRejectCriteria.required = false;
-                    edgeMbBananaRejectCriteria.value = '';
-
-                    edgeMbBananaRejectQty.disabled = true;
-                    edgeMbBananaRejectQty.required = false;
-                    edgeMbBananaRejectQty.value = '';
-
-                    edgeMbBananaRejectUpload.disabled = true;
-                    edgeMbBananaRejectUpload.required = false;
-                    edgeMbBananaRejectUpload.value = '';
-
-                    edgeMbBananaHardwareId.disabled = true;
-                    edgeMbBananaHardwareId.required = false;
-                    edgeMbBananaHardwareId.value = '';
-                }
-                if (electComponentFail.checked) {
-                    electComponentRejectCriteria.disabled = false; // disable button if 'Fail' is checked
-                    electComponentRejectCriteria.required = true;
-
-                    electComponentRejectQty.disabled = false;
-                    electComponentRejectQty.required = true;
-
-                    electComponentRejectUpload.disabled = false;
-                    electComponentRejectUpload.required = true;
-
-                    electComponentHardwareId.disabled = false;
-                    electComponentHardwareId.required = true;
-                } else {
-                    electComponentRejectCriteria.disabled = true;  // enable button otherwise (e.g., if 'Pass' is checked)
-                    electComponentRejectCriteria.required = false;
-                    electComponentRejectCriteria.value = '';
-
-                    electComponentRejectQty.disabled = true;
-                    electComponentRejectQty.required = false;
-                    electComponentRejectQty.value = '';
-
-                    electComponentRejectUpload.disabled = true;
-                    electComponentRejectUpload.required = false;
-                    electComponentRejectUpload.value = '';
-
-                    electComponentHardwareId.disabled = true;
-                    electComponentHardwareId.required = false;
-                    electComponentHardwareId.value = '';
-                }
-                if (solderJointFail.checked) {
-                    solderJointRejectCriteria.disabled = false; // disable button if 'Fail' is checked
-                    solderJointRejectCriteria.required = true;
-
-                    solderJointRejectQty.disabled = false;
-                    solderJointRejectQty.required = true;
-
-                    solderJointRejectUpload.disabled = false;
-                    solderJointRejectUpload.required = true;
-
-                    solderJointHardwareId.disabled = false;
-                    solderJointHardwareId.required = true;
-                } else {
-                    solderJointRejectCriteria.disabled = true;  // enable button otherwise (e.g., if 'Pass' is checked)
-                    solderJointRejectCriteria.required = false;
-                    solderJointRejectCriteria.value = '';
-
-                    solderJointRejectQty.disabled = true;
-                    solderJointRejectQty.required = false;
-                    solderJointRejectQty.value = '';
-
-                    solderJointRejectUpload.disabled = true;
-                    solderJointRejectUpload.required = false;
-                    solderJointRejectUpload.value = '';
-
-                    solderJointHardwareId.disabled = true;
-                    solderJointHardwareId.required = false;
-                    solderJointHardwareId.value = '';
-                }
-                if (winConnectorFail.checked) {
-                    winConnectorRejectCriteria.disabled = false; // disable button if 'Fail' is checked
-                    winConnectorRejectCriteria.required = true;
-
-                    winConnectorRejectQty.disabled = false;
-                    winConnectorRejectQty.required = true;
-
-                    winConnectorRejectUpload.disabled = false;
-                    winConnectorRejectUpload.required = true;
-
-                    winConnectorHardwareId.disabled = false;
-                    winConnectorHardwareId.required = true;
-                } else {
-                    winConnectorRejectCriteria.disabled = true;  // enable button otherwise (e.g., if 'Pass' is checked)
-                    winConnectorRejectCriteria.required = false;
-                    winConnectorRejectCriteria.value = '';
-
-                    winConnectorRejectQty.disabled = true;
-                    winConnectorRejectQty.required = false;
-                    winConnectorRejectQty.value = '';
-
-                    winConnectorRejectUpload.disabled = true;
-                    winConnectorRejectUpload.required = false;
-                    winConnectorRejectUpload.value = '';
-
-                    winConnectorHardwareId.disabled = true;
-                    winConnectorHardwareId.required = false;
-                    winConnectorHardwareId.value = '';
-                }
-                if (teflonConnectorFail.checked) {
-                    teflonConnectorRejectCriteria.disabled = false; // disable button if 'Fail' is checked
-                    teflonConnectorRejectCriteria.required = true;
-
-                    teflonConnectorRejectQty.disabled = false;
-                    teflonConnectorRejectQty.required = true;
-
-                    teflonConnectorRejectUpload.disabled = false;
-                    teflonConnectorRejectUpload.required = true;
-
-                    teflonConnectorHardwareId.disabled = false;
-                    teflonConnectorHardwareId.required = true;
-                } else {
-                    teflonConnectorRejectCriteria.disabled = true;  // enable button otherwise (e.g., if 'Pass' is checked)
-                    teflonConnectorRejectCriteria.required = false;
-                    teflonConnectorRejectCriteria.value = '';
-
-                    teflonConnectorRejectQty.disabled = true;
-                    teflonConnectorRejectQty.required = false;
-                    teflonConnectorRejectQty.value = '';
-
-                    teflonConnectorRejectUpload.disabled = true;
-                    teflonConnectorRejectUpload.required = false;
-                    teflonConnectorRejectUpload.value = '';
-
-                    teflonConnectorHardwareId.disabled = true;
-                    teflonConnectorHardwareId.required = false;
-                    teflonConnectorHardwareId.value = '';
-                }
-                if (pogoReceptaclesPinFail.checked) {
-                    pogoReceptaclesPinRejectCriteria.disabled = false; // disable button if 'Fail' is checked
-                    pogoReceptaclesPinRejectCriteria.required = true;
-
-                    pogoReceptaclesPinRejectQty.disabled = false;
-                    pogoReceptaclesPinRejectQty.required = true;
-
-                    pogoReceptaclesPinRejectUpload.disabled = false;
-                    pogoReceptaclesPinRejectUpload.required = true;
-
-                    pogoReceptaclesPinHardwareId.disabled = false;
-                    pogoReceptaclesPinHardwareId.required = true;
-                } else {
-                    pogoReceptaclesPinRejectCriteria.disabled = true;  // enable button otherwise (e.g., if 'Pass' is checked)
-                    pogoReceptaclesPinRejectCriteria.required = false;
-                    pogoReceptaclesPinRejectCriteria.value = '';
-
-                    pogoReceptaclesPinRejectQty.disabled = true;
-                    pogoReceptaclesPinRejectQty.required = false;
-                    pogoReceptaclesPinRejectQty.value = '';
-
-                    pogoReceptaclesPinRejectUpload.disabled = true;
-                    pogoReceptaclesPinRejectUpload.required = false;
-                    pogoReceptaclesPinRejectUpload.value = '';
-
-                    pogoReceptaclesPinHardwareId.disabled = true;
-                    pogoReceptaclesPinHardwareId.required = false;
-                    pogoReceptaclesPinHardwareId.value = '';
-                }
-                if (cableWiredCopperWireFail.checked) {
-                    cableWiredCopperWireRejectCriteria.disabled = false; // disable button if 'Fail' is checked
-                    cableWiredCopperWireRejectCriteria.required = true;
-
-                    cableWiredCopperWireRejectQty.disabled = false;
-                    cableWiredCopperWireRejectQty.required = true;
-
-                    cableWiredCopperWireRejectUpload.disabled = false;
-                    cableWiredCopperWireRejectUpload.required = true;
-
-                    cableWiredCopperWireHardwareId.disabled = false;
-                    cableWiredCopperWireHardwareId.required = true;
-                } else {
-                    cableWiredCopperWireRejectCriteria.disabled = true;  // enable button otherwise (e.g., if 'Pass' is checked)
-                    cableWiredCopperWireRejectCriteria.required = false;
-                    cableWiredCopperWireRejectCriteria.value = '';
-
-                    cableWiredCopperWireRejectQty.disabled = true;
-                    cableWiredCopperWireRejectQty.required = false;
-                    cableWiredCopperWireRejectQty.value = '';
-
-                    cableWiredCopperWireRejectUpload.disabled = true;
-                    cableWiredCopperWireRejectUpload.required = false;
-                    cableWiredCopperWireRejectUpload.value = '';
-
-                    cableWiredCopperWireHardwareId.disabled = true;
-                    cableWiredCopperWireHardwareId.required = false;
-                    cableWiredCopperWireHardwareId.value = '';
-                }
-                if (labelIdentificationFail.checked) {
-                    labelIdentificationRejectCriteria.disabled = false; // disable button if 'Fail' is checked
-                    labelIdentificationRejectCriteria.required = true;
-
-                    labelIdentificationRejectQty.disabled = false;
-                    labelIdentificationRejectQty.required = true;
-
-                    labelIdentificationRejectUpload.disabled = false;
-                    labelIdentificationRejectUpload.required = true;
-
-                    labelIdentificationHardwareId.disabled = false;
-                    labelIdentificationHardwareId.required = true;
-                } else {
-                    labelIdentificationRejectCriteria.disabled = true;  // enable button otherwise (e.g., if 'Pass' is checked)
-                    labelIdentificationRejectCriteria.required = false;
-                    labelIdentificationRejectCriteria.value = '';
-
-                    labelIdentificationRejectQty.disabled = true;
-                    labelIdentificationRejectQty.required = false;
-                    labelIdentificationRejectQty.value = '';
-
-                    labelIdentificationRejectUpload.disabled = true;
-                    labelIdentificationRejectUpload.required = false;
-                    labelIdentificationRejectUpload.value = '';
-
-                    labelIdentificationHardwareId.disabled = true;
-                    labelIdentificationHardwareId.required = false;
-                    labelIdentificationHardwareId.value = '';
-                }
-            }
-
-            pcbPass.addEventListener('change', handleRadioChange);
-            pcbNa.addEventListener('change', handleRadioChange);
-            pcbFail.addEventListener('change', handleRadioChange);
-
-            handlePass.addEventListener('change', handleRadioChange);
-            handleNa.addEventListener('change', handleRadioChange);
-            handleFail.addEventListener('change', handleRadioChange);
-
-            metalFramePass.addEventListener('change', handleRadioChange);
-            metalFrameNa.addEventListener('change', handleRadioChange);
-            metalFrameFail.addEventListener('change', handleRadioChange);
-
-            hardwareFasternersPass.addEventListener('change', handleRadioChange);
-            hardwareFasternersNa.addEventListener('change', handleRadioChange);
-            hardwareFasternersFail.addEventListener('change', handleRadioChange);
-
-            clipHolderPass.addEventListener('change', handleRadioChange);
-            clipHolderNa.addEventListener('change', handleRadioChange);
-            clipHolderFail.addEventListener('change', handleRadioChange);
-
-            pcbEdgeFingerPass.addEventListener('change', handleRadioChange);
-            pcbEdgeFingerNa.addEventListener('change', handleRadioChange);
-            pcbEdgeFingerFail.addEventListener('change', handleRadioChange);
-
-            edgeMbBananaPass.addEventListener('change', handleRadioChange);
-            edgeMbBananaNa.addEventListener('change', handleRadioChange);
-            edgeMbBananaFail.addEventListener('change', handleRadioChange);
-
-            dutSocketsPass.addEventListener('change', handleRadioChange);
-            dutSocketsNa.addEventListener('change', handleRadioChange);
-            dutSocketsFail.addEventListener('change', handleRadioChange);
-
-            electComponentPass.addEventListener('change', handleRadioChange);
-            electComponentNa.addEventListener('change', handleRadioChange);
-            electComponentFail.addEventListener('change', handleRadioChange);
-
-            connectorPass.addEventListener('change', handleRadioChange);
-            connectorNa.addEventListener('change', handleRadioChange);
-            connectorFail.addEventListener('change', handleRadioChange);
-
-            solderJointPass.addEventListener('change', handleRadioChange);
-            solderJointNa.addEventListener('change', handleRadioChange);
-            solderJointFail.addEventListener('change', handleRadioChange);
-
-            winConnectorPass.addEventListener('change', handleRadioChange);
-            winConnectorNa.addEventListener('change', handleRadioChange);
-            winConnectorFail.addEventListener('change', handleRadioChange);
-
-            teflonConnectorPass.addEventListener('change', handleRadioChange);
-            teflonConnectorNa.addEventListener('change', handleRadioChange);
-            teflonConnectorFail.addEventListener('change', handleRadioChange);
-
-            pogoReceptaclesPinPass.addEventListener('change', handleRadioChange);
-            pogoReceptaclesPinNa.addEventListener('change', handleRadioChange);
-            pogoReceptaclesPinFail.addEventListener('change', handleRadioChange);
-
-            cableWiredCopperWirePass.addEventListener('change', handleRadioChange);
-            cableWiredCopperWireNa.addEventListener('change', handleRadioChange);
-            cableWiredCopperWireFail.addEventListener('change', handleRadioChange);
-
-            labelIdentificationPass.addEventListener('change', handleRadioChange);
-            labelIdentificationNa.addEventListener('change', handleRadioChange);
-            labelIdentificationFail.addEventListener('change', handleRadioChange);
-
+                form.classList.add('was-validated');
+            }, false);
+        });
+
+        $(".js-example-basic-single").select2({
+            placeholder: "Choose one",
+            allowClear: true
+        });
+
+        $(".js-example-tags").select2({
+            tags: true
+        });
+        // Get references to the elements
+
+        const pcbPass = document.getElementById('pcb1');
+        const pcbNa = document.getElementById('pcb3');
+        const pcbFail = document.getElementById('pcb2');
+        const pcbRejectCriteria = document.getElementById('pcbReject');
+        const pcbRejectQty = document.getElementById('pcbRejectQty');
+        const pcbRejectUpload = document.getElementById('pcbRejectUpload');
+        const pcbAttach = document.getElementById('pcbAttach');
+        const pcbHardwareId = document.getElementById('pcbHardwareId');
+
+        const handlePass = document.getElementById('handle1');
+        const handleNa = document.getElementById('handle3');
+        const handleFail = document.getElementById('handle2');
+        const handleRejectCriteria = document.getElementById('handleReject');
+        const handleRejectQty = document.getElementById('handleRejectQty');
+        const handleRejectUpload = document.getElementById('handleRejectUpload');
+        const handleAttach = document.getElementById('handleAttach');
+        const handleHardwareId = document.getElementById('handleHardwareId');
+
+        const metalFramePass = document.getElementById('metalFrame1');
+        const metalFrameNa = document.getElementById('metalFrame3');
+        const metalFrameFail = document.getElementById('metalFrame2');
+        const metalFrameRejectCriteria = document.getElementById('metalFrameReject');
+        const metalFrameRejectQty = document.getElementById('metalFrameRejectQty');
+        const metalFrameRejectUpload = document.getElementById('metalFrameRejectUpload');
+        const metalFrameAttach = document.getElementById('metalFrameAttach');
+        const metalFrameHardwareId = document.getElementById('metalFrameHardwareId');
+
+        const hardwareFasternersPass = document.getElementById('hardwareFasterners1');
+        const hardwareFasternersNa = document.getElementById('hardwareFasterners3');
+        const hardwareFasternersFail = document.getElementById('hardwareFasterners2');
+        const hardwareFasternersRejectCriteria = document.getElementById('hardwareFasternersReject');
+        const hardwareFasternersRejectQty = document.getElementById('hardwareFasternersRejectQty');
+        const hardwareFasternersRejectUpload = document.getElementById('hardwareFasternersRejectUpload');
+        const hardwareFasternersAttach = document.getElementById('hardwareFasternersAttach');
+        const hardwareFasternersHardwareId = document.getElementById('hardwareFasternersHardwareId');
+
+        const clipHolderPass = document.getElementById('clipHolder1');
+        const clipHolderNa = document.getElementById('clipHolder3');
+        const clipHolderFail = document.getElementById('clipHolder2');
+        const clipHolderRejectCriteria = document.getElementById('clipHolderReject');
+        const clipHolderRejectQty = document.getElementById('clipHolderRejectQty');
+        const clipHolderRejectUpload = document.getElementById('clipHolderRejectUpload');
+        const clipHolderAttach = document.getElementById('clipHolderAttach');
+        const clipHolderHardwareId = document.getElementById('clipHolderHardwareId');
+
+        const pcbEdgeFingerPass = document.getElementById('pcbEdgeFinger1');
+        const pcbEdgeFingerNa = document.getElementById('pcbEdgeFinger3');
+        const pcbEdgeFingerFail = document.getElementById('pcbEdgeFinger2');
+        const pcbEdgeFingerRejectCriteria = document.getElementById('pcbEdgeFingerReject');
+        const pcbEdgeFingerRejectQty = document.getElementById('pcbEdgeFingerRejectQty');
+        const pcbEdgeFingerRejectUpload = document.getElementById('pcbEdgeFingerRejectUpload');
+        const pcbEdgeFingerAttach = document.getElementById('pcbEdgeFingerAttach');
+        const pcbEdgeFingerHardwareId = document.getElementById('pcbEdgeFingerHardwareId');
+
+        const connectorPass = document.getElementById('connector1');
+        const connectorNa = document.getElementById('connector3');
+        const connectorFail = document.getElementById('connector2');
+        const connectorRejectCriteria = document.getElementById('connectorReject');
+        const connectorRejectQty = document.getElementById('connectorRejectQty');
+        const connectorRejectUpload = document.getElementById('connectorRejectUpload');
+        const connectorAttach = document.getElementById('connectorAttach');
+        const connectorHardwareId = document.getElementById('connectorHardwareId');
+
+        const dutSocketsPass = document.getElementById('dutSockets1');
+        const dutSocketsNa = document.getElementById('dutSockets3');
+        const dutSocketsFail = document.getElementById('dutSockets2');
+        const dutSocketsRejectCriteria = document.getElementById('dutSocketsReject');
+        const dutSocketsRejectQty = document.getElementById('dutSocketsRejectQty');
+        const dutSocketsRejectUpload = document.getElementById('dutSocketsRejectUpload');
+        const dutSocketsAttach = document.getElementById('dutSocketsAttach');
+        const dutSocketsHardwareId = document.getElementById('dutSocketsHardwareId');
+
+        const edgeMbBananaPass = document.getElementById('edgeMbBanana1');
+        const edgeMbBananaNa = document.getElementById('edgeMbBanana3');
+        const edgeMbBananaFail = document.getElementById('edgeMbBanana2');
+        const edgeMbBananaRejectCriteria = document.getElementById('edgeMbBananaReject');
+        const edgeMbBananaRejectQty = document.getElementById('edgeMbBananaRejectQty');
+        const edgeMbBananaRejectUpload = document.getElementById('edgeMbBananaRejectUpload');
+        const edgeMbBananaAttach = document.getElementById('edgeMbBananaAttach');
+        const edgeMbBananaHardwareId = document.getElementById('edgeMbBananaHardwareId');
+
+        const electComponentPass = document.getElementById('electComponent1');
+        const electComponentNa = document.getElementById('electComponent3');
+        const electComponentFail = document.getElementById('electComponent2');
+        const electComponentRejectCriteria = document.getElementById('electComponentReject');
+        const electComponentRejectQty = document.getElementById('electComponentRejectQty');
+        const electComponentRejectUpload = document.getElementById('electComponentRejectUpload');
+        const electComponentAttach = document.getElementById('electComponentAttach');
+        const electComponentHardwareId = document.getElementById('electComponentHardwareId');
+
+        const solderJointPass = document.getElementById('solderJoint1');
+        const solderJointNa = document.getElementById('solderJoint3');
+        const solderJointFail = document.getElementById('solderJoint2');
+        const solderJointRejectCriteria = document.getElementById('solderJointReject');
+        const solderJointRejectQty = document.getElementById('solderJointRejectQty');
+        const solderJointRejectUpload = document.getElementById('solderJointRejectUpload');
+        const solderJointAttach = document.getElementById('solderJointAttach');
+        const solderJointHardwareId = document.getElementById('solderJointHardwareId');
+
+        const winConnectorPass = document.getElementById('winConnector1');
+        const winConnectorNa = document.getElementById('winConnector3');
+        const winConnectorFail = document.getElementById('winConnector2');
+        const winConnectorRejectCriteria = document.getElementById('winConnectorReject');
+        const winConnectorRejectQty = document.getElementById('winConnectorRejectQty');
+        const winConnectorRejectUpload = document.getElementById('winConnectorRejectUpload');
+        const winConnectorAttach = document.getElementById('winConnectorAttach');
+        const winConnectorHardwareId = document.getElementById('winConnectorHardwareId');
+
+        const teflonConnectorPass = document.getElementById('teflonConnector1');
+        const teflonConnectorNa = document.getElementById('teflonConnector3');
+        const teflonConnectorFail = document.getElementById('teflonConnector2');
+        const teflonConnectorRejectCriteria = document.getElementById('teflonConnectorReject');
+        const teflonConnectorRejectQty = document.getElementById('teflonConnectorRejectQty');
+        const teflonConnectorRejectUpload = document.getElementById('teflonConnectorRejectUpload');
+        const teflonConnectorAttach = document.getElementById('teflonConnectorAttach');
+        const teflonConnectorHardwareId = document.getElementById('teflonConnectorHardwareId');
+
+        const pogoReceptaclesPinPass = document.getElementById('pogoReceptaclesPin1');
+        const pogoReceptaclesPinNa = document.getElementById('pogoReceptaclesPin3');
+        const pogoReceptaclesPinFail = document.getElementById('pogoReceptaclesPin2');
+        const pogoReceptaclesPinRejectCriteria = document.getElementById('pogoReceptaclesPinReject');
+        const pogoReceptaclesPinRejectQty = document.getElementById('pogoReceptaclesPinRejectQty');
+        const pogoReceptaclesPinRejectUpload = document.getElementById('pogoReceptaclesPinRejectUpload');
+        const pogoReceptaclesPinAttach = document.getElementById('pogoReceptaclesPinAttach');
+        const pogoReceptaclesPinHardwareId = document.getElementById('pogoReceptaclesPinHardwareId');
+
+        const cableWiredCopperWirePass = document.getElementById('cableWiredCopperWire1');
+        const cableWiredCopperWireNa = document.getElementById('cableWiredCopperWire3');
+        const cableWiredCopperWireFail = document.getElementById('cableWiredCopperWire2');
+        const cableWiredCopperWireRejectCriteria = document.getElementById('cableWiredCopperWireReject');
+        const cableWiredCopperWireRejectQty = document.getElementById('cableWiredCopperWireRejectQty');
+        const cableWiredCopperWireRejectUpload = document.getElementById('cableWiredCopperWireRejectUpload');
+        const cableWiredCopperWireAttach = document.getElementById('cableWiredCopperWireAttach');
+        const cableWiredCopperWireHardwareId = document.getElementById('cableWiredCopperWireHardwareId');
+
+        const labelIdentificationPass = document.getElementById('labelIdentification1');
+        const labelIdentificationNa = document.getElementById('labelIdentification3');
+        const labelIdentificationFail = document.getElementById('labelIdentification2');
+        const labelIdentificationRejectCriteria = document.getElementById('labelIdentificationReject');
+        const labelIdentificationRejectQty = document.getElementById('labelIdentificationRejectQty');
+        const labelIdentificationRejectUpload = document.getElementById('labelIdentificationRejectUpload');
+        const labelIdentificationAttach = document.getElementById('labelIdentificationAttach');
+        const labelIdentificationHardwareId = document.getElementById('labelIdentificationHardwareId');
+
+        function handleRadioChange() {
             if (pcbFail.checked) {
-                pcbRejectCriteria.disabled = false;
+                pcbRejectCriteria.disabled = false; // disable button if 'Fail' is checked
+                pcbRejectCriteria.required = true;
+
                 pcbRejectQty.disabled = false;
+                pcbRejectQty.required = true;
+
                 pcbRejectUpload.disabled = false;
-                pcbAttach.hidden = false;
+                pcbRejectUpload.required = true;
+
+                pcbHardwareId.disabled = false;
+                pcbHardwareId.required = true;
             } else {
-                pcbAttach.hidden = true;
-                handleRadioChange(); // Set initial state based on default checked radio
+                pcbRejectCriteria.disabled = true;  // enable button otherwise (e.g., if 'Pass' is checked)
+                pcbRejectCriteria.required = false;
+                pcbRejectCriteria.value = '';
+
+                pcbRejectQty.disabled = true;
+                pcbRejectQty.required = false;
+                pcbRejectQty.value = '';
+
+                pcbRejectUpload.disabled = true;
+                pcbRejectUpload.required = false;
+                pcbRejectUpload.value = '';
+
+                pcbHardwareId.disabled = true;
+                pcbHardwareId.required = false;
+                pcbHardwareId.value = '';
             }
             if (handleFail.checked) {
-                handleRejectCriteria.disabled = false;
+                handleRejectCriteria.disabled = false; // disable button if 'Fail' is checked
+                handleRejectCriteria.required = true;
+
                 handleRejectQty.disabled = false;
+                handleRejectQty.required = true;
+
                 handleRejectUpload.disabled = false;
-                handleAttach.hidden = false;
+                handleRejectUpload.required = true;
+
+                handleHardwareId.disabled = false;
+                handleHardwareId.required = true;
             } else {
-                handleAttach.hidden = true;
-                handleRadioChange(); // Set initial state based on default checked radio
+                handleRejectCriteria.disabled = true;  // enable button otherwise (e.g., if 'Pass' is checked)
+                handleRejectCriteria.required = false;
+                handleRejectCriteria.value = '';
+
+                handleRejectQty.disabled = true;
+                handleRejectQty.required = false;
+                handleRejectQty.value = '';
+
+                handleRejectUpload.disabled = true;
+                handleRejectUpload.required = false;
+                handleRejectUpload.value = '';
+
+                handleHardwareId.disabled = true;
+                handleHardwareId.required = false;
+                handleHardwareId.value = '';
             }
             if (metalFrameFail.checked) {
-                metalFrameRejectCriteria.disabled = false;
+                metalFrameRejectCriteria.disabled = false; // disable button if 'Fail' is checked
+                metalFrameRejectCriteria.required = true;
+
                 metalFrameRejectQty.disabled = false;
+                metalFrameRejectQty.required = true;
+
                 metalFrameRejectUpload.disabled = false;
-                metalFrameAttach.hidden = false;
+                metalFrameRejectUpload.required = true;
+
+                metalFrameHardwareId.disabled = false;
+                metalFrameHardwareId.required = true;
             } else {
-                metalFrameAttach.hidden = true;
-                handleRadioChange(); // Set initial state based on default checked radio
+                metalFrameRejectCriteria.disabled = true;  // enable button otherwise (e.g., if 'Pass' is checked)
+                metalFrameRejectCriteria.required = false;
+                metalFrameRejectCriteria.value = '';
+
+                metalFrameRejectQty.disabled = true;
+                metalFrameRejectQty.required = false;
+                metalFrameRejectQty.value = '';
+
+                metalFrameRejectUpload.disabled = true;
+                metalFrameRejectUpload.required = false;
+                metalFrameRejectUpload.value = '';
+
+                metalFrameHardwareId.disabled = true;
+                metalFrameHardwareId.required = false;
+                metalFrameHardwareId.value = '';
             }
             if (hardwareFasternersFail.checked) {
-                hardwareFasternersRejectCriteria.disabled = false;
+                hardwareFasternersRejectCriteria.disabled = false; // disable button if 'Fail' is checked
+                hardwareFasternersRejectCriteria.required = true;
+
                 hardwareFasternersRejectQty.disabled = false;
+                hardwareFasternersRejectQty.required = true;
+
                 hardwareFasternersRejectUpload.disabled = false;
-                hardwareFasternersAttach.hidden = false;
+                hardwareFasternersRejectUpload.required = true;
+
+                hardwareFasternersHardwareId.disabled = false;
+                hardwareFasternersHardwareId.required = true;
             } else {
-                hardwareFasternersAttach.hidden = true;
-                handleRadioChange(); // Set initial state based on default checked radio
+                hardwareFasternersRejectCriteria.disabled = true;  // enable button otherwise (e.g., if 'Pass' is checked)
+                hardwareFasternersRejectCriteria.required = false;
+                hardwareFasternersRejectCriteria.value = '';
+
+                hardwareFasternersRejectQty.disabled = true;
+                hardwareFasternersRejectQty.required = false;
+                hardwareFasternersRejectQty.value = '';
+
+                hardwareFasternersRejectUpload.disabled = true;
+                hardwareFasternersRejectUpload.required = false;
+                hardwareFasternersRejectUpload.value = '';
+
+                hardwareFasternersHardwareId.disabled = true;
+                hardwareFasternersHardwareId.required = false;
+                hardwareFasternersHardwareId.value = '';
             }
             if (clipHolderFail.checked) {
-                clipHolderRejectCriteria.disabled = false;
+                clipHolderRejectCriteria.disabled = false; // disable button if 'Fail' is checked
+                clipHolderRejectCriteria.required = true;
+
                 clipHolderRejectQty.disabled = false;
+                clipHolderRejectQty.required = true;
+
                 clipHolderRejectUpload.disabled = false;
-                clipHolderAttach.hidden = false;
+                clipHolderRejectUpload.required = true;
+
+                clipHolderHardwareId.disabled = false;
+                clipHolderHardwareId.required = true;
             } else {
-                clipHolderAttach.hidden = true;
-                handleRadioChange(); // Set initial state based on default checked radio
+                clipHolderRejectCriteria.disabled = true;  // enable button otherwise (e.g., if 'Pass' is checked)
+                clipHolderRejectCriteria.required = false;
+                clipHolderRejectCriteria.value = '';
+
+                clipHolderRejectQty.disabled = true;
+                clipHolderRejectQty.required = false;
+                clipHolderRejectQty.value = '';
+
+                clipHolderRejectUpload.disabled = true;
+                clipHolderRejectUpload.required = false;
+                clipHolderRejectUpload.value = '';
+
+                clipHolderHardwareId.disabled = true;
+                clipHolderHardwareId.required = false;
+                clipHolderHardwareId.value = '';
             }
             if (pcbEdgeFingerFail.checked) {
-                pcbEdgeFingerRejectCriteria.disabled = false;
+                pcbEdgeFingerRejectCriteria.disabled = false; // disable button if 'Fail' is checked
+                pcbEdgeFingerRejectCriteria.required = true;
+
                 pcbEdgeFingerRejectQty.disabled = false;
+                pcbEdgeFingerRejectQty.required = true;
+
                 pcbEdgeFingerRejectUpload.disabled = false;
-                pcbEdgeFingerAttach.hidden = false;
+                pcbEdgeFingerRejectUpload.required = true;
+
+                pcbEdgeFingerHardwareId.disabled = false;
+                pcbEdgeFingerHardwareId.required = true;
             } else {
-                pcbEdgeFingerAttach.hidden = true;
-                handleRadioChange(); // Set initial state based on default checked radio
+                pcbEdgeFingerRejectCriteria.disabled = true;  // enable button otherwise (e.g., if 'Pass' is checked)
+                pcbEdgeFingerRejectCriteria.required = false;
+                pcbEdgeFingerRejectCriteria.value = '';
+
+                pcbEdgeFingerRejectQty.disabled = true;
+                pcbEdgeFingerRejectQty.required = false;
+                pcbEdgeFingerRejectQty.value = '';
+
+                pcbEdgeFingerRejectUpload.disabled = true;
+                pcbEdgeFingerRejectUpload.required = false;
+                pcbEdgeFingerRejectUpload.value = '';
+
+                pcbEdgeFingerHardwareId.disabled = true;
+                pcbEdgeFingerHardwareId.required = false;
+                pcbEdgeFingerHardwareId.value = '';
             }
             if (connectorFail.checked) {
-                connectorRejectCriteria.disabled = false;
+                connectorRejectCriteria.disabled = false; // disable button if 'Fail' is checked
+                connectorRejectCriteria.required = true;
+
                 connectorRejectQty.disabled = false;
+                connectorRejectQty.required = true;
+
                 connectorRejectUpload.disabled = false;
-                connectorAttach.hidden = false;
+                connectorRejectUpload.required = true;
+
+                connectorHardwareId.disabled = false;
+                connectorHardwareId.required = true;
             } else {
-                connectorAttach.hidden = true;
-                handleRadioChange(); // Set initial state based on default checked radio
+                connectorRejectCriteria.disabled = true;  // enable button otherwise (e.g., if 'Pass' is checked)
+                connectorRejectCriteria.required = false;
+                connectorRejectCriteria.value = '';
+
+                connectorRejectQty.disabled = true;
+                connectorRejectQty.required = false;
+                connectorRejectQty.value = '';
+
+                connectorRejectUpload.disabled = true;
+                connectorRejectUpload.required = false;
+                connectorRejectUpload.value = '';
+
+                connectorHardwareId.disabled = true;
+                connectorHardwareId.required = false;
+                connectorHardwareId.value = '';
             }
             if (dutSocketsFail.checked) {
-                dutSocketsRejectCriteria.disabled = false;
+                dutSocketsRejectCriteria.disabled = false; // disable button if 'Fail' is checked
+                dutSocketsRejectCriteria.required = true;
+
                 dutSocketsRejectQty.disabled = false;
+                dutSocketsRejectQty.required = true;
+
                 dutSocketsRejectUpload.disabled = false;
-                dutSocketsAttach.hidden = false;
+                dutSocketsRejectUpload.required = true;
+
+                dutSocketsHardwareId.disabled = false;
+                dutSocketsHardwareId.required = true;
             } else {
-                dutSocketsAttach.hidden = true;
-                handleRadioChange(); // Set initial state based on default checked radio
+                dutSocketsRejectCriteria.disabled = true;  // enable button otherwise (e.g., if 'Pass' is checked)
+                dutSocketsRejectCriteria.required = false;
+                dutSocketsRejectCriteria.value = '';
+
+                dutSocketsRejectQty.disabled = true;
+                dutSocketsRejectQty.required = false;
+                dutSocketsRejectQty.value = '';
+
+                dutSocketsRejectUpload.disabled = true;
+                dutSocketsRejectUpload.required = false;
+                dutSocketsRejectUpload.value = '';
+
+                dutSocketsHardwareId.disabled = true;
+                dutSocketsHardwareId.required = false;
+                dutSocketsHardwareId.value = '';
             }
             if (edgeMbBananaFail.checked) {
-                edgeMbBananaRejectCriteria.disabled = false;
+                edgeMbBananaRejectCriteria.disabled = false; // disable button if 'Fail' is checked
+                edgeMbBananaRejectCriteria.required = true;
+
                 edgeMbBananaRejectQty.disabled = false;
+                edgeMbBananaRejectQty.required = true;
+
                 edgeMbBananaRejectUpload.disabled = false;
-                edgeMbBananaAttach.hidden = false;
+                edgeMbBananaRejectUpload.required = true;
+
+                edgeMbBananaHardwareId.disabled = false;
+                edgeMbBananaHardwareId.required = true;
             } else {
-                edgeMbBananaAttach.hidden = true;
-                handleRadioChange(); // Set initial state based on default checked radio
+                edgeMbBananaRejectCriteria.disabled = true;  // enable button otherwise (e.g., if 'Pass' is checked)
+                edgeMbBananaRejectCriteria.required = false;
+                edgeMbBananaRejectCriteria.value = '';
+
+                edgeMbBananaRejectQty.disabled = true;
+                edgeMbBananaRejectQty.required = false;
+                edgeMbBananaRejectQty.value = '';
+
+                edgeMbBananaRejectUpload.disabled = true;
+                edgeMbBananaRejectUpload.required = false;
+                edgeMbBananaRejectUpload.value = '';
+
+                edgeMbBananaHardwareId.disabled = true;
+                edgeMbBananaHardwareId.required = false;
+                edgeMbBananaHardwareId.value = '';
             }
             if (electComponentFail.checked) {
-                electComponentRejectCriteria.disabled = false;
+                electComponentRejectCriteria.disabled = false; // disable button if 'Fail' is checked
+                electComponentRejectCriteria.required = true;
+
                 electComponentRejectQty.disabled = false;
+                electComponentRejectQty.required = true;
+
                 electComponentRejectUpload.disabled = false;
-                electComponentAttach.hidden = false;
+                electComponentRejectUpload.required = true;
+
+                electComponentHardwareId.disabled = false;
+                electComponentHardwareId.required = true;
             } else {
-                electComponentAttach.hidden = true;
-                handleRadioChange(); // Set initial state based on default checked radio
+                electComponentRejectCriteria.disabled = true;  // enable button otherwise (e.g., if 'Pass' is checked)
+                electComponentRejectCriteria.required = false;
+                electComponentRejectCriteria.value = '';
+
+                electComponentRejectQty.disabled = true;
+                electComponentRejectQty.required = false;
+                electComponentRejectQty.value = '';
+
+                electComponentRejectUpload.disabled = true;
+                electComponentRejectUpload.required = false;
+                electComponentRejectUpload.value = '';
+
+                electComponentHardwareId.disabled = true;
+                electComponentHardwareId.required = false;
+                electComponentHardwareId.value = '';
             }
             if (solderJointFail.checked) {
-                solderJointRejectCriteria.disabled = false;
+                solderJointRejectCriteria.disabled = false; // disable button if 'Fail' is checked
+                solderJointRejectCriteria.required = true;
+
                 solderJointRejectQty.disabled = false;
+                solderJointRejectQty.required = true;
+
                 solderJointRejectUpload.disabled = false;
-                solderJointAttach.hidden = false;
+                solderJointRejectUpload.required = true;
+
+                solderJointHardwareId.disabled = false;
+                solderJointHardwareId.required = true;
             } else {
-                solderJointAttach.hidden = true;
-                handleRadioChange(); // Set initial state based on default checked radio
+                solderJointRejectCriteria.disabled = true;  // enable button otherwise (e.g., if 'Pass' is checked)
+                solderJointRejectCriteria.required = false;
+                solderJointRejectCriteria.value = '';
+
+                solderJointRejectQty.disabled = true;
+                solderJointRejectQty.required = false;
+                solderJointRejectQty.value = '';
+
+                solderJointRejectUpload.disabled = true;
+                solderJointRejectUpload.required = false;
+                solderJointRejectUpload.value = '';
+
+                solderJointHardwareId.disabled = true;
+                solderJointHardwareId.required = false;
+                solderJointHardwareId.value = '';
             }
             if (winConnectorFail.checked) {
-                winConnectorRejectCriteria.disabled = false;
+                winConnectorRejectCriteria.disabled = false; // disable button if 'Fail' is checked
+                winConnectorRejectCriteria.required = true;
+
                 winConnectorRejectQty.disabled = false;
+                winConnectorRejectQty.required = true;
+
                 winConnectorRejectUpload.disabled = false;
-                winConnectorAttach.hidden = false;
+                winConnectorRejectUpload.required = true;
+
+                winConnectorHardwareId.disabled = false;
+                winConnectorHardwareId.required = true;
             } else {
-                winConnectorAttach.hidden = true;
-                handleRadioChange(); // Set initial state based on default checked radio
+                winConnectorRejectCriteria.disabled = true;  // enable button otherwise (e.g., if 'Pass' is checked)
+                winConnectorRejectCriteria.required = false;
+                winConnectorRejectCriteria.value = '';
+
+                winConnectorRejectQty.disabled = true;
+                winConnectorRejectQty.required = false;
+                winConnectorRejectQty.value = '';
+
+                winConnectorRejectUpload.disabled = true;
+                winConnectorRejectUpload.required = false;
+                winConnectorRejectUpload.value = '';
+
+                winConnectorHardwareId.disabled = true;
+                winConnectorHardwareId.required = false;
+                winConnectorHardwareId.value = '';
             }
             if (teflonConnectorFail.checked) {
-                teflonConnectorRejectCriteria.disabled = false;
+                teflonConnectorRejectCriteria.disabled = false; // disable button if 'Fail' is checked
+                teflonConnectorRejectCriteria.required = true;
+
                 teflonConnectorRejectQty.disabled = false;
+                teflonConnectorRejectQty.required = true;
+
                 teflonConnectorRejectUpload.disabled = false;
-                teflonConnectorAttach.hidden = false;
+                teflonConnectorRejectUpload.required = true;
+
+                teflonConnectorHardwareId.disabled = false;
+                teflonConnectorHardwareId.required = true;
             } else {
-                teflonConnectorAttach.hidden = true;
-                handleRadioChange(); // Set initial state based on default checked radio
+                teflonConnectorRejectCriteria.disabled = true;  // enable button otherwise (e.g., if 'Pass' is checked)
+                teflonConnectorRejectCriteria.required = false;
+                teflonConnectorRejectCriteria.value = '';
+
+                teflonConnectorRejectQty.disabled = true;
+                teflonConnectorRejectQty.required = false;
+                teflonConnectorRejectQty.value = '';
+
+                teflonConnectorRejectUpload.disabled = true;
+                teflonConnectorRejectUpload.required = false;
+                teflonConnectorRejectUpload.value = '';
+
+                teflonConnectorHardwareId.disabled = true;
+                teflonConnectorHardwareId.required = false;
+                teflonConnectorHardwareId.value = '';
             }
             if (pogoReceptaclesPinFail.checked) {
-                pogoReceptaclesPinRejectCriteria.disabled = false;
+                pogoReceptaclesPinRejectCriteria.disabled = false; // disable button if 'Fail' is checked
+                pogoReceptaclesPinRejectCriteria.required = true;
+
                 pogoReceptaclesPinRejectQty.disabled = false;
+                pogoReceptaclesPinRejectQty.required = true;
+
                 pogoReceptaclesPinRejectUpload.disabled = false;
-                pogoReceptaclesPinAttach.hidden = false;
+                pogoReceptaclesPinRejectUpload.required = true;
+
+                pogoReceptaclesPinHardwareId.disabled = false;
+                pogoReceptaclesPinHardwareId.required = true;
             } else {
-                pogoReceptaclesPinAttach.hidden = true;
-                handleRadioChange(); // Set initial state based on default checked radio
+                pogoReceptaclesPinRejectCriteria.disabled = true;  // enable button otherwise (e.g., if 'Pass' is checked)
+                pogoReceptaclesPinRejectCriteria.required = false;
+                pogoReceptaclesPinRejectCriteria.value = '';
+
+                pogoReceptaclesPinRejectQty.disabled = true;
+                pogoReceptaclesPinRejectQty.required = false;
+                pogoReceptaclesPinRejectQty.value = '';
+
+                pogoReceptaclesPinRejectUpload.disabled = true;
+                pogoReceptaclesPinRejectUpload.required = false;
+                pogoReceptaclesPinRejectUpload.value = '';
+
+                pogoReceptaclesPinHardwareId.disabled = true;
+                pogoReceptaclesPinHardwareId.required = false;
+                pogoReceptaclesPinHardwareId.value = '';
             }
             if (cableWiredCopperWireFail.checked) {
-                cableWiredCopperWireRejectCriteria.disabled = false;
+                cableWiredCopperWireRejectCriteria.disabled = false; // disable button if 'Fail' is checked
+                cableWiredCopperWireRejectCriteria.required = true;
+
                 cableWiredCopperWireRejectQty.disabled = false;
+                cableWiredCopperWireRejectQty.required = true;
+
                 cableWiredCopperWireRejectUpload.disabled = false;
-                cableWiredCopperWireAttach.hidden = false;
+                cableWiredCopperWireRejectUpload.required = true;
+
+                cableWiredCopperWireHardwareId.disabled = false;
+                cableWiredCopperWireHardwareId.required = true;
             } else {
-                cableWiredCopperWireAttach.hidden = true;
-                handleRadioChange(); // Set initial state based on default checked radio
+                cableWiredCopperWireRejectCriteria.disabled = true;  // enable button otherwise (e.g., if 'Pass' is checked)
+                cableWiredCopperWireRejectCriteria.required = false;
+                cableWiredCopperWireRejectCriteria.value = '';
+
+                cableWiredCopperWireRejectQty.disabled = true;
+                cableWiredCopperWireRejectQty.required = false;
+                cableWiredCopperWireRejectQty.value = '';
+
+                cableWiredCopperWireRejectUpload.disabled = true;
+                cableWiredCopperWireRejectUpload.required = false;
+                cableWiredCopperWireRejectUpload.value = '';
+
+                cableWiredCopperWireHardwareId.disabled = true;
+                cableWiredCopperWireHardwareId.required = false;
+                cableWiredCopperWireHardwareId.value = '';
             }
             if (labelIdentificationFail.checked) {
-                labelIdentificationRejectCriteria.disabled = false;
+                labelIdentificationRejectCriteria.disabled = false; // disable button if 'Fail' is checked
+                labelIdentificationRejectCriteria.required = true;
+
                 labelIdentificationRejectQty.disabled = false;
+                labelIdentificationRejectQty.required = true;
+
                 labelIdentificationRejectUpload.disabled = false;
-                labelIdentificationAttach.hidden = false;
+                labelIdentificationRejectUpload.required = true;
+
+                labelIdentificationHardwareId.disabled = false;
+                labelIdentificationHardwareId.required = true;
             } else {
-                labelIdentificationAttach.hidden = true;
-                handleRadioChange(); // Set initial state based on default checked radio
+                labelIdentificationRejectCriteria.disabled = true;  // enable button otherwise (e.g., if 'Pass' is checked)
+                labelIdentificationRejectCriteria.required = false;
+                labelIdentificationRejectCriteria.value = '';
+
+                labelIdentificationRejectQty.disabled = true;
+                labelIdentificationRejectQty.required = false;
+                labelIdentificationRejectQty.value = '';
+
+                labelIdentificationRejectUpload.disabled = true;
+                labelIdentificationRejectUpload.required = false;
+                labelIdentificationRejectUpload.value = '';
+
+                labelIdentificationHardwareId.disabled = true;
+                labelIdentificationHardwareId.required = false;
+                labelIdentificationHardwareId.value = '';
             }
-        </script>
-    </s:layout-component>
+        }
+
+        pcbPass.addEventListener('change', handleRadioChange);
+        pcbNa.addEventListener('change', handleRadioChange);
+        pcbFail.addEventListener('change', handleRadioChange);
+
+        handlePass.addEventListener('change', handleRadioChange);
+        handleNa.addEventListener('change', handleRadioChange);
+        handleFail.addEventListener('change', handleRadioChange);
+
+        metalFramePass.addEventListener('change', handleRadioChange);
+        metalFrameNa.addEventListener('change', handleRadioChange);
+        metalFrameFail.addEventListener('change', handleRadioChange);
+
+        hardwareFasternersPass.addEventListener('change', handleRadioChange);
+        hardwareFasternersNa.addEventListener('change', handleRadioChange);
+        hardwareFasternersFail.addEventListener('change', handleRadioChange);
+
+        clipHolderPass.addEventListener('change', handleRadioChange);
+        clipHolderNa.addEventListener('change', handleRadioChange);
+        clipHolderFail.addEventListener('change', handleRadioChange);
+
+        pcbEdgeFingerPass.addEventListener('change', handleRadioChange);
+        pcbEdgeFingerNa.addEventListener('change', handleRadioChange);
+        pcbEdgeFingerFail.addEventListener('change', handleRadioChange);
+
+        edgeMbBananaPass.addEventListener('change', handleRadioChange);
+        edgeMbBananaNa.addEventListener('change', handleRadioChange);
+        edgeMbBananaFail.addEventListener('change', handleRadioChange);
+
+        dutSocketsPass.addEventListener('change', handleRadioChange);
+        dutSocketsNa.addEventListener('change', handleRadioChange);
+        dutSocketsFail.addEventListener('change', handleRadioChange);
+
+        electComponentPass.addEventListener('change', handleRadioChange);
+        electComponentNa.addEventListener('change', handleRadioChange);
+        electComponentFail.addEventListener('change', handleRadioChange);
+
+        connectorPass.addEventListener('change', handleRadioChange);
+        connectorNa.addEventListener('change', handleRadioChange);
+        connectorFail.addEventListener('change', handleRadioChange);
+
+        solderJointPass.addEventListener('change', handleRadioChange);
+        solderJointNa.addEventListener('change', handleRadioChange);
+        solderJointFail.addEventListener('change', handleRadioChange);
+
+        winConnectorPass.addEventListener('change', handleRadioChange);
+        winConnectorNa.addEventListener('change', handleRadioChange);
+        winConnectorFail.addEventListener('change', handleRadioChange);
+
+        teflonConnectorPass.addEventListener('change', handleRadioChange);
+        teflonConnectorNa.addEventListener('change', handleRadioChange);
+        teflonConnectorFail.addEventListener('change', handleRadioChange);
+
+        pogoReceptaclesPinPass.addEventListener('change', handleRadioChange);
+        pogoReceptaclesPinNa.addEventListener('change', handleRadioChange);
+        pogoReceptaclesPinFail.addEventListener('change', handleRadioChange);
+
+        cableWiredCopperWirePass.addEventListener('change', handleRadioChange);
+        cableWiredCopperWireNa.addEventListener('change', handleRadioChange);
+        cableWiredCopperWireFail.addEventListener('change', handleRadioChange);
+
+        labelIdentificationPass.addEventListener('change', handleRadioChange);
+        labelIdentificationNa.addEventListener('change', handleRadioChange);
+        labelIdentificationFail.addEventListener('change', handleRadioChange);
+
+        if (pcbFail.checked) {
+            pcbRejectCriteria.disabled = false;
+            pcbRejectQty.disabled = false;
+            pcbRejectUpload.disabled = false;
+            pcbAttach.hidden = false;
+        } else {
+            pcbAttach.hidden = true;
+            handleRadioChange(); // Set initial state based on default checked radio
+        }
+        if (handleFail.checked) {
+            handleRejectCriteria.disabled = false;
+            handleRejectQty.disabled = false;
+            handleRejectUpload.disabled = false;
+            handleAttach.hidden = false;
+        } else {
+            handleAttach.hidden = true;
+            handleRadioChange(); // Set initial state based on default checked radio
+        }
+        if (metalFrameFail.checked) {
+            metalFrameRejectCriteria.disabled = false;
+            metalFrameRejectQty.disabled = false;
+            metalFrameRejectUpload.disabled = false;
+            metalFrameAttach.hidden = false;
+        } else {
+            metalFrameAttach.hidden = true;
+            handleRadioChange(); // Set initial state based on default checked radio
+        }
+        if (hardwareFasternersFail.checked) {
+            hardwareFasternersRejectCriteria.disabled = false;
+            hardwareFasternersRejectQty.disabled = false;
+            hardwareFasternersRejectUpload.disabled = false;
+            hardwareFasternersAttach.hidden = false;
+        } else {
+            hardwareFasternersAttach.hidden = true;
+            handleRadioChange(); // Set initial state based on default checked radio
+        }
+        if (clipHolderFail.checked) {
+            clipHolderRejectCriteria.disabled = false;
+            clipHolderRejectQty.disabled = false;
+            clipHolderRejectUpload.disabled = false;
+            clipHolderAttach.hidden = false;
+        } else {
+            clipHolderAttach.hidden = true;
+            handleRadioChange(); // Set initial state based on default checked radio
+        }
+        if (pcbEdgeFingerFail.checked) {
+            pcbEdgeFingerRejectCriteria.disabled = false;
+            pcbEdgeFingerRejectQty.disabled = false;
+            pcbEdgeFingerRejectUpload.disabled = false;
+            pcbEdgeFingerAttach.hidden = false;
+        } else {
+            pcbEdgeFingerAttach.hidden = true;
+            handleRadioChange(); // Set initial state based on default checked radio
+        }
+        if (connectorFail.checked) {
+            connectorRejectCriteria.disabled = false;
+            connectorRejectQty.disabled = false;
+            connectorRejectUpload.disabled = false;
+            connectorAttach.hidden = false;
+        } else {
+            connectorAttach.hidden = true;
+            handleRadioChange(); // Set initial state based on default checked radio
+        }
+        if (dutSocketsFail.checked) {
+            dutSocketsRejectCriteria.disabled = false;
+            dutSocketsRejectQty.disabled = false;
+            dutSocketsRejectUpload.disabled = false;
+            dutSocketsAttach.hidden = false;
+        } else {
+            dutSocketsAttach.hidden = true;
+            handleRadioChange(); // Set initial state based on default checked radio
+        }
+        if (edgeMbBananaFail.checked) {
+            edgeMbBananaRejectCriteria.disabled = false;
+            edgeMbBananaRejectQty.disabled = false;
+            edgeMbBananaRejectUpload.disabled = false;
+            edgeMbBananaAttach.hidden = false;
+        } else {
+            edgeMbBananaAttach.hidden = true;
+            handleRadioChange(); // Set initial state based on default checked radio
+        }
+        if (electComponentFail.checked) {
+            electComponentRejectCriteria.disabled = false;
+            electComponentRejectQty.disabled = false;
+            electComponentRejectUpload.disabled = false;
+            electComponentAttach.hidden = false;
+        } else {
+            electComponentAttach.hidden = true;
+            handleRadioChange(); // Set initial state based on default checked radio
+        }
+        if (solderJointFail.checked) {
+            solderJointRejectCriteria.disabled = false;
+            solderJointRejectQty.disabled = false;
+            solderJointRejectUpload.disabled = false;
+            solderJointAttach.hidden = false;
+        } else {
+            solderJointAttach.hidden = true;
+            handleRadioChange(); // Set initial state based on default checked radio
+        }
+        if (winConnectorFail.checked) {
+            winConnectorRejectCriteria.disabled = false;
+            winConnectorRejectQty.disabled = false;
+            winConnectorRejectUpload.disabled = false;
+            winConnectorAttach.hidden = false;
+        } else {
+            winConnectorAttach.hidden = true;
+            handleRadioChange(); // Set initial state based on default checked radio
+        }
+        if (teflonConnectorFail.checked) {
+            teflonConnectorRejectCriteria.disabled = false;
+            teflonConnectorRejectQty.disabled = false;
+            teflonConnectorRejectUpload.disabled = false;
+            teflonConnectorAttach.hidden = false;
+        } else {
+            teflonConnectorAttach.hidden = true;
+            handleRadioChange(); // Set initial state based on default checked radio
+        }
+        if (pogoReceptaclesPinFail.checked) {
+            pogoReceptaclesPinRejectCriteria.disabled = false;
+            pogoReceptaclesPinRejectQty.disabled = false;
+            pogoReceptaclesPinRejectUpload.disabled = false;
+            pogoReceptaclesPinAttach.hidden = false;
+        } else {
+            pogoReceptaclesPinAttach.hidden = true;
+            handleRadioChange(); // Set initial state based on default checked radio
+        }
+        if (cableWiredCopperWireFail.checked) {
+            cableWiredCopperWireRejectCriteria.disabled = false;
+            cableWiredCopperWireRejectQty.disabled = false;
+            cableWiredCopperWireRejectUpload.disabled = false;
+            cableWiredCopperWireAttach.hidden = false;
+        } else {
+            cableWiredCopperWireAttach.hidden = true;
+            handleRadioChange(); // Set initial state based on default checked radio
+        }
+        if (labelIdentificationFail.checked) {
+            labelIdentificationRejectCriteria.disabled = false;
+            labelIdentificationRejectQty.disabled = false;
+            labelIdentificationRejectUpload.disabled = false;
+            labelIdentificationAttach.hidden = false;
+        } else {
+            labelIdentificationAttach.hidden = true;
+            handleRadioChange(); // Set initial state based on default checked radio
+        }
+    </script>
+</s:layout-component>
 </s:layout-render>

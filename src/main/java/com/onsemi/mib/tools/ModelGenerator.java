@@ -16,7 +16,7 @@ import org.apache.commons.lang3.StringUtils;
 public class ModelGenerator {
 
     public static void main(String[] args) {
-        String table = "rms_booking_functional_test";
+        String table = "email_cc";
         String sql = "SELECT * FROM " + table + " LIMIT 1";
         try {
 //            Class.forName("com.mysql.jdbc.Driver");
@@ -24,7 +24,7 @@ public class ModelGenerator {
 //            Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver");
             Connection conn = null;
 //            conn = DriverManager.getConnection("jdbc:sqlserver://MYSE01WS039/GP01QA;databaseName=MIB_SBN;integratedSecurity=true");
-            conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/mib?serverTimezone=UTC&useLegacyDatetimeCode=false", "apps", "mysql@2023");
+            conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/mib?serverTimezone=UTC&useLegacyDatetimeCode=false", "root", "root");
             if (conn != null) {
                 String className = className(table);
                 System.out.println("ClassName: " + className);

@@ -34,6 +34,15 @@ public class RmsBookingHardware {
 
     private String returnDate;
     private String returnBy;
+    private String returnRemarks;
+
+    public String getReturnRemarks() {
+        return returnRemarks;
+    }
+
+    public void setReturnRemarks(String returnRemarks) {
+        this.returnRemarks = returnRemarks;
+    }
 
     public String getReturnDate() {
         return returnDate;

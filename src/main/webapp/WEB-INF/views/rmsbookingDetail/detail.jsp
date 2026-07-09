@@ -84,8 +84,47 @@
                 margin-top: 2px;
                 line-height: 1.2;
             }
+            /* Main Select2 container */
+            .select2-container {
+                width: 100% !important;
+            }
+
+            /* Multiple select border box */
+            .select2-container--default .select2-selection--multiple {
+                min-height: 38px !important;
+                height: auto !important;
+                overflow: visible !important;
+                padding: 4px;
+                border: 1px solid #ced4da;
+                border-radius: 4px;
+            }
+
+            /* Allow selected items to wrap */
+            .select2-container--default .select2-selection--multiple .select2-selection__rendered {
+                display: flex !important;
+                flex-wrap: wrap !important;
+                gap: 3px;
+                overflow: visible !important;
+                white-space: normal !important;
+            }
+
+            /* Selected tags */
+            .select2-container--default .select2-selection--multiple .select2-selection__choice {
+                margin-top: 2px !important;
+                margin-bottom: 2px !important;
+            }
+
+            /* Search input */
+            .select2-container--default .select2-search--inline .select2-search__field {
+                margin-top: 2px !important;
+            }
             .semi-bold {
                 font-weight: 500;
+            }
+            .form-group,
+            .col-md-12,
+            div {
+                height: auto;
             }
         </style>
     </s:layout-component>
@@ -464,19 +503,19 @@
                                                         </c:if>
                                                         <c:if test="${parameterMaster.status == 'Available'}">
                                                             <c:if test="${parameterMaster.subStatus == 'Released to Production'}">
-                                                                 <a href="${contextPath}/rmsbookingDetail/rmsReleasedSingle/groupDetail/${parameterMaster.bookingPkid}/${parameterMaster.pkid}" class="table-link" title="Manage">
-                                                                <i class="bi bi-box-arrow-in-right h3" style="color:orangered"></i>
-                                                            </a>
+                                                                <a href="${contextPath}/rmsbookingDetail/rmsReleasedSingle/groupDetail/${parameterMaster.bookingPkid}/${parameterMaster.pkid}" class="table-link" title="Manage">
+                                                                    <i class="bi bi-box-arrow-in-right h3" style="color:orangered"></i>
+                                                                </a>
                                                             </c:if>
                                                             <c:if test="${parameterMaster.subStatus != 'Released to Production'}">
-                                                                 <a href="${contextPath}/rmsbookingDetail/groupDetail/${parameterMaster.bookingPkid}/${parameterMaster.pkid}" class="table-link" title="Manage">
-                                                                <i class="bi bi-box-arrow-in-right h3" style="color:orangered"></i>
-                                                            </a>
+                                                                <a href="${contextPath}/rmsbookingDetail/groupDetail/${parameterMaster.bookingPkid}/${parameterMaster.pkid}" class="table-link" title="Manage">
+                                                                    <i class="bi bi-box-arrow-in-right h3" style="color:orangered"></i>
+                                                                </a>
                                                             </c:if>
                                                         </c:if>
                                                         <c:if test="${parameterMaster.subStatus == 'Pending Release to Production'}">
                                                             <a modaldeleteid="${parameterMaster.id}" type ="button" title="Release to Production" data-bs-toggle="modal" data-bs-target="#confirmation_modal" 
-                                                                onclick="modalReleaseSingle(this);">
+                                                               onclick="modalReleaseSingle(this);">
                                                                 <i class="bi bi-check-circle h3" style="color:green"></i>
                                                             </a>
                                                         </c:if>
@@ -665,6 +704,26 @@
                     <div class="col-md-12">
                         <c:if test="${countHwReplace != '0'}">
                             <c:if test="${countHwReplaceFlagZero != '0'}">
+                                <div class="col-xl-12 col-sm-12 col-12">
+                                    <div class="mb-2">
+                                        <label for="emailTo" class="form-label">Email To</label>
+                                        <div class="input input-group">
+                                            <input type="text" class="form-control" id="emailTo" name="emailTo" placeholder="" value="${emailTo}" disabled>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-xl-12 col-sm-12 col-12">
+                                    <div class="mb-2">
+                                        <label for="emailCc" class="form-label">CC</label>
+                                        <div class="input input-group">
+                                            <select class="mySelect" id="emailCc" name="emailCc" multiple="multiple" title="" data-live-search="true" style="width: 100%">
+                                                <c:forEach items="${listCc}" var="group">
+                                                    <option value="${group.email}">${group.name}&nbsp;&nbsp;(${group.email})</option>
+                                                </c:forEach>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
                                 <a type ="button" title="Send Email" data-bs-toggle="modal" data-bs-target="#confirmation_modal" class="btn btn-outline-warning me-2 float-end" role="button" onclick="sendEmail();">
                                     <i class='bi bi-envelope-arrow-up'></i>&nbsp;&nbsp;Send Email to Planner</a>
                                 </c:if>
@@ -704,6 +763,15 @@
         <script>
                                     $(document).ready(function () {
                                         $('.js-example-basic-single').select2();
+
+                                        var placeholder = "Email cc";
+                                        $(".mySelect").select2({
+
+                                            allowClear: true,
+                                            placeholder: placeholder,
+                                            minimumInputLength: 3,
+                                            page: 10
+                                        });
                                     });
 
                                     document.addEventListener('DOMContentLoaded', function () {
@@ -735,7 +803,7 @@
                                         $("#confirmation_modal .modal-body").html(deleteMsg);
                                         $("#modal_button").attr("href", deleteUrl);
                                     }
-                                    
+
                                     function modalReleaseSingle(e) {
                                         var id = $(e).attr("modaldeleteid");
                                         var deleteUrl = "${contextPath}/rmsbookingDetail/releaseSingle/" + id;
@@ -746,7 +814,14 @@
 
                                     function sendEmail() {
                                         var bookingPkid = $("#bookingPkid").val();
-                                        var deleteUrl = "${contextPath}/rmsbookingDetail/sendEmailReplacementByGroup/" + bookingPkid;
+                                        var emailCc = $("#emailCc").val();
+
+                                        if (!emailCc || emailCc.length === 0) {
+                                            emailCc = "0";
+                                        } else {
+                                            emailCc = $("#emailCc").val();
+                                        }
+                                        var deleteUrl = "${contextPath}/rmsbookingDetail/sendEmailReplacementByGroup/" + bookingPkid + "/" + emailCc;
                                         var deleteMsg = "Are you sure want to send email to Planner for HW replacement?";
                                         $("#confirmation_modal .modal-body").html(deleteMsg);
                                         $("#modal_button").attr("href", deleteUrl);

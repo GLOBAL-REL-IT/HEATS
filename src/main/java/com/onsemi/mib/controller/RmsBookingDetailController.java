@@ -1,6 +1,7 @@
 package com.onsemi.mib.controller;
 
 import com.google.gson.Gson;
+import com.onsemi.mib.dao.EmailCcDAO;
 import com.onsemi.mib.dao.EmailHwReplacementDAO;
 import com.onsemi.mib.dao.EmailHwReturnFromStagingDAO;
 import com.onsemi.mib.dao.EmailVmFailDAO;
@@ -27,6 +28,7 @@ import com.onsemi.mib.dao.RmsBookingHardwareGroupLogDAO;
 import com.onsemi.mib.dao.RmsBookingLogDAO;
 import com.onsemi.mib.dao.RmsBookingMaverickDAO;
 import com.onsemi.mib.dao.RmsBookingVisualInspectionDAO;
+import com.onsemi.mib.model.EmailCc;
 import com.onsemi.mib.model.EmailHwReplacement;
 import com.onsemi.mib.model.EmailHwReturnFromStaging;
 import com.onsemi.mib.model.EmailVmFail;
@@ -71,6 +73,7 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletResponse;
@@ -431,6 +434,21 @@ public class RmsBookingDetailController {
 
         model.addAttribute("priorityList", priorityList);
 
+        //send email
+        EmailHwReplacementDAO userDao = new EmailHwReplacementDAO();
+        List<EmailHwReplacement> userRecipientsList = userDao.getEmailHwReplacementList();
+
+        String[] to = new String[userRecipientsList.size()];
+        for (int x = 0; x < userRecipientsList.size(); x++) {
+            to[x] = userRecipientsList.get(x).getEmail();
+        }
+        model.addAttribute("emailTo", Arrays.toString(to));
+
+        EmailCcDAO email = new EmailCcDAO();
+        List<EmailCc> listCc = email.getEmailCcListBySite("MYSE%");
+//        List<EmailCc> listCc = email.getEmailCcList();
+        model.addAttribute("listCc", listCc);
+
         return "rmsbookingDetail/rmsbookingDetail";
     }
 
@@ -450,8 +468,127 @@ public class RmsBookingDetailController {
         return rms;
     }
 
+    @RequestMapping(value = "/noCbmsBooking", method = {RequestMethod.GET, RequestMethod.POST})
+    @ResponseBody
+    public RmsBookingDetail noCbmsBooking(
+            @ModelAttribute UserSession userSession,
+            Model model,
+            HttpServletRequest request,
+            @RequestParam(required = false) String id
+    ) throws IOException {
+
+//        LOGGER.info("id: " + id);
+        RmsBookingDetailDAO rmsd = new RmsBookingDetailDAO();
+        RmsBookingDetail rms = rmsd.getRmsBookingDetail(id);
+
+        return rms;
+    }
+
+    @RequestMapping(value = "/sendEmailBooking2", method = {RequestMethod.GET, RequestMethod.POST})
+    public String sendEmailBooking2(
+            Model model,
+            Locale locale,
+            RedirectAttributes redirectAttrs,
+            @ModelAttribute UserSession userSession,
+            @RequestParam(required = false) String idBooking,
+            @RequestParam(required = false) String emailCc,
+            @RequestParam(required = false) String remarksBooking
+    ) throws IOException {
+
+        RmsBookingDetailDAO rmsD = new RmsBookingDetailDAO();
+        RmsBookingDetail rms = rmsD.getRmsBookingDetail(idBooking);
+
+        String text = "";
+
+        //send email
+        EmailHwReplacementDAO userDao = new EmailHwReplacementDAO();
+        List<EmailHwReplacement> userRecipientsList = userDao.getEmailHwReplacementList();
+
+        String[] to = new String[userRecipientsList.size()];
+        for (int x = 0; x < userRecipientsList.size(); x++) {
+            to[x] = userRecipientsList.get(x).getEmail();
+        }
+
+        //get current date and time
+        LocalDateTime instance = LocalDateTime.now();
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm");
+        String formattedString = formatter.format(instance); //15-02-2022 12:43
+
+        //gethostname
+        HostnameDAO hostnameD = new HostnameDAO();
+        Hostname host = hostnameD.getHostnameFlagZero();
+        String hostname = host.getHostname();
+
+        //send INFORMATION email
+        LOGGER.info("######################### START EMAIL TO PIC ########################### ");
+        EmailSender emailSender = new EmailSender();
+
+        if (emailCc != null && !emailCc.trim().isEmpty()) {
+
+            String[] css = emailCc.split(",");
+
+            emailSender.htmlEmailTableForHwReplacementWithCc(
+                    servletContext,
+                    "", //user name requestor
+                    to, //to
+                    //                        emailTo,
+                    "Hardware Preparation for Loading - Request for CBMS Booking", //subject
+                    "<br />"
+                    + "This is to highlight that the RMS_Event below currently has no booking in CBMS. Kindly prioritize and complete the CBMS booking as soon as possible, as this is required for MB team to proceed."
+                    + "<br /> "
+                    + "<br /> "
+                    + "RMS No: " + rms.getRmsNo()
+                    + "<br /> "
+                    + "RMS Event: " + rms.getEvent()
+                    + "<br /> "
+                    + "Est Event Start Date: " + rms.getEventStartDate()
+                    + "<br /> "
+                    + "Requested By: " + userSession.getFullname()
+                    + "<br /> "
+                    + "Requested Date: " + formattedString
+                    + "<br /> "
+                    + "<br /> "
+                    + "Please click <a href=\"http://" + hostname + "/HEATS/rmsbookingDetail\">HERE</a> for more detail."
+                    + "<br /> "
+                    + "<br />Thank you.", //msg
+                    css
+            );
+
+        } else {
+            emailSender.htmlEmailTableForHwReplacement(
+                    servletContext,
+                    "", //user name requestor
+                    to, //to
+                    //                        emailTo,
+                    "Hardware Preparation for Loading - Request for CBMS Booking", //subject
+                    "<br />"
+                    + "This is to highlight that the RMS_Event below currently has no booking in CBMS. Kindly prioritize and complete the CBMS booking as soon as possible, as this is required for MB team to proceed."
+                    + "<br /> "
+                    + "<br /> "
+                    + "RMS No: " + rms.getRmsNo()
+                    + "<br /> "
+                    + "RMS Event: " + rms.getEvent()
+                    + "<br /> "
+                    + "Est Event Start Date: " + rms.getEventStartDate()
+                    + "<br /> "
+                    + "Requested By: " + userSession.getFullname()
+                    + "<br /> "
+                    + "Requested Date: " + formattedString
+                    + "<br /> "
+                    + "<br /> "
+                    + "Please click <a href=\"http://" + hostname + "/HEATS/rmsbookingDetail\">HERE</a> for more detail."
+                    + "<br /> "
+                    + "<br />Thank you." //msg
+            );
+        }
+
+        redirectAttrs.addFlashAttribute("success", "Email sent to planner.");
+
+        return "redirect:/rmsbookingDetail";
+    }
+
     @RequestMapping(value = "/savePriority", method = {RequestMethod.GET, RequestMethod.POST})
-    public String itemSave(
+    public String savePriority(
             Model model,
             Locale locale,
             RedirectAttributes redirectAttrs,
@@ -509,6 +646,20 @@ public class RmsBookingDetailController {
             @ModelAttribute UserSession userSession) throws IOException {
 
         model.addAttribute("userItemSfRecall", userSession.getItemSfRecall());
+
+        EmailHwReplacementDAO userDao = new EmailHwReplacementDAO();
+        List<EmailHwReplacement> userRecipientsList = userDao.getEmailHwReplacementList();
+
+        String[] to = new String[userRecipientsList.size()];
+        for (int x = 0; x < userRecipientsList.size(); x++) {
+            to[x] = userRecipientsList.get(x).getEmail();
+        }
+        model.addAttribute("emailTo", Arrays.toString(to));
+
+        EmailCcDAO email = new EmailCcDAO();
+        List<EmailCc> listCc = email.getEmailCcListBySite("MYSE%");
+//        List<EmailCc> listCc = email.getEmailCcList();
+        model.addAttribute("listCc", listCc);
 
         //to cross check with existing hardware booked
         List<String> list = new ArrayList<>();
@@ -836,15 +987,17 @@ public class RmsBookingDetailController {
         return "redirect:/rmsbookingDetail/detail/" + bookingDetailId + "?saved=1";
     }
 
-    @RequestMapping(value = "/sendEmailReplacementByGroup/{bookingPkid}", method = {RequestMethod.GET, RequestMethod.POST})
+    @RequestMapping(value = "/sendEmailReplacementByGroup/{bookingPkid}/{emailcc}", method = {RequestMethod.GET, RequestMethod.POST})
     public String sendEmailReplacementByGroup(
             Model model,
             Locale locale,
             RedirectAttributes redirectAttrs,
             @ModelAttribute UserSession userSession,
-            @PathVariable("bookingPkid") String bookingPkid
+            @PathVariable("bookingPkid") String bookingPkid,
+            @PathVariable("emailcc") String emailcc
     ) {
 
+        LOGGER.info("emailcc:" + emailcc);
         RmsBookingDetailDAO rmsD = new RmsBookingDetailDAO();
         RmsBookingDetail rms = rmsD.getRmsBookingDetailByBookingPkid(bookingPkid);
 
@@ -909,43 +1062,88 @@ public class RmsBookingDetailController {
         //send INFORMATION email
         LOGGER.info("######################### START EMAIL TO PIC ########################### ");
         EmailSender emailSender = new EmailSender();
-//        emailSender.htmlEmailTable(
-        emailSender.htmlEmailTableForHwReplacement(
-                servletContext,
-                "", //user name requestor
-                to, //to
-                //                        emailTo,
-                "HW Prep for Loading - Request for HW replacement", //subject
-                "<br />"
-                + "This is an urgent request to please replace the hardware listed below in the CBMS application at the earliest."
-                + "<br /> "
-                + "<br /> "
-                + "RMS No: " + rms.getRmsNo()
-                + "<br /> "
-                + "RMS Event: " + rms.getEvent()
-                + "<br /> "
-                + "Requested Date: " + formattedString
-                + "<br /> "
-                + "<br /> "
-                + "Please click <a href=\"http://" + hostname + "/HEATS/rmsbookingDetail/detail/" + rms.getId() + " \">HERE</a> for more detail."
-                + "<br /> "
-                + "<br /> "
-                + "<style>table, th, td {border: 1px solid black; border-collapse: collapse;} th {background-color: #f06a0a;color: white;}</style>"
-                + "<table style=\"width:100%\">" //tbl
-                + "<tr>"
-                + "<th>No.</th> "
-                + "<th>Item Type</th> "
-                + "<th>Item ID</th>"
-                + "<th>Qty</th>"
-                + "<th>Requested By</th>"
-                + "<th>Remarks</th>"
-                + "</tr>"
-                //                + table(bookingPkid)
-                + text
-                + "</table>"
-                + "<br /> "
-                + "<br />Thank you." //msg
-        );
+
+//        if (emailcc != null && !emailcc.trim().isEmpty()) {
+        if (!"0".equals(emailcc)) {
+
+            String[] css = emailcc.split(",");
+
+            emailSender.htmlEmailTableForHwReplacementWithCc(
+                    servletContext,
+                    "", //user name requestor
+                    to, //to
+                    //                        emailTo,
+                    "HW Prep for Loading - Request for HW replacement", //subject
+                    "<br />"
+                    + "This is an urgent request to please replace the hardware listed below in the CBMS application at the earliest."
+                    + "<br /> "
+                    + "<br /> "
+                    + "RMS No: " + rms.getRmsNo()
+                    + "<br /> "
+                    + "RMS Event: " + rms.getEvent()
+                    + "<br /> "
+                    + "Requested Date: " + formattedString
+                    + "<br /> "
+                    + "<br /> "
+                    + "Please click <a href=\"http://" + hostname + "/HEATS/rmsbookingDetail/detail/" + rms.getId() + " \">HERE</a> for more detail."
+                    + "<br /> "
+                    + "<br /> "
+                    + "<style>table, th, td {border: 1px solid black; border-collapse: collapse;} th {background-color: #f06a0a;color: white;}</style>"
+                    + "<table style=\"width:100%\">" //tbl
+                    + "<tr>"
+                    + "<th>No.</th> "
+                    + "<th>Item Type</th> "
+                    + "<th>Item ID</th>"
+                    + "<th>Qty</th>"
+                    + "<th>Requested By</th>"
+                    + "<th>Remarks</th>"
+                    + "</tr>"
+                    //                + table(bookingPkid)
+                    + text
+                    + "</table>"
+                    + "<br /> "
+                    + "<br />Thank you.", //msg
+                    css
+            );
+        } else {
+            emailSender.htmlEmailTableForHwReplacement(
+                    servletContext,
+                    "", //user name requestor
+                    to, //to
+                    //                        emailTo,
+                    "HW Prep for Loading - Request for HW replacement", //subject
+                    "<br />"
+                    + "This is an urgent request to please replace the hardware listed below in the CBMS application at the earliest."
+                    + "<br /> "
+                    + "<br /> "
+                    + "RMS No: " + rms.getRmsNo()
+                    + "<br /> "
+                    + "RMS Event: " + rms.getEvent()
+                    + "<br /> "
+                    + "Requested Date: " + formattedString
+                    + "<br /> "
+                    + "<br /> "
+                    + "Please click <a href=\"http://" + hostname + "/HEATS/rmsbookingDetail/detail/" + rms.getId() + " \">HERE</a> for more detail."
+                    + "<br /> "
+                    + "<br /> "
+                    + "<style>table, th, td {border: 1px solid black; border-collapse: collapse;} th {background-color: #f06a0a;color: white;}</style>"
+                    + "<table style=\"width:100%\">" //tbl
+                    + "<tr>"
+                    + "<th>No.</th> "
+                    + "<th>Item Type</th> "
+                    + "<th>Item ID</th>"
+                    + "<th>Qty</th>"
+                    + "<th>Requested By</th>"
+                    + "<th>Remarks</th>"
+                    + "</tr>"
+                    //                + table(bookingPkid)
+                    + text
+                    + "</table>"
+                    + "<br /> "
+                    + "<br />Thank you." //msg
+            );
+        }
+
         redirectAttrs.addFlashAttribute("success", "Email sent to planner.");
         return "redirect:/rmsbookingDetail/detail/" + rms.getId();
 
@@ -4632,7 +4830,7 @@ public class RmsBookingDetailController {
                     }
                 }
                 //update rms_booking_detail//update status
-               
+
                 rmsHD = new RmsBookingHardwareDAO();
                 int countOtherBib = rmsHD.getCountMotherboardByBookingPkidAndFlagZero(bookingH.getBookingPkid());
                 if (countOtherBib == 0) {  //only update if other BIB flag != 0
@@ -5236,6 +5434,20 @@ public class RmsBookingDetailController {
         model.addAttribute("teActive", teActive);
         model.addAttribute("teActiveTab", teActiveTab);
 
+        EmailHwReturnFromStagingDAO userDao = new EmailHwReturnFromStagingDAO();
+        List<EmailHwReturnFromStaging> userRecipientsList = userDao.getEmailHwReturnFromStagingList();
+
+        String[] to = new String[userRecipientsList.size()];
+        for (int x = 0; x < userRecipientsList.size(); x++) {
+            to[x] = userRecipientsList.get(x).getEmail();
+        }
+        model.addAttribute("emailTo", Arrays.toString(to));
+
+        EmailCcDAO email = new EmailCcDAO();
+        List<EmailCc> listCc = email.getEmailCcListBySite("MYSE%");
+//        List<EmailCc> listCc = email.getEmailCcList();
+        model.addAttribute("listCc", listCc);
+
         return "rmsbookingDetail/detail_group_released_single";
     }
 
@@ -5559,11 +5771,9 @@ public class RmsBookingDetailController {
             RedirectAttributes redirectAttrs,
             @ModelAttribute UserSession userSession,
             @RequestParam(required = false) String id,
+            @RequestParam(required = false) String emailCc,
             @RequestParam(required = false) String bookingHwId, //table id for rms_booking_hardware
             @RequestParam(required = false) String recallRemarks) throws IOException {
-
-        LOGGER.info("id: " + id);
-        LOGGER.info("bookingHwid: " + bookingHwId);
 
         DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");
         Date date = new Date();
@@ -5576,10 +5786,7 @@ public class RmsBookingDetailController {
         RmsBookingHardwareDAO rmsHD = new RmsBookingHardwareDAO();
         RmsBookingHardware bookingH = rmsHD.getRmsBookingHardware(bookingHwId);
 
-        LOGGER.info("bookingH.getBookingPkid(): " + bookingH.getBookingPkid());
-
         String groupId = bookingH.getBookingPkid() + "/" + bookingH.getPkid();
-        LOGGER.info("groupId: " + groupId);
 
         //get LC detail
         rmsHD = new RmsBookingHardwareDAO();
@@ -5626,6 +5833,7 @@ public class RmsBookingDetailController {
             hardware1.setStatus(bookingH.getStatus());
             hardware1.setSubStatus("Pending Release to Production");
             hardware1.setReturnBy(userSession.getFullname());
+            hardware1.setReturnRemarks(recallRemarks);
             rmsHD = new RmsBookingHardwareDAO();
 //                QueryResult q2 = rmsHD.updateRmsBookingHardwareForFlagAndStatusById(hardware1);
             QueryResult q2 = rmsHD.updateRmsBookingHardwareForFlagAndStatusAndReturnDateById(hardware1); //include release date 29 June 2026
@@ -5793,7 +6001,6 @@ public class RmsBookingDetailController {
             List<RmsBookingHardwareGroup> group = groupD.getRmsBookingHardwareGroupListByGroupIdFlagOne(groupId);
 
             for (int x = 0; x < group.size(); x++) {
-                LOGGER.info("group.get(x).getId(): " + group.get(x).getId());
 
                 //update movement in SPTS for Hardware ID first before update HEATS DB
                 JSONObject params = new JSONObject();
@@ -5864,16 +6071,8 @@ public class RmsBookingDetailController {
                             }
                         }
 
-                        LOGGER.info("hardwarePKID: " + itemH.getSptsPkid());
-                        LOGGER.info("hardware ID: " + itemH.getHardwareId());
-                        LOGGER.info("sptsStatus: " + itemH.getStatus());
-                        LOGGER.info("ALU: " + itemH.getAlu());
-                        LOGGER.info("RMS_Event: " + itemH.getRmsEvent());
-                        LOGGER.info("ShelfTime: " + itemH.getShelfTime());
-
                         itemHwD = new ItemHardwareDAO();
                         QueryResult ItemDq = itemHwD.updateItemHardwareFromSPTS(itemH);
-                        LOGGER.info("ItemDq.getResult(): " + ItemDq.getResult());
                     }
 
                     RmsBookingHardwareGroup group1 = new RmsBookingHardwareGroup();
@@ -5932,6 +6131,81 @@ public class RmsBookingDetailController {
                     );
                 }
             }
+
+            //send email to team when successfully recall
+            EmailHwReturnFromStagingDAO userDao = new EmailHwReturnFromStagingDAO();
+            List<EmailHwReturnFromStaging> userRecipientsList = userDao.getEmailHwReturnFromStagingList();
+
+            String[] to = new String[userRecipientsList.size()];
+            for (int x = 0; x < userRecipientsList.size(); x++) {
+                to[x] = userRecipientsList.get(x).getEmail();
+            }
+
+            //gethostname
+            HostnameDAO hostnameD = new HostnameDAO();
+            Hostname h = hostnameD.getHostnameFlagZero();
+            String hostname = h.getHostname();
+
+            EmailSender emailSender = new EmailSender();
+
+            if (emailCc != null && !emailCc.trim().isEmpty()) {
+
+                String[] css = emailCc.split(",");
+
+                emailSender.htmlEmailTableWithCc(
+                        servletContext,
+                        "", //user name requestor
+                        to, //to
+                        //                        emailTo,
+                        "[Action Required] Hardware Return Before Loading (Defective)", //subject
+                        "<br />"
+                        + "Please be informed that the HW for below RMS_Event have been reverted by Loading Tech."
+                        + "<br /> "
+                        + "<br /> "
+                        + "RMS No: " + rms1.getRmsNo()
+                        + "<br /> "
+                        + "Event: " + rms1.getEvent()
+                        + "<br /> "
+                        + "Returned By: " + userSession.getFullname()
+                        + "<br /> "
+                        + "Transaction Date: " + completeDateTime
+                        + "<br /> "
+                        + "Remark: " + recallRemarks
+                        + "<br /> "
+                        + "<br /> "
+                        + "Please click <a href=\"http://" + hostname + "/HEATS/rmsbookingDetail/rmsRecall/" + id + " \">HERE</a> for more detail."
+                        + "<br /> "
+                        + "<br />Thank you.",
+                        css//msg
+                );
+            } else {
+                emailSender.htmlEmailTable(
+                        servletContext,
+                        "", //user name requestor
+                        to, //to
+                        //                        emailTo,
+                        "[Action Required] Hardware Return Before Loading (Defective)", //subject
+                        "<br />"
+                        + "Please be informed that the HW for below RMS_Event have been reverted by Loading Tech."
+                        + "<br /> "
+                        + "<br /> "
+                        + "RMS No: " + rms1.getRmsNo()
+                        + "<br /> "
+                        + "Event: " + rms1.getEvent()
+                        + "<br /> "
+                        + "Returned By: " + userSession.getFullname()
+                        + "<br /> "
+                        + "Transaction Date: " + completeDateTime
+                        + "<br /> "
+                        + "Remark: " + recallRemarks
+                        + "<br /> "
+                        + "<br /> "
+                        + "Please click <a href=\"http://" + hostname + "/HEATS/rmsbookingDetail/rmsRecall/" + id + " \">HERE</a> for more detail."
+                        + "<br /> "
+                        + "<br />Thank you."
+                );
+            }
+
             //update rms_booking_detail//update status hold for now 29 June 2026
 //            RmsBookingDetail rms = new RmsBookingDetail();
 //            rms.setId(rms1.getId());
@@ -5995,7 +6269,7 @@ public class RmsBookingDetailController {
         }
 
 //        return "redirect:/rmsbookingDetail/detail/" + id;
-        return "redirect:/rmsbookingDetail";
+        return "redirect:/rmsbookingDetail/rmsRecall";
     }
 
     @RequestMapping(value = "/rmsRecall", method = RequestMethod.GET)
@@ -6300,6 +6574,9 @@ public class RmsBookingDetailController {
         RmsBookingHardware h = hD.getRmsBookingHardwareByPkid(itemPkid);
         model.addAttribute("motherboardId", h.getItemId());
         model.addAttribute("subStatus", h.getSubStatus());
+        model.addAttribute("returnBy", h.getReturnBy());
+        model.addAttribute("returnDate", h.getReturnDate());
+        model.addAttribute("returnRemarks", h.getReturnRemarks());
 
         RmsBookingHardwareGroupDAO h2D = new RmsBookingHardwareGroupDAO();
         List<RmsBookingHardwareGroup> hwGroupList = h2D.getRmsBookingHardwareGroupListByGroupId(groupId);

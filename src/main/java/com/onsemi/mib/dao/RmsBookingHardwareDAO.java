@@ -218,14 +218,15 @@ public class RmsBookingHardwareDAO {
         QueryResult queryResult = new QueryResult();
         try {
             PreparedStatement ps = conn.prepareStatement(
-                    "UPDATE rms_booking_hardware SET flag = ?, status = ?, modified_date = NOW(), modified_by = ?, sub_status = ?, return_date = NOW(), return_by = ? WHERE id = ?"
+                    "UPDATE rms_booking_hardware SET flag = ?, status = ?, modified_date = NOW(), modified_by = ?, sub_status = ?, return_date = NOW(), return_by = ?, return_remarks = ? WHERE id = ?"
             );
             ps.setString(1, rmsbookingHardware.getFlag());
             ps.setString(2, rmsbookingHardware.getStatus());
             ps.setString(3, rmsbookingHardware.getModifiedBy());
             ps.setString(4, rmsbookingHardware.getSubStatus());
             ps.setString(5, rmsbookingHardware.getReturnBy());
-            ps.setString(6, rmsbookingHardware.getId());
+            ps.setString(6, rmsbookingHardware.getReturnRemarks());
+            ps.setString(7, rmsbookingHardware.getId());
             queryResult.setResult(ps.executeUpdate());
             ps.close();
         } catch (SQLException e) {
@@ -547,7 +548,7 @@ public class RmsBookingHardwareDAO {
     }
 
     public RmsBookingHardware getRmsBookingHardwareByPkid(String pkid) {
-        String sql = "SELECT * FROM rms_booking_hardware WHERE pkid = '" + pkid + "'";
+        String sql = "SELECT *,DATE_FORMAT(return_date,'%d %M %Y %h:%i %p') AS returnDate FROM rms_booking_hardware WHERE pkid = '" + pkid + "'";
         RmsBookingHardware rmsbookingHardware = null;
         try {
             PreparedStatement ps = conn.prepareStatement(sql);
@@ -572,6 +573,9 @@ public class RmsBookingHardwareDAO {
                 rmsbookingHardware.setSubStatus(rs.getString("sub_status"));
                 rmsbookingHardware.setLcQty(rs.getString("lc_qty"));
                 rmsbookingHardware.setPcQty(rs.getString("pc_qty"));
+                rmsbookingHardware.setReturnBy(rs.getString("return_by"));
+                rmsbookingHardware.setReturnDate(rs.getString("returnDate"));
+                rmsbookingHardware.setReturnRemarks(rs.getString("return_remarks"));
             }
             rs.close();
             ps.close();
