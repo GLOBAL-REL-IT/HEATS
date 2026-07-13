@@ -1319,8 +1319,8 @@ public class AdminController {
             if ("on".equals(manualTestCheck)) {
                 saiz = compName.size();
                 String flag = "1";
-                String status = "";
-                int saizDut = Integer.parseInt(inputDUT);
+//                String status = "";
+//                int saizDut = Integer.parseInt(inputDUT);
                 String user = userSession.getLoginId();
 
                 // ASSIGN IT USING THE MIB ITEM ID SINCE CREATE A NEW
@@ -1331,48 +1331,65 @@ public class AdminController {
                 ManualTestDAO test = new ManualTestDAO();
                 Integer check1 = test.getManualTestCurrentRecord(itemId);
                 
-                LOGGER.info("****************************");
-                LOGGER.info("NK TENGOK DATA DEKAT SINI :::: "+itemQ.getGeneratedKey());
-
                 if ("0".equals(check1)) {
-                    LOGGER.info("huhuhuhuhuhuhuhu");
                     test = new ManualTestDAO();
                     QueryResult q0 = test.insertManualTestBeforeLoading(itemId, itemQ.getGeneratedKey(), String.valueOf(inputQuantity), inputDUT, String.valueOf(saiz), user, flag);
-                    LOGGER.info("111111111");
                     if (!"0".equals(q0.getGeneratedKey())) {
-                        String configId = q0.getGeneratedKey();
+                        String configId1 = q0.getGeneratedKey();
                         for (int c1 = 0; c1 < saiz; c1++) {
                             test = new ManualTestDAO();
-                            QueryResult q3 = test.insertManualTestBeforeLoadingSub(itemId, configId, inputDUT, type.get(c1), compName.get(c1), compValue.get(c1), percentageValue.get(c1), lowerValue.get(c1), upperValue.get(c1), user, flag);
+                            test.insertManualTestBeforeLoadingSub(itemId, configId1, inputDUT, type.get(c1), compName.get(c1), compValue.get(c1), percentageValue.get(c1), lowerValue.get(c1), upperValue.get(c1), user, flag);
                             LOGGER.info("222222222");
                         }
                     }
                 } else {
-                    LOGGER.info("hihihihihihihihihihihihihih");
                     test = new ManualTestDAO();
-                    String configId = test.getConfigIdByItemId(itemId).toString();
+                    String configId1 = test.getConfigIdByItemId(itemId).toString();
                     
-                    if ("0".equals(configId)) {
+                    if ("0".equals(configId1)) {
                         test = new ManualTestDAO();
                         QueryResult q0 = test.insertManualTestBeforeLoading(itemId, itemQ.getGeneratedKey(), String.valueOf(inputQuantity), inputDUT, String.valueOf(saiz), user, flag);
-                        LOGGER.info("33333");
+                        if (!"0".equals(q0.getGeneratedKey())) {
+                            configId1 = q0.getGeneratedKey();
+                        }
+                    } else {
+                        test = new ManualTestDAO();
+                        test.updateItemActivityConfigBefore(String.valueOf(inputQuantity), inputDUT, String.valueOf(saiz), String.valueOf(configId1));
+                    }
+
+                    // FUNCTION TO REMOVE PREVIOUS COMPONENT, AND THEN SAVE THE NEW ONE
+                    test = new ManualTestDAO();
+                    test.removeCurrentData(configId1, itemId);
+
+                    for (int c1 = 0; c1 < saiz; c1++) {
+                        test = new ManualTestDAO();
+                        test.insertManualTestBeforeLoadingSub(itemId, configId1, inputDUT, type.get(c1), compName.get(c1), compValue.get(c1), percentageValue.get(c1), lowerValue.get(c1), upperValue.get(c1), user, flag);
+                    }
+                }
+                
+                test = new ManualTestDAO();
+                Integer check2 = test.getManualTestCurrentRecordUnloading(itemId);
+                if ("0".equals(check2)) {
+                    test = new ManualTestDAO();
+                    test.insertManualTestAfterLoading(itemId, id, String.valueOf(inputQuantity), inputDUT, String.valueOf(saiz), user, flag);
+                } else {
+                    test = new ManualTestDAO();
+                    String configId = test.getConfigIdByItemIdUnloading(itemId).toString();
+
+                    if ("0".equals(configId)) {
+                        test = new ManualTestDAO();
+                        QueryResult q0 = test.insertManualTestAfterLoading(itemId, id, String.valueOf(inputQuantity), inputDUT, String.valueOf(saiz), user, flag);
                         if (!"0".equals(q0.getGeneratedKey())) {
                             configId = q0.getGeneratedKey();
                         }
                     } else {
                         test = new ManualTestDAO();
-                        QueryResult q0 = test.updateItemActivityConfig(String.valueOf(inputQuantity), inputDUT, String.valueOf(saiz), String.valueOf(configId));
-                        LOGGER.info("44444");
+                        test.updateItemActivityConfig(String.valueOf(inputQuantity), inputDUT, String.valueOf(saiz), String.valueOf(configId));
                     }
 
                     // FUNCTION TO REMOVE PREVIOUS COMPONENT, AND THEN SAVE THE NEW ONE
                     test = new ManualTestDAO();
-                    test.removeCurrentDataBefore(configId, itemId);
-
-                    for (int c1 = 0; c1 < saiz; c1++) {
-                        test = new ManualTestDAO();
-                        QueryResult q3 = test.insertManualTestBeforeLoadingSub(itemId, configId, inputDUT, type.get(c1), compName.get(c1), compValue.get(c1), percentageValue.get(c1), lowerValue.get(c1), upperValue.get(c1), user, flag);
-                    }
+                    test.removeCurrentData(configId, itemId);
                 }
             }
             redirectAttrs.addFlashAttribute("success", "Activity Configuration Succesfully Added.");
@@ -1417,11 +1434,10 @@ public class AdminController {
             }
         } else {
             String dut = itemA1.getDut();
-
             ItemActivityConfigDAO itemactdao = new ItemActivityConfigDAO();
             String mibItemId = itemactdao.getItemIdByConfigId(id);
             ManualTestDAO itemB = new ManualTestDAO();
-            List<ManualTest> itemB1 = itemB.getAllComponentConfigBefore(mibItemId);
+            List<ManualTest> itemB1 = itemB.getAllComponentConfigSub(mibItemId);
 
             model.addAttribute("dut", dut);
             model.addAttribute("listData", itemB1);
@@ -1467,7 +1483,7 @@ public class AdminController {
             ItemActivityConfigDAO itemactdao = new ItemActivityConfigDAO();
             String mibItemId = itemactdao.getItemIdByConfigId(id);
             ManualTestDAO itemB = new ManualTestDAO();
-            List<ManualTest> itemB1 = itemB.getAllComponentConfigBefore(mibItemId);
+            List<ManualTest> itemB1 = itemB.getAllComponentConfigSub(mibItemId);
 
             model.addAttribute("dut", dut);
             model.addAttribute("listData", itemB1);
@@ -1521,8 +1537,8 @@ public class AdminController {
             itemA.setManualTest("Yes");
             saiz = compName.size();
             String flag = "1";
-            String status = "";
-            int saizDut = Integer.parseInt(inputDUT);
+//            String status = "";
+//            int saizDut = Integer.parseInt(inputDUT);
             String user = userSession.getLoginId();
 
             ItemActivityConfigDAO itemactdao = new ItemActivityConfigDAO();
@@ -1539,7 +1555,7 @@ public class AdminController {
                     String configId = q0.getGeneratedKey();
                     for (int c1 = 0; c1 < saiz; c1++) {
                         test = new ManualTestDAO();
-                        QueryResult q3 = test.insertManualTestBeforeLoadingSub(itemId, configId, inputDUT, type.get(c1), compName.get(c1), compValue.get(c1), percentageValue.get(c1), lowerValue.get(c1), upperValue.get(c1), user, flag);
+                        test.insertManualTestBeforeLoadingSub(itemId, configId, inputDUT, type.get(c1), compName.get(c1), compValue.get(c1), percentageValue.get(c1), lowerValue.get(c1), upperValue.get(c1), user, flag);
                     }
                 }
             } else {
@@ -1555,18 +1571,44 @@ public class AdminController {
                     }
                 } else {
                     test = new ManualTestDAO();
-                    QueryResult q0 = test.updateItemActivityConfig(String.valueOf(inputQuantity), inputDUT, String.valueOf(saiz), String.valueOf(configId));
+                    test.updateItemActivityConfig(String.valueOf(inputQuantity), inputDUT, String.valueOf(saiz), String.valueOf(configId));
                 }
 
                 // FUNCTION TO REMOVE PREVIOUS COMPONENT, AND THEN SAVE THE NEW ONE
                 test = new ManualTestDAO();
-                test.removeCurrentDataBefore(configId, itemId);
+                test.removeCurrentData(configId, itemId);
 
                 for (int c1 = 0; c1 < saiz; c1++) {
                     test = new ManualTestDAO();
-                    QueryResult q3 = test.insertManualTestBeforeLoadingSub(itemId, configId, inputDUT, type.get(c1), compName.get(c1), compValue.get(c1), percentageValue.get(c1), lowerValue.get(c1), upperValue.get(c1), user, flag);
+                    test.insertManualTestBeforeLoadingSub(itemId, configId, inputDUT, type.get(c1), compName.get(c1), compValue.get(c1), percentageValue.get(c1), lowerValue.get(c1), upperValue.get(c1), user, flag);
                 }
             }
+            
+            test = new ManualTestDAO();
+            Integer check2 = test.getManualTestCurrentRecordUnloading(itemId);
+            if ("0".equals(check2)) {
+                test = new ManualTestDAO();
+                test.insertManualTestAfterLoading(itemId, id, String.valueOf(inputQuantity), inputDUT, String.valueOf(saiz), user, flag);
+            } else {
+                test = new ManualTestDAO();
+                String configId = test.getConfigIdByItemIdUnloading(itemId).toString();
+
+                if ("0".equals(configId)) {
+                    test = new ManualTestDAO();
+                    QueryResult q0 = test.insertManualTestAfterLoading(itemId, id, String.valueOf(inputQuantity), inputDUT, String.valueOf(saiz), user, flag);
+                    if (!"0".equals(q0.getGeneratedKey())) {
+                        configId = q0.getGeneratedKey();
+                    }
+                } else {
+                    test = new ManualTestDAO();
+                    test.updateItemActivityConfig(String.valueOf(inputQuantity), inputDUT, String.valueOf(saiz), String.valueOf(configId));
+                }
+
+                // FUNCTION TO REMOVE PREVIOUS COMPONENT, AND THEN SAVE THE NEW ONE
+                test = new ManualTestDAO();
+                test.removeCurrentData(configId, itemId);
+            }
+            
         } else {
             itemA.setManualTest("No");
         }
@@ -1665,7 +1707,7 @@ public class AdminController {
                     String configId = q0.getGeneratedKey();
                     for (int c1 = 0; c1 < saiz; c1++) {
                         test = new ManualTestDAO();
-                        QueryResult q3 = test.insertManualTestBeforeLoadingSub(itemId, configId, inputDUT, type.get(c1), compName.get(c1), compValue.get(c1), percentageValue.get(c1), lowerValue.get(c1), upperValue.get(c1), user, flag);
+                        test.insertManualTestBeforeLoadingSub(itemId, configId, inputDUT, type.get(c1), compName.get(c1), compValue.get(c1), percentageValue.get(c1), lowerValue.get(c1), upperValue.get(c1), user, flag);
                     }
                 }
             } else {
@@ -1681,17 +1723,42 @@ public class AdminController {
                     }
                 } else {
                     test = new ManualTestDAO();
-                    QueryResult q0 = test.updateItemActivityConfig(String.valueOf(inputQuantity), inputDUT, String.valueOf(saiz), String.valueOf(configId));
+                    test.updateItemActivityConfig(String.valueOf(inputQuantity), inputDUT, String.valueOf(saiz), String.valueOf(configId));
                 }
 
                 // FUNCTION TO REMOVE PREVIOUS COMPONENT, AND THEN SAVE THE NEW ONE
                 test = new ManualTestDAO();
-                test.removeCurrentDataBefore(configId, itemId);
+                test.removeCurrentData(configId, itemId);
 
                 for (int c1 = 0; c1 < saiz; c1++) {
                     test = new ManualTestDAO();
-                    QueryResult q3 = test.insertManualTestBeforeLoadingSub(itemId, configId, inputDUT, type.get(c1), compName.get(c1), compValue.get(c1), percentageValue.get(c1), lowerValue.get(c1), upperValue.get(c1), user, flag);
+                    test.insertManualTestBeforeLoadingSub(itemId, configId, inputDUT, type.get(c1), compName.get(c1), compValue.get(c1), percentageValue.get(c1), lowerValue.get(c1), upperValue.get(c1), user, flag);
                 }
+            }
+            
+            test = new ManualTestDAO();
+            Integer check2 = test.getManualTestCurrentRecordUnloading(itemId);
+            if ("0".equals(check2)) {
+                test = new ManualTestDAO();
+                test.insertManualTestAfterLoading(itemId, id, String.valueOf(inputQuantity), inputDUT, String.valueOf(saiz), user, flag);
+            } else {
+                test = new ManualTestDAO();
+                String configId = test.getConfigIdByItemIdUnloading(itemId).toString();
+
+                if ("0".equals(configId)) {
+                    test = new ManualTestDAO();
+                    QueryResult q0 = test.insertManualTestAfterLoading(itemId, id, String.valueOf(inputQuantity), inputDUT, String.valueOf(saiz), user, flag);
+                    if (!"0".equals(q0.getGeneratedKey())) {
+                        configId = q0.getGeneratedKey();
+                    }
+                } else {
+                    test = new ManualTestDAO();
+                    test.updateItemActivityConfig(String.valueOf(inputQuantity), inputDUT, String.valueOf(saiz), String.valueOf(configId));
+                }
+
+                // FUNCTION TO REMOVE PREVIOUS COMPONENT, AND THEN SAVE THE NEW ONE
+                test = new ManualTestDAO();
+                test.removeCurrentData(configId, itemId);
             }
         } else {
             itemA.setManualTest("No");

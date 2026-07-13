@@ -7134,7 +7134,7 @@ public class RmsBookingDetailController {
                 // FUNCTION UPDATE THE LATEST QUANTITY - END
 
                 testdao = new ManualTestDAO();
-                List<ManualTest> listComponent = testdao.getAllComponentConfigBefore(lcItemId);
+                List<ManualTest> listComponent = testdao.getAllComponentConfigBeforeLoading(lcItemId);
 
                 for (int i = 0; i < listComponent.size(); i++) {
                     String compType = listComponent.get(i).getComponentType();

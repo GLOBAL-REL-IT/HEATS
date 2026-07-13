@@ -3411,7 +3411,7 @@ public class RmsBookingDetailUnloadingController {
     }
 
     @RequestMapping(value = "/createManualTest", method = {RequestMethod.GET, RequestMethod.POST})
-    public String bookingFunctionalTest(
+    public String createManualTest(
             Model model,
             Locale locale,
             RedirectAttributes redirectAttrs,
@@ -3424,21 +3424,23 @@ public class RmsBookingDetailUnloadingController {
         String path = "";
 
         // SINI KITA HARDCODE UNTUK PERGI KE PHP PROUJECT LINK FOR HEATS
-//        String link = "http://zbqb9x-7jwwld4:86/HEATS-mini/manual_test_after_loading.php?id=" + lcItemId + "&groupId=" + groupId;
-        String link = "https://mysed-rel-app05/HEATS-mini/manual_test_after_loading.php?id=" + lcItemId + "&groupId=" + groupId;
+        String link = "http://zbqb9x-7jwwld4:86/HEATS-mini/manual_test_unloading.php?id=" + lcItemId + "&groupId=" + groupId;
+//        String link = "https://mysed-rel-app05/HEATS-mini/manual_test_unloading.php?id=" + lcItemId + "&groupId=" + groupId;
         model.addAttribute("link", link);
 
         ManualTestDAO testdao = new ManualTestDAO();
-        ManualTest mantest = testdao.getComponentConfigBeforeByItemId(lcItemId);
+        ManualTest mantest = testdao.getComponentConfigAfterByItemId(lcItemId);
 
         if (mantest != null) {
+            LOGGER.info("satu");
             path = "rmsbookingDetail/goto_manual_test";
             redirectAttrs.addFlashAttribute("success", "Please perform manual test.");
 
             testdao = new ManualTestDAO();
-            List<ManualTest> listManual = testdao.getAllComponentConfigBeforeLoading(lcItemId);
+            List<ManualTest> listManual = testdao.getAllComponentConfigUnloading(lcItemId);
 
             if (listManual.size() == 0) {
+                LOGGER.info("ada data");
                 int saizQty = Integer.parseInt(totalQty);
                 int saizDut = Integer.parseInt(mantest.getDut());
                 int saizCom = Integer.parseInt(mantest.getComponent());
@@ -3449,9 +3451,10 @@ public class RmsBookingDetailUnloadingController {
                 // FUNCTION UPDATE THE LATEST QUANTITY - END
 
                 testdao = new ManualTestDAO();
-                List<ManualTest> listComponent = testdao.getAllComponentConfigBefore(lcItemId);
+                List<ManualTest> listComponent = testdao.getAllComponentConfig(lcItemId);
 
                 for (int i = 0; i < listComponent.size(); i++) {
+                    LOGGER.info("MASUK KE DALAM NI WEA   ----------------------   ");
                     String compType = listComponent.get(i).getComponentType();
                     String compName = listComponent.get(i).getComponentName();
                     String compValue = listComponent.get(i).getComponentValue();
@@ -3462,15 +3465,18 @@ public class RmsBookingDetailUnloadingController {
                     for (int c1 = 1; c1 <= saizQty; c1++) {
                         for (int c2 = 1; c2 <= saizDut; c2++) {
                             testdao = new ManualTestDAO();
-                            QueryResult qr = testdao.insertManualBeforeLoading(lcItemId, String.valueOf(c1), String.valueOf(c2), compType, compName, compValue, minValue, maxValue, percentage, "", "", "1");
+                            QueryResult qr = testdao.insertManualUnloading(lcItemId, String.valueOf(c1), String.valueOf(c2), compType, compName, compValue, minValue, maxValue, percentage, "", "", "1");
                         }
                     }
                 }
+                LOGGER.info("CUBA TENGOK DIA MASUK KE TAK ATAS NI....");
             } else {
+                LOGGER.info("takde data");
                 // WHAT NEED TO BE DONE HERE? SINCE THERE ALREADY DATA, WE SKIP INSERTING A NEW ONE
             }
         } else {
-            path = "redirect:/rmsbookingDetail/groupDetail/" + groupId;
+            LOGGER.info("dua");
+            path = "redirect:/rmsbookingDetailUnloading/groupDetail/" + groupId;
             redirectAttrs.addFlashAttribute("error", "Please check the manual test configuration for the ITEM ID " + mbItemId);
         }
 
@@ -3524,7 +3530,7 @@ public class RmsBookingDetailUnloadingController {
         HostnameDAO hostnameD = new HostnameDAO();
         Hostname h = hostnameD.getHostnameFlagZero();
         String hostname = h.getHostname();
-
+ 
         EmailSender emailSender = new EmailSender();
         emailSender.htmlEmailFT(
                 servletContext,
