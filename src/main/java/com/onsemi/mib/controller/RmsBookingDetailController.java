@@ -7147,7 +7147,9 @@ public class RmsBookingDetailController {
                     for (int c1 = 1; c1 <= saizQty; c1++) {
                         for (int c2 = 1; c2 <= saizDut; c2++) {
                             testdao = new ManualTestDAO();
-                            QueryResult qr = testdao.insertManualBeforeLoading(lcItemId, String.valueOf(c1), String.valueOf(c2), compType, compName, compValue, minValue, maxValue, percentage, "", "", "1");
+                            testdao.insertManualBeforeLoading(lcItemId, String.valueOf(c1), String.valueOf(c2), compType, compName, compValue, minValue, maxValue, percentage, "", "", "1");
+                            testdao = new ManualTestDAO();
+                            testdao.insertManualUnloading(lcItemId, String.valueOf(c1), String.valueOf(c2), compType, compName, compValue, minValue, maxValue, percentage, "", "", "1");
                         }
                     }
                 }

@@ -1371,14 +1371,14 @@ public class AdminController {
                 Integer check2 = test.getManualTestCurrentRecordUnloading(itemId);
                 if ("0".equals(check2)) {
                     test = new ManualTestDAO();
-                    test.insertManualTestAfterLoading(itemId, id, String.valueOf(inputQuantity), inputDUT, String.valueOf(saiz), user, flag);
+                    test.insertManualTestAfterLoading(itemId, itemQ.getGeneratedKey(), String.valueOf(inputQuantity), inputDUT, String.valueOf(saiz), user, flag);
                 } else {
                     test = new ManualTestDAO();
                     String configId = test.getConfigIdByItemIdUnloading(itemId).toString();
 
                     if ("0".equals(configId)) {
                         test = new ManualTestDAO();
-                        QueryResult q0 = test.insertManualTestAfterLoading(itemId, id, String.valueOf(inputQuantity), inputDUT, String.valueOf(saiz), user, flag);
+                        QueryResult q0 = test.insertManualTestAfterLoading(itemId, configId, String.valueOf(inputQuantity), inputDUT, String.valueOf(saiz), user, flag);
                         if (!"0".equals(q0.getGeneratedKey())) {
                             configId = q0.getGeneratedKey();
                         }
