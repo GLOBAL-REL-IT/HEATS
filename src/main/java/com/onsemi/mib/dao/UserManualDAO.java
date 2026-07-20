@@ -88,8 +88,9 @@ public class UserManualDAO {
         QueryResult queryResult = new QueryResult();
         try {
             PreparedStatement ps = conn.prepareStatement(
-                    "DELETE FROM sr_user_manual WHERE id = '" + userManualId + "'"
+                    "DELETE FROM sr_user_manual WHERE id = ? "
             );
+            ps.setString(1, userManualId);
             queryResult.setResult(ps.executeUpdate());
             ps.close();
         } catch (SQLException e) {
@@ -166,4 +167,5 @@ public class UserManualDAO {
         }
         return userManualList;
     }
+
 }

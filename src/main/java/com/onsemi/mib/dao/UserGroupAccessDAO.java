@@ -21,12 +21,13 @@ public class UserGroupAccessDAO {
         DB db = new DB();
         this.conn = db.getConnection();
     }
-    
+
     public List<UserGroupAccess> getGroupAccess(String groupId) {
-        String sql = "SELECT * FROM menu_access WHERE group_id = '" + groupId + "'";
+        String sql = "SELECT * FROM menu_access WHERE group_id = ? ";
         List<UserGroupAccess> userGroupAccessList = new ArrayList<UserGroupAccess>();
         try {
             PreparedStatement ps = conn.prepareStatement(sql);
+            ps.setString(1, groupId);
             UserGroupAccess userGroupAccess;
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
@@ -55,10 +56,11 @@ public class UserGroupAccessDAO {
 
     public List<UserGroupAccess> getUserGroupAccess(String groupId) {
         String sql = "SELECT m.id AS menu_id, m.parent_code, m.code, m.name, uga.id, uga.group_id, IF (m.id = uga.menu_id, \"checked=\\\"\\\"\", \"\") AS selected "
-                + "FROM menu_main m LEFT JOIN menu_access uga ON uga.group_id = '" + groupId + "' AND m.id = uga.menu_id ORDER BY m.code";
+                + "FROM menu_main m LEFT JOIN menu_access uga ON uga.group_id = ? AND m.id = uga.menu_id ORDER BY m.code";
         List<UserGroupAccess> userGroupAccessList = new ArrayList<UserGroupAccess>();
         try {
             PreparedStatement ps = conn.prepareStatement(sql);
+            ps.setString(1, groupId);
             UserGroupAccess userGroupAccess;
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
@@ -126,7 +128,7 @@ public class UserGroupAccessDAO {
         String idList = "";
         try {
             for (String access : groupAccess) {
-                String findId = "SELECT id FROM menu_access WHERE group_id = ? AND menu_id = ?";
+                String findId = "SELECT id FROM menu_access WHERE group_id = ? AND menu_id = ? ";
                 PreparedStatement ps = conn.prepareStatement(findId);
                 ps.setString(1, groupId);
                 ps.setString(2, access);
@@ -140,11 +142,12 @@ public class UserGroupAccessDAO {
             if (!idList.equals("")) {
                 idList = idList.substring(0, idList.length() - 1);
             }
-            String delete = "DELETE FROM menu_access WHERE id NOT IN (" + idList + ") AND group_id ='" + groupId + "'";
+            String delete = "DELETE FROM menu_access WHERE id NOT IN (" + idList + ") AND group_id = ? ";
             if (idList.equals("")) {
-                delete = "DELETE FROM menu_access WHERE group_id = '" + groupId + "'";
+                delete = "DELETE FROM menu_access WHERE group_id = ? ";
             }
             PreparedStatement ps = conn.prepareStatement(delete);
+            ps.setString(1, groupId);
             queryResult.setResult(ps.executeUpdate());
             ps.close();
             queryResult.setResult(1);
@@ -162,13 +165,14 @@ public class UserGroupAccessDAO {
         }
         return queryResult;
     }
-    
+
     public QueryResult removeAccessByGroupId(String groupId) {
         QueryResult queryResult = new QueryResult();
         try {
             PreparedStatement ps = conn.prepareStatement(
-                    "DELETE FROM menu_access WHERE group_id = '" + groupId + "'"
+                    "DELETE FROM menu_access WHERE group_id = ? "
             );
+            ps.setString(1, groupId);
             queryResult.setResult(ps.executeUpdate());
             ps.close();
         } catch (SQLException e) {
@@ -185,4 +189,5 @@ public class UserGroupAccessDAO {
         }
         return queryResult;
     }
+
 }

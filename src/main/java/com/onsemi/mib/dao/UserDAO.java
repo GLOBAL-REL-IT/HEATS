@@ -72,7 +72,7 @@ public class UserDAO {
         QueryResult queryResult = new QueryResult();
         try {
             PreparedStatement ps = conn.prepareStatement(
-                    "UPDATE user_ldap SET email = ?, group_id = ?, is_active = ?, modified_by = ?, modified_time = NOW() WHERE id = ?"
+                    "UPDATE user_ldap SET email = ?, group_id = ?, is_active = ?, modified_by = ?, modified_time = NOW() WHERE id = ? "
             );
             ps.setString(1, user.getEmail());
             ps.setString(2, user.getGroupId());
@@ -109,7 +109,7 @@ public class UserDAO {
         QueryResult queryResult = new QueryResult();
         try {
             PreparedStatement ps = conn.prepareStatement(
-                    "UPDATE user_ldap SET group_id = ? WHERE id = ?"
+                    "UPDATE user_ldap SET group_id = ? WHERE id = ? "
             );
             ps.setString(1, groupId);
             ps.setString(2, userId);
@@ -134,14 +134,16 @@ public class UserDAO {
         QueryResult queryResult = new QueryResult();
         try {
             PreparedStatement ps = conn.prepareStatement(
-                    "DELETE FROM user_ldap WHERE id = '" + userId + "'"
+                    "DELETE FROM user_ldap WHERE id = ? "
             );
+            ps.setString(1, userId);
             queryResult.setResult(ps.executeUpdate());
             ps.close();
             if (queryResult.getResult() == 1) {
                 ps = conn.prepareStatement(
-                        "DELETE FROM user_profile WHERE user_id = '" + userId + "'"
+                        "DELETE FROM user_profile WHERE user_id = ? "
                 );
+                ps.setString(1, userId);
                 queryResult.setResult(ps.executeUpdate());
                 ps.close();
             }
@@ -164,10 +166,11 @@ public class UserDAO {
         String sql = "SELECT u.*, ug.code AS group_code, ug.name AS group_name, up.fullname, up.email FROM user_ldap u "
                 + "LEFT JOIN user_group ug ON (u.group_id = ug.id) "
                 + "LEFT JOIN user_profile up ON (u.id = up.user_id) "
-                + "WHERE u.id = '" + userId + "' ORDER BY up.fullname";
+                + "WHERE u.id = ? ORDER BY up.fullname";
         User user = null;
         try {
             PreparedStatement ps = conn.prepareStatement(sql);
+            ps.setString(1, userId);
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
                 user = new User(
@@ -203,12 +206,12 @@ public class UserDAO {
     }
 
     public LDAPUser getUserByFullName(String fullname) {
-        String sql = "SELECT * "
-                + "FROM user_ldap "
-                + "WHERE CONCAT(firstname,' ',lastname) = '" + fullname + "'";
+        String sql = "SELECT * FROM user_ldap "
+                + "WHERE CONCAT(firstname,' ',lastname) = ? ";
         LDAPUser user = null;
         try {
             PreparedStatement ps = conn.prepareStatement(sql);
+            ps.setString(1, fullname);
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
                 user = new LDAPUser();
@@ -249,7 +252,7 @@ public class UserDAO {
     public List<User> getUserList(String groupId) {
         String filterGroupId = "";
         if (!groupId.equals("")) {
-            filterGroupId = "WHERE u.group_id = '" + groupId + "' ";
+            filterGroupId = "WHERE u.group_id = ? ";
         }
         String sql = "SELECT u.*, ug.code AS group_code, ug.name AS group_name, up.fullname, up.email FROM user_ldap u "
                 + "LEFT JOIN user_group ug ON (u.group_id = ug.id) "
@@ -259,6 +262,7 @@ public class UserDAO {
         List<User> userList = new ArrayList<User>();
         try {
             PreparedStatement ps = conn.prepareStatement(sql);
+            ps.setString(1, groupId);
             User user;
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
@@ -297,9 +301,10 @@ public class UserDAO {
 
     public Integer getCountByGroupId(String groupId) {
         Integer count = null;
-        String sql = "SELECT count(id) AS count FROM user_ldap WHERE group_id = '" + groupId + "'";
+        String sql = "SELECT count(id) AS count FROM user_ldap WHERE group_id = ? ";
         try {
             PreparedStatement ps = conn.prepareStatement(sql);
+            ps.setString(1, groupId);
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
                 count = rs.getInt("count");
@@ -324,10 +329,11 @@ public class UserDAO {
     public User getUserByLoginId(String loginId) {
         String sql = "SELECT u.*, IFNULL(ug.code, '') AS group_code, IFNULL(ug.name, '') AS group_name, up.fullname, up.email FROM user_ldap u "
                 + "LEFT JOIN user_group ug ON (u.group_id = ug.id) LEFT JOIN user_profile up ON (u.id = up.user_id) "
-                + "WHERE u.login_id = '" + loginId + "' ORDER BY up.fullname";
+                + "WHERE u.login_id = ? ORDER BY up.fullname";
         User user = null;
         try {
             PreparedStatement ps = conn.prepareStatement(sql);
+            ps.setString(1, loginId);
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
                 user = new User(
@@ -391,11 +397,12 @@ public class UserDAO {
     public UserAccess getUserDetails(String userId) {
         String sql = "SELECT * "
                 + "FROM user_ldap u, user_group g, user_profile p "
-                + "WHERE u.id = p.user_id AND u.group_id = g.id AND u.id = '" + userId + "' "
+                + "WHERE u.id = p.user_id AND u.group_id = g.id AND u.id = ? "
                 + "ORDER BY u.id ASC ";
         UserAccess userAccess = null;
         try {
             PreparedStatement ps = conn.prepareStatement(sql);
+            ps.setString(1, userId);
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
                 userAccess = new UserAccess();
@@ -446,10 +453,11 @@ public class UserDAO {
         String sql = "SELECT u.*, IFNULL(ug.code, '') AS group_code, IFNULL(ug.name, '') AS group_name, uac.* FROM user_ldap u "
                 + "LEFT JOIN user_group ug ON (u.group_id = ug.id) "
                 + "LEFT JOIN user_access_control uac ON u.id = uac.user_id "
-                + "WHERE u.id = '" + userId + "' ";
+                + "WHERE u.id = ? ";
         LDAPUser userAccess = null;
         try {
             PreparedStatement ps = conn.prepareStatement(sql);
+            ps.setString(1, userId);
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
                 userAccess = new LDAPUser();
@@ -511,10 +519,11 @@ public class UserDAO {
     public LDAPUser getUserDetailById(String userId) {
         String sql = "SELECT u.*, ug.code AS group_code, ug.name AS group_name FROM user_ldap u "
                 + "LEFT JOIN user_group ug ON (u.group_id = ug.id) "
-                + "WHERE u.id = '" + userId + "'";
+                + "WHERE u.id = ? ";
         LDAPUser userAccess = null;
         try {
             PreparedStatement ps = conn.prepareStatement(sql);
+            ps.setString(1, userId);
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
                 userAccess = new LDAPUser();
@@ -550,10 +559,11 @@ public class UserDAO {
     public List<LDAPUser> getSREmailShippingList(String requestorId) {
         String sql = "SELECT DISTINCT(email) "
                 + "FROM user_ldap "
-                + "WHERE sr_email_shipping = 'Active' OR login_id = '" + requestorId + "' ";
+                + "WHERE sr_email_shipping = 'Active' OR login_id = ? ";
         List<LDAPUser> list = new ArrayList<LDAPUser>();
         try {
             PreparedStatement ps = conn.prepareStatement(sql);
+            ps.setString(1, requestorId);
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
                 LDAPUser user = new LDAPUser();
@@ -579,10 +589,11 @@ public class UserDAO {
     public List<LDAPUser> getSREmailRetrieveList(String requestorId) {
         String sql = "SELECT DISTINCT(email) "
                 + "FROM user_ldap "
-                + "WHERE sr_email_retrieve = 'Active' OR login_id = '" + requestorId + "' ";
+                + "WHERE sr_email_retrieve = 'Active' OR login_id = ? ";
         List<LDAPUser> list = new ArrayList<LDAPUser>();
         try {
             PreparedStatement ps = conn.prepareStatement(sql);
+            ps.setString(1, requestorId);
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
                 LDAPUser user = new LDAPUser();
@@ -608,10 +619,11 @@ public class UserDAO {
     public List<LDAPUser> getSREmailRetrieveShipFailList(String requestorId) {
         String sql = "SELECT DISTINCT(email) "
                 + "FROM user_ldap "
-                + "WHERE sr_retrieve_ship_fail = 'Active' OR login_id = '" + requestorId + "' ";
+                + "WHERE sr_retrieve_ship_fail = 'Active' OR login_id = ? ";
         List<LDAPUser> list = new ArrayList<LDAPUser>();
         try {
             PreparedStatement ps = conn.prepareStatement(sql);
+            ps.setString(1, requestorId);
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
                 LDAPUser user = new LDAPUser();
@@ -637,10 +649,11 @@ public class UserDAO {
     public List<LDAPUser> getHWEmailRetrieveShipFailList(String requestorId) {
         String sql = "SELECT DISTINCT(email) "
                 + "FROM user_ldap "
-                + "WHERE hw_retrieve_ship_fail = 'Active' OR login_id = '" + requestorId + "' ";
+                + "WHERE hw_retrieve_ship_fail = 'Active' OR login_id = ? ";
         List<LDAPUser> list = new ArrayList<LDAPUser>();
         try {
             PreparedStatement ps = conn.prepareStatement(sql);
+            ps.setString(1, requestorId);
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
                 LDAPUser user = new LDAPUser();
@@ -666,10 +679,11 @@ public class UserDAO {
     public List<LDAPUser> getSREmailShipToRL(String requestorId) {
         String sql = "SELECT DISTINCT(email) "
                 + "FROM user_ldap "
-                + "WHERE sr_email_ship_to_rl = 'Active' OR login_id = '" + requestorId + "' ";
+                + "WHERE sr_email_ship_to_rl = 'Active' OR login_id = ? ";
         List<LDAPUser> list = new ArrayList<LDAPUser>();
         try {
             PreparedStatement ps = conn.prepareStatement(sql);
+            ps.setString(1, requestorId);
             ResultSet rs = ps.executeQuery();
             LDAPUser user;
             while (rs.next()) {
@@ -696,10 +710,11 @@ public class UserDAO {
     public List<LDAPUser> getHWEmailShipToRL(String requestorId) {
         String sql = "SELECT DISTINCT(email) "
                 + "FROM user_ldap "
-                + "WHERE hw_email_ship_to_rl = 'Active' OR login_id = '" + requestorId + "' ";
+                + "WHERE hw_email_ship_to_rl = 'Active' OR login_id = ? ";
         List<LDAPUser> list = new ArrayList<LDAPUser>();
         try {
             PreparedStatement ps = conn.prepareStatement(sql);
+            ps.setString(1, requestorId);
             ResultSet rs = ps.executeQuery();
             LDAPUser user;
             while (rs.next()) {
@@ -756,10 +771,11 @@ public class UserDAO {
     public List<LDAPUser> getHWEmailShippingList(String requestorId) {
         String sql = "SELECT DISTINCT(email) "
                 + "FROM user_ldap "
-                + "WHERE hw_email_shipping = 'Active' OR login_id = '" + requestorId + "' ";
+                + "WHERE hw_email_shipping = 'Active' OR login_id = ? ";
         List<LDAPUser> list = new ArrayList<LDAPUser>();
         try {
             PreparedStatement ps = conn.prepareStatement(sql);
+            ps.setString(1, requestorId);
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
                 LDAPUser user = new LDAPUser();
@@ -785,10 +801,11 @@ public class UserDAO {
     public List<LDAPUser> getHWEmailRetrieveList(String requestorId) {
         String sql = "SELECT DISTINCT(email) "
                 + "FROM user_ldap "
-                + "WHERE hw_email_retrieve = 'Active' OR login_id = '" + requestorId + "' ";
+                + "WHERE hw_email_retrieve = 'Active' OR login_id = ? ";
         List<LDAPUser> list = new ArrayList<LDAPUser>();
         try {
             PreparedStatement ps = conn.prepareStatement(sql);
+            ps.setString(1, requestorId);
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
                 LDAPUser user = new LDAPUser();
@@ -810,4 +827,5 @@ public class UserDAO {
         }
         return list;
     }
+
 }

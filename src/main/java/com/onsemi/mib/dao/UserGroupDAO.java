@@ -80,13 +80,14 @@ public class UserGroupDAO {
         }
         return queryResult;
     }
-    
+
     public QueryResult deleteGroup(String groupId) {
         QueryResult queryResult = new QueryResult();
         try {
             PreparedStatement ps = conn.prepareStatement(
-                    "DELETE FROM user_group WHERE id = '" + groupId + "'"
+                    "DELETE FROM user_group WHERE id = ? "
             );
+            ps.setString(1, groupId);
             queryResult.setResult(ps.executeUpdate());
             ps.close();
         } catch (SQLException e) {
@@ -103,12 +104,13 @@ public class UserGroupDAO {
         }
         return queryResult;
     }
-    
+
     public UserGroup getGroup(String groupId) {
-        String sql = "SELECT * FROM user_group WHERE id = '" + groupId + "'";
-            UserGroup userGroup = null;
+        String sql = "SELECT * FROM user_group WHERE id = ? ";
+        UserGroup userGroup = null;
         try {
             PreparedStatement ps = conn.prepareStatement(sql);
+            ps.setString(1, groupId);
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
                 userGroup = new UserGroup(
@@ -138,10 +140,12 @@ public class UserGroupDAO {
     }
 
     public List<UserGroup> getGroupList(String groupId) {
-        String sql = "SELECT id, code, name, IF(id=\"" + groupId + "\",\"selected=''\",\"\") AS selected FROM user_group ORDER BY name";
+//        String sql = "SELECT id, code, name, IF(id=\"" + groupId + "\",\"selected=''\",\"\") AS selected FROM user_group ORDER BY name";
+        String sql = "SELECT id, code, name, IF(id = ?,\"selected=''\",\"\") AS selected FROM user_group ORDER BY name";
         List<UserGroup> userGroupList = new ArrayList<UserGroup>();
         try {
             PreparedStatement ps = conn.prepareStatement(sql);
+            ps.setString(1, groupId);
             UserGroup userGroup;
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
@@ -166,4 +170,5 @@ public class UserGroupDAO {
         }
         return userGroupList;
     }
+
 }

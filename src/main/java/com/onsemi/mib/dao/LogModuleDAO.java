@@ -68,10 +68,11 @@ public class LogModuleDAO {
     public List<LogRmsLot> getLogRmsLotList(String ftpId) {
         String sql = "SELECT *, DATE_FORMAT(created_date,'%d/%m/%y %h:%i %p') AS created_date_view"
                 + "FROM sr_log_rmslot "
-                + "WHERE ftp_id = '" + ftpId + "' ";
+                + "WHERE ftp_id = ? ";
         List<LogRmsLot> logModuleList = new ArrayList<LogRmsLot>();
         try {
             PreparedStatement ps = conn.prepareStatement(sql);
+            ps.setString(1, ftpId);
             LogRmsLot log;
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
@@ -108,12 +109,13 @@ public class LogModuleDAO {
                 + "DATE_FORMAT(F.scrap_date,'%d %M %Y %h:%i %p') AS scrap_date_view, UPPER(DATE_FORMAT(F.mth_to_scrap,'%b %y')) AS mth_to_scrap_view, DATEDIFF(mth_to_scrap, NOW()) AS aging, "
                 + "DATE_FORMAT(F.completed_date,'%d %M %Y') AS comp_date_view "
                 + "FROM sr_log_rmslot L, sr_ftp_data F "
-                + "WHERE L.ftp_id = F.id AND F.group_id = '" + groupId + "' "
+                + "WHERE L.ftp_id = F.id AND F.group_id = ? "
                 + "ORDER BY F.rmslot_event, L.created_date ASC ";
         List<LogRmsLot> logModuleList = new ArrayList<LogRmsLot>();
 
         try {
             PreparedStatement ps = conn.prepareStatement(sql);
+            ps.setString(1, groupId);
             ResultSet rs = ps.executeQuery();
             LogRmsLot logRmsLot;
             while (rs.next()) {
@@ -167,12 +169,13 @@ public class LogModuleDAO {
     public List<LogRmsLot> getAllLotLogPerFtpId(String ftpId) {
         String sql = "SELECT *, DATE_FORMAT(created_date,'%d %M %Y %h:%i %p') AS log_created_date_view "
                 + "FROM sr_log_rmslot "
-                + "WHERE ftp_id = '" + ftpId + "' "
+                + "WHERE ftp_id = ? "
                 + "ORDER BY created_date ASC ";
         List<LogRmsLot> logModuleList = new ArrayList<LogRmsLot>();
 
         try {
             PreparedStatement ps = conn.prepareStatement(sql);
+            ps.setString(1, ftpId);
             ResultSet rs = ps.executeQuery();
             LogRmsLot logRmsLot;
             while (rs.next()) {
@@ -207,12 +210,13 @@ public class LogModuleDAO {
     public List<LogRmsLot> getAllLotLogPerFtpIdInnerId(String ftpId, String innerId) {
         String sql = "SELECT *, DATE_FORMAT(created_date,'%d %M %Y %h:%i %p') AS log_created_date_view "
                 + "FROM sr_log_rmslot "
-                + "WHERE ftp_id = '" + ftpId + "' "
+                + "WHERE ftp_id = ? "
                 + "ORDER BY created_date ASC ";
         List<LogRmsLot> logModuleList = new ArrayList<LogRmsLot>();
 
         try {
             PreparedStatement ps = conn.prepareStatement(sql);
+            ps.setString(1, ftpId);
             ResultSet rs = ps.executeQuery();
             LogRmsLot logRmsLot;
             while (rs.next()) {
@@ -250,9 +254,9 @@ public class LogModuleDAO {
             PreparedStatement ps = conn.prepareStatement(
                     "SELECT COUNT(*) AS count "
                     + "FROM sr_log_rmslot "
-                    + "WHERE ftp_id = '" + ftpId + "' "
+                    + "WHERE ftp_id = ? "
             );
-
+            ps.setString(1, ftpId);
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
                 count = rs.getInt("count");
@@ -311,10 +315,11 @@ public class LogModuleDAO {
     public List<LogOuterBox> getLogOuterList(String ftpId) {
         String sql = "SELECT *, DATE_FORMAT(created_date,'%d/%m/%y %h:%i %p') AS created_date_view"
                 + "FROM sr_log_outer "
-                + "WHERE ftp_id = '" + ftpId + "' ";
+                + "WHERE ftp_id = ? ";
         List<LogOuterBox> logModuleList = new ArrayList<LogOuterBox>();
         try {
             PreparedStatement ps = conn.prepareStatement(sql);
+            ps.setString(1, ftpId);
             LogOuterBox log;
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
@@ -348,10 +353,11 @@ public class LogModuleDAO {
         String sql = "SELECT ou.*, DATE_FORMAT(ou.created_date,'%d/%m/%y %h:%i %p') AS created_date_view, re.req_box_id "
                 + "FROM sr_log_outer ou, sr_request re "
                 + "WHERE ou.outer_id = re.id "
-                + "AND ou.outer_id = '" + reqId + "' ";
+                + "AND ou.outer_id = ? ";
         List<LogOuterBox> logModuleList = new ArrayList<LogOuterBox>();
         try {
             PreparedStatement ps = conn.prepareStatement(sql);
+            ps.setString(1, reqId);
             LogOuterBox log;
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
@@ -388,9 +394,9 @@ public class LogModuleDAO {
             PreparedStatement ps = conn.prepareStatement(
                     "SELECT COUNT(*) AS count "
                     + "FROM sr_log_outer "
-                    + "WHERE outer_id = '" + outerId + "' "
+                    + "WHERE outer_id = ? "
             );
-
+            ps.setString(1, outerId);
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
                 count = rs.getInt("count");
@@ -410,4 +416,5 @@ public class LogModuleDAO {
         }
         return count;
     }
+
 }

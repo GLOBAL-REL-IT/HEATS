@@ -3607,7 +3607,7 @@ public class RmsBookingDetailController {
 
         // UPDATE DATA rms_functional_test - START
         ManualTestDAO testdao = new ManualTestDAO();
-        Integer qty = testdao.getQuantityBeforeLoading(lcItemId);
+        Integer qty = testdao.getQuantityByModule(lcItemId, "Before Loading");
 
         RmsBookingFunctionalTest rmsfun = new RmsBookingFunctionalTest();
         rmsfun.setManualQty(String.valueOf(qty));
@@ -7057,17 +7057,6 @@ public class RmsBookingDetailController {
             model.addAttribute("vmActive", vmActive);
             model.addAttribute("vmActiveTab", vmActiveTab);
         }
-//        if (h.getSubStatus().contains("Test")) {
-//            String teActive = "active";
-//            String teActiveTab = "show active";
-//            model.addAttribute("teActive", teActive);
-//            model.addAttribute("teActiveTab", teActiveTab);
-//        } else {
-//            String teActive = "";
-//            String teActiveTab = "";
-//            model.addAttribute("teActive", teActive);
-//            model.addAttribute("teActiveTab", teActiveTab);
-//        }
 
         if (currentStatus.contains("Test")) {
             teActive = "active";
@@ -7104,24 +7093,24 @@ public class RmsBookingDetailController {
             @RequestParam(required = false) String totalQty,
             @RequestParam(required = false) String mbItemId,
             @RequestParam(required = false) String lcItemId,
-            @RequestParam(required = false) String groupId) {
+            @RequestParam(required = false) String groupId) throws SQLException {
 
         String path = "";
 
         // SINI KITA HARDCODE UNTUK PERGI KE PHP PROUJECT LINK FOR HEATS
-//        String link = "http://zbqb9x-7jwwld4:86/HEATS-mini/manual_test_before_loading.php?id=" + lcItemId + "&groupId=" + groupId;
-        String link = "https://mysed-rel-app05/HEATS-mini/manual_test_before_loading.php?id=" + lcItemId + "&groupId=" + groupId;
+        String link = "http://zbqb9x-7jwwld4:86/HEATS-mini/manual_test_before_loading.php?id=" + lcItemId + "&groupId=" + groupId;
+//        String link = "https://mysed-rel-app05/HEATS-mini/manual_test_before_loading.php?id=" + lcItemId + "&groupId=" + groupId;
         model.addAttribute("link", link);
 
         ManualTestDAO testdao = new ManualTestDAO();
-        ManualTest mantest = testdao.getComponentConfigBeforeByItemId(lcItemId);
-
+        ManualTest mantest = testdao.getComponentConfigByItemIdAndModule(lcItemId, "Before Loading");
+        
         if (mantest != null) {
             path = "rmsbookingDetail/goto_manual_test";
             redirectAttrs.addFlashAttribute("success", "Please perform manual test.");
 
             testdao = new ManualTestDAO();
-            List<ManualTest> listManual = testdao.getAllComponentConfigBeforeLoading(lcItemId);
+            List<ManualTest> listManual = testdao.getAllComponentConfigByModule(lcItemId, "Before Loading");
 
             if (listManual.size() == 0) {
                 int saizQty = Integer.parseInt(totalQty);
@@ -7132,24 +7121,28 @@ public class RmsBookingDetailController {
                 testdao = new ManualTestDAO();
                 testdao.updateItemActivityConfig(String.valueOf(saizQty), String.valueOf(saizDut), String.valueOf(saizCom), mantest.getId());
                 // FUNCTION UPDATE THE LATEST QUANTITY - END
-
+                
                 testdao = new ManualTestDAO();
-                List<ManualTest> listComponent = testdao.getAllComponentConfigBeforeLoading(lcItemId);
+//                List<ManualTest> listComponent = testdao.getAllComponentConfigByModule(lcItemId, "Before Loading");
+                List<ManualTest> listComponent = testdao.getAllComponentConfigSub(lcItemId);
+                
+                if (listComponent.size() == 0) {
+                    path = "redirect:/rmsbookingDetail/groupDetail/" + groupId;
+                    redirectAttrs.addFlashAttribute("error", "Please check the manual test configuration for the LC ITEM ID " + lcItemId);
+                } else {
+                    for (int i = 0; i < listComponent.size(); i++) {
+                        String compType = listComponent.get(i).getComponentType();
+                        String compName = listComponent.get(i).getComponentName();
+                        String compValue = listComponent.get(i).getComponentValue();
+                        String minValue = listComponent.get(i).getLowerLimit();
+                        String maxValue = listComponent.get(i).getUpperLimit();
+                        String percentage = listComponent.get(i).getPercentage();
 
-                for (int i = 0; i < listComponent.size(); i++) {
-                    String compType = listComponent.get(i).getComponentType();
-                    String compName = listComponent.get(i).getComponentName();
-                    String compValue = listComponent.get(i).getComponentValue();
-                    String minValue = listComponent.get(i).getLowerLimit();
-                    String maxValue = listComponent.get(i).getUpperLimit();
-                    String percentage = listComponent.get(i).getPercentage();
-
-                    for (int c1 = 1; c1 <= saizQty; c1++) {
-                        for (int c2 = 1; c2 <= saizDut; c2++) {
-                            testdao = new ManualTestDAO();
-                            testdao.insertManualBeforeLoading(lcItemId, String.valueOf(c1), String.valueOf(c2), compType, compName, compValue, minValue, maxValue, percentage, "", "", "1");
-                            testdao = new ManualTestDAO();
-                            testdao.insertManualUnloading(lcItemId, String.valueOf(c1), String.valueOf(c2), compType, compName, compValue, minValue, maxValue, percentage, "", "", "1");
+                        for (int c1 = 1; c1 <= saizQty; c1++) {
+                            for (int c2 = 1; c2 <= saizDut; c2++) {
+                                testdao = new ManualTestDAO();
+                                testdao.insertManualResult(lcItemId, String.valueOf(c1), String.valueOf(c2), compType, compName, compValue, minValue, maxValue, percentage, "", "", "1", "Before Loading");
+                            }
                         }
                     }
                 }
@@ -7170,7 +7163,7 @@ public class RmsBookingDetailController {
             // UPDATE RMS BOOKING FUNCTIONAL TEST - MANUAL TEST RESULT - END
         } else {
             path = "redirect:/rmsbookingDetail/groupDetail/" + groupId;
-            redirectAttrs.addFlashAttribute("error", "Please check the manual test configuration for the ITEM ID " + mbItemId);
+            redirectAttrs.addFlashAttribute("error", "Please check the manual test configuration for the MB ITEM ID " + mbItemId);
         }
 
         // BERJAYA 

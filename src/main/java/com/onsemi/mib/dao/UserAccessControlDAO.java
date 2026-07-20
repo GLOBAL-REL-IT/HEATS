@@ -179,8 +179,9 @@ public class UserAccessControlDAO {
         QueryResult queryResult = new QueryResult();
         try {
             PreparedStatement ps = conn.prepareStatement(
-                    "DELETE FROM user_access_control WHERE id = '" + useraccessControlId + "'"
+                    "DELETE FROM user_access_control WHERE id = ? "
             );
+            ps.setString(1, useraccessControlId);
             queryResult.setResult(ps.executeUpdate());
             ps.close();
         } catch (SQLException e) {
@@ -199,10 +200,11 @@ public class UserAccessControlDAO {
     }
 
     public UserAccessControl getUserAccessControl(String useraccessControlId) {
-        String sql = "SELECT * FROM user_access_control WHERE id = '" + useraccessControlId + "'";
+        String sql = "SELECT * FROM user_access_control WHERE id = ? ";
         UserAccessControl useraccessControl = null;
         try {
             PreparedStatement ps = conn.prepareStatement(sql);
+            ps.setString(1, useraccessControlId);
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
                 useraccessControl = new UserAccessControl();
@@ -252,10 +254,11 @@ public class UserAccessControlDAO {
     }
 
     public UserAccessControl getUserAccessControlByUserId(String userId) {
-        String sql = "SELECT * FROM user_access_control WHERE user_id = '" + userId + "'";
+        String sql = "SELECT * FROM user_access_control WHERE user_id = ? ";
         UserAccessControl useraccessControl = null;
         try {
             PreparedStatement ps = conn.prepareStatement(sql);
+            ps.setString(1, userId);
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
                 useraccessControl = new UserAccessControl();
@@ -307,10 +310,11 @@ public class UserAccessControlDAO {
     public UserAccessControl getUserAccessControlByLoginId(String loginId) {
         String sql = "SELECT u.*, l.login_id FROM user_ldap l "
                 + "LEFT JOIN user_access_control u ON l.id = u.user_id "
-                + "WHERE l.login_id = '" + loginId + "'";
+                + "WHERE l.login_id = ? ";
         UserAccessControl useraccessControl = null;
         try {
             PreparedStatement ps = conn.prepareStatement(sql);
+            ps.setString(1, loginId);
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
                 useraccessControl = new UserAccessControl();
@@ -401,9 +405,10 @@ public class UserAccessControlDAO {
 
     public Integer getCountByUserId(String userId) {
         Integer count = null;
-        String sql = "SELECT count(id) AS count FROM user_access_control WHERE user_id = '" + userId + "'";
+        String sql = "SELECT count(id) AS count FROM user_access_control WHERE user_id = ? ";
         try {
             PreparedStatement ps = conn.prepareStatement(sql);
+            ps.setString(1, userId);
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
                 count = rs.getInt("count");
@@ -423,4 +428,5 @@ public class UserAccessControlDAO {
         }
         return count;
     }
+
 }

@@ -5450,7 +5450,7 @@ public class ItemController {
             @RequestParam(required = false, value = "percentage[]") List<String> num2Rows,
             @RequestParam(required = false, value = "lower[]") List<String> num3Rows,
             @RequestParam(required = false, value = "upper[]") List<String> num4Rows
-    ) {
+    ) throws SQLException {
 
         ItemActivityConfig itemA = new ItemActivityConfig();
         itemA.setMibItemId(mibItemId);
@@ -5586,7 +5586,7 @@ public class ItemController {
             Model model,
             RedirectAttributes redirectAttrs,
             @ModelAttribute UserSession userSession,
-            @PathVariable("id") String id) {
+            @PathVariable("id") String id) throws SQLException {
 
         String qty = "";
         String dut = "";
@@ -5645,7 +5645,7 @@ public class ItemController {
             @RequestParam(required = false, value = "actual_value[]") List<String> num1Rows,
             @RequestParam(required = false, value = "percentage[]") List<String> num2Rows,
             @RequestParam(required = false, value = "lower[]") List<String> num3Rows,
-            @RequestParam(required = false, value = "upper[]") List<String> num4Rows) {
+            @RequestParam(required = false, value = "upper[]") List<String> num4Rows) throws SQLException {
 
         String vi = "No";
         String bb = "No";
