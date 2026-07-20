@@ -159,9 +159,12 @@ public class AdminController {
                 //Local
 //                results = ctx.search("ou=Users", "(cn=" + loginId + ")", controls);
                 //Onsemi
-//                results = ctx.search("ou=Seremban,ou=ONSemi", "(cn=" + loginId + ")", controls);
-                results = ctx.search("ou=ONSemi", "(cn=" + loginId + ")", controls);
+//                //new style to prevent LDAP Injection 20 July 2026
+                String safeLoginId = escapeLDAPSearchFilter(loginId);
+                String filter = "(&(objectClass=person)(cn=" + safeLoginId + "))";
+                results = ctx.search("ou=ONSemi", filter, controls);
 
+//                results = ctx.search("ou=ONSemi", "(cn=" + loginId + ")", controls); //disabled to prevent LDAP Injection 20 July 2026
                 while (results.hasMore()) {
                     SearchResult searchResult = (SearchResult) results.next();
                     Attributes attributes = searchResult.getAttributes();
@@ -406,9 +409,12 @@ public class AdminController {
             //Local
 //            results = ctx.search("ou=Users", "(cn=" + loginId + ")", controls);
             //Onsemi
-//            results = ctx.search("ou=Seremban,ou=ONSemi", "(cn=" + loginId + ")", controls);
-            results = ctx.search("ou=ONSemi", "(cn=" + loginId + ")", controls);
+//            //new style to prevent LDAP Injection 20 July 2026
+            String safeLoginId = escapeLDAPSearchFilter(loginId);
+            String filter = "(&(objectClass=person)(cn=" + safeLoginId + "))";
+            results = ctx.search("ou=ONSemi", filter, controls);
 
+//                results = ctx.search("ou=ONSemi", "(cn=" + loginId + ")", controls); //disabled to prevent LDAP Injection 20 July 2026
             while (results.hasMore()) {
                 SearchResult searchResult = (SearchResult) results.next();
                 Attributes attributes = searchResult.getAttributes();
@@ -1265,10 +1271,10 @@ public class AdminController {
             @RequestParam(required = false, value = "percentage[]") List<String> percentageValue,
             @RequestParam(required = false, value = "lower[]") List<String> lowerValue,
             @RequestParam(required = false, value = "upper[]") List<String> upperValue) {
-        
+
         LOGGER.info("SINI KITA NK PERTAMA KALI SAVE");
-        LOGGER.info("mibItemId >>>>> "+mibItemId);
-        
+        LOGGER.info("mibItemId >>>>> " + mibItemId);
+
         int saiz = 0;
         int inputQuantity = 1;
 
@@ -1330,7 +1336,7 @@ public class AdminController {
 
                 ManualTestDAO test = new ManualTestDAO();
                 Integer check1 = test.getManualTestCurrentRecord(itemId);
-                
+
                 if ("0".equals(check1)) {
                     test = new ManualTestDAO();
                     QueryResult q0 = test.insertManualTestBeforeLoading(itemId, itemQ.getGeneratedKey(), String.valueOf(inputQuantity), inputDUT, String.valueOf(saiz), user, flag);
@@ -1345,7 +1351,7 @@ public class AdminController {
                 } else {
                     test = new ManualTestDAO();
                     String configId1 = test.getConfigIdByItemId(itemId).toString();
-                    
+
                     if ("0".equals(configId1)) {
                         test = new ManualTestDAO();
                         QueryResult q0 = test.insertManualTestBeforeLoading(itemId, itemQ.getGeneratedKey(), String.valueOf(inputQuantity), inputDUT, String.valueOf(saiz), user, flag);
@@ -1366,7 +1372,7 @@ public class AdminController {
                         test.insertManualTestBeforeLoadingSub(itemId, configId1, inputDUT, type.get(c1), compName.get(c1), compValue.get(c1), percentageValue.get(c1), lowerValue.get(c1), upperValue.get(c1), user, flag);
                     }
                 }
-                
+
                 test = new ManualTestDAO();
                 Integer check2 = test.getManualTestCurrentRecordUnloading(itemId);
                 if ("0".equals(check2)) {
@@ -1583,7 +1589,7 @@ public class AdminController {
                     test.insertManualTestBeforeLoadingSub(itemId, configId, inputDUT, type.get(c1), compName.get(c1), compValue.get(c1), percentageValue.get(c1), lowerValue.get(c1), upperValue.get(c1), user, flag);
                 }
             }
-            
+
             test = new ManualTestDAO();
             Integer check2 = test.getManualTestCurrentRecordUnloading(itemId);
             if ("0".equals(check2)) {
@@ -1608,7 +1614,7 @@ public class AdminController {
                 test = new ManualTestDAO();
                 test.removeCurrentData(configId, itemId);
             }
-            
+
         } else {
             itemA.setManualTest("No");
         }
@@ -1735,7 +1741,7 @@ public class AdminController {
                     test.insertManualTestBeforeLoadingSub(itemId, configId, inputDUT, type.get(c1), compName.get(c1), compValue.get(c1), percentageValue.get(c1), lowerValue.get(c1), upperValue.get(c1), user, flag);
                 }
             }
-            
+
             test = new ManualTestDAO();
             Integer check2 = test.getManualTestCurrentRecordUnloading(itemId);
             if ("0".equals(check2)) {
@@ -2396,5 +2402,32 @@ public class AdminController {
 
         return status;
     }
-    
+
+    private static String escapeLDAPSearchFilter(String filter) {
+        StringBuilder sb = new StringBuilder();
+        for (int i = 0; i < filter.length(); i++) {
+            char curChar = filter.charAt(i);
+            switch (curChar) {
+                case '\\':
+                    sb.append("\\5c");
+                    break;
+                case '*':
+                    sb.append("\\2a");
+                    break;
+                case '(':
+                    sb.append("\\28");
+                    break;
+                case ')':
+                    sb.append("\\29");
+                    break;
+                case '\0':
+                    sb.append("\\00");
+                    break;
+                default:
+                    sb.append(curChar);
+            }
+        }
+        return sb.toString();
+    }
+
 }

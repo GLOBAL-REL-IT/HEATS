@@ -2,12 +2,14 @@ package com.onsemi.mib.tools;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
+import java.util.Properties;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.apache.commons.io.FileUtils;
@@ -16,15 +18,31 @@ import org.apache.commons.lang3.StringUtils;
 public class ModelGenerator {
 
     public static void main(String[] args) {
-        String table = "email_cc";
+        String table = "email_testing";
         String sql = "SELECT * FROM " + table + " LIMIT 1";
         try {
-//            Class.forName("com.mysql.jdbc.Driver");
-            Class.forName("com.mysql.cj.jdbc.Driver");
-//            Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver");
-            Connection conn = null;
-//            conn = DriverManager.getConnection("jdbc:sqlserver://MYSE01WS039/GP01QA;databaseName=MIB_SBN;integratedSecurity=true");
-            conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/mib?serverTimezone=UTC&useLegacyDatetimeCode=false", "root", "root");
+////            Class.forName("com.mysql.jdbc.Driver");
+//            Class.forName("com.mysql.cj.jdbc.Driver");
+////            Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver");
+//            Connection conn = null;
+////            conn = DriverManager.getConnection("jdbc:sqlserver://MYSE01WS039/GP01QA;databaseName=MIB_SBN;integratedSecurity=true");
+//            conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/mib?serverTimezone=UTC&useLegacyDatetimeCode=false", "root", "root");
+
+            Properties props = new Properties();
+            try ( InputStream input = DAOGenerator.class
+                    .getClassLoader()
+                    .getResourceAsStream("db.properties")) {
+                if (input == null) {
+                    throw new RuntimeException("db.properties not found");
+                }
+                props.load(input);
+            }
+            Class.forName(props.getProperty("jdbc.driver"));
+
+            Connection conn = DriverManager.getConnection(
+                    props.getProperty("jdbc.url"),
+                    props.getProperty("jdbc.username"),
+                    props.getProperty("jdbc.password"));
             if (conn != null) {
                 String className = className(table);
                 System.out.println("ClassName: " + className);

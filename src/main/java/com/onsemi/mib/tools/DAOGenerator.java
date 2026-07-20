@@ -2,12 +2,14 @@ package com.onsemi.mib.tools;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
+import java.util.Properties;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.apache.commons.io.FileUtils;
@@ -16,12 +18,28 @@ import org.apache.commons.lang3.StringUtils;
 public class DAOGenerator {
 
     public static void main(String[] args) {
-        String table = "email_cc";
+        String table = "email_testing";
         String sql = "SELECT * FROM " + table + " LIMIT 1";
         try {
-            Class.forName("com.mysql.cj.jdbc.Driver");
-            Connection conn = null;
-            conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/mib?serverTimezone=UTC&useLegacyDatetimeCode=false", "root", "root");
+//            Class.forName("com.mysql.cj.jdbc.Driver");
+//            Connection conn = null;
+//            conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/mib?serverTimezone=UTC&useLegacyDatetimeCode=false", "root", "root");
+
+            Properties props = new Properties();
+            try ( InputStream input = DAOGenerator.class
+                    .getClassLoader()
+                    .getResourceAsStream("db.properties")) {
+                if (input == null) {
+                    throw new RuntimeException("db.properties not found");
+                }
+                props.load(input);
+            }
+            Class.forName(props.getProperty("jdbc.driver"));
+
+            Connection conn = DriverManager.getConnection(
+                    props.getProperty("jdbc.url"),
+                    props.getProperty("jdbc.username"),
+                    props.getProperty("jdbc.password"));
             if (conn != null) {
                 String className = className(table) + "DAO";
                 String modelName = modelName(table);
@@ -184,9 +202,13 @@ public class DAOGenerator {
                 classFileContent += "\tpublic QueryResult delete" + modelClass + "(String " + modelName + "Id) {\n"
                         + "\t\tQueryResult queryResult = new QueryResult();\n"
                         + "\t\ttry {\n"
+                        //                        + "\t\t\tPreparedStatement ps = conn.prepareStatement(\n"
+                        //                        + "\t\t\t\t\"DELETE FROM " + table + " WHERE id = '\" + " + modelName + "Id + \"'\"\n"
+                        //                        + "\t\t\t);\n"
                         + "\t\t\tPreparedStatement ps = conn.prepareStatement(\n"
-                        + "\t\t\t\t\"DELETE FROM " + table + " WHERE id = '\" + " + modelName + "Id + \"'\"\n"
+                        + "\t\t\t\t\"DELETE FROM " + table + " WHERE id = ?\"\n"
                         + "\t\t\t);\n"
+                        + "\t\t\tps.setString(1, " + modelName + "Id);\n"
                         + "\t\t\tqueryResult.setResult(ps.executeUpdate());\n"
                         + "\t\t\tps.close();\n"
                         + "\t\t} catch (SQLException e) {\n"
@@ -205,10 +227,15 @@ public class DAOGenerator {
                         + "\t}\n\n";
                 //Get
                 classFileContent += "\tpublic " + modelClass + " get" + modelClass + "(String " + modelName + "Id) {\n"
-                        + "\t\tString sql = \"SELECT * FROM " + table + " WHERE id = '\" + " + modelName + "Id + \"'\";\n"
+                        //                        + "\t\tString sql = \"SELECT * FROM " + table + " WHERE id = '\" + " + modelName + "Id + \"'\";\n"
+                        + "\t\tString sql = \"SELECT * FROM " + table
+                        + " WHERE id = ?\";\n"
                         + "\t\t" + modelClass + " " + modelName + " = null;\n"
                         + "\t\ttry {\n"
+                        //                        + "\t\t\tPreparedStatement ps = conn.prepareStatement(sql);\n"
+                        //                        + "\t\t\tResultSet rs = ps.executeQuery();\n"
                         + "\t\t\tPreparedStatement ps = conn.prepareStatement(sql);\n"
+                        + "\t\t\tps.setString(1, " + modelName + "Id);\n"
                         + "\t\t\tResultSet rs = ps.executeQuery();\n"
                         + "\t\t\twhile (rs.next()) {\n"
                         + "\t\t\t\t" + modelName + " = new " + modelClass + "();\n";
