@@ -507,10 +507,13 @@ public class HomeController {
                     controls.setReturningAttributes(attrIDs);
                     //Local
 //                results = ctx.search("ou=Users", "(cn=" + loginId + ")", controls);
-                    //Onsemi
-//                results = ctx.search("ou=Seremban,ou=ONSemi", "(cn=" + loginId + ")", controls);
-                    results = ctx.search("ou=ONSemi", "(cn=" + userSession.getLoginId() + ")", controls);
+                    //Onsemid
+//                 //new style to prevent LDAP Injection 20 July 2026
+                    String safeLoginId = escapeLDAPSearchFilter(userSession.getLoginId());
+                    String filter = "(&(objectClass=person)(cn=" + safeLoginId + "))";
+                    results = ctx.search("ou=ONSemi", filter, controls);
 
+//                    results = ctx.search("ou=ONSemi", "(cn=" + userSession.getLoginId() + ")", controls); //disabled to prevent LDAP Injection 20 July 2026
                     while (results.hasMore()) {
                         SearchResult searchResult = (SearchResult) results.next();
                         Attributes attributes = searchResult.getAttributes();
@@ -859,6 +862,33 @@ public class HomeController {
             redirectAttrs.addFlashAttribute("error", "Failed to remove priority for " + rms1.getRmsNo() + "_" + rms1.getEvent() + ". Pls contact system admin.");
         }
         return "redirect:/";
+    }
+
+    private static String escapeLDAPSearchFilter(String filter) {
+        StringBuilder sb = new StringBuilder();
+        for (int i = 0; i < filter.length(); i++) {
+            char curChar = filter.charAt(i);
+            switch (curChar) {
+                case '\\':
+                    sb.append("\\5c");
+                    break;
+                case '*':
+                    sb.append("\\2a");
+                    break;
+                case '(':
+                    sb.append("\\28");
+                    break;
+                case ')':
+                    sb.append("\\29");
+                    break;
+                case '\0':
+                    sb.append("\\00");
+                    break;
+                default:
+                    sb.append(curChar);
+            }
+        }
+        return sb.toString();
     }
 
 }
