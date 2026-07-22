@@ -1,6 +1,5 @@
 package com.onsemi.mib.dao;
 
-import com.onsemi.mib.db.DB;
 import com.onsemi.mib.model.EmailConfig;
 import com.onsemi.mib.model.HimsInventory;
 import java.sql.Connection;
@@ -10,8 +9,6 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
-import javax.sql.DataSource;
-import com.onsemi.mib.model.Log;
 import com.onsemi.mib.model.WhInventory;
 import com.onsemi.mib.model.WhRequest;
 import com.onsemi.mib.model.WhRetrieval;
@@ -96,11 +93,12 @@ public class HimsRequestDAO {
     public List<HimsInventory> getWhInventoryActiveListByItemId(String whereClause) {
         String sql = "SELECT *,"
                 + "DATE_FORMAT(inventory_date,'%d %M %Y %h:%i %p') AS inventoryDate "
-                + " FROM cdars_wh_inventory WHERE flag = '0' AND " + whereClause + " ORDER BY id DESC";
+                + " FROM cdars_wh_inventory WHERE flag = '0' AND ? ORDER BY id DESC";
         LOGGER.info("sql: " + sql);
         List<HimsInventory> whInventoryList = new ArrayList<HimsInventory>();
         try {
             PreparedStatement ps = conn.prepareStatement(sql);
+            ps.setString(1, whereClause);
             HimsInventory whInventory;
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
@@ -156,10 +154,11 @@ public class HimsRequestDAO {
     }
 
     public WhInventory getWhInventoryActive(String whInventoryId) {
-        String sql = "SELECT * FROM cdars_wh_inventory WHERE id = '" + whInventoryId + "' AND flag = '0'";
+        String sql = "SELECT * FROM cdars_wh_inventory WHERE id = ? AND flag = '0'";
         WhInventory whInventory = null;
         try {
             PreparedStatement ps = conn.prepareStatement(sql);
+            ps.setString(1, whInventoryId);
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
                 whInventory = new WhInventory();
@@ -217,8 +216,9 @@ public class HimsRequestDAO {
         Integer count = null;
         try {
             PreparedStatement ps = conn.prepareStatement(
-                    "SELECT count(*) AS count FROM cdars_wh_request WHERE request_type = 'Retrieve' AND equipment_id = '" + equipmentId + "' AND flag = '0' "
+                    "SELECT count(*) AS count FROM cdars_wh_request WHERE request_type = 'Retrieve' AND equipment_id = ? AND flag = '0' "
             );
+            ps.setString(1, equipmentId);
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
                 count = rs.getInt("count");
@@ -244,9 +244,10 @@ public class HimsRequestDAO {
         Integer count = null;
         try {
             PreparedStatement ps = conn.prepareStatement(
-                    "SELECT count(*) AS count FROM cdars_wh_request WHERE id = '" + requestId + "'"
+                    "SELECT count(*) AS count FROM cdars_wh_request WHERE id = ? "
             );
             ResultSet rs = ps.executeQuery();
+            ps.setString(1, requestId);
             while (rs.next()) {
                 count = rs.getInt("count");
             }
@@ -271,9 +272,10 @@ public class HimsRequestDAO {
         Integer count = null;
         try {
             PreparedStatement ps = conn.prepareStatement(
-                    "SELECT count(*) AS count FROM cdars_wh_retrieval WHERE id = '" + retrieveId + "'"
+                    "SELECT count(*) AS count FROM cdars_wh_retrieval WHERE id = ? "
             );
             ResultSet rs = ps.executeQuery();
+            ps.setString(1, retrieveId);
             while (rs.next()) {
                 count = rs.getInt("count");
             }
@@ -324,8 +326,10 @@ public class HimsRequestDAO {
         Integer count = null;
         try {
             PreparedStatement ps = conn.prepareStatement(
-                    "SELECT count(*) AS count FROM cdars_wh_request WHERE request_type = 'Retrieve' AND equipment_id = '" + equipmentId + "' AND mp_no = '" + mpNo + "' AND status <> 'Cancelled'"
+                    "SELECT count(*) AS count FROM cdars_wh_request WHERE request_type = 'Retrieve' AND equipment_id = ? AND mp_no = ? AND status <> 'Cancelled' "
             );
+            ps.setString(1, equipmentId);
+            ps.setString(2, mpNo);
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
                 count = rs.getInt("count");
@@ -351,8 +355,10 @@ public class HimsRequestDAO {
         Integer count = null;
         try {
             PreparedStatement ps = conn.prepareStatement(
-                    "SELECT count(*) AS count FROM cdars_wh_request WHERE request_type = 'Retrieve' AND equipment_id = '" + equipmentId + "' AND box_no = '" + boxNo + "' AND status <> 'Cancelled'"
+                    "SELECT count(*) AS count FROM cdars_wh_request WHERE request_type = 'Retrieve' AND equipment_id = ? AND box_no = ? AND status <> 'Cancelled'"
             );
+            ps.setString(1, equipmentId);
+            ps.setString(2, boxNo);
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
                 count = rs.getInt("count");
@@ -379,8 +385,9 @@ public class HimsRequestDAO {
         Integer count = null;
         try {
             PreparedStatement ps = conn.prepareStatement(
-                    "SELECT COUNT(*) AS count FROM cdars_email_config WHERE task_pdetails_code LIKE '" + job + "%'"
+                    "SELECT COUNT(*) AS count FROM cdars_email_config WHERE task_pdetails_code LIKE ? "
             );
+            ps.setString(1, job+"%");
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
                 count = rs.getInt("count");
@@ -403,10 +410,11 @@ public class HimsRequestDAO {
     }
 
     public EmailConfig getEmailConfigByTaskWildCard(String task) {
-        String sql = "SELECT * FROM cdars_email_config WHERE task_pdetails_code LIKE '" + task + "%'";
+        String sql = "SELECT * FROM cdars_email_config WHERE task_pdetails_code LIKE ? ";
         EmailConfig emailConfig = null;
         try {
             PreparedStatement ps = conn.prepareStatement(sql);
+            ps.setString(1, task+"%");
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
                 emailConfig = new EmailConfig();
@@ -595,7 +603,6 @@ public class HimsRequestDAO {
                 whRequest.setProgramCardQty(rs.getString("program_card_qty"));
                 whRequest.setSfpkidLc(rs.getString("sfpkidLc"));
                 whRequest.setSfpkidPc(rs.getString("sfpkidPc"));
-
                 //phase 3
                 whRequest.setBoxNo(rs.getString("box_no"));
                 whRequest.setGtsNo(rs.getString("gts_no"));
@@ -710,4 +717,5 @@ public class HimsRequestDAO {
         }
         return whRetrieval;
     }
+
 }

@@ -77,10 +77,11 @@ public class FTPDao {
         Integer count = null;
         try {
             PreparedStatement ps = conn.prepareStatement(
-                    "SELECT COUNT(*) AS count FROM sr_ftp_data "
-                    + "WHERE rms_id = '" + rmsId + "' AND rms_event = '" + event + "' AND lot_type ='" + lot + "' "
+                    "SELECT COUNT(*) AS count FROM sr_ftp_data WHERE rms_id = ? AND rms_event = ? AND lot_type = ? "
             );
-
+            ps.setString(1, rmsId);
+            ps.setString(2, event);
+            ps.setString(3, lot);
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
                 count = rs.getInt("count");
@@ -105,10 +106,11 @@ public class FTPDao {
         Integer count = null;
         try {
             PreparedStatement ps = conn.prepareStatement(
-                    "SELECT COUNT(*) AS count FROM sr_ftp_data "
-                    + "WHERE rms_id = '" + rmsId + "' AND rms_event = '" + event + "' AND lot_type ='" + lot + "' AND creator = 'FTP'"
+                    "SELECT COUNT(*) AS count FROM sr_ftp_data WHERE rms_id = ? AND rms_event = ? AND lot_type = ? AND creator = 'FTP' "
             );
-
+            ps.setString(1, rmsId);
+            ps.setString(2, event);
+            ps.setString(3, lot);
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
                 count = rs.getInt("count");
@@ -133,10 +135,9 @@ public class FTPDao {
         Integer count = null;
         try {
             PreparedStatement ps = conn.prepareStatement(
-                    "SELECT COUNT(*) AS count FROM sr_ftp_data "
-                    + "WHERE group_id = '" + groupId + "' "
+                    "SELECT COUNT(*) AS count FROM sr_ftp_data WHERE group_id = ? "
             );
-
+            ps.setString(1, groupId);
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
                 count = rs.getInt("count");
@@ -161,10 +162,9 @@ public class FTPDao {
         Integer count = null;
         try {
             PreparedStatement ps = conn.prepareStatement(
-                    "SELECT COUNT(*) AS count FROM sr_ftp_data "
-                    + "WHERE id = '" + ftpId + "' "
+                    "SELECT COUNT(*) AS count FROM sr_ftp_data WHERE id = ? "
             );
-
+            ps.setString(1, ftpId);
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
                 count = rs.getInt("count");
@@ -189,10 +189,9 @@ public class FTPDao {
         Integer count = null;
         try {
             PreparedStatement ps = conn.prepareStatement(
-                    "SELECT COUNT(*) AS count FROM sr_ftp_data "
-                    + "WHERE rmslot_event = '" + rmslotevent + "' "
+                    "SELECT COUNT(*) AS count FROM sr_ftp_data WHERE rmslot_event = ? "
             );
-
+            ps.setString(1, rmslotevent);
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
                 count = rs.getInt("count");
@@ -217,10 +216,9 @@ public class FTPDao {
         Integer count = null;
         try {
             PreparedStatement ps = conn.prepareStatement(
-                    "SELECT COUNT(*) AS count FROM sr_ftp_data "
-                    + "WHERE rmslot_event = '" + rmslotevent + "' AND flag = '0'"
+                    "SELECT COUNT(*) AS count FROM sr_ftp_data WHERE rmslot_event = ? AND flag = '0' "
             );
-
+            ps.setString(1, rmslotevent);
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
                 count = rs.getInt("count");
@@ -245,10 +243,9 @@ public class FTPDao {
         Integer count = null;
         try {
             PreparedStatement ps = conn.prepareStatement(
-                    "SELECT COUNT(*) AS count FROM sr_ftp_data "
-                    + "WHERE rmslot_event = '" + rmslotevent + "' AND (flag = 0 OR flag = 1) "
+                    "SELECT COUNT(*) AS count FROM sr_ftp_data WHERE rmslot_event = ? AND (flag = 0 OR flag = 1) "
             );
-
+            ps.setString(1, rmslotevent);
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
                 count = rs.getInt("count");
@@ -273,10 +270,10 @@ public class FTPDao {
         Integer count = null;
         try {
             PreparedStatement ps = conn.prepareStatement(
-                    "SELECT COUNT(*) AS count FROM sr_ftp_data "
-                    + "WHERE rms_id = '" + rmsId + "' AND rms_event = '" + event + "'"
+                    "SELECT COUNT(*) AS count FROM sr_ftp_data WHERE rms_id = ? AND rms_event = ? "
             );
-
+            ps.setString(1, rmsId);
+            ps.setString(2, event);
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
                 count = rs.getInt("count");
@@ -303,7 +300,6 @@ public class FTPDao {
             PreparedStatement ps = conn.prepareStatement(
                     "SELECT MAX(group_id) AS max FROM sr_ftp_data "
             );
-
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
                 max = rs.getInt("max");
@@ -326,13 +322,16 @@ public class FTPDao {
 
     public FTPdata getFtpData(String rmsId, String event, String lot) {
         String sql = "SELECT *, DATE_FORMAT(completed_date,'%d %M %Y') AS completed_date_view, "
-                + "DATE_FORMAT(scrap_date,'%d %M %Y') AS scrap_date_view, DATE_FORMAT(modified_date,'%d %M %Y') AS modified_date_view, "
-                + "DATE_FORMAT(created_date,'%d %M %Y') AS created_date_view, DATE_FORMAT(mth_to_scrap,'%M %Y') AS mth_to_scrap_view "
-                + "FROM sr_ftp_data "
-                + "WHERE rms_id = '" + rmsId + "' AND rms_event = '" + event + "' AND lot_type = '" + lot + "' ";
+                    + "DATE_FORMAT(scrap_date,'%d %M %Y') AS scrap_date_view, DATE_FORMAT(modified_date,'%d %M %Y') AS modified_date_view, "
+                    + "DATE_FORMAT(created_date,'%d %M %Y') AS created_date_view, DATE_FORMAT(mth_to_scrap,'%M %Y') AS mth_to_scrap_view "
+                    + "FROM sr_ftp_data "
+                    + "WHERE rms_id = ? AND rms_event = ? AND lot_type = ? ";
         FTPdata ftpdata = null;
         try {
             PreparedStatement ps = conn.prepareStatement(sql);
+            ps.setString(1, rmsId);
+            ps.setString(2, event);
+            ps.setString(3, lot);
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
                 ftpdata = new FTPdata();
@@ -372,13 +371,14 @@ public class FTPDao {
 
     public FTPdata getFtpDataPerRmsLotEvent(String rmslotevent) {
         String sql = "SELECT *, DATE_FORMAT(completed_date,'%d %M %Y') AS completed_date_view, "
-                + "DATE_FORMAT(scrap_date,'%d %M %Y') AS scrap_date_view, "
-                + "DATE_FORMAT(mth_to_scrap,'%M %Y') AS mth_to_scrap_view "
-                + "FROM sr_ftp_data "
-                + "WHERE rmslot_event = '" + rmslotevent + "'";
+                    + "DATE_FORMAT(scrap_date,'%d %M %Y') AS scrap_date_view, "
+                    + "DATE_FORMAT(mth_to_scrap,'%M %Y') AS mth_to_scrap_view "
+                    + "FROM sr_ftp_data "
+                    + "WHERE rmslot_event = ? ";
         FTPdata ftpdata = null;
         try {
             PreparedStatement ps = conn.prepareStatement(sql);
+            ps.setString(1, rmslotevent);
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
                 ftpdata = new FTPdata();
@@ -422,10 +422,11 @@ public class FTPDao {
                 + "DATE_FORMAT(scrap_date,'%d %M %Y') AS scrap_date_view, "
                 + "DATE_FORMAT(mth_to_scrap,'%M %Y') AS mth_to_scrap_view "
                 + "FROM sr_ftp_data "
-                + "WHERE rmslot_event = '" + rmslotevent + "' AND flag = '0'";
+                + "WHERE rmslot_event = ? AND flag = '0' ";
         FTPdata ftpdata = null;
         try {
             PreparedStatement ps = conn.prepareStatement(sql);
+            ps.setString(1, rmslotevent);
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
                 ftpdata = new FTPdata();
@@ -466,12 +467,13 @@ public class FTPDao {
     }
 
     public FTPdata getFtpData2(String rmsId, String event, String lot) {
-        String sql = "SELECT * "
-                + "FROM sr_ftp_data "
-                + "WHERE rms_id LIKE '" + rmsId + "%' AND rms_event = '" + event + "' AND lot_type = '" + lot + "' ";
+        String sql = "SELECT * FROM sr_ftp_data WHERE rms_id LIKE ? AND rms_event = ? AND lot_type = ? ";
         FTPdata ftpdata = null;
         try {
             PreparedStatement ps = conn.prepareStatement(sql);
+            ps.setString(1, rmsId+"%");
+            ps.setString(2, event);
+            ps.setString(3, lot);
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
                 ftpdata = new FTPdata();
@@ -510,13 +512,17 @@ public class FTPDao {
     }
 
     public FTPdata getFtpDataPerCond(String event, String mthToScrap, String pkgFamily, String rmsNo, String lotNo) {
-        String sql = "SELECT * "
-                + "FROM sr_ftp_data "
-                + "WHERE rms_event = '" + event + "' AND pkg_family = '" + pkgFamily + "' AND mth_to_scrap = '" + mthToScrap + "' "
-                + "AND rms_id = '" + rmsNo + "' AND lot_type = '" + lotNo + "' AND flag = 0 ";
+        String sql = "SELECT * FROM sr_ftp_data "
+                    + "WHERE rms_event = ? AND pkg_family = ? AND mth_to_scrap = ? "
+                    + "AND rms_id = ? AND lot_type = ? AND flag = 0 ";
         FTPdata ftpdata = null;
         try {
             PreparedStatement ps = conn.prepareStatement(sql);
+            ps.setString(1, event);
+            ps.setString(2, pkgFamily);
+            ps.setString(3, mthToScrap);
+            ps.setString(4, rmsNo);
+            ps.setString(5, lotNo);
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
                 ftpdata = new FTPdata();
@@ -556,13 +562,16 @@ public class FTPDao {
     }
 
     public List<FTPdata> getFtpLotDataPerCond(String event, String mthToScrap, String pkgFamily, String rmsNo) {
-        String sql = "SELECT * "
-                + "FROM sr_ftp_data "
-                + "WHERE rms_event = '" + event + "' AND pkg_family = '" + pkgFamily + "' AND mth_to_scrap = '" + mthToScrap + "' "
-                + "AND rms_id = '" + rmsNo + "' AND flag = 0 ";
+        String sql = "SELECT * FROM sr_ftp_data "
+                    + "WHERE rms_event = ? AND pkg_family = ? AND mth_to_scrap = ? "
+                    + "AND rms_id = ? AND flag = 0 ";
         List<FTPdata> ftpDataList = new ArrayList<FTPdata>();
         try {
             PreparedStatement ps = conn.prepareStatement(sql);
+            ps.setString(1, event);
+            ps.setString(2, pkgFamily);
+            ps.setString(3, mthToScrap);
+            ps.setString(4, rmsNo);
             FTPdata ftpdata;
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
@@ -604,13 +613,16 @@ public class FTPDao {
     }
 
     public FTPdata getFtpDataPerRMSLotEvent(String event, String mthToScrap, String pkgFamily, String rmsLotEvent) {
-        String sql = "SELECT * "
-                + "FROM sr_ftp_data "
-                + "WHERE rms_event = '" + event + "' AND pkg_family = '" + pkgFamily + "' AND mth_to_scrap = '" + mthToScrap + "' "
-                + "AND rmslot_event = '" + rmsLotEvent + "' AND flag = 0 ";
+        String sql = "SELECT * FROM sr_ftp_data "
+                    + "WHERE rms_event = ? AND pkg_family = ? AND mth_to_scrap = ? "
+                    + "AND rmslot_event = ? AND flag = 0 ";
         FTPdata ftpdata = null;
         try {
             PreparedStatement ps = conn.prepareStatement(sql);
+            ps.setString(1, event);
+            ps.setString(2, pkgFamily);
+            ps.setString(3, mthToScrap);
+            ps.setString(4, rmsLotEvent);
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
                 ftpdata = new FTPdata();
@@ -653,10 +665,10 @@ public class FTPDao {
         Integer groupId = null;
         try {
             PreparedStatement ps = conn.prepareStatement(
-                    "SELECT DISTINCT group_id FROM sr_ftp_data "
-                    + "WHERE rms_id = '" + rmsId + "' AND rms_event = '" + event + "' "
+                    "SELECT DISTINCT group_id FROM sr_ftp_data WHERE rms_id = ? AND rms_event = ? "
             );
-
+            ps.setString(1, rmsId);
+            ps.setString(2, event);
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
                 groupId = rs.getInt("group_id");
@@ -678,12 +690,11 @@ public class FTPDao {
     }
 
     public FTPdata getFtpDataById(String id) {
-        String sql = "SELECT * "
-                + "FROM sr_ftp_data "
-                + "WHERE id = '" + id + "'";
+        String sql = "SELECT * FROM sr_ftp_data WHERE id = ? ";
         FTPdata ftpdata = null;
         try {
             PreparedStatement ps = conn.prepareStatement(sql);
+            ps.setString(1, id);
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
                 ftpdata = new FTPdata();
@@ -724,10 +735,11 @@ public class FTPDao {
     }
 
     public FTPdata getFtpDataByRequestId(String requestId) {
-        String sql = "SELECT ft.* FROM sr_ftp_data ft, sr_request re WHERE re.ftp_id = ft.id AND re.id = '" + requestId + "'";
+        String sql = "SELECT ft.* FROM sr_ftp_data ft, sr_request re WHERE re.ftp_id = ft.id AND re.id = ? ";
         FTPdata ftpdata = null;
         try {
             PreparedStatement ps = conn.prepareStatement(sql);
+            ps.setString(1, requestId);
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
                 ftpdata = new FTPdata();
@@ -770,11 +782,11 @@ public class FTPDao {
 
     public List<FTPdata> getAllFtpData() {
         String sql = "SELECT id, group_id, rms_id, rms_event, pkg_family, pkg_name, p_status, status, DATEDIFF(mth_to_scrap, NOW()) AS aging, DATEDIFF(NOW(),completed_date) AS packingDay, "
-                + "GROUP_CONCAT(lot_type ORDER BY lot_type ASC SEPARATOR ', ') AS lot_concat, DATE_FORMAT(completed_date,'%d %b %Y') AS completed_date_view, DATE_FORMAT(mth_to_scrap,'%b %Y') AS mth_to_scrap_view "
-                + "FROM sr_ftp_data "
-                + "WHERE ((YEAR(mth_to_scrap) > YEAR(NOW())) OR (MONTH(mth_to_scrap) > MONTH(NOW()) AND YEAR(mth_to_scrap) = YEAR(NOW()))) and flag = 0 "
-                + "GROUP BY group_id "
-                + "ORDER BY completed_date ASC ";
+                    + "GROUP_CONCAT(lot_type ORDER BY lot_type ASC SEPARATOR ', ') AS lot_concat, DATE_FORMAT(completed_date,'%d %b %Y') AS completed_date_view, DATE_FORMAT(mth_to_scrap,'%b %Y') AS mth_to_scrap_view "
+                    + "FROM sr_ftp_data "
+                    + "WHERE ((YEAR(mth_to_scrap) > YEAR(NOW())) OR (MONTH(mth_to_scrap) > MONTH(NOW()) AND YEAR(mth_to_scrap) = YEAR(NOW()))) and flag = 0 "
+                    + "GROUP BY group_id "
+                    + "ORDER BY completed_date ASC ";
         List<FTPdata> ftpDataList = new ArrayList<FTPdata>();
         try {
             PreparedStatement ps = conn.prepareStatement(sql);
@@ -815,10 +827,10 @@ public class FTPDao {
 
     public List<FTPdata> getAllFtpDataLatest() {
         String sql = "SELECT id, rmslot_event, rms_id, rms_event, lot_type, pkg_family, pkg_name, p_status, status, DATEDIFF(mth_to_scrap, NOW()) AS aging, DATEDIFF(NOW(),completed_date) AS packingDay, "
-                + "DATE_FORMAT(completed_date,'%d %b %Y') AS completed_date_view, DATE_FORMAT(mth_to_scrap,'%b %Y') AS mth_to_scrap_view "
-                + "FROM sr_ftp_data "
-                + "WHERE ((YEAR(mth_to_scrap) > YEAR(NOW())) OR (MONTH(mth_to_scrap) > MONTH(NOW()) AND YEAR(mth_to_scrap) = YEAR(NOW()))) and flag = 0 "
-                + "ORDER BY completed_date ASC ";
+                    + "DATE_FORMAT(completed_date,'%d %b %Y') AS completed_date_view, DATE_FORMAT(mth_to_scrap,'%b %Y') AS mth_to_scrap_view "
+                    + "FROM sr_ftp_data "
+                    + "WHERE ((YEAR(mth_to_scrap) > YEAR(NOW())) OR (MONTH(mth_to_scrap) > MONTH(NOW()) AND YEAR(mth_to_scrap) = YEAR(NOW()))) and flag = 0 "
+                    + "ORDER BY completed_date ASC ";
         List<FTPdata> ftpDataList = new ArrayList<FTPdata>();
         try {
             PreparedStatement ps = conn.prepareStatement(sql);
@@ -859,18 +871,20 @@ public class FTPDao {
 
     public List<FTPdata> getAllFtpDataforMonhtlyReport(String fromDate, String toDate) {
         String sql = "SELECT id, group_id, rms_id, rms_event, pkg_family, pkg_name, p_status, status, "
-                + "DATEDIFF(mth_to_scrap, NOW()) AS aging, DATEDIFF(NOW(),completed_date) AS packingDay, "
-                + "GROUP_CONCAT(lot_type ORDER BY lot_type ASC SEPARATOR ', ') AS lot_concat, "
-                + "DATE_FORMAT(completed_date,'%d %b %Y') AS completed_date_view, "
-                + "DATE_FORMAT(mth_to_scrap,'%b %Y') AS mth_to_scrap_view "
-                + "FROM sr_ftp_data "
-                + "WHERE ((YEAR(mth_to_scrap) > YEAR(NOW())) OR (MONTH(mth_to_scrap) > MONTH(NOW()) AND YEAR(mth_to_scrap) = YEAR(NOW()))) "
-                + "and flag = 0 AND completed_date BETWEEN '" + fromDate + "' AND LAST_DAY('" + toDate + "') "
-                + "GROUP BY group_id "
-                + "ORDER BY completed_date ASC ";
+                    + "DATEDIFF(mth_to_scrap, NOW()) AS aging, DATEDIFF(NOW(),completed_date) AS packingDay, "
+                    + "GROUP_CONCAT(lot_type ORDER BY lot_type ASC SEPARATOR ', ') AS lot_concat, "
+                    + "DATE_FORMAT(completed_date,'%d %b %Y') AS completed_date_view, "
+                    + "DATE_FORMAT(mth_to_scrap,'%b %Y') AS mth_to_scrap_view "
+                    + "FROM sr_ftp_data "
+                    + "WHERE ((YEAR(mth_to_scrap) > YEAR(NOW())) OR (MONTH(mth_to_scrap) > MONTH(NOW()) AND YEAR(mth_to_scrap) = YEAR(NOW()))) "
+                    + "and flag = 0 AND completed_date BETWEEN ? AND LAST_DAY(?) "
+                    + "GROUP BY group_id "
+                    + "ORDER BY completed_date ASC ";
         List<FTPdata> ftpDataList = new ArrayList<FTPdata>();
         try {
             PreparedStatement ps = conn.prepareStatement(sql);
+            ps.setString(1, fromDate);
+            ps.setString(2, toDate);
             FTPdata ftpdata;
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
@@ -907,8 +921,7 @@ public class FTPDao {
     }
 
     public List<FTPdata> getAllExpiredFtpData() {
-        String sql = "SELECT *, DATEDIFF(mth_to_scrap, NOW()) AS aging "
-                + "FROM sr_ftp_data "
+        String sql = "SELECT *, DATEDIFF(mth_to_scrap, NOW()) AS aging FROM sr_ftp_data "
                 + "WHERE flag IN(0,1,9) AND ((YEAR(mth_to_scrap) < YEAR(NOW())) OR (MONTH(mth_to_scrap) < MONTH(NOW()) AND YEAR(mth_to_scrap) = YEAR(NOW()))) ";
         List<FTPdata> ftpDataList = new ArrayList<FTPdata>();
         try {
@@ -949,8 +962,7 @@ public class FTPDao {
     }
 
     public List<FTPdata> getAllExpiredFtpDataNew() {
-        String sql = "SELECT *, DATEDIFF(mth_to_scrap, NOW()) AS aging "
-                + "FROM sr_ftp_data "
+        String sql = "SELECT *, DATEDIFF(mth_to_scrap, NOW()) AS aging FROM sr_ftp_data "
                 + "WHERE status like '%New Record%' AND flag IN(0) AND ((YEAR(mth_to_scrap) < YEAR(NOW())) OR (MONTH(mth_to_scrap) < MONTH(NOW()) AND YEAR(mth_to_scrap) = YEAR(NOW()))) ";
         List<FTPdata> ftpDataList = new ArrayList<FTPdata>();
         try {
@@ -992,11 +1004,11 @@ public class FTPDao {
 
     public List<FTPdata> getExpFtpData() {
         String sql = "SELECT id, group_id, rms_id, rms_event, pkg_family, pkg_name, p_status, status, DATEDIFF(mth_to_scrap, NOW()) AS aging, "
-                + "GROUP_CONCAT(lot_type SEPARATOR ',') AS lot_concat, DATE_FORMAT(completed_date,'%d %M %Y') AS completed_date_view, DATE_FORMAT(mth_to_scrap,'%M %Y') AS mth_to_scrap_view "
-                + "FROM sr_ftp_data "
-                + "WHERE ((YEAR(mth_to_scrap) < YEAR(NOW())) OR (MONTH(mth_to_scrap) < MONTH(NOW()) AND YEAR(mth_to_scrap) = YEAR(NOW()))) "
-                + "GROUP BY group_id "
-                + "ORDER BY completed_date DESC";
+                    + "GROUP_CONCAT(lot_type SEPARATOR ',') AS lot_concat, DATE_FORMAT(completed_date,'%d %M %Y') AS completed_date_view, DATE_FORMAT(mth_to_scrap,'%M %Y') AS mth_to_scrap_view "
+                    + "FROM sr_ftp_data "
+                    + "WHERE ((YEAR(mth_to_scrap) < YEAR(NOW())) OR (MONTH(mth_to_scrap) < MONTH(NOW()) AND YEAR(mth_to_scrap) = YEAR(NOW()))) "
+                    + "GROUP BY group_id "
+                    + "ORDER BY completed_date DESC";
         List<FTPdata> ftpDataList = new ArrayList<FTPdata>();
         try {
             PreparedStatement ps = conn.prepareStatement(sql);
@@ -1036,8 +1048,7 @@ public class FTPDao {
 
     public QueryResult updateStatus(FTPdata ftpData) {
         QueryResult queryResult = new QueryResult();
-        String sql = "UPDATE sr_ftp_data SET status = ?, flag = ?, modified_date = NOW(), modified_by = ? "
-                + "WHERE id = ? ";
+        String sql = "UPDATE sr_ftp_data SET status = ?, flag = ?, modified_date = NOW(), modified_by = ? WHERE id = ? ";
         try {
             PreparedStatement ps = conn.prepareStatement(sql);
             ps.setString(1, ftpData.getStatus());
@@ -1063,8 +1074,7 @@ public class FTPDao {
 
     public QueryResult updateStatusPerGroupId(FTPdata ftpData) {
         QueryResult queryResult = new QueryResult();
-        String sql = "UPDATE sr_ftp_data SET status = ?, flag = ?, modified_date = NOW(), modified_by = ? "
-                + "WHERE group_id = ? ";
+        String sql = "UPDATE sr_ftp_data SET status = ?, flag = ?, modified_date = NOW(), modified_by = ? WHERE group_id = ? ";
         try {
             PreparedStatement ps = conn.prepareStatement(sql);
             ps.setString(1, ftpData.getStatus());
@@ -1090,8 +1100,7 @@ public class FTPDao {
 
     public QueryResult updateStatusbyFtpId(FTPdata ftpData) {
         QueryResult queryResult = new QueryResult();
-        String sql = "UPDATE sr_ftp_data SET status = ?, flag = ?, modified_date = NOW(), modified_by = ?, cancel_by = NULL, cancel_date = NULL "
-                + "WHERE id = ? ";
+        String sql = "UPDATE sr_ftp_data SET status = ?, flag = ?, modified_date = NOW(), modified_by = ?, cancel_by = NULL, cancel_date = NULL WHERE id = ? ";
         try {
             PreparedStatement ps = conn.prepareStatement(sql);
             ps.setString(1, ftpData.getStatus());
@@ -1143,8 +1152,7 @@ public class FTPDao {
 
     public QueryResult updateQty(FTPdata ftpData) {
         QueryResult queryResult = new QueryResult();
-        String sql = "UPDATE sr_ftp_data SET lot_qty = ?, modified_date = NOW(), modified_by = ? "
-                + "WHERE id = ? ";
+        String sql = "UPDATE sr_ftp_data SET lot_qty = ?, modified_date = NOW(), modified_by = ? WHERE id = ? ";
         try {
             PreparedStatement ps = conn.prepareStatement(sql);
             ps.setString(1, ftpData.getUnitQty());
@@ -1169,8 +1177,7 @@ public class FTPDao {
 
     public QueryResult updateActualQty(FTPdata ftpData) {
         QueryResult queryResult = new QueryResult();
-        String sql = "UPDATE sr_ftp_data SET actual_qty = ?, modified_date = NOW(), modified_by = ? "
-                + "WHERE id = ? ";
+        String sql = "UPDATE sr_ftp_data SET actual_qty = ?, modified_date = NOW(), modified_by = ? WHERE id = ? ";
         try {
             PreparedStatement ps = conn.prepareStatement(sql);
             ps.setString(1, ftpData.getActualQty());
@@ -1195,8 +1202,7 @@ public class FTPDao {
 
     public QueryResult updatePkgFamily(FTPdata ftpData) {
         QueryResult queryResult = new QueryResult();
-        String sql = "UPDATE sr_ftp_data SET pkg_family = ?, modified_date = NOW(), modified_by = ? "
-                + "WHERE id = ? ";
+        String sql = "UPDATE sr_ftp_data SET pkg_family = ?, modified_date = NOW(), modified_by = ? WHERE id = ? ";
         try {
             PreparedStatement ps = conn.prepareStatement(sql);
             ps.setString(1, ftpData.getPkgFamily());
@@ -1247,8 +1253,7 @@ public class FTPDao {
 
     public QueryResult updateMthToScrap(FTPdata ftpData) {
         QueryResult queryResult = new QueryResult();
-        String sql = "UPDATE sr_ftp_data SET completed_date = ?, scrap_date = ?, mth_to_scrap = ?, modified_date = NOW(), modified_by = ? "
-                + "WHERE id = ? ";
+        String sql = "UPDATE sr_ftp_data SET completed_date = ?, scrap_date = ?, mth_to_scrap = ?, modified_date = NOW(), modified_by = ? WHERE id = ? ";
         try {
             PreparedStatement ps = conn.prepareStatement(sql);
             ps.setString(1, ftpData.getCompleteDate());
@@ -1275,8 +1280,7 @@ public class FTPDao {
 
     public QueryResult updateCancelRetention(FTPdata ftpData) {
         QueryResult queryResult = new QueryResult();
-        String sql = "UPDATE sr_ftp_data SET cancel_by = ?, cancel_date = NOW(), status = ?, flag = ? "
-                + "WHERE id = ? ";
+        String sql = "UPDATE sr_ftp_data SET cancel_by = ?, cancel_date = NOW(), status = ?, flag = ? WHERE id = ? ";
         try {
             PreparedStatement ps = conn.prepareStatement(sql);
             ps.setString(1, ftpData.getCancelBy());
@@ -1301,14 +1305,16 @@ public class FTPDao {
     }
 
     public List<FTPdata> getAllSubEventPerRms(String event, String rmsNo) {
-        String sql = "SELECT rms_event "
-                + "FROM sr_ftp_data "
-                + "WHERE flag = 0 AND (rms_event LIKE '" + event + "_' OR rms_event = '" + event + "') AND rms_id = '" + rmsNo + "' "
-                + "GROUP BY group_id "
-                + "ORDER BY rms_event ";
+        String sql = "SELECT rms_event FROM sr_ftp_data "
+                    + "WHERE flag = 0 AND (rms_event LIKE ? OR rms_event = ?) AND rms_id = ? "
+                    + "GROUP BY group_id "
+                    + "ORDER BY rms_event ";
         List<FTPdata> subEventList = new ArrayList<FTPdata>();
         try {
             PreparedStatement ps = conn.prepareStatement(sql);
+            ps.setString(1, event+"_");
+            ps.setString(2, event);
+            ps.setString(3, rmsNo);
             FTPdata ftpData;
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
@@ -1333,13 +1339,11 @@ public class FTPDao {
     }
 
     public List<FTPdata> getAllEventPerRms(String rmsNo) {
-        String sql = "SELECT DISTINCT rms_event "
-                + "FROM sr_ftp_data "
-                + "WHERE flag = 0 AND rms_id = '" + rmsNo + "' "
-                + "ORDER BY rms_event ";
+        String sql = "SELECT DISTINCT rms_event  FROM sr_ftp_data WHERE flag = 0 AND rms_id = ? ORDER BY rms_event ";
         List<FTPdata> subEventList = new ArrayList<FTPdata>();
         try {
             PreparedStatement ps = conn.prepareStatement(sql);
+            ps.setString(1, rmsNo);
             FTPdata ftpData;
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
@@ -1366,8 +1370,7 @@ public class FTPDao {
     public QueryResult updateSelectedExpiredLot(FTPdata ftpdata) {
         QueryResult queryResult = new QueryResult();
         String sql = "UPDATE sr_ftp_data SET status = ? , flag = ?, modified_date = NOW(), modified_by = ?, cancel_by = ?, cancel_date = NOW() "
-                + "WHERE id = ? AND flag = 0 "
-                + "AND ((YEAR(mth_to_scrap) < YEAR(NOW())) OR (MONTH(mth_to_scrap) < MONTH(NOW()) AND YEAR(mth_to_scrap) = YEAR(NOW()))) ";
+                    + "WHERE id = ? AND flag = 0 AND ((YEAR(mth_to_scrap) < YEAR(NOW())) OR (MONTH(mth_to_scrap) < MONTH(NOW()) AND YEAR(mth_to_scrap) = YEAR(NOW()))) ";
         try {
             PreparedStatement ps = conn.prepareStatement(sql);
             ps.setString(1, ftpdata.getStatus());
@@ -1396,11 +1399,13 @@ public class FTPDao {
         String actEvent = event;
         try {
             PreparedStatement ps = conn.prepareStatement(
-                    "SELECT DISTINCT (rms_event) AS act_event "
-                    + "FROM sr_ftp_data "
-                    + "WHERE (rms_event LIKE '" + event + "_' OR rms_event = '" + event + "') AND rms_id = '" + rmsId + "' AND mth_to_scrap = '" + mthToScrap + "' AND flag = 0 "
+                    "SELECT DISTINCT (rms_event) AS act_event FROM sr_ftp_data "
+                    + "WHERE (rms_event LIKE ? OR rms_event = ?) AND rms_id = ? AND mth_to_scrap = ? AND flag = 0 "
             );
-
+            ps.setString(1, event+"_");
+            ps.setString(2, event);
+            ps.setString(3, rmsId);
+            ps.setString(4, mthToScrap);
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
                 actEvent = rs.getString("act_event");
@@ -1426,8 +1431,7 @@ public class FTPDao {
         String revDate = null;
         try {
             PreparedStatement ps = conn.prepareStatement(
-                    "SELECT DATE_FORMAT(MAX(created_date), '%d-%b-%Y %h:%m %p') AS maxDate "
-                    + "FROM sr_ftp_data "
+                    "SELECT DATE_FORMAT(MAX(created_date), '%d-%b-%Y %h:%m %p') AS maxDate FROM sr_ftp_data "
             );
 
             ResultSet rs = ps.executeQuery();
@@ -1451,10 +1455,7 @@ public class FTPDao {
     }
 
     public List<FTPdata> getAllActualDetailsPerRmsExtQuery(String rmsNo, String extQuery) {
-        String sql = "SELECT * "
-                + "FROM sr_ftp_data "
-                + "WHERE flag = 0 AND rms_id = '" + rmsNo + "' " + extQuery
-                + "ORDER BY id ";
+        String sql = "SELECT * FROM sr_ftp_data WHERE flag = 0 AND rms_id = '" + rmsNo + "' " + extQuery + "ORDER BY id ";
         List<FTPdata> rmsDetailsList = new ArrayList<FTPdata>();
         try {
             PreparedStatement ps = conn.prepareStatement(sql);
@@ -1499,4 +1500,5 @@ public class FTPDao {
         }
         return rmsDetailsList;
     }
+
 }

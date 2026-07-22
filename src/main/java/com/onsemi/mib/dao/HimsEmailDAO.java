@@ -4,7 +4,6 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import com.onsemi.mib.db.DB;
 import com.onsemi.mib.model.Email;
 import java.sql.DriverManager;
 import org.slf4j.Logger;
@@ -16,7 +15,6 @@ public class HimsEmailDAO {
     private final Connection conn;
 
     public HimsEmailDAO() throws ClassNotFoundException, SQLException {
-//        Class.forName("com.mysql.jdbc.Driver");
         Class.forName("com.mysql.cj.jdbc.Driver");
         Connection conn = null;
         conn = DriverManager.getConnection("jdbc:mysql://mysed-rel-app03:3306/cdars?serverTimezone=UTC&useLegacyDatetimeCode=false", "root", "root");
@@ -56,4 +54,5 @@ public class HimsEmailDAO {
         }
         return email;
     }
+
 }

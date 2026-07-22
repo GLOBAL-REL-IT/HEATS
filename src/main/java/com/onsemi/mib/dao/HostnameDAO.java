@@ -86,9 +86,10 @@ public class HostnameDAO {
         QueryResult queryResult = new QueryResult();
         try {
             PreparedStatement ps = conn.prepareStatement(
-                    "DELETE FROM sr_hostname WHERE id = '" + hostnameId + "'"
+                    "DELETE FROM sr_hostname WHERE id = ? "
             );
             queryResult.setResult(ps.executeUpdate());
+            ps.setString(1, hostnameId);
             ps.close();
         } catch (SQLException e) {
             queryResult.setErrorMessage(e.getMessage());
@@ -106,10 +107,11 @@ public class HostnameDAO {
     }
 
     public Hostname getHostname(String hostnameId) {
-        String sql = "SELECT * FROM sr_hostname WHERE id = '" + hostnameId + "'";
+        String sql = "SELECT * FROM sr_hostname WHERE id = ? ";
         Hostname hostname = null;
         try {
             PreparedStatement ps = conn.prepareStatement(sql);
+            ps.setString(1, hostnameId);
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
                 hostname = new Hostname();
@@ -190,4 +192,5 @@ public class HostnameDAO {
         }
         return hostnameList;
     }
+
 }
