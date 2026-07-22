@@ -276,8 +276,9 @@ public class RmsBookingHardwareDAO {
         QueryResult queryResult = new QueryResult();
         try {
             PreparedStatement ps = conn.prepareStatement(
-                    "DELETE FROM rms_booking_hardware WHERE id = '" + rmsbookingHardwareId + "'"
+                    "DELETE FROM rms_booking_hardware WHERE id = ? "
             );
+            ps.setString(1, rmsbookingHardwareId);
             queryResult.setResult(ps.executeUpdate());
             ps.close();
         } catch (SQLException e) {
@@ -296,10 +297,11 @@ public class RmsBookingHardwareDAO {
     }
 
     public RmsBookingHardware getRmsBookingHardware(String rmsbookingHardwareId) {
-        String sql = "SELECT * FROM rms_booking_hardware WHERE id = '" + rmsbookingHardwareId + "'";
+        String sql = "SELECT * FROM rms_booking_hardware WHERE id = ? ";
         RmsBookingHardware rmsbookingHardware = null;
         try {
             PreparedStatement ps = conn.prepareStatement(sql);
+            ps.setString(1, rmsbookingHardwareId);
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
                 rmsbookingHardware = new RmsBookingHardware();
@@ -338,10 +340,11 @@ public class RmsBookingHardwareDAO {
     }
 
     public RmsBookingHardware getRmsBookingHardwareByBookingPkidForLoadCardFlagZero(String bookingPkid) {
-        String sql = "SELECT ha.* FROM rms_booking_hardware ha WHERE ha.booking_pkid = '" + bookingPkid + "' AND ha.flag = '0' AND status != 'NA' AND ha.item_type = 'Load Card'";
+        String sql = "SELECT ha.* FROM rms_booking_hardware ha WHERE ha.booking_pkid = ? AND ha.flag = '0' AND status != 'NA' AND ha.item_type = 'Load Card' ";
         RmsBookingHardware rmsbookingHardware = null;
         try {
             PreparedStatement ps = conn.prepareStatement(sql);
+            ps.setString(1, bookingPkid);
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
                 rmsbookingHardware = new RmsBookingHardware();
@@ -380,10 +383,11 @@ public class RmsBookingHardwareDAO {
     }
 
     public RmsBookingHardware getRmsBookingHardwareByBookingPkidForProgramCardFlagZero(String bookingPkid) {
-        String sql = "SELECT ha.* FROM rms_booking_hardware ha WHERE ha.booking_pkid = '" + bookingPkid + "' AND ha.flag = '0' AND status != 'NA' AND ha.item_type = 'Program Card'";
+        String sql = "SELECT ha.* FROM rms_booking_hardware ha WHERE ha.booking_pkid = ? AND ha.flag = '0' AND status != 'NA' AND ha.item_type = 'Program Card' ";
         RmsBookingHardware rmsbookingHardware = null;
         try {
             PreparedStatement ps = conn.prepareStatement(sql);
+            ps.setString(1, bookingPkid);
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
                 rmsbookingHardware = new RmsBookingHardware();
@@ -422,10 +426,12 @@ public class RmsBookingHardwareDAO {
     }
 
     public RmsBookingHardware getRmsBookingHardwareByBookingPkidAndItemPKid(String bookingPkid, String itemPkid) {
-        String sql = "SELECT * FROM rms_booking_hardware WHERE booking_pkid = '" + bookingPkid + "' AND item_pkid = '" + itemPkid + "' AND status = 'Available'";
+        String sql = "SELECT * FROM rms_booking_hardware WHERE booking_pkid = ? AND item_pkid = ? AND status = 'Available'";
         RmsBookingHardware rmsbookingHardware = null;
         try {
             PreparedStatement ps = conn.prepareStatement(sql);
+            ps.setString(1, bookingPkid);
+            ps.setString(2, itemPkid);
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
                 rmsbookingHardware = new RmsBookingHardware();
@@ -464,10 +470,12 @@ public class RmsBookingHardwareDAO {
     }
 
     public RmsBookingHardware getRmsBookingHardwareByBookingPkidAndItemPKidBibCard(String bookingPkid, String itemPkid) {
-        String sql = "SELECT * FROM rms_booking_hardware WHERE booking_pkid = '" + bookingPkid + "' AND item_pkid = '" + itemPkid + "' AND status IN ('Available','Released to Production')";
+        String sql = "SELECT * FROM rms_booking_hardware WHERE booking_pkid = ? AND item_pkid = ? AND status IN ('Available','Released to Production')";
         RmsBookingHardware rmsbookingHardware = null;
         try {
             PreparedStatement ps = conn.prepareStatement(sql);
+            ps.setString(1, bookingPkid);
+            ps.setString(2, itemPkid);
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
                 rmsbookingHardware = new RmsBookingHardware();
@@ -506,10 +514,12 @@ public class RmsBookingHardwareDAO {
     }
 
     public RmsBookingHardware getRmsBookingHardwareByBookingPkidAndPkid(String bookingPkid, String pkid) {
-        String sql = "SELECT * FROM rms_booking_hardware WHERE booking_pkid = '" + bookingPkid + "' AND pkid = '" + pkid + "' AND item_type = 'Motherboard'";
+        String sql = "SELECT * FROM rms_booking_hardware WHERE booking_pkid = ? AND pkid = ? AND item_type = 'Motherboard' ";
         RmsBookingHardware rmsbookingHardware = null;
         try {
             PreparedStatement ps = conn.prepareStatement(sql);
+            ps.setString(1, bookingPkid);
+            ps.setString(2, pkid);
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
                 rmsbookingHardware = new RmsBookingHardware();
@@ -548,10 +558,11 @@ public class RmsBookingHardwareDAO {
     }
 
     public RmsBookingHardware getRmsBookingHardwareByPkid(String pkid) {
-        String sql = "SELECT *,DATE_FORMAT(return_date,'%d %M %Y %h:%i %p') AS returnDate FROM rms_booking_hardware WHERE pkid = '" + pkid + "'";
+        String sql = "SELECT *,DATE_FORMAT(return_date,'%d %M %Y %h:%i %p') AS returnDate FROM rms_booking_hardware WHERE pkid = ? ";
         RmsBookingHardware rmsbookingHardware = null;
         try {
             PreparedStatement ps = conn.prepareStatement(sql);
+            ps.setString(1, pkid);
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
                 rmsbookingHardware = new RmsBookingHardware();
@@ -594,10 +605,13 @@ public class RmsBookingHardwareDAO {
     }
 
     public RmsBookingHardware getRmsBookingHardwareBybookingPkidAndItemTypeAndItemIdAndFlagNE99(String bookingId, String itemType, String itemId) {
-        String sql = "SELECT * FROM rms_booking_hardware WHERE booking_pkid = '" + bookingId + "' AND item_type = '" + itemType + "' AND item_id = '" + itemId + "' AND flag != '99'";
+        String sql = "SELECT * FROM rms_booking_hardware WHERE booking_pkid = ? AND item_type = ? AND item_id = ? AND flag != '99' ";
         RmsBookingHardware rmsbookingHardware = null;
         try {
             PreparedStatement ps = conn.prepareStatement(sql);
+            ps.setString(1, bookingId);
+            ps.setString(2, itemType);
+            ps.setString(3, itemId);
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
                 rmsbookingHardware = new RmsBookingHardware();
@@ -637,10 +651,11 @@ public class RmsBookingHardwareDAO {
     }
 
     public RmsBookingHardware getRmsBookingHardwareRemarksByBookingPkid(String bookingPkid) {
-        String sql = "SELECT ha.item_id FROM rms_booking_detail de, rms_booking_hardware ha WHERE ha.item_type = 'Remarks' AND ha.booking_pkid = de.booking_pkid AND de.booking_pkid = '" + bookingPkid + "'";
+        String sql = "SELECT ha.item_id FROM rms_booking_detail de, rms_booking_hardware ha WHERE ha.item_type = 'Remarks' AND ha.booking_pkid = de.booking_pkid AND de.booking_pkid = ? ";
         RmsBookingHardware rmsbookingHardware = null;
         try {
             PreparedStatement ps = conn.prepareStatement(sql);
+            ps.setString(1, bookingPkid);
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
                 rmsbookingHardware = new RmsBookingHardware();
@@ -707,10 +722,11 @@ public class RmsBookingHardwareDAO {
     }
 
     public List<RmsBookingHardware> getRmsBookingHardwareListByBookingPkidWithFlagZero(String bookingPkid) {
-        String sql = "SELECT ha.* FROM rms_booking_hardware ha WHERE ha.booking_pkid = '" + bookingPkid + "' AND ha.flag = '0'";
+        String sql = "SELECT ha.* FROM rms_booking_hardware ha WHERE ha.booking_pkid = ? AND ha.flag = '0'";
         List<RmsBookingHardware> rmsbookingHardwareList = new ArrayList<RmsBookingHardware>();
         try {
             PreparedStatement ps = conn.prepareStatement(sql);
+            ps.setString(1, bookingPkid);
             RmsBookingHardware rmsbookingHardware;
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
@@ -751,10 +767,11 @@ public class RmsBookingHardwareDAO {
     }
 
     public List<RmsBookingHardware> getRmsBookingHardwareListByBookingPkidWithFlagZeroAndStatusNotNA(String bookingPkid) {
-        String sql = "SELECT ha.* FROM rms_booking_hardware ha WHERE ha.booking_pkid = '" + bookingPkid + "' AND ha.flag = '0' AND status != 'NA'";
+        String sql = "SELECT ha.* FROM rms_booking_hardware ha WHERE ha.booking_pkid = ? AND ha.flag = '0' AND status != 'NA'";
         List<RmsBookingHardware> rmsbookingHardwareList = new ArrayList<RmsBookingHardware>();
         try {
             PreparedStatement ps = conn.prepareStatement(sql);
+            ps.setString(1, bookingPkid);
             RmsBookingHardware rmsbookingHardware;
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
@@ -795,10 +812,11 @@ public class RmsBookingHardwareDAO {
     }
 
     public List<RmsBookingHardware> getRmsBookingHardwareListByBookingPkidWithFlagOneAndStatusNotNA(String bookingPkid) {
-        String sql = "SELECT ha.* FROM rms_booking_hardware ha WHERE ha.booking_pkid = '" + bookingPkid + "' AND ha.flag = '1' AND status != 'NA'";
+        String sql = "SELECT ha.* FROM rms_booking_hardware ha WHERE ha.booking_pkid = ? AND ha.flag = '1' AND status != 'NA'";
         List<RmsBookingHardware> rmsbookingHardwareList = new ArrayList<RmsBookingHardware>();
         try {
             PreparedStatement ps = conn.prepareStatement(sql);
+            ps.setString(1, bookingPkid);
             RmsBookingHardware rmsbookingHardware;
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
@@ -842,11 +860,12 @@ public class RmsBookingHardwareDAO {
         String sql = "SELECT ha.* "
                 + "FROM rms_booking_hardware ha "
                 + "LEFT JOIN rms_booking_detail_hw_replacement re ON ha.pkid = re.booking_hw_pkid "
-                + "WHERE ha.booking_pkid = '" + bookingPkid + "' AND ha.flag = '0' AND ha.item_type IN ('Motherboard', 'Load Card', 'Program Card') "
+                + "WHERE ha.booking_pkid = ? AND ha.flag = '0' AND ha.item_type IN ('Motherboard', 'Load Card', 'Program Card') "
                 + "AND ha.status LIKE 'Not Available%' AND re.booking_hw_pkid IS NULL";
         List<RmsBookingHardware> rmsbookingHardwareList = new ArrayList<RmsBookingHardware>();
         try {
             PreparedStatement ps = conn.prepareStatement(sql);
+            ps.setString(1, bookingPkid);
             RmsBookingHardware rmsbookingHardware;
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
@@ -890,11 +909,12 @@ public class RmsBookingHardwareDAO {
         String sql = "SELECT ha.* "
                 + "FROM rms_booking_hardware ha "
                 + "LEFT JOIN rms_booking_detail_hw_replacement re ON ha.pkid = re.booking_hw_pkid "
-                + "WHERE ha.booking_pkid = '" + bookingPkid + "' AND ha.flag = '0' AND ha.item_type IN ('Motherboard', 'Load Card', 'Program Card') "
+                + "WHERE ha.booking_pkid = ? AND ha.flag = '0' AND ha.item_type IN ('Motherboard', 'Load Card', 'Program Card') "
                 + "AND re.booking_hw_pkid IS NULL";
         List<RmsBookingHardware> rmsbookingHardwareList = new ArrayList<RmsBookingHardware>();
         try {
             PreparedStatement ps = conn.prepareStatement(sql);
+            ps.setString(1, bookingPkid);
             RmsBookingHardware rmsbookingHardware;
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
@@ -935,10 +955,11 @@ public class RmsBookingHardwareDAO {
     }
 
     public List<RmsBookingHardware> getRmsBookingHardwareListForMotherboardByBookingPkid(String bookingPkid) {
-        String sql = "SELECT ha.*,IFNULL(lc_qty,'0') AS lcQty, IFNULL(pc_qty,'0') AS pcQty FROM rms_booking_hardware ha WHERE ha.booking_pkid = '" + bookingPkid + "' AND ha.item_type = 'Motherboard' ORDER BY ha.flag, ha.item_id ";
+        String sql = "SELECT ha.*,IFNULL(lc_qty,'0') AS lcQty, IFNULL(pc_qty,'0') AS pcQty FROM rms_booking_hardware ha WHERE ha.booking_pkid = ? AND ha.item_type = 'Motherboard' ORDER BY ha.flag, ha.item_id ";
         List<RmsBookingHardware> rmsbookingHardwareList = new ArrayList<RmsBookingHardware>();
         try {
             PreparedStatement ps = conn.prepareStatement(sql);
+            ps.setString(1, bookingPkid);
             RmsBookingHardware rmsbookingHardware;
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
@@ -980,10 +1001,11 @@ public class RmsBookingHardwareDAO {
     }
 
     public List<RmsBookingHardware> getRmsBookingHardwareListForOtherHwByBookingPkid(String bookingPkid) {
-        String sql = "SELECT ha.* FROM rms_booking_hardware ha WHERE ha.booking_pkid = '" + bookingPkid + "' AND ha.item_type NOT IN ('Motherboard','Remarks') ORDER BY ha.flag, ha.item_type";
+        String sql = "SELECT ha.* FROM rms_booking_hardware ha WHERE ha.booking_pkid = ? AND ha.item_type NOT IN ('Motherboard','Remarks') ORDER BY ha.flag, ha.item_type";
         List<RmsBookingHardware> rmsbookingHardwareList = new ArrayList<RmsBookingHardware>();
         try {
             PreparedStatement ps = conn.prepareStatement(sql);
+            ps.setString(1, bookingPkid);
             RmsBookingHardware rmsbookingHardware;
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
@@ -1152,7 +1174,7 @@ public class RmsBookingHardwareDAO {
         QueryResult queryResult = new QueryResult();
         try {
             PreparedStatement ps = conn.prepareStatement(
-                    "UPDATE rms_booking_hardware SET sub_status = ? WHERE id = ?"
+                    "UPDATE rms_booking_hardware SET sub_status = ? WHERE id = ? "
             );
             ps.setString(1, rmsbookingHardware.getSubStatus());
             ps.setString(2, rmsbookingHardware.getId());
@@ -1204,8 +1226,10 @@ public class RmsBookingHardwareDAO {
         Integer count = null;
         try {
             PreparedStatement ps = conn.prepareStatement(
-                    "SELECT COUNT(*) AS count FROM rms_booking_hardware inc WHERE inc.booking_pkid = '" + bookingId + "' AND inc.pkid = '" + pkid + "'"
+                    "SELECT COUNT(*) AS count FROM rms_booking_hardware inc WHERE inc.booking_pkid = ? AND inc.pkid = ? "
             );
+            ps.setString(1, bookingId);
+            ps.setString(2, pkid);
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
                 count = rs.getInt("count");
@@ -1230,8 +1254,10 @@ public class RmsBookingHardwareDAO {
         Integer count = null;
         try {
             PreparedStatement ps = conn.prepareStatement(
-                    "SELECT COUNT(*) AS count FROM rms_booking_hardware inc WHERE inc.booking_pkid = '" + bookingId + "' AND inc.pkid = '" + pkid + "' AND inc.flag = '0'"
+                    "SELECT COUNT(*) AS count FROM rms_booking_hardware inc WHERE inc.booking_pkid = ? AND inc.pkid = ? AND inc.flag = '0'"
             );
+            ps.setString(1, bookingId);
+            ps.setString(2, pkid);
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
                 count = rs.getInt("count");
@@ -1256,8 +1282,11 @@ public class RmsBookingHardwareDAO {
         Integer count = null;
         try {
             PreparedStatement ps = conn.prepareStatement(
-                    "SELECT COUNT(*) AS count FROM rms_booking_hardware inc WHERE inc.booking_pkid = '" + bookingId + "' AND inc.item_type = '" + itemType + "' AND inc.item_id = '" + itemId + "' AND inc.flag != '99'"
+                    "SELECT COUNT(*) AS count FROM rms_booking_hardware inc WHERE inc.booking_pkid = ? AND inc.item_type = ? AND inc.item_id = ? AND inc.flag != '99' "
             );
+            ps.setString(1, bookingId);
+            ps.setString(2, itemType);
+            ps.setString(3, itemId);
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
                 count = rs.getInt("count");
@@ -1282,8 +1311,11 @@ public class RmsBookingHardwareDAO {
         Integer count = null;
         try {
             PreparedStatement ps = conn.prepareStatement(
-                    "SELECT COUNT(*) AS count FROM rms_booking_hardware inc WHERE inc.booking_pkid = '" + bookingId + "' AND inc.item_type = '" + itemType + "' AND inc.item_id = '" + itemId + "' AND inc.flag = '0'"
+                    "SELECT COUNT(*) AS count FROM rms_booking_hardware inc WHERE inc.booking_pkid = ? AND inc.item_type = ? AND inc.item_id = ? AND inc.flag = '0' "
             );
+            ps.setString(1, bookingId);
+            ps.setString(2, itemType);
+            ps.setString(3, itemId);
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
                 count = rs.getInt("count");
@@ -1308,8 +1340,11 @@ public class RmsBookingHardwareDAO {
         Integer count = null;
         try {
             PreparedStatement ps = conn.prepareStatement(
-                    "SELECT COUNT(*) AS count FROM rms_booking_hardware inc WHERE inc.booking_pkid = '" + bookingId + "' AND inc.item_type = '" + itemType + "' AND inc.item_id = '" + itemId + "' AND inc.flag = '99'"
+                    "SELECT COUNT(*) AS count FROM rms_booking_hardware inc WHERE inc.booking_pkid = ? AND inc.item_type = ? AND inc.item_id = ? AND inc.flag = '99' "
             );
+            ps.setString(1, bookingId);
+            ps.setString(2, itemType);
+            ps.setString(3, itemId);
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
                 count = rs.getInt("count");
@@ -1334,8 +1369,9 @@ public class RmsBookingHardwareDAO {
         Integer count = null;
         try {
             PreparedStatement ps = conn.prepareStatement(
-                    "SELECT COUNT(*) AS count FROM rms_booking_hardware inc WHERE inc.item_type = 'Remarks' AND inc.booking_pkid = '" + bookingPkid + "'"
+                    "SELECT COUNT(*) AS count FROM rms_booking_hardware inc WHERE inc.item_type = 'Remarks' AND inc.booking_pkid = ? "
             );
+            ps.setString(1, bookingPkid);
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
                 count = rs.getInt("count");
@@ -1360,8 +1396,10 @@ public class RmsBookingHardwareDAO {
         Integer count = null;
         try {
             PreparedStatement ps = conn.prepareStatement(
-                    "SELECT COUNT(*) AS count FROM rms_booking_hardware inc WHERE inc.booking_pkid = '" + bookingPkid + "' AND inc.item_pkid = '" + itemPkid + "' AND inc.status = 'Available'"
+                    "SELECT COUNT(*) AS count FROM rms_booking_hardware inc WHERE inc.booking_pkid = ? AND inc.item_pkid = ? AND inc.status = 'Available'"
             );
+            ps.setString(1, bookingPkid);
+            ps.setString(2, itemPkid);
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
                 count = rs.getInt("count");
@@ -1386,8 +1424,10 @@ public class RmsBookingHardwareDAO {
         Integer count = null;
         try {
             PreparedStatement ps = conn.prepareStatement(
-                    "SELECT COUNT(*) AS count FROM rms_booking_hardware inc WHERE inc.booking_pkid = '" + bookingPkid + "' AND inc.item_pkid = '" + itemPkid + "' AND inc.status IN ('Available','Released to Production')"
+                    "SELECT COUNT(*) AS count FROM rms_booking_hardware inc WHERE inc.booking_pkid = ? AND inc.item_pkid = ? AND inc.status IN ('Available','Released to Production')"
             );
+            ps.setString(1, bookingPkid);
+            ps.setString(2, itemPkid);
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
                 count = rs.getInt("count");
@@ -1412,8 +1452,10 @@ public class RmsBookingHardwareDAO {
         Integer count = null;
         try {
             PreparedStatement ps = conn.prepareStatement(
-                    "SELECT COUNT(*) AS count FROM rms_booking_hardware inc WHERE inc.booking_pkid = '" + bookingPkid + "' AND inc.pkid = '" + pkid + "' AND inc.item_type = 'Motherboard'"
+                    "SELECT COUNT(*) AS count FROM rms_booking_hardware inc WHERE inc.booking_pkid = ? AND inc.pkid = ? AND inc.item_type = 'Motherboard'"
             );
+            ps.setString(1, bookingPkid);
+            ps.setString(2, pkid);
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
                 count = rs.getInt("count");
@@ -1438,8 +1480,9 @@ public class RmsBookingHardwareDAO {
         Integer count = null;
         try {
             PreparedStatement ps = conn.prepareStatement(
-                    "SELECT COUNT(*) AS count FROM rms_booking_hardware inc WHERE inc.booking_pkid = '" + bookingPkid + "' AND inc.item_type = 'Motherboard' AND inc.flag != '99'"
+                    "SELECT COUNT(*) AS count FROM rms_booking_hardware inc WHERE inc.booking_pkid = ? AND inc.item_type = 'Motherboard' AND inc.flag != '99'"
             );
+            ps.setString(1, bookingPkid);
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
                 count = rs.getInt("count");
@@ -1464,8 +1507,9 @@ public class RmsBookingHardwareDAO {
         Integer count = null;
         try {
             PreparedStatement ps = conn.prepareStatement(
-                    "SELECT COUNT(*) AS count FROM rms_booking_hardware inc WHERE inc.booking_pkid = '" + bookingPkid + "' AND inc.item_type = 'Motherboard' AND inc.flag = '0'"
+                    "SELECT COUNT(*) AS count FROM rms_booking_hardware inc WHERE inc.booking_pkid = ? AND inc.item_type = 'Motherboard' AND inc.flag = '0'"
             );
+            ps.setString(1, bookingPkid);
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
                 count = rs.getInt("count");
@@ -1490,8 +1534,9 @@ public class RmsBookingHardwareDAO {
         Integer count = null;
         try {
             PreparedStatement ps = conn.prepareStatement(
-                    "SELECT COUNT(*) AS count FROM rms_booking_hardware inc WHERE inc.booking_pkid = '" + bookingPkid + "' AND inc.item_type = 'Motherboard' AND inc.sub_status = 'Pending Release to Production'"
+                    "SELECT COUNT(*) AS count FROM rms_booking_hardware inc WHERE inc.booking_pkid = ? AND inc.item_type = 'Motherboard' AND inc.sub_status = 'Pending Release to Production'"
             );
+            ps.setString(1, bookingPkid);
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
                 count = rs.getInt("count");
@@ -1540,10 +1585,11 @@ public class RmsBookingHardwareDAO {
 
     public Integer checkMotherboardData(String bookingId) {
         Integer count = 0;
-        String sql = "SELECT COUNT(*) as count FROM rms_booking_hardware WHERE booking_pkid = '" + bookingId + "' AND item_type = 'Motherboard'";
+        String sql = "SELECT COUNT(*) as count FROM rms_booking_hardware WHERE booking_pkid = ? AND item_type = 'Motherboard' ";
 //        LOGGER.info("QUERY KITA CHECK DEKAT SINI >> checkMotherboardData ::::: " + sql);
         try {
             PreparedStatement ps = conn.prepareStatement(sql);
+            ps.setString(1, bookingId);
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
                 count = rs.getInt("count");
@@ -1566,10 +1612,11 @@ public class RmsBookingHardwareDAO {
 
     public Integer checkCardData(String bookingId) {
         Integer count = 0;
-        String sql = "SELECT COUNT(*) as count FROM rms_booking_hardware WHERE booking_pkid = '" + bookingId + "' AND item_type != 'Motherboard' AND qty != 0";
+        String sql = "SELECT COUNT(*) as count FROM rms_booking_hardware WHERE booking_pkid = ? AND item_type != 'Motherboard' AND qty != 0 ";
 //        LOGGER.info("QUERY KITA CHECK DEKAT SINI >> checkCardData ::::: " + sql);
         try {
             PreparedStatement ps = conn.prepareStatement(sql);
+            ps.setString(1, bookingId);
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
                 count = rs.getInt("count");
@@ -1592,10 +1639,11 @@ public class RmsBookingHardwareDAO {
 
     public String getSptsPkidForItemIdLC(String bookingId) {
         String data = "";
-        String sql = "SELECT * FROM item WHERE spts_pkid = (SELECT item_pkid FROM rms_booking_hardware WHERE booking_pkid = '" + bookingId + "' AND item_type = 'Load Card' AND qty != 0 LIMIT 1)";
+        String sql = "SELECT * FROM item WHERE spts_pkid = (SELECT item_pkid FROM rms_booking_hardware WHERE booking_pkid = ? AND item_type = 'Load Card' AND qty != 0 LIMIT 1) ";
 //        LOGGER.info("QUERY KITA CHECK DEKAT SINI >> getSptsPkidForItemIdLC Load Card ::::: " + sql);
         try {
             PreparedStatement ps = conn.prepareStatement(sql);
+            ps.setString(1, bookingId);
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
                 data = rs.getString("id");
@@ -1618,10 +1666,12 @@ public class RmsBookingHardwareDAO {
 
     public String getSptsPkidForItemIdMb(String bookingId, String pkId) {
         String data = "";
-        String sql = "SELECT item_pkid FROM rms_booking_hardware WHERE booking_pkid = '" + bookingId + "' AND item_type = 'Motherboard' AND pkid = '" + pkId + "'";
+        String sql = "SELECT item_pkid FROM rms_booking_hardware WHERE booking_pkid = ? AND item_type = 'Motherboard' AND pkid = ? ";
 //        LOGGER.info("QUERY KITA CHECK DEKAT SINI >> getSptsPkidForItemIdMb MOTHERBOARD ::::: " + sql);
         try {
             PreparedStatement ps = conn.prepareStatement(sql);
+            ps.setString(1, bookingId);
+            ps.setString(2, pkId);
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
                 data = rs.getString("item_pkid");
@@ -1644,9 +1694,11 @@ public class RmsBookingHardwareDAO {
 
     public String getLatestStatus(String bookingId, String pkId) {
         String data = "";
-        String sql = "SELECT status FROM rms_booking_hardware WHERE booking_pkid = '" + bookingId + "' AND item_type = 'Motherboard' AND pkid = '" + pkId + "'";
+        String sql = "SELECT status FROM rms_booking_hardware WHERE booking_pkid = ? AND item_type = 'Motherboard' AND pkid = ? ";
         try {
             PreparedStatement ps = conn.prepareStatement(sql);
+            ps.setString(1, bookingId);
+            ps.setString(2, pkId);
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
                 data = rs.getString("status");
@@ -1697,9 +1749,10 @@ public class RmsBookingHardwareDAO {
         String sql = "SELECT it.id AS item_id FROM rms_booking_hardware_group rms "
                 + "INNER JOIN item it ON it.spts_pkid = rms.item_pkid "
                 + "INNER JOIN item_activity_config ac ON ac.mib_item_id = it.id "
-                + "WHERE rms.item_type = 'BIB' AND rms.group_id = '" + groupId + "' ";
+                + "WHERE rms.item_type = 'BIB' AND rms.group_id = ? ";
         try {
             PreparedStatement ps = conn.prepareStatement(sql);
+            ps.setString(1, groupId);
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
                 data = rs.getString("item_id");
@@ -1725,9 +1778,10 @@ public class RmsBookingHardwareDAO {
         String sql = "SELECT it.id AS item_id FROM rms_booking_hardware_group rms "
                 + "INNER JOIN item it ON it.spts_pkid = rms.item_pkid "
                 + "INNER JOIN item_activity_config ac ON ac.mib_item_id = it.id "
-                + "WHERE rms.item_type = 'BIB Card' AND rms.group_id = '" + groupId + "' GROUP BY item_id ";
+                + "WHERE rms.item_type = 'BIB Card' AND rms.group_id = ? GROUP BY item_id ";
         try {
             PreparedStatement ps = conn.prepareStatement(sql);
+            ps.setString(1, groupId);
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
                 data = rs.getString("item_id");
@@ -1749,10 +1803,11 @@ public class RmsBookingHardwareDAO {
     }
 
     public List<RmsBookingHardware> getRmsHardwareList(String id) {
-        String sql = "SELECT * FROM rms_booking_hardware WHERE booking_pkid = '" + id + "' AND status = 'Available' ";
+        String sql = "SELECT * FROM rms_booking_hardware WHERE booking_pkid = ? AND status = 'Available' ";
         List<RmsBookingHardware> rmsbookingHardwareList = new ArrayList<RmsBookingHardware>();
         try {
             PreparedStatement ps = conn.prepareStatement(sql);
+            ps.setString(1, id);
             RmsBookingHardware rmsbookingHardware;
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {

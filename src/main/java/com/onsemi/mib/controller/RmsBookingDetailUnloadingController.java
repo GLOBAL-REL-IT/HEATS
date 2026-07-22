@@ -213,7 +213,7 @@ public class RmsBookingDetailUnloadingController {
             @PathVariable("bookingId") String bookingId,
             @PathVariable("itemPkid") String itemPkid,
             RedirectAttributes redirectAttrs,
-            @ModelAttribute UserSession userSession) throws IOException {
+            @ModelAttribute UserSession userSession) throws IOException, SQLException {
 
         String currentStatus = "";
         String leakTest = "";
@@ -401,7 +401,7 @@ public class RmsBookingDetailUnloadingController {
 
                 RmsBookingFunctionalTestDAO ftestdao2 = new RmsBookingFunctionalTestDAO();
                 RmsBookingFunctionalTest testResult = new RmsBookingFunctionalTest();
-                testResult = ftestdao2.getFuncTestResultUnloading(groupId);
+                testResult = ftestdao2.getFuncTestResultByModule(groupId, "Unloading");
                 model.addAttribute("testResult", testResult);
 
                 if (testResult == null) {
@@ -1805,7 +1805,7 @@ public class RmsBookingDetailUnloadingController {
             @RequestParam(required = false) String psHardware,
             @RequestParam(required = false) String winHardware,
             HttpServletResponse response
-    ) throws IOException {
+    ) throws IOException, SQLException {
 
         String gotoMn = "Pending Functional Test - Manual Test";
         String gotoBib = "Pending Functional Test - BIB Test";
@@ -2214,7 +2214,7 @@ public class RmsBookingDetailUnloadingController {
     public String updateStatusFailed(
             Model model,
             @ModelAttribute UserSession userSession,
-            @PathVariable("groupid") String groupid) {
+            @PathVariable("groupid") String groupid) throws SQLException {
 
         String username = userSession.getFullname();
         String manual = "Manual";
@@ -3471,8 +3471,19 @@ public class RmsBookingDetailUnloadingController {
             } else {
                 // WHAT NEED TO BE DONE HERE? SINCE THERE ALREADY DATA, WE SKIP INSERTING A NEW ONE
             }
+            // UPDATE RMS BOOKING FUNCTIONAL TEST - MANUAL TEST RESULT - START
+            RmsBookingFunctionalTest rmstest = new RmsBookingFunctionalTest();
+            rmstest.setManualStatus("In Progress");
+            rmstest.setManualQty(totalQty);
+            rmstest.setRemark(" ");
+            rmstest.setFinalStatus("Pending Functional Test - Manual Test");
+            rmstest.setFlag("2");
+            rmstest.setGroupId(groupId);
+            rmstest.setModule("Unloading");
+            RmsBookingFunctionalTestDAO ftdao = new RmsBookingFunctionalTestDAO();
+            ftdao.updateManualTest(rmstest);
+            // UPDATE RMS BOOKING FUNCTIONAL TEST - MANUAL TEST RESULT - END
         } else {
-            LOGGER.info("dua");
             path = "redirect:/rmsbookingDetailUnloading/groupDetail/" + groupId;
             redirectAttrs.addFlashAttribute("error", "Please check the manual test configuration for the ITEM ID " + lcItemId);
         }
@@ -3660,10 +3671,10 @@ public class RmsBookingDetailUnloadingController {
         return data;
     }
 
-    public void checkInsertFunctionalTestResult(String groupId, String username) {
+    public void checkInsertFunctionalTestResult(String groupId, String username) throws SQLException {
 
         RmsBookingFunctionalTestDAO testdao = new RmsBookingFunctionalTestDAO();
-        Integer checkData = testdao.getCountTestResultByGroupIdUnload(groupId);
+        Integer checkData = testdao.getCountTestResultByGroupIdUnload(groupId, "Unloading");
 
         if (checkData == 0) {
             // INSERT BARU

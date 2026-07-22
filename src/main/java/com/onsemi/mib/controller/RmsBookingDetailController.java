@@ -1383,7 +1383,7 @@ public class RmsBookingDetailController {
             @PathVariable("bookingId") String bookingId,
             @PathVariable("itemPkid") String itemPkid,
             RedirectAttributes redirectAttrs,
-            @ModelAttribute UserSession userSession) throws IOException {
+            @ModelAttribute UserSession userSession) throws IOException, SQLException {
 
         String currentStatus = "";
         String leakTest = "";
@@ -1567,7 +1567,7 @@ public class RmsBookingDetailController {
                 }
 
                 RmsBookingFunctionalTestDAO ftestdao2 = new RmsBookingFunctionalTestDAO();
-                RmsBookingFunctionalTest testResult = ftestdao2.getFuncTestResultbe4Load(groupId);
+                RmsBookingFunctionalTest testResult = ftestdao2.getFuncTestResultByModule(groupId, "Before Loading");
 //                testResult = ftestdao2.getFuncTestResultbe4Load(groupId);
                 model.addAttribute("testResult", testResult);
 
@@ -2157,7 +2157,7 @@ public class RmsBookingDetailController {
             @ModelAttribute UserSession userSession,
             @PathVariable("bookingPkid") String bookingPkid,
             @PathVariable("pkid") String pkid
-    ) {
+    ) throws SQLException {
         String status = "";
         String groupId = bookingPkid + "/" + pkid;
 
@@ -2174,7 +2174,7 @@ public class RmsBookingDetailController {
             int countVmPass = viD.getCountByGroupIdWithModuleBeforeLoadingWithFinalStatusPass(groupId);
 
             RmsBookingFunctionalTestDAO ftD = new RmsBookingFunctionalTestDAO();
-            int countFtPass = ftD.getCountTestResultByGroupId(groupId);
+            int countFtPass = ftD.getCountTestResultByGroupId(groupId, "Before Loading");
             if (countVmPass == 0) {
                 status = "Pending VM";
             } else {
@@ -2182,7 +2182,7 @@ public class RmsBookingDetailController {
                     status = "Pending Functional Test";
                 } else {
                     ftD = new RmsBookingFunctionalTestDAO();
-                    RmsBookingFunctionalTest rmsF = ftD.getFuncTestResultbe4Load(groupId);
+                    RmsBookingFunctionalTest rmsF = ftD.getFuncTestResultByModule(groupId, "Before Loading");
                     status = rmsF.getFinalStatus();
                 }
             }
@@ -3207,7 +3207,7 @@ public class RmsBookingDetailController {
             @RequestParam(required = false) String psHardware,
             @RequestParam(required = false) String winHardware,
             HttpServletResponse response
-    ) throws IOException {
+    ) throws IOException, SQLException {
 
         LOGGER.info("ahoi >>> " + jenis);
 
@@ -3581,7 +3581,7 @@ public class RmsBookingDetailController {
     public String updateStatusFailed(
             Model model,
             @ModelAttribute UserSession userSession,
-            @PathVariable("groupid") String groupid) {
+            @PathVariable("groupid") String groupid) throws SQLException {
 
         String username = userSession.getFullname();
         String manual = "Manual";
@@ -4924,7 +4924,7 @@ public class RmsBookingDetailController {
             @PathVariable("bookingId") String bookingId,
             @PathVariable("itemPkid") String itemPkid,
             RedirectAttributes redirectAttrs,
-            @ModelAttribute UserSession userSession) throws IOException {
+            @ModelAttribute UserSession userSession) throws IOException, SQLException {
 
         String currentStatus = "";
         String leakTest = "";
@@ -5102,7 +5102,7 @@ public class RmsBookingDetailController {
                 }
 
                 RmsBookingFunctionalTestDAO ftestdao2 = new RmsBookingFunctionalTestDAO();
-                RmsBookingFunctionalTest testResult = ftestdao2.getFuncTestResultbe4Load(groupId);
+                RmsBookingFunctionalTest testResult = ftestdao2.getFuncTestResultByModule(groupId, "Before Loading");
 //                testResult = ftestdao2.getFuncTestResultbe4Load(groupId);
                 model.addAttribute("testResult", testResult);
 
@@ -6549,7 +6549,7 @@ public class RmsBookingDetailController {
             @PathVariable("bookingId") String bookingId,
             @PathVariable("itemPkid") String itemPkid,
             RedirectAttributes redirectAttrs,
-            @ModelAttribute UserSession userSession) throws IOException {
+            @ModelAttribute UserSession userSession) throws IOException, SQLException {
 
         String currentStatus = "";
         String leakTest = "";
@@ -6737,7 +6737,7 @@ public class RmsBookingDetailController {
                 }
 
                 RmsBookingFunctionalTestDAO ftestdao2 = new RmsBookingFunctionalTestDAO();
-                RmsBookingFunctionalTest testResult = ftestdao2.getFuncTestResultbe4Load(groupId);
+                RmsBookingFunctionalTest testResult = ftestdao2.getFuncTestResultByModule(groupId, "Before Loading");
 //                testResult = ftestdao2.getFuncTestResultbe4Load(groupId);
                 model.addAttribute("testResult", testResult);
 
@@ -7085,7 +7085,7 @@ public class RmsBookingDetailController {
     }
 
     @RequestMapping(value = "/createManualTest", method = {RequestMethod.GET, RequestMethod.POST})
-    public String bookingFunctionalTest(
+    public String createManualTest(
             Model model,
             Locale locale,
             RedirectAttributes redirectAttrs,
@@ -7371,7 +7371,7 @@ public class RmsBookingDetailController {
                 + "Inspection Date: " + formattedString
                 + "<br /> "
                 + "Detail: " + emailBodyFail
-                + "<br /> "
+                + "<br /> " 
                 + "<br /> "
                 + "Please click <a href=\"http://" + hostname + "/HEATS/rmsbookingDetail/groupDetail/" + groupId + " \">HERE</a> for more detail."
                 + "<br /> "
@@ -7380,10 +7380,10 @@ public class RmsBookingDetailController {
         return data;
     }
 
-    public void checkInsertFunctionalTestResult(String groupId, String username) {
+    public void checkInsertFunctionalTestResult(String groupId, String username) throws SQLException {
 
         RmsBookingFunctionalTestDAO testdao = new RmsBookingFunctionalTestDAO();
-        Integer checkData = testdao.getCountTestResultByGroupId(groupId);
+        Integer checkData = testdao.getCountTestResultByGroupId(groupId, "Before Loading");
 
         if (checkData == 0) {
             // INSERT BARU

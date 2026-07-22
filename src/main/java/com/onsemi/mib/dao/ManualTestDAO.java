@@ -339,10 +339,6 @@ public class ManualTestDAO {
 
     public List<ManualTest> getAllComponentConfigByModule(String mibItemId, String module) throws SQLException {
         List<ManualTest> manualList = new ArrayList<>();
-        LOGGER.info("****************************************");
-        LOGGER.info("QUERY SINI >> "+GET_ALL_COMPONENT_RESULT_BY_MODULE);
-        LOGGER.info("mibItemId >> "+mibItemId);
-        LOGGER.info("module >> "+module);
         try (PreparedStatement ps = conn.prepareStatement(GET_ALL_COMPONENT_RESULT_BY_MODULE)) {
             ps.setString(1, mibItemId);
             ps.setString(2, module);
