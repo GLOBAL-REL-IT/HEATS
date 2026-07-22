@@ -547,6 +547,8 @@ public class RmsBookingDetailController {
                     + "<br /> "
                     + "Requested Date: " + formattedString
                     + "<br /> "
+                    + "Remarks: " + remarksBooking
+                    + "<br /> "
                     + "<br /> "
                     + "Please click <a href=\"http://" + hostname + "/HEATS/rmsbookingDetail\">HERE</a> for more detail."
                     + "<br /> "
@@ -574,6 +576,8 @@ public class RmsBookingDetailController {
                     + "Requested By: " + userSession.getFullname()
                     + "<br /> "
                     + "Requested Date: " + formattedString
+                    + "<br /> "
+                    + "Remarks: " + remarksBooking
                     + "<br /> "
                     + "<br /> "
                     + "Please click <a href=\"http://" + hostname + "/HEATS/rmsbookingDetail\">HERE</a> for more detail."
@@ -7104,7 +7108,7 @@ public class RmsBookingDetailController {
 
         ManualTestDAO testdao = new ManualTestDAO();
         ManualTest mantest = testdao.getComponentConfigByItemIdAndModule(lcItemId, "Before Loading");
-        
+
         if (mantest != null) {
             path = "rmsbookingDetail/goto_manual_test";
             redirectAttrs.addFlashAttribute("success", "Please perform manual test.");
@@ -7121,11 +7125,11 @@ public class RmsBookingDetailController {
                 testdao = new ManualTestDAO();
                 testdao.updateItemActivityConfig(String.valueOf(saizQty), String.valueOf(saizDut), String.valueOf(saizCom), mantest.getId());
                 // FUNCTION UPDATE THE LATEST QUANTITY - END
-                
+
                 testdao = new ManualTestDAO();
 //                List<ManualTest> listComponent = testdao.getAllComponentConfigByModule(lcItemId, "Before Loading");
                 List<ManualTest> listComponent = testdao.getAllComponentConfigSub(lcItemId);
-                
+
                 if (listComponent.size() == 0) {
                     path = "redirect:/rmsbookingDetail/groupDetail/" + groupId;
                     redirectAttrs.addFlashAttribute("error", "Please check the manual test configuration for the LC ITEM ID " + lcItemId);

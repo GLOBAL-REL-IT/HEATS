@@ -338,7 +338,7 @@
                                     <div class="mb-1">
                                         <label for="itemId" class="form-label">Remarks</label>
                                         <div class="input input-group">
-                                            <textarea class="form-control" rows="5" id="remarksBooking" name="remarksBooking" disabled>This RMS_Event does not have an associated booking in CBMS. Please contact the Capacity Planner to complete the booking in CBMS before proceeding.</textarea>
+                                            <textarea class="form-control" rows="5" id="remarksBooking" name="remarksBooking">This RMS_Event does not have an associated booking in CBMS. Please contact the Capacity Planner to complete the booking in CBMS before proceeding.</textarea>
                                         </div>
                                     </div>
                                 </div>

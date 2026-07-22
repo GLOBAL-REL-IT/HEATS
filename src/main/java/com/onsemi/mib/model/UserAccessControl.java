@@ -32,21 +32,21 @@ public class UserAccessControl {
     private String eqptFamilyAddGlobal;
     private String eqptRelTestGroupAddGlobal;
 
-    public String getEqptFamilyAddGlobal() {
-        return eqptFamilyAddGlobal;
-    }
+    private String befLoadingPriority;
+    private String befLoadingHwReplace;
+    private String befLoadingSfRecall;
+    private String befLoadingHwRegister;
+    private String befLoadingHwFinalize;
+    private String befLoadingVm;
+    private String befLoadingFt;
+    private String befLoadingRelease;
+    private String befLoadingReturnDefective;
 
-    public void setEqptFamilyAddGlobal(String eqptFamilyAddGlobal) {
-        this.eqptFamilyAddGlobal = eqptFamilyAddGlobal;
-    }
-
-    public String getEqptRelTestGroupAddGlobal() {
-        return eqptRelTestGroupAddGlobal;
-    }
-
-    public void setEqptRelTestGroupAddGlobal(String eqptRelTestGroupAddGlobal) {
-        this.eqptRelTestGroupAddGlobal = eqptRelTestGroupAddGlobal;
-    }
+    private String unloadingHwReturn;
+    private String unloadingIonic;
+    private String unloadingVm;
+    private String unloadingFt;
+    private String unloadingReleaseClose;
 
     public String getId() {
         return id;
@@ -254,6 +254,134 @@ public class UserAccessControl {
 
     public void setEqptViMonDelete(String eqptViMonDelete) {
         this.eqptViMonDelete = eqptViMonDelete;
+    }
+
+    public String getEqptFamilyAddGlobal() {
+        return eqptFamilyAddGlobal;
+    }
+
+    public void setEqptFamilyAddGlobal(String eqptFamilyAddGlobal) {
+        this.eqptFamilyAddGlobal = eqptFamilyAddGlobal;
+    }
+
+    public String getEqptRelTestGroupAddGlobal() {
+        return eqptRelTestGroupAddGlobal;
+    }
+
+    public void setEqptRelTestGroupAddGlobal(String eqptRelTestGroupAddGlobal) {
+        this.eqptRelTestGroupAddGlobal = eqptRelTestGroupAddGlobal;
+    }
+
+    public String getBefLoadingPriority() {
+        return befLoadingPriority;
+    }
+
+    public void setBefLoadingPriority(String befLoadingPriority) {
+        this.befLoadingPriority = befLoadingPriority;
+    }
+
+    public String getBefLoadingHwReplace() {
+        return befLoadingHwReplace;
+    }
+
+    public void setBefLoadingHwReplace(String befLoadingHwReplace) {
+        this.befLoadingHwReplace = befLoadingHwReplace;
+    }
+
+    public String getBefLoadingSfRecall() {
+        return befLoadingSfRecall;
+    }
+
+    public void setBefLoadingSfRecall(String befLoadingSfRecall) {
+        this.befLoadingSfRecall = befLoadingSfRecall;
+    }
+
+    public String getBefLoadingHwRegister() {
+        return befLoadingHwRegister;
+    }
+
+    public void setBefLoadingHwRegister(String befLoadingHwRegister) {
+        this.befLoadingHwRegister = befLoadingHwRegister;
+    }
+
+    public String getBefLoadingHwFinalize() {
+        return befLoadingHwFinalize;
+    }
+
+    public void setBefLoadingHwFinalize(String befLoadingHwFinalize) {
+        this.befLoadingHwFinalize = befLoadingHwFinalize;
+    }
+
+    public String getBefLoadingVm() {
+        return befLoadingVm;
+    }
+
+    public void setBefLoadingVm(String befLoadingVm) {
+        this.befLoadingVm = befLoadingVm;
+    }
+
+    public String getBefLoadingFt() {
+        return befLoadingFt;
+    }
+
+    public void setBefLoadingFt(String befLoadingFt) {
+        this.befLoadingFt = befLoadingFt;
+    }
+
+    public String getBefLoadingRelease() {
+        return befLoadingRelease;
+    }
+
+    public void setBefLoadingRelease(String befLoadingRelease) {
+        this.befLoadingRelease = befLoadingRelease;
+    }
+
+    public String getBefLoadingReturnDefective() {
+        return befLoadingReturnDefective;
+    }
+
+    public void setBefLoadingReturnDefective(String befLoadingReturnDefective) {
+        this.befLoadingReturnDefective = befLoadingReturnDefective;
+    }
+
+    public String getUnloadingHwReturn() {
+        return unloadingHwReturn;
+    }
+
+    public void setUnloadingHwReturn(String unloadingHwReturn) {
+        this.unloadingHwReturn = unloadingHwReturn;
+    }
+
+    public String getUnloadingIonic() {
+        return unloadingIonic;
+    }
+
+    public void setUnloadingIonic(String unloadingIonic) {
+        this.unloadingIonic = unloadingIonic;
+    }
+
+    public String getUnloadingVm() {
+        return unloadingVm;
+    }
+
+    public void setUnloadingVm(String unloadingVm) {
+        this.unloadingVm = unloadingVm;
+    }
+
+    public String getUnloadingFt() {
+        return unloadingFt;
+    }
+
+    public void setUnloadingFt(String unloadingFt) {
+        this.unloadingFt = unloadingFt;
+    }
+
+    public String getUnloadingReleaseClose() {
+        return unloadingReleaseClose;
+    }
+
+    public void setUnloadingReleaseClose(String unloadingReleaseClose) {
+        this.unloadingReleaseClose = unloadingReleaseClose;
     }
 
 }

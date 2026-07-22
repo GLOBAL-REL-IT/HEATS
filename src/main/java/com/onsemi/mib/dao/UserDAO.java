@@ -499,6 +499,22 @@ public class UserDAO {
                 userAccess.setEqptViMonDelete(rs.getString("uac.eqpt_vi_mon_delete"));
                 userAccess.setEqptFamilyAddGlobal(rs.getString("uac.eqpt_family_add_global"));
                 userAccess.setEqptRelTestGroupAddGlobal(rs.getString("uac.eqpt_rel_test_group_add_global"));
+
+                userAccess.setBefLoadingPriority(rs.getString("uac.bef_loading_priority"));
+                userAccess.setBefLoadingHwReplace(rs.getString("uac.bef_loading_hw_replace"));
+                userAccess.setBefLoadingSfRecall(rs.getString("uac.bef_loading_sf_recall"));
+                userAccess.setBefLoadingHwRegister(rs.getString("uac.bef_loading_hw_register"));
+                userAccess.setBefLoadingHwFinalize(rs.getString("uac.bef_loading_hw_finalize"));
+                userAccess.setBefLoadingVm(rs.getString("uac.bef_loading_vm"));
+                userAccess.setBefLoadingFt(rs.getString("uac.bef_loading_ft"));
+                userAccess.setBefLoadingRelease(rs.getString("uac.bef_loading_release"));
+                userAccess.setBefLoadingReturnDefective(rs.getString("uac.bef_loading_return_defective"));
+
+                userAccess.setUnloadingHwReturn(rs.getString("uac.unloading_hw_return"));
+                userAccess.setUnloadingIonic(rs.getString("uac.unloading_ionic"));
+                userAccess.setUnloadingVm(rs.getString("uac.unloading_vm"));
+                userAccess.setUnloadingFt(rs.getString("uac.unloading_ft"));
+                userAccess.setUnloadingReleaseClose(rs.getString("uac.unloading_release_close"));
             }
             rs.close();
             ps.close();

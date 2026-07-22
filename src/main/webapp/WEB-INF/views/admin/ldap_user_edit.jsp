@@ -197,8 +197,6 @@
                                     <h6 class="fw-semibold mb-1 border-start border-primary ps-2"style="border-left-width: 3px !important;">Hardware Module</h6>
                                 </div>
                                 <div class="col-12">
-                                    <!--<div class="card mb-4">-->
-                                    <!--<div class="card-body">-->
                                     <div class="form-check form-check-inline">
                                         <input type="hidden" name="userId" value="${user.id}">
                                         <input class="form-check-input" type="checkbox" id="itemAdd" name="itemAdd" value="Yes" <c:if test="${user.itemAdd == 'Yes'}">checked</c:if>>
@@ -244,16 +242,12 @@
                                         <input class="form-check-input" type="checkbox" id="itemSfRecell" name="itemSfRecall" value="Yes" <c:if test="${user.itemSfRecall == 'Yes'}">checked</c:if>>
                                         <label class="form-check-label" for="inlineCheckbox1">Recall Item from SF</label>
                                     </div>
-                                    <!--</div>-->
-                                    <!--</div>-->
                                 </div>
                                 <!--eqpt-->
                                 <div class="col-12 mb-1">
                                     <h6 class="fw-semibold mb-1 border-start border-primary ps-2"style="border-left-width: 3px !important;">Equipment Module</h6>
                                 </div>
                                 <div class="col-12">
-                                    <!--<div class="card mb-4">-->
-                                    <!--<div class="card-body">-->
                                     <div class="form-check form-check-inline">
                                         <input class="form-check-input" type="checkbox" id="eqptAdd" name="eqptAdd" value="Yes" <c:if test="${user.eqptAdd == 'Yes'}">checked</c:if>>
                                         <label class="form-check-label" for="inlineCheckbox1">Add Eqpt</label>
@@ -314,8 +308,72 @@
                                         <input class="form-check-input" type="checkbox" id="eqptViMonDelete" name="eqptViMonDelete" value="Yes" <c:if test="${user.eqptViMonDelete == 'Yes'}">checked</c:if>>
                                         <label class="form-check-label" for="inlineCheckbox1">Delete Eqpt VI Monitoring</label>
                                     </div>
-                                    <!--</div>-->
-                                    <!--</div>-->
+                                </div>
+                                <div class="col-12 mb-1">
+                                    <h6 class="fw-semibold mb-1 border-start border-primary ps-2"style="border-left-width: 3px !important;">Hardware Prep for Loading Module</h6>
+                                </div>
+                                <div class="col-12">
+                                    <div class="form-check form-check-inline">
+                                        <input class="form-check-input" type="checkbox" id="befLoadingPriority" name="befLoadingPriority" value="Yes" <c:if test="${user.befLoadingPriority == 'Yes'}">checked</c:if>>
+                                        <label class="form-check-label" for="inlineCheckbox1">Priority</label>
+                                    </div>
+                                    <div class="form-check form-check-inline">
+                                        <input class="form-check-input" type="checkbox" id="befLoadingHwReplace" name="befLoadingHwReplace" value="Yes" <c:if test="${user.befLoadingHwReplace == 'Yes'}">checked</c:if>>
+                                        <label class="form-check-label" for="inlineCheckbox1">HW Replacement</label>
+                                    </div>
+                                    <div class="form-check form-check-inline">
+                                        <input class="form-check-input" type="checkbox" id="befLoadingSfRecall" name="befLoadingSfRecall" value="Yes" <c:if test="${user.befLoadingSfRecall == 'Yes'}">checked</c:if>>
+                                        <label class="form-check-label" for="inlineCheckbox1">SF Recall</label>
+                                    </div>
+                                    <div class="form-check form-check-inline">
+                                        <input class="form-check-input" type="checkbox" id="befLoadingHwRegister" name="befLoadingHwRegister" value="Yes" <c:if test="${user.befLoadingHwRegister == 'Yes'}">checked</c:if>>
+                                        <label class="form-check-label" for="inlineCheckbox1">HW Registration</label>
+                                    </div>
+                                    <div class="form-check form-check-inline">
+                                        <input class="form-check-input" type="checkbox" id="befLoadingHwFinalize" name="befLoadingHwFinalize" value="Yes" <c:if test="${user.befLoadingHwFinalize == 'Yes'}">checked</c:if>>
+                                        <label class="form-check-label" for="inlineCheckbox1">HW Finalize</label>
+                                    </div>
+                                    <div class="form-check form-check-inline">
+                                        <input class="form-check-input" type="checkbox" id="befLoadingVm" name="befLoadingVm" value="Yes" <c:if test="${user.befLoadingVm == 'Yes'}">checked</c:if>>
+                                        <label class="form-check-label" for="inlineCheckbox1">Add VM Result</label>
+                                    </div>
+                                    <div class="form-check form-check-inline">
+                                        <input class="form-check-input" type="checkbox" id="befLoadingFt" name="befLoadingFt" value="Yes" <c:if test="${user.befLoadingFt == 'Yes'}">checked</c:if>>
+                                        <label class="form-check-label" for="inlineCheckbox1">Add Functional Test Result</label>
+                                    </div>
+                                    <div class="form-check form-check-inline">
+                                        <input class="form-check-input" type="checkbox" id="befLoadingRelease" name="befLoadingRelease" value="Yes" <c:if test="${user.befLoadingRelease == 'Yes'}">checked</c:if>>
+                                        <label class="form-check-label" for="inlineCheckbox1">HW Release to Production</label>
+                                    </div>
+                                    <div class="form-check form-check-inline">
+                                        <input class="form-check-input" type="checkbox" id="befLoadingReturnDefective" name="befLoadingReturnDefective" value="Yes" <c:if test="${user.befLoadingReturnDefective == 'Yes'}">checked</c:if>>
+                                        <label class="form-check-label" for="inlineCheckbox1">HW Return Before Loading(Defective)</label>
+                                    </div>
+                                </div>
+                                <div class="col-12 mb-1">
+                                    <h6 class="fw-semibold mb-1 border-start border-primary ps-2"style="border-left-width: 3px !important;">Hardware Return from Loading Module</h6>
+                                </div>
+                                <div class="col-12">
+                                    <div class="form-check form-check-inline">
+                                        <input class="form-check-input" type="checkbox" id="unloadingHwReturn" name="unloadingHwReturn" value="Yes" <c:if test="${user.unloadingHwReturn == 'Yes'}">checked</c:if>>
+                                        <label class="form-check-label" for="inlineCheckbox1">HW Return</label>
+                                    </div>
+                                    <div class="form-check form-check-inline">
+                                        <input class="form-check-input" type="checkbox" id="unloadingIonic" name="unloadingIonic" value="Yes" <c:if test="${user.unloadingIonic == 'Yes'}">checked</c:if>>
+                                        <label class="form-check-label" for="inlineCheckbox1">Add Ionic Result</label>
+                                    </div>
+                                    <div class="form-check form-check-inline">
+                                        <input class="form-check-input" type="checkbox" id="unloadingVm" name="unloadingVm" value="Yes" <c:if test="${user.unloadingVm == 'Yes'}">checked</c:if>>
+                                        <label class="form-check-label" for="inlineCheckbox1">Add VM Result</label>
+                                    </div>
+                                    <div class="form-check form-check-inline">
+                                        <input class="form-check-input" type="checkbox" id="unloadingFt" name="unloadingFt" value="Yes" <c:if test="${user.unloadingFt == 'Yes'}">checked</c:if>>
+                                        <label class="form-check-label" for="inlineCheckbox1">Add Functional Test Result</label>
+                                    </div>
+                                    <div class="form-check form-check-inline">
+                                        <input class="form-check-input" type="checkbox" id="unloadingReleaseClose" name="unloadingReleaseClose" value="Yes" <c:if test="${user.unloadingReleaseClose == 'Yes'}">checked</c:if>>
+                                        <label class="form-check-label" for="inlineCheckbox1">Return to Production/Closed</label>
+                                    </div>
                                 </div>
                                 <!-- Form actions start -->
                                 <div class="col-md-12">
