@@ -32,8 +32,10 @@ public class UserAccessControlDAO {
             PreparedStatement ps = conn.prepareStatement(
                     "INSERT INTO user_access_control (user_id, item_add, item_edit, item_delete, item_activity_config, item_activity_add, item_activity_edit, "
                     + "item_hardware_add, item_hardware_edit, item_hardware_delete, item_movement_add, item_sf_recall, eqpt_add, eqpt_edit, eqpt_delete, eqpt_family_add, eqpt_family_delete, eqpt_rel_test_group_add, eqpt_rel__test_group_delete, "
-                    + "eqpt_tech_add, eqpt_tech_delete, eqpt_mon_add, eqpt_mon_delete, eqpt_vi_mon_add, eqpt_vi_mon_delete, eqpt_family_add_global, eqpt_rel_test_group_add_global) "
-                    + "VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)", Statement.RETURN_GENERATED_KEYS
+                    + "eqpt_tech_add, eqpt_tech_delete, eqpt_mon_add, eqpt_mon_delete, eqpt_vi_mon_add, eqpt_vi_mon_delete, eqpt_family_add_global, eqpt_rel_test_group_add_global, "
+                    + "bef_loading_priority, bef_loading_hw_replace, bef_loading_sf_recall, bef_loading_hw_register, bef_loading_hw_finalize, bef_loading_vm, bef_loading_ft, bef_loading_release, bef_loading_return_defective, "
+                    + "unloading_hw_return, unloading_ionic, unloading_vm, unloading_ft, unloading_release_close) "
+                    + "VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)", Statement.RETURN_GENERATED_KEYS
             );
             ps.setString(1, useraccessControl.getUserId());
             ps.setString(2, useraccessControl.getItemAdd());
@@ -47,6 +49,7 @@ public class UserAccessControlDAO {
             ps.setString(10, useraccessControl.getItemHardwareDelete());
             ps.setString(11, useraccessControl.getItemMovementAdd());
             ps.setString(12, useraccessControl.getItemSfRecall());
+
             ps.setString(13, useraccessControl.getEqptAdd());
             ps.setString(14, useraccessControl.getEqptEdit());
             ps.setString(15, useraccessControl.getEqptDelete());
@@ -62,6 +65,22 @@ public class UserAccessControlDAO {
             ps.setString(25, useraccessControl.getEqptViMonDelete());
             ps.setString(26, useraccessControl.getEqptFamilyAddGlobal());
             ps.setString(27, useraccessControl.getEqptRelTestGroupAddGlobal());
+
+            ps.setString(28, useraccessControl.getBefLoadingPriority());
+            ps.setString(29, useraccessControl.getBefLoadingHwReplace());
+            ps.setString(30, useraccessControl.getBefLoadingSfRecall());
+            ps.setString(31, useraccessControl.getBefLoadingHwRegister());
+            ps.setString(32, useraccessControl.getBefLoadingHwFinalize());
+            ps.setString(33, useraccessControl.getBefLoadingVm());
+            ps.setString(34, useraccessControl.getBefLoadingFt());
+            ps.setString(35, useraccessControl.getBefLoadingRelease());
+            ps.setString(36, useraccessControl.getBefLoadingReturnDefective());
+
+            ps.setString(37, useraccessControl.getUnloadingHwReturn());
+            ps.setString(38, useraccessControl.getUnloadingIonic());
+            ps.setString(39, useraccessControl.getUnloadingVm());
+            ps.setString(40, useraccessControl.getUnloadingFt());
+            ps.setString(41, useraccessControl.getUnloadingReleaseClose());
             queryResult.setResult(ps.executeUpdate());
             ResultSet rs = ps.getGeneratedKeys();
             if (rs.next()) {
@@ -127,7 +146,10 @@ public class UserAccessControlDAO {
                     "UPDATE user_access_control SET user_id = ?, item_add = ?, item_edit = ?, item_delete = ?, item_activity_config = ?, item_activity_add = ?, item_activity_edit = ?, item_hardware_add = ?, "
                     + "item_hardware_edit = ?, item_hardware_delete = ?, item_movement_add = ?, item_sf_recall = ?, eqpt_add = ?, eqpt_edit = ?, eqpt_delete = ?, eqpt_family_add = ?, eqpt_family_delete = ?, "
                     + "eqpt_rel_test_group_add = ?, eqpt_rel__test_group_delete = ?, eqpt_tech_add = ?, eqpt_tech_delete = ?, eqpt_mon_add = ?, eqpt_mon_delete = ?, eqpt_vi_mon_add = ?, eqpt_vi_mon_delete = ?, "
-                    + "eqpt_family_add_global = ?, eqpt_rel_test_group_add_global = ? "
+                    + "eqpt_family_add_global = ?, eqpt_rel_test_group_add_global = ?, "
+                    + "bef_loading_priority = ?, bef_loading_hw_replace = ?, bef_loading_sf_recall = ?, bef_loading_hw_register = ?, bef_loading_hw_finalize = ?, bef_loading_vm = ?, bef_loading_ft = ?, "
+                    + "bef_loading_release = ?, bef_loading_return_defective = ?, "
+                    + "unloading_hw_return = ?, unloading_ionic = ?, unloading_vm = ?, unloading_ft = ?, unloading_release_close = ? "
                     + "WHERE user_id = ?"
             );
             ps.setString(1, useraccessControl.getUserId());
@@ -142,6 +164,7 @@ public class UserAccessControlDAO {
             ps.setString(10, useraccessControl.getItemHardwareDelete());
             ps.setString(11, useraccessControl.getItemMovementAdd());
             ps.setString(12, useraccessControl.getItemSfRecall());
+
             ps.setString(13, useraccessControl.getEqptAdd());
             ps.setString(14, useraccessControl.getEqptEdit());
             ps.setString(15, useraccessControl.getEqptDelete());
@@ -157,7 +180,24 @@ public class UserAccessControlDAO {
             ps.setString(25, useraccessControl.getEqptViMonDelete());
             ps.setString(26, useraccessControl.getEqptFamilyAddGlobal());
             ps.setString(27, useraccessControl.getEqptRelTestGroupAddGlobal());
-            ps.setString(28, useraccessControl.getUserId());
+
+            ps.setString(28, useraccessControl.getBefLoadingPriority());
+            ps.setString(29, useraccessControl.getBefLoadingHwReplace());
+            ps.setString(30, useraccessControl.getBefLoadingSfRecall());
+            ps.setString(31, useraccessControl.getBefLoadingHwRegister());
+            ps.setString(32, useraccessControl.getBefLoadingHwFinalize());
+            ps.setString(33, useraccessControl.getBefLoadingVm());
+            ps.setString(34, useraccessControl.getBefLoadingFt());
+            ps.setString(35, useraccessControl.getBefLoadingRelease());
+            ps.setString(36, useraccessControl.getBefLoadingReturnDefective());
+
+            ps.setString(37, useraccessControl.getUnloadingHwReturn());
+            ps.setString(38, useraccessControl.getUnloadingIonic());
+            ps.setString(39, useraccessControl.getUnloadingVm());
+            ps.setString(40, useraccessControl.getUnloadingFt());
+            ps.setString(41, useraccessControl.getUnloadingReleaseClose());
+
+            ps.setString(42, useraccessControl.getUserId());
             queryResult.setResult(ps.executeUpdate());
             ps.close();
         } catch (SQLException e) {
@@ -346,6 +386,22 @@ public class UserAccessControlDAO {
                 useraccessControl.setEqptViMonDelete(rs.getString("eqpt_vi_mon_delete"));
                 useraccessControl.setEqptFamilyAddGlobal(rs.getString("eqpt_family_add_global"));
                 useraccessControl.setEqptRelTestGroupAddGlobal(rs.getString("eqpt_rel_test_group_add_global"));
+
+                useraccessControl.setBefLoadingPriority(rs.getString("bef_loading_priority"));
+                useraccessControl.setBefLoadingHwReplace(rs.getString("bef_loading_hw_replace"));
+                useraccessControl.setBefLoadingSfRecall(rs.getString("bef_loading_sf_recall"));
+                useraccessControl.setBefLoadingHwRegister(rs.getString("bef_loading_hw_register"));
+                useraccessControl.setBefLoadingHwFinalize(rs.getString("bef_loading_hw_finalize"));
+                useraccessControl.setBefLoadingVm(rs.getString("bef_loading_vm"));
+                useraccessControl.setBefLoadingFt(rs.getString("bef_loading_ft"));
+                useraccessControl.setBefLoadingRelease(rs.getString("bef_loading_release"));
+                useraccessControl.setBefLoadingReturnDefective(rs.getString("bef_loading_return_defective"));
+
+                useraccessControl.setUnloadingHwReturn(rs.getString("unloading_hw_return"));
+                useraccessControl.setUnloadingIonic(rs.getString("unloading_ionic"));
+                useraccessControl.setUnloadingVm(rs.getString("unloading_vm"));
+                useraccessControl.setUnloadingFt(rs.getString("unloading_ft"));
+                useraccessControl.setUnloadingReleaseClose(rs.getString("unloading_release_close"));
             }
             rs.close();
             ps.close();

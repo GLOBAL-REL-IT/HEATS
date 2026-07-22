@@ -630,7 +630,23 @@ public class AdminController {
             @RequestParam(required = false) String eqptViMonAdd,
             @RequestParam(required = false) String eqptViMonDelete,
             @RequestParam(required = false) String eqptFamilyAddGlobal,
-            @RequestParam(required = false) String eqptRelTestGroupAddGlobal
+            @RequestParam(required = false) String eqptRelTestGroupAddGlobal,
+            
+            @RequestParam(required = false) String befLoadingPriority,
+            @RequestParam(required = false) String befLoadingHwReplace,
+            @RequestParam(required = false) String befLoadingSfRecall,
+            @RequestParam(required = false) String befLoadingHwRegister,
+            @RequestParam(required = false) String befLoadingHwFinalize,
+            @RequestParam(required = false) String befLoadingVm,
+            @RequestParam(required = false) String befLoadingFt,
+            @RequestParam(required = false) String befLoadingRelease,
+            @RequestParam(required = false) String befLoadingReturnDefective,
+            
+            @RequestParam(required = false) String unloadingHwReturn,
+            @RequestParam(required = false) String unloadingIonic,
+            @RequestParam(required = false) String unloadingVm,
+            @RequestParam(required = false) String unloadingFt,
+            @RequestParam(required = false) String unloadingReleaseClose
     ) {
         UserAccessControl uac = new UserAccessControl();
         uac.setUserId(userId);
@@ -645,6 +661,7 @@ public class AdminController {
         uac.setItemActivityEdit(itemActEdit);
         uac.setItemMovementAdd(itemMovementAdd);
         uac.setItemSfRecall(itemSfRecall);
+        
         uac.setEqptAdd(eqptAdd);
         uac.setEqptEdit(eqptEdit);
         uac.setEqptDelete(eqptDelete);
@@ -660,6 +677,22 @@ public class AdminController {
         uac.setEqptViMonDelete(eqptViMonDelete);
         uac.setEqptFamilyAddGlobal(eqptFamilyAddGlobal);
         uac.setEqptRelTestGroupAddGlobal(eqptRelTestGroupAddGlobal);
+        
+        uac.setBefLoadingPriority(befLoadingPriority);
+        uac.setBefLoadingHwReplace(befLoadingHwReplace);
+        uac.setBefLoadingSfRecall(befLoadingSfRecall);
+        uac.setBefLoadingHwRegister(befLoadingHwRegister);
+        uac.setBefLoadingHwFinalize(befLoadingHwFinalize);
+        uac.setBefLoadingVm(befLoadingVm);
+        uac.setBefLoadingFt(befLoadingFt);
+        uac.setBefLoadingRelease(befLoadingRelease);
+        uac.setBefLoadingReturnDefective(befLoadingReturnDefective);
+        
+        uac.setUnloadingHwReturn(unloadingHwReturn);
+        uac.setUnloadingIonic(unloadingIonic);
+        uac.setUnloadingVm(unloadingVm);
+        uac.setUnloadingFt(unloadingFt);
+        uac.setUnloadingReleaseClose(unloadingReleaseClose);
 
         UserAccessControlDAO uacD = new UserAccessControlDAO();
         int count = uacD.getCountByUserId(userId);
