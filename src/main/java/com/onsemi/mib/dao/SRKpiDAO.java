@@ -14,6 +14,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public class SRKpiDAO {
+
     private static final Logger LOGGER = LoggerFactory.getLogger(SRKpiDAO.class);
     private final Connection conn;
     private final DataSource dataSource;
@@ -28,9 +29,9 @@ public class SRKpiDAO {
         Integer count = null;
         try {
             PreparedStatement ps = conn.prepareStatement(
-                "SELECT cycle_time_goal_day FROM sr_kpi_requirement WHERE title = '" + requirement + "' "
+                    "SELECT cycle_time_goal_day FROM sr_kpi_requirement WHERE title = ? "
             );
-
+            ps.setString(1, requirement);
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
                 count = rs.getInt("cycle_time_goal_day");
@@ -50,20 +51,14 @@ public class SRKpiDAO {
         }
         return count;
     }
-    
+
     public List<SRKpi> getAllScrapDataPerMth() {
         String sql = "SELECT COUNT(DISTINCT(req_id)) AS count, DATE_FORMAT(created_date,'%b-%y')  as dateMonth, DATE_FORMAT(created_date,'%b-%Y') AS mthyr_req, "
-                   + "DATE_FORMAT(created_date,'%m') AS mth_req, DATE_FORMAT(created_date,'%Y') AS yr_req " 
-                   + "FROM sr_retrieve "
-                   + "WHERE req_type = 'Auto Recall from Sendayan' AND TIMESTAMPDIFF(MONTH, created_date, NOW()) <= 12 " 
-                   + "GROUP BY DATE_FORMAT(created_date,'%b-%y') "
-                   + "ORDER BY YEAR(created_date) DESC, MONTH(created_date) DESC ";
-//        String sql = "SELECT COUNT(*) AS count, DATE_FORMAT(created_date,'%b-%Y') AS mthyr_req, DATE_FORMAT(created_date,'%m') AS mth_req, "
-//                   + "DATE_FORMAT(created_date,'%Y') AS yr_req "
-//                   + "FROM sr_retrieve "
-//                   + "WHERE req_details = 'Recall for Scrap' AND PERIOD_DIFF(DATE_FORMAT(NOW(),'%Y%m'),DATE_FORMAT(created_date,'%Y%m')) <= 12 "
-//                   + "GROUP BY DATE_FORMAT(created_date,'%Y%m') "
-//                   + "ORDER BY DATE_FORMAT(created_date,'%Y%m') DESC ";
+                    + "DATE_FORMAT(created_date,'%m') AS mth_req, DATE_FORMAT(created_date,'%Y') AS yr_req "
+                    + "FROM sr_retrieve "
+                    + "WHERE req_type = 'Auto Recall from Sendayan' AND TIMESTAMPDIFF(MONTH, created_date, NOW()) <= 12 "
+                    + "GROUP BY DATE_FORMAT(created_date,'%b-%y') "
+                    + "ORDER BY YEAR(created_date) DESC, MONTH(created_date) DESC ";
         List<SRKpi> srKpiList = new ArrayList<SRKpi>();
         try {
             PreparedStatement ps = conn.prepareStatement(sql);
@@ -92,17 +87,17 @@ public class SRKpiDAO {
         }
         return srKpiList;
     }
-    
+
     public List<SRRetrieve> getAllScrapData() {
         String sql = "SELECT *, GROUP_CONCAT(I.lot ORDER BY I.lot ASC SEPARATOR ', ') AS lot_concat, DATE_FORMAT(R.created_date,'%d/%m/%y %h:%i %p') AS created_date_view, "
-                   + "IF(rl_received_date IS NULL, 'Pending', DATE_FORMAT(rl_received_date,'%d/%m/%y %h:%i %p')) AS received_date_view, UPPER(DATE_FORMAT(R.mth_to_scrap,'%b %y')) AS mth_to_scrap_view, "
-                   + "DATEDIFF(R.created_date,mth_to_scrap) AS cycle_time_1, "
-                   + "IF(ship_date IS NULL, DATEDIFF(NOW(),R.created_date), DATEDIFF(ship_date,R.created_date)) AS cycle_time_2, "
-                   + "IF(ship_date IS NULL, 'Pending', DATE_FORMAT(ship_date,'%d/%m/%y %h:%i %p')) AS ship_date_view "
-                   + "FROM sr_retrieve R, sr_req_inner I "
-                   + "WHERE R.req_id = I.req_id AND req_details = 'Recall for Scrap' AND PERIOD_DIFF(DATE_FORMAT(NOW(),'%Y%m'),DATE_FORMAT(R.created_date,'%Y%m'))<=12 "
-                   + "GROUP BY I.rms_no, I.event, R.id "
-                   + "ORDER BY R.mth_to_scrap DESC ";
+                    + "IF(rl_received_date IS NULL, 'Pending', DATE_FORMAT(rl_received_date,'%d/%m/%y %h:%i %p')) AS received_date_view, UPPER(DATE_FORMAT(R.mth_to_scrap,'%b %y')) AS mth_to_scrap_view, "
+                    + "DATEDIFF(R.created_date,mth_to_scrap) AS cycle_time_1, "
+                    + "IF(ship_date IS NULL, DATEDIFF(NOW(),R.created_date), DATEDIFF(ship_date,R.created_date)) AS cycle_time_2, "
+                    + "IF(ship_date IS NULL, 'Pending', DATE_FORMAT(ship_date,'%d/%m/%y %h:%i %p')) AS ship_date_view "
+                    + "FROM sr_retrieve R, sr_req_inner I "
+                    + "WHERE R.req_id = I.req_id AND req_details = 'Recall for Scrap' AND PERIOD_DIFF(DATE_FORMAT(NOW(),'%Y%m'),DATE_FORMAT(R.created_date,'%Y%m'))<=12 "
+                    + "GROUP BY I.rms_no, I.event, R.id "
+                    + "ORDER BY R.mth_to_scrap DESC ";
         List<SRRetrieve> reqList = new ArrayList<SRRetrieve>();
         try {
             PreparedStatement ps = conn.prepareStatement(sql);
@@ -147,22 +142,28 @@ public class SRKpiDAO {
         }
         return reqList;
     }
-    
+
     public List<SRKpi> getMthToScrapVsReqDateData(String mthToScrapVsReqGoal, String reqVsShipGoal) {
-        String sql = "SELECT COUNT(*) as total_req, DATE_FORMAT(created_date,'%b-%y') AS mthyr_req, " 
-                   + "COUNT(IF(DATEDIFF(created_date,mth_to_scrap)<='" + mthToScrapVsReqGoal + "',1,NULL)) AS req_pass, " 
-                   + "COUNT(IF(DATEDIFF(created_date,mth_to_scrap)>'" + mthToScrapVsReqGoal + "',1,NULL)) AS req_fail, "
-                   + "ROUND(COUNT(IF(DATEDIFF(created_date,mth_to_scrap)<='" + mthToScrapVsReqGoal + "',1,NULL))/COUNT(*)*100,1) AS req_percent, "
-                   + "COUNT(IF(DATEDIFF(IF(ship_date IS NULL, NOW(),ship_date),mth_to_scrap)<='" + reqVsShipGoal + "',1,NULL)) AS ship_pass, "
-                   + "COUNT(IF(DATEDIFF(IF(ship_date IS NULL, NOW(),ship_date),mth_to_scrap)>'" + reqVsShipGoal + "',1,NULL)) AS ship_fail, "
-                   + "ROUND(COUNT(IF(DATEDIFF(IF(ship_date IS NULL, NOW(),ship_date),created_date)<='" + reqVsShipGoal + "',1,NULL))/COUNT(*)*100,1) AS ship_percent "
-                   + "FROM sr_retrieve " 
-                   + "WHERE req_details = 'Recall for Scrap' AND PERIOD_DIFF(DATE_FORMAT(NOW(),'%Y%m'),DATE_FORMAT(created_date,'%Y%m')) <= 12 " 
-                   + "GROUP BY DATE_FORMAT(created_date,'%Y%m') " 
-                   + "ORDER BY DATE_FORMAT(created_date,'%Y%m') DESC ";
+        String sql = "SELECT COUNT(*) as total_req, DATE_FORMAT(created_date,'%b-%y') AS mthyr_req, "
+                    + "COUNT(IF(DATEDIFF(created_date,mth_to_scrap)<=?,1,NULL)) AS req_pass, "
+                    + "COUNT(IF(DATEDIFF(created_date,mth_to_scrap)>?,1,NULL)) AS req_fail, "
+                    + "ROUND(COUNT(IF(DATEDIFF(created_date,mth_to_scrap)<=?,1,NULL))/COUNT(*)*100,1) AS req_percent, "
+                    + "COUNT(IF(DATEDIFF(IF(ship_date IS NULL, NOW(),ship_date),mth_to_scrap)<=?,1,NULL)) AS ship_pass, "
+                    + "COUNT(IF(DATEDIFF(IF(ship_date IS NULL, NOW(),ship_date),mth_to_scrap)>?,1,NULL)) AS ship_fail, "
+                    + "ROUND(COUNT(IF(DATEDIFF(IF(ship_date IS NULL, NOW(),ship_date),created_date)<=?,1,NULL))/COUNT(*)*100,1) AS ship_percent "
+                    + "FROM sr_retrieve "
+                    + "WHERE req_details = 'Recall for Scrap' AND PERIOD_DIFF(DATE_FORMAT(NOW(),'%Y%m'),DATE_FORMAT(created_date,'%Y%m')) <= 12 "
+                    + "GROUP BY DATE_FORMAT(created_date,'%Y%m') "
+                    + "ORDER BY DATE_FORMAT(created_date,'%Y%m') DESC ";
         List<SRKpi> srKpiList = new ArrayList<SRKpi>();
         try {
             PreparedStatement ps = conn.prepareStatement(sql);
+            ps.setString(1, mthToScrapVsReqGoal);
+            ps.setString(2, mthToScrapVsReqGoal);
+            ps.setString(3, mthToScrapVsReqGoal);
+            ps.setString(4, reqVsShipGoal);
+            ps.setString(5, reqVsShipGoal);
+            ps.setString(6, reqVsShipGoal);
             SRKpi srKpi;
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
@@ -192,22 +193,15 @@ public class SRKpiDAO {
         }
         return srKpiList;
     }
-    
-    
+
     //retrieve
     public List<SRKpi> getAllRetrieveDataPerMth() {
         String sql = "SELECT COUNT(*) AS count, DATE_FORMAT(created_date,'%b-%y') AS date_request, DATE_FORMAT(created_date,'%b-%Y') AS mthyr_req, "
-                   + "DATE_FORMAT(created_date,'%m') AS mth_req, DATE_FORMAT(created_date,'%Y') AS yr_req " 
-                   + "FROM sr_retrieve " 
-                   + "WHERE req_type != 'Auto Recall from Sendayan' AND TIMESTAMPDIFF(MONTH, created_date, NOW()) <= 12 " 
-                   + "GROUP BY DATE_FORMAT(created_date,'%b-%y') " 
-                   + "ORDER BY created_date DESC ";
-//        String sql = "SELECT COUNT(*) AS count, DATE_FORMAT(created_date,'%b-%Y') AS mthyr_req, DATE_FORMAT(created_date,'%m') AS mth_req, "
-//                   + "DATE_FORMAT(created_date,'%Y') AS yr_req "
-//                   + "FROM sr_retrieve "
-//                   + "WHERE req_details != 'Recall for Scrap' AND PERIOD_DIFF(DATE_FORMAT(NOW(),'%Y%m'),DATE_FORMAT(created_date,'%Y%m')) <= 12 "
-//                   + "GROUP BY DATE_FORMAT(created_date,'%Y%m') "
-//                   + "ORDER BY DATE_FORMAT(created_date,'%Y%m') DESC ";
+                    + "DATE_FORMAT(created_date,'%m') AS mth_req, DATE_FORMAT(created_date,'%Y') AS yr_req "
+                    + "FROM sr_retrieve "
+                    + "WHERE req_type != 'Auto Recall from Sendayan' AND TIMESTAMPDIFF(MONTH, created_date, NOW()) <= 12 "
+                    + "GROUP BY DATE_FORMAT(created_date,'%b-%y') "
+                    + "ORDER BY created_date DESC ";
         List<SRKpi> srKpiList = new ArrayList<SRKpi>();
         try {
             PreparedStatement ps = conn.prepareStatement(sql);
@@ -236,20 +230,20 @@ public class SRKpiDAO {
         }
         return srKpiList;
     }
-    
+
     public List<SRKpi> getAllRetrieveData() {
         String sql = "SELECT *, GROUP_CONCAT(I.lot ORDER BY I.lot ASC SEPARATOR ', ') AS lot_concat, DATE_FORMAT(R.created_date,'%d/%m/%y %h:%i %p') AS req_date_view, "
-                   + "IF(rl_received_date IS NULL, 'Pending', DATE_FORMAT(rl_received_date,'%d/%m/%y %h:%i %p')) AS received_date_view, "
-                   + "UPPER(DATE_FORMAT(R.mth_to_scrap,'%b %y')) AS mth_to_scrap_view, "
-                   + "IF(ship_date IS NULL, DATEDIFF(NOW(),R.created_date), DATEDIFF(ship_date,R.created_date)) AS cycle_time_1, "
-                   + "IF(rl_received_date IS NULL, DATEDIFF(NOW(),ship_date), DATEDIFF(rl_received_date,ship_date)) AS cycle_time_2, "
-                   + "IF(ship_date IS NULL, 'Pending', DATE_FORMAT(ship_date,'%d/%m/%y %h:%i %p')) AS ship_date_view, "
-                   + "IF(requestor_name IS NULL, R.created_by, CONCAT(R.created_by, ' on behalf of ', requestor_name)) AS req_by,"
-                   + "IF(R.req_remarks IS NULL, R.req_details, CONCAT(R.req_details, ' (', R.req_remarks,')')) AS reason_recall "
-                   + "FROM sr_retrieve R, sr_req_inner I "
-                   + "WHERE R.req_id = I.req_id AND req_details != 'Recall for Scrap' AND PERIOD_DIFF(DATE_FORMAT(NOW(),'%Y%m'),DATE_FORMAT(R.created_date,'%Y%m'))<=12 "
-                   + "GROUP BY I.rms_no, I.event, R.id "
-                   + "ORDER BY DATE_FORMAT(R.created_date,'%Y%m') DESC ";
+                    + "IF(rl_received_date IS NULL, 'Pending', DATE_FORMAT(rl_received_date,'%d/%m/%y %h:%i %p')) AS received_date_view, "
+                    + "UPPER(DATE_FORMAT(R.mth_to_scrap,'%b %y')) AS mth_to_scrap_view, "
+                    + "IF(ship_date IS NULL, DATEDIFF(NOW(),R.created_date), DATEDIFF(ship_date,R.created_date)) AS cycle_time_1, "
+                    + "IF(rl_received_date IS NULL, DATEDIFF(NOW(),ship_date), DATEDIFF(rl_received_date,ship_date)) AS cycle_time_2, "
+                    + "IF(ship_date IS NULL, 'Pending', DATE_FORMAT(ship_date,'%d/%m/%y %h:%i %p')) AS ship_date_view, "
+                    + "IF(requestor_name IS NULL, R.created_by, CONCAT(R.created_by, ' on behalf of ', requestor_name)) AS req_by,"
+                    + "IF(R.req_remarks IS NULL, R.req_details, CONCAT(R.req_details, ' (', R.req_remarks,')')) AS reason_recall "
+                    + "FROM sr_retrieve R, sr_req_inner I "
+                    + "WHERE R.req_id = I.req_id AND req_details != 'Recall for Scrap' AND PERIOD_DIFF(DATE_FORMAT(NOW(),'%Y%m'),DATE_FORMAT(R.created_date,'%Y%m'))<=12 "
+                    + "GROUP BY I.rms_no, I.event, R.id "
+                    + "ORDER BY DATE_FORMAT(R.created_date,'%Y%m') DESC ";
         List<SRKpi> reqList = new ArrayList<SRKpi>();
         try {
             PreparedStatement ps = conn.prepareStatement(sql);
@@ -296,20 +290,23 @@ public class SRKpiDAO {
         }
         return reqList;
     }
-    
+
     //activity
     public List<SRKpi> getActivityReqDateVSShipDateData(String reqVsShipGoal) {
-        String sql = "SELECT COUNT(*) as total_req, DATE_FORMAT(created_date,'%b-%y') AS mthyr_req, " 
-                   + "COUNT(IF(DATEDIFF(ship_date,created_date)<='" + reqVsShipGoal + "',1,NULL)) AS req_pass, " 
-                   + "COUNT(IF(DATEDIFF(ship_date,created_date)>'" + reqVsShipGoal + "',1,NULL)) AS req_fail, " 
-                   + "ROUND(COUNT(IF(DATEDIFF(ship_date,created_date)<='" + reqVsShipGoal + "',1,NULL))/COUNT(*)*100,1) AS req_percent " 
-                   + "FROM sr_retrieve " 
-                   + "WHERE req_details != 'Recall for Scrap' AND PERIOD_DIFF(DATE_FORMAT(NOW(),'%Y%m'),DATE_FORMAT(created_date,'%Y%m')) <= 12 " 
-                   + "GROUP BY DATE_FORMAT(created_date,'%Y%m') " 
-                   + "ORDER BY DATE_FORMAT(created_date,'%Y%m') DESC ";
+        String sql = "SELECT COUNT(*) as total_req, DATE_FORMAT(created_date,'%b-%y') AS mthyr_req, "
+                + "COUNT(IF(DATEDIFF(ship_date,created_date)<=?,1,NULL)) AS req_pass, "
+                + "COUNT(IF(DATEDIFF(ship_date,created_date)>?,1,NULL)) AS req_fail, "
+                + "ROUND(COUNT(IF(DATEDIFF(ship_date,created_date)<=?,1,NULL))/COUNT(*)*100,1) AS req_percent "
+                + "FROM sr_retrieve "
+                + "WHERE req_details != 'Recall for Scrap' AND PERIOD_DIFF(DATE_FORMAT(NOW(),'%Y%m'),DATE_FORMAT(created_date,'%Y%m')) <= 12 "
+                + "GROUP BY DATE_FORMAT(created_date,'%Y%m') "
+                + "ORDER BY DATE_FORMAT(created_date,'%Y%m') DESC ";
         List<SRKpi> srKpiList = new ArrayList<SRKpi>();
         try {
             PreparedStatement ps = conn.prepareStatement(sql);
+            ps.setString(1, reqVsShipGoal);
+            ps.setString(2, reqVsShipGoal);
+            ps.setString(3, reqVsShipGoal);
             SRKpi srKpi;
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
@@ -336,4 +333,5 @@ public class SRKpiDAO {
         }
         return srKpiList;
     }
+
 }

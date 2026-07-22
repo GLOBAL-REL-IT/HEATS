@@ -309,8 +309,8 @@ public class UserAccessControlDAO {
 
     public UserAccessControl getUserAccessControlByLoginId(String loginId) {
         String sql = "SELECT u.*, l.login_id FROM user_ldap l "
-                + "LEFT JOIN user_access_control u ON l.id = u.user_id "
-                + "WHERE l.login_id = ? ";
+                    + "LEFT JOIN user_access_control u ON l.id = u.user_id "
+                    + "WHERE l.login_id = ? ";
         UserAccessControl useraccessControl = null;
         try {
             PreparedStatement ps = conn.prepareStatement(sql);

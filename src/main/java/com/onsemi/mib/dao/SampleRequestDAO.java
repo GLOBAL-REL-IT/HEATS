@@ -70,9 +70,9 @@ public class SampleRequestDAO {
 
     public List<SampleRequest> getAllRequestList() {
         String sql = "SELECT *, DATEDIFF(mth_to_scrap, NOW()) AS aging, UPPER(DATE_FORMAT(mth_to_scrap,'%b %y')) AS mth_to_scrap_view, DATE_FORMAT(modified_date,'%d/%m/%y %h:%i %p') AS modified_date_view, DATE_FORMAT(created_date,'%d/%m/%y %h:%i %p') AS created_date_view "
-                + "FROM sr_request "
-                + "WHERE req_type = 'Ship to Sendayan' AND (flag = 0 OR flag = 1) "
-                + "ORDER BY created_date ASC ";
+                    + "FROM sr_request "
+                    + "WHERE req_type = 'Ship to Sendayan' AND (flag = 0 OR flag = 1) "
+                    + "ORDER BY created_date ASC ";
         List<SampleRequest> reqList = new ArrayList<SampleRequest>();
         try {
             PreparedStatement ps = conn.prepareStatement(sql);
@@ -198,13 +198,13 @@ public class SampleRequestDAO {
 
     public List<SampleRequest> getAllRetrievedMergeInnerList() {
         String sql = "SELECT R.*, GROUP_CONCAT(I.rmslot_event SEPARATOR ', ') AS rmslot_event_concat, DATEDIFF(R.mth_to_scrap, NOW()) AS aging, UPPER(DATE_FORMAT(R.mth_to_scrap,'%b %y')) AS mth_to_scrap_view, "
-                + "DATE_FORMAT(R.modified_date,'%d/%m/%y %h:%i %p') AS modified_date_view, DATE_FORMAT(R.created_date,'%d/%m/%y %h:%i %p') AS created_date_view, COUNT(I.rmslot_event) AS count_lot, "
-                + "(SELECT UPPER(IFNULL(U.login_id,R.created_by)) FROM user_ldap U WHERE R.created_by = CONCAT(U.firstname,' ',U.lastname)) AS user_id "
-                + "FROM sr_request R, sr_req_inner I "
-                + "WHERE R.id = I.req_id AND R.flag = 9 AND R.status IN ('Shipped from Sendayan') "
-                + "AND DATEDIFF(R.mth_to_scrap, NOW()) > 7 "
-                + "GROUP BY R.id  "
-                + "ORDER BY R.created_date DESC ";
+                    + "DATE_FORMAT(R.modified_date,'%d/%m/%y %h:%i %p') AS modified_date_view, DATE_FORMAT(R.created_date,'%d/%m/%y %h:%i %p') AS created_date_view, COUNT(I.rmslot_event) AS count_lot, "
+                    + "(SELECT UPPER(IFNULL(U.login_id,R.created_by)) FROM user_ldap U WHERE R.created_by = CONCAT(U.firstname,' ',U.lastname)) AS user_id "
+                    + "FROM sr_request R, sr_req_inner I "
+                    + "WHERE R.id = I.req_id AND R.flag = 9 AND R.status IN ('Shipped from Sendayan') "
+                    + "AND DATEDIFF(R.mth_to_scrap, NOW()) > 7 "
+                    + "GROUP BY R.id  "
+                    + "ORDER BY R.created_date DESC ";
         List<SampleRequest> reqList = new ArrayList<SampleRequest>();
         try {
             PreparedStatement ps = conn.prepareStatement(sql);
@@ -252,8 +252,7 @@ public class SampleRequestDAO {
     }
 
     public List<SampleRequest> getDistinctEventList() {
-        String sql = "SELECT DISTINCT `event`"
-                + "FROM sr_request ";
+        String sql = "SELECT DISTINCT `event` FROM sr_request ";
         List<SampleRequest> reqList = new ArrayList<SampleRequest>();
         try {
             PreparedStatement ps = conn.prepareStatement(sql);
@@ -281,8 +280,7 @@ public class SampleRequestDAO {
     }
 
     public List<SampleRequest> getDistinctPkgFamilyList() {
-        String sql = "SELECT DISTINCT pkg_family "
-                + "FROM sr_request ";
+        String sql = "SELECT DISTINCT pkg_family FROM sr_request ";
         List<SampleRequest> reqList = new ArrayList<SampleRequest>();
         try {
             PreparedStatement ps = conn.prepareStatement(sql);
@@ -395,8 +393,7 @@ public class SampleRequestDAO {
     }
 
     public List<SampleRequest> getDistinctStatusList() {
-        String sql = "SELECT DISTINCT status "
-                + "FROM sr_request ";
+        String sql = "SELECT DISTINCT status FROM sr_request ";
         List<SampleRequest> reqList = new ArrayList<SampleRequest>();
         try {
             PreparedStatement ps = conn.prepareStatement(sql);
@@ -425,12 +422,12 @@ public class SampleRequestDAO {
 
     public List<SampleRequest> getAllReqMergeInner() {
         String sql = "SELECT R.*, GROUP_CONCAT(I.rmslot_event SEPARATOR ', ') AS rmslot_event_concat, DATEDIFF(R.mth_to_scrap, NOW()) AS aging, UPPER(DATE_FORMAT(R.mth_to_scrap,'%b %y')) AS mth_to_scrap_view, "
-                + "DATE_FORMAT(R.modified_date,'%d/%m/%y %h:%i %p') AS modified_date_view, DATE_FORMAT(R.created_date,'%d/%m/%y %h:%i %p') AS created_date_view, COUNT(I.rmslot_event) AS count_lot, "
-                + "(SELECT UPPER(IFNULL(U.login_id,R.created_by)) FROM user_ldap U WHERE R.created_by = CONCAT(U.firstname,' ',U.lastname)) AS user_id "
-                + "FROM sr_request R, sr_req_inner I "
-                + "WHERE R.id = I.req_id AND R.req_type = 'Ship to Sendayan' AND R.flag NOT IN ('9','8','99') "
-                + "GROUP BY R.id  "
-                + "ORDER BY R.created_date DESC ";
+                    + "DATE_FORMAT(R.modified_date,'%d/%m/%y %h:%i %p') AS modified_date_view, DATE_FORMAT(R.created_date,'%d/%m/%y %h:%i %p') AS created_date_view, COUNT(I.rmslot_event) AS count_lot, "
+                    + "(SELECT UPPER(IFNULL(U.login_id,R.created_by)) FROM user_ldap U WHERE R.created_by = CONCAT(U.firstname,' ',U.lastname)) AS user_id "
+                    + "FROM sr_request R, sr_req_inner I "
+                    + "WHERE R.id = I.req_id AND R.req_type = 'Ship to Sendayan' AND R.flag NOT IN ('9','8','99') "
+                    + "GROUP BY R.id  "
+                    + "ORDER BY R.created_date DESC ";
         List<SampleRequest> reqList = new ArrayList<SampleRequest>();
         try {
             PreparedStatement ps = conn.prepareStatement(sql);
@@ -478,10 +475,7 @@ public class SampleRequestDAO {
     }
 
     public List<FTPdata> getAllDistinctLot() {
-        String sql = "SELECT DISTINCT(lot_type) "
-                + "FROM sr_ftp_data "
-                + "WHERE flag = 0 "
-                + "ORDER BY lot_type ASC ";
+        String sql = "SELECT DISTINCT(lot_type) FROM sr_ftp_data WHERE flag = 0 ORDER BY lot_type ASC ";
         List<FTPdata> lotList = new ArrayList<FTPdata>();
         try {
             PreparedStatement ps = conn.prepareStatement(sql);
@@ -509,13 +503,16 @@ public class SampleRequestDAO {
     }
 
     public List<FTPdata> getAllDistinctEventSub(String pkgFamily, String event, String mthToScrap) {
-        String sql = "SELECT DISTINCT(rms_event) "
-                + "FROM sr_ftp_data "
-                + "WHERE flag = 0 AND pkg_family = '" + pkgFamily + "' AND (rms_event LIKE '" + event + "_' OR rms_event = '" + event + "') AND mth_to_scrap = '" + mthToScrap + "' "
-                + "ORDER BY rms_event ASC ";
+        String sql = "SELECT DISTINCT(rms_event) FROM sr_ftp_data "
+                    + "WHERE flag = 0 AND pkg_family = ? AND (rms_event LIKE ? OR rms_event = ?) AND mth_to_scrap = ? "
+                    + "ORDER BY rms_event ASC ";
         List<FTPdata> eventList = new ArrayList<FTPdata>();
         try {
             PreparedStatement ps = conn.prepareStatement(sql);
+            ps.setString(1, pkgFamily);
+            ps.setString(2, event+"_");
+            ps.setString(3, event);
+            ps.setString(4, mthToScrap);
             FTPdata initData;
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
@@ -540,13 +537,15 @@ public class SampleRequestDAO {
     }
 
     public List<FTPdata> getAllDistinctEventPerRms(String rmsNo, String event) {
-        String sql = "SELECT DISTINCT(rms_event) "
-                + "FROM sr_ftp_data "
-                + "WHERE flag = 0 AND rms_id = '" + rmsNo + "' AND (rms_event LIKE '" + event + "_' OR rms_event = '" + event + "') "
-                + "ORDER BY rms_event ASC ";
+        String sql = "SELECT DISTINCT(rms_event) FROM sr_ftp_data "
+                    + "WHERE flag = 0 AND rms_id = ? AND (rms_event LIKE ? OR rms_event = ?) "
+                    + "ORDER BY rms_event ASC ";
         List<FTPdata> eventList = new ArrayList<FTPdata>();
         try {
             PreparedStatement ps = conn.prepareStatement(sql);
+            ps.setString(1, rmsNo);
+            ps.setString(2, event+"_");
+            ps.setString(3, event);
             FTPdata initData;
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
@@ -576,7 +575,6 @@ public class SampleRequestDAO {
             PreparedStatement ps = conn.prepareStatement(
                     "SELECT MAX(id) AS max FROM sr_request "
             );
-
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
                 max = rs.getInt("max");
@@ -601,9 +599,9 @@ public class SampleRequestDAO {
         Integer count = null;
         try {
             PreparedStatement ps = conn.prepareStatement(
-                    "SELECT COUNT(id) AS count FROM sr_request WHERE id = '" + max + "' "
+                    "SELECT COUNT(id) AS count FROM sr_request WHERE id = ? "
             );
-
+            ps.setString(1, max);
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
                 count = rs.getInt("count");
@@ -628,8 +626,9 @@ public class SampleRequestDAO {
         QueryResult queryResult = new QueryResult();
         try {
             PreparedStatement ps = conn.prepareStatement(
-                    "DELETE FROM sr_request WHERE id = '" + id + "'"
+                    "DELETE FROM sr_request WHERE id = ? "
             );
+            ps.setString(1, id);
             queryResult.setResult(ps.executeUpdate());
             ps.close();
         } catch (SQLException e) {
@@ -648,12 +647,11 @@ public class SampleRequestDAO {
     }
 
     public SampleRequest getRequestDetails(String id) {
-        String sql = "SELECT *, DATEDIFF(mth_to_scrap, NOW()) AS aging, UPPER(DATE_FORMAT(mth_to_scrap,'%b %y')) AS mth_to_scrap_view, DATE_FORMAT(modified_date,'%d/%m/%y %h:%i %p') AS modified_date_view, DATE_FORMAT(created_date,'%d/%m/%y %h:%i %p') AS created_date_view "
-                + "FROM sr_request "
-                + "WHERE id = '" + id + "' ";
+        String sql = "SELECT *, DATEDIFF(mth_to_scrap, NOW()) AS aging, UPPER(DATE_FORMAT(mth_to_scrap,'%b %y')) AS mth_to_scrap_view, DATE_FORMAT(modified_date,'%d/%m/%y %h:%i %p') AS modified_date_view, DATE_FORMAT(created_date,'%d/%m/%y %h:%i %p') AS created_date_view FROM sr_request WHERE id = ? ";
         SampleRequest sampleReq = null;
         try {
             PreparedStatement ps = conn.prepareStatement(sql);
+            ps.setString(1, id);
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
                 sampleReq = new SampleRequest();
@@ -694,15 +692,11 @@ public class SampleRequestDAO {
     }
 
     public List<LogOuterBox> getLogOuterListNew(String reqId) {
-//        String sql = "SELECT ou.*, DATE_FORMAT(ou.created_date,'%d/%m/%y %h:%i %p') AS created_date_view, re.req_box_id "
-//                + "FROM sr_log_outer ou, sr_request re "
-//                + "WHERE ou.outer_id = re.id "
-//                + "AND ou.outer_id = '" + reqId + "' ";
-        String sql = "SELECT * FROM sr_log WHERE request_id = '" + reqId + "'";
+        String sql = "SELECT * FROM sr_log WHERE request_id = ? ";
         List<LogOuterBox> logModuleList = new ArrayList<LogOuterBox>();
-        LOGGER.info("LOGGER FOR LOG YANG KITA NK TENGOK :: " + sql);
         try {
             PreparedStatement ps = conn.prepareStatement(sql);
+            ps.setString(1, reqId);
             LogOuterBox log;
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
@@ -734,13 +728,11 @@ public class SampleRequestDAO {
     }
 
     public SampleRequest getRqDetail(String id) {
-        String sql = "SELECT *, DATEDIFF(mth_to_scrap, NOW()) AS aging, UPPER(DATE_FORMAT(mth_to_scrap,'%b %y')) AS mth_to_scrap_view, DATE_FORMAT(modified_date,'%d/%m/%y %h:%i %p') AS modified_date_view, DATE_FORMAT(created_date,'%d/%m/%y %h:%i %p') AS created_date_view "
-                + "FROM sr_request "
-                + "WHERE id = '" + id + "' ";
-        LOGGER.info("LOGGER FOR SQL NK DAPATKAN SEMUA LOG DEKAT SINI >>> :: " + sql);
+        String sql = "SELECT *, DATEDIFF(mth_to_scrap, NOW()) AS aging, UPPER(DATE_FORMAT(mth_to_scrap,'%b %y')) AS mth_to_scrap_view, DATE_FORMAT(modified_date,'%d/%m/%y %h:%i %p') AS modified_date_view, DATE_FORMAT(created_date,'%d/%m/%y %h:%i %p') AS created_date_view FROM sr_request WHERE id = ? ";
         SampleRequest sampleReq = null;
         try {
             PreparedStatement ps = conn.prepareStatement(sql);
+            ps.setString(1, id);
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
                 sampleReq = new SampleRequest();
@@ -781,12 +773,11 @@ public class SampleRequestDAO {
     }
 
     public SampleRequest getRequestPerRegId(String regId) {
-        String sql = "SELECT *, DATEDIFF(mth_to_scrap, NOW()) AS aging, UPPER(DATE_FORMAT(mth_to_scrap,'%b %y')) AS mth_to_scrap_view, DATE_FORMAT(modified_date,'%d/%m/%y %h:%i %p') AS modified_date_view, DATE_FORMAT(created_date,'%d/%m/%y %h:%i %p') AS created_date_view "
-                + "FROM sr_request "
-                + "WHERE register_id = '" + regId + "' ";
+        String sql = "SELECT *, DATEDIFF(mth_to_scrap, NOW()) AS aging, UPPER(DATE_FORMAT(mth_to_scrap,'%b %y')) AS mth_to_scrap_view, DATE_FORMAT(modified_date,'%d/%m/%y %h:%i %p') AS modified_date_view, DATE_FORMAT(created_date,'%d/%m/%y %h:%i %p') AS created_date_view FROM sr_request WHERE register_id = ? ";
         SampleRequest sampleReq = null;
         try {
             PreparedStatement ps = conn.prepareStatement(sql);
+            ps.setString(1, regId);
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
                 sampleReq = new SampleRequest();
@@ -825,12 +816,11 @@ public class SampleRequestDAO {
     }
 
     public SampleRequest getRequestActual(String id) {
-        String sql = "SELECT *, DATEDIFF(mth_to_scrap, NOW()) AS aging "
-                + "FROM sr_request "
-                + "WHERE id = '" + id + "' ";
+        String sql = "SELECT *, DATEDIFF(mth_to_scrap, NOW()) AS aging FROM sr_request WHERE id = ? ";
         SampleRequest sampleReq = null;
         try {
             PreparedStatement ps = conn.prepareStatement(sql);
+            ps.setString(1, id);
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
                 sampleReq = new SampleRequest();
@@ -870,12 +860,11 @@ public class SampleRequestDAO {
     }
 
     public SampleRequest getRequestPdf(String id) {
-        String sql = "SELECT *, DATEDIFF(mth_to_scrap, NOW()) AS aging, UPPER(DATE_FORMAT(mth_to_scrap,'%b %Y')) AS mth_to_scrap_view "
-                + "FROM sr_request "
-                + "WHERE id = '" + id + "' ";
+        String sql = "SELECT *, DATEDIFF(mth_to_scrap, NOW()) AS aging, UPPER(DATE_FORMAT(mth_to_scrap,'%b %Y')) AS mth_to_scrap_view FROM sr_request WHERE id = ? ";
         SampleRequest sampleReq = null;
         try {
             PreparedStatement ps = conn.prepareStatement(sql);
+            ps.setString(1, id);
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
                 sampleReq = new SampleRequest();
@@ -916,9 +905,7 @@ public class SampleRequestDAO {
 
     public QueryResult updateReqBoxId(SampleRequest sampleReq) {
         QueryResult queryResult = new QueryResult();
-        String sql = "UPDATE sr_request SET "
-                + "req_box_id = ?, flag = ?, status = ?, modified_date = NOW(), modified_by = ? "
-                + "WHERE id  = ? ";
+        String sql = "UPDATE sr_request SET req_box_id = ?, flag = ?, status = ?, modified_date = NOW(), modified_by = ? WHERE id  = ? ";
         try {
             PreparedStatement ps = conn.prepareStatement(sql);
             ps.setString(1, sampleReq.getReqBoxId());
@@ -945,9 +932,7 @@ public class SampleRequestDAO {
 
     public QueryResult updateRequestStatus(SampleRequest sampleReq) {
         QueryResult queryResult = new QueryResult();
-        String sql = "UPDATE sr_request SET "
-                + "flag = ?, status = ?, modified_date = NOW(), modified_by = ? "
-                + "WHERE id  = ? ";
+        String sql = "UPDATE sr_request SET flag = ?, status = ?, modified_date = NOW(), modified_by = ? WHERE id = ? ";
         try {
             PreparedStatement ps = conn.prepareStatement(sql);
             ps.setString(1, sampleReq.getFlag());
@@ -972,14 +957,14 @@ public class SampleRequestDAO {
     }
 
     public List<FTPdata> getAllDistinctRMSNo(String event, String pkgFamily, String mthToScrap) {
-        String sql = "SELECT DISTINCT(rms_id) "
-                + "FROM sr_ftp_data "
-                + "WHERE (rms_event LIKE '" + event + "_' OR rms_event = '" + event + "') AND pkg_family = '" + pkgFamily + "' AND mth_to_scrap = '" + mthToScrap + "' "
-                + "AND flag = 0 "
-                + "ORDER BY rms_id ASC ";
+        String sql = "SELECT DISTINCT(rms_id) FROM sr_ftp_data WHERE (rms_event LIKE ? OR rms_event = ?) AND pkg_family = ? AND mth_to_scrap = ? AND flag = 0 ORDER BY rms_id ASC ";
         List<FTPdata> rmsList = new ArrayList<FTPdata>();
         try {
             PreparedStatement ps = conn.prepareStatement(sql);
+            ps.setString(1, event+"_");
+            ps.setString(2, event);
+            ps.setString(3, pkgFamily);
+            ps.setString(4, mthToScrap);
             FTPdata initData;
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
@@ -1004,10 +989,7 @@ public class SampleRequestDAO {
     }
 
     public List<FTPdata> getAllDistinctRMSNoOnly() {
-        String sql = "SELECT DISTINCT(rms_id) "
-                + "FROM sr_ftp_data "
-                + "WHERE flag = 0 "
-                + "ORDER BY rms_id ASC ";
+        String sql = "SELECT DISTINCT(rms_id) FROM sr_ftp_data WHERE flag = 0 ORDER BY rms_id ASC ";
         List<FTPdata> rmsList = new ArrayList<FTPdata>();
         try {
             PreparedStatement ps = conn.prepareStatement(sql);
@@ -1038,10 +1020,9 @@ public class SampleRequestDAO {
         Integer count = null;
         try {
             PreparedStatement ps = conn.prepareStatement(
-                    "SELECT COUNT(id) AS count FROM sr_request "
-                    + "WHERE req_box_id LIKE '" + date + "%' "
+                    "SELECT COUNT(id) AS count FROM sr_request WHERE req_box_id LIKE ? "
             );
-
+            ps.setString(1, date+"%");
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
                 count = rs.getInt("count");
@@ -1066,10 +1047,9 @@ public class SampleRequestDAO {
         Integer count = null;
         try {
             PreparedStatement ps = conn.prepareStatement(
-                    "SELECT COUNT(id) AS count FROM sr_request "
-                    + "WHERE id = '" + id + "' AND (status like 'Ship' OR status like '%Inventory%' OR status like '%Received%') "
+                    "SELECT COUNT(id) AS count FROM sr_request WHERE id = ? AND (status like 'Ship' OR status like '%Inventory%' OR status like '%Received%') "
             );
-
+            ps.setString(1, id);
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
                 count = rs.getInt("count");
@@ -1094,10 +1074,9 @@ public class SampleRequestDAO {
         Integer count = null;
         try {
             PreparedStatement ps = conn.prepareStatement(
-                    "SELECT COUNT(id) AS count FROM sr_request "
-                    + "WHERE id = '" + id + "' AND status = 'Shipped from Sendayan' "
+                    "SELECT COUNT(id) AS count FROM sr_request WHERE id = ? AND status = 'Shipped from Sendayan' "
             );
-
+            ps.setString(1, id);
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
                 count = rs.getInt("count");
@@ -1120,13 +1099,13 @@ public class SampleRequestDAO {
 
     public List<SampleRequest> getAllExpReqMergeInner() {
         String sql = "SELECT R.id, R.register_id, R.req_box_id, R.`event`, R.pkg_family, R.created_by, R.`status`, GROUP_CONCAT(I.rmslot_event SEPARATOR ', ') AS rmslot_event_concat, "
-                + "DATEDIFF(R.mth_to_scrap, NOW()) AS aging, UPPER(DATE_FORMAT(R.mth_to_scrap,'%b %y')) AS mth_to_scrap_view, "
-                + "DATE_FORMAT(R.created_date,'%d/%m/%y %h:%i %p') AS created_date_view, COUNT(I.rmslot_event) AS count_lot "
-                + "FROM sr_request R, sr_req_inner I "
-                + "WHERE R.id = I.req_id AND R.req_type = 'Ship to Sendayan' "
-                + "AND (R.flag IN(0,1,2) OR R.`status` = 'Pending DO' OR R.`status` = 'Pending Shipment') AND DATEDIFF(R.mth_to_scrap, NOW()) <= 0 "
-                + "GROUP BY R.id "
-                + "ORDER BY R.created_date DESC, COUNT(I.rmslot_event) ASC ";
+                    + "DATEDIFF(R.mth_to_scrap, NOW()) AS aging, UPPER(DATE_FORMAT(R.mth_to_scrap,'%b %y')) AS mth_to_scrap_view, "
+                    + "DATE_FORMAT(R.created_date,'%d/%m/%y %h:%i %p') AS created_date_view, COUNT(I.rmslot_event) AS count_lot "
+                    + "FROM sr_request R, sr_req_inner I "
+                    + "WHERE R.id = I.req_id AND R.req_type = 'Ship to Sendayan' "
+                    + "AND (R.flag IN(0,1,2) OR R.`status` = 'Pending DO' OR R.`status` = 'Pending Shipment') AND DATEDIFF(R.mth_to_scrap, NOW()) <= 0 "
+                    + "GROUP BY R.id "
+                    + "ORDER BY R.created_date DESC, COUNT(I.rmslot_event) ASC ";
         List<SampleRequest> reqList = new ArrayList<SampleRequest>();
         try {
             PreparedStatement ps = conn.prepareStatement(sql);
@@ -1209,14 +1188,17 @@ public class SampleRequestDAO {
     }
 
     public List<FTPdata> getAllSubEvent(String event, String pkgFamily, String mthToScrap) {
-        String sql = "SELECT rms_id, GROUP_CONCAT(rms_event SEPARATOR ',') AS event_concat "
-                + "FROM sr_ftp_data "
-                + "WHERE flag = 0 and (rms_event LIKE '" + event + "_' OR rms_event = '" + event + "') AND pkg_family = '" + pkgFamily + "' AND mth_to_scrap = '" + mthToScrap + "' "
-                + "GROUP BY rms_id, rms_event "
-                + "ORDER BY rms_id, rms_event ";
+        String sql = "SELECT rms_id, GROUP_CONCAT(rms_event SEPARATOR ',') AS event_concat FROM sr_ftp_data "
+                    + "WHERE flag = 0 and (rms_event LIKE ? OR rms_event = ?) AND pkg_family = ? AND mth_to_scrap = ? "
+                    + "GROUP BY rms_id, rms_event "
+                    + "ORDER BY rms_id, rms_event ";
         List<FTPdata> subEventList = new ArrayList<FTPdata>();
         try {
             PreparedStatement ps = conn.prepareStatement(sql);
+            ps.setString(1, event+"_");
+            ps.setString(2, event);
+            ps.setString(3, pkgFamily);
+            ps.setString(4, mthToScrap);
             FTPdata ftpdata;
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
@@ -1240,4 +1222,5 @@ public class SampleRequestDAO {
         }
         return subEventList;
     }
+
 }

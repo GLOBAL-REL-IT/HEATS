@@ -25,11 +25,10 @@ public class SummaryDataDAO {
     }
 
     public List<SummaryData> getAllNoRetentionSummaryData() {
-        String sql = "SELECT pkg_family, rms_event, COUNT(id) AS total_lot "
-                + "FROM sr_ftp_data "
-                + "WHERE flag = 0  AND ((YEAR(mth_to_scrap) > YEAR(NOW())) OR (MONTH(mth_to_scrap) > MONTH(NOW()) AND YEAR(mth_to_scrap) = YEAR(NOW())))"
-                + "GROUP BY pkg_family, rms_event "
-                + "ORDER BY pkg_family, rms_event ";
+        String sql = "SELECT pkg_family, rms_event, COUNT(id) AS total_lot FROM sr_ftp_data "
+                    + "WHERE flag = 0  AND ((YEAR(mth_to_scrap) > YEAR(NOW())) OR (MONTH(mth_to_scrap) > MONTH(NOW()) AND YEAR(mth_to_scrap) = YEAR(NOW())))"
+                    + "GROUP BY pkg_family, rms_event "
+                    + "ORDER BY pkg_family, rms_event ";
         List<SummaryData> summDataList = new ArrayList<SummaryData>();
         try {
             PreparedStatement ps = conn.prepareStatement(sql);
@@ -59,11 +58,10 @@ public class SummaryDataDAO {
     }
 
     public List<SummaryData> getAllRetentionSummaryData() {
-        String sql = "SELECT pkg_family, rms_event, COUNT(id) AS total_lot "
-                + "FROM sr_ftp_data "
-                + "WHERE flag = 0  AND status NOT LIKE '%Cancelled Lot' AND ((YEAR(mth_to_scrap) > YEAR(NOW())) OR (MONTH(mth_to_scrap) > MONTH(NOW()) AND YEAR(mth_to_scrap) = YEAR(NOW())))"
-                + "GROUP BY pkg_family, rms_event "
-                + "ORDER BY pkg_family, rms_event ";
+        String sql = "SELECT pkg_family, rms_event, COUNT(id) AS total_lot FROM sr_ftp_data "
+                    + "WHERE flag = 0  AND status NOT LIKE '%Cancelled Lot' AND ((YEAR(mth_to_scrap) > YEAR(NOW())) OR (MONTH(mth_to_scrap) > MONTH(NOW()) AND YEAR(mth_to_scrap) = YEAR(NOW())))"
+                    + "GROUP BY pkg_family, rms_event "
+                    + "ORDER BY pkg_family, rms_event ";
         List<SummaryData> summDataList = new ArrayList<SummaryData>();
         try {
             PreparedStatement ps = conn.prepareStatement(sql);
@@ -93,12 +91,11 @@ public class SummaryDataDAO {
     }
 
     public List<SummaryData> getMthToScrap(String pkgFamily, String event) {
-        String sql = "SELECT DISTINCT(UPPER(DATE_FORMAT(mth_to_scrap,'%M %Y'))) AS mth_to_scrap_view, mth_to_scrap, pkg_family, rms_event "
-                + "FROM sr_ftp_data "
-                + "WHERE pkg_family = ? AND (rms_event LIKE ? OR rms_event = ?) AND flag = 0 "
-                + "AND CASE WHEN ASCII (RIGHT(rms_event,1)) BETWEEN ASCII('A') AND ASCII('Z') THEN 1 ELSE 0 END "
-                + "AND ((YEAR(mth_to_scrap) > YEAR(NOW())) OR (MONTH(mth_to_scrap) > MONTH(NOW()) AND YEAR(mth_to_scrap) = YEAR(NOW()))) "
-                + "ORDER BY mth_to_scrap ";
+        String sql = "SELECT DISTINCT(UPPER(DATE_FORMAT(mth_to_scrap,'%M %Y'))) AS mth_to_scrap_view, mth_to_scrap, pkg_family, rms_event FROM sr_ftp_data "
+                    + "WHERE pkg_family = ? AND (rms_event LIKE ? OR rms_event = ?) AND flag = 0 "
+                    + "AND CASE WHEN ASCII (RIGHT(rms_event,1)) BETWEEN ASCII('A') AND ASCII('Z') THEN 1 ELSE 0 END "
+                    + "AND ((YEAR(mth_to_scrap) > YEAR(NOW())) OR (MONTH(mth_to_scrap) > MONTH(NOW()) AND YEAR(mth_to_scrap) = YEAR(NOW()))) "
+                    + "ORDER BY mth_to_scrap ";
         List<SummaryData> summDataList = new ArrayList<SummaryData>();
         try (PreparedStatement ps = conn.prepareStatement(sql)) {
             ps.setString(1, pkgFamily);
@@ -130,12 +127,11 @@ public class SummaryDataDAO {
     }
 
     public List<SummaryData> getMthToScrapFilter(String pkgFamily, String event) {
-        String sql = "SELECT DISTINCT(UPPER(DATE_FORMAT(mth_to_scrap,'%M %Y'))) AS mth_to_scrap_view, mth_to_scrap, pkg_family, rms_event "
-                + "FROM sr_ftp_data "
-                + "WHERE pkg_family = ? AND (rms_event LIKE ? OR rms_event = ?) AND flag = 0 "
-                + "AND ((YEAR(mth_to_scrap) > YEAR(NOW())) OR (MONTH(mth_to_scrap) > MONTH(NOW()) AND YEAR(mth_to_scrap) = YEAR(NOW()))) "
-                + "GROUP BY mth_to_scrap_view "
-                + "ORDER BY mth_to_scrap ";
+        String sql = "SELECT DISTINCT(UPPER(DATE_FORMAT(mth_to_scrap,'%M %Y'))) AS mth_to_scrap_view, mth_to_scrap, pkg_family, rms_event FROM sr_ftp_data "
+                    + "WHERE pkg_family = ? AND (rms_event LIKE ? OR rms_event = ?) AND flag = 0 "
+                    + "AND ((YEAR(mth_to_scrap) > YEAR(NOW())) OR (MONTH(mth_to_scrap) > MONTH(NOW()) AND YEAR(mth_to_scrap) = YEAR(NOW()))) "
+                    + "GROUP BY mth_to_scrap_view "
+                    + "ORDER BY mth_to_scrap ";
         List<SummaryData> summDataList = new ArrayList<SummaryData>();
         try {
             PreparedStatement ps = conn.prepareStatement(sql);
@@ -169,12 +165,11 @@ public class SummaryDataDAO {
     }
 
     public List<SummaryData> getCountTotalLotPerMth(String pkgFamily, String event) {
-        String sql = "SELECT DATE_FORMAT(mth_to_scrap,'%b ''%y') AS mth_to_scrap_view, COUNT(id) AS total_lot "
-                + "FROM sr_ftp_data "
-                + "WHERE (rms_event = ? OR rms_event LIKE ?) AND pkg_family = ? "
-                + "AND flag = 0  AND ((YEAR(mth_to_scrap) > YEAR(NOW())) OR (MONTH(mth_to_scrap) > MONTH(NOW()) AND YEAR(mth_to_scrap) = YEAR(NOW()))) "
-                + "GROUP BY mth_to_scrap "
-                + "ORDER BY mth_to_scrap ";
+        String sql = "SELECT DATE_FORMAT(mth_to_scrap,'%b ''%y') AS mth_to_scrap_view, COUNT(id) AS total_lot FROM sr_ftp_data "
+                    + "WHERE (rms_event = ? OR rms_event LIKE ?) AND pkg_family = ? "
+                    + "AND flag = 0  AND ((YEAR(mth_to_scrap) > YEAR(NOW())) OR (MONTH(mth_to_scrap) > MONTH(NOW()) AND YEAR(mth_to_scrap) = YEAR(NOW()))) "
+                    + "GROUP BY mth_to_scrap "
+                    + "ORDER BY mth_to_scrap ";
         List<SummaryData> summDataList = new ArrayList<SummaryData>();
         String mthToScrap = "";
         try {

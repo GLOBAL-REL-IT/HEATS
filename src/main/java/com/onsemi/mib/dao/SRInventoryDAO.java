@@ -15,6 +15,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public class SRInventoryDAO {
+
     private static final Logger LOGGER = LoggerFactory.getLogger(SRInventoryDAO.class);
     private final Connection conn;
     private final DataSource dataSource;
@@ -29,8 +30,8 @@ public class SRInventoryDAO {
         QueryResult queryResult = new QueryResult();
         try {
             PreparedStatement ps = conn.prepareStatement(
-                "INSERT INTO sr_inventory (req_id, box_id, gts_no, received_date, custom_no, custom_date, event, mth_to_scrap, pkg_family, modified_date, modified_by, created_date, created_by, status, flag ) "
-                + "VALUES (?,?,?,?,?,?,?,?,?,NOW(),?,NOW(),?,?,?)", Statement.RETURN_GENERATED_KEYS
+                    "INSERT INTO sr_inventory (req_id, box_id, gts_no, received_date, custom_no, custom_date, event, mth_to_scrap, pkg_family, modified_date, modified_by, created_date, created_by, status, flag ) "
+                    + "VALUES (?,?,?,?,?,?,?,?,?,NOW(),?,NOW(),?,?,?)", Statement.RETURN_GENERATED_KEYS
             );
             ps.setString(1, sampleInventory.getReqId());
             ps.setString(2, sampleInventory.getBoxId());
@@ -66,12 +67,12 @@ public class SRInventoryDAO {
         }
         return queryResult;
     }
-    
+
     public QueryResult updateInventory(SRInventory sampleInventory) {
         QueryResult queryResult = new QueryResult();
         String sql = "UPDATE sr_inventory SET "
-                   + "inventory_rack = ?, inventory_shelf = ?, inventory_date = ?, inventory_by = ?, flag = ?, status = ?, modified_date = NOW(), modified_by = ? "
-                   + "WHERE req_id  = ? ";
+                    + "inventory_rack = ?, inventory_shelf = ?, inventory_date = ?, inventory_by = ?, flag = ?, status = ?, modified_date = NOW(), modified_by = ? "
+                    + "WHERE req_id  = ? ";
         try {
             PreparedStatement ps = conn.prepareStatement(sql);
             ps.setString(1, sampleInventory.getInventoryRack());
@@ -98,16 +99,16 @@ public class SRInventoryDAO {
         }
         return queryResult;
     }
-    
+
     public List<SRInventory> getAllInventoryList() {
         String sql = "SELECT *, GROUP_CONCAT(I.rmslot_event SEPARATOR ', ') AS rmslot_event_concat, COUNT(I.rmslot_event) AS count_lot, "
-                   + "DATEDIFF(V.mth_to_scrap, NOW()) AS aging, UPPER(DATE_FORMAT(V.mth_to_scrap,'%b %y')) AS mth_to_scrap_view, "
-                   + "DATE_FORMAT(V.modified_date,'%d/%m/%y %h:%i %p') AS modified_date_view, DATE_FORMAT(V.created_date,'%d/%m/%y %h:%i %p') AS created_date_view, "
-                   + "IFNULL(DATE_FORMAT(V.inventory_date,'%d/%m/%y %h:%i %p'),V.status) AS inventory_date_view , IFNULL(V.inventory_shelf,'-') AS shelf_id_view "
-                   + "FROM sr_inventory V, sr_req_inner I "
-                   + "WHERE V.flag NOT LIKE '99' AND V.req_id = I.req_id "
-                   + "GROUP BY V.id "
-                   + "ORDER BY V.created_date DESC ";
+                    + "DATEDIFF(V.mth_to_scrap, NOW()) AS aging, UPPER(DATE_FORMAT(V.mth_to_scrap,'%b %y')) AS mth_to_scrap_view, "
+                    + "DATE_FORMAT(V.modified_date,'%d/%m/%y %h:%i %p') AS modified_date_view, DATE_FORMAT(V.created_date,'%d/%m/%y %h:%i %p') AS created_date_view, "
+                    + "IFNULL(DATE_FORMAT(V.inventory_date,'%d/%m/%y %h:%i %p'),V.status) AS inventory_date_view , IFNULL(V.inventory_shelf,'-') AS shelf_id_view "
+                    + "FROM sr_inventory V, sr_req_inner I "
+                    + "WHERE V.flag NOT LIKE '99' AND V.req_id = I.req_id "
+                    + "GROUP BY V.id "
+                    + "ORDER BY V.created_date DESC ";
         List<SRInventory> retrieveList = new ArrayList<SRInventory>();
         try {
             PreparedStatement ps = conn.prepareStatement(sql);
@@ -153,19 +154,19 @@ public class SRInventoryDAO {
         }
         return retrieveList;
     }
-    
+
     public SRInventory getInventoryDetails(String reqId) {
         String sql = "SELECT *, DATEDIFF(mth_to_scrap, NOW()) AS aging, UPPER(DATE_FORMAT(mth_to_scrap,'%b %y')) AS mth_to_scrap_view, "
-                   + "DATE_FORMAT(modified_date,'%d/%m/%y %h:%i %p') AS modified_date_view, DATE_FORMAT(created_date,'%d/%m/%y %h:%i %p') AS created_date_view, "
-                   + "DATE_FORMAT(received_date,'%d/%m/%y %h:%i %p') AS received_date_view, DATE_FORMAT(custom_date,'%d/%m/%y %h:%i %p') AS custom_date_view, "
-                   + "DATE_FORMAT(inventory_date,'%d/%m/%y %h:%i %p') AS inventory_date_view, DATE_FORMAT(inventory_date_new,'%d/%m/%y %h:%i %p') AS inventory_date_new_view "
-                   + "FROM sr_inventory "
-                   + "WHERE req_id LIKE '" + reqId + "' "
-                   + "ORDER BY created_date DESC ";
+                    + "DATE_FORMAT(modified_date,'%d/%m/%y %h:%i %p') AS modified_date_view, DATE_FORMAT(created_date,'%d/%m/%y %h:%i %p') AS created_date_view, "
+                    + "DATE_FORMAT(received_date,'%d/%m/%y %h:%i %p') AS received_date_view, DATE_FORMAT(custom_date,'%d/%m/%y %h:%i %p') AS custom_date_view, "
+                    + "DATE_FORMAT(inventory_date,'%d/%m/%y %h:%i %p') AS inventory_date_view, DATE_FORMAT(inventory_date_new,'%d/%m/%y %h:%i %p') AS inventory_date_new_view "
+                    + "FROM sr_inventory "
+                    + "WHERE req_id LIKE ? "
+                    + "ORDER BY created_date DESC ";
         SRInventory sampleInventory = new SRInventory();
         try {
             PreparedStatement ps = conn.prepareStatement(sql);
-            
+            ps.setString(1, reqId);
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
                 sampleInventory.setId(rs.getString("id"));
@@ -207,15 +208,13 @@ public class SRInventoryDAO {
         }
         return sampleInventory;
     }
-    
+
     public SRInventory getInventoryDetailsActual(String reqId) {
-        String sql = "SELECT *, DATEDIFF(mth_to_scrap, NOW()) AS aging "
-                   + "FROM sr_inventory "
-                   + "WHERE req_id LIKE '" + reqId + "' ";
+        String sql = "SELECT *, DATEDIFF(mth_to_scrap, NOW()) AS aging FROM sr_inventory WHERE req_id LIKE ? ";
         SRInventory sampleInventory = new SRInventory();
         try {
             PreparedStatement ps = conn.prepareStatement(sql);
-            
+            ps.setString(1, reqId);
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
                 sampleInventory.setId(rs.getString("id"));
@@ -257,12 +256,10 @@ public class SRInventoryDAO {
         }
         return sampleInventory;
     }
-    
+
     public QueryResult updateInventoryStatus(SRInventory sampleInventory) {
         QueryResult queryResult = new QueryResult();
-        String sql = "UPDATE sr_inventory SET "
-                   + "flag = ?, status = ?, modified_date = NOW(), modified_by = ? "
-                   + "WHERE id  = ? ";
+        String sql = "UPDATE sr_inventory SET flag = ?, status = ?, modified_date = NOW(), modified_by = ? WHERE id  = ? ";
         try {
             PreparedStatement ps = conn.prepareStatement(sql);
             ps.setString(1, sampleInventory.getFlag());
@@ -285,12 +282,10 @@ public class SRInventoryDAO {
         }
         return queryResult;
     }
-    
+
     public QueryResult updateNewInventory(SRInventory sampleInventory) {
         QueryResult queryResult = new QueryResult();
-        String sql = "UPDATE sr_inventory SET "
-                   + "inventory_rack = ?, inventory_shelf = ?, inventory_date_new = ?, inventory_remarks = ?, modified_date = NOW(), modified_by = ? "
-                   + "WHERE id  = ? ";
+        String sql = "UPDATE sr_inventory SET inventory_rack = ?, inventory_shelf = ?, inventory_date_new = ?, inventory_remarks = ?, modified_date = NOW(), modified_by = ? WHERE id  = ? ";
         try {
             PreparedStatement ps = conn.prepareStatement(sql);
             ps.setString(1, sampleInventory.getInventoryRack());
@@ -315,15 +310,14 @@ public class SRInventoryDAO {
         }
         return queryResult;
     }
-    
+
     public Integer getCountExistData(String id) {
         Integer count = null;
         try {
             PreparedStatement ps = conn.prepareStatement(
-                "SELECT COUNT(req_id) AS count FROM sr_inventory " +
-                "WHERE req_id = '" + id + "' "
+                    "SELECT COUNT(req_id) AS count FROM sr_inventory WHERE req_id = ? "
             );
-
+            ps.setString(1, id);
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
                 count = rs.getInt("count");
@@ -343,12 +337,11 @@ public class SRInventoryDAO {
         }
         return count;
     }
-    
+
     public List<SRInventory> getInventoryDueScrap() {
-        String sql = "SELECT *, DATEDIFF(mth_to_scrap, NOW()) AS aging "
-                   + "FROM sr_inventory "
-                   + "WHERE DATEDIFF(mth_to_scrap, NOW()) <= 0 AND flag = 0 "
-                   + "ORDER BY inventory_shelf ASC";
+        String sql = "SELECT *, DATEDIFF(mth_to_scrap, NOW()) AS aging FROM sr_inventory "
+                    + "WHERE DATEDIFF(mth_to_scrap, NOW()) <= 0 AND flag = 0 "
+                    + "ORDER BY inventory_shelf ASC";
         List<SRInventory> dueScrapList = new ArrayList();
         try {
             PreparedStatement ps = conn.prepareStatement(sql);
@@ -395,13 +388,12 @@ public class SRInventoryDAO {
         }
         return dueScrapList;
     }
-    
+
     public List<SRInventory> getAllBoxIdInventoryList() {
-        String sql = "SELECT * "
-                   + "FROM sr_inventory V, sr_req_inner I "
-                   + "WHERE V.req_id = I.req_id AND V.flag = 0 AND I.req_id NOT IN (SELECT req_id FROM sr_retrieve) "
-                   + "GROUP BY V.req_id "
-                   + "ORDER BY V.box_id ASC ";
+        String sql = "SELECT * FROM sr_inventory V, sr_req_inner I "
+                    + "WHERE V.req_id = I.req_id AND V.flag = 0 AND I.req_id NOT IN (SELECT req_id FROM sr_retrieve) "
+                    + "GROUP BY V.req_id "
+                    + "ORDER BY V.box_id ASC ";
         List<SRInventory> retrieveList = new ArrayList<SRInventory>();
         try {
             PreparedStatement ps = conn.prepareStatement(sql);
@@ -443,13 +435,12 @@ public class SRInventoryDAO {
         }
         return retrieveList;
     }
-    
+
     public List<SRInventory> getAllRmsInInventoryList() {
-        String sql = "SELECT *, CONCAT(I.rms_no, ' (', I.event, ') ') AS concat_rms "
-                   + "FROM sr_inventory V, sr_req_inner I "
-                   + "WHERE V.req_id = I.req_id AND V.flag = 0 AND I.flag = 4 AND I.req_id NOT IN (SELECT req_id FROM sr_retrieve) "
-                   + "GROUP BY CONCAT(I.rms_no, '_', I.`event`) "
-                   + "ORDER BY concat_rms ASC ";
+        String sql = "SELECT *, CONCAT(I.rms_no, ' (', I.event, ') ') AS concat_rms FROM sr_inventory V, sr_req_inner I "
+                    + "WHERE V.req_id = I.req_id AND V.flag = 0 AND I.flag = 4 AND I.req_id NOT IN (SELECT req_id FROM sr_retrieve) "
+                    + "GROUP BY CONCAT(I.rms_no, '_', I.`event`) "
+                    + "ORDER BY concat_rms ASC ";
         List<SRInventory> retrieveList = new ArrayList<SRInventory>();
         try {
             PreparedStatement ps = conn.prepareStatement(sql);
@@ -492,12 +483,12 @@ public class SRInventoryDAO {
         }
         return retrieveList;
     }
-    
+
     public List<SRInventory> getMthToScrapList() {
         String sql = "SELECT DISTINCT UPPER((DATE_FORMAT(mth_to_scrap,'%M %Y'))) AS mthToScrapView, (DATE_FORMAT(mth_to_scrap,'%Y-%m-01')) AS mthToScrapDb "
-                   + "FROM sr_inventory "
-                   + "WHERE req_id NOT IN (SELECT req_id FROM sr_retrieve) "
-                   + "AND ( "
+                    + "FROM sr_inventory "
+                    + "WHERE req_id NOT IN (SELECT req_id FROM sr_retrieve) "
+                    + "AND ( "
                     + "(MONTH(mth_to_scrap) = MONTH(NOW()) AND YEAR(mth_to_scrap) = YEAR(NOW())) "
                     + "OR "
                     + "(mth_to_scrap < NOW()) "
@@ -505,8 +496,8 @@ public class SRInventoryDAO {
                     + "(MONTH(mth_to_scrap) = (MONTH(NOW())+1) AND YEAR(mth_to_scrap) = YEAR(NOW())) "
                     + "OR "
                     + "(MONTH(mth_to_scrap) = IF(MONTH(NOW())+1>12,1,MONTH(NOW())) AND YEAR(mth_to_scrap) = YEAR(NOW())+1) "
-                   + ") "
-                   + "ORDER BY YEAR(mth_to_scrap) ASC, MONTH(mth_to_scrap) " ;
+                    + ") "
+                    + "ORDER BY YEAR(mth_to_scrap) ASC, MONTH(mth_to_scrap) ";
         List<SRInventory> mthToScrapList = new ArrayList();
         try {
             PreparedStatement ps = conn.prepareStatement(sql);
@@ -532,4 +523,5 @@ public class SRInventoryDAO {
         }
         return mthToScrapList;
     }
+
 }

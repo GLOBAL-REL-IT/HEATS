@@ -64,9 +64,7 @@ public class SRInventoryMgtDAO {
         QueryResult queryResult = new QueryResult();
         try {
             PreparedStatement ps = conn.prepareStatement(
-                    "UPDATE sr_inventory_mgt "
-                    + "SET outer_id = ?, req_id = ?, status = ?, flag = ?, modified_date = NOW() "
-                    + "WHERE shelf_id = ? "
+                    "UPDATE sr_inventory_mgt SET outer_id = ?, req_id = ?, status = ?, flag = ?, modified_date = NOW() WHERE shelf_id = ? "
             );
             ps.setString(1, srInventoryMgt.getOuterId());
             ps.setString(2, srInventoryMgt.getReqId());
@@ -156,13 +154,13 @@ public class SRInventoryMgtDAO {
     public List<SRInventoryMgt> getInventoryDetailsList(String query) {
         //AFTER
         String sql = "SELECT *, IFNULL(GROUP_CONCAT(I.rmslot_event SEPARATOR ', '),'N/A') AS rmslot_event_concat, IF(COUNT(I.rmslot_event)=0,'N/A',COUNT(I.rmslot_event)) AS count_lot, "
-                + "DATE_FORMAT(M.modified_date,'%d/%m/%y %h:%i %p') AS modified_date_view, DATE_FORMAT(M.date_created,'%d/%m/%y %h:%i %p') AS created_date_view "
-                + "FROM sr_inventory_mgt M "
-                + "LEFT JOIN sr_req_inner I "
-                + "ON M.req_id = I.req_id "
-                + query
-                + "GROUP BY M.shelf_id "
-                + "ORDER BY M.rack_month ASC, M.shelf_id ASC ";
+                    + "DATE_FORMAT(M.modified_date,'%d/%m/%y %h:%i %p') AS modified_date_view, DATE_FORMAT(M.date_created,'%d/%m/%y %h:%i %p') AS created_date_view "
+                    + "FROM sr_inventory_mgt M "
+                    + "LEFT JOIN sr_req_inner I "
+                    + "ON M.req_id = I.req_id "
+                    + query
+                    + "GROUP BY M.shelf_id "
+                    + "ORDER BY M.rack_month ASC, M.shelf_id ASC ";
         List<SRInventoryMgt> srInventoryMgtList = new ArrayList<SRInventoryMgt>();
         try {
             PreparedStatement ps = conn.prepareStatement(sql);
@@ -211,9 +209,9 @@ public class SRInventoryMgtDAO {
 
     public List<SRInventoryMgt> getInventoryDataPerMonthList() {
         String sql = "SELECT SUBSTRING(rack_month,1,2) AS mth_int, SUBSTRING(rack_month,4) AS rack_month_view, COUNT(req_id) AS shelf_used, COUNT(shelf_id)-COUNT(req_id) AS shelf_free, COUNT(shelf_id) AS total_shelf "
-                + "FROM sr_inventory_mgt "
-                + "GROUP BY rack_month "
-                + "ORDER BY mth_int ";
+                    + "FROM sr_inventory_mgt "
+                    + "GROUP BY rack_month "
+                    + "ORDER BY mth_int ";
         List<SRInventoryMgt> srInventoryMgtList = new ArrayList<SRInventoryMgt>();
         try {
             PreparedStatement ps = conn.prepareStatement(sql);
@@ -304,9 +302,9 @@ public class SRInventoryMgtDAO {
         Integer count = null;
         try {
             PreparedStatement ps = conn.prepareStatement(
-                    "SELECT COUNT(*) AS count FROM sr_inventory_mgt WHERE shelf_id = '" + shelfId + "' "
+                    "SELECT COUNT(*) AS count FROM sr_inventory_mgt WHERE shelf_id = ? "
             );
-
+            ps.setString(1, shelfId);
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
                 count = rs.getInt("count");
@@ -331,9 +329,9 @@ public class SRInventoryMgtDAO {
         Integer count = null;
         try {
             PreparedStatement ps = conn.prepareStatement(
-                    "SELECT COUNT(*) AS count FROM sr_inventory_mgt WHERE shelf_id LIKE '%" + month + "%' AND flag = '1' "
+                    "SELECT COUNT(*) AS count FROM sr_inventory_mgt WHERE shelf_id LIKE ? AND flag = '1' "
             );
-
+            ps.setString(1, "%"+month+"%");
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
                 count = rs.getInt("count");
@@ -360,7 +358,6 @@ public class SRInventoryMgtDAO {
             PreparedStatement ps = conn.prepareStatement(
                     "SELECT COUNT(*) AS count FROM sr_inventory_mgt WHERE shelf_id LIKE '%JAN%' AND flag = '0' "
             );
-
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
                 count = rs.getInt("count");
@@ -383,8 +380,8 @@ public class SRInventoryMgtDAO {
 
     public List<SRInventoryMgt> getInventoryList() {
         String sql = "SELECT *, DATE_FORMAT(modified_date,'%d/%m/%y %h:%i %p') AS modified_date_view, DATE_FORMAT(date_created,'%d/%m/%y %h:%i %p') AS created_date_view "
-                + "FROM sr_inventory_mgt "
-                + "ORDER BY rack_month ASC, shelf_id ASC ";
+                    + "FROM sr_inventory_mgt "
+                    + "ORDER BY rack_month ASC, shelf_id ASC ";
         List<SRInventoryMgt> srInventoryMgtList = new ArrayList<SRInventoryMgt>();
         try {
             PreparedStatement ps = conn.prepareStatement(sql);
@@ -516,4 +513,5 @@ public class SRInventoryMgtDAO {
         }
         return count;
     }
+
 }

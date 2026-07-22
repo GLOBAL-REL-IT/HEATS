@@ -56,7 +56,7 @@ public class UserGroupAccessDAO {
 
     public List<UserGroupAccess> getUserGroupAccess(String groupId) {
         String sql = "SELECT m.id AS menu_id, m.parent_code, m.code, m.name, uga.id, uga.group_id, IF (m.id = uga.menu_id, \"checked=\\\"\\\"\", \"\") AS selected "
-                + "FROM menu_main m LEFT JOIN menu_access uga ON uga.group_id = ? AND m.id = uga.menu_id ORDER BY m.code";
+                    + "FROM menu_main m LEFT JOIN menu_access uga ON uga.group_id = ? AND m.id = uga.menu_id ORDER BY m.code";
         List<UserGroupAccess> userGroupAccessList = new ArrayList<UserGroupAccess>();
         try {
             PreparedStatement ps = conn.prepareStatement(sql);
@@ -95,9 +95,9 @@ public class UserGroupAccessDAO {
         QueryResult queryResult = new QueryResult();
         queryResult.setResult(0);
         String sql = "INSERT into menu_access (group_id, menu_id) "
-                + "SELECT * FROM (SELECT ? AS group_id, ? AS menu_id) AS tmp "
-                + "WHERE NOT EXISTS (SELECT id FROM menu_access WHERE group_id = ? AND menu_id = ?) "
-                + "LIMIT 1";
+                    + "SELECT * FROM (SELECT ? AS group_id, ? AS menu_id) AS tmp "
+                    + "WHERE NOT EXISTS (SELECT id FROM menu_access WHERE group_id = ? AND menu_id = ?) "
+                    + "LIMIT 1";
         try {
             PreparedStatement ps = conn.prepareStatement(sql);
             ps.setString(1, groupId);

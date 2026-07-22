@@ -72,15 +72,16 @@ public class SRRetrieveDAO {
 
     public SRRetrieve getRetrievePerReqId(String reqId) {
         String sql = "SELECT *, DATEDIFF(mth_to_scrap, NOW()) AS aging, UPPER(DATE_FORMAT(mth_to_scrap,'%b %y')) AS mth_to_scrap_view, "
-                + "DATE_FORMAT(modified_date,'%d/%m/%y %h:%i %p') AS modified_date_view, DATE_FORMAT(created_date,'%d/%m/%y %h:%i %p') AS created_date_view, "
-                + "DATE_FORMAT(verification_date,'%d/%m/%y %h:%i %p') AS verification_date_view, DATE_FORMAT(rl_received_date,'%d/%m/%y %h:%i %p') AS rl_received_date_view, "
-                + "DATE_FORMAT(ship_date,'%d/%m/%y %h:%i %p') AS ship_date_view, DATE_FORMAT(req_date,'%d-%b-%y') AS req_date_view "
-                + "FROM sr_retrieve "
-                + "WHERE req_id = '" + reqId + "' "
-                + "ORDER BY created_date DESC ";
+                    + "DATE_FORMAT(modified_date,'%d/%m/%y %h:%i %p') AS modified_date_view, DATE_FORMAT(created_date,'%d/%m/%y %h:%i %p') AS created_date_view, "
+                    + "DATE_FORMAT(verification_date,'%d/%m/%y %h:%i %p') AS verification_date_view, DATE_FORMAT(rl_received_date,'%d/%m/%y %h:%i %p') AS rl_received_date_view, "
+                    + "DATE_FORMAT(ship_date,'%d/%m/%y %h:%i %p') AS ship_date_view, DATE_FORMAT(req_date,'%d-%b-%y') AS req_date_view "
+                    + "FROM sr_retrieve "
+                    + "WHERE req_id = ? "
+                    + "ORDER BY created_date DESC ";
         SRRetrieve sampleRetrieve = new SRRetrieve();
         try {
             PreparedStatement ps = conn.prepareStatement(sql);
+            ps.setString(1, reqId);
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
                 sampleRetrieve.setId(rs.getString("id"));
@@ -128,13 +129,11 @@ public class SRRetrieveDAO {
     }
 
     public SRRetrieve getRetrievePerReqIdActual(String reqId) {
-        String sql = "SELECT *, DATEDIFF(mth_to_scrap, NOW()) AS aging "
-                + "FROM sr_retrieve "
-                + "WHERE req_id = '" + reqId + "' "
-                + "ORDER BY created_date DESC ";
+        String sql = "SELECT *, DATEDIFF(mth_to_scrap, NOW()) AS aging FROM sr_retrieve WHERE req_id = ? ORDER BY created_date DESC ";
         SRRetrieve sampleRetrieve = new SRRetrieve();
         try {
             PreparedStatement ps = conn.prepareStatement(sql);
+            ps.setString(1, reqId);
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
                 sampleRetrieve.setId(rs.getString("id"));
@@ -171,13 +170,11 @@ public class SRRetrieveDAO {
     }
 
     public SRRetrieve getRetrievePerRetrieveId(String id) {
-        String sql = "SELECT *, DATEDIFF(mth_to_scrap, NOW()) AS aging, UPPER(DATE_FORMAT(mth_to_scrap,'%b %y')) AS mth_to_scrap_view, DATE_FORMAT(modified_date,'%d/%m/%y %h:%i %p') AS modified_date_view, DATE_FORMAT(created_date,'%d/%m/%y %h:%i %p') AS created_date_view "
-                + "FROM sr_retrieve "
-                + "WHERE id = '" + id + "' "
-                + "ORDER BY created_date DESC ";
+        String sql = "SELECT *, DATEDIFF(mth_to_scrap, NOW()) AS aging, UPPER(DATE_FORMAT(mth_to_scrap,'%b %y')) AS mth_to_scrap_view, DATE_FORMAT(modified_date,'%d/%m/%y %h:%i %p') AS modified_date_view, DATE_FORMAT(created_date,'%d/%m/%y %h:%i %p') AS created_date_view FROM sr_retrieve WHERE id = ? ORDER BY created_date DESC ";
         SRRetrieve sampleRetrieve = new SRRetrieve();
         try {
             PreparedStatement ps = conn.prepareStatement(sql);
+            ps.setString(1, id);
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
                 sampleRetrieve.setId(rs.getString("id"));
@@ -215,11 +212,11 @@ public class SRRetrieveDAO {
 
     public List<SRRetrieve> getAllReqMergeInner() {
         String sql = "SELECT R.*, GROUP_CONCAT(I.rmslot_event SEPARATOR ', ') AS rmslot_event_concat, DATEDIFF(R.mth_to_scrap, NOW()) AS aging, UPPER(DATE_FORMAT(R.mth_to_scrap,'%b %y')) AS mth_to_scrap_view, "
-                + "DATE_FORMAT(R.modified_date,'%d/%m/%y %h:%i %p') AS modified_date_view, DATE_FORMAT(R.created_date,'%d/%m/%y %h:%i %p') AS created_date_view, COUNT(I.rmslot_event) AS count_lot "
-                + "FROM sr_retrieve R, sr_req_inner I "
-                + "WHERE R.req_id = I.req_id AND R.flag NOT LIKE '9' "
-                + "GROUP BY R.id "
-                + "ORDER BY R.created_date ASC ";
+                    + "DATE_FORMAT(R.modified_date,'%d/%m/%y %h:%i %p') AS modified_date_view, DATE_FORMAT(R.created_date,'%d/%m/%y %h:%i %p') AS created_date_view, COUNT(I.rmslot_event) AS count_lot "
+                    + "FROM sr_retrieve R, sr_req_inner I "
+                    + "WHERE R.req_id = I.req_id AND R.flag NOT LIKE '9' "
+                    + "GROUP BY R.id "
+                    + "ORDER BY R.created_date ASC ";
         List<SRRetrieve> reqList = new ArrayList<SRRetrieve>();
         try {
             PreparedStatement ps = conn.prepareStatement(sql);
@@ -265,11 +262,11 @@ public class SRRetrieveDAO {
 
     public List<SRRetrieve> getAllScrapMergeInner() {
         String sql = "SELECT R.*, GROUP_CONCAT(I.rmslot_event SEPARATOR ', ') AS rmslot_event_concat, DATEDIFF(R.mth_to_scrap, NOW()) AS aging, UPPER(DATE_FORMAT(R.mth_to_scrap,'%b %y')) AS mth_to_scrap_view, "
-                + "DATE_FORMAT(R.modified_date,'%d/%m/%y %h:%i %p') AS modified_date_view, DATE_FORMAT(R.created_date,'%d/%m/%y %h:%i %p') AS created_date_view, COUNT(I.rmslot_event) AS count_lot "
-                + "FROM sr_retrieve R, sr_req_inner I "
-                + "WHERE R.req_id = I.req_id AND R.flag LIKE '9' AND R.req_details = 'Recall for Scrap' "
-                + "GROUP BY R.id "
-                + "ORDER BY R.created_date ASC ";
+                    + "DATE_FORMAT(R.modified_date,'%d/%m/%y %h:%i %p') AS modified_date_view, DATE_FORMAT(R.created_date,'%d/%m/%y %h:%i %p') AS created_date_view, COUNT(I.rmslot_event) AS count_lot "
+                    + "FROM sr_retrieve R, sr_req_inner I "
+                    + "WHERE R.req_id = I.req_id AND R.flag LIKE '9' AND R.req_details = 'Recall for Scrap' "
+                    + "GROUP BY R.id "
+                    + "ORDER BY R.created_date ASC ";
         List<SRRetrieve> reqList = new ArrayList<SRRetrieve>();
         try {
             PreparedStatement ps = conn.prepareStatement(sql);
@@ -315,11 +312,11 @@ public class SRRetrieveDAO {
 
     public List<SRKpi> getAllScrapDataPerMthKPI() {
         String sql = "SELECT COUNT(*) AS count, DATE_FORMAT(created_date,'%b-%Y') AS mthyr_req, DATE_FORMAT(created_date,'%m') AS mth_req, "
-                + "DATE_FORMAT(created_date,'%Y') AS yr_req "
-                + "FROM sr_retrieve "
-                + "WHERE req_details = 'Recall for Scrap' AND PERIOD_DIFF(DATE_FORMAT(NOW(),'%Y%m'),DATE_FORMAT(created_date,'%Y%m')) <= 12 "
-                + "GROUP BY DATE_FORMAT(created_date,'%Y%m') "
-                + "ORDER BY DATE_FORMAT(created_date,'%Y%m') DESC ";
+                    + "DATE_FORMAT(created_date,'%Y') AS yr_req "
+                    + "FROM sr_retrieve "
+                    + "WHERE req_details = 'Recall for Scrap' AND PERIOD_DIFF(DATE_FORMAT(NOW(),'%Y%m'),DATE_FORMAT(created_date,'%Y%m')) <= 12 "
+                    + "GROUP BY DATE_FORMAT(created_date,'%Y%m') "
+                    + "ORDER BY DATE_FORMAT(created_date,'%Y%m') DESC ";
         List<SRKpi> srKpiList = new ArrayList<SRKpi>();
         try {
             PreparedStatement ps = conn.prepareStatement(sql);
@@ -353,10 +350,9 @@ public class SRRetrieveDAO {
         Integer count = null;
         try {
             PreparedStatement ps = conn.prepareStatement(
-                    "SELECT COUNT(id) AS count FROM sr_retrieve "
-                    + "WHERE id = '" + id + "' "
+                    "SELECT COUNT(id) AS count FROM sr_retrieve WHERE id = ? "
             );
-
+            ps.setString(1, id);
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
                 count = rs.getInt("count");
@@ -381,10 +377,9 @@ public class SRRetrieveDAO {
         Integer count = null;
         try {
             PreparedStatement ps = conn.prepareStatement(
-                    "SELECT COUNT(id) AS count FROM sr_retrieve "
-                    + "WHERE req_id = '" + reqId + "' "
+                    "SELECT COUNT(id) AS count FROM sr_retrieve WHERE req_id = ? "
             );
-
+            ps.setString(1, reqId);
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
                 count = rs.getInt("count");
@@ -409,8 +404,9 @@ public class SRRetrieveDAO {
         QueryResult queryResult = new QueryResult();
         try {
             PreparedStatement ps = conn.prepareStatement(
-                    "DELETE FROM sr_retrieve WHERE id = '" + id + "'"
+                    "DELETE FROM sr_retrieve WHERE id = ?"
             );
+            ps.setString(1, id);
             queryResult.setResult(ps.executeUpdate());
             ps.close();
         } catch (SQLException e) {
@@ -431,8 +427,8 @@ public class SRRetrieveDAO {
     public QueryResult updateShipmentStatusPerReqId(SRRetrieve sampleRetrieve) {
         QueryResult queryResult = new QueryResult();
         String sql = "UPDATE sr_retrieve SET "
-                + "verification_date = ?, verification_by = ?, invoice_no = ?, ship_date = ?, ship_by = ?, flag = ?, status = ?, modified_date = NOW(), modified_by = ? "
-                + "WHERE req_id  = ? ";
+                    + "verification_date = ?, verification_by = ?, invoice_no = ?, ship_date = ?, ship_by = ?, flag = ?, status = ?, modified_date = NOW(), modified_by = ? "
+                    + "WHERE req_id  = ? ";
         try {
             PreparedStatement ps = conn.prepareStatement(sql);
             ps.setString(1, sampleRetrieve.getVerificationDate());
@@ -463,9 +459,7 @@ public class SRRetrieveDAO {
 
     public QueryResult updateReceivingStatus(SRRetrieve sampleRetrieve) {
         QueryResult queryResult = new QueryResult();
-        String sql = "UPDATE sr_retrieve SET "
-                + "rl_received_date = NOW(), rl_received_by = ?, flag = ?, status = ?, modified_date = NOW(), modified_by = ? "
-                + "WHERE req_id  = ? ";
+        String sql = "UPDATE sr_retrieve SET rl_received_date = NOW(), rl_received_by = ?, flag = ?, status = ?, modified_date = NOW(), modified_by = ? WHERE req_id  = ? ";
         try {
             PreparedStatement ps = conn.prepareStatement(sql);
             ps.setString(1, sampleRetrieve.getRlReceivedBy());
@@ -492,9 +486,7 @@ public class SRRetrieveDAO {
 
     public QueryResult updateShipmentStatus(SRRetrieve sampleRetrieve) {
         QueryResult queryResult = new QueryResult();
-        String sql = "UPDATE sr_retrieve SET "
-                + "ship_status = ?, ship_remark = ? "
-                + "WHERE req_id  = ? ";
+        String sql = "UPDATE sr_retrieve SET ship_status = ?, ship_remark = ? WHERE req_id  = ? ";
         try {
             PreparedStatement ps = conn.prepareStatement(sql);
             ps.setString(1, sampleRetrieve.getShipStatus());
@@ -521,9 +513,9 @@ public class SRRetrieveDAO {
         Integer count = null;
         try {
             PreparedStatement ps = conn.prepareStatement(
-                    "SELECT COUNT(*) AS count FROM sr_retrieve WHERE shelf_id LIKE '%" + month + "%' AND flag = '1' "
+                    "SELECT COUNT(*) AS count FROM sr_retrieve WHERE shelf_id LIKE ? AND flag = '1' "
             );
-
+            ps.setString(1, "%"+month+"%");
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
                 count = rs.getInt("count");
@@ -543,4 +535,5 @@ public class SRRetrieveDAO {
         }
         return count;
     }
+
 }

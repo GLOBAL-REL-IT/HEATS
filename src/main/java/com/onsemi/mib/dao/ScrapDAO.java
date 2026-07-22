@@ -65,7 +65,7 @@ public class ScrapDAO {
         QueryResult queryResult = new QueryResult();
         try {
             PreparedStatement ps = conn.prepareStatement(
-                    "UPDATE sr_scrap SET request_id = ?, box_id = ?, month_scrap = ?, scrap_by = ?, scrap_date = ?, status = ?, created_by = ?, created_date = ?, flag = ? WHERE id = ?"
+                    "UPDATE sr_scrap SET request_id = ?, box_id = ?, month_scrap = ?, scrap_by = ?, scrap_date = ?, status = ?, created_by = ?, created_date = ?, flag = ? WHERE id = ? "
             );
             ps.setString(1, scrap.getRequestId());
             ps.setString(2, scrap.getBoxId());
@@ -97,7 +97,8 @@ public class ScrapDAO {
     public QueryResult deleteScrap(String scrapId) {
         QueryResult queryResult = new QueryResult();
         try {
-            PreparedStatement ps = conn.prepareStatement("DELETE FROM sr_scrap WHERE id = '" + scrapId + "'");
+            PreparedStatement ps = conn.prepareStatement("DELETE FROM sr_scrap WHERE id = ? ");
+            ps.setString(1, scrapId);
             queryResult.setResult(ps.executeUpdate());
             ps.close();
         } catch (SQLException e) {
@@ -118,7 +119,8 @@ public class ScrapDAO {
     public QueryResult revertScrap(String scrapId) {
         QueryResult queryResult = new QueryResult();
         try {
-            PreparedStatement ps = conn.prepareStatement("UPDATE sr_scrap SET STATUS = 'Pending Scrap', flag = '0' WHERE id = '" + scrapId + "'");
+            PreparedStatement ps = conn.prepareStatement("UPDATE sr_scrap SET STATUS = 'Pending Scrap', flag = '0' WHERE id = ? ");
+            ps.setString(1, scrapId);
             queryResult.setResult(ps.executeUpdate());
             ps.close();
         } catch (SQLException e) {
@@ -139,7 +141,8 @@ public class ScrapDAO {
     public QueryResult updateReadyScrap(String scrapId) {
         QueryResult queryResult = new QueryResult();
         try {
-            PreparedStatement ps = conn.prepareStatement("UPDATE sr_scrap SET STATUS = 'Ready for Scrap', flag = '0' WHERE id = '" + scrapId + "' ");
+            PreparedStatement ps = conn.prepareStatement("UPDATE sr_scrap SET STATUS = 'Ready for Scrap', flag = '0' WHERE id = ? ");
+            ps.setString(1, scrapId);
             queryResult.setResult(ps.executeUpdate());
             ps.close();
         } catch (SQLException e) {
@@ -191,10 +194,11 @@ public class ScrapDAO {
     }
 
     public Scrap getScrap(String scrapId) {
-        String sql = "SELECT * FROM sr_scrap WHERE id = '" + scrapId + "'";
+        String sql = "SELECT * FROM sr_scrap WHERE id = ? ";
         Scrap scrap = null;
         try {
             PreparedStatement ps = conn.prepareStatement(sql);
+            ps.setString(1, scrapId);
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
                 scrap = new Scrap();
@@ -226,12 +230,12 @@ public class ScrapDAO {
     }
 
     public Scrap getScrapById(String scrapId) {
-        String sql = "SELECT sc.*, re.id AS reqID, re.ftp_id AS ftpId, re.inv_id AS invID "
-                + "FROM sr_scrap sc, sr_request re "
-                + "WHERE sc.request_id = re.id AND sc.id = '" + scrapId + "'";
+        String sql = "SELECT sc.*, re.id AS reqID, re.ftp_id AS ftpId, re.inv_id AS invID FROM sr_scrap sc, sr_request re "
+                    + "WHERE sc.request_id = re.id AND sc.id = ? ";
         Scrap scrap = null;
         try {
             PreparedStatement ps = conn.prepareStatement(sql);
+            ps.setString(1, scrapId);
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
                 scrap = new Scrap();
@@ -297,12 +301,12 @@ public class ScrapDAO {
 
     public List<Scrap> getPendingScrapList() {
         String sql = "SELECT sc.id AS scrap_id, rq.id AS request_id, ftp.id AS ftp_id, DATE_FORMAT(sc.month_scrap,'%M %Y') AS month_scrap, final_qty, actual_qty, inventory_rack, inventory_shelf, inventory_date, "
-                + "sc.status scrap_status, rq.status AS request_status, rmslot_event, lot_qty, p_status, pkg_name, sc.status AS scrap_status, sc.flag AS flag, inv.`status` AS inventory_status "
-                + "FROM sr_scrap sc "
-                + "INNER JOIN sr_request rq ON request_id = rq.id "
-                + "INNER JOIN sr_ftp_data ftp ON ftp_id = ftp.id "
-                + "INNER JOIN sr_inventory inv ON inv_id = inv.id "
-                + "WHERE sc.flag IN ('0') ORDER BY sc.month_scrap ASC";
+                    + "sc.status scrap_status, rq.status AS request_status, rmslot_event, lot_qty, p_status, pkg_name, sc.status AS scrap_status, sc.flag AS flag, inv.`status` AS inventory_status "
+                    + "FROM sr_scrap sc "
+                    + "INNER JOIN sr_request rq ON request_id = rq.id "
+                    + "INNER JOIN sr_ftp_data ftp ON ftp_id = ftp.id "
+                    + "INNER JOIN sr_inventory inv ON inv_id = inv.id "
+                    + "WHERE sc.flag IN ('0') ORDER BY sc.month_scrap ASC";
         List<Scrap> scrapList = new ArrayList<Scrap>();
         try {
             PreparedStatement ps = conn.prepareStatement(sql);
@@ -341,12 +345,12 @@ public class ScrapDAO {
 
     public List<Scrap> getReadyScrapList() {
         String sql = "SELECT sc.id AS scrap_id, rq.id AS request_id, ftp.id AS ftp_id, inv.id AS invId, MONTHNAME(month_scrap) AS month_scrap, final_qty, actual_qty, inventory_rack, inventory_shelf, inventory_date, "
-                + "sc.status scrap_status, rq.status AS request_status, rmslot_event, lot_qty, p_status, pkg_name, sc.status AS scrap_status, sc.flag AS flag, inv.`status` AS inventory_status "
-                + "FROM sr_scrap sc "
-                + "INNER JOIN sr_request rq ON request_id = rq.id "
-                + "INNER JOIN sr_ftp_data ftp ON ftp_id = ftp.id "
-                + "INNER JOIN sr_inventory inv ON inv_id = inv.id "
-                + "WHERE sc.flag IN ('0') AND sc.status = 'Ready for Scrap' ORDER BY scrap_id ASC";
+                    + "sc.status scrap_status, rq.status AS request_status, rmslot_event, lot_qty, p_status, pkg_name, sc.status AS scrap_status, sc.flag AS flag, inv.`status` AS inventory_status "
+                    + "FROM sr_scrap sc "
+                    + "INNER JOIN sr_request rq ON request_id = rq.id "
+                    + "INNER JOIN sr_ftp_data ftp ON ftp_id = ftp.id "
+                    + "INNER JOIN sr_inventory inv ON inv_id = inv.id "
+                    + "WHERE sc.flag IN ('0') AND sc.status = 'Ready for Scrap' ORDER BY scrap_id ASC";
         List<Scrap> scrapList = new ArrayList<Scrap>();
         try {
             PreparedStatement ps = conn.prepareStatement(sql);
@@ -391,11 +395,11 @@ public class ScrapDAO {
                     "SELECT s1.id FROM sr_scrap s1 "
                     + "INNER JOIN sr_request s2 ON s1.request_id = s2.id "
                     + "INNER JOIN sr_ftp_data s3 ON s2.ftp_id = s3.id "
-                    + "WHERE rmslot_event = '" + rms_event + "' "
+                    + "WHERE rmslot_event = ? "
             );
+            ps.setString(1, rms_event);
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
-//                scrapId = rs.getInt("id");
                 scrapId = rs.getString("id");
             }
             rs.close();
@@ -416,12 +420,13 @@ public class ScrapDAO {
 
     public Scrap getScrapbyRmsLotEvent(String rms_event) {
         String sql = "SELECT s1.id, s1.request_id, s2.ftp_id, s2.inv_id FROM sr_scrap s1  "
-                + "INNER JOIN sr_request s2 ON s1.request_id = s2.id "
-                + "INNER JOIN sr_ftp_data s3 ON s2.ftp_id = s3.id "
-                + "WHERE rmslot_event = '" + rms_event + "' ";
+                    + "INNER JOIN sr_request s2 ON s1.request_id = s2.id "
+                    + "INNER JOIN sr_ftp_data s3 ON s2.ftp_id = s3.id "
+                    + "WHERE rmslot_event = ? ";
         Scrap scrap = null;
         try {
             PreparedStatement ps = conn.prepareStatement(sql);
+            ps.setString(1, rms_event);
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
                 scrap = new Scrap();
@@ -453,9 +458,9 @@ public class ScrapDAO {
                     "SELECT COUNT(sc.id) AS COUNT "
                     + "FROM sr_scrap sc, sr_request re, sr_ftp_data ft "
                     + "WHERE sc.`status` = 'Pending Scrap' AND sc.request_id = re.id "
-                    + "AND re.ftp_id = ft.id AND ft.rmslot_event = '" + rmsLotEvent + "' "
+                    + "AND re.ftp_id = ft.id AND ft.rmslot_event = ? "
             );
-
+            ps.setString(1, rmsLotEvent);
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
                 count = rs.getInt("count");

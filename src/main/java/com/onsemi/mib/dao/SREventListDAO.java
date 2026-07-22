@@ -27,8 +27,8 @@ public class SREventListDAO {
         QueryResult queryResult = new QueryResult();
         try {
             PreparedStatement ps = conn.prepareStatement(
-                    "INSERT INTO event_group (event_group_code, event_group_details, event_group_status, event_group_flag, modified_by, modified_date, created_by, created_date) " +
-                    "VALUES (?,?,?,?,?,NOW(),?,NOW())", Statement.RETURN_GENERATED_KEYS
+                    "INSERT INTO event_group (event_group_code, event_group_details, event_group_status, event_group_flag, modified_by, modified_date, created_by, created_date) "
+                    + "VALUES (?,?,?,?,?,NOW(),?,NOW())", Statement.RETURN_GENERATED_KEYS
             );
             ps.setString(1, eventGroup.getEventGroupCode());
             ps.setString(2, eventGroup.getEventGroupDetails());
@@ -62,9 +62,7 @@ public class SREventListDAO {
         QueryResult queryResult = new QueryResult();
         try {
             PreparedStatement ps = conn.prepareStatement(
-                    "UPDATE event_group " +
-                    "SET event_group_code = ?, event_group_details = ?, event_group_status = ?, event_group_flag = ?, modified_by = ?, modified_date = NOW() " +
-                    "WHERE id = ? "
+                    "UPDATE event_group SET event_group_code = ?, event_group_details = ?, event_group_status = ?, event_group_flag = ?, modified_by = ?, modified_date = NOW() WHERE id = ? "
             );
             ps.setString(1, eventGroup.getEventGroupCode());
             ps.setString(2, eventGroup.getEventGroupDetails());
@@ -88,13 +86,14 @@ public class SREventListDAO {
         }
         return queryResult;
     }
-    
+
     public QueryResult deleteGroupEvent(String groupId) {
         QueryResult queryResult = new QueryResult();
         try {
             PreparedStatement ps = conn.prepareStatement(
-                    "DELETE FROM event_group WHERE id = '" + groupId + "'"
+                    "DELETE FROM event_group WHERE id = ? "
             );
+            ps.setString(1, groupId);
             queryResult.setResult(ps.executeUpdate());
             ps.close();
         } catch (SQLException e) {
@@ -111,12 +110,13 @@ public class SREventListDAO {
         }
         return queryResult;
     }
-    
+
     public EventGroup getGroup(String groupId) {
-        String sql = "SELECT * FROM event_group WHERE id = '" + groupId + "'";
-            EventGroup eventGroup = null;
+        String sql = "SELECT * FROM event_group WHERE id = ? ";
+        EventGroup eventGroup = null;
         try {
             PreparedStatement ps = conn.prepareStatement(sql);
+            ps.setString(1, groupId);
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
                 eventGroup = new EventGroup(
@@ -146,12 +146,13 @@ public class SREventListDAO {
         }
         return eventGroup;
     }
-    
+
     public Integer getCountByEventGroupCode(String groupCode) {
         Integer count = null;
-        String sql = "SELECT count(id) AS count FROM event_group WHERE event_group_code = '" + groupCode + "'";
+        String sql = "SELECT count(id) AS count FROM event_group WHERE event_group_code = ?";
         try {
             PreparedStatement ps = conn.prepareStatement(sql);
+            ps.setString(1, groupCode);
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
                 count = rs.getInt("count");
@@ -190,7 +191,6 @@ public class SREventListDAO {
                         rs.getString("modified_date"),
                         rs.getString("created_by"),
                         rs.getString("created_date")
-                        
                 );
                 eventGroupList.add(eventGroup);
             }
@@ -207,12 +207,13 @@ public class SREventListDAO {
         }
         return eventGroupList;
     }
-    
+
     public Integer getCountByEventGroupId(String groupId) {
         Integer count = null;
-        String sql = "SELECT count(id) AS count FROM event_group WHERE id = '" + groupId + "'";
+        String sql = "SELECT count(id) AS count FROM event_group WHERE id = ? ";
         try {
             PreparedStatement ps = conn.prepareStatement(sql);
+            ps.setString(1, groupId);
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
                 count = rs.getInt("count");
@@ -232,15 +233,14 @@ public class SREventListDAO {
         }
         return count;
     }
-    
-    
+
     //event
     public QueryResult insertEvent(EventGroup eventGroup) {
         QueryResult queryResult = new QueryResult();
         try {
             PreparedStatement ps = conn.prepareStatement(
-                    "INSERT INTO event_list (event_group_id, event_code, event_name, requirement_status, modified_by, modified_date, created_by, created_date) " +
-                    "VALUES (?,?,?,?,?,NOW(),?,NOW())", Statement.RETURN_GENERATED_KEYS
+                    "INSERT INTO event_list (event_group_id, event_code, event_name, requirement_status, modified_by, modified_date, created_by, created_date) "
+                    + "VALUES (?,?,?,?,?,NOW(),?,NOW())", Statement.RETURN_GENERATED_KEYS
             );
             ps.setString(1, eventGroup.getEventGroupId());
             ps.setString(2, eventGroup.getEventCode());
@@ -274,9 +274,7 @@ public class SREventListDAO {
         QueryResult queryResult = new QueryResult();
         try {
             PreparedStatement ps = conn.prepareStatement(
-                    "UPDATE event_list " +
-                    "SET event_group_id = ?, event_code = ?, event_name = ?, requirement_status = ?, modified_by = ?, modified_date = NOW() " +
-                    "WHERE id = ? "
+                    "UPDATE event_list SET event_group_id = ?, event_code = ?, event_name = ?, requirement_status = ?, modified_by = ?, modified_date = NOW() WHERE id = ? "
             );
             ps.setString(1, eventGroup.getEventGroupId());
             ps.setString(2, eventGroup.getEventCode());
@@ -300,13 +298,14 @@ public class SREventListDAO {
         }
         return queryResult;
     }
-    
+
     public QueryResult deleteEvent(String eventId) {
         QueryResult queryResult = new QueryResult();
         try {
             PreparedStatement ps = conn.prepareStatement(
-                    "DELETE FROM event_list WHERE id = '" + eventId + "'"
+                    "DELETE FROM event_list WHERE id = ? "
             );
+            ps.setString(1, eventId);
             queryResult.setResult(ps.executeUpdate());
             ps.close();
         } catch (SQLException e) {
@@ -323,19 +322,17 @@ public class SREventListDAO {
         }
         return queryResult;
     }
-    
+
     public EventGroup getEventDetails(String eventId) {
-        String sql = "SELECT * " 
-                   + "FROM event_list L, event_group G " 
-                   + "WHERE L.event_group_id = G.id AND L.id = '" + eventId + "' " 
-                   + "ORDER BY event_code ";
-            EventGroup eventGroup = null;
+        String sql = "SELECT * FROM event_list L, event_group G WHERE L.event_group_id = G.id AND L.id = ? ORDER BY event_code ";
+        EventGroup eventGroup = null;
         try {
             PreparedStatement ps = conn.prepareStatement(sql);
+            ps.setString(1, eventId);
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
                 eventGroup = new EventGroup();
-                eventGroup.setEventId( rs.getString("L.id"));
+                eventGroup.setEventId(rs.getString("L.id"));
                 eventGroup.setEventGroupId(rs.getString("L.event_group_id"));
                 eventGroup.setEventCode(rs.getString("L.event_code"));
                 eventGroup.setEventName(rs.getString("L.event_name"));
@@ -361,12 +358,13 @@ public class SREventListDAO {
         }
         return eventGroup;
     }
-    
+
     public Integer getCountByEventCode(String eventCode) {
         Integer count = null;
-        String sql = "SELECT count(id) AS count FROM event_list WHERE event_code = '" + eventCode + "'";
+        String sql = "SELECT count(id) AS count FROM event_list WHERE event_code = ? ";
         try {
             PreparedStatement ps = conn.prepareStatement(sql);
+            ps.setString(1, eventCode);
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
                 count = rs.getInt("count");
@@ -388,9 +386,7 @@ public class SREventListDAO {
     }
 
     public List<EventGroup> getEventList() {
-        String sql = "SELECT * " 
-                   + "FROM event_group G, event_list L " 
-                   + "WHERE G.id = L.event_group_id ";
+        String sql = "SELECT * FROM event_group G, event_list L WHERE G.id = L.event_group_id ";
         List<EventGroup> eventGroupList = new ArrayList<EventGroup>();
         try {
             PreparedStatement ps = conn.prepareStatement(sql);
@@ -398,7 +394,7 @@ public class SREventListDAO {
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
                 eventGroup = new EventGroup();
-                eventGroup.setEventId( rs.getString("L.id"));
+                eventGroup.setEventId(rs.getString("L.id"));
                 eventGroup.setEventGroupId(rs.getString("L.event_group_id"));
                 eventGroup.setEventCode(rs.getString("L.event_code"));
                 eventGroup.setEventName(rs.getString("L.event_name"));
@@ -423,4 +419,5 @@ public class SREventListDAO {
         }
         return eventGroupList;
     }
+
 }
