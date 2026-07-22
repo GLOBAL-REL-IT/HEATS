@@ -28,6 +28,7 @@ import com.onsemi.mib.dao.RmsBookingHardwareGroupLogDAO;
 import com.onsemi.mib.dao.RmsBookingLogDAO;
 import com.onsemi.mib.dao.RmsBookingMaverickDAO;
 import com.onsemi.mib.dao.RmsBookingVisualInspectionDAO;
+import com.onsemi.mib.dao.UserAccessControlDAO;
 import com.onsemi.mib.model.EmailCc;
 import com.onsemi.mib.model.EmailHwReplacement;
 import com.onsemi.mib.model.EmailHwReturnFromStaging;
@@ -50,6 +51,7 @@ import com.onsemi.mib.model.RmsBookingHardwareGroupLog;
 import com.onsemi.mib.model.RmsBookingLog;
 import com.onsemi.mib.model.RmsBookingMaverick;
 import com.onsemi.mib.model.RmsBookingVisualInspection;
+import com.onsemi.mib.model.UserAccessControl;
 import com.onsemi.mib.model.UserSession;
 import com.onsemi.mib.tools.EmailSender;
 import com.onsemi.mib.tools.HimsRetrieve;
@@ -121,6 +123,11 @@ public class RmsBookingDetailController {
             Model model,
             @ModelAttribute UserSession userSession
     ) throws IOException {
+
+        UserAccessControlDAO uacD = new UserAccessControlDAO();
+        UserAccessControl uac = uacD.getUserAccessControlByLoginId(userSession.getLoginId());
+        model.addAttribute("uac", uac);
+
         //get cmbs booking detail
         JSONArray getRMSBooking = SPTSWebService.getBookedEqptFOLFiles(false);
 
@@ -650,6 +657,10 @@ public class RmsBookingDetailController {
             @ModelAttribute UserSession userSession) throws IOException {
 
         model.addAttribute("userItemSfRecall", userSession.getItemSfRecall());
+        
+        UserAccessControlDAO uacD = new UserAccessControlDAO();
+        UserAccessControl uac = uacD.getUserAccessControlByLoginId(userSession.getLoginId());
+        model.addAttribute("uac", uac);
 
         EmailHwReplacementDAO userDao = new EmailHwReplacementDAO();
         List<EmailHwReplacement> userRecipientsList = userDao.getEmailHwReplacementList();
@@ -7375,7 +7386,7 @@ public class RmsBookingDetailController {
                 + "Inspection Date: " + formattedString
                 + "<br /> "
                 + "Detail: " + emailBodyFail
-                + "<br /> " 
+                + "<br /> "
                 + "<br /> "
                 + "Please click <a href=\"http://" + hostname + "/HEATS/rmsbookingDetail/groupDetail/" + groupId + " \">HERE</a> for more detail."
                 + "<br /> "

@@ -307,9 +307,16 @@
 
                                 <div class="col-md-12">
                                     <c:if test="${releaseButton == 'Enable'}">
-                                        <a modaldeleteid="${rms.id}" type ="button" title="Release to Production" data-bs-toggle="modal" data-bs-target="#confirmation_modal" class="btn btn-success float-start" onclick="modalRelease(this);">
-                                            <i class="bi bi-check-circle-fill">&nbsp;&nbsp;Release to Production</i>
-                                        </a>
+                                        <c:if test="${uac.befLoadingRelease == 'Yes'}">
+                                            <a modaldeleteid="${rms.id}" type ="button" title="Release to Production" data-bs-toggle="modal" data-bs-target="#confirmation_modal" class="btn btn-success float-start" onclick="modalRelease(this);">
+                                                <i class="bi bi-check-circle-fill">&nbsp;&nbsp;Release to Production</i>
+                                            </a>
+                                        </c:if>
+                                        <c:if test="${uac.befLoadingRelease ne 'Yes'}">
+                                            <a modaldeleteid="${rms.id}" type ="button" title="Release to Production" class="btn float-start disabled" disabled>
+                                                <i class="bi bi-check-circle-fill">&nbsp;&nbsp;Release to Production</i>
+                                            </a>
+                                        </c:if>
                                     </c:if>
                                     <c:if test="${releaseButton == 'Disable'}">
                                         <a modaldeleteid="${rms.id}" type ="button" title="Release to Production" class="btn float-start disabled" disabled>
@@ -391,8 +398,8 @@
                                                         <c:if test="${parameterMaster.status != 'NA'}">
                                                             <c:if test="${parameterMaster.recall == 'Yes'}">
                                                                 <a modaldeleteid="${parameterMaster.itemPkid}" modaldeleteid2="${parameterMaster.id}" type="button" data-bs-toggle="offcanvas" title="Recall from Storage Factory"
-                                                                   data-bs-target="#staticBackdropRecall" aria-controls="staticBackdropRecall" onclick="ajaxStorage(this);">
-                                                                    <i class="bi bi-house-up h4"></i>
+                                                                   data-bs-target="#staticBackdropRecall" aria-controls="staticBackdropRecall" onclick="ajaxStorage(this);" <c:if test="${uac.befLoadingSfRecall ne 'Yes'}">disabled</c:if>>
+                                                                    <i class="bi bi-house-up h4" <c:if test="${uac.befLoadingSfRecall ne 'Yes'}">style="color:gray"</c:if>></i>
                                                                 </a>
                                                             </c:if>
                                                         </c:if>
@@ -497,8 +504,8 @@
                                                     <td align="center">
                                                         <c:if test="${parameterMaster.recall == 'Yes'}">
                                                             <a modaldeleteid="${parameterMaster.itemPkid}" modaldeleteid2="${parameterMaster.id}" type="button" data-bs-toggle="offcanvas" title="Recall from Storage Factory"
-                                                               data-bs-target="#staticBackdropRecall" aria-controls="staticBackdropRecall" onclick="ajaxStorage(this);">
-                                                                <i class="bi bi-house-up h4"></i>
+                                                               data-bs-target="#staticBackdropRecall" aria-controls="staticBackdropRecall" onclick="ajaxStorage(this);" <c:if test="${uac.befLoadingSfRecall ne 'Yes'}">disabled</c:if>>
+                                                                <i class="bi bi-house-up h4" <c:if test="${uac.befLoadingSfRecall ne 'Yes'}">style="color:gray"</c:if>></i>
                                                             </a>
                                                         </c:if>
                                                         <c:if test="${parameterMaster.status == 'Available'}">
@@ -634,8 +641,8 @@
                                         <label for="itemId" class="form-label">Item ID *</label>
                                         <div class="input input-group">
                                             <input type="hidden" class="form-control" id="id3" name="id3" placeholder="" value="${rms.id}">
-                                            <select class="js-example-basic-single" id="hwReplacement" name="hwReplacement" style="width: 100%" required>
-                                                <option></option>
+                                            <select class="js-example-basic-single" id="hwReplacement" name="hwReplacement" style="width: 100%" <c:if test="${uac.befLoadingHwReplace ne 'Yes'}">disabled</c:if> required>
+                                                    <option></option>
                                                 <c:forEach items="${hwList}" var="invInner">
                                                     <option value="${invInner.pkid}">
                                                         ${invInner.itemId} (${invInner.status})
@@ -651,33 +658,33 @@
                                     <div class="mb-1">
                                         <label for="itemId" class="form-label">Remarks</label>
                                         <div class="input input-group">
-                                            <textarea class="form-control" rows="5" id="remarks" name="remarks"></textarea>
+                                            <textarea class="form-control" rows="5" id="remarks" name="remarks" <c:if test="${uac.befLoadingHwReplace ne 'Yes'}">disabled</c:if>></textarea>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
-                            </div>
-                            <!-- Form actions start -->
-                            <div class="col-md-12">
-                                <button type="submit" id="submit" id="submit" class="btn btn-primary float-end">Add</button>
-                            </div>
-                            <!-- Form actions end -->
+                                <!-- Form actions start -->
+                                <div class="col-md-12">
+                                    <button type="submit" id="submit" id="submit" class="btn btn-primary float-end" <c:if test="${uac.befLoadingHwReplace ne 'Yes'}">disabled</c:if>>Add</button>
+                                </div>
+                                <!-- Form actions end -->
 
-                        </form>
-                    </div>
-                    <div class="row mb-3">
-                        <div class="table-responsive">
-                            <table id="listStorage" class="table custom-table pending">
-                                <thead>
-                                    <tr>
-                                        <th class="col-1">No</th>
-                                        <th class="col-1">Item Type</th>
-                                        <th class="col-3">item Id</th>
-                                        <th class="col-1">Qty</th>
-                                        <th class="col-2">Status</th>
-                                        <th class="col-3">Remarks</th>
-                                        <th class="col-1">Action</th>
-                                    </tr>
-                                </thead>
+                            </form>
+                        </div>
+                        <div class="row mb-3">
+                            <div class="table-responsive">
+                                <table id="listStorage" class="table custom-table pending">
+                                    <thead>
+                                        <tr>
+                                            <th class="col-1">No</th>
+                                            <th class="col-1">Item Type</th>
+                                            <th class="col-3">item Id</th>
+                                            <th class="col-1">Qty</th>
+                                            <th class="col-2">Status</th>
+                                            <th class="col-3">Remarks</th>
+                                            <th class="col-1">Action</th>
+                                        </tr>
+                                    </thead>
                                 <c:forEach items="${listHwReplace}" var="parameterMaster" varStatus="parameterMasterLoop">
                                     <tr>
                                         <td><c:out value="${parameterMasterLoop.index+1}"/></td>
@@ -688,8 +695,15 @@
                                         <td><c:out value="${parameterMaster.remarks}"/></td>
                                         <td align="center">
                                             <c:if test="${parameterMaster.flag == '0'}">
-                                                <a modaldeleteid="${parameterMaster.id}" type ="button" title="Delete" data-bs-toggle="modal" data-bs-target="#delete_modal" class="table-link danger group_delete" onclick="modalDelete(this);">
-                                                    <i class="bi bi-trash h3" style="color:red"></i></a> 
+                                                <c:if test="${uac.befLoadingHwReplace == 'Yes'}">
+                                                    <a modaldeleteid="${parameterMaster.id}" type ="button" title="Delete" data-bs-toggle="modal" data-bs-target="#delete_modal" 
+                                                       class="table-link danger group_delete" onclick="modalDelete(this);">
+                                                        <i class="bi bi-trash h3" style="color:red"></i></a> 
+                                                    </c:if>
+                                                    <c:if test="${uac.befLoadingHwReplace ne 'Yes'}">
+                                                    <a type ="button" title="Delete" class="table-link danger group_delete disabled">
+                                                        <i class="bi bi-trash h3" style="color:gray"></i></a> 
+                                                    </c:if>
                                                 </c:if>
                                                 <c:if test="${parameterMaster.flag != '0'}">
                                                 <a type ="button" title="Delete" class="table-link danger group_delete disabled">
@@ -716,7 +730,7 @@
                                     <div class="mb-2">
                                         <label for="emailCc" class="form-label">CC</label>
                                         <div class="input input-group">
-                                            <select class="mySelect" id="emailCc" name="emailCc" multiple="multiple" title="" data-live-search="true" style="width: 100%">
+                                            <select class="mySelect" id="emailCc" name="emailCc" multiple="multiple" title="" data-live-search="true" style="width: 100%" <c:if test="${uac.befLoadingHwReplace ne 'Yes'}">disabled</c:if>>
                                                 <c:forEach items="${listCc}" var="group">
                                                     <option value="${group.email}">${group.name}&nbsp;&nbsp;(${group.email})</option>
                                                 </c:forEach>
@@ -724,8 +738,8 @@
                                         </div>
                                     </div>
                                 </div>
-                                <a type ="button" title="Send Email" data-bs-toggle="modal" data-bs-target="#confirmation_modal" class="btn btn-outline-warning me-2 float-end" role="button" onclick="sendEmail();">
-                                    <i class='bi bi-envelope-arrow-up'></i>&nbsp;&nbsp;Send Email to Planner</a>
+                                <a type ="button" title="Send Email" data-bs-toggle="modal" data-bs-target="#confirmation_modal" class="btn btn-outline-warning me-2 float-end <c:if test="${uac.befLoadingHwReplace ne 'Yes'}">disabled</c:if>" role="button" onclick="sendEmail();">
+                                        <i class='bi bi-envelope-arrow-up'></i>&nbsp;&nbsp;Send Email to Planner</a>
                                 </c:if>
                             </c:if>
                     </div>

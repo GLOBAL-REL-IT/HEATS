@@ -273,7 +273,7 @@
                                     <div class="mb-1">
                                         <label for="model" class="form-label">Priority</label>
                                         <div class="input input-group">
-                                            <select class="input input-group" id="priority" name="priority" style="width: 100%">
+                                            <select class="input input-group" id="priority" name="priority" style="width: 100%" <c:if test="${uac.befLoadingPriority ne 'Yes'}">disabled</c:if>>
                                                 <!--<option></option>-->
                                                 <c:forEach items="${priorityList}" var="invInner">
                                                     <option value="${invInner.name}" ${invInner.selected}>${invInner.name}</option>
@@ -288,16 +288,18 @@
                                     <div class="mb-1">
                                         <label for="itemId" class="form-label">Remarks</label>
                                         <div class="input input-group">
-                                            <textarea class="form-control" rows="5" id="remarks" name="remarks"></textarea>
+                                            <textarea class="form-control" rows="5" id="remarks" name="remarks" <c:if test="${uac.befLoadingPriority ne 'Yes'}">disabled</c:if>></textarea>
                                         </div>
                                     </div>
                                 </div>
                             </div>
                             <div class="col-md-12">
+                            <c:if test="${uac.befLoadingPriority == 'Yes'}">
                                 <a title="Delete Priority" data-bs-toggle="modal" data-bs-target="#delete_modal" class="table-link danger group_delete" onclick="modalDeletePriority();">
                                     <i class="bi bi-trash h3" style="color:red"></i>
                                 </a>
-                                <button type="submit" id="submit" id="submit" class="btn btn-primary float-end">Save</button>
+                            </c:if>
+                                <button type="submit" id="submit" id="submit" class="btn btn-primary float-end" <c:if test="${uac.befLoadingPriority ne 'Yes'}">disabled</c:if>>Save</button>
                             </div>
                         </form>
                     </div>
