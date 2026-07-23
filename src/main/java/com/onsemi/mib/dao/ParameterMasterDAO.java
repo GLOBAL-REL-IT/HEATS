@@ -90,8 +90,9 @@ public class ParameterMasterDAO {
         QueryResult queryResult = new QueryResult();
         try {
             PreparedStatement ps = conn.prepareStatement(
-                    "DELETE FROM parameter_master WHERE id = '" + parameterMasterId + "'"
+                    "DELETE FROM parameter_master WHERE id = ? "
             );
+            ps.setString(1, parameterMasterId);
             queryResult.setResult(ps.executeUpdate());
             ps.close();
         } catch (SQLException e) {
@@ -110,10 +111,11 @@ public class ParameterMasterDAO {
     }
 
     public ParameterMaster getParameterMaster(String parameterMasterId) {
-        String sql = "SELECT * FROM parameter_master WHERE id = '" + parameterMasterId + "'";
+        String sql = "SELECT * FROM parameter_master WHERE id = ? ";
         ParameterMaster parameterMaster = null;
         try {
             PreparedStatement ps = conn.prepareStatement(sql);
+            ps.setString(1, parameterMasterId);
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
                 parameterMaster = new ParameterMaster();
@@ -203,13 +205,13 @@ public class ParameterMasterDAO {
     }
 
     public String getMasterCodeandName(String masterCode) {
-        String sql = "SELECT s.code AS code, s.name AS name FROM parameter_master s"
-                + " WHERE code = '" + masterCode + "'";
+        String sql = "SELECT s.code AS code, s.name AS name FROM parameter_master s WHERE code = ? ";
         String name = "";
         String code = "";
         String codeName = "";
         try {
             PreparedStatement ps = conn.prepareStatement(sql);
+            ps.setString(1, masterCode);
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
                 name = rs.getString("name");
@@ -231,13 +233,13 @@ public class ParameterMasterDAO {
         }
         return codeName;
     }
-    
-     public String getMasterCode(String masterCode) {
-        String sql = "SELECT s.code AS code FROM parameter_master s"
-                + " WHERE code = '" + masterCode + "'";
+
+    public String getMasterCode(String masterCode) {
+        String sql = "SELECT s.code AS code FROM parameter_master s WHERE code = ? ";
         String code = "";
         try {
             PreparedStatement ps = conn.prepareStatement(sql);
+            ps.setString(1, masterCode);
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
                 code = rs.getNString("code");
@@ -257,4 +259,5 @@ public class ParameterMasterDAO {
         }
         return code;
     }
+
 }

@@ -215,7 +215,7 @@ public class RetrieveDAO1 {
         QueryResult queryResult = new QueryResult();
         try {
             PreparedStatement ps = conn.prepareStatement(
-                    "UPDATE sr_retrieve SET status = ?, flag = ? WHERE id = ?"
+                    "UPDATE sr_retrieve SET status = ?, flag = ? WHERE id = ? "
             );
             ps.setString(1, retrieve.getStatus());
             ps.setString(2, retrieve.getFlag());
@@ -241,8 +241,9 @@ public class RetrieveDAO1 {
         QueryResult queryResult = new QueryResult();
         try {
             PreparedStatement ps = conn.prepareStatement(
-                    "DELETE FROM sr_retrieve WHERE id = '" + retrieveId + "'"
+                    "DELETE FROM sr_retrieve WHERE id = ? "
             );
+            ps.setString(1, retrieveId);
             queryResult.setResult(ps.executeUpdate());
             ps.close();
         } catch (SQLException e) {
@@ -261,10 +262,11 @@ public class RetrieveDAO1 {
     }
 
     public Retrieve getRetrieve(String retrieveId) {
-        String sql = "SELECT * FROM sr_retrieve WHERE id = '" + retrieveId + "'";
+        String sql = "SELECT * FROM sr_retrieve WHERE id = ? ";
         Retrieve retrieve = null;
         try {
             PreparedStatement ps = conn.prepareStatement(sql);
+            ps.setString(1, retrieveId);
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
                 retrieve = new Retrieve();
@@ -313,10 +315,11 @@ public class RetrieveDAO1 {
                 + "DATE_FORMAT(ftp.mth_to_scrap,'%M %Y') AS mth_to_scrap_view, "
                 + "FROM sr_retrieve ret, sr_ftp_data ftp, sr_inventory inv, sr_request re "
                 + "WHERE ret.req_id = re.id AND re.ftp_id = ftp.id AND ret.req_id = inv.req_id "
-                + "AND ret.id = '" + retrieveId + "'";
+                + "AND ret.id = ? ";
         Retrieve retrieve = null;
         try {
             PreparedStatement ps = conn.prepareStatement(sql);
+            ps.setString(1, retrieveId);
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
                 retrieve = new Retrieve();
@@ -424,7 +427,7 @@ public class RetrieveDAO1 {
         }
         return retrieveList;
     }
-    
+
     public Integer getCountSample() {
         Integer count = null;
         try {
@@ -448,11 +451,12 @@ public class RetrieveDAO1 {
         }
         return count;
     }
-    
+
     public Integer getCountInventory(String month) {
         Integer count = null;
         try {
-            PreparedStatement ps = conn.prepareStatement("SELECT COUNT(*) AS data FROM sr_inventory WHERE MONTH(mth_to_scrap) = '" + month + "'");
+            PreparedStatement ps = conn.prepareStatement("SELECT COUNT(*) AS data FROM sr_inventory WHERE MONTH(mth_to_scrap) = ? ");
+            ps.setString(1, month);
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
                 count = rs.getInt("data");
@@ -472,11 +476,12 @@ public class RetrieveDAO1 {
         }
         return count;
     }
-    
+
     public Integer getCountRetrieve(String month) {
         Integer count = null;
         try {
-            PreparedStatement ps = conn.prepareStatement("SELECT COUNT(*) AS data FROM sr_retrieve WHERE MONTH(req_date) = '" + month + "'");
+            PreparedStatement ps = conn.prepareStatement("SELECT COUNT(*) AS data FROM sr_retrieve WHERE MONTH(req_date) = ? ");
+            ps.setString(1, month);
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
                 count = rs.getInt("data");

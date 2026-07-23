@@ -108,8 +108,9 @@ public class HardwareDAO {
         QueryResult queryResult = new QueryResult();
         try {
             PreparedStatement ps = conn.prepareStatement(
-                    "DELETE FROM hardware WHERE id = '" + hardwareId + "'"
+                    "DELETE FROM hardware WHERE id = ? "
             );
+            ps.setString(1, hardwareId);
             queryResult.setResult(ps.executeUpdate());
             ps.close();
         } catch (SQLException e) {
@@ -128,10 +129,11 @@ public class HardwareDAO {
     }
 
     public Hardware getHardware(String hardwareId) {
-        String sql = "SELECT * FROM hardware WHERE id = '" + hardwareId + "'";
+        String sql = "SELECT * FROM hardware WHERE id = ? ";
         Hardware hardware = null;
         try {
             PreparedStatement ps = conn.prepareStatement(sql);
+            ps.setString(1, hardwareId);
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
                 hardware = new Hardware();
@@ -208,10 +210,11 @@ public class HardwareDAO {
     }
 
     public List<Hardware> getHardwareListByItemId(String itemId) {
-        String sql = "SELECT * FROM hardware WHERE item_id = '" + itemId + "' ORDER BY id ASC";
+        String sql = "SELECT * FROM hardware WHERE item_id = ? ORDER BY id ASC";
         List<Hardware> hardwareList = new ArrayList<Hardware>();
         try {
             PreparedStatement ps = conn.prepareStatement(sql);
+            ps.setString(1, itemId);
             Hardware hardware;
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
@@ -247,4 +250,5 @@ public class HardwareDAO {
         }
         return hardwareList;
     }
+
 }

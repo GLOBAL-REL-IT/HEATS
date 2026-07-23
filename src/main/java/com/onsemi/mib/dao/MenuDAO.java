@@ -36,14 +36,14 @@ public class MenuDAO {
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
                 menu = new Menu(
-                    rs.getString("parent_code"),
-                    rs.getString("code"),
-                    rs.getString("name"),
-                    rs.getString("url_path"),
-                    rs.getString("target"),
-                    rs.getString("icon"),
-                    rs.getString("label_key"),
-                    rs.getString("class_active")
+                        rs.getString("parent_code"),
+                        rs.getString("code"),
+                        rs.getString("name"),
+                        rs.getString("url_path"),
+                        rs.getString("target"),
+                        rs.getString("icon"),
+                        rs.getString("label_key"),
+                        rs.getString("class_active")
                 );
                 menuList.add(menu);
             }
@@ -54,15 +54,16 @@ public class MenuDAO {
         }
         return menuList;
     }
-    
+
     public List<Menu> getMenuList(String parentCode) {
         String sql = "SELECT id, parent_code, code, name, icon, label_key "
                 + "FROM menu_main m "
-                + "WHERE m.parent_code='" + parentCode + "' "
+                + "WHERE m.parent_code = ? "
                 + "ORDER BY m.sequence ASC";
         List<Menu> menuList = new ArrayList<Menu>();
         try {
             PreparedStatement ps = conn.prepareStatement(sql);
+            ps.setString(1, parentCode);
             Menu menu;
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
@@ -82,12 +83,13 @@ public class MenuDAO {
         }
         return menuList;
     }
-    
+
     public Boolean menuExist(String path) {
-        String sql = "SELECT id FROM menu_main m WHERE m.url_path='" + path + "'";
+        String sql = "SELECT id FROM menu_main m WHERE m.url_path = ?";
         Boolean exist = false;
         try {
             PreparedStatement ps = conn.prepareStatement(sql);
+            ps.setString(1, path);
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
                 exist = true;
@@ -99,4 +101,5 @@ public class MenuDAO {
         }
         return exist;
     }
+
 }

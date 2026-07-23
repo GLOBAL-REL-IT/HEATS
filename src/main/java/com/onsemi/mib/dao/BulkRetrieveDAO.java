@@ -112,8 +112,9 @@ public class BulkRetrieveDAO {
         QueryResult queryResult = new QueryResult();
         try {
             PreparedStatement ps = conn.prepareStatement(
-                    "DELETE FROM sr_bulk_retrieve WHERE id = '" + bulkRetrieveId + "'"
+                    "DELETE FROM sr_bulk_retrieve WHERE id = ? "
             );
+            ps.setString(1, bulkRetrieveId);
             queryResult.setResult(ps.executeUpdate());
             ps.close();
         } catch (SQLException e) {
@@ -132,10 +133,11 @@ public class BulkRetrieveDAO {
     }
 
     public BulkRetrieve getBulkRetrieve(String bulkRetrieveId) {
-        String sql = "SELECT * FROM sr_bulk_retrieve WHERE id = '" + bulkRetrieveId + "'";
+        String sql = "SELECT * FROM sr_bulk_retrieve WHERE id = ? ";
         BulkRetrieve bulkRetrieve = null;
         try {
             PreparedStatement ps = conn.prepareStatement(sql);
+            ps.setString(1, bulkRetrieveId);
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
                 bulkRetrieve = new BulkRetrieve();
@@ -194,7 +196,8 @@ public class BulkRetrieveDAO {
     public Integer getCountBulkByUserIdWithFlagZero(String userId) {
         Integer count = null;
         try {
-            PreparedStatement ps = conn.prepareStatement("SELECT COUNT(*) AS data FROM sr_bulk_retrieve WHERE requestor = '" + userId + "' AND flag = '0'");
+            PreparedStatement ps = conn.prepareStatement("SELECT COUNT(*) AS data FROM sr_bulk_retrieve WHERE requestor = ? AND flag = '0'");
+            ps.setString(1, userId);
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
                 count = rs.getInt("data");
@@ -218,7 +221,8 @@ public class BulkRetrieveDAO {
     public Integer getCountBulkId(String bulkId) {
         Integer count = null;
         try {
-            PreparedStatement ps = conn.prepareStatement("SELECT COUNT(*) AS data FROM sr_bulk_retrieve WHERE id = '" + bulkId + "'");
+            PreparedStatement ps = conn.prepareStatement("SELECT COUNT(*) AS data FROM sr_bulk_retrieve WHERE id = ? ");
+            ps.setString(1, bulkId);
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
                 count = rs.getInt("data");
@@ -240,10 +244,11 @@ public class BulkRetrieveDAO {
     }
 
     public BulkRetrieve getBulkRetrieveByUserIdAndFlagZero(String requestor) {
-        String sql = "SELECT * FROM sr_bulk_retrieve WHERE requestor = '" + requestor + "' AND flag = '0'";
+        String sql = "SELECT * FROM sr_bulk_retrieve WHERE requestor = ? AND flag = '0'";
         BulkRetrieve bulkRetrieve = null;
         try {
             PreparedStatement ps = conn.prepareStatement(sql);
+            ps.setString(1, requestor);
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
                 bulkRetrieve = new BulkRetrieve();
@@ -267,4 +272,5 @@ public class BulkRetrieveDAO {
         }
         return bulkRetrieve;
     }
+
 }

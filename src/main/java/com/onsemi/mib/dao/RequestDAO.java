@@ -151,8 +151,9 @@ public class RequestDAO {
         QueryResult queryResult = new QueryResult();
         try {
             PreparedStatement ps = conn.prepareStatement(
-                    "DELETE FROM sr_request WHERE id = '" + requestId + "'"
+                    "DELETE FROM sr_request WHERE id = ? "
             );
+            ps.setString(1, requestId);
             queryResult.setResult(ps.executeUpdate());
             ps.close();
         } catch (SQLException e) {
@@ -171,10 +172,11 @@ public class RequestDAO {
     }
 
     public Request getRequest(String requestId) {
-        String sql = "SELECT * FROM sr_request WHERE id = '" + requestId + "'";
+        String sql = "SELECT * FROM sr_request WHERE id = ? ";
         Request request = null;
         try {
             PreparedStatement ps = conn.prepareStatement(sql);
+            ps.setString(1, requestId);
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
                 request = new Request();
@@ -219,10 +221,11 @@ public class RequestDAO {
                 + "FROM sr_request re "
                 + "INNER JOIN sr_ftp_data ftp ON re.ftp_id = ftp.id "
                 + "LEFT JOIN sr_inventory inv ON re.inv_id = inv.id "
-                + "WHERE re.id = '" + requestId + "'";
+                + "WHERE re.id = ? ";
         Request request = null;
         try {
             PreparedStatement ps = conn.prepareStatement(sql);
+            ps.setString(1, requestId);
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
                 request = new Request();
@@ -368,14 +371,14 @@ public class RequestDAO {
         Integer count = null;
         try {
             PreparedStatement ps = conn.prepareStatement(
-                    "SELECT COUNT(*) AS count FROM sr_request WHERE ftp_id = '" + ftpId + "' AND flag = '0'"
+                    "SELECT COUNT(*) AS count FROM sr_request WHERE ftp_id = ? AND flag = '0'"
             );
+            ps.setString(1, ftpId);
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
                 count = rs.getInt("count");
             }
             rs.close();
-
             ps.close();
         } catch (SQLException e) {
             LOGGER.error(e.getMessage());
@@ -390,4 +393,5 @@ public class RequestDAO {
         }
         return count;
     }
+
 }

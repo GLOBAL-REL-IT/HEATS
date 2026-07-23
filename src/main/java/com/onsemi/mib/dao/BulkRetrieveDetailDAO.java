@@ -116,8 +116,9 @@ public class BulkRetrieveDetailDAO {
         QueryResult queryResult = new QueryResult();
         try {
             PreparedStatement ps = conn.prepareStatement(
-                    "DELETE FROM sr_bulk_retrieve_detail WHERE id = '" + bulkRetrieveDetailId + "'"
+                    "DELETE FROM sr_bulk_retrieve_detail WHERE id = ? "
             );
+            ps.setString(1, bulkRetrieveDetailId);
             queryResult.setResult(ps.executeUpdate());
             ps.close();
         } catch (SQLException e) {
@@ -136,10 +137,11 @@ public class BulkRetrieveDetailDAO {
     }
 
     public BulkRetrieveDetail getBulkRetrieveDetail(String bulkRetrieveDetailId) {
-        String sql = "SELECT * FROM sr_bulk_retrieve_detail WHERE id = '" + bulkRetrieveDetailId + "'";
+        String sql = "SELECT * FROM sr_bulk_retrieve_detail WHERE id = ? ";
         BulkRetrieveDetail bulkRetrieveDetail = null;
         try {
             PreparedStatement ps = conn.prepareStatement(sql);
+            ps.setString(1, bulkRetrieveDetailId);
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
                 bulkRetrieveDetail = new BulkRetrieveDetail();
@@ -202,7 +204,8 @@ public class BulkRetrieveDetailDAO {
     public Integer getCountBulkDetailByBulkId(String bulkId) {
         Integer count = null;
         try {
-            PreparedStatement ps = conn.prepareStatement("SELECT COUNT(*) AS data FROM sr_bulk_retrieve_detail WHERE bulk_id = '" + bulkId + "'");
+            PreparedStatement ps = conn.prepareStatement("SELECT COUNT(*) AS data FROM sr_bulk_retrieve_detail WHERE bulk_id = ? ");
+            ps.setString(1, bulkId);
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
                 count = rs.getInt("data");
@@ -226,7 +229,9 @@ public class BulkRetrieveDetailDAO {
     public Integer getCountBulkDetailByBulkIdAndReqIdAndFlagZero(String bulkId, String reqId) {
         Integer count = null;
         try {
-            PreparedStatement ps = conn.prepareStatement("SELECT COUNT(*) AS data FROM sr_bulk_retrieve_detail WHERE bulk_id = '" + bulkId + "' AND req_id = '" + reqId + "' AND flag = '0'");
+            PreparedStatement ps = conn.prepareStatement("SELECT COUNT(*) AS data FROM sr_bulk_retrieve_detail WHERE bulk_id = ? AND req_id = ? AND flag = '0'");
+            ps.setString(1, bulkId);
+            ps.setString(2, reqId);
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
                 count = rs.getInt("data");
@@ -250,7 +255,8 @@ public class BulkRetrieveDetailDAO {
     public Integer getCountBulkDetailByReqIdAndFlagZero(String reqId) {
         Integer count = null;
         try {
-            PreparedStatement ps = conn.prepareStatement("SELECT COUNT(*) AS data FROM sr_bulk_retrieve_detail WHERE req_id = '" + reqId + "' AND flag = '0'");
+            PreparedStatement ps = conn.prepareStatement("SELECT COUNT(*) AS data FROM sr_bulk_retrieve_detail WHERE req_id = ? AND flag = '0' ");
+            ps.setString(1, reqId);
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
                 count = rs.getInt("data");
@@ -275,10 +281,11 @@ public class BulkRetrieveDetailDAO {
         String sql = "SELECT bulkD.id AS bulkDetailId, bulk.id AS bulkId, re.id AS reqId, inv.id AS invId, ft.rmslot_event, ft.actual_qty, ft.pkg_family, "
                 + "ft.pkg_name, DATE_FORMAT(ft.mth_to_scrap,'%M %Y') AS mth_to_scrap_view, inv.inventory_shelf, ft.completed_date, bulkD.returnable, bulkD.remarks, bulkD.created_date "
                 + "FROM sr_bulk_retrieve bulk, sr_bulk_retrieve_detail bulkD, sr_request re, sr_ftp_data ft, sr_inventory inv "
-                + "WHERE bulk.id = bulkD.bulk_id AND bulkD.req_id = re.id AND re.ftp_id = ft.id AND re.inv_id = inv.id AND bulk.id = '" + bulkId + "'";
+                + "WHERE bulk.id = bulkD.bulk_id AND bulkD.req_id = re.id AND re.ftp_id = ft.id AND re.inv_id = inv.id AND bulk.id = ? ";
         List<BulkRetrieveDetail> bulkRetrieveDetailList = new ArrayList<BulkRetrieveDetail>();
         try {
             PreparedStatement ps = conn.prepareStatement(sql);
+            ps.setString(1, bulkId);
             BulkRetrieveDetail bulkRetrieveDetail;
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
@@ -297,7 +304,6 @@ public class BulkRetrieveDetailDAO {
                 bulkRetrieveDetail.setLocation(rs.getString("inventory_shelf"));
                 bulkRetrieveDetail.setCompleteDate(rs.getString("completed_date"));
                 bulkRetrieveDetail.setCreatedDate(rs.getString("created_date"));
-
                 bulkRetrieveDetailList.add(bulkRetrieveDetail);
             }
             rs.close();
@@ -315,4 +321,5 @@ public class BulkRetrieveDetailDAO {
         }
         return bulkRetrieveDetailList;
     }
+
 }

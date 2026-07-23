@@ -92,8 +92,9 @@ public class ParameterDetailsDAO {
         QueryResult queryResult = new QueryResult();
         try {
             PreparedStatement ps = conn.prepareStatement(
-                    "DELETE FROM parameter_details WHERE id = '" + parameterDetailsId + "'"
+                    "DELETE FROM parameter_details WHERE id = ?"
             );
+            ps.setString(1, parameterDetailsId);
             queryResult.setResult(ps.executeUpdate());
             ps.close();
         } catch (SQLException e) {
@@ -112,10 +113,11 @@ public class ParameterDetailsDAO {
     }
 
     public ParameterDetails getParameterDetails(String parameterDetailsId) {
-        String sql = "SELECT * FROM parameter_details WHERE id = '" + parameterDetailsId + "'";
+        String sql = "SELECT * FROM parameter_details WHERE id = '? ";
         ParameterDetails parameterDetails = null;
         try {
             PreparedStatement ps = conn.prepareStatement(sql);
+            ps.setString(1, parameterDetailsId);
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
                 parameterDetails = new ParameterDetails();
@@ -182,10 +184,11 @@ public class ParameterDetailsDAO {
     }
 
     public List<ParameterDetails> getParameterDetailsListByMasterCode(String masterCode) {
-        String sql = "SELECT * FROM parameter_details WHERE master_code = '" + masterCode + "' ORDER BY id ASC";
+        String sql = "SELECT * FROM parameter_details WHERE master_code = ? ORDER BY id ASC";
         List<ParameterDetails> parameterDetailsList = new ArrayList<ParameterDetails>();
         try {
             PreparedStatement ps = conn.prepareStatement(sql);
+            ps.setString(1, masterCode);
             ParameterDetails parameterDetails;
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
@@ -218,12 +221,14 @@ public class ParameterDetailsDAO {
     }
 
     public String getNextDetailCode(String masterCode) {
-        String sql = "SELECT LPAD(IFNULL(MAX(m.detail_code)+1, CONCAT('" + masterCode + "','001')),6,'0') AS code "
+        String sql = "SELECT LPAD(IFNULL(MAX(m.detail_code)+1, CONCAT(?,'001')),6,'0') AS code "
                 + "FROM parameter_details m "
-                + "WHERE m.master_code = '" + masterCode + "'";
+                + "WHERE m.master_code = ? ";
         String code = "";
         try {
             PreparedStatement ps = conn.prepareStatement(sql);
+            ps.setString(1, masterCode);
+            ps.setString(2, masterCode);
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
                 code = rs.getString("code");
@@ -248,8 +253,9 @@ public class ParameterDetailsDAO {
         QueryResult queryResult = new QueryResult();
         try {
             PreparedStatement ps = conn.prepareStatement(
-                    "DELETE FROM parameter_details WHERE master_code = '" + masterCode + "'"
+                    "DELETE FROM parameter_details WHERE master_code = ? "
             );
+            ps.setString(1, masterCode);
             queryResult.setResult(ps.executeUpdate());
             ps.close();
         } catch (SQLException e) {
@@ -269,9 +275,10 @@ public class ParameterDetailsDAO {
 
     public Integer getCountByMasterCode(String masterCode) {
         Integer count = null;
-        String sql = "SELECT count(id) AS count FROM parameter_details WHERE master_code = '" + masterCode + "'";
+        String sql = "SELECT count(id) AS count FROM parameter_details WHERE master_code = ? ";
         try {
             PreparedStatement ps = conn.prepareStatement(sql);
+            ps.setString(1, masterCode);
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
                 count = rs.getInt("count");
@@ -430,8 +437,10 @@ public class ParameterDetailsDAO {
         Integer count = null;
         try {
             PreparedStatement ps = conn.prepareStatement(
-                    "SELECT COUNT(*) AS count FROM parameter_details inc WHERE inc.master_code = '" + masterCode + "' AND name = '" + name + "'"
+                    "SELECT COUNT(*) AS count FROM parameter_details inc WHERE inc.master_code = ? AND name = ? "
             );
+            ps.setString(1, masterCode);
+            ps.setString(2, name);
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
                 count = rs.getInt("count");
@@ -479,4 +488,5 @@ public class ParameterDetailsDAO {
 //        }
 //        return parameterDetailList;
 //    }
+
 }

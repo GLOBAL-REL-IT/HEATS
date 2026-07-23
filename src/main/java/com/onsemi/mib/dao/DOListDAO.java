@@ -2,7 +2,6 @@ package com.onsemi.mib.dao;
 
 import com.onsemi.mib.db.DB;
 import com.onsemi.mib.model.DOList;
-import com.onsemi.mib.model.UserEmail;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -15,8 +14,8 @@ import com.onsemi.mib.tools.QueryResult;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-
 public class DOListDAO {
+
     private static final Logger LOGGER = LoggerFactory.getLogger(DOListDAO.class);
     private final Connection conn;
     private final DataSource dataSource;
@@ -31,8 +30,8 @@ public class DOListDAO {
         QueryResult queryResult = new QueryResult();
         try {
             PreparedStatement ps = conn.prepareStatement(
-                "INSERT INTO sr_do_list (req_id, box_id, req_type, total_units, total_weight, event, pkg_family, mth_to_scrap, modified_date, modified_by, created_date, created_by, status, flag, unit_price) "
-              + "VALUES (?,?,?,?,?,?,?,?,NOW(),?,NOW(),?,?,?,?)", Statement.RETURN_GENERATED_KEYS
+                    "INSERT INTO sr_do_list (req_id, box_id, req_type, total_units, total_weight, event, pkg_family, mth_to_scrap, modified_date, modified_by, created_date, created_by, status, flag, unit_price) "
+                    + "VALUES (?,?,?,?,?,?,?,?,NOW(),?,NOW(),?,?,?,?)", Statement.RETURN_GENERATED_KEYS
             );
             ps.setString(1, doList.getReqId());
             ps.setString(2, doList.getBoxId());
@@ -72,8 +71,8 @@ public class DOListDAO {
     public QueryResult updateDo(DOList doList) {
         QueryResult queryResult = new QueryResult();
         String sql = "UPDATE sr_do_list "
-                   + "SET gts_no = ?, shipping_date = ?, status = ?, flag = ?, modified_date = NOW(), modified_by = ?, total_box = ?, index_count = ? "
-                   + "WHERE flag = '0' ";
+                + "SET gts_no = ?, shipping_date = ?, status = ?, flag = ?, modified_date = NOW(), modified_by = ?, total_box = ?, index_count = ? "
+                + "WHERE flag = '0' ";
         try {
             PreparedStatement ps = conn.prepareStatement(sql);
             ps.setString(1, doList.getGtsNo());
@@ -99,17 +98,15 @@ public class DOListDAO {
         }
         return queryResult;
     }
-    
-    
+
     public List<DOList> getAllDOListActual(String flag) {
-        String sql = "SELECT * "
-                   + "FROM sr_do_list "
-                   + "WHERE flag = '" + flag + "' ";
+        String sql = "SELECT * FROM sr_do_list WHERE flag = ? ";
         List<DOList> doActualList = new ArrayList<DOList>();
         try {
             PreparedStatement ps = conn.prepareStatement(sql);
+            ps.setString(1, flag);
             ResultSet rs = ps.executeQuery();
-            DOList doList ;
+            DOList doList;
             while (rs.next()) {
                 doList = new DOList();
                 doList.setDoId(rs.getString("id"));
@@ -128,10 +125,10 @@ public class DOListDAO {
                 doList.setStatus(rs.getString("status"));
                 doList.setFlag(rs.getString("flag"));
                 doList.setModifiedBy(rs.getString("modified_by"));
-                doList.setModifiedDate(rs.getString("modified_date")); 
+                doList.setModifiedDate(rs.getString("modified_date"));
                 doList.setCreatedDate(rs.getString("created_date"));
                 doList.setCreatedBy(rs.getString("created_by"));
-                doActualList.add(doList);                
+                doActualList.add(doList);
             }
             rs.close();
             ps.close();
@@ -148,14 +145,13 @@ public class DOListDAO {
         }
         return doActualList;
     }
-    
+
     public DOList getAllDOListActualPerReqId(String reqId) {
-        String sql = "SELECT * "
-                   + "FROM sr_do_list "
-                   + "WHERE req_id = '" + reqId  + "' ";
+        String sql = "SELECT * FROM sr_do_list WHERE req_id = ? ";
         DOList doList = null;
         try {
             PreparedStatement ps = conn.prepareStatement(sql);
+            ps.setString(1, reqId);
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
                 doList = new DOList();
@@ -175,9 +171,9 @@ public class DOListDAO {
                 doList.setStatus(rs.getString("status"));
                 doList.setFlag(rs.getString("flag"));
                 doList.setModifiedBy(rs.getString("modified_by"));
-                doList.setModifiedDate(rs.getString("modified_date")); 
+                doList.setModifiedDate(rs.getString("modified_date"));
                 doList.setCreatedDate(rs.getString("created_date"));
-                doList.setCreatedBy(rs.getString("created_by"));           
+                doList.setCreatedBy(rs.getString("created_by"));
             }
             rs.close();
             ps.close();
@@ -194,11 +190,10 @@ public class DOListDAO {
         }
         return doList;
     }
-    
+
     public DOList getDistinctDOListDetails() {
         String sql = "SELECT MIN(index_count) AS kira, gts_no, DATE_FORMAT(shipping_date,'%d/%m/%y %h:%i %p') AS shipping_date_view, DATE_FORMAT(modified_date,'%d/%m/%y %h:%i %p') AS modified_date_view "
-                   + "FROM sr_do_list "
-                   + "WHERE flag = '1' ";
+                + "FROM sr_do_list WHERE flag = '1' ";
         DOList doList = null;
         try {
             PreparedStatement ps = conn.prepareStatement(sql);
@@ -208,7 +203,7 @@ public class DOListDAO {
                 doList.setGtsNo(rs.getString("gts_no"));
                 doList.setIndexCount(rs.getString("kira"));
                 doList.setShipDate(rs.getString("shipping_date_view"));
-                doList.setModifiedDate(rs.getString("modified_date_view")); 
+                doList.setModifiedDate(rs.getString("modified_date_view"));
             }
             rs.close();
             ps.close();
@@ -225,14 +220,13 @@ public class DOListDAO {
         }
         return doList;
     }
-    
+
     public DOList getDOActualPerDoId(String id) {
-        String sql = "SELECT * "
-                   + "FROM sr_do_list "
-                   + "WHERE id = '" + id  + "' ";
+        String sql = "SELECT * FROM sr_do_list WHERE id = ? ";
         DOList doList = null;
         try {
             PreparedStatement ps = conn.prepareStatement(sql);
+            ps.setString(1, id);
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
                 doList = new DOList();
@@ -252,9 +246,9 @@ public class DOListDAO {
                 doList.setStatus(rs.getString("status"));
                 doList.setFlag(rs.getString("flag"));
                 doList.setModifiedBy(rs.getString("modified_by"));
-                doList.setModifiedDate(rs.getString("modified_date")); 
+                doList.setModifiedDate(rs.getString("modified_date"));
                 doList.setCreatedDate(rs.getString("created_date"));
-                doList.setCreatedBy(rs.getString("created_by"));           
+                doList.setCreatedBy(rs.getString("created_by"));
             }
             rs.close();
             ps.close();
@@ -271,17 +265,17 @@ public class DOListDAO {
         }
         return doList;
     }
-    
+
     public List<DOList> getAllDOListDisplay(String flag) {
         String sql = "SELECT *, UPPER(DATE_FORMAT(mth_to_scrap,'%b %y')) AS mth_to_scrap_view, DATE_FORMAT(modified_date,'%d/%m/%y %h:%i %p') AS modified_date_view, "
-                   + "DATE_FORMAT(created_date,'%d/%m/%y %h:%i %p') AS created_date_view, DATE_FORMAT(shipping_date,'%d/%m/%y %h:%i %p') AS shipping_date_view "
-                   + "FROM sr_do_list "
-                   + "WHERE flag = '" + flag + "' ";
+                + "DATE_FORMAT(created_date,'%d/%m/%y %h:%i %p') AS created_date_view, DATE_FORMAT(shipping_date,'%d/%m/%y %h:%i %p') AS shipping_date_view "
+                + "FROM sr_do_list WHERE flag = ? ";
         List<DOList> doActualList = new ArrayList<DOList>();
         try {
             PreparedStatement ps = conn.prepareStatement(sql);
+            ps.setString(1, flag);
             ResultSet rs = ps.executeQuery();
-            DOList doList ;
+            DOList doList;
             while (rs.next()) {
                 doList = new DOList();
                 doList.setDoId(rs.getString("id"));
@@ -300,10 +294,10 @@ public class DOListDAO {
                 doList.setStatus(rs.getString("status"));
                 doList.setFlag(rs.getString("flag"));
                 doList.setModifiedBy(rs.getString("modified_by"));
-                doList.setModifiedDate(rs.getString("modified_date_view")); 
+                doList.setModifiedDate(rs.getString("modified_date_view"));
                 doList.setCreatedDate(rs.getString("created_date_view"));
                 doList.setCreatedBy(rs.getString("created_by"));
-                doActualList.add(doList);                
+                doActualList.add(doList);
             }
             rs.close();
             ps.close();
@@ -325,10 +319,8 @@ public class DOListDAO {
         Integer count = null;
         try {
             PreparedStatement ps = conn.prepareStatement(
-                "SELECT COUNT(id) AS count FROM sr_do_list " +
-                "WHERE flag = '0' OR flag = '1' "
+                    "SELECT COUNT(id) AS count FROM sr_do_list WHERE flag = '0' OR flag = '1' "
             );
-
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
                 count = rs.getInt("count");
@@ -348,15 +340,13 @@ public class DOListDAO {
         }
         return count;
     }
-    
+
     public Integer getCountVerifiedDO() {
         Integer count = null;
         try {
             PreparedStatement ps = conn.prepareStatement(
-                "SELECT COUNT(id) AS count FROM sr_do_list " +
-                "WHERE flag = '1' "
+                    "SELECT COUNT(id) AS count FROM sr_do_list WHERE flag = '1' "
             );
-
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
                 count = rs.getInt("count");
@@ -376,15 +366,13 @@ public class DOListDAO {
         }
         return count;
     }
-    
+
     public Integer getCountOpenDetails() {
         Integer count = null;
         try {
             PreparedStatement ps = conn.prepareStatement(
-                "SELECT COUNT(id) AS count FROM sr_do_list " +
-                "WHERE flag = '0' "
+                    "SELECT COUNT(id) AS count FROM sr_do_list WHERE flag = '0' "
             );
-
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
                 count = rs.getInt("count");
@@ -404,15 +392,13 @@ public class DOListDAO {
         }
         return count;
     }
-    
+
     public Integer getMaxIndexCount() {
         Integer count = null;
         try {
             PreparedStatement ps = conn.prepareStatement(
-                "SELECT MAX(index_count) AS count "
-              + "FROM sr_do_list "
+                    "SELECT MAX(index_count) AS count FROM sr_do_list "
             );
-
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
                 count = rs.getInt("count");
@@ -432,16 +418,13 @@ public class DOListDAO {
         }
         return count;
     }
-    
+
     public Integer getCheckMinIndexCountStatus() {
         Integer count = null;
         try {
             PreparedStatement ps = conn.prepareStatement(
-                "SELECT IFNULL(MIN(index_count),'0') AS count, flag " 
-                + "FROM sr_do_list " 
-                + "WHERE flag = 1 AND (SELECT COUNT(id) FROM sr_do_list WHERE flag = 0) != 0 "
+                    "SELECT IFNULL(MIN(index_count),'0') AS count, flag FROM sr_do_list WHERE flag = 1 AND (SELECT COUNT(id) FROM sr_do_list WHERE flag = 0) != 0 "
             );
-
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
                 count = rs.getInt("count");
@@ -461,12 +444,10 @@ public class DOListDAO {
         }
         return count;
     }
-    
+
     public QueryResult updateDoStatus(DOList doList) {
         QueryResult queryResult = new QueryResult();
-        String sql = "UPDATE sr_do_list "
-                   + "SET status = ?, flag = ?, modified_date = NOW(), modified_by = ? "
-                   + "WHERE flag = 1 ";
+        String sql = "UPDATE sr_do_list SET status = ?, flag = ?, modified_date = NOW(), modified_by = ? WHERE flag = 1 ";
         try {
             PreparedStatement ps = conn.prepareStatement(sql);
             ps.setString(1, doList.getStatus());
@@ -488,12 +469,10 @@ public class DOListDAO {
         }
         return queryResult;
     }
-    
+
     public QueryResult updateDoShipStatus(DOList doList) {
         QueryResult queryResult = new QueryResult();
-        String sql = "UPDATE sr_do_list "
-                   + "SET status = ?, flag = ?, modified_date = NOW(), modified_by = ? "
-                   + "WHERE flag = 1 ";
+        String sql = "UPDATE sr_do_list SET status = ?, flag = ?, modified_date = NOW(), modified_by = ? WHERE flag = 1 ";
         try {
             PreparedStatement ps = conn.prepareStatement(sql);
             ps.setString(1, doList.getStatus());
@@ -559,10 +538,9 @@ public class DOListDAO {
         Integer count = null;
         try {
             PreparedStatement ps = conn.prepareStatement(
-                "SELECT COUNT(id) AS count FROM sr_do_list " +
-                "WHERE gts_no = '" + gtsNo + "' "
+                    "SELECT COUNT(id) AS count FROM sr_do_list WHERE gts_no = ? "
             );
-
+            ps.setString(1, gtsNo);
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
                 count = rs.getInt("count");
@@ -582,19 +560,18 @@ public class DOListDAO {
         }
         return count;
     }
-    
+
     public List<DOList> getAllGtsNo() {
-        String sql = "SELECT DISTINCT(gts_no) "
-                   + "FROM sr_do_list ";
+        String sql = "SELECT DISTINCT(gts_no) FROM sr_do_list ";
         List<DOList> doActualList = new ArrayList<DOList>();
         try {
             PreparedStatement ps = conn.prepareStatement(sql);
             ResultSet rs = ps.executeQuery();
-            DOList doList ;
+            DOList doList;
             while (rs.next()) {
                 doList = new DOList();
                 doList.setGtsNo(rs.getString("gts_no"));
-                doActualList.add(doList);                
+                doActualList.add(doList);
             }
             rs.close();
             ps.close();
@@ -611,17 +588,17 @@ public class DOListDAO {
         }
         return doActualList;
     }
-    
+
     public List<DOList> getAllListPerGtsNo(String gtsNo) {
         String sql = "SELECT *, UPPER(DATE_FORMAT(mth_to_scrap,'%b %y')) AS mth_to_scrap_view, DATE_FORMAT(modified_date,'%d/%m/%y %h:%i %p') AS modified_date_view, "
-                   + "DATE_FORMAT(created_date,'%d/%m/%y %h:%i %p') AS created_date_view, DATE_FORMAT(shipping_date,'%d/%m/%y %h:%i %p') AS shipping_date_view "
-                   + "FROM sr_do_list "
-                   + "WHERE gts_no = '" + gtsNo + "' ";
+                + "DATE_FORMAT(created_date,'%d/%m/%y %h:%i %p') AS created_date_view, DATE_FORMAT(shipping_date,'%d/%m/%y %h:%i %p') AS shipping_date_view "
+                + "FROM sr_do_list WHERE gts_no = ? ";
         List<DOList> doActualList = new ArrayList<DOList>();
         try {
             PreparedStatement ps = conn.prepareStatement(sql);
+            ps.setString(1, gtsNo);
             ResultSet rs = ps.executeQuery();
-            DOList doList ;
+            DOList doList;
             while (rs.next()) {
                 doList = new DOList();
                 doList.setDoId(rs.getString("id"));
@@ -640,10 +617,10 @@ public class DOListDAO {
                 doList.setStatus(rs.getString("status"));
                 doList.setFlag(rs.getString("flag"));
                 doList.setModifiedBy(rs.getString("modified_by"));
-                doList.setModifiedDate(rs.getString("modified_date_view")); 
+                doList.setModifiedDate(rs.getString("modified_date_view"));
                 doList.setCreatedDate(rs.getString("created_date_view"));
                 doList.setCreatedBy(rs.getString("created_by"));
-                doActualList.add(doList);                
+                doActualList.add(doList);
             }
             rs.close();
             ps.close();
@@ -660,17 +637,17 @@ public class DOListDAO {
         }
         return doActualList;
     }
-    
+
     public List<DOList> getAllDOListDisplayPerGts(String gtsNo) {
         String sql = "SELECT *, UPPER(DATE_FORMAT(mth_to_scrap,'%b %y')) AS mth_to_scrap_view, DATE_FORMAT(modified_date,'%d/%m/%y %h:%i %p') AS modified_date_view, "
-                   + "DATE_FORMAT(created_date,'%d/%m/%y %h:%i %p') AS created_date_view, DATE_FORMAT(shipping_date,'%d/%m/%y %h:%i %p') AS shipping_date_view "
-                   + "FROM sr_do_list "
-                   + "WHERE gts_no = '" + gtsNo + "' ";
+                + "DATE_FORMAT(created_date,'%d/%m/%y %h:%i %p') AS created_date_view, DATE_FORMAT(shipping_date,'%d/%m/%y %h:%i %p') AS shipping_date_view "
+                + "FROM sr_do_list WHERE gts_no = ? ";
         List<DOList> doActualList = new ArrayList<DOList>();
         try {
             PreparedStatement ps = conn.prepareStatement(sql);
+            ps.setString(1, gtsNo);
             ResultSet rs = ps.executeQuery();
-            DOList doList ;
+            DOList doList;
             while (rs.next()) {
                 doList = new DOList();
                 doList.setDoId(rs.getString("id"));
@@ -689,10 +666,10 @@ public class DOListDAO {
                 doList.setStatus(rs.getString("status"));
                 doList.setFlag(rs.getString("flag"));
                 doList.setModifiedBy(rs.getString("modified_by"));
-                doList.setModifiedDate(rs.getString("modified_date_view")); 
+                doList.setModifiedDate(rs.getString("modified_date_view"));
                 doList.setCreatedDate(rs.getString("created_date_view"));
                 doList.setCreatedBy(rs.getString("created_by"));
-                doActualList.add(doList);                
+                doActualList.add(doList);
             }
             rs.close();
             ps.close();
@@ -709,13 +686,14 @@ public class DOListDAO {
         }
         return doActualList;
     }
-    
+
     public QueryResult deleteReq(String reqId) {
         QueryResult queryResult = new QueryResult();
         try {
             PreparedStatement ps = conn.prepareStatement(
-                    "DELETE FROM sr_do_list WHERE req_id = '" + reqId + "'"
+                    "DELETE FROM sr_do_list WHERE req_id = ? "
             );
+            ps.setString(1, reqId);
             queryResult.setResult(ps.executeUpdate());
             ps.close();
         } catch (SQLException e) {
@@ -732,15 +710,14 @@ public class DOListDAO {
         }
         return queryResult;
     }
-    
+
     public Integer getCountExistingRequest(String reqId) {
         Integer count = null;
         try {
             PreparedStatement ps = conn.prepareStatement(
-                "SELECT COUNT(id) AS count FROM sr_do_list " +
-                "WHERE req_id = '" + reqId + "' "
+                    "SELECT COUNT(id) AS count FROM sr_do_list WHERE req_id = ? "
             );
-
+            ps.setString(1, reqId);
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
                 count = rs.getInt("count");
@@ -760,5 +737,5 @@ public class DOListDAO {
         }
         return count;
     }
-    
+
 }
