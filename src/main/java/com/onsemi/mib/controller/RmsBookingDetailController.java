@@ -1581,6 +1581,14 @@ public class RmsBookingDetailController {
                             redirectAttrs.addFlashAttribute("error", "No load card configuration configured");
                         }
                     }
+                    LOGGER.info("CHCK DATA SINI : >>>> ");
+                    LOGGER.info("CHCK DATA SINI MB  : >>>> "+itemIdMB);
+                    LOGGER.info("CHCK DATA SINI LC  : >>>> "+itemIdLC);
+                    
+                    LOGGER.info("manTest : >>>> "+manTest);
+                    LOGGER.info("bibTest : >>>> "+bibTest);
+                    LOGGER.info("daqTest : >>>> "+daqTest);
+                    
                     model.addAttribute("itemIdMB", itemIdMB);
                     model.addAttribute("itemIdLC", itemIdLC);
                 }
@@ -4932,7 +4940,6 @@ public class RmsBookingDetailController {
 
         RmsBookingDetailDAO rmsD = new RmsBookingDetailDAO();
         List<RmsBookingDetail> booking = rmsD.getRmsBookingDetailListReleasedSingleBib();
-
         model.addAttribute("booking", booking);
 
         return "rmsbookingDetail/rms_released_single";
@@ -4969,6 +4976,11 @@ public class RmsBookingDetailController {
         RmsBookingHardwareGroupDAO h2D = new RmsBookingHardwareGroupDAO();
         List<RmsBookingHardwareGroup> hwGroupList = h2D.getRmsBookingHardwareGroupListByGroupId(groupId);
         model.addAttribute("hwGroupList", hwGroupList);
+
+        h2D = new RmsBookingHardwareGroupDAO();
+        RmsBookingHardwareGroup hwGroup = h2D.getLoadingDateByGroupId(groupId);
+        String loadingDate = hwGroup.getLoadingDate();
+        model.addAttribute("loadingDate", loadingDate);
 
         //get booking remarks
         RmsBookingHardwareDAO rmsHD = new RmsBookingHardwareDAO();

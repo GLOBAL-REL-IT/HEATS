@@ -22,6 +22,16 @@ public class RmsBookingHardwareGroup {
     private String returnBy;
     private String returnDate;
 
+    private String loadingDate;
+
+    public String getLoadingDate() {
+        return loadingDate;
+    }
+
+    public void setLoadingDate(String loadingDate) {
+        this.loadingDate = loadingDate;
+    }
+
     public String getUnloadingDate() {
         return unloadingDate;
     }

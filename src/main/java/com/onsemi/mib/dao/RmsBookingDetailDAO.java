@@ -644,9 +644,13 @@ public class RmsBookingDetailDAO {
 
     public List<RmsBookingDetail> getRmsBookingDetailListReleasedSingleBib() {
         String sql = "SELECT de.id, de.booking_pkid, de.rms_no, de.`event`, DATE_FORMAT(ha.released_date,'%d %M %Y %h:%i %p') AS releasedDate, ha.released_by, "
-                + "ha.id AS bookingHwId, ha.item_id, ha.item_pkid, ha.lc_qty, ha.pc_qty, ha.sub_status, ha.pkid "
-                + "FROM rms_booking_detail de LEFT JOIN rms_booking_hardware ha ON de.booking_pkid = ha.booking_pkid "
-                + "WHERE ha.item_type = 'Motherboard' AND ha.sub_status = 'Released to Production' AND ha.flag = '1'";
+                + "DATE_FORMAT(gr.loading_date,'%d %M %Y %h:%i %p') AS loadingDate, ha.id AS bookingHwId, ha.item_id, ha.item_pkid, ha.lc_qty, ha.pc_qty, ha.sub_status, ha.pkid "
+                + "FROM rms_booking_detail de "
+                + "LEFT JOIN rms_booking_hardware_group gr ON SUBSTRING_INDEX(gr.group_id,'/',1) = de.booking_pkid "
+                + "LEFT JOIN rms_booking_hardware ha ON ha.pkid = SUBSTRING_INDEX(gr.group_id,'/',-1) "
+                + "WHERE ha.item_type = 'Motherboard' AND ha.sub_status = 'Released to Production' AND ha.flag = '1' AND gr.item_type = 'BIB'";
+//         + "LEFT JOIN rms_booking_hardware ha ON de.booking_pkid = ha.booking_pkid "
+//         + "WHERE ha.item_type = 'Motherboard' AND ha.sub_status = 'Released to Production' AND ha.flag = '1'";
         List<RmsBookingDetail> rmsbookingDetailList = new ArrayList<RmsBookingDetail>();
         try {
             PreparedStatement ps = conn.prepareStatement(sql);
@@ -667,6 +671,7 @@ public class RmsBookingDetailDAO {
                 rmsbookingDetail.setLcQty(rs.getString("lc_qty"));
                 rmsbookingDetail.setPcQty(rs.getString("pc_qty"));
                 rmsbookingDetail.setStatus(rs.getString("sub_status"));
+                rmsbookingDetail.setLoadingDate(rs.getString("loadingDate"));
                 rmsbookingDetailList.add(rmsbookingDetail);
             }
             rs.close();

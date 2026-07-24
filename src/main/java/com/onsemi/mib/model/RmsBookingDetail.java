@@ -52,6 +52,16 @@ public class RmsBookingDetail {
     private String itemPkid;
     private String bookingHwId;
 
+    private String loadingDate;
+
+    public String getLoadingDate() {
+        return loadingDate;
+    }
+
+    public void setLoadingDate(String loadingDate) {
+        this.loadingDate = loadingDate;
+    }
+
     public String getBookingHwId() {
         return bookingHwId;
     }

@@ -103,6 +103,7 @@
                                                     <th>PC Qty</th>
                                                     <th>Released Date</th>
                                                     <th>Released By</th>
+                                                    <th>Loading Date</th>
                                                     <th>Status</th>
                                                     <th>Manage</th>
                                                 </tr>
@@ -118,6 +119,7 @@
                                                         <td><c:out value="${parameterMaster.pcQty}"/></td>
                                                         <td><c:out value="${parameterMaster.releasedDate}"/></td>
                                                         <td><c:out value="${parameterMaster.releasedBy}"/></td>
+                                                        <td><c:out value="${parameterMaster.loadingDate}"/></td>
                                                         <td><c:out value="${parameterMaster.status}"/></td>
                                                         <td align="center">
                                                             <a href="${contextPath}/rmsbookingDetail/rmsReleasedSingle/groupDetail/${parameterMaster.bookingPkid}/${parameterMaster.bookingHwPkid}" class="table-link" title="Manage">

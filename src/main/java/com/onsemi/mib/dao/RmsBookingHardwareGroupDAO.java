@@ -295,17 +295,41 @@ public class RmsBookingHardwareGroupDAO {
     }
 
     public RmsBookingHardwareGroup getUnloadingDateByGroupId(String groupId) {
-        String sql = "SELECT DATE_FORMAT(gr.unloading_date,'%d %M %Y %h:%i %p') AS viewUnloadingDate FROM rms_booking_hardware_group gr WHERE gr.group_id = '" + groupId + "' AND gr.item_type = 'BIB'";
+        String sql = "SELECT DATE_FORMAT(gr.unloading_date,'%d %M %Y %h:%i %p') AS viewUnloadingDate FROM rms_booking_hardware_group gr WHERE gr.group_id = ? AND gr.item_type = 'BIB' AND gr.flag = '2'";
         RmsBookingHardwareGroup rmsbookingHardwareGroup = null;
-        try {
-            PreparedStatement ps = conn.prepareStatement(sql);
-            ResultSet rs = ps.executeQuery();
-            while (rs.next()) {
-                rmsbookingHardwareGroup = new RmsBookingHardwareGroup();
-                rmsbookingHardwareGroup.setUnloadingDate(rs.getString("viewUnloadingDate"));
+        try ( PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setString(1, groupId);
+            try ( ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    rmsbookingHardwareGroup = new RmsBookingHardwareGroup();
+                    rmsbookingHardwareGroup.setUnloadingDate(rs.getString("viewUnloadingDate"));
+                }
             }
-            rs.close();
-            ps.close();
+        } catch (SQLException e) {
+            LOGGER.error(e.getMessage());
+        } finally {
+            if (conn != null) {
+                try {
+                    conn.close();
+                } catch (SQLException e) {
+                    LOGGER.error(e.getMessage());
+                }
+            }
+        }
+        return rmsbookingHardwareGroup;
+    }
+
+    public RmsBookingHardwareGroup getLoadingDateByGroupId(String groupId) {
+        String sql = "SELECT DATE_FORMAT(gr.loading_date,'%d %M %Y %h:%i %p') AS loadingDate FROM rms_booking_hardware_group gr WHERE gr.group_id = ? AND gr.item_type = 'BIB' AND gr.flag = '1'";
+        RmsBookingHardwareGroup rmsbookingHardwareGroup = null;
+        try ( PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setString(1, groupId);
+            try ( ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    rmsbookingHardwareGroup = new RmsBookingHardwareGroup();
+                    rmsbookingHardwareGroup.setLoadingDate(rs.getString("loadingDate"));
+                }
+            }
         } catch (SQLException e) {
             LOGGER.error(e.getMessage());
         } finally {
