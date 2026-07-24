@@ -1956,7 +1956,7 @@
                                                                                 </div>
                                                                             </div>
                                                                         </c:if>
-                                                                        <c:if test="${bibDCheck eq 'Yes'}">
+                                                                        <c:if test="${daqCheck eq 'Yes'}">
                                                                             <div class="accordion-item">
                                                                                 <h2 class="accordion-header" id="panelsStayOpen-headingSix">
                                                                                     <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#panelsStayOpen-collapseSix" aria-expanded="false" aria-controls="panelsStayOpen-collapseSix" id="tabBibD">
