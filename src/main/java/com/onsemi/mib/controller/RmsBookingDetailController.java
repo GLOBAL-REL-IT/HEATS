@@ -1581,14 +1581,7 @@ public class RmsBookingDetailController {
                             redirectAttrs.addFlashAttribute("error", "No load card configuration configured");
                         }
                     }
-                    LOGGER.info("CHCK DATA SINI : >>>> ");
-                    LOGGER.info("CHCK DATA SINI MB  : >>>> "+itemIdMB);
-                    LOGGER.info("CHCK DATA SINI LC  : >>>> "+itemIdLC);
-                    
-                    LOGGER.info("manTest : >>>> "+manTest);
-                    LOGGER.info("bibTest : >>>> "+bibTest);
-                    LOGGER.info("daqTest : >>>> "+daqTest);
-                    
+
                     model.addAttribute("itemIdMB", itemIdMB);
                     model.addAttribute("itemIdLC", itemIdLC);
                 }
@@ -4963,6 +4956,10 @@ public class RmsBookingDetailController {
         model.addAttribute("groupId", groupId);
         model.addAttribute("userItemSfRecall", userSession.getItemSfRecall());
 
+        UserAccessControlDAO uacD = new UserAccessControlDAO();
+        UserAccessControl uac = uacD.getUserAccessControlByLoginId(userSession.getLoginId());
+        model.addAttribute("uac", uac);
+
         RmsBookingDetailDAO rmsd = new RmsBookingDetailDAO();
         RmsBookingDetail rms = rmsd.getRmsBookingDetailByBookingPkid(bookingId);
         model.addAttribute("rms", rms);
@@ -6323,6 +6320,10 @@ public class RmsBookingDetailController {
             @ModelAttribute UserSession userSession) throws IOException {
 
         model.addAttribute("userItemSfRecall", userSession.getItemSfRecall());
+
+        UserAccessControlDAO uacD = new UserAccessControlDAO();
+        UserAccessControl uac = uacD.getUserAccessControlByLoginId(userSession.getLoginId());
+        model.addAttribute("uac", uac);
 
         //to cross check with existing hardware booked
         List<String> list = new ArrayList<>();

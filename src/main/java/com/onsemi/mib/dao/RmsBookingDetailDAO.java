@@ -692,10 +692,11 @@ public class RmsBookingDetailDAO {
 
     public List<RmsBookingDetail> getRmsBookingDetailListRecallSingleBib() {
         String sql = "SELECT de.id, de.booking_pkid, de.rms_no, de.`event`, DATE_FORMAT(ha.return_date,'%d %M %Y %h:%i %p') AS returnDate, "
-                + "ha.return_by, ha.id AS bookingHwId, ha.item_id, ha.item_pkid, ha.lc_qty, ha.pc_qty, ha.sub_status, ha.pkid "
-                + "FROM rms_booking_detail de LEFT JOIN rms_booking_hardware ha ON de.booking_pkid = ha.booking_pkid "
+                + "ha.return_by, ha.return_remarks, ha.id AS bookingHwId, ha.item_id, ha.item_pkid, ha.lc_qty, ha.pc_qty, ha.sub_status, ha.pkid "
+                + "FROM rms_booking_detail de "
+                + "LEFT JOIN rms_booking_hardware ha ON de.booking_pkid = ha.booking_pkid "
                 + "WHERE ha.item_type = 'Motherboard' AND ha.sub_status = 'Pending Release to Production' AND ha.flag = '0' "
-                + "AND de.`status` = 'Released to Production' AND de.flag = '1'";
+                + "AND de.`status` IN ('Released to Production','New') AND de.flag IN ('1','0')";
         List<RmsBookingDetail> rmsbookingDetailList = new ArrayList<RmsBookingDetail>();
         try {
             PreparedStatement ps = conn.prepareStatement(sql);
@@ -709,6 +710,7 @@ public class RmsBookingDetailDAO {
                 rmsbookingDetail.setEvent(rs.getString("event"));
                 rmsbookingDetail.setReturnDate(rs.getString("returnDate"));
                 rmsbookingDetail.setReturnBy(rs.getString("return_by"));
+                rmsbookingDetail.setReturnRemarks(rs.getString("return_remarks"));
                 rmsbookingDetail.setBookingHwId(rs.getString("bookingHwId"));
                 rmsbookingDetail.setItemId(rs.getString("item_id"));
                 rmsbookingDetail.setItemPkid(rs.getString("item_pkid"));

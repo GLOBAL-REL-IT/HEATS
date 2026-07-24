@@ -521,10 +521,16 @@
                                                             </c:if>
                                                         </c:if>
                                                         <c:if test="${parameterMaster.subStatus == 'Pending Release to Production'}">
-                                                            <a modaldeleteid="${parameterMaster.id}" type ="button" title="Release to Production" data-bs-toggle="modal" data-bs-target="#confirmation_modal" 
+                                                            <c:if test="${uac.befLoadingRelease == 'Yes'}">
+                                                                <a modaldeleteid="${parameterMaster.id}" type ="button" title="Release to Production" data-bs-toggle="modal" data-bs-target="#confirmation_modal" 
                                                                onclick="modalReleaseSingle(this);">
                                                                 <i class="bi bi-check-circle h3" style="color:green"></i>
                                                             </a>
+                                                            </c:if>
+                                                            <c:if test="${uac.befLoadingRelease ne 'Yes'}">
+                                                                 <a modaldeleteid="${parameterMaster.id}" type ="button" title="Release to Production">
+                                                                <i class="bi bi-check-circle h3" style="color:gray"></i>
+                                                            </c:if>
                                                         </c:if>
                                                     </td>
                                                 </c:if>

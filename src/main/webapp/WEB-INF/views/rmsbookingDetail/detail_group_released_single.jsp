@@ -304,7 +304,7 @@
                                 <div class="col-md-12">
                                     <c:if test="${empty loadingDate}">
                                         <a type="button" data-bs-toggle="offcanvas" title="Return to MB Room"
-                                           data-bs-target="#staticBackdrop" aria-controls="staticBackdrop" class="btn btn-danger float-start">
+                                           data-bs-target="#staticBackdrop" aria-controls="staticBackdrop" class="btn btn-danger float-start <c:if test="${uac.befLoadingReturnDefective ne 'Yes'}">disabled</c:if>">
                                             <i class="bi bi-check-circle-fill">&nbsp;&nbsp;Return to MB Room (Defective HW)</i>
                                         </a>
                                     </c:if>
@@ -2201,7 +2201,7 @@
                                         <div class="input input-group">
                                             <input type="hidden" class="form-control" id="id" name="id" placeholder="" value="${rms.id}">
                                             <input type="hidden" class="form-control" id="bookingHwId" name="bookingHwId" placeholder="" value="${bookingHwId}">
-                                            <textarea class="form-control" rows="5" maxlength="250" id="recallRemarks" name="recallRemarks" oninput="updateCounter()"></textarea>
+                                            <textarea class="form-control" rows="5" maxlength="250" id="recallRemarks" name="recallRemarks" oninput="updateCounter()" required></textarea>
                                         </div>
                                         <div class="text-end">
                                             <small class="text-muted">

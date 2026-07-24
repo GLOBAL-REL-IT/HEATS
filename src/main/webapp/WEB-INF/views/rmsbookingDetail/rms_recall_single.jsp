@@ -103,6 +103,7 @@
                                                     <th>PC Qty</th>
                                                     <th>Returned Date</th>
                                                     <th>Returned By</th>
+                                                    <th>Returned Remarks</th>
                                                     <th>Status</th>
                                                     <th>Manage</th>
                                                 </tr>
@@ -118,6 +119,7 @@
                                                         <td><c:out value="${parameterMaster.pcQty}"/></td>
                                                         <td><c:out value="${parameterMaster.returnDate}"/></td>
                                                         <td><c:out value="${parameterMaster.returnBy}"/></td>
+                                                        <td><c:out value="${parameterMaster.returnRemarks}"/></td>
                                                         <td><c:out value="${parameterMaster.status}"/></td>
                                                         <td align="center">
                                                             <a href="${contextPath}/rmsbookingDetail/rmsRecall/detail/${parameterMaster.id}" class="table-link" title="Manage">

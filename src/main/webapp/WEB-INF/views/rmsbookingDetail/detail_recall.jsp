@@ -268,9 +268,16 @@
 
                                 <div class="col-md-12">
                                     <c:if test="${releaseButton == 'Enable'}">
-                                        <a modaldeleteid="${rms.id}" type ="button" title="Release to Production" data-bs-toggle="modal" data-bs-target="#confirmation_modal" class="btn btn-success float-start" onclick="modalRelease(this);">
-                                            <i class="bi bi-check-circle-fill">&nbsp;&nbsp;Release to Production</i>
-                                        </a>
+                                        <c:if test="${uac.befLoadingRelease == 'Yes'}">
+                                            <a modaldeleteid="${rms.id}" type ="button" title="Release to Production" data-bs-toggle="modal" data-bs-target="#confirmation_modal" class="btn btn-success float-start" onclick="modalRelease(this);">
+                                                <i class="bi bi-check-circle-fill">&nbsp;&nbsp;Release to Production</i>
+                                            </a>
+                                        </c:if>
+                                        <c:if test="${uac.befLoadingRelease ne 'Yes'}">
+                                            <a modaldeleteid="${rms.id}" type ="button" title="Release to Production" class="btn float-start disabled" disabled>
+                                                <i class="bi bi-check-circle-fill">&nbsp;&nbsp;Release to Production</i>
+                                            </a>
+                                        </c:if>
                                     </c:if>
                                     <c:if test="${releaseButton == 'Disable'}">
                                         <a modaldeleteid="${rms.id}" type ="button" title="Release to Production" class="btn float-start disabled" disabled>
@@ -352,8 +359,8 @@
                                                         <c:if test="${parameterMaster.status != 'NA'}">
                                                             <c:if test="${parameterMaster.recall == 'Yes'}">
                                                                 <a modaldeleteid="${parameterMaster.itemPkid}" modaldeleteid2="${parameterMaster.id}" type="button" data-bs-toggle="offcanvas" title="Recall from Storage Factory"
-                                                                   data-bs-target="#staticBackdropRecall" aria-controls="staticBackdropRecall" onclick="ajaxStorage(this);">
-                                                                    <i class="bi bi-house-up h4"></i>
+                                                                   data-bs-target="#staticBackdropRecall" aria-controls="staticBackdropRecall" onclick="ajaxStorage(this);" <c:if test="${uac.befLoadingSfRecall ne 'Yes'}">disabled</c:if>>
+                                                                    <i class="bi bi-house-up h4" <c:if test="${uac.befLoadingSfRecall ne 'Yes'}">style="color:gray"</c:if>></i>
                                                                 </a>
                                                             </c:if>
                                                         </c:if>
@@ -458,7 +465,7 @@
                                                     <td align="center">
                                                         <c:if test="${parameterMaster.recall == 'Yes'}">
                                                             <a modaldeleteid="${parameterMaster.itemPkid}" modaldeleteid2="${parameterMaster.id}" type="button" data-bs-toggle="offcanvas" title="Recall from Storage Factory"
-                                                               data-bs-target="#staticBackdropRecall" aria-controls="staticBackdropRecall" onclick="ajaxStorage(this);">
+                                                               data-bs-target="#staticBackdropRecall" aria-controls="staticBackdropRecall" onclick="ajaxStorage(this);" <c:if test="${uac.befLoadingSfRecall ne 'Yes'}">disabled</c:if>>
                                                                 <i class="bi bi-house-up h4"></i>
                                                             </a>
                                                         </c:if>
@@ -468,11 +475,16 @@
                                                             </a>
                                                         </c:if>
                                                         <c:if test="${parameterMaster.subStatus == 'Pending Release to Production'}">
-                                                           <a modaldeleteid="${parameterMaster.id}" type ="button" title="Release to Production" data-bs-toggle="modal" data-bs-target="#confirmation_modal" 
-                                                                onclick="modalReleaseSingle(this);">
+                                                            <c:if test="${uac.befLoadingRelease == 'Yes'}">
+                                                                <a modaldeleteid="${parameterMaster.id}" type ="button" title="Release to Production" data-bs-toggle="modal" data-bs-target="#confirmation_modal" 
+                                                               onclick="modalReleaseSingle(this);">
                                                                 <i class="bi bi-check-circle h3" style="color:green"></i>
                                                             </a>
-                                                            
+                                                            </c:if>
+                                                            <c:if test="${uac.befLoadingRelease ne 'Yes'}">
+                                                                 <a modaldeleteid="${parameterMaster.id}" title="Release to Production">
+                                                                <i class="bi bi-check-circle h3" style="color:gray"></i>
+                                                            </c:if>
                                                         </c:if>
                                                     </td>
                                                 </c:if>
