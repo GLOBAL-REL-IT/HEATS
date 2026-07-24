@@ -657,7 +657,7 @@ public class RmsBookingDetailController {
             @ModelAttribute UserSession userSession) throws IOException {
 
         model.addAttribute("userItemSfRecall", userSession.getItemSfRecall());
-        
+
         UserAccessControlDAO uacD = new UserAccessControlDAO();
         UserAccessControl uac = uacD.getUserAccessControlByLoginId(userSession.getLoginId());
         model.addAttribute("uac", uac);
@@ -1410,6 +1410,10 @@ public class RmsBookingDetailController {
 
         String teActive = "";
         String teActiveTab = "";
+
+        UserAccessControlDAO uacD = new UserAccessControlDAO();
+        UserAccessControl uac = uacD.getUserAccessControlByLoginId(userSession.getLoginId());
+        model.addAttribute("uac", uac);
 
         String groupId = bookingId + "/" + itemPkid;
         model.addAttribute("groupId", groupId);
