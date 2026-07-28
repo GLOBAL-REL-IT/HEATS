@@ -519,10 +519,10 @@ public class SPTSRequestTest {
 //            System.out.println(getEqptBookedFOLFilesByPkid.getJSONObject(i));
 //        }
 //        System.out.println("COUNT Eqpt Booked FOL Files By Pkid..." + getEqptBookedFOLFilesByPkid.length());
-        System.out.println("GET BOOKED EQUIPMENT..." + LocalDateTime.now());
+//        System.out.println("GET BOOKED EQUIPMENT..." + LocalDateTime.now());
 //        JSONObject params0 = new JSONObject();
 //        String equipmentID = "H3T 1";
-        JSONObject param = new JSONObject();
+//        JSONObject param = new JSONObject();
 //        param.put("sitePKID", "1");
 //        param.put("siteName", "Seremban");
 //        param.put("pkid", "3348");
@@ -532,8 +532,8 @@ public class SPTSRequestTest {
 //        param.put("active", "1");
 //        JSONArray getItemByParam = SPTSWebService.getEqptByPkid(param);
         JSONObject paramV = new JSONObject();
-        paramV.put("pkid", "69924");
-        JSONArray getItemHwByParam = SPTSWebService.getBookingDetailByPKID(59646);
+        paramV.put("itemID", "AVI222C-103");
+        JSONArray getItemHwByParam = SPTSWebService.getItemByParam(paramV);
         for (int i = 0; i < getItemHwByParam.length(); i++) {
             System.out.println(getItemHwByParam.getJSONObject(i));
         }

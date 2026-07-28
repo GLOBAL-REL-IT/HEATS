@@ -341,17 +341,17 @@
                                                                                 <input type="hidden" class="form-control" id="groupId" name="groupId" placeholder="" value="${groupId}">
                                                                                 <input type="hidden" class="form-control" id="motherboardId" name="motherboardId" placeholder="" value="${motherboardId}">
                                                                                 <c:if test="${subStatus == 'Pending HW Registration'}">
-                                                                                    <input type="text" class="form-control" id="hwId" name="hwId" placeholder="" value="" autofocus="autofocus" required>
+                                                                                    <input type="text" class="form-control" id="hwId" name="hwId" placeholder="" value="" autofocus="autofocus" required <c:if test="${uac.befLoadingHwRegister ne 'Yes'}">disabled</c:if>>
                                                                                 </c:if>
                                                                                 <c:if test="${subStatus != 'Pending HW Registration'}">
-                                                                                    <input type="text" class="form-control" id="hwId" name="hwId" placeholder="" value="" autofocus="autofocus" disabled>
+                                                                                    <input type="text" class="form-control" id="hwId" name="hwId" placeholder="" value="" autofocus="autofocus" disabled >
                                                                                 </c:if>
                                                                             </div>
                                                                         </div>
                                                                     </div>
                                                                     <div class="col-auto">
                                                                         <c:if test="${subStatus == 'Pending HW Registration'}">
-                                                                            <button type="submit" class="btn btn-primary">Register</button>
+                                                                            <button type="submit" class="btn btn-primary <c:if test="${uac.befLoadingHwRegister ne 'Yes'}">disabled</c:if>">Register</button>
                                                                         </c:if>
                                                                         <c:if test="${subStatus != 'Pending HW Registration'}">
                                                                             <button type="submit" class="btn btn-primary disabled">Register</button>
@@ -360,12 +360,14 @@
                                                                 </div>
                                                                 <div class="col-md-12">
                                                                     <c:if test="${subStatus == 'Pending HW Registration'}">
-                                                                        <a modaldeleteid="${groupId}" type="button" title="Finalize HW Registration" data-bs-toggle="modal" data-bs-target="#confirmation_modal" class="btn float-end" onclick="modalFinalize(this);" style="background-color: #4CAF50; color: white;">
+                                                                        <a modaldeleteid="${groupId}" type="button" title="Finalize HW Registration" data-bs-toggle="modal" data-bs-target="#confirmation_modal" 
+                                                                           class="btn float-end <c:if test="${uac.befLoadingHwFinalize ne 'Yes'}">disabled</c:if>" onclick="modalFinalize(this);" style="background-color: #4CAF50; color: white;">
                                                                             <i class="bi bi-check2-square h5"><span class="h6"> Finalize</span></i>
                                                                         </a>
                                                                     </c:if>
                                                                     <c:if test="${subStatus != 'Pending HW Registration'}">
-                                                                        <a modaldeleteid="${groupId}" type="button" title="Finalize HW Registration" data-bs-toggle="modal" data-bs-target="#confirmation_modal" class="btn float-end" onclick="modalUndoFinalize(this);" style="background-color: #821903; color: white;">
+                                                                        <a modaldeleteid="${groupId}" type="button" title="Finalize HW Registration" data-bs-toggle="modal" data-bs-target="#confirmation_modal" 
+                                                                           class="btn float-end <c:if test="${uac.befLoadingHwFinalize ne 'Yes'}">disabled</c:if>" onclick="modalUndoFinalize(this);" style="background-color: #821903; color: white;">
                                                                             <i class="bi bi-arrow-counterclockwise h5"><span class="h6"> Undo Finalization</span></i>
                                                                         </a>
                                                                     </c:if>
@@ -410,9 +412,12 @@
                                                                                 <td><c:out value="${parameterMaster.createdDate}"/></td>
                                                                                 <td align="center">
                                                                                     <c:if test="${subStatus == 'Pending HW Registration'}">
-                                                                                        <a modaldeleteid="${parameterMaster.id}" type ="button" title="Delete" data-bs-toggle="modal" data-bs-target="#delete_modal" class="table-link danger group_delete" onclick="modalDelete(this);">
+                                                                                        <c:if test="${uac.befLoadingHwRegister == 'Yes'}">
+                                                                                          <a modaldeleteid="${parameterMaster.id}" type ="button" title="Delete" data-bs-toggle="modal" data-bs-target="#delete_modal" class="table-link danger group_delete" onclick="modalDelete(this);">
                                                                                             <i class="bi bi-trash h3" style="color:red"></i>
-                                                                                        </a> 
+                                                                                        </a>   
+                                                                                        </c:if>
+                                                                                        
                                                                                     </c:if>
                                                                                 </td>
                                                                             </tr>
@@ -428,6 +433,20 @@
                                     </div> 
                                     <div class="tab-pane fade ${vmActiveTab}" id="twoAAA" role="tabpanel">
                                         <div class="row gx-4">
+                                            <c:choose>    
+                                                <c:when test="${uac.befLoadingVm ne 'Yes'}">
+                                                    <fieldset disabled>
+                                                    </c:when>    
+                                                    <c:otherwise>
+                                                        <c:if test="${subStatus == 'Pending VM'}">
+                                                               <fieldset>
+                                                            </c:if>
+                                                            <c:if test="${subStatus != 'Pending VM'}">
+                                                               <fieldset disabled>
+                                                            </c:if>
+                                                       
+                                                        </c:otherwise>
+                                                    </c:choose>
                                             <form class="row gx-3 needs-validation" role="form" action="${contextPath}/rmsbookingDetail/vm/save" method="post" enctype="multipart/form-data" novalidate>
                                                 <div class="col-sm-6 col-12">
                                                     <div class="card mb-2">
@@ -1716,6 +1735,7 @@
                                                     </c:if>
                                                 </div>
                                             </form>
+                                                                    </fieldset>
                                         </div>
 
                                     </div>
@@ -1752,6 +1772,14 @@
                                                                                 </h2>
                                                                                 <div id="panelsStayOpen-collapseThree" class="accordion-collapse collapse ${leakshow}" aria-labelledby="panelsStayOpen-headingThree">
                                                                                     <div class="accordion-body">
+                                                                                        <c:choose>    
+                                                                                            <c:when test="${uac.befLoadingFt ne 'Yes'}">
+                                                                                                <fieldset disabled>
+                                                                                                </c:when>    
+                                                                                                <c:otherwise>
+                                                                                                    <fieldset>
+                                                                                                    </c:otherwise>
+                                                                                                </c:choose>
                                                                                         <form class="row gx-3 align-items-end" role="form" action="${contextPath}/rmsbookingDetail/ftest/save/leakTest" method="post" enctype="multipart/form-data" novalidate>
                                                                                             <input type="hidden" class="form-control" id="bookId" name="bookId" value="${bookId}">
                                                                                             <input type="hidden" class="form-control" id="motherboardId" name="motherboardId" value="${mibItemId}">
@@ -1810,6 +1838,7 @@
                                                                                                 <a id="editLeak2" class="btn btn-secondary me-2 float-end visually-hidden" onclick="allowUpdateLeak2();" role="button">Cancel</a>
                                                                                             </div>
                                                                                         </form>
+                                                                                                </fieldset>
                                                                                     </div>
                                                                                 </div>
                                                                             </div>
@@ -1825,6 +1854,14 @@
                                                                                 </h2>
                                                                                 <div id="panelsStayOpen-collapseTwo" class="accordion-collapse collapse ${manshow}" aria-labelledby="panelsStayOpen-headingTwo">
                                                                                     <div class="accordion-body">
+                                                                                        <c:choose>    
+                                                                                            <c:when test="${uac.befLoadingFt ne 'Yes'}">
+                                                                                                <fieldset disabled>
+                                                                                                </c:when>    
+                                                                                                <c:otherwise>
+                                                                                                    <fieldset>
+                                                                                                    </c:otherwise>
+                                                                                                </c:choose>
                                                                                         <form class="row gx-3 align-items-end" role="form" action="${contextPath}/rmsbookingDetail/createManualTest" method="post" enctype="multipart/form-data">
                                                                                         <div class="row">
                                                                                             <input type="hidden" class="form-control" id="bookId" name="bookId" value="${bookId}">
@@ -1866,6 +1903,7 @@
                                                                                             </div>
                                                                                         </div>
                                                                                         </form>
+                                                                                                 </fieldset>
                                                                                     </div>
                                                                                 </div>
                                                                             </div>
@@ -1879,6 +1917,14 @@
                                                                                 </h2>
                                                                                 <div id="panelsStayOpen-collapseOne" class="accordion-collapse collapse ${bibshow}" aria-labelledby="panelsStayOpen-headingOne">
                                                                                     <div class="accordion-body">
+                                                                                        <c:choose>    
+                                                                                            <c:when test="${uac.befLoadingFt ne 'Yes'}">
+                                                                                                <fieldset disabled>
+                                                                                                </c:when>    
+                                                                                                <c:otherwise>
+                                                                                                    <fieldset>
+                                                                                                    </c:otherwise>
+                                                                                                </c:choose>
                                                                                         <form class="row gx-3 align-items-end" role="form" action="${contextPath}/rmsbookingDetail/ftest/save/bibTest" method="post" enctype="multipart/form-data" novalidate>
                                                                                             <input type="hidden" class="form-control" id="bookId" name="bookId" value="${bookId}">
                                                                                             <input type="hidden" class="form-control" id="motherboardId" name="motherboardId" value="${mibItemId}">
@@ -1935,7 +1981,7 @@
                                                                                                 <a id="editBib1" class="btn btn-secondary me-2 float-end ${editbibbutton}" onclick="allowUpdateBib1();" role="button">Edit</a>
                                                                                                 <a id="editBib2" class="btn btn-secondary me-2 float-end visually-hidden" onclick="allowUpdateBib2();" role="button">Cancel</a>
                                                                                             </div>
-                                                                                        </form>
+                                                                                        </form></fieldset>
                                                                                     </div>
                                                                                 </div>
                                                                             </div>
@@ -1949,6 +1995,14 @@
                                                                                 </h2>
                                                                                 <div id="panelsStayOpen-collapseSix" class="accordion-collapse collapse ${bibDshow}" aria-labelledby="panelsStayOpen-headingSix">
                                                                                     <div class="accordion-body">
+                                                                                        <c:choose>    
+                                                                                            <c:when test="${uac.befLoadingFt ne 'Yes'}">
+                                                                                                <fieldset disabled>
+                                                                                                </c:when>    
+                                                                                                <c:otherwise>
+                                                                                                    <fieldset>
+                                                                                                    </c:otherwise>
+                                                                                                </c:choose>
                                                                                         <form class="row gx-3 align-items-end" role="form" action="${contextPath}/rmsbookingDetail/ftest/save/bibDaqTest" method="post" enctype="multipart/form-data" novalidate>
                                                                                             <input type="hidden" class="form-control" id="bookId" name="bookId" value="${bookId}">
                                                                                             <input type="hidden" class="form-control" id="motherboardId" name="motherboardId" value="${mibItemId}">
@@ -2005,7 +2059,7 @@
                                                                                                 <a id="editBibDaq1" class="btn btn-secondary me-2 float-end ${editbibdaqbutton}" onclick="allowUpdateBibDaq1();" role="button">Edit</a>
                                                                                                 <a id="editBibDaq2" class="btn btn-secondary me-2 float-end visually-hidden" onclick="allowUpdateBibDaq2();" role="button">Cancel</a>
                                                                                             </div>
-                                                                                        </form>
+                                                                                        </form> </fieldset>
                                                                                     </div>
                                                                                 </div>
                                                                             </div>
@@ -2022,6 +2076,14 @@
                                                                                 <div id="panelsStayOpen-collapseFour" class="accordion-collapse collapse ${psshow}"
                                                                                      aria-labelledby="panelsStayOpen-headingFour">
                                                                                     <div class="accordion-body">
+                                                                                        <c:choose>    
+                                                                                            <c:when test="${uac.befLoadingFt ne 'Yes'}">
+                                                                                                <fieldset disabled>
+                                                                                                </c:when>    
+                                                                                                <c:otherwise>
+                                                                                                    <fieldset>
+                                                                                                    </c:otherwise>
+                                                                                                </c:choose>
                                                                                         <form class="row gx-3 align-items-end" role="form" action="${contextPath}/rmsbookingDetail/ftest/save/psTest" method="post" enctype="multipart/form-data" novalidate>
                                                                                             <input type="hidden" class="form-control" id="bookId" name="bookId" value="${bookId}">
                                                                                             <input type="hidden" class="form-control" id="motherboardId" name="motherboardId" value="${mibItemId}">
@@ -2079,7 +2141,7 @@
                                                                                                 <a id="editPower1" class="btn btn-secondary me-2 float-end ${editpsbutton}" onclick="allowUpdatePower1();" role="button">Edit</a>
                                                                                                 <a id="editPower2" class="btn btn-secondary me-2 float-end visually-hidden" onclick="allowUpdatePower2();" role="button">Cancel</a>
                                                                                             </div>
-                                                                                        </form>
+                                                                                        </form></fieldset>
                                                                                     </div>
                                                                                 </div>
                                                                             </div>
@@ -2096,6 +2158,14 @@
                                                                                 <div id="panelsStayOpen-collapseFive" class="accordion-collapse collapse ${winshow}"
                                                                                      aria-labelledby="panelsStayOpen-headingFive">
                                                                                     <div class="accordion-body">
+                                                                                        <c:choose>    
+                                                                                            <c:when test="${uac.befLoadingFt ne 'Yes'}">
+                                                                                                <fieldset disabled>
+                                                                                                </c:when>    
+                                                                                                <c:otherwise>
+                                                                                                    <fieldset>
+                                                                                                    </c:otherwise>
+                                                                                                </c:choose>
                                                                                         <form class="row gx-3 align-items-end" role="form" action="${contextPath}/rmsbookingDetail/ftest/save/winTest" method="post" enctype="multipart/form-data" novalidate>
                                                                                             <input type="hidden" class="form-control" id="bookId" name="bookId" value="${bookId}">
                                                                                             <input type="hidden" class="form-control" id="motherboardId" name="motherboardId" value="${mibItemId}">
@@ -2153,7 +2223,7 @@
                                                                                                 <a id="editWin1" class="btn btn-secondary me-2 float-end ${editwinbutton}" onclick="allowUpdateWin1();" role="button">Edit</a>
                                                                                                 <a id="editWin2" class="btn btn-secondary me-2 float-end visually-hidden" onclick="allowUpdateWin2();" role="button">Cancel</a>
                                                                                             </div>
-                                                                                        </form>
+                                                                                        </form></fieldset>
                                                                                     </div>
                                                                                 </div>
                                                                             </div>
@@ -2455,7 +2525,7 @@
 
             function modalFinalize(e) {
                 var groupId = $(e).attr("modaldeleteid");
-                var deleteUrl = "${contextPath}/rmsbookingDetail/finalize/" + groupId;
+                var deleteUrl = "${contextPath}/rmsbookingDetail/finalizeRecall/" + groupId;
                 var deleteMsg = "Do you confirm that all information is complete and ready to finalize?";
                 $("#confirmation_modal .modal-body").html(deleteMsg);
                 $("#modal_button").attr("href", deleteUrl);
@@ -2463,7 +2533,7 @@
 
             function modalUndoFinalize(e) {
                 var groupId = $(e).attr("modaldeleteid");
-                var deleteUrl = "${contextPath}/rmsbookingDetail/undoFinalize/" + groupId;
+                var deleteUrl = "${contextPath}/rmsbookingDetail/undoFinalizeRecall/" + groupId;
                 var deleteMsg = "Do you confirm to undo the finalization?";
                 $("#confirmation_modal .modal-body").html(deleteMsg);
                 $("#modal_button").attr("href", deleteUrl);

@@ -2233,6 +2233,70 @@ public class RmsBookingDetailController {
 
     }
 
+    @RequestMapping(value = "/finalizeRecall/{bookingPkid}/{pkid}", method = RequestMethod.GET)
+    public String finalizeRecall(
+            Model model,
+            Locale locale,
+            RedirectAttributes redirectAttrs,
+            @ModelAttribute UserSession userSession,
+            @PathVariable("bookingPkid") String bookingPkid,
+            @PathVariable("pkid") String pkid
+    ) throws SQLException {
+        String status = "";
+        String groupId = bookingPkid + "/" + pkid;
+
+        RmsBookingHardwareDAO booking = new RmsBookingHardwareDAO();
+        int countBookingHardware = booking.getCountBookingPkidAndPkidForMotherboard(bookingPkid, pkid);
+
+        if (countBookingHardware == 1) {
+            //update sub status to 'Pending VM'
+            RmsBookingHardware bookHardware = new RmsBookingHardware();
+            bookHardware.setBookingPkid(bookingPkid);
+            bookHardware.setPkid(pkid);
+            //check if VM and FT already done and pass, then proceed with Pending Release to Production 1 July 2026
+            RmsBookingVisualInspectionDAO viD = new RmsBookingVisualInspectionDAO();
+            int countVmPass = viD.getCountByGroupIdWithModuleBeforeLoadingWithFinalStatusPass(groupId);
+
+            RmsBookingFunctionalTestDAO ftD = new RmsBookingFunctionalTestDAO();
+            int countFtPass = ftD.getCountTestResultByGroupId(groupId, "Before Loading");
+            if (countVmPass == 0) {
+                status = "Pending VM";
+            } else {
+                if (countFtPass == 0) {
+                    status = "Pending Functional Test";
+                } else {
+                    ftD = new RmsBookingFunctionalTestDAO();
+                    RmsBookingFunctionalTest rmsF = ftD.getFuncTestResultByModule(groupId, "Before Loading");
+                    status = rmsF.getFinalStatus();
+                }
+            }
+            bookHardware.setSubStatus(status);
+            booking = new RmsBookingHardwareDAO();
+            QueryResult q = booking.updateRmsBookingHardwareSubStatusByPkidAndBookingPkid(bookHardware);
+            if (q.getResult() == 1) {
+
+                //add log
+                RmsBookingHardwareGroupLog log = new RmsBookingHardwareGroupLog();
+                log.setGroupId(groupId);
+                log.setDetail("Finalized");
+                log.setCreatedBy(userSession.getFullname());
+                RmsBookingHardwareGroupLogDAO logD = new RmsBookingHardwareGroupLogDAO();
+                QueryResult logQ = logD.insertRmsBookingHardwareGroupLog(log);
+
+                redirectAttrs.addFlashAttribute("success", "Finalization successful. Proceed to the next step when ready.");
+                return "redirect:/rmsbookingDetail/rmsRecall/groupDetail/" + bookingPkid + "/" + pkid;
+            } else {
+                redirectAttrs.addFlashAttribute("error", "Failed to finalize. Pls contact system admin.");
+                return "redirect:/rmsbookingDetail/rmsRecall/groupDetail/" + bookingPkid + "/" + pkid;
+            }
+
+        } else {
+            redirectAttrs.addFlashAttribute("error", "Failed to finalize. Pls contact system admin.");
+            return "redirect:/rmsbookingDetail/rmsRecall/groupDetail/" + bookingPkid + "/" + pkid;
+        }
+
+    }
+
     @RequestMapping(value = "/undoFinalize/{bookingPkid}/{pkid}", method = RequestMethod.GET)
     public String undoFinalize(
             Model model,
@@ -2276,6 +2340,53 @@ public class RmsBookingDetailController {
         } else {
             redirectAttrs.addFlashAttribute("error", "Failed to undo the finalization. Pls contact system admin.");
             return "redirect:/rmsbookingDetail/groupDetail/" + bookingPkid + "/" + pkid;
+        }
+
+    }
+
+    @RequestMapping(value = "/undoFinalizeRecall/{bookingPkid}/{pkid}", method = RequestMethod.GET)
+    public String undoFinalizeRecall(
+            Model model,
+            Locale locale,
+            RedirectAttributes redirectAttrs,
+            @ModelAttribute UserSession userSession,
+            @PathVariable("bookingPkid") String bookingPkid,
+            @PathVariable("pkid") String pkid
+    ) {
+
+        RmsBookingHardwareDAO booking = new RmsBookingHardwareDAO();
+        int countBookingHardware = booking.getCountBookingPkidAndPkidForMotherboard(bookingPkid, pkid);
+
+        if (countBookingHardware == 1) {
+            //update sub status to 'Pending VM'
+            RmsBookingHardware bookHardware = new RmsBookingHardware();
+            bookHardware.setBookingPkid(bookingPkid);
+            bookHardware.setPkid(pkid);
+            bookHardware.setSubStatus("Pending HW Registration");
+            booking = new RmsBookingHardwareDAO();
+            QueryResult q = booking.updateRmsBookingHardwareSubStatusByPkidAndBookingPkid(bookHardware);
+            if (q.getResult() == 1) {
+
+                String groupId = bookingPkid + "/" + pkid;
+
+                //add log
+                RmsBookingHardwareGroupLog log = new RmsBookingHardwareGroupLog();
+                log.setGroupId(groupId);
+                log.setDetail("Revert Finalization");
+                log.setCreatedBy(userSession.getFullname());
+                RmsBookingHardwareGroupLogDAO logD = new RmsBookingHardwareGroupLogDAO();
+                QueryResult logQ = logD.insertRmsBookingHardwareGroupLog(log);
+
+                redirectAttrs.addFlashAttribute("success", "Undo successful. This item group is now open for modifications.");
+                return "redirect:/rmsbookingDetail/rmsRecall/groupDetail/" + bookingPkid + "/" + pkid;
+            } else {
+                redirectAttrs.addFlashAttribute("error", "Failed to undo the finalization. Pls contact system admin.");
+                return "redirect:/rmsbookingDetail/rmsRecall/groupDetail/" + bookingPkid + "/" + pkid;
+            }
+
+        } else {
+            redirectAttrs.addFlashAttribute("error", "Failed to undo the finalization. Pls contact system admin.");
+            return "redirect:/rmsbookingDetail/rmsRecall/groupDetail/" + bookingPkid + "/" + pkid;
         }
 
     }
@@ -6597,6 +6708,10 @@ public class RmsBookingDetailController {
         String groupId = bookingId + "/" + itemPkid;
         model.addAttribute("groupId", groupId);
         model.addAttribute("userItemSfRecall", userSession.getItemSfRecall());
+
+        UserAccessControlDAO uacD = new UserAccessControlDAO();
+        UserAccessControl uac = uacD.getUserAccessControlByLoginId(userSession.getLoginId());
+        model.addAttribute("uac", uac);
 
         RmsBookingDetailDAO rmsd = new RmsBookingDetailDAO();
         RmsBookingDetail rms = rmsd.getRmsBookingDetailByBookingPkid(bookingId);
