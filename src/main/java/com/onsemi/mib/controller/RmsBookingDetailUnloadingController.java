@@ -220,7 +220,7 @@ public class RmsBookingDetailUnloadingController {
             @PathVariable("itemPkid") String itemPkid,
             RedirectAttributes redirectAttrs,
             @ModelAttribute UserSession userSession) throws IOException, SQLException {
-
+        
         String currentStatus = "";
         String leakTest = "";
         String manTest = "";
@@ -235,7 +235,7 @@ public class RmsBookingDetailUnloadingController {
         String groupId = bookingId + "/" + itemPkid;
         model.addAttribute("groupId", groupId);
         model.addAttribute("userItemSfRecall", userSession.getItemSfRecall());
-        
+
         UserAccessControlDAO uacD = new UserAccessControlDAO();
         UserAccessControl uac = uacD.getUserAccessControlByLoginId(userSession.getLoginId());
         model.addAttribute("uac", uac);
@@ -470,10 +470,10 @@ public class RmsBookingDetailUnloadingController {
                         check05 = "";
                         edit05 = "";
                     } else {
-
+                        
                     }
                 }
-
+                
                 model.addAttribute("leakbutton", check01);
                 model.addAttribute("manualbutton", check02);
                 model.addAttribute("bibbutton", check03);
@@ -490,16 +490,7 @@ public class RmsBookingDetailUnloadingController {
 
             }
         }
-
-//        if (statusLeak.equals("Fail")) {
-//            model.addAttribute("leakbutton", "disabled");
-//            model.addAttribute("editleakbutton", "disabled");
-//        } else if (statusLeak.equals("Pass")) {
-//            model.addAttribute("leakbutton", "disabled");
-//            model.addAttribute("editleakbutton", "enabled");
-//        } else {
-//
-//        }
+        
         model.addAttribute("bookId", bookingId);
         model.addAttribute("mibItemId", itemPkid);
 
@@ -2190,12 +2181,12 @@ public class RmsBookingDetailUnloadingController {
         if (newStatus == goReady) {
             if (event == "HAST") {
                 newStatus = "Pending Release Or Return";
-
+                
                 RmsBookingHardwareGroup rmsgroup = new RmsBookingHardwareGroup();
                 rmsgroup.setStatus(newStatus);
                 rmsgroup.setGroupId(groupId);
                 rmsgroup.setFlag("2");
-
+                
                 RmsBookingHardwareGroupDAO groupD = new RmsBookingHardwareGroupDAO();
                 groupD.updateRmsBookingHardwareGroupFlagAndStatusByGroupId(rmsgroup);
             } else {
@@ -2228,7 +2219,7 @@ public class RmsBookingDetailUnloadingController {
         String username = userSession.getFullname();
         String manual = "Manual";
         String status = "Failed Functional Test - Manual Test - Waiting Maverick CA";
-
+        
         RmsBookingHardwareDAO rmsdao = new RmsBookingHardwareDAO();
         String lcItemId = rmsdao.getLcMibItemIdFromGroupId(groupid);
         rmsdao = new RmsBookingHardwareDAO();
@@ -2239,7 +2230,7 @@ public class RmsBookingDetailUnloadingController {
         String[] parts = groupid.split("/");
         String bookId = parts[0];
         String pkid = parts[1];
-
+        
         rmsdao = new RmsBookingHardwareDAO();
         String latestStatus = rmsdao.getLatestStatus(bookId, pkid);
 
@@ -3547,7 +3538,7 @@ public class RmsBookingDetailUnloadingController {
         HostnameDAO hostnameD = new HostnameDAO();
         Hostname h = hostnameD.getHostnameFlagZero();
         String hostname = h.getHostname();
-
+ 
         EmailSender emailSender = new EmailSender();
         emailSender.htmlEmailFT(
                 servletContext,
