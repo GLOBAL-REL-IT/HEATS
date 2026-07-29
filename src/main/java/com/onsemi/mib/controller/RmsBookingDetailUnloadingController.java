@@ -26,6 +26,7 @@ import com.onsemi.mib.dao.RmsBookingIonicDAO;
 import com.onsemi.mib.dao.RmsBookingLogDAO;
 import com.onsemi.mib.dao.RmsBookingMaverickDAO;
 import com.onsemi.mib.dao.RmsBookingVisualInspectionDAO;
+import com.onsemi.mib.dao.UserAccessControlDAO;
 import com.onsemi.mib.model.EmailHwReturnFromStaging;
 import com.onsemi.mib.model.EmailVmFail;
 import com.onsemi.mib.model.Hostname;
@@ -48,6 +49,7 @@ import com.onsemi.mib.model.RmsBookingIonicConfig;
 import com.onsemi.mib.model.RmsBookingLog;
 import com.onsemi.mib.model.RmsBookingMaverick;
 import com.onsemi.mib.model.RmsBookingVisualInspection;
+import com.onsemi.mib.model.UserAccessControl;
 import com.onsemi.mib.model.UserSession;
 import com.onsemi.mib.tools.EmailSender;
 import com.onsemi.mib.tools.QueryResult;
@@ -114,6 +116,10 @@ public class RmsBookingDetailUnloadingController {
             Model model,
             @ModelAttribute UserSession userSession
     ) throws IOException {
+
+        UserAccessControlDAO uacD = new UserAccessControlDAO();
+        UserAccessControl uac = uacD.getUserAccessControlByLoginId(userSession.getLoginId());
+        model.addAttribute("uac", uac);
 
         RmsBookingDetailDAO rmsD = new RmsBookingDetailDAO();
         List<RmsBookingDetail> bookingReturnProduction = rmsD.getRmsBookingDetailListWithHwGroupAfterLoading();
@@ -229,6 +235,10 @@ public class RmsBookingDetailUnloadingController {
         String groupId = bookingId + "/" + itemPkid;
         model.addAttribute("groupId", groupId);
         model.addAttribute("userItemSfRecall", userSession.getItemSfRecall());
+        
+        UserAccessControlDAO uacD = new UserAccessControlDAO();
+        UserAccessControl uac = uacD.getUserAccessControlByLoginId(userSession.getLoginId());
+        model.addAttribute("uac", uac);
 
         RmsBookingDetailDAO rmsd = new RmsBookingDetailDAO();
         RmsBookingDetail rms = rmsd.getRmsBookingDetailByBookingPkid(bookingId);
@@ -460,7 +470,7 @@ public class RmsBookingDetailUnloadingController {
                         check05 = "";
                         edit05 = "";
                     } else {
-                        
+
                     }
                 }
 
@@ -490,7 +500,6 @@ public class RmsBookingDetailUnloadingController {
 //        } else {
 //
 //        }
-
         model.addAttribute("bookId", bookingId);
         model.addAttribute("mibItemId", itemPkid);
 
@@ -2181,12 +2190,12 @@ public class RmsBookingDetailUnloadingController {
         if (newStatus == goReady) {
             if (event == "HAST") {
                 newStatus = "Pending Release Or Return";
-                
+
                 RmsBookingHardwareGroup rmsgroup = new RmsBookingHardwareGroup();
                 rmsgroup.setStatus(newStatus);
                 rmsgroup.setGroupId(groupId);
                 rmsgroup.setFlag("2");
-                
+
                 RmsBookingHardwareGroupDAO groupD = new RmsBookingHardwareGroupDAO();
                 groupD.updateRmsBookingHardwareGroupFlagAndStatusByGroupId(rmsgroup);
             } else {
@@ -2219,7 +2228,7 @@ public class RmsBookingDetailUnloadingController {
         String username = userSession.getFullname();
         String manual = "Manual";
         String status = "Failed Functional Test - Manual Test - Waiting Maverick CA";
-        
+
         RmsBookingHardwareDAO rmsdao = new RmsBookingHardwareDAO();
         String lcItemId = rmsdao.getLcMibItemIdFromGroupId(groupid);
         rmsdao = new RmsBookingHardwareDAO();
@@ -2230,7 +2239,7 @@ public class RmsBookingDetailUnloadingController {
         String[] parts = groupid.split("/");
         String bookId = parts[0];
         String pkid = parts[1];
-        
+
         rmsdao = new RmsBookingHardwareDAO();
         String latestStatus = rmsdao.getLatestStatus(bookId, pkid);
 
@@ -3538,7 +3547,7 @@ public class RmsBookingDetailUnloadingController {
         HostnameDAO hostnameD = new HostnameDAO();
         Hostname h = hostnameD.getHostnameFlagZero();
         String hostname = h.getHostname();
- 
+
         EmailSender emailSender = new EmailSender();
         emailSender.htmlEmailFT(
                 servletContext,

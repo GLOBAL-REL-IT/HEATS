@@ -287,6 +287,20 @@
                                                 <div class="card-body">
                                                     <div class="row gx-3">
                                                         <div class="card-body">
+                                                            <c:choose>    
+                                                                <c:when test="${uac.unloadingIonic ne 'Yes'}">
+                                                                    <fieldset disabled>
+                                                                </c:when>    
+                                                                <c:otherwise>
+                                                                    <c:if test="${subStatus == 'Pending Ionic Test'}">
+                                                                        <fieldset>
+                                                                    </c:if>
+                                                                    <c:if test="${subStatus != 'Pending Ionic Test'}">
+                                                                        <fieldset disabled>
+                                                                    </c:if>
+
+                                                                </c:otherwise>
+                                                            </c:choose>
                                                             <form class="row gx-3 needs-validation" role="form" action="${contextPath}/rmsbookingDetailUnloading/ionic/save" method="post" enctype="multipart/form-data" novalidate>
                                                                 <input type="hidden" class="form-control" id="bookingPkid" name="bookingPkid" placeholder="" value="${rms.bookingPkid}">
                                                                 <input type="hidden" class="form-control" id="groupId" name="groupId" placeholder="" value="${groupId}">
@@ -374,6 +388,7 @@
                                                                     <button type="submit" id="saveIonic" class="btn btn-primary float-end ${disabledUpload}">Save</button>
                                                                 </div>
                                                             </form>
+                                                            </fieldset>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -383,6 +398,20 @@
                                     </div> 
                                     <div class="tab-pane fade ${vmActiveTab}" id="threeAAA" role="tabpanel">
                                         <div class="row gx-4">
+                                            <c:choose>    
+                                                <c:when test="${uac.unloadingVm ne 'Yes'}">
+                                                    <fieldset disabled>
+                                                </c:when>    
+                                                <c:otherwise>
+                                                    <c:if test="${subStatus == 'Pending VM'}">
+                                                        <fieldset>
+                                                    </c:if>
+                                                    <c:if test="${subStatus != 'Pending VM'}">
+                                                        <fieldset disabled>
+                                                    </c:if>
+
+                                                </c:otherwise>
+                                            </c:choose>
                                             <form class="row gx-3 needs-validation" role="form" action="${contextPath}/rmsbookingDetailUnloading/vm/save" method="post" enctype="multipart/form-data" novalidate>
                                                 <div class="col-sm-6 col-12">
                                                     <div class="card mb-2">
@@ -1667,6 +1696,7 @@
                                                     <button type="submit" id="submitVm" name="submitVm" class="btn btn-primary float-end ${buttonVm}">Save</button>
                                                 </div>
                                             </form>
+                                            </fieldset>
                                         </div>
                                     </div>
                                     <div class="tab-pane fade ${teActiveTab}" id="fourAAA" role="tabpanel">
@@ -1702,6 +1732,14 @@
                                                                                 </h2>
                                                                                 <div id="panelsStayOpen-collapseThree" class="accordion-collapse collapse ${leakshow}" aria-labelledby="panelsStayOpen-headingThree">
                                                                                     <div class="accordion-body">
+                                                                                        <c:choose>    
+                                                                                            <c:when test="${uac.unloadingFt ne 'Yes'}">
+                                                                                                <fieldset disabled>
+                                                                                            </c:when>    
+                                                                                            <c:otherwise>
+                                                                                                <fieldset>
+                                                                                            </c:otherwise>
+                                                                                        </c:choose>
                                                                                         <form class="row gx-3 align-items-end" role="form" action="${contextPath}/rmsbookingDetailUnloading/ftest/save/leakTest" method="post" enctype="multipart/form-data" novalidate>
                                                                                             <input type="hidden" class="form-control" id="bookId" name="bookId" value="${bookId}">
                                                                                             <input type="hidden" class="form-control" id="motherboardId" name="motherboardId" value="${mibItemId}">
@@ -1760,6 +1798,7 @@
                                                                                                 <a id="editLeak2" class="btn btn-secondary me-2 float-end visually-hidden" onclick="allowUpdateLeak2();" role="button">Cancel</a>
                                                                                             </div>
                                                                                         </form>
+                                                                                        </fieldset>
                                                                                     </div>
                                                                                 </div>
                                                                             </div>
@@ -1775,6 +1814,14 @@
                                                                                 </h2>
                                                                                 <div id="panelsStayOpen-collapseTwo" class="accordion-collapse collapse ${manshow}" aria-labelledby="panelsStayOpen-headingTwo">
                                                                                     <div class="accordion-body">
+                                                                                        <c:choose>    
+                                                                                            <c:when test="${uac.unloadingFt ne 'Yes'}">
+                                                                                                <fieldset disabled>
+                                                                                            </c:when>    
+                                                                                            <c:otherwise>
+                                                                                                <fieldset>
+                                                                                            </c:otherwise>
+                                                                                        </c:choose>
                                                                                         <form class="row gx-3 align-items-end" role="form" action="${contextPath}/rmsbookingDetailUnloading/createManualTest" method="post" enctype="multipart/form-data">
                                                                                             <div class="row">
                                                                                                 <input type="hidden" class="form-control" id="bookId" name="bookId" value="${bookId}">
@@ -1816,6 +1863,7 @@
                                                                                                 </div>
                                                                                             </div>
                                                                                         </form>
+                                                                                        </fieldset>
                                                                                     </div>
                                                                                 </div>
                                                                             </div>
@@ -1829,6 +1877,14 @@
                                                                                 </h2>
                                                                                 <div id="panelsStayOpen-collapseOne" class="accordion-collapse collapse ${bibshow}" aria-labelledby="panelsStayOpen-headingOne">
                                                                                     <div class="accordion-body">
+                                                                                        <c:choose>    
+                                                                                            <c:when test="${uac.unloadingFt ne 'Yes'}">
+                                                                                                <fieldset disabled>
+                                                                                            </c:when>    
+                                                                                            <c:otherwise>
+                                                                                                <fieldset>
+                                                                                            </c:otherwise>
+                                                                                        </c:choose>
                                                                                         <form class="row gx-3 align-items-end" role="form" action="${contextPath}/rmsbookingDetailUnloading/ftest/save/bibTest" method="post" enctype="multipart/form-data" novalidate>
                                                                                             <input type="hidden" class="form-control" id="bookId" name="bookId" value="${bookId}">
                                                                                             <input type="hidden" class="form-control" id="motherboardId" name="motherboardId" value="${mibItemId}">
@@ -1886,6 +1942,7 @@
                                                                                                 <a id="editBib2" class="btn btn-secondary me-2 float-end visually-hidden" onclick="allowUpdateBib2();" role="button">Cancel</a>
                                                                                             </div>
                                                                                         </form>
+                                                                                        </fieldset>
                                                                                     </div>
                                                                                 </div>
                                                                             </div>
@@ -1899,6 +1956,14 @@
                                                                                 </h2>
                                                                                 <div id="panelsStayOpen-collapseSix" class="accordion-collapse collapse ${bibDshow}" aria-labelledby="panelsStayOpen-headingSix">
                                                                                     <div class="accordion-body">
+                                                                                        <c:choose>    
+                                                                                            <c:when test="${uac.unloadingFt ne 'Yes'}">
+                                                                                                <fieldset disabled>
+                                                                                            </c:when>    
+                                                                                            <c:otherwise>
+                                                                                                <fieldset>
+                                                                                            </c:otherwise>
+                                                                                        </c:choose>
                                                                                         <form class="row gx-3 align-items-end" role="form" action="${contextPath}/rmsbookingDetailUnloading/ftest/save/bibDaqTest" method="post" enctype="multipart/form-data" novalidate>
                                                                                             <input type="hidden" class="form-control" id="bookId" name="bookId" value="${bookId}">
                                                                                             <input type="hidden" class="form-control" id="motherboardId" name="motherboardId" value="${mibItemId}">
@@ -1956,6 +2021,7 @@
                                                                                                 <a id="editBibDaq2" class="btn btn-secondary me-2 float-end visually-hidden" onclick="allowUpdateBibDaq2();" role="button">Cancel</a>
                                                                                             </div>
                                                                                         </form>
+                                                                                        </fieldset>
                                                                                     </div>
                                                                                 </div>
                                                                             </div>
@@ -1972,6 +2038,14 @@
                                                                                 <div id="panelsStayOpen-collapseFour" class="accordion-collapse collapse ${psshow}"
                                                                                      aria-labelledby="panelsStayOpen-headingFour">
                                                                                     <div class="accordion-body">
+                                                                                        <c:choose>    
+                                                                                            <c:when test="${uac.unloadingFt ne 'Yes'}">
+                                                                                                <fieldset disabled>
+                                                                                            </c:when>    
+                                                                                            <c:otherwise>
+                                                                                                <fieldset>
+                                                                                            </c:otherwise>
+                                                                                        </c:choose>
                                                                                         <form class="row gx-3 align-items-end" role="form" action="${contextPath}/rmsbookingDetailUnloading/ftest/save/psTest" method="post" enctype="multipart/form-data" novalidate>
                                                                                             <input type="hidden" class="form-control" id="bookId" name="bookId" value="${bookId}">
                                                                                             <input type="hidden" class="form-control" id="motherboardId" name="motherboardId" value="${mibItemId}">
@@ -2030,6 +2104,7 @@
                                                                                                 <a id="editPower2" class="btn btn-secondary me-2 float-end visually-hidden" onclick="allowUpdatePower2();" role="button">Cancel</a>
                                                                                             </div>
                                                                                         </form>
+                                                                                        </fieldset>
                                                                                     </div>
                                                                                 </div>
                                                                             </div>
@@ -2046,6 +2121,14 @@
                                                                                 <div id="panelsStayOpen-collapseFive" class="accordion-collapse collapse ${winshow}"
                                                                                      aria-labelledby="panelsStayOpen-headingFive">
                                                                                     <div class="accordion-body">
+                                                                                        <c:choose>    
+                                                                                            <c:when test="${uac.unloadingFt ne 'Yes'}">
+                                                                                                <fieldset disabled>
+                                                                                            </c:when>    
+                                                                                            <c:otherwise>
+                                                                                                <fieldset>
+                                                                                            </c:otherwise>
+                                                                                        </c:choose>
                                                                                         <form class="row gx-3 align-items-end" role="form" action="${contextPath}/rmsbookingDetailUnloading/ftest/save/winTest" method="post" enctype="multipart/form-data" novalidate>
                                                                                             <input type="hidden" class="form-control" id="bookId" name="bookId" value="${bookId}">
                                                                                             <input type="hidden" class="form-control" id="motherboardId" name="motherboardId" value="${mibItemId}">
@@ -2104,6 +2187,7 @@
                                                                                                 <a id="editWin2" class="btn btn-secondary me-2 float-end visually-hidden" onclick="allowUpdateWin2();" role="button">Cancel</a>
                                                                                             </div>
                                                                                         </form>
+                                                                                        </fieldset>
                                                                                     </div>
                                                                                 </div>
                                                                             </div>
@@ -2119,6 +2203,14 @@
                                     </div>
                                     <div class="tab-pane fade ${haActiveTab}" id="fiveAAA" role="tabpanel">
                                         <div class="row gx-4">
+                                            <c:choose>    
+                                                <c:when test="${uac.unloadingReleaseClose ne 'Yes'}">
+                                                    <fieldset disabled>
+                                                </c:when>    
+                                                <c:otherwise>
+                                                    <fieldset>
+                                                </c:otherwise>
+                                            </c:choose>
                                             <form class="row gx-3 needs-validation" role="form" action="${contextPath}/rmsbookingDetailUnloading/releaseOrReturn/save" method="post" novalidate>
                                                 <div class="col-sm-6 col-12">
                                                     <div class="card mb-2">
@@ -2145,7 +2237,7 @@
                                                                 <div class="mb-2">
                                                                     <label for="pcbHardwareId" class="form-label">Remarks</label>
                                                                     <div class="input input-group">
-                                                                         <textarea class="form-control" rows="3" id="releaseOrReturnRemarks" name="releaseOrReturnRemarks" required></textarea>
+                                                                        <textarea class="form-control" rows="3" id="releaseOrReturnRemarks" name="releaseOrReturnRemarks" required></textarea>
                                                                     </div>
                                                                 </div>
                                                             </div>
@@ -2157,6 +2249,7 @@
                                                     <button type="submit" id="submitHa" name="submitHa" class="btn btn-primary float-end ${buttonHa}">Save</button>
                                                 </div>
                                             </form>
+                                            </fieldset>
                                         </div>
                                     </div>
                                 </div>
@@ -2273,7 +2366,7 @@
 
                                                                                                         const checkStatus = "${currentStatus}";
 
-//                console.log("KITA TENGOK STATUS SINI :::: "+checkStatus);
+                                                                                                        //                console.log("KITA TENGOK STATUS SINI :::: "+checkStatus);
 
                                                                                                         $('.js-example-basic-multiple').select2();
                                                                                                         var valueJsonPcb = ${valueJsonPcb};
@@ -2490,10 +2583,10 @@
                                                                                                             ],
                                                                                                             language: {
                                                                                                                 lengthMenu: "Display _MENU_ Records Per Page",
-//                        info: "Showing Page _PAGE_ of _PAGES_",
+                                                                                                                //                        info: "Showing Page _PAGE_ of _PAGES_",
                                                                                                                 info: "Showing _START_ to _END_ of _TOTAL_ total records",
                                                                                                             },
-//                    dom: "Blfrtip",
+                                                                                                            //                    dom: "Blfrtip",
                                                                                                             dom: '<"top"Blfi>rt<"bottom"p><"clear">',
                                                                                                             buttons: ["copy", "csv", "pdf", "print"],
                                                                                                         });

@@ -127,10 +127,17 @@
                                                             <c:set var="name" value="${parameterMaster.hardwareReturnDate}"/>
                                                             <c:choose>
                                                                 <c:when test="${empty name}">
-                                                                    <a modaldeleteid="${parameterMaster.groupId}" type="button" data-bs-toggle="offcanvas" title="Return HW to MB Room/Ionic Area"
-                                                                       data-bs-target="#staticBackdrop" aria-controls="staticBackdrop" onclick="getData(this);">
-                                                                        <i class="bi bi-box-arrow-in-down-left h3"></i>
-                                                                    </a>
+                                                                    <c:if test="${uac.unloadingHwReturn ne 'Yes'}">
+                                                                        <a modaldeleteid="${parameterMaster.groupId}" title="Return HW to MB Room/Ionic Area">
+                                                                            <i class="bi bi-box-arrow-in-down-left h3" style="color: lightgrey;"></i>
+                                                                        </a>
+                                                                    </c:if>
+                                                                    <c:if test="${uac.unloadingHwReturn == 'Yes'}">
+                                                                        <a modaldeleteid="${parameterMaster.groupId}" type="button" data-bs-toggle="offcanvas" title="Return HW to MB Room/Ionic Area"
+                                                                           data-bs-target="#staticBackdrop" aria-controls="staticBackdrop" onclick="getData(this);">
+                                                                            <i class="bi bi-box-arrow-in-down-left h3"></i>
+                                                                        </a>
+                                                                    </c:if>
                                                                     <a class="table-link" title="Manage" >
                                                                         <i class="bi bi-box-arrow-in-right h3" style="color: lightgrey;"></i>
                                                                     </a>
