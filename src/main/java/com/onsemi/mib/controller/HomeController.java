@@ -10,6 +10,7 @@ import com.onsemi.mib.dao.RmsBookingDetailDAO;
 import com.onsemi.mib.dao.RmsBookingHardwareDAO;
 import com.onsemi.mib.dao.RmsBookingLogDAO;
 import com.onsemi.mib.dao.SRInventoryMgtDAO;
+import com.onsemi.mib.dao.UserAccessControlDAO;
 import com.onsemi.mib.model.Hostname;
 import com.onsemi.mib.model.InventoryMgt;
 import com.onsemi.mib.model.Item;
@@ -18,6 +19,7 @@ import com.onsemi.mib.model.LDAPUser;
 import com.onsemi.mib.model.ParameterDetails;
 import com.onsemi.mib.model.RmsBookingDetail;
 import com.onsemi.mib.model.RmsBookingLog;
+import com.onsemi.mib.model.UserAccessControl;
 import java.util.Locale;
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
@@ -118,7 +120,6 @@ public class HomeController {
             month -= 1;
         }
         Collections.reverse(monthNameList);
-//        LOGGER.info("monthNameList " + monthNameList);
         model.addAttribute("monthNameList", monthNameList);
         model.addAttribute("yearLabel", yearLabel);
 
@@ -135,6 +136,10 @@ public class HomeController {
         model.addAttribute("maverickList", maverickList);
 
         if (userSession != null) {
+
+            UserAccessControlDAO uacD = new UserAccessControlDAO();
+            UserAccessControl uac = uacD.getUserAccessControlByLoginId(userSession.getLoginId());
+            model.addAttribute("uac", uac);
 
             ItemDAO itemD = new ItemDAO();
             List<Item> item = itemD.getItemListPendingVMFunctionalTest();
@@ -458,9 +463,6 @@ public class HomeController {
             model.addAttribute("priorityList", priorityList);
 
             //rms released to production
-//            rmsD = new RmsBookingDetailDAO();
-//            List<RmsBookingDetail> bookingReleased = rmsD.getRmsBookingDetailListReleased();
-//            model.addAttribute("bookingReleased", bookingReleased);
             rmsD = new RmsBookingDetailDAO();
             List<RmsBookingDetail> bookingReleased = rmsD.getRmsBookingDetailListReleasedSingleBib();
             model.addAttribute("bookingReleased", bookingReleased);
