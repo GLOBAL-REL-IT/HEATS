@@ -111,7 +111,7 @@
                             <form class="row g-3 align-items-center" role="form" action="${contextPath}/hw/item/add" method="post">
                                 <div class="row mb-3">
                                     <label class="col-sm-1 col-md-1 col-form-label fw-semibold" for="singleSelect">Item Type</label>
-                                    <div class="col-sm-3 col-md-3">
+                                    <div class="col-sm-3 col-md-3 mb-3">
                                         <div class="row g-1">
                                             <div class="col-sm-11 col-md-12">
                                                 <select class="select-single js-states form-control" id="itemType" name="itemType"

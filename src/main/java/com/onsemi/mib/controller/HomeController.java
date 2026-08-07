@@ -91,51 +91,79 @@ public class HomeController {
         HttpSession currentSession = request.getSession();
         UserSession userSession = (UserSession) currentSession.getAttribute("userSession");
 
-        LocalDateTime instance = LocalDateTime.now();
-        Integer month = Integer.valueOf(instance.toString().substring(5, 7));
-//        Integer month = 12;
-        Integer year = Integer.valueOf(instance.toString().substring(0, 4));
-//        Integer year = 2027;
-        List<String> monthNameList = new ArrayList<String>();
-
-        String yearLabel = "";
-        if (month < 12) {
-            yearLabel = (year - 1) + "/" + (year);
-        } else if (month == 12) {
-            yearLabel = year.toString();
-        }
-
-        for (int x = 1; x <= 12; x++) {
-            if (month < 1) {
-//                year = year - 1;
-                year -= 1;
-                month = 12;
-            }
-            Month monthN = Month.of(month);
-            String monthNameFull = monthN.name();
-            String monthName = monthNameFull.substring(0, 3);
-            String year1 = year.toString().substring(2, 4);
-            String fullMonthYear = "'" + monthName + " " + year1 + "'";
-            monthNameList.add(fullMonthYear);
-            month -= 1;
-        }
-        Collections.reverse(monthNameList);
-        model.addAttribute("monthNameList", monthNameList);
-        model.addAttribute("yearLabel", yearLabel);
-
-        ItemDAO itemDao = new ItemDAO();
-        int countItemPending = itemDao.getCountItemWithFlagZero();
-        model.addAttribute("countItemPending", countItemPending);
-
-        ItemMaverickDAO itemMaverickD = new ItemMaverickDAO();
-        int countMaverick = itemMaverickD.getCountFlagZero();
-        model.addAttribute("countMaverick", countMaverick);
-
-        itemMaverickD = new ItemMaverickDAO();
-        List<ItemMaverick> maverickList = itemMaverickD.getItemMaverickListFlagZero();
-        model.addAttribute("maverickList", maverickList);
-
         if (userSession != null) {
+
+            LocalDateTime instance = LocalDateTime.now();
+            Integer month = Integer.valueOf(instance.toString().substring(5, 7));
+//        Integer month = 12;
+            Integer year = Integer.valueOf(instance.toString().substring(0, 4));
+//        Integer year = 2027;
+            List<String> monthNameList = new ArrayList<String>();
+            List<Integer> listHwIn = new ArrayList<Integer>();
+            List<Integer> listHwOut = new ArrayList<Integer>();
+            List<String> listHwAverage = new ArrayList<String>();
+
+            String yearLabel = "";
+            if (month < 12) {
+                yearLabel = (year - 1) + "/" + (year);
+            } else if (month == 12) {
+                yearLabel = year.toString();
+            }
+
+            for (int x = 1; x <= 12; x++) {
+                if (month < 1) {
+//                year = year - 1;
+                    year -= 1;
+                    month = 12;
+                }
+                Month monthN = Month.of(month);
+                String monthNameFull = monthN.name();
+                String monthName = monthNameFull.substring(0, 3);
+                String year1 = year.toString().substring(2, 4);
+                String fullMonthYear = "'" + monthName + " " + year1 + "'";
+                monthNameList.add(fullMonthYear);
+
+                RmsBookingHardwareDAO hwD = new RmsBookingHardwareDAO();
+                int countHwId = hwD.getCountBibInByMonthAndYear(month.toString(), year.toString());
+                listHwIn.add(countHwId);
+
+                hwD = new RmsBookingHardwareDAO();
+                int countHwRelease = hwD.getCountBibReleaseByMonthAndYear(month.toString(), year.toString());
+                listHwOut.add(countHwRelease);
+
+                hwD = new RmsBookingHardwareDAO();
+                String avgCircleTime = hwD.getCountAvgCircleTypeByMonthAndYear(month.toString(), year.toString());
+                listHwAverage.add(avgCircleTime);
+                LOGGER.info("month.toString(): " + month.toString());
+                LOGGER.info("year.toString(): " + year.toString());
+
+                month -= 1;
+            }
+            Collections.reverse(listHwIn);
+            Collections.reverse(listHwOut);
+            Collections.reverse(listHwAverage);
+            LOGGER.info("listHwIn: " + listHwIn);
+            LOGGER.info("listHwOut: " + listHwOut);
+            LOGGER.info("listHwAverage: " + listHwAverage);
+
+            Collections.reverse(monthNameList);
+            model.addAttribute("monthNameList", monthNameList);
+            model.addAttribute("yearLabel", yearLabel);
+            model.addAttribute("listHwIn", listHwIn);
+            model.addAttribute("listHwOut", listHwOut);
+            model.addAttribute("listHwAverage", listHwAverage);
+
+            ItemDAO itemDao = new ItemDAO();
+            int countItemPending = itemDao.getCountItemWithFlagZero();
+            model.addAttribute("countItemPending", countItemPending);
+
+            ItemMaverickDAO itemMaverickD = new ItemMaverickDAO();
+            int countMaverick = itemMaverickD.getCountFlagZero();
+            model.addAttribute("countMaverick", countMaverick);
+
+            itemMaverickD = new ItemMaverickDAO();
+            List<ItemMaverick> maverickList = itemMaverickD.getItemMaverickListFlagZero();
+            model.addAttribute("maverickList", maverickList);
 
             UserAccessControlDAO uacD = new UserAccessControlDAO();
             UserAccessControl uac = uacD.getUserAccessControlByLoginId(userSession.getLoginId());

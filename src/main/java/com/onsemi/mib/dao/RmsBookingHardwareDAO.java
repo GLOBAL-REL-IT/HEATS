@@ -1847,4 +1847,90 @@ public class RmsBookingHardwareDAO {
         return rmsbookingHardwareList;
     }
 
+    public Integer getCountBibInByMonthAndYear(String month, String year) {
+        Integer count = null;
+        try {
+            PreparedStatement ps = conn.prepareStatement(
+                    "SELECT COUNT(*) AS count FROM rms_booking_hardware ha WHERE ha.item_type = 'Motherboard' AND MONTH(ha.created_date) = ? AND YEAR(ha.created_date) = ? AND flag != 99; "
+            );
+            ps.setString(1, month);
+            ps.setString(2, year);
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                count = rs.getInt("count");
+            }
+            rs.close();
+            ps.close();
+        } catch (SQLException e) {
+            LOGGER.error(e.getMessage());
+        } finally {
+            if (conn != null) {
+                try {
+                    conn.close();
+                } catch (SQLException e) {
+                    LOGGER.error(e.getMessage());
+                }
+            }
+        }
+        return count;
+    }
+
+    public Integer getCountBibReleaseByMonthAndYear(String month, String year) {
+        Integer count = null;
+        try {
+            PreparedStatement ps = conn.prepareStatement(
+                    "SELECT COUNT(*) AS count FROM rms_booking_hardware ha WHERE ha.item_type = 'Motherboard' AND MONTH(ha.released_date) = ? AND YEAR(ha.released_date) = ? AND flag != 99; "
+            );
+            ps.setString(1, month);
+            ps.setString(2, year);
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                count = rs.getInt("count");
+            }
+            rs.close();
+            ps.close();
+        } catch (SQLException e) {
+            LOGGER.error(e.getMessage());
+        } finally {
+            if (conn != null) {
+                try {
+                    conn.close();
+                } catch (SQLException e) {
+                    LOGGER.error(e.getMessage());
+                }
+            }
+        }
+        return count;
+    }
+
+    public String getCountAvgCircleTypeByMonthAndYear(String month, String year) {
+        String count = "";
+        try {
+            PreparedStatement ps = conn.prepareStatement(
+                    "SELECT COALESCE(ROUND(AVG(DATEDIFF(ha.released_date, ha.created_date)),2),0) AS avg_day_difference "
+                    + "FROM rms_booking_hardware ha WHERE ha.item_type = 'Motherboard' AND MONTH(ha.created_date) = ? "
+                    + "AND YEAR(ha.created_date) = ? AND flag != 99 AND ha.released_date IS NOT NULL"
+            );
+            ps.setString(1, month);
+            ps.setString(2, year);
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                count = rs.getString("avg_day_difference");
+            }
+            rs.close();
+            ps.close();
+        } catch (SQLException e) {
+            LOGGER.error(e.getMessage());
+        } finally {
+            if (conn != null) {
+                try {
+                    conn.close();
+                } catch (SQLException e) {
+                    LOGGER.error(e.getMessage());
+                }
+            }
+        }
+        return count;
+    }
+
 }

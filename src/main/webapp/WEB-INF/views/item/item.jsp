@@ -76,6 +76,9 @@
             .input:focus {
                 box-shadow: 5.5px 7px 0 black;
             }
+            .top-search {
+    margin-top: 15px;
+}
         </style>
     </s:layout-component>
     <s:layout-component name="page_container">
@@ -87,13 +90,12 @@
                 <nav class="navbar bg-body-tertiary">
                     <div class="container-fluid justify-content-start">
                         <!--<button class="btn btn-outline-success me-2" type="button">Pending Registration (BIB/ Bib Card)</button>-->
-                        <c:if test="${userItemAdd == 'Yes'}"><a href="${contextPath}/hw/item/add" class="btn btn-outline-success me-2" role="button">
-                                <i class='bi bi-plus-square'></i>&nbsp;&nbsp;Add New</a></c:if>
-                        <a href="${contextPath}/hw/item/pending" class="btn btn-outline-success me-2" role="button">
-                            <i class='bi bi-hourglass'></i>&nbsp;&nbsp;Pending VM/Functional Test</a>
-                        <a href="${contextPath}/hw/item/query" class="btn btn-outline-success me-2" role="button">
-                            <i class='bi bi-search'></i>&nbsp;&nbsp;Query</a>
-
+                        <c:if test="${userItemAdd == 'Yes'}"> <div class="mb-1"><a href="${contextPath}/hw/item/add" class="btn btn-outline-success me-2" role="button">
+                                <i class='bi bi-plus-square'></i>&nbsp;&nbsp;Add New</a></div></c:if>
+                       <div class="mb-1"> <a href="${contextPath}/hw/item/pending" class="btn btn-outline-success me-2" role="button">
+                            <i class='bi bi-hourglass'></i>&nbsp;&nbsp;Pending VM/Functional Test</a></div>
+                       <div class="mb-1"> <a href="${contextPath}/hw/item/query" class="btn btn-outline-success me-2" role="button">
+                            <i class='bi bi-search'></i>&nbsp;&nbsp;Query</a></div>
                     </div>
                 </nav>
                 <div class="col-sm-12 col-12">
@@ -107,7 +109,7 @@
                             <form class="row g-3 align-items-center" role="form" action="${contextPath}/hw" method="post">
                                 <div class="row mb-3">
                                     <label class="col-sm-1 col-md-1 col-form-label fw-semibold" for="singleSelect">Item Type</label>
-                                    <div class="col-sm-3 col-md-3">
+                                    <div class="col-sm-3 col-md-3 mb-3">
                                         <div class="row g-1">
                                             <div class="col-sm-11 col-md-12">
                                                 <select class="js-example-basic-single" id="itemType" name="itemType"
@@ -4221,14 +4223,15 @@
                                                     $(function () {
                                                         $("#scrollVertical2").DataTable({
                                                             scrollY: "680px",
-                                                            scrollCollapse: false,
-                                                            paging: false,
+                                                            scrollCollapse: true,
+                                                            paging: true,
 //                                                            bInfo: false,
                                                             language: {
                                                                 info: "Showing _TOTAL_ total records",
                                                             },
 //                                                            dom: 'Bfrtip',
-                                                            dom: '<"top"Bfi>rt<"bottom"p><"clear">',
+//                                                            dom: '<"top"Bfi>rt<"bottom"p><"clear">',
+                                                            dom: '<"top"B><"top-search"f>rt<"bottom"p><"clear">',
                                                             buttons: ["copy", "csv", "print"],
                                                             columnDefs: [{
                                                                     targets: [0, 1, 3, 4], visible: false

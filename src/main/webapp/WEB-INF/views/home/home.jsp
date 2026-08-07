@@ -1108,11 +1108,13 @@ myOffcanvas.addEventListener('shown.bs.offcanvas', () => {
                     {
                         name: 'HW In',
                         type: 'column',
-                        data: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+//                        data: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+                         data: ${listHwIn}
                     }, {
                         name: 'HW Released',
                         type: 'column',
-                        data: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+//                        data: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+                        data: ${listHwOut}
                     }, {
                         name: 'Cycle Time Goal',
                         type: 'line',
@@ -1120,7 +1122,8 @@ myOffcanvas.addEventListener('shown.bs.offcanvas', () => {
                     }, {
                         name: 'Average Cycle Time',
                         type: 'line',
-                        data: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+//                        data: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+                        data: ${listHwAverage}
                     }],
                 chart: {
                     height: 350,
@@ -1148,7 +1151,7 @@ myOffcanvas.addEventListener('shown.bs.offcanvas', () => {
                     {
                         seriesName: 'HW In',
                         min: 0,
-                        max: 20,
+                        max: 50,
                         axisTicks: {
                             show: true
                         },
@@ -1175,7 +1178,7 @@ myOffcanvas.addEventListener('shown.bs.offcanvas', () => {
                         seriesName: 'HW Released',
                         show: false,
                         min: 0,
-                        max: 20,
+                        max: 50,
                         opposite: true,
                         axisTicks: {
                             show: true
@@ -1199,7 +1202,7 @@ myOffcanvas.addEventListener('shown.bs.offcanvas', () => {
                         seriesName: 'AVERAGE',
                         show: false,
                         min: 0,
-                        max: 10,
+                        max: 30,
                         axisTicks: {
                             show: true
                         },
@@ -1223,7 +1226,7 @@ myOffcanvas.addEventListener('shown.bs.offcanvas', () => {
                         seriesName: 'Average Cycle Time',
                         opposite: true,
                         min: 0,
-                        max: 10,
+                        max: 30,
                         axisTicks: {
                             show: true
                         },
