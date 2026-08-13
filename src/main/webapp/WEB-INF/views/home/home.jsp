@@ -493,7 +493,8 @@
                 <div class="col-xxl-6 col-sm-12 col-12">
                     <div class="card mb-4">
                         <div class="card-header">
-                            <h5 class="card-title">Maverick ${yearLabel}</h5>
+                            <!--<h5 class="card-title">Maverick ${yearLabel}</h5>-->
+                            <h5 class="card-title">Maverick</h5>
                             <p style="font-size: 12px; color: blue;">
                                 *Cumulative hardware issues across multiple modules</p>
                         </div>
@@ -919,7 +920,7 @@ myOffcanvas.addEventListener('shown.bs.offcanvas', () => {
 //                            alert("Test 1");
                             
                             var options = {
-                series: [${countMaverick}, 0, 0, 0, 0, 0, 0, 0],
+                series: [${countHwRegVmMaverick}, 0, ${countHwRegFtMaverick}, 0, 0, 0, 0, 0],
                         
                 chart: {
 //                    width: 370,

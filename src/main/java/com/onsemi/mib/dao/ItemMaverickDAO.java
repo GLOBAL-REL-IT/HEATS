@@ -288,7 +288,7 @@ public class ItemMaverickDAO {
         return count;
     }
 
-    public Integer getCountVm(String month, String year) {
+    public Integer getCountVmWithMonthAndYear(String month, String year) {
         Integer count = null;
         try ( PreparedStatement ps = conn.prepareStatement(
                 "SELECT COUNT(*) AS COUNT "
@@ -316,7 +316,33 @@ public class ItemMaverickDAO {
         return count;
     }
 
-    public Integer getCountFt(String month, String year) {
+    public Integer getCountOpenVm() {
+        Integer count = null;
+        try ( PreparedStatement ps = conn.prepareStatement(
+                "SELECT COUNT(*) AS COUNT "
+                + "FROM item_maverick inc "
+                + "WHERE inc.submodule = 'Visual Inspection' AND flag = '0'"
+        )) {
+            try ( ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    count = rs.getInt("count");
+                }
+            }
+        } catch (SQLException e) {
+            LOGGER.error(e.getMessage());
+        } finally {
+            if (conn != null) {
+                try {
+                    conn.close();
+                } catch (SQLException e) {
+                    LOGGER.error(e.getMessage());
+                }
+            }
+        }
+        return count;
+    }
+
+    public Integer getCountFtWithMonthAndYear(String month, String year) {
         Integer count = null;
         try ( PreparedStatement ps = conn.prepareStatement(
                 "SELECT COUNT(*) AS COUNT "
@@ -325,6 +351,32 @@ public class ItemMaverickDAO {
         )) {
             ps.setString(1, month);
             ps.setString(2, year);
+            try ( ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    count = rs.getInt("count");
+                }
+            }
+        } catch (SQLException e) {
+            LOGGER.error(e.getMessage());
+        } finally {
+            if (conn != null) {
+                try {
+                    conn.close();
+                } catch (SQLException e) {
+                    LOGGER.error(e.getMessage());
+                }
+            }
+        }
+        return count;
+    }
+
+    public Integer getCountOpenFT() {
+        Integer count = null;
+        try ( PreparedStatement ps = conn.prepareStatement(
+                "SELECT COUNT(*) AS COUNT "
+                + "FROM item_maverick inc "
+                + "WHERE inc.submodule != 'Visual Inspection' AND flag = '0'"
+        )) {
             try ( ResultSet rs = ps.executeQuery()) {
                 while (rs.next()) {
                     count = rs.getInt("count");

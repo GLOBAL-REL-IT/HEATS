@@ -103,8 +103,6 @@ public class HomeController {
             List<Integer> listHwOut = new ArrayList<>();
             List<String> listHwAverage = new ArrayList<>();
 
-            int hwRegVmMaverick = 0;
-
             String yearLabel = "";
             if (month < 12) {
                 yearLabel = (year - 1) + "/" + (year);
@@ -136,23 +134,13 @@ public class HomeController {
                 hwD = new RmsBookingHardwareDAO();
                 String avgCircleTime = hwD.getCountAvgCircleTypeByMonthAndYear(month.toString(), year.toString());
                 listHwAverage.add(avgCircleTime);
-                LOGGER.info("month.toString(): " + month.toString());
-                LOGGER.info("year.toString(): " + year.toString());
-
-                //maverick
-                ItemMaverickDAO itemMaverickD = new ItemMaverickDAO();
-                int countHwRegVmMaverick = itemMaverickD.getCountVm(yearLabel, yearLabel);
-                hwRegVmMaverick += countHwRegVmMaverick;
 
                 month -= 1;
             }
+
             Collections.reverse(listHwIn);
             Collections.reverse(listHwOut);
             Collections.reverse(listHwAverage);
-            LOGGER.info("listHwIn: " + listHwIn);
-            LOGGER.info("listHwOut: " + listHwOut);
-            LOGGER.info("listHwAverage: " + listHwAverage);
-
             Collections.reverse(monthNameList);
             model.addAttribute("monthNameList", monthNameList);
             model.addAttribute("yearLabel", yearLabel);
@@ -164,7 +152,16 @@ public class HomeController {
             int countItemPending = itemDao.getCountItemWithFlagZero();
             model.addAttribute("countItemPending", countItemPending);
 
+            //maverick
             ItemMaverickDAO itemMaverickD = new ItemMaverickDAO();
+            int countHwRegVmMaverick = itemMaverickD.getCountOpenVm();
+            model.addAttribute("countHwRegVmMaverick", countHwRegVmMaverick);
+
+            itemMaverickD = new ItemMaverickDAO();
+            int countHwRegFtMaverick = itemMaverickD.getCountOpenFT();
+            model.addAttribute("countHwRegFtMaverick", countHwRegFtMaverick);
+
+            itemMaverickD = new ItemMaverickDAO();
             int countMaverick = itemMaverickD.getCountFlagZero();
             model.addAttribute("countMaverick", countMaverick);
 
