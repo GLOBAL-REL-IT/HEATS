@@ -213,4 +213,54 @@ public class RmsBookingMaverickDAO {
         }
         return rmsbookingMaverickList;
     }
+
+    public List<RmsBookingMaverick> getRmsBookingMaverickListUnionWithItemMaverick() {
+        String sql = "SELECT mav1.id, mav1.mib_item_id AS id2, mav1.module, mav1.submodule,mav1.disposition_1, mav1.disposition_remarks_1, mav1.disposition_1_by, mav1.disposition_1_date, "
+                + "mav1.disposition_2, mav1.disposition_2_remarks, mav1.disposition_2_by, mav1.disposition_2_date, mav1.`status`, mav1.flag, mav1.created_by, mav1.created_date "
+                + "FROM item_maverick mav1 "
+                + "UNION ALL "
+                + "SELECT mav2.id, mav2.group_id AS id2, mav2.module, mav2.submodule,mav2.disposition_1, mav2.disposition_remarks_1, mav2.disposition_1_by, mav2.disposition_1_date, "
+                + "mav2.disposition_2, mav2.disposition_2_remarks, mav2.disposition_2_by, mav2.disposition_2_date, mav2.`status`, mav2.flag, mav2.created_by, mav2.created_date "
+                + "FROM rms_booking_maverick mav2 "
+                + "ORDER BY created_date";
+        List<RmsBookingMaverick> rmsbookingMaverickList = new ArrayList<RmsBookingMaverick>();
+        try {
+            PreparedStatement ps = conn.prepareStatement(sql);
+            RmsBookingMaverick rmsbookingMaverick;
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                rmsbookingMaverick = new RmsBookingMaverick();
+                rmsbookingMaverick.setId(rs.getString("id"));
+                rmsbookingMaverick.setId2(rs.getString("id2"));
+                rmsbookingMaverick.setModule(rs.getString("module"));
+                rmsbookingMaverick.setSubmodule(rs.getString("submodule"));
+                rmsbookingMaverick.setDisposition1(rs.getString("disposition_1"));
+                rmsbookingMaverick.setDispositionRemarks1(rs.getString("disposition_remarks_1"));
+                rmsbookingMaverick.setDisposition1By(rs.getString("disposition_1_by"));
+                rmsbookingMaverick.setDisposition1Date(rs.getString("disposition_1_date"));
+                rmsbookingMaverick.setDisposition2(rs.getString("disposition_2"));
+                rmsbookingMaverick.setDisposition2Remarks(rs.getString("disposition_2_remarks"));
+                rmsbookingMaverick.setDisposition2By(rs.getString("disposition_2_by"));
+                rmsbookingMaverick.setDisposition2Date(rs.getString("disposition_2_date"));
+                rmsbookingMaverick.setStatus(rs.getString("status"));
+                rmsbookingMaverick.setFlag(rs.getString("flag"));
+                rmsbookingMaverick.setCreatedBy(rs.getString("created_by"));
+                rmsbookingMaverick.setCreatedDate(rs.getString("created_date"));
+                rmsbookingMaverickList.add(rmsbookingMaverick);
+            }
+            rs.close();
+            ps.close();
+        } catch (SQLException e) {
+            LOGGER.error(e.getMessage());
+        } finally {
+            if (conn != null) {
+                try {
+                    conn.close();
+                } catch (SQLException e) {
+                    LOGGER.error(e.getMessage());
+                }
+            }
+        }
+        return rmsbookingMaverickList;
+    }
 }

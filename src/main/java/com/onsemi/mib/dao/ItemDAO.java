@@ -859,6 +859,35 @@ public class ItemDAO {
         return hardwaredetailList;
     }
 
+    public List<Item> getActiveBibList() {
+        String sql = "SELECT it.id, it.item_type, it.item_id, it.flag FROM item it WHERE it.item_type = 'BIB' AND it.flag NOT IN (0,99)";
+        List<Item> hardwaredetailList = new ArrayList<>();
+        try ( PreparedStatement ps = conn.prepareStatement(sql)) {
+            Item hardwaredetail;
+            try ( ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    hardwaredetail = new Item();
+                    hardwaredetail.setId(rs.getString("id"));
+                    hardwaredetail.setItemType(rs.getString("item_type"));
+                    hardwaredetail.setItemId(rs.getString("item_id"));
+                    hardwaredetail.setFlag(rs.getString("flag"));
+                    hardwaredetailList.add(hardwaredetail);
+                }
+            }
+        } catch (SQLException e) {
+            LOGGER.error(e.getMessage());
+        } finally {
+            if (conn != null) {
+                try {
+                    conn.close();
+                } catch (SQLException e) {
+                    LOGGER.error(e.getMessage());
+                }
+            }
+        }
+        return hardwaredetailList;
+    }
+
     public List<Item> getitemQuery(String query) {
         String sql = query;
         List<Item> hardwaredetailList = new ArrayList<Item>();

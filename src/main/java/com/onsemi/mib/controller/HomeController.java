@@ -98,10 +98,12 @@ public class HomeController {
 //        Integer month = 12;
             Integer year = Integer.valueOf(instance.toString().substring(0, 4));
 //        Integer year = 2027;
-            List<String> monthNameList = new ArrayList<String>();
-            List<Integer> listHwIn = new ArrayList<Integer>();
-            List<Integer> listHwOut = new ArrayList<Integer>();
-            List<String> listHwAverage = new ArrayList<String>();
+            List<String> monthNameList = new ArrayList<>();
+            List<Integer> listHwIn = new ArrayList<>();
+            List<Integer> listHwOut = new ArrayList<>();
+            List<String> listHwAverage = new ArrayList<>();
+
+            int hwRegVmMaverick = 0;
 
             String yearLabel = "";
             if (month < 12) {
@@ -136,6 +138,11 @@ public class HomeController {
                 listHwAverage.add(avgCircleTime);
                 LOGGER.info("month.toString(): " + month.toString());
                 LOGGER.info("year.toString(): " + year.toString());
+
+                //maverick
+                ItemMaverickDAO itemMaverickD = new ItemMaverickDAO();
+                int countHwRegVmMaverick = itemMaverickD.getCountVm(yearLabel, yearLabel);
+                hwRegVmMaverick += countHwRegVmMaverick;
 
                 month -= 1;
             }

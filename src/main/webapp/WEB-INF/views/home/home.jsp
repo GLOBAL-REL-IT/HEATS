@@ -919,7 +919,7 @@ myOffcanvas.addEventListener('shown.bs.offcanvas', () => {
 //                            alert("Test 1");
                             
                             var options = {
-                series: [${countMaverick}, 0, 0, 0, 0, 0],
+                series: [${countMaverick}, 0, 0, 0, 0, 0, 0, 0],
                         
                 chart: {
 //                    width: 370,
@@ -936,7 +936,7 @@ myOffcanvas.addEventListener('shown.bs.offcanvas', () => {
                         speed: 800
                     }
                 },
-                labels: ['HW Registration','VM Before Loading', 'Functional Test before Loading', 'Abnormal Loading', 'Ionic Test', 'VM After Loading'],
+                labels: ['VM (HW Registration)','VM (Before Loading)', 'Functional Test (HW Registration)', 'Functional Test (Before Loading)', 'Abnormal Unloading', 'Ionic Test (After Loading)', 'VM (After Loading)','Functional Test (After Loading)'],
                 fill: {
                     opacity: 0.85,
                     gradient: {
@@ -947,7 +947,7 @@ myOffcanvas.addEventListener('shown.bs.offcanvas', () => {
                     width: 2,
                     colors: ['#ffffff']
                 },
-                colors: ["#50589C", "#5ec3f1", "#9DB6FF", "#59AC77","#F63049","#94A378"],
+                colors: ["#50589C", "#5ec3f1", "#9DB6FF", "#59AC77","#F63049","#94A378","#b479ba","#edd079"],
                 yaxis: {
                     show: false
                 },
@@ -1023,9 +1023,9 @@ myOffcanvas.addEventListener('shown.bs.offcanvas', () => {
                     }
                 },
 //              labels: [],
-              labels: ['','HW Registration','VM Before Loading', 'Functional Test before Loading', 'Abnormal Loading', 'Ionic Test', 'VM After Loading'],
+              labels: ['','VM (HW Registration)','VM (Before Loading)', 'Functional Test (HW Registration)', 'Functional Test (Before Loading)', 'Abnormal Unloading', 'Ionic Test (After Loading)', 'VM (After Loading)','Functional Test (After Loading)'],
 //              colors: ['#f0f0f0'],
-              colors: ["#f0f0f0","#50589C", "#5ec3f1", "#9DB6FF", "#59AC77","#F63049","#94A378"],
+              colors: ["#f0f0f0","#50589C", "#5ec3f1", "#9DB6FF", "#59AC77","#F63049","#94A378","#b479ba","#edd079"],
               fill: {
                     opacity: 0.85,
                     gradient: {

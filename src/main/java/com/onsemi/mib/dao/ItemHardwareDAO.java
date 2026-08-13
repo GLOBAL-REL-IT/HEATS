@@ -679,6 +679,31 @@ public class ItemHardwareDAO {
         return count;
     }
 
+    public Integer getCountHardwareId(String hwId) {
+        Integer count = null;
+        try ( PreparedStatement ps = conn.prepareStatement(
+                "SELECT COUNT(*) AS count FROM item_hardware inc WHERE inc.hardware_id = ?"
+        )) {
+            ps.setString(1, hwId);
+            try ( ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    count = rs.getInt("count");
+                }
+            }
+        } catch (SQLException e) {
+            LOGGER.error(e.getMessage());
+        } finally {
+            if (conn != null) {
+                try {
+                    conn.close();
+                } catch (SQLException e) {
+                    LOGGER.error(e.getMessage());
+                }
+            }
+        }
+        return count;
+    }
+
     public String getSptsIdByHwId(String hardwareId) {
         String data = "";
         try {

@@ -7,6 +7,7 @@ import com.onsemi.mib.dao.ItemActivityConfigDAO;
 import com.onsemi.mib.dao.ItemAluConfigDAO;
 import com.onsemi.mib.dao.ItemDAO;
 import com.onsemi.mib.dao.ItemHardwareConfigDAO;
+import com.onsemi.mib.dao.ItemHardwareDAO;
 import com.onsemi.mib.dao.LDAPUserDAO;
 import com.onsemi.mib.dao.ManualTestDAO;
 import java.util.List;
@@ -24,6 +25,7 @@ import com.onsemi.mib.model.EventGroup;
 import com.onsemi.mib.model.Item;
 import com.onsemi.mib.model.ItemActivityConfig;
 import com.onsemi.mib.model.ItemAluConfig;
+import com.onsemi.mib.model.ItemHardware;
 import com.onsemi.mib.model.ItemHardwareConfig;
 import com.onsemi.mib.model.JSONResponse;
 import com.onsemi.mib.model.LDAPUser;
@@ -631,7 +633,6 @@ public class AdminController {
             @RequestParam(required = false) String eqptViMonDelete,
             @RequestParam(required = false) String eqptFamilyAddGlobal,
             @RequestParam(required = false) String eqptRelTestGroupAddGlobal,
-            
             @RequestParam(required = false) String befLoadingPriority,
             @RequestParam(required = false) String befLoadingHwReplace,
             @RequestParam(required = false) String befLoadingSfRecall,
@@ -641,7 +642,6 @@ public class AdminController {
             @RequestParam(required = false) String befLoadingFt,
             @RequestParam(required = false) String befLoadingRelease,
             @RequestParam(required = false) String befLoadingReturnDefective,
-            
             @RequestParam(required = false) String unloadingHwReturn,
             @RequestParam(required = false) String unloadingIonic,
             @RequestParam(required = false) String unloadingVm,
@@ -661,7 +661,7 @@ public class AdminController {
         uac.setItemActivityEdit(itemActEdit);
         uac.setItemMovementAdd(itemMovementAdd);
         uac.setItemSfRecall(itemSfRecall);
-        
+
         uac.setEqptAdd(eqptAdd);
         uac.setEqptEdit(eqptEdit);
         uac.setEqptDelete(eqptDelete);
@@ -677,7 +677,7 @@ public class AdminController {
         uac.setEqptViMonDelete(eqptViMonDelete);
         uac.setEqptFamilyAddGlobal(eqptFamilyAddGlobal);
         uac.setEqptRelTestGroupAddGlobal(eqptRelTestGroupAddGlobal);
-        
+
         uac.setBefLoadingPriority(befLoadingPriority);
         uac.setBefLoadingHwReplace(befLoadingHwReplace);
         uac.setBefLoadingSfRecall(befLoadingSfRecall);
@@ -687,7 +687,7 @@ public class AdminController {
         uac.setBefLoadingFt(befLoadingFt);
         uac.setBefLoadingRelease(befLoadingRelease);
         uac.setBefLoadingReturnDefective(befLoadingReturnDefective);
-        
+
         uac.setUnloadingHwReturn(unloadingHwReturn);
         uac.setUnloadingIonic(unloadingIonic);
         uac.setUnloadingVm(unloadingVm);
@@ -2461,6 +2461,45 @@ public class AdminController {
             }
         }
         return sb.toString();
+    }
+
+    @RequestMapping(value = "/createHardwareId", method = {RequestMethod.GET, RequestMethod.POST})
+    public String createHardwareId(
+            Model model,
+            @ModelAttribute UserSession userSession
+    ) throws IOException {
+
+        ItemDAO itemD = new ItemDAO();
+        List<Item> item = itemD.getActiveBibList();
+
+        int count = 0;
+        int countAdd = 0;
+
+        for (int i = 0; i < item.size(); i++) {
+
+            count += 1;
+
+            ItemHardwareDAO itemHD = new ItemHardwareDAO();
+            int countSameItemID = itemHD.getCountHardwareId(item.get(i).getItemId());
+
+            if (countSameItemID == 0) {
+                ItemHardware itemhardware = new ItemHardware();
+                itemhardware.setMibItemId(item.get(i).getId());
+                itemhardware.setHardwareId(item.get(i).getItemId());
+                itemhardware.setStatus("Pending Verification");
+                itemhardware.setCreatedBy(userSession.getLoginId());
+                itemhardware.setFlag("0");
+
+                ItemHardwareDAO dao2 = new ItemHardwareDAO();
+                QueryResult q = dao2.insertHardwareID(itemhardware);
+                countAdd += q.getResult();
+            }
+        }
+
+        model.addAttribute("count", count);
+        model.addAttribute("countAdd", countAdd);
+
+        return "admin/bulkCreateHwId";
     }
 
 }
