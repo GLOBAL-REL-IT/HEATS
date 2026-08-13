@@ -4637,12 +4637,12 @@ public class ItemController {
         String pathDaq = "";
         String pathPs = "";
         String pathWin = "";
-        
-        LOGGER.info("bibUpload        :::::::::: " +bibUpload);
-        LOGGER.info("bibDaqUpload     :::::::::: " +bibDaqUpload);
-        LOGGER.info("leakUpload       :::::::::: " +leakUpload);
-        LOGGER.info("psUpload         :::::::::: " +psUpload);
-        LOGGER.info("winUpload        :::::::::: " +winUpload);
+
+        LOGGER.info("bibUpload        :::::::::: " + bibUpload);
+        LOGGER.info("bibDaqUpload     :::::::::: " + bibDaqUpload);
+        LOGGER.info("leakUpload       :::::::::: " + leakUpload);
+        LOGGER.info("psUpload         :::::::::: " + psUpload);
+        LOGGER.info("winUpload        :::::::::: " + winUpload);
 
         ItemFunctionalTest item = new ItemFunctionalTest();
 
@@ -4655,8 +4655,8 @@ public class ItemController {
         String checkDaq = itemdata.getBibDaqTest();
         String checkPs = itemdata.getPsLeakageTest();;
         String checkWin = itemdata.getWinchesterChamberLeakageTest();
-        
-        LOGGER.info("APA BENDA NAY ::: "+jenis);
+
+        LOGGER.info("APA BENDA NAY ::: " + jenis);
 
         if (bibUpload != null) {
             LOGGER.info("SINI MASUK YANG BIB PUNYA");
@@ -4700,7 +4700,7 @@ public class ItemController {
                 ItemDAO itemDA = new ItemDAO();
                 QueryResult iQ = itemDA.updateItemStatusAndFlag(item0);
                 // UPDATE STATUS TABLE ITEM END
-                
+
                 // UPDATE TABLE ITEM_FUNCTIONAL_TEST START
                 ItemFunctionalTestDAO itemdao = new ItemFunctionalTestDAO();
                 item.setMibItemId(mibItemId);
@@ -4758,7 +4758,7 @@ public class ItemController {
                 ItemDAO itemDA = new ItemDAO();
                 QueryResult iQ = itemDA.updateItemStatusAndFlag(item0);
                 // UPDATE STATUS TABLE ITEM END
-                
+
                 // UPDATE TABLE ITEM_FUNCTIONAL_TEST START
                 ItemFunctionalTestDAO itemdao = new ItemFunctionalTestDAO();
                 item.setMibItemId(mibItemId);
@@ -4822,7 +4822,7 @@ public class ItemController {
                 ItemDAO itemDA = new ItemDAO();
                 QueryResult iQ = itemDA.updateItemStatusAndFlag(item0);
                 // UPDATE STATUS TABLE ITEM END
-                
+
                 // UPDATE TABLE ITEM_FUNCTIONAL_TEST START
                 ItemFunctionalTestDAO itemdao = new ItemFunctionalTestDAO();
                 item.setMibItemId(mibItemId);
@@ -4878,7 +4878,7 @@ public class ItemController {
                 ItemDAO itemDA = new ItemDAO();
                 QueryResult iQ = itemDA.updateItemStatusAndFlag(item0);
                 // UPDATE STATUS TABLE ITEM END
-                
+
                 // UPDATE TABLE ITEM_FUNCTIONAL_TEST START
                 ItemFunctionalTestDAO itemdao = new ItemFunctionalTestDAO();
                 item.setMibItemId(mibItemId);
@@ -4929,7 +4929,7 @@ public class ItemController {
                 ItemDAO itemDA = new ItemDAO();
                 QueryResult iQ = itemDA.updateItemStatusAndFlag(item0);
                 // UPDATE STATUS TABLE ITEM END
-                
+
                 // UPDATE TABLE ITEM_FUNCTIONAL_TEST START
                 ItemFunctionalTestDAO itemdao = new ItemFunctionalTestDAO();
                 item.setMibItemId(mibItemId);
@@ -4947,15 +4947,15 @@ public class ItemController {
         } else {
             LOGGER.info("6666");
         }
-        
+
         ItemLog log = new ItemLog();
         log.setItemId(mibItemId);
         log.setDetail(logStatus);
         log.setCreatedBy(userSession.getFullname());
         ItemLogDAO logD = new ItemLogDAO();
         QueryResult logQ = logD.insertItemLog(log);
-        
-        LOGGER.info("KITA RETURN KE MANA NI "+target_location);
+
+        LOGGER.info("KITA RETURN KE MANA NI " + target_location);
         return target_location;
     }
 
@@ -5197,6 +5197,25 @@ public class ItemController {
 
             ItemDAO itemD = new ItemDAO();
             QueryResult i2 = itemD.updateItemSPTSPKID(item);
+
+            //create Hardware ID if item type = BIB 13.08.2026
+            if ("BIB".equals(itemTypeRead)) {
+                LOGGER.info("++++++++++++createhardwareid+++++++++++++");
+                ItemHardwareDAO itemHD = new ItemHardwareDAO();
+                int countHwId = itemHD.getCountHardwareId(itemId);
+                if (countHwId == 0) {
+                    ItemHardware itemhardware = new ItemHardware();
+                    itemhardware.setMibItemId(mibItemId);
+                    itemhardware.setHardwareId(itemId);
+                    itemhardware.setStatus("Pending Verification");
+                    itemhardware.setCreatedBy(username);
+                    itemhardware.setFlag("0");
+
+                    ItemHardwareDAO dao2 = new ItemHardwareDAO();
+                    QueryResult q = dao2.insertHardwareID(itemhardware);
+                }
+            }
+
         } else {
             LinkedHashMap<String, String> item2;
             ObjectMapper mapper = new ObjectMapper();
