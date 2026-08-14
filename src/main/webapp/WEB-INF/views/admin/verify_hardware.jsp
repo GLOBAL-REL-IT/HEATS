@@ -21,6 +21,12 @@
             <div id="resultMsg"></div>
             <div class="row gx-4">
                 <div class="col-sm-12 col-12">
+                    
+                    <div class="container-fluid justify-content-start">
+                        <a href="${contextPath}/hw" class="btn btn-outline-warning me-2 mb-2" role="button">
+                            <i class='bi bi-arrow-bar-left'></i>&nbsp;&nbsp;Back</a>
+                    </div>
+                    
                     <div class="card mb-4">
                         <div class="card-header">
                             <h5 class="card-title">Scan Hardware ID</h5>

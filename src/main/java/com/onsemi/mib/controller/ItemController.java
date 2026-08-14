@@ -7090,7 +7090,7 @@ public class ItemController {
 //                redirectAttrs.addFlashAttribute("success", messageSource.getMessage("admin.label.hardware.verified.done", args, locale));
 //            }
         }
-        return "redirect:/hw";
+        return "redirect:/scanqr/verifyHardware";
     }
 
     @RequestMapping(value = "/item/movement/{itemHwId}", method = RequestMethod.GET)
