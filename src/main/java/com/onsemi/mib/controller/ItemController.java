@@ -7070,7 +7070,7 @@ public class ItemController {
             
             if (status.equalsIgnoreCase("Pending Verification")) {
                 String hwidStatus = "Available"; 
-                itemhw.setVerifyBy(userSession.getFullname());
+                itemhw.setVerifyBy(userSession.getLoginId());
                 itemhwdao = new ItemHardwareDAO();
                 itemhwdao.updateHardwareIdStatusGood(itemhw);
                 String statusspts = insertItemHardwareIntoSpts(itemhw.getId(), itemhw.getMibItemId(), itemhw.getHardwareId(), hwidStatus, userSession.getLoginId());
