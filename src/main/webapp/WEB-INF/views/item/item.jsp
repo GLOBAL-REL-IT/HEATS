@@ -96,6 +96,8 @@
                             <i class='bi bi-hourglass'></i>&nbsp;&nbsp;Pending VM/Functional Test</a></div>
                        <div class="mb-1"> <a href="${contextPath}/hw/item/query" class="btn btn-outline-success me-2" role="button">
                             <i class='bi bi-search'></i>&nbsp;&nbsp;Query</a></div>
+                       <div class="mb-1"> <a href="${contextPath}/scanqr/verifyHardware" class="btn btn-outline-success me-2" role="button">
+                            <i class="bi bi-qr-code-scan"></i>&nbsp;&nbsp;Verify Hardware</a></div>
                     </div>
                 </nav>
                 <div class="col-sm-12 col-12">

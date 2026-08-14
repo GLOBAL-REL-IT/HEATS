@@ -41,8 +41,12 @@ public class ScanQRController {
     
     @RequestMapping(value = "", method = RequestMethod.GET)
     public String scanQr(Model model) {
-        LOGGER.info("KITA MASUK KE PAGE YANG BETUL");
         return "/admin/scan";
+    }
+    
+    @RequestMapping(value = "/verifyHardware", method = RequestMethod.GET)
+    public String verifyHardware(Model model) {
+        return "/admin/verify_hardware";
     }
     
 }

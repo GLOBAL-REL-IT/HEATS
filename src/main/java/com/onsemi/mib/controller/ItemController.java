@@ -7048,6 +7048,44 @@ public class ItemController {
         return "redirect:/hw/" + sptsPkid;
     }
 
+    @RequestMapping(value = "/item/hardware/verifyLagi", method = {RequestMethod.GET, RequestMethod.POST})
+    public String verifyHardwareIdLagi(
+            Model model,
+            Locale locale,
+            RedirectAttributes redirectAttrs,
+            @ModelAttribute UserSession userSession,
+            @RequestParam(required = false) String scanqr) throws IOException {
+
+        args = new String[1];
+        args[0] = scanqr;
+        
+        ItemHardwareDAO itemhwdao = new ItemHardwareDAO();
+        ItemHardware itemhw = itemhwdao.getItemHardwareByHardwareId(scanqr);
+        if (itemhw == null) {
+            redirectAttrs.addFlashAttribute("error", messageSource.getMessage("admin.label.hardware.verified.failed", args, locale));
+        } else {
+            String siapa = itemhw.getVerifyBy();
+            String bila = itemhw.getVerifyDate();
+            String status = itemhw.getStatus();
+            
+            if (status.equalsIgnoreCase("Pending Verification")) {
+                itemhw.setVerifyBy(userSession.getFullname());
+                itemhwdao = new ItemHardwareDAO();
+                itemhwdao.updateHardwareIdStatusGood(itemhw);
+                redirectAttrs.addFlashAttribute("success", "Hardware ID successfully verified!!!");
+            } else {
+                redirectAttrs.addFlashAttribute("success", "Hardware ID "+scanqr+" status is "+status);
+            }
+
+//            if ((siapa == null || siapa.trim().isEmpty()) && (bila == null || bila.trim().isEmpty())) {
+//                redirectAttrs.addFlashAttribute("success", messageSource.getMessage("admin.label.hardware.verified.success", args, locale));
+//            } else {
+//                redirectAttrs.addFlashAttribute("success", messageSource.getMessage("admin.label.hardware.verified.done", args, locale));
+//            }
+        }
+        return "redirect:/hw";
+    }
+
     @RequestMapping(value = "/item/movement/{itemHwId}", method = RequestMethod.GET)
     public String hardwareMovement(
             Model model,

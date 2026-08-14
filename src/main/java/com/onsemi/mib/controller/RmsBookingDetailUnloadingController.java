@@ -220,7 +220,7 @@ public class RmsBookingDetailUnloadingController {
             @PathVariable("itemPkid") String itemPkid,
             RedirectAttributes redirectAttrs,
             @ModelAttribute UserSession userSession) throws IOException, SQLException {
-        
+
         String currentStatus = "";
         String leakTest = "";
         String manTest = "";
@@ -417,12 +417,6 @@ public class RmsBookingDetailUnloadingController {
                 if (testResult == null) {
                     // NOTHING TO UPDATE HERE
                 } else {
-//                    statusLeak = testResult.getLeakStatus();
-//                    statusMan = testResult.getManualStatus();
-//                    statusBib = testResult.getBibStatus();
-//                    statusBibD = testResult.getBibDaqStatus();
-//                    statusPs = testResult.getPsStatus();
-//                    statusWin = testResult.getPsStatus();
                     statusLeak = SpmlUtil.nullToEmptyString(testResult.getLeakStatus());
                     statusMan = SpmlUtil.nullToEmptyString(testResult.getManualStatus());
                     statusBib = SpmlUtil.nullToEmptyString(testResult.getBibStatus());
@@ -430,6 +424,7 @@ public class RmsBookingDetailUnloadingController {
                     statusPs = SpmlUtil.nullToEmptyString(testResult.getPsStatus());
                     statusWin = SpmlUtil.nullToEmptyString(testResult.getPsStatus());
                 }
+
                 String check01 = "disabled";    // LEAKAGE
                 String check02 = "disabled";    // MANUAL
                 String check03 = "disabled";    // BIB 
@@ -442,6 +437,12 @@ public class RmsBookingDetailUnloadingController {
                 String edit04 = "visually-hidden";
                 String edit05 = "visually-hidden";
                 String edit06 = "visually-hidden";
+                String tgk01 = "collapsed";
+                String tgk02 = "collapsed";
+                String tgk03 = "collapsed";
+                String tgk04 = "collapsed";
+                String tgk05 = "collapsed";
+                String tgk06 = "collapsed";
 
                 if (currentStatus.contains("Failed")) {
                     model.addAttribute("leakbutton", "disabled");
@@ -454,26 +455,32 @@ public class RmsBookingDetailUnloadingController {
                     if (currentStatus.contains("- Leakage")) {
                         check01 = "";
                         edit01 = "";
+                        tgk01 = "";
                     } else if (currentStatus.contains("BIB Test")) {
                         check03 = "";
                         edit03 = "";
+                        tgk03 = "";
                     } else if (currentStatus.contains("BIB DAQ")) {
                         check04 = "";
                         edit04 = "";
+                        tgk04 = "";
                     } else if (currentStatus.contains("Manual")) {
                         check02 = "";
                         edit02 = "";
+                        tgk02 = "";
                     } else if (currentStatus.contains("Winchester")) {
                         check06 = "";
                         edit06 = "";
+                        tgk06 = "";
                     } else if (currentStatus.contains("Power")) {
                         check05 = "";
                         edit05 = "";
+                        tgk05 = "";
                     } else {
-                        
+
                     }
                 }
-                
+
                 model.addAttribute("leakbutton", check01);
                 model.addAttribute("manualbutton", check02);
                 model.addAttribute("bibbutton", check03);
@@ -486,11 +493,17 @@ public class RmsBookingDetailUnloadingController {
                 model.addAttribute("editbibdaqbutton", edit04);
                 model.addAttribute("editpsbutton", edit05);
                 model.addAttribute("editwinbutton", edit06);
+                model.addAttribute("leaktab", tgk01);
+                model.addAttribute("manualtab", tgk02);
+                model.addAttribute("bibtab", tgk03);
+                model.addAttribute("daqtab", tgk04);
+                model.addAttribute("powertab", tgk05);
+                model.addAttribute("wintab", tgk06);
             } else {
 
             }
         }
-        
+
         model.addAttribute("bookId", bookingId);
         model.addAttribute("mibItemId", itemPkid);
 
@@ -1813,6 +1826,7 @@ public class RmsBookingDetailUnloadingController {
         String gotoPS = "Pending Functional Test - Power Supply Leakage Test";
         String gotoWin = "Pending Functional Test - Winchester Chamber Leakage Test";
 //        String goReady = "Pending Release to Production";
+        String goDispo = "Pending Production Disposition";
         String goReady = "Closed";
         String goHast = "";
 
@@ -1902,7 +1916,7 @@ public class RmsBookingDetailUnloadingController {
             if (leakUpload != null) {
                 try {
                     byte[] bytesConnector = leakUpload.getBytes();
-                    Path pathConnector = Paths.get(FOLDER_TEST_BL + "_leakageTest_" + leakUpload.getOriginalFilename()); // THIS ONE TESTING ONLY, USE CORRECT GENERATED KEY
+                    Path pathConnector = Paths.get(FOLDER_TEST_AL + "_leakageTest_" + leakUpload.getOriginalFilename()); // THIS ONE TESTING ONLY, USE CORRECT GENERATED KEY
                     if (leakUpload.getOriginalFilename() == null || leakUpload.getOriginalFilename().equalsIgnoreCase("")) {
                         //
                     } else {
@@ -1967,7 +1981,7 @@ public class RmsBookingDetailUnloadingController {
             if (bibUpload != null) {
                 try {
                     byte[] bytesConnector = bibUpload.getBytes();
-                    Path pathConnector = Paths.get(FOLDER_TEST_BL + "_bibTest_" + bibUpload.getOriginalFilename()); // THIS ONE TESTING ONLY, USE CORRECT GENERATED KEY
+                    Path pathConnector = Paths.get(FOLDER_TEST_AL + "_bibTest_" + bibUpload.getOriginalFilename()); // THIS ONE TESTING ONLY, USE CORRECT GENERATED KEY
                     if (bibUpload.getOriginalFilename() == null || bibUpload.getOriginalFilename().equalsIgnoreCase("")) {
                         //
                     } else {
@@ -2023,7 +2037,7 @@ public class RmsBookingDetailUnloadingController {
             if (bibDaqUpload != null) {
                 try {
                     byte[] bytesConnector = bibDaqUpload.getBytes();
-                    Path pathConnector = Paths.get(FOLDER_TEST_BL + "_bibDaqTest_" + bibDaqUpload.getOriginalFilename()); // THIS ONE TESTING ONLY, USE CORRECT GENERATED KEY
+                    Path pathConnector = Paths.get(FOLDER_TEST_AL + "_bibDaqTest_" + bibDaqUpload.getOriginalFilename()); // THIS ONE TESTING ONLY, USE CORRECT GENERATED KEY
                     if (bibDaqUpload.getOriginalFilename() == null || bibDaqUpload.getOriginalFilename().equalsIgnoreCase("")) {
                         //
                     } else {
@@ -2077,7 +2091,7 @@ public class RmsBookingDetailUnloadingController {
             if (psUpload != null) {
                 try {
                     byte[] bytesConnector = psUpload.getBytes();
-                    Path pathConnector = Paths.get(FOLDER_TEST_BL + "_psTest_" + psUpload.getOriginalFilename()); // THIS ONE TESTING ONLY, USE CORRECT GENERATED KEY
+                    Path pathConnector = Paths.get(FOLDER_TEST_AL + "_psTest_" + psUpload.getOriginalFilename()); // THIS ONE TESTING ONLY, USE CORRECT GENERATED KEY
                     if (psUpload.getOriginalFilename() == null || psUpload.getOriginalFilename().equalsIgnoreCase("")) {
                         //
                     } else {
@@ -2128,7 +2142,7 @@ public class RmsBookingDetailUnloadingController {
             if (winUpload != null) {
                 try {
                     byte[] bytesConnector = winUpload.getBytes();
-                    Path pathConnector = Paths.get(FOLDER_TEST_BL + "_winTest_" + winUpload.getOriginalFilename()); // THIS ONE TESTING ONLY, USE CORRECT GENERATED KEY
+                    Path pathConnector = Paths.get(FOLDER_TEST_AL + "_winTest_" + winUpload.getOriginalFilename()); // THIS ONE TESTING ONLY, USE CORRECT GENERATED KEY
                     if (winUpload.getOriginalFilename() == null || winUpload.getOriginalFilename().equalsIgnoreCase("")) {
                         //
                     } else {
@@ -2180,20 +2194,38 @@ public class RmsBookingDetailUnloadingController {
         // FUNCTION TO CHECK IF THE FUNCTIONAL TEST IS COMPLETED - START
         if (newStatus == goReady) {
             if (event == "HAST") {
-                newStatus = "Pending Release Or Return";
-                
+//                newStatus = "Pending Release Or Return";
+                // For HAST, CLOSED status go to Disposition
+                newStatus = goDispo;
+
                 RmsBookingHardwareGroup rmsgroup = new RmsBookingHardwareGroup();
                 rmsgroup.setStatus(newStatus);
                 rmsgroup.setGroupId(groupId);
                 rmsgroup.setFlag("2");
-                
+
                 RmsBookingHardwareGroupDAO groupD = new RmsBookingHardwareGroupDAO();
                 groupD.updateRmsBookingHardwareGroupFlagAndStatusByGroupId(rmsgroup);
+                // ABOVE FUNCTION WILL UPDATE ALL THE STATUS IN HW GROUP
+                
             } else {
                 // RIGHT NOW HARDCODE - PLEASE UPDATE LATER
                 String sptsStatus = "Good";
                 RmsBookingHardwareGroupDAO groupD = new RmsBookingHardwareGroupDAO();
                 groupD.updateGroupStatusToClosed(newStatus, sptsStatus, groupId);
+                // ABOVE FUNCTION WILL UPDATE ALL THE STATUS IN HW GROUP
+
+                // UPDATE SPTS TRANSACTION FOR ITEM AND HARDWARE LEVEL - START
+                sendSPTSTransactionUnloading(bookId, username);
+                // UPDATE SPTS TRANSACTION FOR ITEM AND HARDWARE LEVEL - END
+                
+                // UPDATE ITEM AND HARDWARE TABLE IN HEARS - START
+                
+                // UPDATE ITEM AND HARDWARE TABLE IN HEARS - END
+                
+                // UPDATE RMS_BOOKING_DETAIL STATUS - START
+                // CHECK IF ALL THE MOTHERBOARDS HAS CLOSED, ELSE STILL NO UPDATE
+                
+                // UPDATE RMS_BOOKING_DETAIL STATUS - END
             }
         } else {
             // SKIP EVERYTHING SINCE FUNCTIONAL TEST IS NOT COMPLETED
@@ -2219,7 +2251,7 @@ public class RmsBookingDetailUnloadingController {
         String username = userSession.getFullname();
         String manual = "Manual";
         String status = "Failed Functional Test - Manual Test - Waiting Maverick CA";
-        
+
         RmsBookingHardwareDAO rmsdao = new RmsBookingHardwareDAO();
         String lcItemId = rmsdao.getLcMibItemIdFromGroupId(groupid);
         rmsdao = new RmsBookingHardwareDAO();
@@ -2230,7 +2262,7 @@ public class RmsBookingDetailUnloadingController {
         String[] parts = groupid.split("/");
         String bookId = parts[0];
         String pkid = parts[1];
-        
+
         rmsdao = new RmsBookingHardwareDAO();
         String latestStatus = rmsdao.getLatestStatus(bookId, pkid);
 
@@ -3538,7 +3570,7 @@ public class RmsBookingDetailUnloadingController {
         HostnameDAO hostnameD = new HostnameDAO();
         Hostname h = hostnameD.getHostnameFlagZero();
         String hostname = h.getHostname();
- 
+
         EmailSender emailSender = new EmailSender();
         emailSender.htmlEmailFT(
                 servletContext,
@@ -3688,6 +3720,268 @@ public class RmsBookingDetailUnloadingController {
             testdao.insertRmsBookingFunctionalTest(ftest);
         } else {
             // BOLE UPDATE NANTI
+        }
+    }
+
+    public void sendSPTSTransactionUnloading(String bookPkid, String username) throws IOException {
+        
+        String rmsNo = "";
+        String event = "";
+        String sptsStatus = "";
+        String[] to = {"global-rel-it@onsemi.com"};
+        String emailSubject = "HW Release to Production - Failed to Insert SPTS Transaction";
+        String status = "Good";
+        String subStatus = "Good";
+        String transType = "26";
+        String transTypeName = "Return From Production Staging";
+        String flag = "3";
+        String sptsRemark = "Return From Production Staging through HEATS";
+        
+//        B.	Return item hardware from Production Staging to Good
+//              TransType:26 (Return_From_Production_Staging)
+        
+        DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");
+        Date date = new Date();
+        String formattedDate = dateFormat.format(date);
+        String date1 = formattedDate.substring(0, 10);
+        String time = formattedDate.substring(11, 23);
+        String completeDateTime = date1 + "T" + time;
+        
+        RmsBookingDetailDAO rmsdao = new RmsBookingDetailDAO();
+        RmsBookingDetail rmsdetail = new RmsBookingDetail();
+        rmsdetail = rmsdao.getRmsBookingDetailByBookingPkid(bookPkid);
+        rmsNo = rmsdetail.getRmsNo();
+        event = rmsdetail.getEvent();
+        
+        RmsBookingHardwareDAO rmsHD = new RmsBookingHardwareDAO();
+        // UPDATE THE FUNCTION TO GET THE DATA THAT RETURN FROM PRODUCTION STAGING
+        List<RmsBookingHardware> hardware = rmsHD.getRmsBookingHardwareListByBookingPkidWithFlagZeroAndStatusNotNA(bookPkid);
+
+        for (int i = 0; i < hardware.size(); i++) {
+
+            LOGGER.info("hardware.get(i).getId(): " + hardware.get(i).getId());
+            //update movement in SPTS for Item ID first before update HEATS DB
+            JSONObject params2 = new JSONObject();
+            params2.put("dateTime", completeDateTime);
+            params2.put("itemsPKID", hardware.get(i).getItemPkid());
+            params2.put("transType", transType);
+            params2.put("transQty", hardware.get(i).getQty());
+            params2.put("remarks", sptsRemark);
+
+            SPTSResponse TransPkid = SPTSWebService.insertTransaction(params2);
+
+            if (TransPkid.getResponseId() > 0) {
+
+                //add transaction to DB
+                ItemTransaction item = new ItemTransaction();
+                item.setSptsPkid(TransPkid.getResponseId().toString());
+                item.setItemPkid(hardware.get(i).getItemPkid());
+                item.setSiteName("Seremban");
+                item.setDateTime(date1 + " " + time);
+                item.setTransType(transType);
+                item.setTransTypeName(transTypeName);
+                item.setTransQty(hardware.get(i).getQty());
+                item.setTransOutQty(hardware.get(i).getQty());
+                item.setRemarks(sptsRemark);
+
+                ItemTransactionDAO itemD = new ItemTransactionDAO();
+                QueryResult qI = itemD.insertItemTransaction(item);
+
+                RmsBookingHardware hardware1 = new RmsBookingHardware();
+                hardware1.setId(hardware.get(i).getId());
+                hardware1.setFlag(flag);
+                hardware1.setModifiedBy(username);
+                hardware1.setReleaseBy(username);
+                if ("Motherboard".equals(hardware.get(i).getItemType())) {
+                    hardware1.setStatus(hardware.get(i).getStatus());
+                    hardware1.setSubStatus(subStatus);
+                } else if ("Load Card".equals(hardware.get(i).getItemType()) || "Program Card".equals(hardware.get(i).getItemType())) {
+                    hardware1.setStatus(status);
+                }
+                rmsHD = new RmsBookingHardwareDAO();
+                QueryResult q2 = rmsHD.updateRmsBookingHardwareForFlagAndStatusAndReleaseDateById(hardware1); //to include release date 29 June 2026
+            } else {
+                HostnameDAO hostnameD = new HostnameDAO();
+                Hostname h = hostnameD.getHostnameFlagZero();
+                String hostname = h.getHostname();
+                
+                EmailSender emailSender = new EmailSender();
+                emailSender.htmlEmailTable(
+                        servletContext,
+                        "", //user name requestor
+                        to,
+                        emailSubject, //subject
+                        "<br />"
+                        + "Please be informed that the item below failed to insert SPTS transaction (Return from Production Staging)."
+                        + "<br /> "
+                        + "<br /> "
+                        + "RMS No: " + rmsNo
+                        + "<br /> "
+                        + "Event: " + event
+                        + "<br /> "
+                        + "Item ID: " + hardware.get(i).getItemId()
+                        + "<br /> "
+                        + "Transaction Date: " + completeDateTime
+                        + "<br /> "
+                        + "<br /> "
+                        + "Detail: Failed to insert SPTS Transaction (Return from Production Staging)"
+                        + "<br /> "
+                        + "Please click <a href=\"http://" + hostname + "/HEATS/rmsbookingDetailUnloading. "
+                        + "<br /> "
+                        + "<br />Thank you." //msg
+                );
+            }
+
+        }
+
+        RmsBookingHardwareGroupDAO groupD = new RmsBookingHardwareGroupDAO();
+        // TO UPDATE ON THE BOOKING HARDWARE GROUP DETAIL - UNLAODING
+        List<RmsBookingHardwareGroup> group = groupD.getRmsBookingHardwareGroupListByBookingPkid(bookPkid);
+
+        for (int x = 0; x < group.size(); x++) {
+            LOGGER.info("group.get(x).getId(): " + group.get(x).getId());
+
+            //update movement in SPTS for Hardware ID first before update HEATS DB
+            JSONObject params = new JSONObject();
+            params.put("transDate", completeDateTime);
+            params.put("itemHardwarePKID", group.get(x).getHardwarePkid());
+            params.put("transType", transType);
+            params.put("rmsEvent", group.get(x).getRmsNo() + "_" + group.get(x).getEvent());
+            params.put("remarks", sptsRemark);
+            params.put("createdBy", username);
+
+            SPTSResponse TransHwPkid = SPTSWebService.insertTransactionHwId(params);
+
+            if (TransHwPkid.getResponseId() > 0) {
+                //add transaction to item_hardware_movement
+                ItemHardwareDAO itemD = new ItemHardwareDAO();
+                ItemHardware itemHw = itemD.getItemHardwareByHardwareId(group.get(x).getHardwareId());
+
+                ItemHardwareMovement itemHwMovement = new ItemHardwareMovement();
+                itemHwMovement.setMibHardwareId(itemHw.getId());
+                itemHwMovement.setSptsPkid(TransHwPkid.getResponseId().toString());
+                itemHwMovement.setTransType(transType);
+                itemHwMovement.setRmsEvent(group.get(x).getRmsNo() + "_" + group.get(x).getEvent());
+                itemHwMovement.setCreatedBy(username);
+                ItemHardwareMovementDAO itD = new ItemHardwareMovementDAO();
+                itD.insertItemHardwareMovement(itemHwMovement);
+
+                //update table item_hardware
+                JSONObject paramsItem = new JSONObject();
+                paramsItem.put("pkid", group.get(x).getHardwarePkid());
+                JSONArray getRMSBooking = SPTSWebService.getHardwareIdByPKID(paramsItem);
+                for (int i = 0; i < getRMSBooking.length(); i++) {
+
+                    ItemHardware itemH = new ItemHardware();
+                    itemH.setSptsPkid(group.get(x).getHardwarePkid());
+                    itemH.setHardwareId(group.get(x).getHardwareId());
+                    //  Scrapped = -1, 
+                    //  No_Stock = 0,
+                    //  Good = 1,
+                    //  Production = 2,
+                    //  Repair = 3,
+                    //  Others = 4,
+                    //  Quarantine = 5,
+                    //  External_Cleaning = 6,
+                    //  External_Re_Cleaning = 7,
+                    //  Internal_Cleaning = 8,
+                    //  Internal_Re_Cleaning = 9,
+                    //  Storage_Factory = 10,
+                    //  Shipped_To_Other_ON_Semi_Site = 11,
+                    //  Shipped_To_Vendor = 12,
+                    //  Out_For_Production_Staging = 13
+
+//                    sptsStatus = sptsStatus(getRMSBooking.getJSONObject(i).getInt("HardwareStatus"));
+                    SPTSStatus spts = new SPTSStatus();
+                    sptsStatus = spts.sptsStatus(getRMSBooking.getJSONObject(i).getInt("HardwareStatus"));
+
+                    itemH.setStatus(sptsStatus);
+                    if (getRMSBooking.getJSONObject(i).has("ALU")) {
+                        Object alu = getRMSBooking.getJSONObject(i).get("ALU");
+                        if (alu instanceof String) {
+                            itemH.setAlu(getRMSBooking.getJSONObject(i).getString("ALU"));
+                        } else {
+                            itemH.setAlu(Integer.toString(getRMSBooking.getJSONObject(i).getInt("ALU")));
+                        }
+                    }
+                    if (getRMSBooking.getJSONObject(i).has("RMS_Event")) {
+                        Object RMS_Event = getRMSBooking.getJSONObject(i).get("RMS_Event");
+                        if (RMS_Event instanceof String) {
+                            itemH.setRmsEvent(getRMSBooking.getJSONObject(i).getString("RMS_Event"));
+                        } else {
+                            itemH.setRmsEvent(Integer.toString(getRMSBooking.getJSONObject(i).getInt("RMS_Event")));
+                        }
+                    }
+                    if (getRMSBooking.getJSONObject(i).has("ShelfTime")) {
+                        Object ShelfTime = getRMSBooking.getJSONObject(i).get("ShelfTime");
+                        if (ShelfTime instanceof String) {
+                            itemH.setShelfTime(getRMSBooking.getJSONObject(i).getString("ShelfTime"));
+                        } else {
+                            itemH.setShelfTime(Integer.toString(getRMSBooking.getJSONObject(i).getInt("ShelfTime")));
+                        }
+                    }
+
+                    LOGGER.info("hardwarePKID: " + itemH.getSptsPkid());
+                    LOGGER.info("hardware ID: " + itemH.getHardwareId());
+                    LOGGER.info("sptsStatus: " + itemH.getStatus());
+                    LOGGER.info("ALU: " + itemH.getAlu());
+                    LOGGER.info("RMS_Event: " + itemH.getRmsEvent());
+                    LOGGER.info("ShelfTime: " + itemH.getShelfTime());
+
+                    itemD = new ItemHardwareDAO();
+                    QueryResult ItemDq = itemD.updateItemHardwareFromSPTS(itemH);
+                    LOGGER.info("ItemDq.getResult(): " + ItemDq.getResult());
+                }
+
+                RmsBookingHardwareGroup group1 = new RmsBookingHardwareGroup();
+                group1.setId(group.get(x).getId());
+                group1.setStatus(transTypeName);
+                group1.setSptsStatus(sptsStatus); 
+                group1.setFlag(flag);
+                groupD = new RmsBookingHardwareGroupDAO();
+                QueryResult q3 = groupD.updateRmsBookingHardwareGroupStatusAndSptsStatusAndFlag(group1);
+
+                //add log
+                RmsBookingHardwareGroupLog log2 = new RmsBookingHardwareGroupLog();
+                log2.setGroupId(group.get(x).getGroupId());
+                log2.setDetail(transTypeName + group.get(x).getHardwareId());
+                log2.setCreatedBy(username);
+                RmsBookingHardwareGroupLogDAO logD2 = new RmsBookingHardwareGroupLogDAO();
+                QueryResult logQ2 = logD2.insertRmsBookingHardwareGroupLog(log2);
+
+            } else {
+                LOGGER.info("Fail to insert transaction for Hardware ID: " + group.get(x).getHardwareId());
+                HostnameDAO hostnameD = new HostnameDAO();
+                Hostname h = hostnameD.getHostnameFlagZero();
+                String hostname = h.getHostname();
+
+                EmailSender emailSender = new EmailSender();
+                emailSender.htmlEmailTable(
+                        servletContext,
+                        "",
+                        to,
+                        emailSubject, 
+                        "<br />"
+                        + "Please be informed that the Hardware ID below failed to insert SPTS transaction (Return From Production Staging)."
+                        + "<br /> "
+                        + "<br /> "
+                        + "RMS No: " + rmsNo
+                        + "<br /> "
+                        + "Event: " + event
+                        + "<br /> "
+                        + "Hardware ID: " + group.get(x).getHardwareId()
+                        + "<br /> "
+                        + "Transaction Date: " + completeDateTime
+                        + "<br /> "
+                        + "<br /> "
+                        + "Detail: Failed to insert SPTS Transaction (Return From Production Staging)"
+                        + "<br /> "
+                        + "Please click <a href=\"http://" + hostname + "/HEATS/rmsbookingDetailUnloading. "
+                        + "<br /> "
+                        + "<br />Thank you."
+                );
+            }
+
         }
     }
 

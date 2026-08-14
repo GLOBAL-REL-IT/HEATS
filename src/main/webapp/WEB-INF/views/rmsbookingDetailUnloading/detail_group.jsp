@@ -1726,7 +1726,7 @@
                                                                         <c:if test="${leakCheck eq 'Yes'}">
                                                                             <div class="accordion-item">
                                                                                 <h2 class="accordion-header" id="panelsStayOpen-headingThree">
-                                                                                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#panelsStayOpen-collapseThree" aria-expanded="false" id="tabLeak" aria-controls="panelsStayOpen-collapseThree">
+                                                                                    <button class="accordion-button ${leaktab}" type="button" data-bs-toggle="collapse" data-bs-target="#panelsStayOpen-collapseThree" aria-expanded="false" id="tabLeak" aria-controls="panelsStayOpen-collapseThree">
                                                                                         Leakage Test
                                                                                     </button>
                                                                                 </h2>
@@ -1806,7 +1806,7 @@
                                                                         <c:if test="${manCheck eq 'Yes'}">
                                                                             <div class="accordion-item">
                                                                                 <h2 class="accordion-header" id="panelsStayOpen-headingTwo">
-                                                                                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                                                                                    <button class="accordion-button ${manualtab}" type="button" data-bs-toggle="collapse"
                                                                                             data-bs-target="#panelsStayOpen-collapseTwo" aria-expanded="false" id="tabManual"
                                                                                             aria-controls="panelsStayOpen-collapseTwo">
                                                                                         Manual Test
@@ -1871,7 +1871,7 @@
                                                                         <c:if test="${bibCheck eq 'Yes'}">
                                                                             <div class="accordion-item">
                                                                                 <h2 class="accordion-header" id="panelsStayOpen-headingOne">
-                                                                                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#panelsStayOpen-collapseOne" aria-expanded="false" aria-controls="panelsStayOpen-collapseOne" id="tabBib">
+                                                                                    <button class="accordion-button ${bibtab}" type="button" data-bs-toggle="collapse" data-bs-target="#panelsStayOpen-collapseOne" aria-expanded="false" aria-controls="panelsStayOpen-collapseOne" id="tabBib">
                                                                                         BIB Test
                                                                                     </button>
                                                                                 </h2>
@@ -1947,10 +1947,10 @@
                                                                                 </div>
                                                                             </div>
                                                                         </c:if>
-                                                                        <c:if test="${bibDCheck eq 'Yes'}">
+                                                                        <c:if test="${daqCheck eq 'Yes'}">
                                                                             <div class="accordion-item">
                                                                                 <h2 class="accordion-header" id="panelsStayOpen-headingSix">
-                                                                                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#panelsStayOpen-collapseSix" aria-expanded="false" aria-controls="panelsStayOpen-collapseSix" id="tabBibD">
+                                                                                    <button class="accordion-button ${daqtab}" type="button" data-bs-toggle="collapse" data-bs-target="#panelsStayOpen-collapseSix" aria-expanded="false" aria-controls="panelsStayOpen-collapseSix" id="tabBibD">
                                                                                         BIB DAQ
                                                                                     </button>
                                                                                 </h2>
@@ -2029,7 +2029,7 @@
                                                                         <c:if test="${psCheck eq 'Yes'}">
                                                                             <div class="accordion-item">
                                                                                 <h2 class="accordion-header" id="panelsStayOpen-headingFour">
-                                                                                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                                                                                    <button class="accordion-button ${powertab}" type="button" data-bs-toggle="collapse"
                                                                                             data-bs-target="#panelsStayOpen-collapseFour" aria-expanded="false" id="tabPs"
                                                                                             aria-controls="panelsStayOpen-collapseFour">
                                                                                         Power Supply Leakage Test
@@ -2112,7 +2112,7 @@
                                                                         <c:if test="${winCheck eq 'Yes'}">
                                                                             <div class="accordion-item">
                                                                                 <h2 class="accordion-header" id="panelsStayOpen-headingFive">
-                                                                                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                                                                                    <button class="accordion-button ${wintab}" type="button" data-bs-toggle="collapse"
                                                                                             data-bs-target="#panelsStayOpen-collapseFive" aria-expanded="false" id="tabWin"
                                                                                             aria-controls="panelsStayOpen-collapseFive">
                                                                                         Winchester Chamber Leakage Test
