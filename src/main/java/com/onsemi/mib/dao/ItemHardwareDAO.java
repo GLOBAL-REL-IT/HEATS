@@ -572,7 +572,7 @@ public class ItemHardwareDAO {
         return queryResult;
     }
 
-    public QueryResult updateHardwareIdStatusGood(ItemHardware item) {
+    public QueryResult updateHardwareIdStatusAvailable(ItemHardware item) {
         QueryResult queryResult = new QueryResult();
         try {
             PreparedStatement ps = conn.prepareStatement(

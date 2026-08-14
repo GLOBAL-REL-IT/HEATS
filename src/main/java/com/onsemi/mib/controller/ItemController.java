@@ -7037,7 +7037,7 @@ public class ItemController {
 
         ItemHardwareDAO itemhwdao = new ItemHardwareDAO();
 //        itemhwdao.updateHardwareIdStatus(itemhw);
-        itemhwdao.updateHardwareIdStatusGood(itemhw); //change status from 'Available' to 'Good'
+        itemhwdao.updateHardwareIdStatus(itemhw); //change status from 'Available' to 'Good'
 
         String status = insertItemHardwareIntoSpts(hwid, mibId, hardwareId, hwidStatus, userSession.getLoginId());
         if (status.equals("SUCCESS")) {
@@ -7072,7 +7072,7 @@ public class ItemController {
                 String hwidStatus = "Available"; 
                 itemhw.setVerifyBy(userSession.getLoginId());
                 itemhwdao = new ItemHardwareDAO();
-                itemhwdao.updateHardwareIdStatusGood(itemhw);
+                itemhwdao.updateHardwareIdStatus(itemhw);
                 String statusspts = insertItemHardwareIntoSpts(itemhw.getId(), itemhw.getMibItemId(), itemhw.getHardwareId(), hwidStatus, userSession.getLoginId());
                 if (statusspts.equals("SUCCESS")) {
                     redirectAttrs.addFlashAttribute("success", "Hardware ID successfully verified!!!");
