@@ -7069,10 +7069,17 @@ public class ItemController {
             String status = itemhw.getStatus();
             
             if (status.equalsIgnoreCase("Pending Verification")) {
+                String hwidStatus = "Available"; 
                 itemhw.setVerifyBy(userSession.getFullname());
                 itemhwdao = new ItemHardwareDAO();
                 itemhwdao.updateHardwareIdStatusGood(itemhw);
-                redirectAttrs.addFlashAttribute("success", "Hardware ID successfully verified!!!");
+                String statusspts = insertItemHardwareIntoSpts(itemhw.getId(), itemhw.getMibItemId(), itemhw.getHardwareId(), hwidStatus, userSession.getLoginId());
+                if (statusspts.equals("SUCCESS")) {
+                    redirectAttrs.addFlashAttribute("success", "Hardware ID successfully verified!!!");
+//                    redirectAttrs.addFlashAttribute("success", messageSource.getMessage("admin.label.hardware.create.success", args, locale));
+                } else {
+                    redirectAttrs.addFlashAttribute("error", status);
+                }
             } else {
                 redirectAttrs.addFlashAttribute("success", "Hardware ID "+scanqr+" status is "+status);
             }
