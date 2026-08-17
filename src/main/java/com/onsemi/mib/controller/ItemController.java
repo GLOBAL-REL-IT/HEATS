@@ -1514,10 +1514,8 @@ public class ItemController {
             String itemType = item.getItemType();
             String itemId = item.getItemId();
             String subType = item.getSubType();
-            LOGGER.info("itemType: " + itemType);
-            LOGGER.info("subType: " + subType);
 
-            String whereClause = "";
+//            String whereClause = "";
 
             String columnName;
 
@@ -1597,16 +1595,13 @@ public class ItemController {
 //                whereClause = " equipment_id = '" + itemId + "' ";
 //            }
 //            LOGGER.info("whereClause: " + whereClause);
-            LOGGER.info("columnName: " + columnName);
             HimsRequestDAO himsD = new HimsRequestDAO();
 //            List<HimsInventory> hims = himsD.getWhInventoryActiveListByItemId(whereClause);
             List<HimsInventory> hims = himsD.getWhInventoryActiveListByItemId(columnName, itemId);
-            LOGGER.info("hims: " + hims.size());
 
             jsonArray = new JSONArray();
 
             for (HimsInventory itm : hims) {
-                LOGGER.info("+++++++++++masuk+++++++++++++++");
                 JSONObject jsonObject = new JSONObject();
                 jsonObject.put("itemId", Strings.nullToEmpty(itemId));
                 jsonObject.put("rack", Strings.nullToEmpty(itm.getInventoryRack()));
@@ -1617,10 +1612,6 @@ public class ItemController {
                 jsonObject.put("invId", Strings.nullToEmpty(itm.getId()));
                 jsonArray.put(jsonObject);
 
-                LOGGER.info("itemId: " + Strings.nullToEmpty(itemId));
-                LOGGER.info("rack: " + Strings.nullToEmpty(itm.getInventoryRack()));
-                LOGGER.info("shelf: " + Strings.nullToEmpty(itm.getInventoryShelf()));
-                LOGGER.info("qty: " + Strings.nullToEmpty(itm.getQuantity()));
             }
         }
 
