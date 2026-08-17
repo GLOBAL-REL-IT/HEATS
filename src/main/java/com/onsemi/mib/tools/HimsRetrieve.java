@@ -38,6 +38,8 @@ public class HimsRetrieve {
 
     public static String himsRetrieve(ServletContext servletContext, @ModelAttribute UserSession userSession, String himInventoryId) throws ClassNotFoundException, SQLException {
 
+        LOGGER.info("himInventoryId: " + himInventoryId);
+
         HimsRequestDAO inventoryD = new HimsRequestDAO();
         WhInventory inventory = inventoryD.getWhInventoryActive(himInventoryId);
 
@@ -81,6 +83,7 @@ public class HimsRetrieve {
 
             //update status at master table request for ship
             HimsRequestDAO reqD = new HimsRequestDAO();
+            LOGGER.info("inventory.getRequestId(): " + inventory.getRequestId());
             int countReq = reqD.getCountRequestId(inventory.getRequestId());
             if (countReq == 1) {
                 WhRequest reqUpdate = new WhRequest();

@@ -302,18 +302,15 @@ public class HimsRequestDAO {
 
     public Integer getCountRequestId(String requestId) {
         Integer count = null;
-        try {
-            PreparedStatement ps = conn.prepareStatement(
-                    "SELECT count(*) AS count FROM cdars_wh_request WHERE id = ? "
-            );
-            ResultSet rs = ps.executeQuery();
+        try ( PreparedStatement ps = conn.prepareStatement(
+                "SELECT count(*) AS count FROM cdars_wh_request WHERE id = ? "
+        )) {
             ps.setString(1, requestId);
-            while (rs.next()) {
-                count = rs.getInt("count");
+            try ( ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    count = rs.getInt("count");
+                }
             }
-            rs.close();
-
-            ps.close();
         } catch (SQLException e) {
             LOGGER.error(e.getMessage());
         } finally {
@@ -334,8 +331,8 @@ public class HimsRequestDAO {
             PreparedStatement ps = conn.prepareStatement(
                     "SELECT count(*) AS count FROM cdars_wh_retrieval WHERE id = ? "
             );
-            ResultSet rs = ps.executeQuery();
             ps.setString(1, retrieveId);
+            ResultSet rs = ps.executeQuery();
             while (rs.next()) {
                 count = rs.getInt("count");
             }
