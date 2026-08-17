@@ -90,55 +90,55 @@ public class HimsRequestDAO {
         return whInventoryList;
     }
 
-    public List<HimsInventory> getWhInventoryActiveListByItemId(String whereClause) {
+    public List<HimsInventory> getWhInventoryActiveListByItemId(String columnName, String itemId) {
         String sql = "SELECT *,"
                 + "DATE_FORMAT(inventory_date,'%d %M %Y %h:%i %p') AS inventoryDate "
-                + " FROM cdars_wh_inventory WHERE flag = '0' AND ? ORDER BY id DESC";
+                + " FROM cdars_wh_inventory "
+                + "WHERE flag = '0' "
+                + "AND " + columnName + " = ? ORDER BY id DESC";
         LOGGER.info("sql: " + sql);
-        List<HimsInventory> whInventoryList = new ArrayList<HimsInventory>();
-        try {
-            PreparedStatement ps = conn.prepareStatement(sql);
-            ps.setString(1, whereClause);
+        List<HimsInventory> whInventoryList = new ArrayList<>();
+        try ( PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setString(1, itemId);
             HimsInventory whInventory;
-            ResultSet rs = ps.executeQuery();
-            while (rs.next()) {
-                whInventory = new HimsInventory();
-                whInventory.setId(rs.getString("id"));
-                whInventory.setRequestId(rs.getString("request_id"));
-                whInventory.setMpNo(rs.getString("mp_no"));
-                whInventory.setMpExpiryDate(rs.getString("mp_expiry_date"));
-                whInventory.setEquipmentType(rs.getString("equipment_type"));
-                whInventory.setEquipmentId(rs.getString("equipment_id"));
-                whInventory.setPcbA(rs.getString("pcb_a"));
-                whInventory.setPcbAQty(rs.getString("pcb_a_qty"));
-                whInventory.setPcbB(rs.getString("pcb_b"));
-                whInventory.setPcbBQty(rs.getString("pcb_b_qty"));
-                whInventory.setPcbC(rs.getString("pcb_c"));
-                whInventory.setPcbCQty(rs.getString("pcb_c_qty"));
-                whInventory.setPcbCtr(rs.getString("pcb_ctr"));
-                whInventory.setPcbCtrQty(rs.getString("pcb_ctr_qty"));
-                whInventory.setQuantity(rs.getString("quantity"));
-                whInventory.setRequestedBy(rs.getString("requested_by"));
-                whInventory.setRequestedDate(rs.getString("requested_date"));
-                whInventory.setRemarks(rs.getString("remarks"));
-                whInventory.setVerifiedDate(rs.getString("verified_date"));
-                whInventory.setInventoryDate(rs.getString("inventoryDate"));
-                whInventory.setInventoryLocation(rs.getString("inventory_location"));
-                whInventory.setInventoryRack(rs.getString("inventory_rack"));
-                whInventory.setInventoryShelf(rs.getString("inventory_shelf"));
-                whInventory.setInventoryBy(rs.getString("inventory_by"));
-                whInventory.setStatus(rs.getString("status"));
-                whInventory.setReceivedDate(rs.getString("received_date"));
-                whInventory.setFlag(rs.getString("flag"));
-                whInventory.setLoadCard(rs.getString("load_card_id"));
-                whInventory.setLoadCardQty(rs.getString("load_card_qty"));
-                whInventory.setProgramCard(rs.getString("program_card_id"));
-                whInventory.setProgramCardQty(rs.getString("program_card_qty"));
-                whInventory.setBoxNo(rs.getString("box_no"));
-                whInventoryList.add(whInventory);
+            try ( ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    whInventory = new HimsInventory();
+                    whInventory.setId(rs.getString("id"));
+                    whInventory.setRequestId(rs.getString("request_id"));
+                    whInventory.setMpNo(rs.getString("mp_no"));
+                    whInventory.setMpExpiryDate(rs.getString("mp_expiry_date"));
+                    whInventory.setEquipmentType(rs.getString("equipment_type"));
+                    whInventory.setEquipmentId(rs.getString("equipment_id"));
+                    whInventory.setPcbA(rs.getString("pcb_a"));
+                    whInventory.setPcbAQty(rs.getString("pcb_a_qty"));
+                    whInventory.setPcbB(rs.getString("pcb_b"));
+                    whInventory.setPcbBQty(rs.getString("pcb_b_qty"));
+                    whInventory.setPcbC(rs.getString("pcb_c"));
+                    whInventory.setPcbCQty(rs.getString("pcb_c_qty"));
+                    whInventory.setPcbCtr(rs.getString("pcb_ctr"));
+                    whInventory.setPcbCtrQty(rs.getString("pcb_ctr_qty"));
+                    whInventory.setQuantity(rs.getString("quantity"));
+                    whInventory.setRequestedBy(rs.getString("requested_by"));
+                    whInventory.setRequestedDate(rs.getString("requested_date"));
+                    whInventory.setRemarks(rs.getString("remarks"));
+                    whInventory.setVerifiedDate(rs.getString("verified_date"));
+                    whInventory.setInventoryDate(rs.getString("inventoryDate"));
+                    whInventory.setInventoryLocation(rs.getString("inventory_location"));
+                    whInventory.setInventoryRack(rs.getString("inventory_rack"));
+                    whInventory.setInventoryShelf(rs.getString("inventory_shelf"));
+                    whInventory.setInventoryBy(rs.getString("inventory_by"));
+                    whInventory.setStatus(rs.getString("status"));
+                    whInventory.setReceivedDate(rs.getString("received_date"));
+                    whInventory.setFlag(rs.getString("flag"));
+                    whInventory.setLoadCard(rs.getString("load_card_id"));
+                    whInventory.setLoadCardQty(rs.getString("load_card_qty"));
+                    whInventory.setProgramCard(rs.getString("program_card_id"));
+                    whInventory.setProgramCardQty(rs.getString("program_card_qty"));
+                    whInventory.setBoxNo(rs.getString("box_no"));
+                    whInventoryList.add(whInventory);
+                }
             }
-            rs.close();
-            ps.close();
         } catch (SQLException e) {
             LOGGER.error(e.getMessage());
         } finally {
@@ -153,6 +153,66 @@ public class HimsRequestDAO {
         return whInventoryList;
     }
 
+//    public List<HimsInventory> getWhInventoryActiveListByItemId(String whereClause) {
+//        String sql = "SELECT *,"
+//                + "DATE_FORMAT(inventory_date,'%d %M %Y %h:%i %p') AS inventoryDate "
+//                + " FROM cdars_wh_inventory WHERE flag = '0' AND ? ORDER BY id DESC";
+//        LOGGER.info("sql: " + sql);
+//        List<HimsInventory> whInventoryList = new ArrayList<>();
+//            try (PreparedStatement ps = conn.prepareStatement(sql)) {
+//                ps.setString(1, whereClause);
+//                HimsInventory whInventory;
+//            try (ResultSet rs = ps.executeQuery()) {
+//                while (rs.next()) {
+//                    whInventory = new HimsInventory();
+//                    whInventory.setId(rs.getString("id"));
+//                    whInventory.setRequestId(rs.getString("request_id"));
+//                    whInventory.setMpNo(rs.getString("mp_no"));
+//                    whInventory.setMpExpiryDate(rs.getString("mp_expiry_date"));
+//                    whInventory.setEquipmentType(rs.getString("equipment_type"));
+//                    whInventory.setEquipmentId(rs.getString("equipment_id"));
+//                    whInventory.setPcbA(rs.getString("pcb_a"));
+//                    whInventory.setPcbAQty(rs.getString("pcb_a_qty"));
+//                    whInventory.setPcbB(rs.getString("pcb_b"));
+//                    whInventory.setPcbBQty(rs.getString("pcb_b_qty"));
+//                    whInventory.setPcbC(rs.getString("pcb_c"));
+//                    whInventory.setPcbCQty(rs.getString("pcb_c_qty"));
+//                    whInventory.setPcbCtr(rs.getString("pcb_ctr"));
+//                    whInventory.setPcbCtrQty(rs.getString("pcb_ctr_qty"));
+//                    whInventory.setQuantity(rs.getString("quantity"));
+//                    whInventory.setRequestedBy(rs.getString("requested_by"));
+//                    whInventory.setRequestedDate(rs.getString("requested_date"));
+//                    whInventory.setRemarks(rs.getString("remarks"));
+//                    whInventory.setVerifiedDate(rs.getString("verified_date"));
+//                    whInventory.setInventoryDate(rs.getString("inventoryDate"));
+//                    whInventory.setInventoryLocation(rs.getString("inventory_location"));
+//                    whInventory.setInventoryRack(rs.getString("inventory_rack"));
+//                    whInventory.setInventoryShelf(rs.getString("inventory_shelf"));
+//                    whInventory.setInventoryBy(rs.getString("inventory_by"));
+//                    whInventory.setStatus(rs.getString("status"));
+//                    whInventory.setReceivedDate(rs.getString("received_date"));
+//                    whInventory.setFlag(rs.getString("flag"));
+//                    whInventory.setLoadCard(rs.getString("load_card_id"));
+//                    whInventory.setLoadCardQty(rs.getString("load_card_qty"));
+//                    whInventory.setProgramCard(rs.getString("program_card_id"));
+//                    whInventory.setProgramCardQty(rs.getString("program_card_qty"));
+//                    whInventory.setBoxNo(rs.getString("box_no"));
+//                    whInventoryList.add(whInventory);
+//                }
+//            }
+//        } catch (SQLException e) {
+//            LOGGER.error(e.getMessage());
+//        } finally {
+//            if (conn != null) {
+//                try {
+//                    conn.close();
+//                } catch (SQLException e) {
+//                    LOGGER.error(e.getMessage());
+//                }
+//            }
+//        }
+//        return whInventoryList;
+//    }
     public WhInventory getWhInventoryActive(String whInventoryId) {
         String sql = "SELECT * FROM cdars_wh_inventory WHERE id = ? AND flag = '0'";
         WhInventory whInventory = null;
@@ -387,7 +447,7 @@ public class HimsRequestDAO {
             PreparedStatement ps = conn.prepareStatement(
                     "SELECT COUNT(*) AS count FROM cdars_email_config WHERE task_pdetails_code LIKE ? "
             );
-            ps.setString(1, job+"%");
+            ps.setString(1, job + "%");
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
                 count = rs.getInt("count");
@@ -414,7 +474,7 @@ public class HimsRequestDAO {
         EmailConfig emailConfig = null;
         try {
             PreparedStatement ps = conn.prepareStatement(sql);
-            ps.setString(1, task+"%");
+            ps.setString(1, task + "%");
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
                 emailConfig = new EmailConfig();

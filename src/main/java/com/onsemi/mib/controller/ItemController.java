@@ -1519,48 +1519,94 @@ public class ItemController {
 
             String whereClause = "";
 
-            if ("BIB CARD".equals(itemType) || "BIB Card".equals(itemType)) {
-                if (null == subType) {
-                    whereClause = " equipment_id = '" + itemId + "' ";
+            String columnName;
+
+            if ("BIB CARD".equalsIgnoreCase(itemType)) {
+
+                if (subType == null) {
+                    columnName = "equipment_id";
                 } else {
-                    switch (subType) {
-                        case "Load Card":
+                    switch (subType.toUpperCase()) {
                         case "LOAD CARD":
                         case "LC_DUT":
-                            whereClause = " load_card_id = '" + itemId + "' ";
+                            columnName = "load_card_id";
                             break;
-                        case "Program Card":
+
                         case "PROGRAM CARD":
                         case "PC_DUT":
-                            whereClause = " program_card_id = '" + itemId + "' ";
+                            columnName = "program_card_id";
                             break;
+
                         default:
-                            whereClause = " equipment_id = '" + itemId + "' ";
+                            columnName = "equipment_id";
                             break;
                     }
                 }
+
             } else if (itemType.contains("PCB")) {
+
                 if (itemId.contains("QUAL A")) {
-                    whereClause = " pcb_a = '" + itemId + "' ";
+                    columnName = "pcb_a";
                 } else if (itemId.contains("QUAL B")) {
-                    whereClause = " pcb_b = '" + itemId + "' ";
+                    columnName = "pcb_b";
                 } else if (itemId.contains("QUAL C")) {
-                    whereClause = " pcb_c = '" + itemId + "' ";
+                    columnName = "pcb_c";
                 } else if (itemId.contains("CONTROL")) {
-                    whereClause = " pcb_ctr = '" + itemId + "' ";
+                    columnName = "pcb_ctr";
                 } else {
-                    whereClause = " equipment_id = '" + itemId + "' ";
+                    columnName = "equipment_id";
                 }
+
             } else {
-                whereClause = " equipment_id = '" + itemId + "' ";
+                columnName = "equipment_id";
             }
 
+//            if ("BIB CARD".equals(itemType) || "BIB Card".equals(itemType)) {
+//                if (null == subType) {
+//                    whereClause = " equipment_id = '" + itemId + "' ";
+//                } else {
+//                    switch (subType) {
+//                        case "Load Card":
+//                        case "LOAD CARD":
+//                        case "LC_DUT":
+//                            whereClause = " load_card_id = '" + itemId + "' ";
+//                            break;
+//                        case "Program Card":
+//                        case "PROGRAM CARD":
+//                        case "PC_DUT":
+//                            whereClause = " program_card_id = '" + itemId + "' ";
+//                            break;
+//                        default:
+//                            whereClause = " equipment_id = '" + itemId + "' ";
+//                            break;
+//                    }
+//                }
+//            } else if (itemType.contains("PCB")) {
+//                if (itemId.contains("QUAL A")) {
+//                    whereClause = " pcb_a = '" + itemId + "' ";
+//                } else if (itemId.contains("QUAL B")) {
+//                    whereClause = " pcb_b = '" + itemId + "' ";
+//                } else if (itemId.contains("QUAL C")) {
+//                    whereClause = " pcb_c = '" + itemId + "' ";
+//                } else if (itemId.contains("CONTROL")) {
+//                    whereClause = " pcb_ctr = '" + itemId + "' ";
+//                } else {
+//                    whereClause = " equipment_id = '" + itemId + "' ";
+//                }
+//            } else {
+//                whereClause = " equipment_id = '" + itemId + "' ";
+//            }
+//            LOGGER.info("whereClause: " + whereClause);
+            LOGGER.info("columnName: " + columnName);
             HimsRequestDAO himsD = new HimsRequestDAO();
-            List<HimsInventory> hims = himsD.getWhInventoryActiveListByItemId(whereClause);
+//            List<HimsInventory> hims = himsD.getWhInventoryActiveListByItemId(whereClause);
+            List<HimsInventory> hims = himsD.getWhInventoryActiveListByItemId(columnName, itemId);
+            LOGGER.info("hims: " + hims.size());
 
             jsonArray = new JSONArray();
 
             for (HimsInventory itm : hims) {
+                LOGGER.info("+++++++++++masuk+++++++++++++++");
                 JSONObject jsonObject = new JSONObject();
                 jsonObject.put("itemId", Strings.nullToEmpty(itemId));
                 jsonObject.put("rack", Strings.nullToEmpty(itm.getInventoryRack()));
@@ -1570,6 +1616,11 @@ public class ItemController {
                 jsonObject.put("boxNo", Strings.nullToEmpty(itm.getBoxNo()));
                 jsonObject.put("invId", Strings.nullToEmpty(itm.getId()));
                 jsonArray.put(jsonObject);
+
+                LOGGER.info("itemId: " + Strings.nullToEmpty(itemId));
+                LOGGER.info("rack: " + Strings.nullToEmpty(itm.getInventoryRack()));
+                LOGGER.info("shelf: " + Strings.nullToEmpty(itm.getInventoryShelf()));
+                LOGGER.info("qty: " + Strings.nullToEmpty(itm.getQuantity()));
             }
         }
 
@@ -7058,7 +7109,7 @@ public class ItemController {
 
         args = new String[1];
         args[0] = scanqr;
-        
+
         ItemHardwareDAO itemhwdao = new ItemHardwareDAO();
         ItemHardware itemhw = itemhwdao.getItemHardwareByHardwareId(scanqr);
         if (itemhw == null) {
@@ -7067,9 +7118,9 @@ public class ItemController {
             String siapa = itemhw.getVerifyBy();
             String bila = itemhw.getVerifyDate();
             String status = itemhw.getStatus();
-            
+
             if (status.equalsIgnoreCase("Pending Verification")) {
-                String hwidStatus = "Available"; 
+                String hwidStatus = "Available";
                 itemhw.setVerifyBy(userSession.getLoginId());
                 itemhwdao = new ItemHardwareDAO();
                 itemhwdao.updateHardwareIdStatus(itemhw);
@@ -7081,7 +7132,7 @@ public class ItemController {
                     redirectAttrs.addFlashAttribute("error", status);
                 }
             } else {
-                redirectAttrs.addFlashAttribute("success", "Hardware ID "+scanqr+" status is "+status);
+                redirectAttrs.addFlashAttribute("success", "Hardware ID " + scanqr + " status is " + status);
             }
 
 //            if ((siapa == null || siapa.trim().isEmpty()) && (bila == null || bila.trim().isEmpty())) {
