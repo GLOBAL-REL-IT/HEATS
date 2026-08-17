@@ -736,6 +736,31 @@ public class RmsBookingHardwareGroupDAO {
         return count;
     }
 
+    public Integer getCountBibByGroupId(String groupId) {
+        Integer count = null;
+        try ( PreparedStatement ps = conn.prepareStatement(
+                "SELECT COUNT(*) AS count FROM rms_booking_hardware_group inc WHERE inc.group_id = ? AND inc.item_type = 'BIB'"
+        )) {
+            ps.setString(1, groupId);
+            try ( ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    count = rs.getInt("count");
+                }
+            }
+        } catch (SQLException e) {
+            LOGGER.error(e.getMessage());
+        } finally {
+            if (conn != null) {
+                try {
+                    conn.close();
+                } catch (SQLException e) {
+                    LOGGER.error(e.getMessage());
+                }
+            }
+        }
+        return count;
+    }
+
     public QueryResult updateGroupStatus(String status, String groupId, String hardwareId) {
         QueryResult queryResult = new QueryResult();
         try {

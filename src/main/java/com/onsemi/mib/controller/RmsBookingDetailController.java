@@ -2185,6 +2185,13 @@ public class RmsBookingDetailController {
         int countBookingHardware = booking.getCountBookingPkidAndPkidForMotherboard(bookingPkid, pkid);
 
         if (countBookingHardware == 1) {
+            //check if HW ID for motherboard has been registered or not.
+            RmsBookingHardwareGroupDAO rmsBD = new RmsBookingHardwareGroupDAO();
+            int countBib = rmsBD.getCountBibByGroupId(groupId);
+            if (countBib == 0) {
+                redirectAttrs.addFlashAttribute("error", "Failed to finalize. Pls register Hardware ID for motherboard first.");
+                return "redirect:/rmsbookingDetail/groupDetail/" + bookingPkid + "/" + pkid;
+            }
             //update sub status to 'Pending VM'
             RmsBookingHardware bookHardware = new RmsBookingHardware();
             bookHardware.setBookingPkid(bookingPkid);
