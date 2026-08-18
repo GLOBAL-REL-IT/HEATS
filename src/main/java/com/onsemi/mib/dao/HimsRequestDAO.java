@@ -91,17 +91,14 @@ public class HimsRequestDAO {
     }
 
     public List<HimsInventory> getWhInventoryActiveListByItemId(String columnName, String itemId) {
-        String sql = "SELECT *,"
-                + "DATE_FORMAT(inventory_date,'%d %M %Y %h:%i %p') AS inventoryDate "
+        String sql = "SELECT *, DATE_FORMAT(inventory_date,'%d %M %Y %h:%i %p') AS inventoryDate "
                 + " FROM cdars_wh_inventory "
-                + "WHERE flag = '0' "
-                + "AND " + columnName + " = ? ORDER BY id DESC";
-        LOGGER.info("sql: " + sql);
+                + " WHERE flag = '0' AND " + columnName + " = ? ORDER BY id DESC";
         List<HimsInventory> whInventoryList = new ArrayList<>();
-        try ( PreparedStatement ps = conn.prepareStatement(sql)) {
+        try (PreparedStatement ps = conn.prepareStatement(sql)) {
             ps.setString(1, itemId);
             HimsInventory whInventory;
-            try ( ResultSet rs = ps.executeQuery()) {
+            try (ResultSet rs = ps.executeQuery()) {
                 while (rs.next()) {
                     whInventory = new HimsInventory();
                     whInventory.setId(rs.getString("id"));
@@ -157,7 +154,6 @@ public class HimsRequestDAO {
 //        String sql = "SELECT *,"
 //                + "DATE_FORMAT(inventory_date,'%d %M %Y %h:%i %p') AS inventoryDate "
 //                + " FROM cdars_wh_inventory WHERE flag = '0' AND ? ORDER BY id DESC";
-//        LOGGER.info("sql: " + sql);
 //        List<HimsInventory> whInventoryList = new ArrayList<>();
 //            try (PreparedStatement ps = conn.prepareStatement(sql)) {
 //                ps.setString(1, whereClause);

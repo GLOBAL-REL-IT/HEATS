@@ -600,6 +600,48 @@ public class RmsBookingHardwareGroupDAO {
         }
         return rmsbookingHardwareGroupList;
     }
+    
+    public List<RmsBookingHardwareGroup> getRmsBookingHardwareGroupForUnloading(String bookingPkid, String pkid) {
+        String groupId = bookingPkid+"/"+pkid;
+        String sql = "SELECT * FROM item_hardware WHERE hardware_id IN (SELECT hardware_id FROM rms_booking_hardware_group WHERE group_id = ?";
+        List<RmsBookingHardwareGroup> rmsbookingHardwareGroupList = new ArrayList<RmsBookingHardwareGroup>();
+        try {
+            PreparedStatement ps = conn.prepareStatement(sql);
+            ps.setString(1, groupId);
+            RmsBookingHardwareGroup rmsbookingHardwareGroup;
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                rmsbookingHardwareGroup = new RmsBookingHardwareGroup();
+                rmsbookingHardwareGroup.setId(rs.getString("id"));
+                rmsbookingHardwareGroup.setGroupId(rs.getString("group_id"));
+                rmsbookingHardwareGroup.setItemPkid(rs.getString("item_pkid"));
+                rmsbookingHardwareGroup.setItemId(rs.getString("item_id"));
+                rmsbookingHardwareGroup.setHardwarePkid(rs.getString("hardware_pkid"));
+                rmsbookingHardwareGroup.setHardwareId(rs.getString("hardware_id"));
+                rmsbookingHardwareGroup.setRmsNo(rs.getString("rms_no"));
+                rmsbookingHardwareGroup.setEvent(rs.getString("event"));
+                rmsbookingHardwareGroup.setSptsStatus(rs.getString("spts_status"));
+                rmsbookingHardwareGroup.setStatus(rs.getString("status"));
+                rmsbookingHardwareGroup.setCreatedBy(rs.getString("created_by"));
+                rmsbookingHardwareGroup.setCreatedDate(rs.getString("createdDate"));
+                rmsbookingHardwareGroup.setFlag(rs.getString("flag"));
+                rmsbookingHardwareGroupList.add(rmsbookingHardwareGroup);
+            }
+            rs.close();
+            ps.close();
+        } catch (SQLException e) {
+            LOGGER.error(e.getMessage());
+        } finally {
+            if (conn != null) {
+                try {
+                    conn.close();
+                } catch (SQLException e) {
+                    LOGGER.error(e.getMessage());
+                }
+            }
+        }
+        return rmsbookingHardwareGroupList;
+    }
 
     public Integer getCountHwByGroupIdAndHwId(String groupId, String hwId) {
         Integer count = null;

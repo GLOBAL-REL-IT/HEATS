@@ -3390,9 +3390,9 @@ public class RmsBookingDetailController {
             ItemActivityConfigDAO itemactdao = new ItemActivityConfigDAO();
             ItemActivityConfig itemactmb = itemactdao.getItemActivityByItemId(itemIdMB);
             if (itemactmb != null) {
-                checkLeak = itemactmb.getLeakageTest();
-                checkPs = itemactmb.getPsLeakageTest();
-                checkWin = itemactmb.getWinchesterChamberLeakageTest();
+                checkLeak = itemactmb.getLeakageTest() != null ? itemactmb.getLeakageTest() : "No";
+                checkPs = itemactmb.getPsLeakageTest() != null ? itemactmb.getPsLeakageTest() : "No";
+                checkWin = itemactmb.getWinchesterChamberLeakageTest() != null ? itemactmb.getWinchesterChamberLeakageTest() : "No";
                 model.addAttribute("configMotherboard", "");
             } else {
                 model.addAttribute("configMotherboard", "TRIGGERERROR");
@@ -3419,9 +3419,9 @@ public class RmsBookingDetailController {
                 ItemActivityConfig itemactlc = itemactdao.getItemActivityByItemId(itemIdLC);
 
                 if (itemactlc != null) {
-                    checkBib = itemactlc.getBibTest();
-                    checkDaq = itemactlc.getBibDaqTest();
-                    checkManual = itemactlc.getManualTest();
+                    checkBib = itemactlc.getBibTest() != null ? itemactmb.getBibTest() : "No";
+                    checkDaq = itemactlc.getBibDaqTest() != null ? itemactmb.getBibDaqTest() : "No";
+                    checkManual = itemactlc.getManualTest() != null ? itemactmb.getManualTest() : "No";
                 } else {
                     redirectAttrs.addFlashAttribute("error", "No load card configuration configured");
                 }

@@ -4691,12 +4691,12 @@ public class ItemController {
         ItemActivityConfigDAO itemdao2 = new ItemActivityConfigDAO();
         ItemActivityConfig itemdata = itemdao2.getItemActivityByItemId(mibItemId);
         // SINI TAK CHECK DATA NULL - ASSUME SEBELUM NI DA CHECK AND *MESTI* ADA DATA
-        String checkLeak = itemdata.getLeakageTest();
-        String checkMan = itemdata.getManualTest();
-        String checkBib = itemdata.getBibTest();
-        String checkDaq = itemdata.getBibDaqTest();
-        String checkPs = itemdata.getPsLeakageTest();;
-        String checkWin = itemdata.getWinchesterChamberLeakageTest();
+        String checkLeak = itemdata.getLeakageTest() != null ? itemdata.getLeakageTest() : "No";
+        String checkMan = itemdata.getManualTest() != null ? itemdata.getManualTest() : "No";
+        String checkBib = itemdata.getBibTest() != null ? itemdata.getBibTest() : "No";
+        String checkDaq = itemdata.getBibDaqTest() != null ? itemdata.getBibDaqTest() : "No";
+        String checkPs = itemdata.getPsLeakageTest() != null ? itemdata.getPsLeakageTest() : "No";
+        String checkWin = itemdata.getWinchesterChamberLeakageTest() != null ? itemdata.getWinchesterChamberLeakageTest() : "No";
 
         LOGGER.info("APA BENDA NAY ::: " + jenis);
 

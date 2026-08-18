@@ -1859,7 +1859,8 @@ public class RmsBookingDetailUnloadingController {
 
         // SINI DAPATKAN INFO SAMADA HAST ATAU BUKAN
         String event = "";
-
+        LOGGER.info("target_location      >>>> "+target_location);
+        
         if (checkMb == 0) {
             redirectAttrs.addFlashAttribute("error", "No motherboard configured");
         } else {
@@ -1870,9 +1871,9 @@ public class RmsBookingDetailUnloadingController {
             ItemActivityConfigDAO itemactdao = new ItemActivityConfigDAO();
             ItemActivityConfig itemactmb = itemactdao.getItemActivityByItemId(itemIdMB);
             if (itemactmb != null) {
-                checkLeak = itemactmb.getLeakageTest();
-                checkPs = itemactmb.getPsLeakageTest();
-                checkWin = itemactmb.getWinchesterChamberLeakageTest();
+                checkLeak = itemactmb.getLeakageTest() != null ? itemactmb.getLeakageTest() : "No";
+                checkPs = itemactmb.getPsLeakageTest() != null ? itemactmb.getPsLeakageTest() : "No";
+                checkWin = itemactmb.getWinchesterChamberLeakageTest() != null ? itemactmb.getWinchesterChamberLeakageTest() : "No";
                 model.addAttribute("configMotherboard", "");
             } else {
                 model.addAttribute("configMotherboard", "TRIGGERERROR");
@@ -1899,9 +1900,9 @@ public class RmsBookingDetailUnloadingController {
                 ItemActivityConfig itemactlc = itemactdao.getItemActivityByItemId(itemIdLC);
 
                 if (itemactlc != null) {
-                    checkBib = itemactlc.getBibTest();
-                    checkDaq = itemactlc.getBibDaqTest();
-                    checkManual = itemactlc.getManualTest();
+                    checkBib = itemactlc.getBibTest() != null ? itemactmb.getBibTest() : "No";
+                    checkDaq = itemactlc.getBibDaqTest() != null ? itemactmb.getBibDaqTest() : "No";
+                    checkManual = itemactlc.getManualTest() != null ? itemactmb.getManualTest() : "No";
                 } else {
                     redirectAttrs.addFlashAttribute("error", "No load card configuration configured");
                 }
@@ -2215,7 +2216,7 @@ public class RmsBookingDetailUnloadingController {
                 // ABOVE FUNCTION WILL UPDATE ALL THE STATUS IN HW GROUP
 
                 // UPDATE SPTS TRANSACTION FOR ITEM AND HARDWARE LEVEL - START
-                sendSPTSTransactionUnloading(bookId, username);
+                sendSPTSTransactionUnloading(bookId, motherboardId, username);
                 // UPDATE SPTS TRANSACTION FOR ITEM AND HARDWARE LEVEL - END
                 
                 // UPDATE ITEM AND HARDWARE TABLE IN HEARS - START
@@ -2238,6 +2239,7 @@ public class RmsBookingDetailUnloadingController {
         log2.setCreatedBy(userSession.getFullname());
         RmsBookingHardwareGroupLogDAO logD2 = new RmsBookingHardwareGroupLogDAO();
         logD2.insertRmsBookingHardwareGroupLog(log2);
+        
 
         return target_location;
     }
@@ -3723,7 +3725,7 @@ public class RmsBookingDetailUnloadingController {
         }
     }
 
-    public void sendSPTSTransactionUnloading(String bookPkid, String username) throws IOException {
+    public void sendSPTSTransactionUnloading(String bookPkid, String pkid, String username) throws IOException {
         
         String rmsNo = "";
         String event = "";
@@ -3755,83 +3757,84 @@ public class RmsBookingDetailUnloadingController {
         
         RmsBookingHardwareDAO rmsHD = new RmsBookingHardwareDAO();
         // UPDATE THE FUNCTION TO GET THE DATA THAT RETURN FROM PRODUCTION STAGING
-        List<RmsBookingHardware> hardware = rmsHD.getRmsBookingHardwareListByBookingPkidWithFlagZeroAndStatusNotNA(bookPkid);
+        List<RmsBookingHardware> hardware = rmsHD.getRmsBookingForUnloading(bookPkid, pkid);
 
         for (int i = 0; i < hardware.size(); i++) {
+            // TO MAKE SURE HANYA YANG DA LAST INTERVAL SAHAJA UPDATE DEKAT SINI
+            if (hardware.get(i).getStatus().equalsIgnoreCase("Return from Production (Complete Final SI)")) {
+                LOGGER.info("hardware.get(i).getId(): " + hardware.get(i).getId());
+                //update movement in SPTS for Item ID first before update HEATS DB
+                JSONObject params2 = new JSONObject();
+                params2.put("dateTime", completeDateTime);
+                params2.put("itemsPKID", hardware.get(i).getItemPkid());
+                params2.put("transType", transType);
+                params2.put("transQty", hardware.get(i).getQty());
+                params2.put("remarks", sptsRemark);
 
-            LOGGER.info("hardware.get(i).getId(): " + hardware.get(i).getId());
-            //update movement in SPTS for Item ID first before update HEATS DB
-            JSONObject params2 = new JSONObject();
-            params2.put("dateTime", completeDateTime);
-            params2.put("itemsPKID", hardware.get(i).getItemPkid());
-            params2.put("transType", transType);
-            params2.put("transQty", hardware.get(i).getQty());
-            params2.put("remarks", sptsRemark);
+                SPTSResponse TransPkid = SPTSWebService.insertTransaction(params2);
 
-            SPTSResponse TransPkid = SPTSWebService.insertTransaction(params2);
+                if (TransPkid.getResponseId() > 0) {
 
-            if (TransPkid.getResponseId() > 0) {
+                    //add transaction to DB
+                    ItemTransaction item = new ItemTransaction();
+                    item.setSptsPkid(TransPkid.getResponseId().toString());
+                    item.setItemPkid(hardware.get(i).getItemPkid());
+                    item.setSiteName("Seremban");
+                    item.setDateTime(date1 + " " + time);
+                    item.setTransType(transType);
+                    item.setTransTypeName(transTypeName);
+                    item.setTransQty(hardware.get(i).getQty());
+                    item.setTransOutQty(hardware.get(i).getQty());
+                    item.setRemarks(sptsRemark);
 
-                //add transaction to DB
-                ItemTransaction item = new ItemTransaction();
-                item.setSptsPkid(TransPkid.getResponseId().toString());
-                item.setItemPkid(hardware.get(i).getItemPkid());
-                item.setSiteName("Seremban");
-                item.setDateTime(date1 + " " + time);
-                item.setTransType(transType);
-                item.setTransTypeName(transTypeName);
-                item.setTransQty(hardware.get(i).getQty());
-                item.setTransOutQty(hardware.get(i).getQty());
-                item.setRemarks(sptsRemark);
+                    ItemTransactionDAO itemD = new ItemTransactionDAO();
+                    QueryResult qI = itemD.insertItemTransaction(item);
 
-                ItemTransactionDAO itemD = new ItemTransactionDAO();
-                QueryResult qI = itemD.insertItemTransaction(item);
+                    RmsBookingHardware hardware1 = new RmsBookingHardware();
+                    hardware1.setId(hardware.get(i).getId());
+                    hardware1.setFlag(flag);
+                    hardware1.setModifiedBy(username);
+                    hardware1.setReleaseBy(username);
+                    if ("Motherboard".equals(hardware.get(i).getItemType())) {
+                        hardware1.setStatus(hardware.get(i).getStatus());
+                        hardware1.setSubStatus(subStatus);
+                    } else if ("Load Card".equals(hardware.get(i).getItemType()) || "Program Card".equals(hardware.get(i).getItemType())) {
+                        hardware1.setStatus(status);
+                    }
+                    rmsHD = new RmsBookingHardwareDAO();
+                    QueryResult q2 = rmsHD.updateRmsBookingHardwareForFlagAndStatusAndReleaseDateById(hardware1); //to include release date 29 June 2026
+                } else {
+                    HostnameDAO hostnameD = new HostnameDAO();
+                    Hostname h = hostnameD.getHostnameFlagZero();
+                    String hostname = h.getHostname();
 
-                RmsBookingHardware hardware1 = new RmsBookingHardware();
-                hardware1.setId(hardware.get(i).getId());
-                hardware1.setFlag(flag);
-                hardware1.setModifiedBy(username);
-                hardware1.setReleaseBy(username);
-                if ("Motherboard".equals(hardware.get(i).getItemType())) {
-                    hardware1.setStatus(hardware.get(i).getStatus());
-                    hardware1.setSubStatus(subStatus);
-                } else if ("Load Card".equals(hardware.get(i).getItemType()) || "Program Card".equals(hardware.get(i).getItemType())) {
-                    hardware1.setStatus(status);
+                    EmailSender emailSender = new EmailSender();
+                    emailSender.htmlEmailTable(
+                            servletContext,
+                            "", //user name requestor
+                            to,
+                            emailSubject, //subject
+                            "<br />"
+                            + "Please be informed that the item below failed to insert SPTS transaction (Return from Production Staging)."
+                            + "<br /> "
+                            + "<br /> "
+                            + "RMS No: " + rmsNo
+                            + "<br /> "
+                            + "Event: " + event
+                            + "<br /> "
+                            + "Item ID: " + hardware.get(i).getItemId()
+                            + "<br /> "
+                            + "Transaction Date: " + completeDateTime
+                            + "<br /> "
+                            + "<br /> "
+                            + "Detail: Failed to insert SPTS Transaction (Return from Production Staging)"
+                            + "<br /> "
+                            + "Please click <a href=\"http://" + hostname + "/HEATS/rmsbookingDetailUnloading. "
+                            + "<br /> "
+                            + "<br />Thank you." //msg
+                    );
                 }
-                rmsHD = new RmsBookingHardwareDAO();
-                QueryResult q2 = rmsHD.updateRmsBookingHardwareForFlagAndStatusAndReleaseDateById(hardware1); //to include release date 29 June 2026
-            } else {
-                HostnameDAO hostnameD = new HostnameDAO();
-                Hostname h = hostnameD.getHostnameFlagZero();
-                String hostname = h.getHostname();
-                
-                EmailSender emailSender = new EmailSender();
-                emailSender.htmlEmailTable(
-                        servletContext,
-                        "", //user name requestor
-                        to,
-                        emailSubject, //subject
-                        "<br />"
-                        + "Please be informed that the item below failed to insert SPTS transaction (Return from Production Staging)."
-                        + "<br /> "
-                        + "<br /> "
-                        + "RMS No: " + rmsNo
-                        + "<br /> "
-                        + "Event: " + event
-                        + "<br /> "
-                        + "Item ID: " + hardware.get(i).getItemId()
-                        + "<br /> "
-                        + "Transaction Date: " + completeDateTime
-                        + "<br /> "
-                        + "<br /> "
-                        + "Detail: Failed to insert SPTS Transaction (Return from Production Staging)"
-                        + "<br /> "
-                        + "Please click <a href=\"http://" + hostname + "/HEATS/rmsbookingDetailUnloading. "
-                        + "<br /> "
-                        + "<br />Thank you." //msg
-                );
             }
-
         }
 
         RmsBookingHardwareGroupDAO groupD = new RmsBookingHardwareGroupDAO();

@@ -1044,6 +1044,42 @@ public class RmsBookingHardwareDAO {
         }
         return rmsbookingHardwareList;
     }
+    
+    public List<RmsBookingHardware> getRmsBookingForUnloading(String bookingPkid, String pkid) {
+        String sql = "SELECT booking_pkid, pkid, item_id, item_pkid, status, sub_status, qty, flag FROM rms_booking_hardware WHERE booking_pkid = ? AND pkid = ? ";
+        List<RmsBookingHardware> rmsbookingHardwareList = new ArrayList<RmsBookingHardware>();
+        try {
+            PreparedStatement ps = conn.prepareStatement(sql);
+            ps.setString(1, bookingPkid);
+            RmsBookingHardware rmsbookingHardware;
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                rmsbookingHardware = new RmsBookingHardware();
+                rmsbookingHardware.setBookingPkid(rs.getString("booking_pkid"));
+                rmsbookingHardware.setPkid(rs.getString("pkid"));
+                rmsbookingHardware.setItemId(rs.getString("item_id"));
+                rmsbookingHardware.setItemPkid(rs.getString("item_pkid"));
+                rmsbookingHardware.setStatus(rs.getString("status"));
+                rmsbookingHardware.setSubStatus(rs.getString("sub_status"));
+                rmsbookingHardware.setFlag(rs.getString("flag"));
+                rmsbookingHardware.setQty(rs.getString("qty"));
+                rmsbookingHardwareList.add(rmsbookingHardware);
+            }
+            rs.close();
+            ps.close();
+        } catch (SQLException e) {
+            LOGGER.error(e.getMessage());
+        } finally {
+            if (conn != null) {
+                try {
+                    conn.close();
+                } catch (SQLException e) {
+                    LOGGER.error(e.getMessage());
+                }
+            }
+        }
+        return rmsbookingHardwareList;
+    }
 
     public QueryResult updateRmsBookingHardwareByPkidAndBookingPkid(RmsBookingHardware rmsbookingHardware) {
         QueryResult queryResult = new QueryResult();
