@@ -1673,6 +1673,58 @@ public class RmsBookingHardwareDAO {
         return count;
     }
 
+    public Integer countDataHardwareSemua(String bookingId) {
+        Integer count = 0;
+        String sql = "SELECT COUNT(*) AS count FROM rms_booking_hardware WHERE booking_pkid = ? AND item_type = 'Motherboard' AND status != 'Removed' ";
+        try {
+            PreparedStatement ps = conn.prepareStatement(sql);
+            ps.setString(1, bookingId);
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                count = rs.getInt("count");
+            }
+            rs.close();
+            ps.close();
+        } catch (SQLException e) {
+            LOGGER.error(e.getMessage());
+        } finally {
+            if (conn != null) {
+                try {
+                    conn.close();
+                } catch (SQLException e) {
+                    LOGGER.error(e.getMessage());
+                }
+            }
+        }
+        return count;
+    }
+
+    public Integer countDataHardwareClosed(String bookingId) {
+        Integer count = 0;
+        String sql = "SELECT COUNT(*) AS count FROM rms_booking_hardware WHERE booking_pkid = ? AND item_type = 'Motherboard' AND status != 'Removed' AND status = 'Closed' ";
+        try {
+            PreparedStatement ps = conn.prepareStatement(sql);
+            ps.setString(1, bookingId);
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                count = rs.getInt("count");
+            }
+            rs.close();
+            ps.close();
+        } catch (SQLException e) {
+            LOGGER.error(e.getMessage());
+        } finally {
+            if (conn != null) {
+                try {
+                    conn.close();
+                } catch (SQLException e) {
+                    LOGGER.error(e.getMessage());
+                }
+            }
+        }
+        return count;
+    }
+
     public String getSptsPkidForItemIdLC(String bookingId) {
         String data = "";
         String sql = "SELECT * FROM item WHERE spts_pkid = (SELECT item_pkid FROM rms_booking_hardware WHERE booking_pkid = ? AND item_type = 'Load Card' AND qty != 0 LIMIT 1) ";

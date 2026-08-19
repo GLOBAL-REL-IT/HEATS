@@ -297,9 +297,9 @@ public class RmsBookingHardwareGroupDAO {
     public RmsBookingHardwareGroup getUnloadingDateByGroupId(String groupId) {
         String sql = "SELECT DATE_FORMAT(gr.unloading_date,'%d %M %Y %h:%i %p') AS viewUnloadingDate FROM rms_booking_hardware_group gr WHERE gr.group_id = ? AND gr.item_type = 'BIB' AND gr.flag = '2'";
         RmsBookingHardwareGroup rmsbookingHardwareGroup = null;
-        try ( PreparedStatement ps = conn.prepareStatement(sql)) {
+        try (PreparedStatement ps = conn.prepareStatement(sql)) {
             ps.setString(1, groupId);
-            try ( ResultSet rs = ps.executeQuery()) {
+            try (ResultSet rs = ps.executeQuery()) {
                 while (rs.next()) {
                     rmsbookingHardwareGroup = new RmsBookingHardwareGroup();
                     rmsbookingHardwareGroup.setUnloadingDate(rs.getString("viewUnloadingDate"));
@@ -322,9 +322,9 @@ public class RmsBookingHardwareGroupDAO {
     public RmsBookingHardwareGroup getLoadingDateByGroupId(String groupId) {
         String sql = "SELECT DATE_FORMAT(gr.loading_date,'%d %M %Y %h:%i %p') AS loadingDate FROM rms_booking_hardware_group gr WHERE gr.group_id = ? AND gr.item_type = 'BIB' AND gr.flag = '1'";
         RmsBookingHardwareGroup rmsbookingHardwareGroup = null;
-        try ( PreparedStatement ps = conn.prepareStatement(sql)) {
+        try (PreparedStatement ps = conn.prepareStatement(sql)) {
             ps.setString(1, groupId);
-            try ( ResultSet rs = ps.executeQuery()) {
+            try (ResultSet rs = ps.executeQuery()) {
                 while (rs.next()) {
                     rmsbookingHardwareGroup = new RmsBookingHardwareGroup();
                     rmsbookingHardwareGroup.setLoadingDate(rs.getString("loadingDate"));
@@ -452,7 +452,7 @@ public class RmsBookingHardwareGroupDAO {
                 rmsbookingHardwareGroup.setSptsStatus(rs.getString("spts_status"));
                 rmsbookingHardwareGroup.setStatus(rs.getString("status"));
                 rmsbookingHardwareGroup.setCreatedBy(rs.getString("created_by"));
-                rmsbookingHardwareGroup.setCreatedDate(rs.getString("createdDate"));
+                rmsbookingHardwareGroup.setCreatedDate(rs.getString("created_date"));
                 rmsbookingHardwareGroup.setFlag(rs.getString("flag"));
                 rmsbookingHardwareGroupList.add(rmsbookingHardwareGroup);
             }
@@ -495,7 +495,7 @@ public class RmsBookingHardwareGroupDAO {
                 rmsbookingHardwareGroup.setSptsStatus(rs.getString("spts_status"));
                 rmsbookingHardwareGroup.setStatus(rs.getString("status"));
                 rmsbookingHardwareGroup.setCreatedBy(rs.getString("created_by"));
-                rmsbookingHardwareGroup.setCreatedDate(rs.getString("createdDate"));
+                rmsbookingHardwareGroup.setCreatedDate(rs.getString("created_date"));
                 rmsbookingHardwareGroup.setFlag(rs.getString("flag"));
                 rmsbookingHardwareGroupList.add(rmsbookingHardwareGroup);
             }
@@ -538,7 +538,7 @@ public class RmsBookingHardwareGroupDAO {
                 rmsbookingHardwareGroup.setSptsStatus(rs.getString("spts_status"));
                 rmsbookingHardwareGroup.setStatus(rs.getString("status"));
                 rmsbookingHardwareGroup.setCreatedBy(rs.getString("created_by"));
-                rmsbookingHardwareGroup.setCreatedDate(rs.getString("createdDate"));
+                rmsbookingHardwareGroup.setCreatedDate(rs.getString("created_date"));
                 rmsbookingHardwareGroup.setFlag(rs.getString("flag"));
                 rmsbookingHardwareGroupList.add(rmsbookingHardwareGroup);
             }
@@ -581,7 +581,7 @@ public class RmsBookingHardwareGroupDAO {
                 rmsbookingHardwareGroup.setSptsStatus(rs.getString("spts_status"));
                 rmsbookingHardwareGroup.setStatus(rs.getString("status"));
                 rmsbookingHardwareGroup.setCreatedBy(rs.getString("created_by"));
-                rmsbookingHardwareGroup.setCreatedDate(rs.getString("createdDate"));
+                rmsbookingHardwareGroup.setCreatedDate(rs.getString("created_date"));
                 rmsbookingHardwareGroup.setFlag(rs.getString("flag"));
                 rmsbookingHardwareGroupList.add(rmsbookingHardwareGroup);
             }
@@ -600,10 +600,10 @@ public class RmsBookingHardwareGroupDAO {
         }
         return rmsbookingHardwareGroupList;
     }
-    
+
     public List<RmsBookingHardwareGroup> getRmsBookingHardwareGroupForUnloading(String bookingPkid, String pkid) {
-        String groupId = bookingPkid+"/"+pkid;
-        String sql = "SELECT * FROM item_hardware WHERE hardware_id IN (SELECT hardware_id FROM rms_booking_hardware_group WHERE group_id = ?";
+        String groupId = bookingPkid + "/" + pkid;
+        String sql = "SELECT * FROM rms_booking_hardware_group WHERE group_id = ? ";
         List<RmsBookingHardwareGroup> rmsbookingHardwareGroupList = new ArrayList<RmsBookingHardwareGroup>();
         try {
             PreparedStatement ps = conn.prepareStatement(sql);
@@ -623,7 +623,7 @@ public class RmsBookingHardwareGroupDAO {
                 rmsbookingHardwareGroup.setSptsStatus(rs.getString("spts_status"));
                 rmsbookingHardwareGroup.setStatus(rs.getString("status"));
                 rmsbookingHardwareGroup.setCreatedBy(rs.getString("created_by"));
-                rmsbookingHardwareGroup.setCreatedDate(rs.getString("createdDate"));
+                rmsbookingHardwareGroup.setCreatedDate(rs.getString("created_date"));
                 rmsbookingHardwareGroup.setFlag(rs.getString("flag"));
                 rmsbookingHardwareGroupList.add(rmsbookingHardwareGroup);
             }
@@ -780,11 +780,11 @@ public class RmsBookingHardwareGroupDAO {
 
     public Integer getCountBibByGroupId(String groupId) {
         Integer count = null;
-        try ( PreparedStatement ps = conn.prepareStatement(
+        try (PreparedStatement ps = conn.prepareStatement(
                 "SELECT COUNT(*) AS count FROM rms_booking_hardware_group inc WHERE inc.group_id = ? AND inc.item_type = 'BIB'"
         )) {
             ps.setString(1, groupId);
-            try ( ResultSet rs = ps.executeQuery()) {
+            try (ResultSet rs = ps.executeQuery()) {
                 while (rs.next()) {
                     count = rs.getInt("count");
                 }

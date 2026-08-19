@@ -2123,6 +2123,7 @@ public class RmsBookingDetailUnloadingController {
                     bookHardware.setFlag("3");
                     booking.updateRmsBookingHardwareStatus(bookHardware);
                 } else {
+                    bookHardware.setFlag("2");
                     booking.updateRmsBookingHardwareStatus(bookHardware);
                 }
                 logStatus = "Unloading - FT - Power Supply Leakage Test - Passed";
@@ -2219,13 +2220,35 @@ public class RmsBookingDetailUnloadingController {
                 sendSPTSTransactionUnloading(bookId, motherboardId, username);
                 // UPDATE SPTS TRANSACTION FOR ITEM AND HARDWARE LEVEL - END
                 
-                // UPDATE ITEM AND HARDWARE TABLE IN HEARS - START
-                
-                // UPDATE ITEM AND HARDWARE TABLE IN HEARS - END
+                // UPDATE ITEM AND HARDWARE TABLE IN HEATS - START
+                // - check if function above already cover to update all hardware id status
+                // UPDATE ITEM AND HARDWARE TABLE IN HEATS - END
                 
                 // UPDATE RMS_BOOKING_DETAIL STATUS - START
                 // CHECK IF ALL THE MOTHERBOARDS HAS CLOSED, ELSE STILL NO UPDATE
+                RmsBookingHardwareDAO rmsbhdao = new RmsBookingHardwareDAO();
                 
+                RmsBookingHardware rmsbook = new RmsBookingHardware();
+                rmsbook.setSubStatus(newStatus);
+                rmsbook.setFlag("3");
+                rmsbhdao.updateRmsBookingHardwareStatus(rmsbook);
+                
+                rmsbhdao = new RmsBookingHardwareDAO();
+                Integer tutup = rmsbhdao.countDataHardwareClosed(bookId);
+                rmsbhdao = new RmsBookingHardwareDAO();
+                Integer semua = rmsbhdao.countDataHardwareSemua(bookId);
+                
+                if (tutup == semua) {
+                    // SINI SEMUA DA CLOSED DA, SO, SILA UPDATE rms_booking_detail
+                    flag = "3";
+                    // newststus
+                    RmsBookingDetailDAO rmsdetaildao = new RmsBookingDetailDAO();
+                    RmsBookingDetail rmsdetail = new RmsBookingDetail();
+                    rmsdetail.setBookingPkid(bookId);
+                    rmsdetail.setFlag(flag);
+                    rmsdetail.setStatus(newStatus);
+                    rmsdetaildao.updateRmsBookingDetailForFlagAndStatus(rmsdetail);
+                }
                 // UPDATE RMS_BOOKING_DETAIL STATUS - END
             }
         } else {
@@ -3729,7 +3752,7 @@ public class RmsBookingDetailUnloadingController {
         
         String rmsNo = "";
         String event = "";
-        String sptsStatus = "";
+        String sptsStatus = "Good";
         String[] to = {"global-rel-it@onsemi.com"};
         String emailSubject = "HW Release to Production - Failed to Insert SPTS Transaction";
         String status = "Good";
@@ -3738,6 +3761,7 @@ public class RmsBookingDetailUnloadingController {
         String transTypeName = "Return From Production Staging";
         String flag = "3";
         String sptsRemark = "Return From Production Staging through HEATS";
+        String hwStatus = "Available";
         
 //        B.	Return item hardware from Production Staging to Good
 //              TransType:26 (Return_From_Production_Staging)
@@ -3839,7 +3863,7 @@ public class RmsBookingDetailUnloadingController {
 
         RmsBookingHardwareGroupDAO groupD = new RmsBookingHardwareGroupDAO();
         // TO UPDATE ON THE BOOKING HARDWARE GROUP DETAIL - UNLAODING
-        List<RmsBookingHardwareGroup> group = groupD.getRmsBookingHardwareGroupListByBookingPkid(bookPkid);
+        List<RmsBookingHardwareGroup> group = groupD.getRmsBookingHardwareGroupForUnloading(bookPkid, pkid);
 
         for (int x = 0; x < group.size(); x++) {
             LOGGER.info("group.get(x).getId(): " + group.get(x).getId());
@@ -3874,7 +3898,6 @@ public class RmsBookingDetailUnloadingController {
                 paramsItem.put("pkid", group.get(x).getHardwarePkid());
                 JSONArray getRMSBooking = SPTSWebService.getHardwareIdByPKID(paramsItem);
                 for (int i = 0; i < getRMSBooking.length(); i++) {
-
                     ItemHardware itemH = new ItemHardware();
                     itemH.setSptsPkid(group.get(x).getHardwarePkid());
                     itemH.setHardwareId(group.get(x).getHardwareId());
@@ -3924,16 +3947,8 @@ public class RmsBookingDetailUnloadingController {
                         }
                     }
 
-                    LOGGER.info("hardwarePKID: " + itemH.getSptsPkid());
-                    LOGGER.info("hardware ID: " + itemH.getHardwareId());
-                    LOGGER.info("sptsStatus: " + itemH.getStatus());
-                    LOGGER.info("ALU: " + itemH.getAlu());
-                    LOGGER.info("RMS_Event: " + itemH.getRmsEvent());
-                    LOGGER.info("ShelfTime: " + itemH.getShelfTime());
-
                     itemD = new ItemHardwareDAO();
                     QueryResult ItemDq = itemD.updateItemHardwareFromSPTS(itemH);
-                    LOGGER.info("ItemDq.getResult(): " + ItemDq.getResult());
                 }
 
                 RmsBookingHardwareGroup group1 = new RmsBookingHardwareGroup();
@@ -3951,7 +3966,14 @@ public class RmsBookingDetailUnloadingController {
                 log2.setCreatedBy(username);
                 RmsBookingHardwareGroupLogDAO logD2 = new RmsBookingHardwareGroupLogDAO();
                 QueryResult logQ2 = logD2.insertRmsBookingHardwareGroupLog(log2);
-
+                
+                // UPDATE ALL HARDWARE ID STATUS
+                ItemHardware ithw = new ItemHardware();
+                ItemHardwareDAO itemdao = new ItemHardwareDAO();
+                ithw.setStatus(hwStatus);
+                ithw.setVerifyBy(username);
+                ithw.setId(group.get(x).getId());
+                itemdao.updateHardwareIdStatusAvailable(ithw);
             } else {
                 LOGGER.info("Fail to insert transaction for Hardware ID: " + group.get(x).getHardwareId());
                 HostnameDAO hostnameD = new HostnameDAO();
