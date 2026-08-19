@@ -23,12 +23,12 @@ import org.slf4j.LoggerFactory;
 public class RmsBookingFunctionalTestDAO {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(RmsBookingFunctionalTestDAO.class);
-    private final Connection conn;
+//    private final Connection conn;
     private final DataSource dataSource;
 
     public RmsBookingFunctionalTestDAO() {
         DB db = new DB();
-        this.conn = db.getConnection();
+//        this.conn = db.getConnection();
         this.dataSource = db.getDataSource();
     }
 
@@ -46,7 +46,7 @@ public class RmsBookingFunctionalTestDAO {
 
     public QueryResult insertRmsBookingFunctionalTest(RmsBookingFunctionalTest book) throws SQLException {
         QueryResult result = new QueryResult();
-        try (PreparedStatement ps = conn.prepareStatement(SQL_INSERT_BOOKING_FUNCTIONAL_TEST, Statement.RETURN_GENERATED_KEYS)) {
+        try (Connection conn = dataSource.getConnection(); PreparedStatement ps = conn.prepareStatement(SQL_INSERT_BOOKING_FUNCTIONAL_TEST, Statement.RETURN_GENERATED_KEYS)) {
             ps.setString(1, book.getGroupId());
             ps.setString(2, book.getFinalStatus());
             ps.setString(3, book.getCreatedBy());
@@ -54,14 +54,6 @@ public class RmsBookingFunctionalTestDAO {
             ps.setString(5, book.getModule());
             result.setResult(ps.executeUpdate());
             result.setGeneratedKey(getGeneratedKey(ps));
-        } finally {
-            if (conn != null) {
-                try {
-                    conn.close();
-                } catch (SQLException e) {
-                    LOGGER.error(e.getMessage());
-                }
-            }
         }
         return result;
     }
@@ -77,7 +69,7 @@ public class RmsBookingFunctionalTestDAO {
 
     public QueryResult updateBibTest(RmsBookingFunctionalTest book) throws SQLException {
         QueryResult result = new QueryResult();
-        try (PreparedStatement ps = conn.prepareStatement(SQL_UPDATE_BIB_TEST)) {
+        try (Connection conn = dataSource.getConnection(); PreparedStatement ps = conn.prepareStatement(SQL_UPDATE_BIB_TEST)) {
             ps.setString(1, book.getBibQty());
             ps.setString(2, book.getBibStatus());
             ps.setString(3, book.getBibUpload());
@@ -88,21 +80,13 @@ public class RmsBookingFunctionalTestDAO {
             ps.setString(8, book.getGroupId());
             ps.setString(9, book.getModule());
             result.setResult(ps.executeUpdate());
-        } finally {
-            if (conn != null) {
-                try {
-                    conn.close();
-                } catch (SQLException e) {
-                    LOGGER.error(e.getMessage());
-                }
-            }
         }
         return result;
     }
 
     public QueryResult updateManualTest(RmsBookingFunctionalTest book) throws SQLException {
         QueryResult result = new QueryResult();
-        try (PreparedStatement ps = conn.prepareStatement(SQL_UPDATE_MANUAL_TEST)) {
+        try (Connection conn = dataSource.getConnection(); PreparedStatement ps = conn.prepareStatement(SQL_UPDATE_MANUAL_TEST)) {
             ps.setString(1, book.getManualStatus());
             ps.setString(2, book.getManualQty());
             ps.setString(3, book.getRemark());
@@ -111,21 +95,13 @@ public class RmsBookingFunctionalTestDAO {
             ps.setString(6, book.getGroupId());
             ps.setString(7, book.getModule());
             result.setResult(ps.executeUpdate());
-        } finally {
-            if (conn != null) {
-                try {
-                    conn.close();
-                } catch (SQLException e) {
-                    LOGGER.error(e.getMessage());
-                }
-            }
         }
         return result;
     }
 
     public QueryResult updateLeakageTest(RmsBookingFunctionalTest book) throws SQLException {
         QueryResult result = new QueryResult();
-        try (PreparedStatement ps = conn.prepareStatement(SQL_UPDATE_LEAKAGE_TEST)) {
+        try (Connection conn = dataSource.getConnection(); PreparedStatement ps = conn.prepareStatement(SQL_UPDATE_LEAKAGE_TEST)) {
             ps.setString(1, book.getLeakQty());
             ps.setString(2, book.getLeakStatus());
             ps.setString(3, book.getLeakUpload());
@@ -136,21 +112,13 @@ public class RmsBookingFunctionalTestDAO {
             ps.setString(8, book.getGroupId());
             ps.setString(9, book.getModule());
             result.setResult(ps.executeUpdate());
-        } finally {
-            if (conn != null) {
-                try {
-                    conn.close();
-                } catch (SQLException e) {
-                    LOGGER.error(e.getMessage());
-                }
-            }
         }
         return result;
     }
 
     public QueryResult updateBibDaqTest(RmsBookingFunctionalTest book) throws SQLException {
         QueryResult result = new QueryResult();
-        try (PreparedStatement ps = conn.prepareStatement(SQL_UPDATE_BIB_DAQ_TEST)) {
+        try (Connection conn = dataSource.getConnection(); PreparedStatement ps = conn.prepareStatement(SQL_UPDATE_BIB_DAQ_TEST)) {
             ps.setString(1, book.getBibDaqQty());
             ps.setString(2, book.getBibDaqStatus());
             ps.setString(3, book.getBibDaqUpload());
@@ -161,21 +129,13 @@ public class RmsBookingFunctionalTestDAO {
             ps.setString(8, book.getGroupId());
             ps.setString(9, book.getModule());
             result.setResult(ps.executeUpdate());
-        } finally {
-            if (conn != null) {
-                try {
-                    conn.close();
-                } catch (SQLException e) {
-                    LOGGER.error(e.getMessage());
-                }
-            }
         }
         return result;
     }
 
     public QueryResult updatePowerTest(RmsBookingFunctionalTest book) throws SQLException {
         QueryResult result = new QueryResult();
-        try (PreparedStatement ps = conn.prepareStatement(SQL_UPDATE_POWER_TEST)) {
+        try (Connection conn = dataSource.getConnection(); PreparedStatement ps = conn.prepareStatement(SQL_UPDATE_POWER_TEST)) {
             ps.setString(1, book.getPsQty());
             ps.setString(2, book.getPsStatus());
             ps.setString(3, book.getPsUpload());
@@ -186,21 +146,13 @@ public class RmsBookingFunctionalTestDAO {
             ps.setString(8, book.getGroupId());
             ps.setString(9, book.getModule());
             result.setResult(ps.executeUpdate());
-        } finally {
-            if (conn != null) {
-                try {
-                    conn.close();
-                } catch (SQLException e) {
-                    LOGGER.error(e.getMessage());
-                }
-            }
         }
         return result;
     }
 
     public QueryResult updateWinchesterTest(RmsBookingFunctionalTest book) throws SQLException {
         QueryResult result = new QueryResult();
-        try (PreparedStatement ps = conn.prepareStatement(SQL_UPDATE_WINCHESTER_TEST)) {
+        try (Connection conn = dataSource.getConnection(); PreparedStatement ps = conn.prepareStatement(SQL_UPDATE_WINCHESTER_TEST)) {
             ps.setString(1, book.getWinQty());
             ps.setString(2, book.getWinStatus());
             ps.setString(3, book.getWinUpload());
@@ -211,31 +163,15 @@ public class RmsBookingFunctionalTestDAO {
             ps.setString(8, book.getGroupId());
             ps.setString(9, book.getModule());
             result.setResult(ps.executeUpdate());
-        } finally {
-            if (conn != null) {
-                try {
-                    conn.close();
-                } catch (SQLException e) {
-                    LOGGER.error(e.getMessage());
-                }
-            }
         }
         return result;
     }
 
     public QueryResult deleteItemFunctionalTest(String id) throws SQLException {
         QueryResult result = new QueryResult();
-        try (PreparedStatement ps = conn.prepareStatement(SQL_DELETE_ITEM_FUNCTIONAL_TEST)) {
+        try (Connection conn = dataSource.getConnection(); PreparedStatement ps = conn.prepareStatement(SQL_DELETE_ITEM_FUNCTIONAL_TEST)) {
             ps.setString(1, id);
             result.setResult(ps.executeUpdate());
-        } finally {
-            if (conn != null) {
-                try {
-                    conn.close();
-                } catch (SQLException e) {
-                    LOGGER.error(e.getMessage());
-                }
-            }
         }
         return result;
     }
@@ -292,20 +228,12 @@ public class RmsBookingFunctionalTestDAO {
     }
 
     public RmsBookingFunctionalTest getFuncTestResultByModule(String groupId, String module) throws SQLException {
-        try (PreparedStatement ps = conn.prepareStatement(SQL_GET_FUNC_TEST_BY_MODULE)) {
+        try (Connection conn = dataSource.getConnection(); PreparedStatement ps = conn.prepareStatement(SQL_GET_FUNC_TEST_BY_MODULE)) {
             ps.setString(1, groupId);
             ps.setString(2, module);
             try (ResultSet rs = ps.executeQuery()) {
                 if (rs.next()) {
                     return mapComponentConfig(rs);
-                }
-            }
-        } finally {
-            if (conn != null) {
-                try {
-                    conn.close();
-                } catch (SQLException e) {
-                    LOGGER.error(e.getMessage());
                 }
             }
         }

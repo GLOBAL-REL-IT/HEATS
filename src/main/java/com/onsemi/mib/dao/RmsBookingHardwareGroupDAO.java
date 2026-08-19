@@ -26,6 +26,73 @@ public class RmsBookingHardwareGroupDAO {
         this.dataSource = db.getDataSource();
     }
 
+    private String getGeneratedKey(PreparedStatement ps) throws SQLException {
+        try (ResultSet rs = ps.getGeneratedKeys()) {
+            if (rs.next()) {
+                return rs.getString(1);
+            }
+            throw new SQLException("No generated key returned.");
+        }
+    }
+    
+    /*
+    public QueryResult insertFunction(RmsBookingFunctionalTest book) throws SQLException {
+        QueryResult result = new QueryResult();
+
+        try (Connection conn = dataSource.getConnection();
+             PreparedStatement ps = conn.prepareStatement(
+                     SQL_INSERT_BOOKING_FUNCTIONAL_TEST,
+                     Statement.RETURN_GENERATED_KEYS)) {
+
+            ps.setString(1, book.getGroupId());
+            ps.setString(2, book.getFinalStatus());
+            ps.setString(3, book.getCreatedBy());
+            ps.setString(4, book.getFlag());
+            ps.setString(5, book.getModule());
+
+            result.setResult(ps.executeUpdate());
+            result.setGeneratedKey(getGeneratedKey(ps));
+        }
+
+        return result;
+    }
+    
+    private static final String SQL_INSERT_RMS_BOOKING_HARDWARE_GROUP = "INSERT INTO rms_booking_hardware_group (group_id, item_pkid, item_id, hardware_pkid, hardware_id, rms_no, event, spts_status, status, created_by, created_date, flag, item_type) VALUES (?,?,?,?,?,?,?,?,?,?,NOW(),?,?)";
+    
+    public QueryResult insertRmsBookingHardwareGroup(RmsBookingHardwareGroup rmsbookingHardwareGroup) throws SQLException {
+        QueryResult result = new QueryResult();
+
+        try (Connection conn = dataSource.getConnection();
+             PreparedStatement ps = conn.prepareStatement(SQL_INSERT_RMS_BOOKING_HARDWARE_GROUP, Statement.RETURN_GENERATED_KEYS)) {
+
+            ps.setString(1, rmsbookingHardwareGroup.getGroupId());
+            ps.setString(2, rmsbookingHardwareGroup.getItemPkid());
+            ps.setString(3, rmsbookingHardwareGroup.getItemId());
+            ps.setString(4, rmsbookingHardwareGroup.getHardwarePkid());
+            ps.setString(5, rmsbookingHardwareGroup.getHardwareId());
+            ps.setString(6, rmsbookingHardwareGroup.getRmsNo());
+            ps.setString(7, rmsbookingHardwareGroup.getEvent());
+            ps.setString(8, rmsbookingHardwareGroup.getSptsStatus());
+            ps.setString(9, rmsbookingHardwareGroup.getStatus());
+            ps.setString(10, rmsbookingHardwareGroup.getCreatedBy());
+            ps.setString(11, rmsbookingHardwareGroup.getFlag());
+            ps.setString(12, rmsbookingHardwareGroup.getItemType());
+
+            result.setResult(ps.executeUpdate());
+            result.setGeneratedKey(getGeneratedKey(ps));
+        } finally {
+            if (conn != null) {
+                try {
+                    conn.close();
+                } catch (SQLException e) {
+                    LOGGER.error(e.getMessage());
+                }
+            }
+        }
+        return result;
+    }
+    */
+
     public QueryResult insertRmsBookingHardwareGroup(RmsBookingHardwareGroup rmsbookingHardwareGroup) {
         QueryResult queryResult = new QueryResult();
         try {
