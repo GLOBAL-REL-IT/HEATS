@@ -1993,8 +1993,9 @@ public class RmsBookingDetailController {
                     hwGroupD = new RmsBookingHardwareGroupDAO();
                     int totalQtyRegistered = hwGroupD.getCountHwWithinSameBookingPkidAndItemPkid(bookingPkid, item.getSptsPkid());
 
-//                    LOGGER.info("totalQtyRegistered: " + totalQtyRegistered);
-//                    LOGGER.info("requestedQty: " + requestedQty);
+                    LOGGER.info("totalQtyRegistered: " + totalQtyRegistered);
+                    LOGGER.info("requestedQty: " + requestedQty);
+                    LOGGER.info("item.getSptsPkid(): " + item.getSptsPkid());
                     if (totalQtyRegistered >= requestedQty) {
                         LOGGER.info("totalQtyRegistered >= requestedQty");
 

@@ -27,14 +27,14 @@ public class RmsBookingHardwareGroupDAO {
     }
 
     private String getGeneratedKey(PreparedStatement ps) throws SQLException {
-        try (ResultSet rs = ps.getGeneratedKeys()) {
+        try ( ResultSet rs = ps.getGeneratedKeys()) {
             if (rs.next()) {
                 return rs.getString(1);
             }
             throw new SQLException("No generated key returned.");
         }
     }
-    
+
     /*
     public QueryResult insertFunction(RmsBookingFunctionalTest book) throws SQLException {
         QueryResult result = new QueryResult();
@@ -91,8 +91,7 @@ public class RmsBookingHardwareGroupDAO {
         }
         return result;
     }
-    */
-
+     */
     public QueryResult insertRmsBookingHardwareGroup(RmsBookingHardwareGroup rmsbookingHardwareGroup) {
         QueryResult queryResult = new QueryResult();
         try {
@@ -364,9 +363,9 @@ public class RmsBookingHardwareGroupDAO {
     public RmsBookingHardwareGroup getUnloadingDateByGroupId(String groupId) {
         String sql = "SELECT DATE_FORMAT(gr.unloading_date,'%d %M %Y %h:%i %p') AS viewUnloadingDate FROM rms_booking_hardware_group gr WHERE gr.group_id = ? AND gr.item_type = 'BIB' AND gr.flag = '2'";
         RmsBookingHardwareGroup rmsbookingHardwareGroup = null;
-        try (PreparedStatement ps = conn.prepareStatement(sql)) {
+        try ( PreparedStatement ps = conn.prepareStatement(sql)) {
             ps.setString(1, groupId);
-            try (ResultSet rs = ps.executeQuery()) {
+            try ( ResultSet rs = ps.executeQuery()) {
                 while (rs.next()) {
                     rmsbookingHardwareGroup = new RmsBookingHardwareGroup();
                     rmsbookingHardwareGroup.setUnloadingDate(rs.getString("viewUnloadingDate"));
@@ -389,9 +388,9 @@ public class RmsBookingHardwareGroupDAO {
     public RmsBookingHardwareGroup getLoadingDateByGroupId(String groupId) {
         String sql = "SELECT DATE_FORMAT(gr.loading_date,'%d %M %Y %h:%i %p') AS loadingDate FROM rms_booking_hardware_group gr WHERE gr.group_id = ? AND gr.item_type = 'BIB' AND gr.flag = '1'";
         RmsBookingHardwareGroup rmsbookingHardwareGroup = null;
-        try (PreparedStatement ps = conn.prepareStatement(sql)) {
+        try ( PreparedStatement ps = conn.prepareStatement(sql)) {
             ps.setString(1, groupId);
-            try (ResultSet rs = ps.executeQuery()) {
+            try ( ResultSet rs = ps.executeQuery()) {
                 while (rs.next()) {
                     rmsbookingHardwareGroup = new RmsBookingHardwareGroup();
                     rmsbookingHardwareGroup.setLoadingDate(rs.getString("loadingDate"));
@@ -822,7 +821,7 @@ public class RmsBookingHardwareGroupDAO {
         Integer count = null;
         try {
             PreparedStatement ps = conn.prepareStatement(
-                    "SELECT COUNT(*) AS count FROM rms_booking_hardware_group inc WHERE inc.group_id LIKE '" + bookingPkid + "/%' AND inc.item_pkid = '" + itemPkid + "'"
+                    "SELECT COUNT(*) AS count FROM rms_booking_hardware_group inc WHERE inc.group_id LIKE '" + bookingPkid + "/%' AND inc.item_pkid = '" + itemPkid + "' AND inc.flag IN ('0', '1')"
             );
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
@@ -847,11 +846,11 @@ public class RmsBookingHardwareGroupDAO {
 
     public Integer getCountBibByGroupId(String groupId) {
         Integer count = null;
-        try (PreparedStatement ps = conn.prepareStatement(
+        try ( PreparedStatement ps = conn.prepareStatement(
                 "SELECT COUNT(*) AS count FROM rms_booking_hardware_group inc WHERE inc.group_id = ? AND inc.item_type = 'BIB'"
         )) {
             ps.setString(1, groupId);
-            try (ResultSet rs = ps.executeQuery()) {
+            try ( ResultSet rs = ps.executeQuery()) {
                 while (rs.next()) {
                     count = rs.getInt("count");
                 }
