@@ -658,6 +658,8 @@ public class ItemHardwareDAO {
                     //                    "SELECT COUNT(*) AS count FROM item_hardware inc WHERE inc.hardware_id = '" + hwId + "' AND status = 'Available'"
                     "SELECT COUNT(*) AS count FROM item_hardware inc WHERE inc.hardware_id = '" + hwId + "' AND status in ('Available','Good')" //include status 'Good'
             );
+            
+            LOGGER.info("KITA MASUK NK CEK DEKAT SINI");
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
                 count = rs.getInt("count");

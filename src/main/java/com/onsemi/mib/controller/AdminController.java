@@ -1264,7 +1264,7 @@ public class AdminController {
     public String bibActivityAdd(
             Model model,
             @ModelAttribute UserSession userSession,
-            @PathVariable("mibId") String mibId) {
+            @PathVariable("mibId") String mibId) throws SQLException {
 
         UserAccessControlDAO uacD = new UserAccessControlDAO();
         UserAccessControl uac = uacD.getUserAccessControlByLoginId(userSession.getLoginId());

@@ -654,7 +654,7 @@ public class RmsBookingDetailController {
     @RequestMapping(value = "/detail/{id}", method = RequestMethod.GET)
     public String detail(Model model,
             @PathVariable("id") String id,
-            @ModelAttribute UserSession userSession) throws IOException {
+            @ModelAttribute UserSession userSession) throws IOException, SQLException {
 
         model.addAttribute("userItemSfRecall", userSession.getItemSfRecall());
 
@@ -1955,7 +1955,9 @@ public class RmsBookingDetailController {
             @RequestParam(required = false) String bookingPkid,
             @RequestParam(required = false) String motherboardId,
             @RequestParam(required = false) String hwId
-    ) {
+    ) throws SQLException {
+        
+        LOGGER.info("MASUK KE FUNCTION registerHwId");
 
         //check hardware status first - must be available
         ItemHardwareDAO itemHwD = new ItemHardwareDAO();
@@ -1991,6 +1993,8 @@ public class RmsBookingDetailController {
 
                     //get total qty register under same itemID and booking id (split from group id)
                     hwGroupD = new RmsBookingHardwareGroupDAO();
+                    LOGGER.info("bookingPkid >>>> "+bookingPkid);
+                    LOGGER.info("spts pkid   >>>> "+item.getSptsPkid());
                     int totalQtyRegistered = hwGroupD.getCountHwWithinSameBookingPkidAndItemPkid(bookingPkid, item.getSptsPkid());
 
                     LOGGER.info("totalQtyRegistered: " + totalQtyRegistered);
@@ -2102,7 +2106,7 @@ public class RmsBookingDetailController {
             @ModelAttribute UserSession userSession,
             RedirectAttributes redirectAttrs,
             @PathVariable("id") String id
-    ) {
+    ) throws SQLException {
         RmsBookingHardwareGroupDAO hwD = new RmsBookingHardwareGroupDAO();
         RmsBookingHardwareGroup hw = hwD.getRmsBookingHardwareGroup(id);
 
@@ -3783,7 +3787,7 @@ public class RmsBookingDetailController {
         return item;
     }
 
-    public void updateMaverickAndEmail(String mibItemId, String username, String jenis) {
+    public void updateMaverickAndEmail(String mibItemId, String username, String jenis) throws SQLException {
 
         String module = "Before Loading";
         String sub = "";
@@ -3874,7 +3878,7 @@ public class RmsBookingDetailController {
             HttpServletRequest request,
             RedirectAttributes redirectAttrs,
             @ModelAttribute UserSession userSession,
-            @PathVariable("id") String id) throws IOException {
+            @PathVariable("id") String id) throws IOException, SQLException {
 
         LOGGER.info("id: " + id);
 
@@ -4596,7 +4600,7 @@ public class RmsBookingDetailController {
             HttpServletRequest request,
             RedirectAttributes redirectAttrs,
             @ModelAttribute UserSession userSession,
-            @PathVariable("id") String id) throws IOException {
+            @PathVariable("id") String id) throws IOException, SQLException {
 
         LOGGER.info("id: " + id);
 
@@ -5605,7 +5609,7 @@ public class RmsBookingDetailController {
             RedirectAttributes redirectAttrs,
             @ModelAttribute UserSession userSession,
             @RequestParam(required = false) String id,
-            @RequestParam(required = false) String recallRemarks) throws IOException {
+            @RequestParam(required = false) String recallRemarks) throws IOException, SQLException {
 
         LOGGER.info("id: " + id);
 
@@ -5920,7 +5924,7 @@ public class RmsBookingDetailController {
             @RequestParam(required = false) String id,
             @RequestParam(required = false) String emailCc,
             @RequestParam(required = false) String bookingHwId, //table id for rms_booking_hardware
-            @RequestParam(required = false) String recallRemarks) throws IOException {
+            @RequestParam(required = false) String recallRemarks) throws IOException, SQLException {
 
         DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");
         Date date = new Date();
@@ -6436,7 +6440,7 @@ public class RmsBookingDetailController {
     @RequestMapping(value = "rmsRecall/detail/{id}", method = RequestMethod.GET)
     public String rmsRecallDetail(Model model,
             @PathVariable("id") String id,
-            @ModelAttribute UserSession userSession) throws IOException {
+            @ModelAttribute UserSession userSession) throws IOException, SQLException {
 
         model.addAttribute("userItemSfRecall", userSession.getItemSfRecall());
 

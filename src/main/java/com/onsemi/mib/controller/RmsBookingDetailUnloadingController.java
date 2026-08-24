@@ -159,7 +159,7 @@ public class RmsBookingDetailUnloadingController {
             @RequestParam(required = false) String bookingHwGroupId,
             @RequestParam(required = false) String itemId,
             @RequestParam(required = false) String event
-    ) throws IOException {
+    ) throws IOException, SQLException {
 
         RmsBookingHardwareGroup rms = new RmsBookingHardwareGroup();
         rms.setGroupId(groupId);
@@ -1859,7 +1859,6 @@ public class RmsBookingDetailUnloadingController {
 
         // SINI DAPATKAN INFO SAMADA HAST ATAU BUKAN
         String event = "";
-        LOGGER.info("target_location      >>>> "+target_location);
         
         if (checkMb == 0) {
             redirectAttrs.addFlashAttribute("error", "No motherboard configured");
@@ -2350,7 +2349,7 @@ public class RmsBookingDetailUnloadingController {
         return item;
     }
 
-    public void updateMaverickAndEmail(String mibItemId, String username, String jenis) {
+    public void updateMaverickAndEmail(String mibItemId, String username, String jenis) throws SQLException {
 
         String module = "Unloading";
         String sub = "";
@@ -2441,7 +2440,7 @@ public class RmsBookingDetailUnloadingController {
             HttpServletRequest request,
             RedirectAttributes redirectAttrs,
             @ModelAttribute UserSession userSession,
-            @PathVariable("id") String id) throws IOException {
+            @PathVariable("id") String id) throws IOException, SQLException {
 
         LOGGER.info("id: " + id);
 
@@ -3162,7 +3161,7 @@ public class RmsBookingDetailUnloadingController {
             RedirectAttributes redirectAttrs,
             @ModelAttribute UserSession userSession,
             @RequestParam(required = false) String id,
-            @RequestParam(required = false) String recallRemarks) throws IOException {
+            @RequestParam(required = false) String recallRemarks) throws IOException, SQLException {
 
         LOGGER.info("id: " + id);
 
@@ -3748,7 +3747,7 @@ public class RmsBookingDetailUnloadingController {
         }
     }
 
-    public void sendSPTSTransactionUnloading(String bookPkid, String pkid, String username) throws IOException {
+    public void sendSPTSTransactionUnloading(String bookPkid, String pkid, String username) throws IOException, SQLException {
         
         String rmsNo = "";
         String event = "";
@@ -3765,7 +3764,6 @@ public class RmsBookingDetailUnloadingController {
         
 //        B.	Return item hardware from Production Staging to Good
 //              TransType:26 (Return_From_Production_Staging)
-        
         DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");
         Date date = new Date();
         String formattedDate = dateFormat.format(date);
@@ -3778,15 +3776,13 @@ public class RmsBookingDetailUnloadingController {
         rmsdetail = rmsdao.getRmsBookingDetailByBookingPkid(bookPkid);
         rmsNo = rmsdetail.getRmsNo();
         event = rmsdetail.getEvent();
-        
         RmsBookingHardwareDAO rmsHD = new RmsBookingHardwareDAO();
         // UPDATE THE FUNCTION TO GET THE DATA THAT RETURN FROM PRODUCTION STAGING
         List<RmsBookingHardware> hardware = rmsHD.getRmsBookingForUnloading(bookPkid, pkid);
-
+        
         for (int i = 0; i < hardware.size(); i++) {
             // TO MAKE SURE HANYA YANG DA LAST INTERVAL SAHAJA UPDATE DEKAT SINI
             if (hardware.get(i).getStatus().equalsIgnoreCase("Return from Production (Complete Final SI)")) {
-                LOGGER.info("hardware.get(i).getId(): " + hardware.get(i).getId());
                 //update movement in SPTS for Item ID first before update HEATS DB
                 JSONObject params2 = new JSONObject();
                 params2.put("dateTime", completeDateTime);
@@ -3813,7 +3809,6 @@ public class RmsBookingDetailUnloadingController {
 
                     ItemTransactionDAO itemD = new ItemTransactionDAO();
                     QueryResult qI = itemD.insertItemTransaction(item);
-
                     RmsBookingHardware hardware1 = new RmsBookingHardware();
                     hardware1.setId(hardware.get(i).getId());
                     hardware1.setFlag(flag);
@@ -3824,6 +3819,7 @@ public class RmsBookingDetailUnloadingController {
                         hardware1.setSubStatus(subStatus);
                     } else if ("Load Card".equals(hardware.get(i).getItemType()) || "Program Card".equals(hardware.get(i).getItemType())) {
                         hardware1.setStatus(status);
+                        hardware1.setSubStatus("");
                     }
                     rmsHD = new RmsBookingHardwareDAO();
                     QueryResult q2 = rmsHD.updateRmsBookingHardwareForFlagAndStatusAndReleaseDateById(hardware1); //to include release date 29 June 2026
@@ -3864,7 +3860,6 @@ public class RmsBookingDetailUnloadingController {
         RmsBookingHardwareGroupDAO groupD = new RmsBookingHardwareGroupDAO();
         // TO UPDATE ON THE BOOKING HARDWARE GROUP DETAIL - UNLAODING
         List<RmsBookingHardwareGroup> group = groupD.getRmsBookingHardwareGroupForUnloading(bookPkid, pkid);
-
         for (int x = 0; x < group.size(); x++) {
             LOGGER.info("group.get(x).getId(): " + group.get(x).getId());
 
@@ -3973,9 +3968,40 @@ public class RmsBookingDetailUnloadingController {
                 ithw.setStatus(hwStatus);
                 ithw.setVerifyBy(username);
                 ithw.setId(group.get(x).getId());
+                
                 itemdao.updateHardwareIdStatusAvailable(ithw);
+                
+                String itemPkid = "";
+                String hardwareId = group.get(x).getHardwareId();
+                String groupId = bookPkid + "/" + pkid;
+                
+                RmsBookingHardwareGroupDAO groupD1 = new RmsBookingHardwareGroupDAO();
+                itemPkid = groupD1.getMibItemIdByGroupIdAndHardwareId(hardwareId, groupId);
+                
+                Item item = new Item();
+                ItemDAO itemdai = new ItemDAO();
+                item = itemdai.getHardwareDetail(itemPkid);
+                
+                int onHand = 0;
+                int psQty = 0;
+                
+                if (item.getOnHandQty() != null && !item.getOnHandQty().trim().isEmpty()) {
+                    onHand = Integer.parseInt(item.getOnHandQty());
+                }
+                if (item.getProductionStagingQty() != null && !item.getProductionStagingQty().trim().isEmpty()) {
+                    psQty = Integer.parseInt(item.getProductionStagingQty());
+                }
+                onHand += 1;
+                psQty -= 1;
+                
+                ItemDAO itemdao1 = new ItemDAO();
+                
+                item = new Item();
+                item.setOnHandQty(String.valueOf(onHand));
+                item.setProductionQty(String.valueOf(psQty));
+                item.setId(itemPkid);
+                itemdao1.updateQuantityAfterReturnFromProduction(item);
             } else {
-                LOGGER.info("Fail to insert transaction for Hardware ID: " + group.get(x).getHardwareId());
                 HostnameDAO hostnameD = new HostnameDAO();
                 Hostname h = hostnameD.getHostnameFlagZero();
                 String hostname = h.getHostname();

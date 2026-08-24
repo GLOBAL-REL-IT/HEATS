@@ -189,7 +189,7 @@ public class RmsBookingHardwareDAO {
         QueryResult queryResult = new QueryResult();
         try {
             PreparedStatement ps = conn.prepareStatement(
-                    "UPDATE rms_booking_hardware SET  flag = ?, status = ?, modified_date = NOW(), modified_by = ?, sub_status = ?, released_date = NOW(), released_by = ? WHERE id = ?"
+                    "UPDATE rms_booking_hardware SET flag = ?, status = ?, modified_date = NOW(), modified_by = ?, sub_status = ?, released_date = NOW(), released_by = ? WHERE id = ?"
             );
             ps.setString(1, rmsbookingHardware.getFlag());
             ps.setString(2, rmsbookingHardware.getStatus());
@@ -1051,18 +1051,18 @@ public class RmsBookingHardwareDAO {
         try {
             PreparedStatement ps = conn.prepareStatement(sql);
             ps.setString(1, bookingPkid);
-            RmsBookingHardware rmsbookingHardware;
+            ps.setString(2, pkid);
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
-                rmsbookingHardware = new RmsBookingHardware();
+                RmsBookingHardware rmsbookingHardware = new RmsBookingHardware();
                 rmsbookingHardware.setBookingPkid(rs.getString("booking_pkid"));
                 rmsbookingHardware.setPkid(rs.getString("pkid"));
                 rmsbookingHardware.setItemId(rs.getString("item_id"));
                 rmsbookingHardware.setItemPkid(rs.getString("item_pkid"));
                 rmsbookingHardware.setStatus(rs.getString("status"));
                 rmsbookingHardware.setSubStatus(rs.getString("sub_status"));
-                rmsbookingHardware.setFlag(rs.getString("flag"));
                 rmsbookingHardware.setQty(rs.getString("qty"));
+                rmsbookingHardware.setFlag(rs.getString("flag"));
                 rmsbookingHardwareList.add(rmsbookingHardware);
             }
             rs.close();

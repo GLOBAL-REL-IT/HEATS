@@ -115,7 +115,7 @@ public class ItemController {
             Model model,
             @ModelAttribute UserSession userSession,
             @RequestParam(required = false) String itemType
-    ) throws IOException {
+    ) throws IOException, SQLException {
 
         JSONArray getItemTypeAll = SPTSWebService.getItemTypeAll();
         List<LinkedHashMap<String, String>> itemTpeAll = SystemUtil.jsonArrayToList(getItemTypeAll);
@@ -198,7 +198,7 @@ public class ItemController {
             @ModelAttribute UserSession userSession,
             @RequestParam(required = false) String itemType,
             @PathVariable("itemPkid") String itemPkid
-    ) throws IOException {
+    ) throws IOException, SQLException {
 
         JSONArray getItemTypeAll = SPTSWebService.getItemTypeAll();
         List<LinkedHashMap<String, String>> itemTpeAll = SystemUtil.jsonArrayToList(getItemTypeAll);
@@ -290,8 +290,7 @@ public class ItemController {
             Model model,
             @ModelAttribute UserSession userSession,
             @PathVariable("itemType") String itemType
-    //            @RequestParam(required = false) String itemType
-    ) throws IOException {
+    ) throws IOException, SQLException {
 
         model.addAttribute("userItemAdd", userSession.getItemAdd());
         model.addAttribute("userItemEdit", userSession.getItemEdit());
@@ -638,13 +637,15 @@ public class ItemController {
             Model model,
             HttpServletRequest request,
             @RequestParam(required = false) String pkID
-    ) throws IOException {
+    ) throws IOException, SQLException {
+        LOGGER.info("KITA MASUK KE FUNCTION BACA DETAILS");
 
         //check if any info from SPTS need to update to MIB DB
         //update SPTS data per item type into MIB DB
         JSONObject params = new JSONObject();
         params.put("pkID", pkID);
         JSONArray getItemByParam = SPTSWebService.getItemByParam(params);
+        LOGGER.info("baca no 1");
 
         int count = 0;
         int countAdd = 0;
@@ -900,6 +901,7 @@ public class ItemController {
         JSONObject params2 = new JSONObject();
         params2.put("itemsPKID", pkID);
         JSONArray getTransactionByParam = SPTSWebService.getTransactionByParam(params2);
+        LOGGER.info("baca no 2");
 
         for (int i = 0; i < getTransactionByParam.length(); i++) {
 
@@ -946,6 +948,7 @@ public class ItemController {
         JSONObject paramsSf = new JSONObject();
         paramsSf.put("itemPKID", pkID);
         JSONArray getSFItemByParam = SPTSWebService.getSFItemByParam(paramsSf);
+        LOGGER.info("baca no 3");
 
         for (int i = 0; i < getSFItemByParam.length(); i++) {
 
@@ -998,6 +1001,7 @@ public class ItemController {
         JSONObject paramsHwid = new JSONObject();
         paramsHwid.put("itemPKID", pkID);
         JSONArray getItemHwByParam = SPTSWebService.getHardwareIdByParam(paramsHwid);
+        LOGGER.info("baca no 4");
 
         for (int i = 0; i < getItemHwByParam.length(); i++) {
             String sptsStatus = "";
@@ -1516,7 +1520,6 @@ public class ItemController {
             String subType = item.getSubType();
 
 //            String whereClause = "";
-
             String columnName;
 
             if ("BIB CARD".equalsIgnoreCase(itemType)) {
@@ -1672,7 +1675,7 @@ public class ItemController {
             Model model,
             @ModelAttribute UserSession userSession,
             @RequestParam(required = false) String itemType
-    ) throws IOException {
+    ) throws IOException, SQLException {
 
         JSONArray getItemTypeAll = SPTSWebService.getItemTypeAll();
         List<LinkedHashMap<String, String>> itemTpeAll = SystemUtil.jsonArrayToList(getItemTypeAll);
@@ -2112,7 +2115,7 @@ public class ItemController {
     public String updateFromSPTS(
             Model model,
             @ModelAttribute UserSession userSession
-    ) throws IOException {
+    ) throws IOException, SQLException {
 
         JSONArray getItemByParam = SPTSWebService.getItemAll();
 
@@ -2367,7 +2370,7 @@ public class ItemController {
             Model model,
             @ModelAttribute UserSession userSession,
             @RequestParam(required = false) String itemType
-    ) throws IOException {
+    ) throws IOException, SQLException {
 
         JSONArray getItemTypeAll = SPTSWebService.getItemTypeAll();
 
@@ -2484,7 +2487,7 @@ public class ItemController {
             @RequestParam(required = false) String isConsumable,
             @RequestParam(required = false) String remarks,
             @RequestParam(required = false) String expirationDate
-    ) throws IOException {
+    ) throws IOException, SQLException {
 
         Item item = new Item();
         LOGGER.info("itemTypeRead: " + itemTypeRead);
@@ -2757,7 +2760,7 @@ public class ItemController {
             @RequestParam(required = false) String status,
             @RequestParam(required = false) String aluHrs,
             @RequestParam(required = false) String expirationDate
-    ) throws IOException {
+    ) throws IOException, SQLException {
 
         if (productionQty == null || "".equals(productionQty)) {
             productionQty = "0";
@@ -3120,7 +3123,7 @@ public class ItemController {
             @RequestParam(required = false) String flag,
             @RequestParam(required = false) String aluHrs,
             @RequestParam(required = false) String expirationDate
-    ) throws IOException {
+    ) throws IOException, SQLException {
 
         if (productionQty == null || "".equals(productionQty)) {
             productionQty = "0";
@@ -3256,7 +3259,7 @@ public class ItemController {
             @ModelAttribute UserSession userSession,
             @PathVariable("itemPKID") String itemPKID,
             @PathVariable("mibId") String mibId
-    ) throws IOException {
+    ) throws IOException, SQLException {
 
         //get version from spts first
         String version = "";
@@ -3328,7 +3331,7 @@ public class ItemController {
     public String pending(
             Model model,
             @ModelAttribute UserSession userSession
-    ) throws IOException {
+    ) throws IOException, SQLException {
 
         ItemDAO itemD = new ItemDAO();
         List<Item> item = itemD.getItemListPendingVMFunctionalTest();
@@ -3354,7 +3357,7 @@ public class ItemController {
             Model model,
             @ModelAttribute UserSession userSession,
             @PathVariable("mibItemId") String mibItemId
-    ) throws IOException {
+    ) throws IOException, SQLException {
 
         ItemActivityConfigDAO itemdao = new ItemActivityConfigDAO();
         ItemActivityConfig itemData = itemdao.getItemActivityByItemId(mibItemId);
@@ -3664,7 +3667,7 @@ public class ItemController {
             Model model,
             @ModelAttribute UserSession userSession,
             @PathVariable("mibItemId") String mibItemId
-    ) throws IOException {
+    ) throws IOException, SQLException {
 
         ItemActivityConfigDAO itemdao = new ItemActivityConfigDAO();
         ItemActivityConfig itemData = itemdao.getItemActivityByItemId(mibItemId);
@@ -3931,7 +3934,7 @@ public class ItemController {
             Locale locale,
             RedirectAttributes redirectAttrs,
             @ModelAttribute UserSession userSession,
-            @RequestParam(required = false) String mibItemId) {
+            @RequestParam(required = false) String mibItemId) throws SQLException {
 
         String finalStatus = "";
         String statusLeak = "";
@@ -4124,7 +4127,7 @@ public class ItemController {
             @RequestParam(required = false) MultipartFile cableWiredCopperWireRejectUpload,
             @RequestParam(required = false) String labelIdentificationRejectQty,
             @RequestParam(required = false) MultipartFile labelIdentificationRejectUpload
-    ) throws IOException {
+    ) throws IOException, SQLException {
 
         String finalStatus = "";
         String stringPathPcb = "";
@@ -4658,7 +4661,7 @@ public class ItemController {
             @RequestParam(required = false) String winResult,
             @RequestParam(required = false) MultipartFile winUpload,
             HttpServletResponse response
-    ) throws IOException {
+    ) throws IOException, SQLException {
         LOGGER.info("SINI KITA NK SAVE FUNCTION TEST");
 
         // jenis2
@@ -5005,7 +5008,7 @@ public class ItemController {
     public String updateStatus(
             Model model,
             @ModelAttribute UserSession userSession,
-            @PathVariable("id") String id) throws IOException {
+            @PathVariable("id") String id) throws IOException, SQLException {
 
         String username = userSession.getFullname();
         insertSPTSData(id, username);
@@ -5016,7 +5019,7 @@ public class ItemController {
     public String updateStatusFailed(
             Model model,
             @ModelAttribute UserSession userSession,
-            @PathVariable("id") String id) {
+            @PathVariable("id") String id) throws SQLException {
 
         String username = userSession.getFullname();
         String manual = "Manual";
@@ -5024,7 +5027,6 @@ public class ItemController {
 
         Item item0 = new Item();
         ItemDAO itemDA = new ItemDAO();
-
         item0.setId(id);
         item0.setFlag("0");
         item0.setStatus(status);
@@ -5034,7 +5036,7 @@ public class ItemController {
         return "redirect:/hw/item/add2/" + id;
     }
 
-    public void updateMaverickAndEmail(String mibItemId, String username, String jenis) {
+    public void updateMaverickAndEmail(String mibItemId, String username, String jenis) throws SQLException {
 
         String module = "Hardware Registration";
         String sub = "";
@@ -5119,7 +5121,7 @@ public class ItemController {
 
     }
 
-    public void insertSPTSData(String mibItemId, String username) throws IOException {
+    public void insertSPTSData(String mibItemId, String username) throws IOException, SQLException {
 
         ItemDAO itemdao = new ItemDAO();
         Item item = itemdao.getHardwareDetail(mibItemId);
@@ -5414,7 +5416,7 @@ public class ItemController {
     public void downloadAttachmentTest(HttpServletRequest request,
             @PathVariable("type") String type,
             @PathVariable("itemid") String itemid,
-            HttpServletResponse response) throws IOException {
+            HttpServletResponse response) throws IOException, SQLException {
 
         ItemFunctionalTestDAO itemdao = new ItemFunctionalTestDAO();
         ItemFunctionalTest itemf = itemdao.getItemActivityByItemId(itemid);
@@ -5473,7 +5475,7 @@ public class ItemController {
     public String addActivity(
             Model model,
             @ModelAttribute UserSession userSession,
-            @PathVariable("id") String id) {
+            @PathVariable("id") String id) throws SQLException {
 
         ItemDAO itemD = new ItemDAO();
         Item item = itemD.getHardwareDetail(id);
@@ -5898,7 +5900,7 @@ public class ItemController {
             Model model,
             @ModelAttribute UserSession userSession,
             @PathVariable("pkid") String pkid
-    ) {
+    ) throws SQLException {
 
         ItemDAO itemD = new ItemDAO();
         Item item = itemD.getHardwareDetailByPkid(pkid);
@@ -5932,7 +5934,7 @@ public class ItemController {
             @RequestParam(required = false) String remarks,
             @RequestParam(required = false) String transactionDate,
             @RequestParam(required = false) String winchesterChamberLeakageTest
-    ) throws IOException {
+    ) throws IOException, SQLException {
 
         ItemDAO itemD = new ItemDAO();
         Item item = itemD.getHardwareDetail(mibItemId);
@@ -6354,7 +6356,7 @@ public class ItemController {
             @RequestParam(required = false) String manufacturer,
             @RequestParam(required = false) String equipmentType,
             @RequestParam(required = false) String equipmentModel,
-            @RequestParam(required = false) String equipmentManufacturer) throws IOException {
+            @RequestParam(required = false) String equipmentManufacturer) throws IOException, SQLException {
 
         String query = "";
         int count = 0;
@@ -6851,10 +6853,8 @@ public class ItemController {
             Model model,
             @PathVariable("reqId") String reqId
     ) {
-
         RequestDAO reqD = new RequestDAO();
         Request request = reqD.getRequestWithFtpAndInventory(reqId);
-
         return new ModelAndView("barcodeStickerPdf", "request", request);
     }
 
@@ -6863,7 +6863,7 @@ public class ItemController {
             Model model,
             @ModelAttribute UserSession userSession,
             @PathVariable("sptsPkid") String sptsId,
-            @PathVariable("itemType") String itemType) throws IOException {
+            @PathVariable("itemType") String itemType) throws IOException, SQLException {
 
         ItemDAO itemdao = new ItemDAO();
         Item item = itemdao.getHardwareDetailByPkid(sptsId);                // the function actually search by spts_pkid
@@ -6914,7 +6914,7 @@ public class ItemController {
             @RequestParam(required = false) String partNo,
             @RequestParam(required = false) String alu,
             @RequestParam(required = false) String shelfTime,
-            @RequestParam(required = false) String runningNumber) throws IOException {
+            @RequestParam(required = false) String runningNumber) throws IOException, SQLException {
 
         String hwidStatus = "Pending Verification";
 
@@ -7014,7 +7014,7 @@ public class ItemController {
     public String toverifyHardware(
             Model model,
             @ModelAttribute UserSession userSession,
-            @PathVariable("itemHwId") String itemHwId) throws IOException {
+            @PathVariable("itemHwId") String itemHwId) throws IOException, SQLException {
 
         ItemHardwareDAO itemhwdao = new ItemHardwareDAO();
         String itemId = itemhwdao.getMibItemIdByItemHwId(itemHwId);
@@ -7069,7 +7069,7 @@ public class ItemController {
             @RequestParam(required = false) String itemType,
             @RequestParam(required = false) String subType,
             @RequestParam(required = false) String itemId,
-            @RequestParam(required = false) String itemName) throws IOException {
+            @RequestParam(required = false) String itemName) throws IOException, SQLException {
 
         String hwidStatus = "Available";
 
@@ -7096,7 +7096,7 @@ public class ItemController {
             Locale locale,
             RedirectAttributes redirectAttrs,
             @ModelAttribute UserSession userSession,
-            @RequestParam(required = false) String scanqr) throws IOException {
+            @RequestParam(required = false) String scanqr) throws IOException, SQLException {
 
         args = new String[1];
         args[0] = scanqr;
@@ -7139,7 +7139,7 @@ public class ItemController {
     public String hardwareMovement(
             Model model,
             @ModelAttribute UserSession userSession,
-            @PathVariable("itemHwId") String itemHwId) throws IOException {
+            @PathVariable("itemHwId") String itemHwId) throws IOException, SQLException {
 
         ItemHardwareDAO itemhwdao = new ItemHardwareDAO();
         String itemId = itemhwdao.getMibItemIdByItemHwId(itemHwId);
@@ -7181,7 +7181,7 @@ public class ItemController {
             Locale locale,
             RedirectAttributes redirectAttrs,
             @ModelAttribute UserSession userSession,
-            @PathVariable("hwid") String hwid) throws IOException {
+            @PathVariable("hwid") String hwid) throws IOException, SQLException {
 
         ItemHardwareDAO itemhwdao = new ItemHardwareDAO();
         String sptsPkid = itemhwdao.getSptsIdByHwId(hwid);
@@ -7231,7 +7231,7 @@ public class ItemController {
         }
     }
 
-    private String insertItemHardwareIntoSpts(String id, String itempkid, String hardwareId, String hwStatus, String user) throws IOException {
+    private String insertItemHardwareIntoSpts(String id, String itempkid, String hardwareId, String hwStatus, String user) throws IOException, SQLException {
         String status = "";
 
         String pattern = "yyyy-MM-dd'T'HH:mm:ss";
@@ -7351,7 +7351,7 @@ public class ItemController {
             Model model,
             @ModelAttribute UserSession userSession,
             @PathVariable("mibItemId") String mibItemId,
-            @PathVariable("username") String username) throws IOException {
+            @PathVariable("username") String username) throws IOException, SQLException {
 
         insertSPTSData(mibItemId, username);
 

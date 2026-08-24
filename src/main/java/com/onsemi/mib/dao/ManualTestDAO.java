@@ -25,12 +25,12 @@ import org.slf4j.LoggerFactory;
 public class ManualTestDAO {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(ManualTestDAO.class);
-    private final Connection conn;
+//    private final Connection conn;
     private final DataSource dataSource;
 
     public ManualTestDAO() {
         DB db = new DB();
-        this.conn = db.getConnection();
+//        this.conn = db.getConnection();
         this.dataSource = db.getDataSource();
     }
 
@@ -52,7 +52,7 @@ public class ManualTestDAO {
 
     public QueryResult insertManualTest(String itemId, String qty, String dut, String component, String user, String flag) throws SQLException {
         QueryResult result = new QueryResult();
-        try (PreparedStatement ps = conn.prepareStatement(INSERT_MANUAL_TEST_SQL, Statement.RETURN_GENERATED_KEYS)) {
+        try (Connection conn = dataSource.getConnection(); PreparedStatement ps = conn.prepareStatement(INSERT_MANUAL_TEST_SQL, Statement.RETURN_GENERATED_KEYS)) {
             ps.setString(1, itemId);
             ps.setString(2, qty);
             ps.setString(3, dut);
@@ -61,42 +61,26 @@ public class ManualTestDAO {
             ps.setString(6, flag);
             result.setResult(ps.executeUpdate());
             result.setGeneratedKey(getGeneratedKey(ps));
-        } finally {
-            if (conn != null) {
-                try {
-                    conn.close();
-                } catch (SQLException e) {
-                    LOGGER.error(e.getMessage());
-                }
-            }
         }
         return result;
     }
 
     public QueryResult insertManual01(String itemId, String qtyNo, String user, String flag) throws SQLException {
         QueryResult result = new QueryResult();
-        try (PreparedStatement ps = conn.prepareStatement(INSERT_MANUAL_L1_SQL, Statement.RETURN_GENERATED_KEYS)) {
+        try (Connection conn = dataSource.getConnection(); PreparedStatement ps = conn.prepareStatement(INSERT_MANUAL_L1_SQL, Statement.RETURN_GENERATED_KEYS)) {
             ps.setString(1, itemId);
             ps.setString(2, qtyNo);
             ps.setString(3, user);
             ps.setString(4, flag);
             result.setResult(ps.executeUpdate());
             result.setGeneratedKey(getGeneratedKey(ps));
-        } finally {
-            if (conn != null) {
-                try {
-                    conn.close();
-                } catch (SQLException e) {
-                    LOGGER.error(e.getMessage());
-                }
-            }
         }
         return result;
     }
 
     public QueryResult insertManual02(String itemId, String qtyId, String dutNo, String user, String flag) throws SQLException {
         QueryResult result = new QueryResult();
-        try (PreparedStatement ps = conn.prepareStatement(INSERT_MANUAL_L2_SQL, Statement.RETURN_GENERATED_KEYS)) {
+        try (Connection conn = dataSource.getConnection(); PreparedStatement ps = conn.prepareStatement(INSERT_MANUAL_L2_SQL, Statement.RETURN_GENERATED_KEYS)) {
             ps.setString(1, itemId);
             ps.setString(2, qtyId);
             ps.setString(3, dutNo);
@@ -104,21 +88,13 @@ public class ManualTestDAO {
             ps.setString(5, flag);
             result.setResult(ps.executeUpdate());
             result.setGeneratedKey(getGeneratedKey(ps));
-        } finally {
-            if (conn != null) {
-                try {
-                    conn.close();
-                } catch (SQLException e) {
-                    LOGGER.error(e.getMessage());
-                }
-            }
         }
         return result;
     }
 
     public QueryResult insertManual03(String itemId, String qtyId, String dutId, String ctype, String cpntName, String cpntValue, String lower, String upper, String percentage, String status, String user, String flag) throws SQLException {
         QueryResult result = new QueryResult();
-        try (PreparedStatement ps = conn.prepareStatement(INSERT_MANUAL_L3_SQL, Statement.RETURN_GENERATED_KEYS)) {
+        try (Connection conn = dataSource.getConnection(); PreparedStatement ps = conn.prepareStatement(INSERT_MANUAL_L3_SQL, Statement.RETURN_GENERATED_KEYS)) {
             ps.setString(1, itemId);
             ps.setString(2, qtyId);
             ps.setString(3, dutId);
@@ -133,21 +109,13 @@ public class ManualTestDAO {
             ps.setString(12, flag);
             result.setResult(ps.executeUpdate());
             result.setGeneratedKey(getGeneratedKey(ps));
-        } finally {
-            if (conn != null) {
-                try {
-                    conn.close();
-                } catch (SQLException e) {
-                    LOGGER.error(e.getMessage());
-                }
-            }
         }
         return result;
     }
 
     public QueryResult insertManualResult(String itemId, String qtyId, String dutId, String ctype, String cpntName, String cpntValue, String lower, String upper, String percentage, String status, String user, String flag, String module) throws SQLException {
         QueryResult result = new QueryResult();
-        try (PreparedStatement ps = conn.prepareStatement(INSERT_MANUAL_RESULT, Statement.RETURN_GENERATED_KEYS)) {
+        try (Connection conn = dataSource.getConnection(); PreparedStatement ps = conn.prepareStatement(INSERT_MANUAL_RESULT, Statement.RETURN_GENERATED_KEYS)) {
             ps.setString(1, itemId);
             ps.setString(2, qtyId);
             ps.setString(3, dutId);
@@ -163,21 +131,13 @@ public class ManualTestDAO {
             ps.setString(13, module);
             result.setResult(ps.executeUpdate());
             result.setGeneratedKey(getGeneratedKey(ps));
-        } finally {
-            if (conn != null) {
-                try {
-                    conn.close();
-                } catch (SQLException e) {
-                    LOGGER.error(e.getMessage());
-                }
-            }
         }
         return result;
     }
 
     public QueryResult insertManualTestProd(String itemId, String configId, String qty, String dut, String component, String user, String flag, String module) throws SQLException {
         QueryResult result = new QueryResult();
-        try (PreparedStatement ps = conn.prepareStatement(INSERT_MANUAL_TEST_PROD, Statement.RETURN_GENERATED_KEYS)) {
+        try (Connection conn = dataSource.getConnection(); PreparedStatement ps = conn.prepareStatement(INSERT_MANUAL_TEST_PROD, Statement.RETURN_GENERATED_KEYS)) {
             ps.setString(1, itemId);
             ps.setString(2, configId);
             ps.setString(3, qty);
@@ -188,21 +148,13 @@ public class ManualTestDAO {
             ps.setString(8, module);
             result.setResult(ps.executeUpdate());
             result.setGeneratedKey(getGeneratedKey(ps));
-        } finally {
-            if (conn != null) {
-                try {
-                    conn.close();
-                } catch (SQLException e) {
-                    LOGGER.error(e.getMessage());
-                }
-            }
         }
         return result;
     }
 
     public QueryResult insertManualTestProdData(String itemId, String qty, String dut, String cpnt, String user, String flag, String module) throws SQLException {
         QueryResult result = new QueryResult();
-        try (PreparedStatement ps = conn.prepareStatement(INSERT_MANUAL_TEST_PROD_DATA, Statement.RETURN_GENERATED_KEYS)) {
+        try (Connection conn = dataSource.getConnection(); PreparedStatement ps = conn.prepareStatement(INSERT_MANUAL_TEST_PROD_DATA, Statement.RETURN_GENERATED_KEYS)) {
             ps.setString(1, itemId);
             ps.setString(2, qty);
             ps.setString(3, dut);
@@ -212,21 +164,13 @@ public class ManualTestDAO {
             ps.setString(7, module);
             result.setResult(ps.executeUpdate());
             result.setGeneratedKey(getGeneratedKey(ps));
-        } finally {
-            if (conn != null) {
-                try {
-                    conn.close();
-                } catch (SQLException e) {
-                    LOGGER.error(e.getMessage());
-                }
-            }
         }
         return result;
     }
 
     public QueryResult insertManualTestSub(String itemId, String pkId, String dut, String compType, String compName, String compValue, String percentage, String lower, String upper, String user, String flag) throws SQLException {
         QueryResult result = new QueryResult();
-        try (PreparedStatement ps = conn.prepareStatement(INSERT_MANUAL_TEST_SUB, Statement.RETURN_GENERATED_KEYS)) {
+        try (Connection conn = dataSource.getConnection(); PreparedStatement ps = conn.prepareStatement(INSERT_MANUAL_TEST_SUB, Statement.RETURN_GENERATED_KEYS)) {
             ps.setString(1, itemId);
             ps.setString(2, pkId);
             ps.setString(3, dut);
@@ -240,21 +184,13 @@ public class ManualTestDAO {
             ps.setString(11, flag);
             result.setResult(ps.executeUpdate());
             result.setGeneratedKey(getGeneratedKey(ps));
-        } finally {
-            if (conn != null) {
-                try {
-                    conn.close();
-                } catch (SQLException e) {
-                    LOGGER.error(e.getMessage());
-                }
-            }
         }
         return result;
     }
 
     public QueryResult insertManualTestSubData(String itemId, String pkId, String dut, String compName, String compValue, String percentage, String lower, String upper, String user, String flag, String module) throws SQLException {
         QueryResult result = new QueryResult();
-        try (PreparedStatement ps = conn.prepareStatement(INSERT_MANUAL_TEST_SUB_DATA, Statement.RETURN_GENERATED_KEYS)) {
+        try (Connection conn = dataSource.getConnection(); PreparedStatement ps = conn.prepareStatement(INSERT_MANUAL_TEST_SUB_DATA, Statement.RETURN_GENERATED_KEYS)) {
             ps.setString(1, itemId);
             ps.setString(2, pkId);
             ps.setString(3, dut);
@@ -268,14 +204,6 @@ public class ManualTestDAO {
             ps.setString(11, module);
             result.setResult(ps.executeUpdate());
             result.setGeneratedKey(getGeneratedKey(ps));
-        } finally {
-            if (conn != null) {
-                try {
-                    conn.close();
-                } catch (SQLException e) {
-                    LOGGER.error(e.getMessage());
-                }
-            }
         }
         return result;
     }
@@ -298,19 +226,11 @@ public class ManualTestDAO {
 
     public List<ManualTest> getManualTestConfig() throws SQLException {
         List<ManualTest> manualList = new ArrayList<>();
-        try (PreparedStatement ps = conn.prepareStatement(GET_MANUAL_TEST_CONFIG_SQL); ResultSet rs = ps.executeQuery()) {
+        try (Connection conn = dataSource.getConnection(); PreparedStatement ps = conn.prepareStatement(GET_MANUAL_TEST_CONFIG_SQL); ResultSet rs = ps.executeQuery()) {
             while (rs.next()) {
                 ManualTest manualTest = new ManualTest();
                 manualTest.setId(rs.getString("id"));
                 manualList.add(manualTest);
-            }
-        } finally {
-            if (conn != null) {
-                try {
-                    conn.close();
-                } catch (SQLException e) {
-                    LOGGER.error(e.getMessage());
-                }
             }
         }
         return manualList;
@@ -318,19 +238,11 @@ public class ManualTestDAO {
 
     public List<ManualTest> getAllComponentConfig(String mibItemId) throws SQLException {
         List<ManualTest> manualList = new ArrayList<>();
-        try (PreparedStatement ps = conn.prepareStatement(GET_ALL_COMPONENT_CONFIG_SQL)) {
+        try (Connection conn = dataSource.getConnection(); PreparedStatement ps = conn.prepareStatement(GET_ALL_COMPONENT_CONFIG_SQL)) {
             ps.setString(1, mibItemId);
             try (ResultSet rs = ps.executeQuery()) {
                 while (rs.next()) {
                     manualList.add(mapComponentResult(rs));
-                }
-            }
-        } finally {
-            if (conn != null) {
-                try {
-                    conn.close();
-                } catch (SQLException e) {
-                    LOGGER.error(e.getMessage());
                 }
             }
         }
@@ -339,20 +251,12 @@ public class ManualTestDAO {
 
     public List<ManualTest> getAllComponentConfigByModule(String mibItemId, String module) throws SQLException {
         List<ManualTest> manualList = new ArrayList<>();
-        try (PreparedStatement ps = conn.prepareStatement(GET_ALL_COMPONENT_RESULT_BY_MODULE)) {
+        try (Connection conn = dataSource.getConnection(); PreparedStatement ps = conn.prepareStatement(GET_ALL_COMPONENT_RESULT_BY_MODULE)) {
             ps.setString(1, mibItemId);
             ps.setString(2, module);
             try (ResultSet rs = ps.executeQuery()) {
                 while (rs.next()) {
                     manualList.add(mapComponentResult(rs));
-                }
-            }
-        } finally {
-            if (conn != null) {
-                try {
-                    conn.close();
-                } catch (SQLException e) {
-                    LOGGER.error(e.getMessage());
                 }
             }
         }
@@ -361,19 +265,11 @@ public class ManualTestDAO {
 
     public List<ManualTest> getAllComponentConfigSub(String mibItemId) throws SQLException {
         List<ManualTest> manualList = new ArrayList<>();
-        try (PreparedStatement ps = conn.prepareStatement(GET_ALL_COMPONENT_CONFIG_SUB)) {
+        try (Connection conn = dataSource.getConnection(); PreparedStatement ps = conn.prepareStatement(GET_ALL_COMPONENT_CONFIG_SUB)) {
             ps.setString(1, mibItemId);
             try (ResultSet rs = ps.executeQuery()) {
                 while (rs.next()) {
                     manualList.add(mapComponentSub(rs));
-                }
-            }
-        } finally {
-            if (conn != null) {
-                try {
-                    conn.close();
-                } catch (SQLException e) {
-                    LOGGER.error(e.getMessage());
                 }
             }
         }
@@ -381,19 +277,11 @@ public class ManualTestDAO {
     }
 
     public ManualTest getComponentConfig(String configId) throws SQLException {
-        try (PreparedStatement ps = conn.prepareStatement(GET_COMPONENT_CONFIG_SQL)) {
+        try (Connection conn = dataSource.getConnection(); PreparedStatement ps = conn.prepareStatement(GET_COMPONENT_CONFIG_SQL)) {
             ps.setString(1, configId);
             try (ResultSet rs = ps.executeQuery()) {
                 if (rs.next()) {
                     return mapComponentConfig(rs);
-                }
-            }
-        } finally {
-            if (conn != null) {
-                try {
-                    conn.close();
-                } catch (SQLException e) {
-                    LOGGER.error(e.getMessage());
                 }
             }
         }
@@ -409,7 +297,7 @@ public class ManualTestDAO {
         }
 
         final String sql = "SELECT id, mib_item_id, config_id, qty, dut FROM item_manual_test_prod WHERE config_id = ? AND module = ? ";
-        try (PreparedStatement ps = conn.prepareStatement(sql)) {
+        try (Connection conn = dataSource.getConnection(); PreparedStatement ps = conn.prepareStatement(sql)) {
             ps.setString(1, configId);
             ps.setString(2, module);
             try (ResultSet rs = ps.executeQuery()) {
@@ -420,14 +308,6 @@ public class ManualTestDAO {
         } catch (SQLException e) {
             LOGGER.error("Error fetching ManualTest for configId={} and module={}", configId, module, e);
             throw new RuntimeException("Database error occurred while fetching component config", e);
-        } finally {
-            if (conn != null) {
-                try {
-                    conn.close();
-                } catch (SQLException e) {
-                    LOGGER.error(e.getMessage());
-                }
-            }
         }
         return null;
     }
@@ -441,7 +321,7 @@ public class ManualTestDAO {
         }
 
         final String sql = "SELECT id, mib_item_id, config_id, qty, dut, component FROM item_manual_test_prod WHERE mib_item_id = ? AND module = ? ";
-        try (PreparedStatement ps = conn.prepareStatement(sql)) {
+        try (Connection conn = dataSource.getConnection(); PreparedStatement ps = conn.prepareStatement(sql)) {
             ps.setString(1, mibItemId);
             ps.setString(2, module);
             try (ResultSet rs = ps.executeQuery()) {
@@ -452,14 +332,6 @@ public class ManualTestDAO {
         } catch (SQLException e) {
             LOGGER.error("Error fetching ManualTest for mibItemId={} and module={}", mibItemId, module, e);
             throw new RuntimeException("Database error occurred while fetching component config", e);
-        } finally {
-            if (conn != null) {
-                try {
-                    conn.close();
-                } catch (SQLException e) {
-                    LOGGER.error(e.getMessage());
-                }
-            }
         }
         return null;
     }
@@ -527,7 +399,7 @@ public class ManualTestDAO {
             throw new IllegalArgumentException("manualId must not be null or empty");
         }
 
-        try (PreparedStatement ps = conn.prepareStatement(UPDATE_CONFIG_ID_SQL)) {
+        try (Connection conn = dataSource.getConnection(); PreparedStatement ps = conn.prepareStatement(UPDATE_CONFIG_ID_SQL)) {
             ps.setString(1, configId);
             ps.setString(2, manualId);
             return ps.executeUpdate();
@@ -545,7 +417,7 @@ public class ManualTestDAO {
             throw new IllegalArgumentException("manualId must not be null or empty");
         }
 
-        try (PreparedStatement ps = conn.prepareStatement(UPDATE_PROD_BY_MODULE)) {
+        try (Connection conn = dataSource.getConnection(); PreparedStatement ps = conn.prepareStatement(UPDATE_PROD_BY_MODULE)) {
             ps.setString(1, configId);
             ps.setString(2, manualId);
             ps.setString(3, module);
@@ -558,25 +430,17 @@ public class ManualTestDAO {
 
     public QueryResult updateConfigIdResult(String configId, String manualId) throws SQLException {
         QueryResult result = new QueryResult();
-        try (PreparedStatement ps = conn.prepareStatement(UPDATE_CONFIG_ID_SQL)) {
+        try (Connection conn = dataSource.getConnection(); PreparedStatement ps = conn.prepareStatement(UPDATE_CONFIG_ID_SQL)) {
             ps.setString(1, configId);
             ps.setString(2, manualId);
             result.setResult(ps.executeUpdate());
-        } finally {
-            if (conn != null) {
-                try {
-                    conn.close();
-                } catch (SQLException e) {
-                    LOGGER.error(e.getMessage());
-                }
-            }
         }
         return result;
     }
 
     public QueryResult updateConfigProd(String configId, String manualId, String module) throws SQLException {
         QueryResult result = new QueryResult();
-        try (PreparedStatement ps = conn.prepareStatement(UPDATE_CONFIG_ID_SQL)) {
+        try (Connection conn = dataSource.getConnection(); PreparedStatement ps = conn.prepareStatement(UPDATE_CONFIG_ID_SQL)) {
             ps.setString(1, configId);
             ps.setString(2, manualId);
             ps.setString(3, module);
@@ -587,105 +451,73 @@ public class ManualTestDAO {
 
     public QueryResult updateConfigId(String configId, String manualId, String module) throws SQLException {
         QueryResult result = new QueryResult();
-        try (PreparedStatement ps = conn.prepareStatement(UPDATE_PROD_BY_MODULE)) {
+        try (Connection conn = dataSource.getConnection(); PreparedStatement ps = conn.prepareStatement(UPDATE_PROD_BY_MODULE)) {
             ps.setString(1, configId);
             ps.setString(2, manualId);
             ps.setString(3, module);
             result.setResult(ps.executeUpdate());
-        } finally {
-            if (conn != null) {
-                try {
-                    conn.close();
-                } catch (SQLException e) {
-                    LOGGER.error(e.getMessage());
-                }
-            }
         }
         return result;
     }
 
     public QueryResult updateItemActivityConfig(String qty, String dut, String cmp, String id) throws SQLException {
         QueryResult result = new QueryResult();
-        try (PreparedStatement ps = conn.prepareStatement(UPDATE_PROD_FOR_QTY_DUT_COMP)) {
+        try (Connection conn = dataSource.getConnection(); PreparedStatement ps = conn.prepareStatement(UPDATE_PROD_FOR_QTY_DUT_COMP)) {
             ps.setString(1, qty);
             ps.setString(2, dut);
             ps.setString(3, cmp);
             ps.setString(4, id);
             result.setResult(ps.executeUpdate());
-        } finally {
-            if (conn != null) {
-                try {
-                    conn.close();
-                } catch (SQLException e) {
-                    LOGGER.error(e.getMessage());
-                }
-            }
         }
         return result;
     }
 
     public QueryResult updateItemActivityConfigByModule(String qty, String dut, String cmp, String id, String module) throws SQLException {
         QueryResult result = new QueryResult();
-        try (PreparedStatement ps = conn.prepareStatement(UPDATE_PROD_FOR_COMP_BY_MODULE)) {
+        try (Connection conn = dataSource.getConnection(); PreparedStatement ps = conn.prepareStatement(UPDATE_PROD_FOR_COMP_BY_MODULE)) {
             ps.setString(1, qty);
             ps.setString(2, dut);
             ps.setString(3, cmp);
             ps.setString(4, id);
             ps.setString(5, module);
             result.setResult(ps.executeUpdate());
-        } finally {
-            if (conn != null) {
-                try {
-                    conn.close();
-                } catch (SQLException e) {
-                    LOGGER.error(e.getMessage());
-                }
-            }
         }
         return result;
     }
 
     public QueryResult removeCurrentData(String configId, String itemId) throws SQLException {
         QueryResult result = new QueryResult();
-        try (PreparedStatement ps = conn.prepareStatement(DELETE_SUB_BY_ITEMID)) {
+        try (Connection conn = dataSource.getConnection(); PreparedStatement ps = conn.prepareStatement(DELETE_SUB_BY_ITEMID)) {
             ps.setString(1, configId);
             ps.setString(2, itemId);
             result.setResult(ps.executeUpdate());
-        } finally {
-            if (conn != null) {
-                try {
-                    conn.close();
-                } catch (SQLException e) {
-                    LOGGER.error(e.getMessage());
-                }
-            }
         }
         return result;
     }
 
     public int deleteConfigId(String itemId) throws SQLException {
-        try (PreparedStatement ps = conn.prepareStatement(DELETE_CONFIG_ID_SQL)) {
+        try (Connection conn = dataSource.getConnection(); PreparedStatement ps = conn.prepareStatement(DELETE_CONFIG_ID_SQL)) {
             ps.setString(1, itemId);
             return ps.executeUpdate();
         }
     }
 
     public int deleteConfigLevel01(String itemId) throws SQLException {
-        try (PreparedStatement ps = conn.prepareStatement(DELETE_CONFIG_01_SQL)) {
+        try (Connection conn = dataSource.getConnection(); PreparedStatement ps = conn.prepareStatement(DELETE_CONFIG_01_SQL)) {
             ps.setString(1, itemId);
             return ps.executeUpdate();
         }
     }
 
     public int deleteConfigLevel02(String itemId) throws SQLException {
-        try (PreparedStatement ps = conn.prepareStatement(DELETE_CONFIG_02_SQL)) {
+        try (Connection conn = dataSource.getConnection(); PreparedStatement ps = conn.prepareStatement(DELETE_CONFIG_02_SQL)) {
             ps.setString(1, itemId);
             return ps.executeUpdate();
         }
     }
 
     public int deleteConfigLevel03(String itemId) throws SQLException {
-        try (PreparedStatement ps = conn.prepareStatement(DELETE_CONFIG_03_SQL)) {
+        try (Connection conn = dataSource.getConnection(); PreparedStatement ps = conn.prepareStatement(DELETE_CONFIG_03_SQL)) {
             ps.setString(1, itemId);
             return ps.executeUpdate();
         }
@@ -696,7 +528,7 @@ public class ManualTestDAO {
             throw new IllegalArgumentException("mibItemId must not be null or empty");
         }
         final String sql = "SELECT COUNT(*) FROM item_activity_config WHERE mib_item_id = ?";
-        try (PreparedStatement ps = conn.prepareStatement(sql)) {
+        try (Connection conn = dataSource.getConnection(); PreparedStatement ps = conn.prepareStatement(sql)) {
             ps.setString(1, mibItemId);
             try (ResultSet rs = ps.executeQuery()) {
                 if (rs.next()) {
@@ -715,7 +547,7 @@ public class ManualTestDAO {
             throw new IllegalArgumentException("mibItemId must not be null or empty");
         }
         final String sql = "SELECT qty FROM item_manual_test_prod WHERE mib_item_id = ? AND module = ? ";
-        try (PreparedStatement ps = conn.prepareStatement(sql)) {
+        try (Connection conn = dataSource.getConnection(); PreparedStatement ps = conn.prepareStatement(sql)) {
             ps.setString(1, mibItemId);
             ps.setString(2, module);
             try (ResultSet rs = ps.executeQuery()) {
@@ -735,7 +567,7 @@ public class ManualTestDAO {
             throw new IllegalArgumentException("mibItemId must not be null or empty");
         }
         final String sql = "SELECT COUNT(*) FROM item_activity_config WHERE mib_item_id = ? ";
-        try (PreparedStatement ps = conn.prepareStatement(sql)) {
+        try (Connection conn = dataSource.getConnection(); PreparedStatement ps = conn.prepareStatement(sql)) {
             ps.setString(1, mibItemId);
             try (ResultSet rs = ps.executeQuery()) {
                 if (rs.next()) {
@@ -754,7 +586,7 @@ public class ManualTestDAO {
             throw new IllegalArgumentException("mibItemId must not be null or empty");
         }
         final String sql = "SELECT COUNT(*) FROM item_manual_test_prod WHERE mib_item_id = ? AND module = ? ";
-        try (PreparedStatement ps = conn.prepareStatement(sql)) {
+        try (Connection conn = dataSource.getConnection(); PreparedStatement ps = conn.prepareStatement(sql)) {
             ps.setString(1, mibItemId);
             ps.setString(2, module);
             try (ResultSet rs = ps.executeQuery()) {
@@ -774,7 +606,7 @@ public class ManualTestDAO {
             throw new IllegalArgumentException("mibItemId must not be null or empty");
         }
         final String sql = "SELECT id FROM item_manual_test_prod WHERE mib_item_id = ? AND module = ?";
-        try (PreparedStatement ps = conn.prepareStatement(sql)) {
+        try (Connection conn = dataSource.getConnection(); PreparedStatement ps = conn.prepareStatement(sql)) {
             ps.setString(1, mibItemId);
             ps.setString(2, module);
             try (ResultSet rs = ps.executeQuery()) {
@@ -794,7 +626,7 @@ public class ManualTestDAO {
             throw new IllegalArgumentException("mibItemId must not be null or empty");
         }
         final String sql = "SELECT COUNT(*) FROM item_manual_test_sub WHERE mib_item_id = ? ";
-        try (PreparedStatement ps = conn.prepareStatement(sql)) {
+        try (Connection conn = dataSource.getConnection(); PreparedStatement ps = conn.prepareStatement(sql)) {
             ps.setString(1, mibItemId);
             try (ResultSet rs = ps.executeQuery()) {
                 if (rs.next()) {
