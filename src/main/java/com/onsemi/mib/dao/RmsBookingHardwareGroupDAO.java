@@ -224,6 +224,7 @@ public class RmsBookingHardwareGroupDAO {
     private static final String SQL_GET_RMS_BOOKING_HARDWARE_GROUP_LIST_BY_BOOKING_PKID = "SELECT g.*, DATE_FORMAT(g.created_date, '%d-%M-%Y') AS createdDate FROM rms_booking_hardware_group g WHERE g.group_id LIKE ? AND g.flag = '0' ORDER BY g.hardware_id, g.item_id ASC ";
     private static final String SQL_GET_RMS_BOOKING_HARDWARE_GROUP_LIST_BY_GROUP_ID_FLAG_ZERO = "SELECT g.*, DATE_FORMAT(g.created_date,'%d-%M-%Y') AS createdDate FROM rms_booking_hardware_group g WHERE g.group_id = ? AND g.flag = '0' ORDER BY g.hardware_id, g.item_id ASC";
     private static final String SQL_GET_RMS_BOOKING_HARDWARE_GROUP_LIST_BY_GROUP_ID_FLAG_ONE = "SELECT g.*, DATE_FORMAT(g.created_date,'%d-%M-%Y') AS createdDate FROM rms_booking_hardware_group g WHERE g.group_id = ? AND g.flag = '1' ORDER BY g.hardware_id, g.item_id ASC";
+    private static final String SQL_GET_RMS_BOOKING_HARDWARE_GROUP_LIST_BY_GROUP_ID_FLAG_ONE_LIKE = "SELECT g.*, DATE_FORMAT(g.created_date,'%d-%M-%Y') AS createdDate FROM rms_booking_hardware_group g WHERE g.group_id LIKE ? AND g.flag = '1' ORDER BY g.hardware_id, g.item_id ASC";
     private static final String SQL_GET_RMS_BOOKING_HARDWARE_GROUP_FOR_UNLOADING = "SELECT * FROM rms_booking_hardware_group WHERE group_id = ? ";
 
     public List<RmsBookingHardwareGroup> getRmsBookingHardwareGroupList() {
@@ -372,7 +373,7 @@ public class RmsBookingHardwareGroupDAO {
 
     public List<RmsBookingHardwareGroup> getRmsBookingHardwareGroupListByBookingPkidWithFlagOne(String bookingPkid) {
         List<RmsBookingHardwareGroup> rmsBookingHardwareGroupList = new ArrayList<>();
-        try (Connection conn = dataSource.getConnection(); PreparedStatement ps = conn.prepareStatement(SQL_GET_RMS_BOOKING_HARDWARE_GROUP_LIST_BY_GROUP_ID_FLAG_ONE)) {
+        try (Connection conn = dataSource.getConnection(); PreparedStatement ps = conn.prepareStatement(SQL_GET_RMS_BOOKING_HARDWARE_GROUP_LIST_BY_GROUP_ID_FLAG_ONE_LIKE)) {
             ps.setString(1, bookingPkid + "/%");
             try (ResultSet rs = ps.executeQuery()) {
                 while (rs.next()) {
@@ -554,7 +555,7 @@ public class RmsBookingHardwareGroupDAO {
         return result;
     }
 
-    private final static String SQL_GET_MIBITEMID = "SELECT id FROM item WHERE spts_pkid IN (SELECT item_pkid FROM rms_booking_hardware_group WHERE group_id = ? AND hardware_id = ?)";
+    private static final String SQL_GET_MIBITEMID = "SELECT id FROM item WHERE spts_pkid IN (SELECT item_pkid FROM rms_booking_hardware_group WHERE group_id = ? AND hardware_id = ?)";
 
     public String getMibItemIdByGroupIdAndHardwareId(String hardwareId, String groupId) {
         final String sql = SQL_GET_MIBITEMID;

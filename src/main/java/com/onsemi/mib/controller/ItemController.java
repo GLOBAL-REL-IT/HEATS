@@ -7186,7 +7186,8 @@ public class ItemController {
         ItemHardwareDAO itemhwdao = new ItemHardwareDAO();
         String sptsPkid = itemhwdao.getSptsIdByHwId(hwid);
         itemhwdao = new ItemHardwareDAO();
-        String mibItemId = itemhwdao.getMibItemIdByHwId(hwid);
+        String mibItemId = itemhwdao.getMibItemIdByItemHwId(hwid);
+//        String mibItemId = itemhwdao.getMibItemIdByHwId(hwid);
 
         itemhwdao = new ItemHardwareDAO();
         itemhwdao.deleteItemHardware(hwid);

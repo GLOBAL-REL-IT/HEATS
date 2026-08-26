@@ -2467,7 +2467,7 @@ public class AdminController {
     public String createHardwareId(
             Model model,
             @ModelAttribute UserSession userSession
-    ) throws IOException {
+    ) throws IOException, SQLException {
 
         ItemDAO itemD = new ItemDAO();
         List<Item> item = itemD.getActiveBibList();

@@ -748,7 +748,7 @@ public class RmsBookingDetailController {
             //change list from bookinghardwarepkid to combination bookingpkid and item type and item id
 //            list.add(Integer.toString(getItemByParamV.getJSONObject(i).getInt("pkid")));
             String bookingPkidAndItemTypeAndItemId = rmsH.getBookingPkid() + "_" + rmsH.getItemType() + "_" + rmsH.getItemId();
-            LOGGER.info("bookingPkidAndItemTypeAndItemId : " + bookingPkidAndItemTypeAndItemId);
+//            LOGGER.info("bookingPkidAndItemTypeAndItemId : " + bookingPkidAndItemTypeAndItemId);
 
             list.add(bookingPkidAndItemTypeAndItemId);
 
