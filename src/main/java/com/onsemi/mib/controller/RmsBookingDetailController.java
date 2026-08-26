@@ -1956,8 +1956,6 @@ public class RmsBookingDetailController {
             @RequestParam(required = false) String motherboardId,
             @RequestParam(required = false) String hwId
     ) throws SQLException {
-        
-        LOGGER.info("MASUK KE FUNCTION registerHwId");
 
         //check hardware status first - must be available
         ItemHardwareDAO itemHwD = new ItemHardwareDAO();
@@ -1993,16 +1991,10 @@ public class RmsBookingDetailController {
 
                     //get total qty register under same itemID and booking id (split from group id)
                     hwGroupD = new RmsBookingHardwareGroupDAO();
-                    LOGGER.info("bookingPkid >>>> "+bookingPkid);
-                    LOGGER.info("spts pkid   >>>> "+item.getSptsPkid());
                     int totalQtyRegistered = hwGroupD.getCountHwWithinSameBookingPkidAndItemPkid(bookingPkid, item.getSptsPkid());
 
-                    LOGGER.info("totalQtyRegistered: " + totalQtyRegistered);
-                    LOGGER.info("requestedQty: " + requestedQty);
-                    LOGGER.info("item.getSptsPkid(): " + item.getSptsPkid());
                     if (totalQtyRegistered >= requestedQty) {
                         LOGGER.info("totalQtyRegistered >= requestedQty");
-
                         redirectAttrs.addFlashAttribute("error", " You’ve already registered all the hardware allowed under Item ID: " + rmsBookingH.getItemId() + ". Total requested qty: " + requestedQty);
                         return "redirect:/rmsbookingDetail/groupDetail/" + groupId;
                     } else {
@@ -3352,8 +3344,6 @@ public class RmsBookingDetailController {
             HttpServletResponse response
     ) throws IOException, SQLException {
 
-        LOGGER.info("ahoi >>> " + jenis);
-
         String gotoMn = "Pending Functional Test - Manual Test";
         String gotoBib = "Pending Functional Test - BIB Test";
         String gotoDaq = "Pending Functional Test - BIB DAQ Test";
@@ -3880,8 +3870,6 @@ public class RmsBookingDetailController {
             @ModelAttribute UserSession userSession,
             @PathVariable("id") String id) throws IOException, SQLException {
 
-        LOGGER.info("id: " + id);
-
         DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");
         Date date = new Date();
         String formattedDate = dateFormat.format(date);
@@ -3896,8 +3884,6 @@ public class RmsBookingDetailController {
         List<RmsBookingHardware> hardware = rmsHD.getRmsBookingHardwareListByBookingPkidWithFlagZeroAndStatusNotNA(rms1.getBookingPkid());
 
         for (int i = 0; i < hardware.size(); i++) {
-
-            LOGGER.info("hardware.get(i).getId(): " + hardware.get(i).getId());
             //update movement in SPTS for Item ID first before update HEATS DB
             JSONObject params2 = new JSONObject();
             params2.put("dateTime", completeDateTime);
@@ -4602,8 +4588,6 @@ public class RmsBookingDetailController {
             @ModelAttribute UserSession userSession,
             @PathVariable("id") String id) throws IOException, SQLException {
 
-        LOGGER.info("id: " + id);
-
         DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");
         Date date = new Date();
         String formattedDate = dateFormat.format(date);
@@ -4615,10 +4599,7 @@ public class RmsBookingDetailController {
         RmsBookingHardwareDAO rmsHD = new RmsBookingHardwareDAO();
         RmsBookingHardware bookingH = rmsHD.getRmsBookingHardware(id);
 
-        LOGGER.info("bookingH.getBookingPkid(): " + bookingH.getBookingPkid());
-
         String groupId = bookingH.getBookingPkid() + "/" + bookingH.getPkid();
-        LOGGER.info("groupId: " + groupId);
 
         //get LC detail
         rmsHD = new RmsBookingHardwareDAO();
