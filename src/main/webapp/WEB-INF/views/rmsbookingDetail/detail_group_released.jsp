@@ -1757,10 +1757,10 @@
                                                                                             </div>
                                                                                             <div class="col-sm-2">
                                                                                                 <div class="p-3 d-flex justify-content-end">
-                                                                                                    <!--<a href="https://mysed-rel-app05/HEATS-mini/manual_test_before_loading.php?id=${item.id}" class="leads rounded-3 d-xxl-flex d-none">-->
-                                                                                                    <a href="http://zbqb9x-7jwwld4:85//Tutorial/sample-heat/manual_test_before_loading.php?id=${item.id}" class="leads rounded-3 d-xxl-flex d-none">
+                                                                                                    <a href="https://mysed-rel-app05/HEATS-mini/manual_test_before_loading.php?id=${item.id}" class="leads rounded-3 d-xxl-flex d-none">
+<!--                                                                                                    <a href="http://zbqb9x-7jwwld4:85//Tutorial/sample-heat/manual_test_before_loading.php?id=${item.id}" class="leads rounded-3 d-xxl-flex d-none">
                                                                                                         <i class="bi bi-box-arrow-right" style="color:#ffffff"></i>&nbsp;&nbsp;Inspect Manual Test
-                                                                                                    </a>
+                                                                                                    </a>-->
                                                                                                 </div>
                                                                                             </div>
                                                                                         </div>

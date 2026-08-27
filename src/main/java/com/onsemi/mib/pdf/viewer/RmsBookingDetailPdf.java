@@ -15,7 +15,10 @@ import com.itextpdf.text.FontFactory;
 import com.itextpdf.text.Image;
 import com.itextpdf.text.Phrase;
 import com.itextpdf.text.Rectangle;
+import com.itextpdf.text.pdf.Barcode;
+import com.itextpdf.text.pdf.Barcode128;
 import com.itextpdf.text.pdf.BarcodeQRCode;
+import com.itextpdf.text.pdf.BaseFont;
 import com.itextpdf.text.pdf.PdfPCell;
 import com.itextpdf.text.pdf.PdfPTable;
 import com.itextpdf.text.pdf.PdfWriter;
@@ -26,10 +29,8 @@ import com.onsemi.mib.model.RmsBookingHardware;
 import com.onsemi.mib.pdf.AbstractITextPdfViewPotrait;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-//import org.supercsv.cellprocessor.Optional;
 
 /**
  *
@@ -279,9 +280,27 @@ public class RmsBookingDetailPdf extends AbstractITextPdfViewPotrait {
                 cellType.setBorderColor(BaseColor.GRAY);
                 rightTable.addCell(cellType);
 
-                PdfPCell cellItemId = new PdfPCell(new Phrase(data.getItemId(), valueFont));
+//                PdfPCell cellItemId = new PdfPCell(new Phrase(data.getItemId(), valueFont));
+//                cellItemId.setVerticalAlignment(Element.ALIGN_MIDDLE);
+//                cellItemId.setBorderColor(BaseColor.GRAY);
+//                rightTable.addCell(cellItemId);
+                
+                Barcode128 barcode = new Barcode128();
+                barcode.setCode(data.getItemId());
+                barcode.setCodeType(Barcode.CODE128);
+
+                barcode.setFont(BaseFont.createFont());
+                barcode.setBaseline(8f);      // text closer to barcode
+                barcode.setBarHeight(25f);
+
+                Image barcodeImage = barcode.createImageWithBarcode(writer.getDirectContent(), BaseColor.BLACK, BaseColor.BLACK);
+                barcodeImage.scalePercent(85f);
+
+                PdfPCell cellItemId = new PdfPCell(barcodeImage, false);
+                cellItemId.setHorizontalAlignment(Element.ALIGN_LEFT);
                 cellItemId.setVerticalAlignment(Element.ALIGN_MIDDLE);
-                cellItemId.setBorderColor(BaseColor.GRAY);
+                cellItemId.setPadding(5f);
+
                 rightTable.addCell(cellItemId);
 
                 PdfPCell qty1 = new PdfPCell(new Phrase(data.getLcQty(), valueFont));
@@ -302,7 +321,6 @@ public class RmsBookingDetailPdf extends AbstractITextPdfViewPotrait {
                 qrCode = new BarcodeQRCode(qrmb, 300, 300, null);
                 qrImage = qrCode.getImage();
                 qrImage.scaleToFit(440, 40);
-
 
                 qrCell = new PdfPCell(qrImage, false);
                 qrCell.setHorizontalAlignment(Element.ALIGN_RIGHT);

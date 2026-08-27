@@ -7238,8 +7238,8 @@ public class RmsBookingDetailController {
         String path = "";
 
         // SINI KITA HARDCODE UNTUK PERGI KE PHP PROUJECT LINK FOR HEATS
-        String link = "http://zbqb9x-7jwwld4:86/HEATS-mini/manual_test_before_loading.php?id=" + lcItemId + "&groupId=" + groupId;
-//        String link = "https://mysed-rel-app05/HEATS-mini/manual_test_before_loading.php?id=" + lcItemId + "&groupId=" + groupId;
+//        String link = "http://zbqb9x-7jwwld4:86/HEATS-mini/manual_test_before_loading.php?id=" + lcItemId + "&groupId=" + groupId;
+        String link = "https://mysed-rel-app05/HEATS-mini/manual_test_before_loading.php?id=" + lcItemId + "&groupId=" + groupId;
         model.addAttribute("link", link);
 
         ManualTestDAO testdao = new ManualTestDAO();
@@ -7389,8 +7389,8 @@ public class RmsBookingDetailController {
         String pdfUrl = URLEncoder.encode(request.getContextPath() + "/rmsbookingDetail/viewMbttPdf/" + bookId, "UTF-8");
         String backUrl = servletContext.getContextPath() + "/rmsbookingDetail/detail/" + bookId;
 
-        String baru = "/HEATS/rmsbookingDetail/viewMbttPdf/" + bookId;
-        pdfUrl = URLEncoder.encode(baru, "UTF-8");
+        String link = "/HEATS/rmsbookingDetail/viewMbttPdf/" + bookId;
+        pdfUrl = URLEncoder.encode(link, "UTF-8");
 
         model.addAttribute("pdfUrl", pdfUrl);
         model.addAttribute("backUrl", backUrl);
