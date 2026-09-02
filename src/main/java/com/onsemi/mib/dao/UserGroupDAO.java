@@ -7,6 +7,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
+import javax.sql.DataSource;
 import com.onsemi.mib.db.DB;
 import com.onsemi.mib.model.UserGroup;
 import com.onsemi.mib.tools.QueryResult;
@@ -16,157 +17,104 @@ import org.slf4j.LoggerFactory;
 public class UserGroupDAO {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(UserGroupDAO.class);
-    private final Connection conn;
+    private final DataSource dataSource;
 
     public UserGroupDAO() {
         DB db = new DB();
-        this.conn = db.getConnection();
+        this.dataSource = db.getDataSource();
     }
+
+    private static final String SQL_INSERT_GROUP = "INSERT INTO user_group (code, name, created_by, created_time) VALUES (?,?,?,NOW()) ";
+    private static final String SQL_UPDATE_GROUP = "UPDATE user_group SET code = ?, name = ?, modified_by = ?, modified_time = NOW() WHERE id = ? ";
+    private static final String SQL_DELETE_GROUP = "DELETE FROM user_group WHERE id = ? ";
+    private static final String SQL_GET_GROUP = "SELECT * FROM user_group WHERE id = ? ";
+    private static final String SQL_GET_GROUP_LIST = "SELECT id, code, name, IF(id = ?, 'selected=\"selected\"', '') AS selected FROM user_group ORDER BY nam";
 
     public QueryResult insertGroup(UserGroup userGroup) {
         QueryResult queryResult = new QueryResult();
-        try {
-            PreparedStatement ps = conn.prepareStatement(
-                    "INSERT INTO user_group (code, name, created_by, created_time) VALUES (?,?,?,NOW())", Statement.RETURN_GENERATED_KEYS
-            );
+        try (Connection conn = dataSource.getConnection(); PreparedStatement ps = conn.prepareStatement(SQL_INSERT_GROUP, Statement.RETURN_GENERATED_KEYS)) {
             ps.setString(1, userGroup.getCode());
             ps.setString(2, userGroup.getName());
             ps.setString(3, userGroup.getCreatedBy());
             queryResult.setResult(ps.executeUpdate());
-            ResultSet rs = ps.getGeneratedKeys();
-            if (rs.next()) {
-                queryResult.setGeneratedKey(Integer.toString(rs.getInt(1)));
-            }
-            rs.close();
-            ps.close();
-        } catch (SQLException e) {
-            queryResult.setErrorMessage(e.getMessage());
-            LOGGER.error(e.getMessage());
-        } finally {
-            if (conn != null) {
-                try {
-                    conn.close();
-                } catch (SQLException e) {
-                    LOGGER.error(e.getMessage());
+            try (ResultSet rs = ps.getGeneratedKeys()) {
+                if (rs.next()) {
+                    queryResult.setGeneratedKey(String.valueOf(rs.getInt(1)));
                 }
             }
+        } catch (SQLException e) {
+            queryResult.setErrorMessage("Database operation failed");
+            LOGGER.error("Error inserting group", e);
         }
         return queryResult;
     }
 
     public QueryResult updateGroup(UserGroup userGroup) {
         QueryResult queryResult = new QueryResult();
-        try {
-            PreparedStatement ps = conn.prepareStatement(
-                    "UPDATE user_group SET code = ?, name = ?, modified_by = ?, modified_time = NOW() WHERE id = ?"
-            );
+        try (Connection conn = dataSource.getConnection(); PreparedStatement ps = conn.prepareStatement(SQL_UPDATE_GROUP)) {
             ps.setString(1, userGroup.getCode());
             ps.setString(2, userGroup.getName());
             ps.setString(3, userGroup.getModifiedBy());
             ps.setString(4, userGroup.getId());
             queryResult.setResult(ps.executeUpdate());
-            ps.close();
         } catch (SQLException e) {
-            queryResult.setErrorMessage(e.getMessage());
-            LOGGER.error(e.getMessage());
-        } finally {
-            if (conn != null) {
-                try {
-                    conn.close();
-                } catch (SQLException e) {
-                    LOGGER.error(e.getMessage());
-                }
-            }
+            queryResult.setErrorMessage("Database operation failed");
+            LOGGER.error("Error updating group", e);
         }
         return queryResult;
     }
 
     public QueryResult deleteGroup(String groupId) {
         QueryResult queryResult = new QueryResult();
-        try {
-            PreparedStatement ps = conn.prepareStatement(
-                    "DELETE FROM user_group WHERE id = ? "
-            );
+        try (Connection conn = dataSource.getConnection(); PreparedStatement ps = conn.prepareStatement(SQL_DELETE_GROUP)) {
             ps.setString(1, groupId);
             queryResult.setResult(ps.executeUpdate());
-            ps.close();
         } catch (SQLException e) {
-            queryResult.setErrorMessage(e.getMessage());
-            LOGGER.error(e.getMessage());
-        } finally {
-            if (conn != null) {
-                try {
-                    conn.close();
-                } catch (SQLException e) {
-                    LOGGER.error(e.getMessage());
-                }
-            }
+            queryResult.setErrorMessage("Database operation failed");
+            LOGGER.error("Error deleting group", e);
         }
         return queryResult;
     }
 
     public UserGroup getGroup(String groupId) {
-        String sql = "SELECT * FROM user_group WHERE id = ? ";
-        UserGroup userGroup = null;
-        try {
-            PreparedStatement ps = conn.prepareStatement(sql);
+        try (Connection conn = dataSource.getConnection(); PreparedStatement ps = conn.prepareStatement(SQL_GET_GROUP)) {
             ps.setString(1, groupId);
-            ResultSet rs = ps.executeQuery();
-            while (rs.next()) {
-                userGroup = new UserGroup(
-                        rs.getString("id"),
-                        rs.getString("code"),
-                        rs.getString("name"),
-                        rs.getString("created_by"),
-                        rs.getString("created_time"),
-                        rs.getString("modified_by"),
-                        rs.getString("modified_time")
-                );
-            }
-            rs.close();
-            ps.close();
-        } catch (SQLException e) {
-            LOGGER.error(e.getMessage());
-        } finally {
-            if (conn != null) {
-                try {
-                    conn.close();
-                } catch (SQLException e) {
-                    LOGGER.error(e.getMessage());
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    return new UserGroup(
+                            rs.getString("id"),
+                            rs.getString("code"),
+                            rs.getString("name"),
+                            rs.getString("created_by"),
+                            rs.getString("created_time"),
+                            rs.getString("modified_by"),
+                            rs.getString("modified_time")
+                    );
                 }
             }
+        } catch (SQLException e) {
+            LOGGER.error("Error retrieving group", e);
         }
-        return userGroup;
+        return null;
     }
 
     public List<UserGroup> getGroupList(String groupId) {
-//        String sql = "SELECT id, code, name, IF(id=\"" + groupId + "\",\"selected=''\",\"\") AS selected FROM user_group ORDER BY name";
-        String sql = "SELECT id, code, name, IF(id = ?,\"selected=''\",\"\") AS selected FROM user_group ORDER BY name";
-        List<UserGroup> userGroupList = new ArrayList<UserGroup>();
-        try {
-            PreparedStatement ps = conn.prepareStatement(sql);
+        List<UserGroup> userGroupList = new ArrayList<>();
+        try (Connection conn = dataSource.getConnection(); PreparedStatement ps = conn.prepareStatement(SQL_GET_GROUP_LIST)) {
             ps.setString(1, groupId);
-            UserGroup userGroup;
-            ResultSet rs = ps.executeQuery();
-            while (rs.next()) {
-                userGroup = new UserGroup(
-                        rs.getString("id"),
-                        rs.getString("code"),
-                        rs.getString("name"),
-                        rs.getString("selected")
-                );
-                userGroupList.add(userGroup);
-            }
-        } catch (SQLException e) {
-            LOGGER.error(e.getMessage());
-        } finally {
-            if (conn != null) {
-                try {
-                    conn.close();
-                } catch (SQLException e) {
-                    LOGGER.error(e.getMessage());
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    UserGroup userGroup = new UserGroup(
+                            rs.getString("id"),
+                            rs.getString("code"),
+                            rs.getString("name"),
+                            rs.getString("selected")
+                    );
+                    userGroupList.add(userGroup);
                 }
             }
+        } catch (SQLException e) {
+            LOGGER.error("Error retrieving group list", e);
         }
         return userGroupList;
     }

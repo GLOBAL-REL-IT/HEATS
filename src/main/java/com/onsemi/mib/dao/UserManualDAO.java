@@ -17,153 +17,98 @@ import org.slf4j.LoggerFactory;
 public class UserManualDAO {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(UserManualDAO.class);
-    private final Connection conn;
     private final DataSource dataSource;
 
     public UserManualDAO() {
         DB db = new DB();
-        this.conn = db.getConnection();
         this.dataSource = db.getDataSource();
     }
+    
+    private static final String SQL_INSERT_USER_MANUAL = "INSERT INTO sr_user_manual (path, filename, flag) VALUES (?,?,?) ";
+    private static final String SQL_UPDATE_USER_MANUAL = "UPDATE sr_user_manual SET path = ?, filename = ?, flag = ? WHERE id = ? ";
+    private static final String SQL_DELETE_USER_MANUAL = "DELETE FROM sr_user_manual WHERE id = ? ";
+    private static final String SQL_GET_USER_MANUAL = "SELECT * FROM sr_user_manual WHERE flag = ? ";
+    private static final String SQL_GET_USER_MANUAL_LIST = "SELECT * FROM sr_user_manual ORDER BY id ASC ";
 
     public QueryResult insertUserManual(UserManual userManual) {
         QueryResult queryResult = new QueryResult();
-        try {
-            PreparedStatement ps = conn.prepareStatement(
-                    "INSERT INTO sr_user_manual (path, filename, flag) VALUES (?,?,?)", Statement.RETURN_GENERATED_KEYS
-            );
+        try (Connection conn = dataSource.getConnection(); PreparedStatement ps = conn.prepareStatement(SQL_INSERT_USER_MANUAL, Statement.RETURN_GENERATED_KEYS)) {
             ps.setString(1, userManual.getPath());
             ps.setString(2, userManual.getFilename());
             ps.setString(3, userManual.getFlag());
             queryResult.setResult(ps.executeUpdate());
-            ResultSet rs = ps.getGeneratedKeys();
-            if (rs.next()) {
-                queryResult.setGeneratedKey(Integer.toString(rs.getInt(1)));
-            }
-            rs.close();
-            ps.close();
-        } catch (SQLException e) {
-            queryResult.setErrorMessage(e.getMessage());
-            LOGGER.error(e.getMessage());
-        } finally {
-            if (conn != null) {
-                try {
-                    conn.close();
-                } catch (SQLException e) {
-                    LOGGER.error(e.getMessage());
+            try (ResultSet rs = ps.getGeneratedKeys()) {
+                if (rs.next()) {
+                    queryResult.setGeneratedKey(String.valueOf(rs.getInt(1)));
                 }
             }
+        } catch (SQLException e) {
+            queryResult.setErrorMessage("Database operation failed");
+            LOGGER.error("Error inserting user manual", e);
         }
         return queryResult;
     }
 
     public QueryResult updateUserManual(UserManual userManual) {
         QueryResult queryResult = new QueryResult();
-        try {
-            PreparedStatement ps = conn.prepareStatement(
-                    "UPDATE sr_user_manual SET path = ?, filename = ?, flag = ? WHERE id = ?"
-            );
+        try (Connection conn = dataSource.getConnection(); PreparedStatement ps = conn.prepareStatement(SQL_UPDATE_USER_MANUAL)) {
             ps.setString(1, userManual.getPath());
             ps.setString(2, userManual.getFilename());
             ps.setString(3, userManual.getFlag());
             ps.setString(4, userManual.getId());
             queryResult.setResult(ps.executeUpdate());
-            ps.close();
+
         } catch (SQLException e) {
-            queryResult.setErrorMessage(e.getMessage());
-            LOGGER.error(e.getMessage());
-        } finally {
-            if (conn != null) {
-                try {
-                    conn.close();
-                } catch (SQLException e) {
-                    LOGGER.error(e.getMessage());
-                }
-            }
+            queryResult.setErrorMessage("Database operation failed");
+            LOGGER.error("Error updating user manual", e);
         }
         return queryResult;
     }
 
     public QueryResult deleteUserManual(String userManualId) {
         QueryResult queryResult = new QueryResult();
-        try {
-            PreparedStatement ps = conn.prepareStatement(
-                    "DELETE FROM sr_user_manual WHERE id = ? "
-            );
+        try (Connection conn = dataSource.getConnection(); PreparedStatement ps = conn.prepareStatement(SQL_DELETE_USER_MANUAL)) {
             ps.setString(1, userManualId);
             queryResult.setResult(ps.executeUpdate());
-            ps.close();
         } catch (SQLException e) {
-            queryResult.setErrorMessage(e.getMessage());
-            LOGGER.error(e.getMessage());
-        } finally {
-            if (conn != null) {
-                try {
-                    conn.close();
-                } catch (SQLException e) {
-                    LOGGER.error(e.getMessage());
-                }
-            }
+            queryResult.setErrorMessage("Database operation failed");
+            LOGGER.error("Error deleting user manual", e);
         }
         return queryResult;
     }
 
     public UserManual getUserManual() {
-        String sql = "SELECT * FROM sr_user_manual WHERE flag = '0'";
-        UserManual userManual = null;
-        try {
-            PreparedStatement ps = conn.prepareStatement(sql);
-            ResultSet rs = ps.executeQuery();
-            while (rs.next()) {
-                userManual = new UserManual();
-                userManual.setId(rs.getString("id"));
-                userManual.setPath(rs.getString("path"));
-                userManual.setFilename(rs.getString("filename"));
-                userManual.setFlag(rs.getString("flag"));
-            }
-            rs.close();
-            ps.close();
-        } catch (SQLException e) {
-            LOGGER.error(e.getMessage());
-        } finally {
-            if (conn != null) {
-                try {
-                    conn.close();
-                } catch (SQLException e) {
-                    LOGGER.error(e.getMessage());
+        try (Connection conn = dataSource.getConnection(); PreparedStatement ps = conn.prepareStatement(SQL_GET_USER_MANUAL)) {
+            ps.setString(1, "0");
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    UserManual userManual = new UserManual();
+                    userManual.setId(rs.getString("id"));
+                    userManual.setPath(rs.getString("path"));
+                    userManual.setFilename(rs.getString("filename"));
+                    userManual.setFlag(rs.getString("flag"));
+                    return userManual;
                 }
             }
+        } catch (SQLException e) {
+            LOGGER.error("Error retrieving user manual", e);
         }
-        return userManual;
+        return null;
     }
 
     public List<UserManual> getUserManualList() {
-        String sql = "SELECT * FROM sr_user_manual ORDER BY id ASC";
-        List<UserManual> userManualList = new ArrayList<UserManual>();
-        try {
-            PreparedStatement ps = conn.prepareStatement(sql);
-            UserManual userManual;
-            ResultSet rs = ps.executeQuery();
+        List<UserManual> userManualList = new ArrayList<>();
+        try (Connection conn = dataSource.getConnection(); PreparedStatement ps = conn.prepareStatement(SQL_GET_USER_MANUAL_LIST); ResultSet rs = ps.executeQuery()) {
             while (rs.next()) {
-                userManual = new UserManual();
+                UserManual userManual = new UserManual();
                 userManual.setId(rs.getString("id"));
                 userManual.setPath(rs.getString("path"));
                 userManual.setFilename(rs.getString("filename"));
                 userManual.setFlag(rs.getString("flag"));
                 userManualList.add(userManual);
             }
-            rs.close();
-            ps.close();
         } catch (SQLException e) {
-            LOGGER.error(e.getMessage());
-        } finally {
-            if (conn != null) {
-                try {
-                    conn.close();
-                } catch (SQLException e) {
-                    LOGGER.error(e.getMessage());
-                }
-            }
+            LOGGER.error("Error retrieving user manual list", e);
         }
         return userManualList;
     }
