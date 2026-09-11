@@ -208,7 +208,6 @@ public class ItemMaverickDAO {
     public Integer getCountFlagZero() {
         Integer count = 0;
         try (Connection conn = dataSource.getConnection(); PreparedStatement ps = conn.prepareStatement(SQL_GET_COUNT_FLAG_ZERO)) {
-            ps.setString(1, "0");
             try (ResultSet rs = ps.executeQuery()) {
                 if (rs.next()) {
                     count = rs.getInt("count");

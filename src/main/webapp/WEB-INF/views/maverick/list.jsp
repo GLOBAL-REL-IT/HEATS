@@ -68,12 +68,12 @@
                                                             <a modaldeleteid="${parameterMaster.id}" type="button" data-bs-toggle="offcanvas" title="Set Priority" data-bs-target="#staticBackdrop" aria-controls="staticBackdrop" onclick="getData(this);">
                                                                 <i class="bi bi-list-ol h3"></i>
                                                             </a>
-                                                            <c:if test="${parameterMaster.id == '1'}">
+                                                            <c:if test="${parameterMaster.flag == '1'}">
                                                                 <a href="${contextPath}/rmsbookingDetail/detail/${parameterMaster.id}" class="table-link" title="Manage">
                                                                     <i class="bi bi-box-arrow-in-right h3"></i>
                                                                 </a>
                                                             </c:if>
-                                                            <c:if test="${parameterMaster.id == '0'}">
+                                                            <c:if test="${parameterMaster.flag == '0'}">
                                                                 <a modaldeleteid="${parameterMaster.id}" type="button" data-bs-toggle="offcanvas" title="Set Priority" data-bs-target="#staticBackdropNoBooking" aria-controls="staticBackdropNoBooking" onclick="getDataNoBooking(this);">
                                                                     <i class="bi bi-exclamation-octagon h3" style="color: red;"></i>
                                                                 </a>
@@ -90,7 +90,7 @@
                     </div>
                 </div>
 
-                <div class="col-sm-12 col-12">
+<!--                <div class="col-sm-12 col-12">
                     <div class="card mb-4">
                         <div class="card-header">
                             <h5 class="card-title">Maverick List</h5>
@@ -112,7 +112,7 @@
                             </div>
                         </div>
                     </div>
-                </div>
+                </div>-->
             </div>
         </div>
 
