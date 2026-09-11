@@ -20,6 +20,8 @@ public class RmsBookingMaverick {
     private String createdDate;
 
     private String id2;
+    private String itemType;
+    private String itemId;
 
     public String getId2() {
         return id2;
@@ -155,6 +157,22 @@ public class RmsBookingMaverick {
 
     public void setCreatedDate(String createdDate) {
         this.createdDate = createdDate;
+    }
+
+    public String getItemType() {
+        return itemType;
+    }
+
+    public void setItemType(String itemType) {
+        this.itemType = itemType;
+    }
+
+    public String getItemId() {
+        return itemId;
+    }
+
+    public void setItemId(String itemId) {
+        this.itemId = itemId;
     }
 
 }

@@ -4662,7 +4662,6 @@ public class ItemController {
             @RequestParam(required = false) MultipartFile winUpload,
             HttpServletResponse response
     ) throws IOException, SQLException {
-        LOGGER.info("SINI KITA NK SAVE FUNCTION TEST");
 
         // jenis2
         // ------------------------ // 
@@ -4683,12 +4682,6 @@ public class ItemController {
         String pathPs = "";
         String pathWin = "";
 
-        LOGGER.info("bibUpload        :::::::::: " + bibUpload);
-        LOGGER.info("bibDaqUpload     :::::::::: " + bibDaqUpload);
-        LOGGER.info("leakUpload       :::::::::: " + leakUpload);
-        LOGGER.info("psUpload         :::::::::: " + psUpload);
-        LOGGER.info("winUpload        :::::::::: " + winUpload);
-
         ItemFunctionalTest item = new ItemFunctionalTest();
 
         ItemActivityConfigDAO itemdao2 = new ItemActivityConfigDAO();
@@ -4701,10 +4694,7 @@ public class ItemController {
         String checkPs = itemdata.getPsLeakageTest() != null ? itemdata.getPsLeakageTest() : "No";
         String checkWin = itemdata.getWinchesterChamberLeakageTest() != null ? itemdata.getWinchesterChamberLeakageTest() : "No";
 
-        LOGGER.info("APA BENDA NAY ::: " + jenis);
-
         if (bibUpload != null) {
-            LOGGER.info("SINI MASUK YANG BIB PUNYA");
             try {
                 // Get the file and save it somewhere
                 byte[] bytesConnector = bibUpload.getBytes();
@@ -4761,10 +4751,10 @@ public class ItemController {
                 e.printStackTrace();
             }
         } else {
-            LOGGER.info("33");
+            
         }
+        
         if (bibDaqUpload != null) {
-            LOGGER.info("MASUK KE SINI UNTUK BIB DAQ KE TAK");
             try {
                 // Get the file and save it somewhere
                 byte[] bytesConnector = bibDaqUpload.getBytes();
@@ -4819,10 +4809,10 @@ public class ItemController {
                 e.printStackTrace();
             }
         } else {
-            LOGGER.info("44 ");
+            
         }
+        
         if (leakUpload != null) {
-            LOGGER.info("SINI MASUK LEAKAGE TEST");
             try {
                 // Get the file and save it somewhere
                 byte[] bytesConnector = leakUpload.getBytes();
@@ -4883,10 +4873,10 @@ public class ItemController {
                 e.printStackTrace();
             }
         } else {
-            LOGGER.info("111");
+            
         }
+        
         if (psUpload != null) {
-            LOGGER.info("SINI MASUK POWER SUPPLY TEST");
             try {
                 // Get the file and save it somewhere
                 byte[] bytesConnector = psUpload.getBytes();
@@ -4939,10 +4929,10 @@ public class ItemController {
                 e.printStackTrace();
             }
         } else {
-            LOGGER.info("5555");
+            
         }
+        
         if (winUpload != null) {
-            LOGGER.info("SINI MASUK WINCHESTER CHAMBER TEST");
             try {
                 // Get the file and save it somewhere
                 byte[] bytesConnector = winUpload.getBytes();
@@ -4990,7 +4980,7 @@ public class ItemController {
                 e.printStackTrace();
             }
         } else {
-            LOGGER.info("6666");
+            
         }
 
         ItemLog log = new ItemLog();
@@ -4999,8 +4989,6 @@ public class ItemController {
         log.setCreatedBy(userSession.getFullname());
         ItemLogDAO logD = new ItemLogDAO();
         QueryResult logQ = logD.insertItemLog(log);
-
-        LOGGER.info("KITA RETURN KE MANA NI " + target_location);
         return target_location;
     }
 
