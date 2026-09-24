@@ -100,6 +100,7 @@ public class ItemMaverickDAO {
     }
 
     private static final String SQL_GET_ITEM_MAVERICK = "SELECT * FROM item_maverick WHERE id = ?";
+    private static final String SQL_GET_ITEM_MAVERICK_BY_ID = "SELECT mav1.id, mav1.mib_item_id AS id2, itm.item_type, itm.item_name AS item_identifier, mav1.module, mav1.submodule, mav1.disposition_1, mav1.disposition_remarks_1, mav1.disposition_1_by, mav1.disposition_1_date, mav1.disposition_2, mav1.disposition_2_remarks, mav1.disposition_2_by, mav1.disposition_2_date, mav1.status, mav1.flag, mav1.created_by, DATE_FORMAT(mav1.created_date, '%e %b %Y, %H:%i:%s') AS created_date FROM item_maverick mav1 LEFT JOIN item itm ON itm.id = mav1.mib_item_id WHERE mav1.id = ? ";
     private static final String SQL_GET_ITEM_MAVERICK_LIST = "SELECT * FROM item_maverick ORDER BY id ASC";
     private static final String SQL_GET_ITEM_MAVERICK_LIST_FLAG_ZERO = "SELECT mav.*, DATE_FORMAT(mav.created_date,'%d %M %Y %h:%i %p') AS createdDate, it.item_id, it.item_type FROM item_maverick mav INNER JOIN item it ON mav.mib_item_id = it.id WHERE mav.flag = ? ORDER BY mav.id ASC";
     private static final String SQL_GET_ITEM_MAVERICK_UNION_RMS_BOOKING_MAVERICK = "SELECT mav1.id, mav1.mib_item_id AS id2, itm.item_type, itm.item_name AS item_identifier, mav1.module, mav1.submodule, mav1.disposition_1, mav1.disposition_remarks_1, mav1.disposition_1_by, mav1.disposition_1_date, mav1.disposition_2, mav1.disposition_2_remarks, mav1.disposition_2_by, mav1.disposition_2_date, mav1.status, mav1.flag, mav1.created_by, mav1.created_date FROM item_maverick mav1 LEFT JOIN item itm ON itm.id = mav1.mib_item_id " +
@@ -132,6 +133,38 @@ public class ItemMaverickDAO {
             }
         } catch (SQLException e) {
             LOGGER.error("Error retrieving Item Maverick. ID: {}", itemmaverickId, e);
+        }
+        return itemmaverick;
+    }
+    
+    public ItemMaverick getItemMaverickById(String maverickId) {
+        ItemMaverick itemmaverick = null;
+        try (Connection conn = dataSource.getConnection(); PreparedStatement ps = conn.prepareStatement(SQL_GET_ITEM_MAVERICK_BY_ID)) {
+            ps.setString(1, maverickId);
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    itemmaverick = new ItemMaverick();
+                    itemmaverick.setId(rs.getString("id"));
+                    itemmaverick.setItemType(rs.getString("item_type"));
+                    itemmaverick.setItemId(rs.getString("item_identifier"));
+                    itemmaverick.setModule(rs.getString("module"));
+                    itemmaverick.setSubmodule(rs.getString("submodule"));
+                    itemmaverick.setDisposition1(rs.getString("disposition_1"));
+                    itemmaverick.setDispositionRemarks1(rs.getString("disposition_remarks_1"));
+                    itemmaverick.setDisposition1By(rs.getString("disposition_1_by"));
+                    itemmaverick.setDisposition1Date(rs.getString("disposition_1_date"));
+                    itemmaverick.setDisposition2(rs.getString("disposition_2"));
+                    itemmaverick.setDisposition2Remarks(rs.getString("disposition_2_remarks"));
+                    itemmaverick.setDisposition2By(rs.getString("disposition_2_by"));
+                    itemmaverick.setDisposition2Date(rs.getString("disposition_2_date"));
+                    itemmaverick.setStatus(rs.getString("status"));
+                    itemmaverick.setFlag(rs.getString("flag"));
+                    itemmaverick.setCreatedBy(rs.getString("created_by"));
+                    itemmaverick.setCreatedDate(rs.getString("created_date"));
+                }
+            }
+        } catch (SQLException e) {
+            LOGGER.error("Error retrieving Item Maverick. ID: {}", maverickId, e);
         }
         return itemmaverick;
     }

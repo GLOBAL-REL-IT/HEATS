@@ -27,6 +27,12 @@
                 background-color: #f06a0a;
                 color: #FFFFFF;
             }
+            input.no-box {
+                border: none;
+                background: transparent;
+                outline: none;
+                width: 100%;
+            }
         </style>
     </s:layout-component>
     <s:layout-component name="page_container">
@@ -60,24 +66,44 @@
                                                         <td><c:out value="${parameterMasterLoop.index+1}"/></td>
                                                         <td id="modal_delete_info_${parameterMaster.id2}"><c:out value="${parameterMaster.itemType}"/></td>
                                                         <td><c:out value="${parameterMaster.itemId}"/></td>
-                                                        <td><c:out value="${parameterMaster.module}"/></td>
+                                                        <td><span class="badge border border-secondary text-body fs-6"><c:out value="${parameterMaster.module}"/></span></td>
                                                         <td><c:out value="${parameterMaster.submodule}"/></td>
                                                         <td style="color: red;"><c:out value="${parameterMaster.createdDate}" /></td>
-                                                        <td style="color: red;"><c:out value="${parameterMaster.status}"/></td>
+                                                        <c:choose>
+                                                            <c:when test="${fn:contains(parameterMaster.module, 'oading')}">
+                                                                <td style="color: purple;"><c:out value="${parameterMaster.status}" /></td>
+                                                            </c:when>
+                                                            <c:when test="${fn:contains(parameterMaster.module, 'Registration')}">
+                                                                <td style="color: red;"><c:out value="${parameterMaster.status}"/></td>
+                                                            </c:when>
+                                                            <c:otherwise>
+                                                                <td><c:out value="${parameterMaster.status}"/></td>
+                                                            </c:otherwise>
+                                                        </c:choose>
                                                         <td align="center">
-                                                            <a modaldeleteid="${parameterMaster.id}" type="button" data-bs-toggle="offcanvas" title="Set Priority" data-bs-target="#staticBackdrop" aria-controls="staticBackdrop" onclick="getData(this);">
-                                                                <i class="bi bi-list-ol h3"></i>
-                                                            </a>
-                                                            <c:if test="${parameterMaster.flag == '1'}">
-                                                                <a href="${contextPath}/rmsbookingDetail/detail/${parameterMaster.id}" class="table-link" title="Manage">
-                                                                    <i class="bi bi-box-arrow-in-right h3"></i>
-                                                                </a>
-                                                            </c:if>
-                                                            <c:if test="${parameterMaster.flag == '0'}">
-                                                                <a modaldeleteid="${parameterMaster.id}" type="button" data-bs-toggle="offcanvas" title="Set Priority" data-bs-target="#staticBackdropNoBooking" aria-controls="staticBackdropNoBooking" onclick="getDataNoBooking(this);">
-                                                                    <i class="bi bi-exclamation-octagon h3" style="color: red;"></i>
-                                                                </a>
-                                                            </c:if>
+                                                            <c:choose>
+                                                                <c:when test="${parameterMaster.flag == '1'}">
+                                                                    <a href="maverickdetails/${parameterMaster.id}/${parameterMaster.module}/${parameterMaster.id2}" type="button" data-bs-toggle="offcanvas" title="Check details" data-bs-target="#staticBackdrop" aria-controls="staticBackdrop" onclick="getData(this);">
+                                                                        <i class="bi bi-list-ol h3"></i>
+                                                                    </a>
+                                                                </c:when>
+                                                                <c:when test="${parameterMaster.flag == '0'}">
+                                                                    <a href="maverickdetails/${parameterMaster.id}/${parameterMaster.module}/${parameterMaster.id2}" type="button" onclick="getDataDetails(this);">
+                                                                        <c:choose>
+                                                                            <c:when test="${fn:contains(parameterMaster.module, 'oading')}">
+                                                                                <i class="bi bi-motherboard h3"></i>
+                                                                            </c:when>
+                                                                            <c:when test="${fn:contains(parameterMaster.module, 'Registration')}">
+                                                                                <i class="bi bi-postcard h3"></i>
+                                                                            </c:when>
+                                                                        </c:choose>
+                                                                    </a>
+                                                                </c:when>
+                                                                <c:otherwise>
+                                                                    <a href="maverickdetails/scrap"><i class="bi bi-eraser-fill h3"></i></a>
+                                                                    <a href="maverickdetails/${parameterMaster.id}/${parameterMaster.module}/${parameterMaster.id2}" type="button" onclick="getDataDetails(this);"><i class="bi bi-search h3"></i></a>
+                                                                </c:otherwise>
+                                                            </c:choose>
                                                         </td>
                                                     </tr>
                                                 </c:forEach>

@@ -83,7 +83,6 @@ public class EmailCcConfig {
     }
 
     public void ReadLDAP(String Location) throws IOException, ParseException {
-
 //       add email list into db
         List<LDAPUser> ldapUserList = new ArrayList<LDAPUser>();
         Integer totalAdd = 0;
@@ -110,9 +109,7 @@ public class EmailCcConfig {
             while (results.hasMore()) {
                 SearchResult searchResult = (SearchResult) results.next();
                 Attributes attributes = searchResult.getAttributes();
-
                 LDAPUser user = new LDAPUser();
-
                 Enumeration e = attributes.getIDs();
                 while (e.hasMoreElements()) {
                     String key = (String) e.nextElement();
@@ -133,14 +130,11 @@ public class EmailCcConfig {
                     }
                 }
                 ldapUserList.add(user);
-
             }
             for (int i = 0; i < ldapUserList.size(); i++) {
-
                 if (ldapUserList.get(i).getEmail() != null) {
                     EmailCcDAO emD = new EmailCcDAO();
                     Integer countEmail = emD.getCountEmail(ldapUserList.get(i).getEmail());
-
                     if (countEmail == 0) {
                         EmailCc emailcc = new EmailCc();
                         emailcc.setCid(ldapUserList.get(i).getLoginId());
@@ -148,17 +142,13 @@ public class EmailCcConfig {
                         emailcc.setLocation(ldapUserList.get(i).getLocation());
                         emailcc.setEmail(ldapUserList.get(i).getEmail());
                         emailcc.setFlag("0");
-
                         emD = new EmailCcDAO();
                         QueryResult emaD = emD.insertEmailCc(emailcc);
                         totalAdd = totalAdd + 1;
                     }
                 }
-
             }
-
             LOGGER.info("Total New Email " + Location + "  = " + totalAdd);
-
         } catch (NamingException e) {
             LOGGER.error(e.getMessage());
         } finally {
@@ -177,6 +167,6 @@ public class EmailCcConfig {
                 }
             }
         }
-
     }
+
 }
