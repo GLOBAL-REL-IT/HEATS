@@ -6,6 +6,7 @@ package com.onsemi.mib.controller;
 
 import com.onsemi.mib.dao.ItemDAO;
 import com.onsemi.mib.dao.ItemFunctionalTestDAO;
+import com.onsemi.mib.dao.ItemLogDAO;
 import com.onsemi.mib.dao.ItemMaverickDAO;
 import com.onsemi.mib.dao.ItemVisualInspectionDAO;
 import com.onsemi.mib.dao.ParameterDetailsDAO;
@@ -13,6 +14,7 @@ import com.onsemi.mib.dao.RmsBookingDetailDAO;
 import com.onsemi.mib.dao.RmsBookingMaverickDAO;
 import com.onsemi.mib.model.Item;
 import com.onsemi.mib.model.ItemFunctionalTest;
+import com.onsemi.mib.model.ItemLog;
 import com.onsemi.mib.model.ItemMaverick;
 import com.onsemi.mib.model.ItemVisualInspection;
 import com.onsemi.mib.model.ParameterDetails;
@@ -24,8 +26,12 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.sql.SQLException;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.List;
 import javax.servlet.ServletContext;
+import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import org.slf4j.Logger;
@@ -56,7 +62,7 @@ public class MaverickController {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(MaverickController.class);
     String[] args = {};
-    
+
     private static final int BUFFER_SIZE = 4096;
 
     @Autowired
@@ -102,18 +108,19 @@ public class MaverickController {
     @RequestMapping(value = "/maverickdetails/{id}/{module}/{id2}", method = RequestMethod.GET)
     public String maverickDetails(
             Model model,
+            HttpServletRequest request,
+            HttpServletResponse response,
             RedirectAttributes redirectAttrs,
             @PathVariable String id,
             @PathVariable String id2,
-            @PathVariable String module) throws SQLException {
-        
+            @PathVariable String module) throws SQLException, ServletException, IOException {
+
         // HARDWARE REGISTRATION
-        
         if (!module.equalsIgnoreCase("Hardware Registration")) {
             redirectAttrs.addFlashAttribute("error", "This record does not belong to Hardware Registration page, please contact HEATS admin");
-            return "redirect:/maverick/list"; 
+            return "redirect:/maverick/list";
         }
-        
+
         ItemMaverick itemmav = new ItemMaverick();
         ItemMaverickDAO itemmavdao = new ItemMaverickDAO();
         itemmav = itemmavdao.getItemMaverickById(id);
@@ -122,15 +129,16 @@ public class MaverickController {
         model.addAttribute("id", id);
         
         String submodule = itemmav.getSubmodule();
-        String returnPage = "maverick/registration_ft";
-        
+//        String returnPage = "maverick/registration_ft";
+        String returnPage = "maverick/reg_ft";
+
         model.addAttribute("leakCheck", "No");
         model.addAttribute("manCheck", "No");
         model.addAttribute("bibCheck", "No");
         model.addAttribute("daqCheck", "No");
         model.addAttribute("psCheck", "No");
         model.addAttribute("winCheck", "No");
-        
+
         if (submodule.equals("Leakage Test")) {
             model.addAttribute("leakCheck", "Yes");
         } else if (submodule.contains("Manual Test")) {
@@ -144,6 +152,7 @@ public class MaverickController {
         } else if (submodule.contains("Winchester Chamber Leakage Test")) {
             model.addAttribute("winCheck", "Yes");
         } else if (submodule.contains("Visual Inspection")) {
+            LOGGER.info("DIA MASUK DEKAT VM NI WEA    ************************************* ");
             ItemVisualInspection itemVm = new ItemVisualInspection(); //declare new model to prevent null pointer exception
 
             ItemVisualInspectionDAO itemVmD = new ItemVisualInspectionDAO(); //check if already have VM data
@@ -153,7 +162,7 @@ public class MaverickController {
                 itemVmD = new ItemVisualInspectionDAO();
                 itemVm = itemVmD.getItemVisualInspectionByMibItemIdWithModuleItemRegistration(id2);
             }
-            
+
             ParameterDetailsDAO pD = new ParameterDetailsDAO();
             List<ParameterDetails> pcbReject = pD.getGroupParameterDetailList(itemVm.getPcbReject(), "003");
             model.addAttribute("pcbReject", pcbReject);
@@ -219,7 +228,8 @@ public class MaverickController {
             model.addAttribute("labelIdentificationReject", labelIdentificationReject);
 
             model.addAttribute("itemVm", itemVm);
-            returnPage = "maverick/registration_vm";
+//            returnPage = "maverick/registration_vm";
+            returnPage = "maverick/reg_vm";
         }
 
         ItemFunctionalTestDAO itemdao2 = new ItemFunctionalTestDAO();
@@ -269,6 +279,11 @@ public class MaverickController {
             model.addAttribute("winResultData", winResultData);
         }
 
+        ItemLogDAO itemlogdao = new ItemLogDAO();
+        List<ItemLog> itemlog = itemlogdao.getItemLogListByItemId(id2);
+        LOGGER.info("SINI NK TENGOK LOG DIA>>>> " + id2);
+        model.addAttribute("itemlog", itemlog);
+
         // type = "Hardware Registration"
         return returnPage;
     }
@@ -279,9 +294,8 @@ public class MaverickController {
             @PathVariable String module,
             @PathVariable String bookid,
             @PathVariable String pkid) {
-        
-        // BEFORE & AFTER LOADING
 
+        // BEFORE & AFTER LOADING
         LOGGER.info("MASUK FUNCTION 02");
         LOGGER.info("nk tengok value id main  :::::: " + id);
         LOGGER.info("nk tengok value module   :::::: " + module);
@@ -291,32 +305,103 @@ public class MaverickController {
         // type = "Hardware Registration"
         return "maverick/test";
     }
-    
-    @RequestMapping(value = "/repair/{id}", method=RequestMethod.GET)
-    public String maverickRepair(@PathVariable String id) {
+
+    @RequestMapping(value = "/updateMaverick", method = RequestMethod.POST)
+    public String maverickupdate(
+            @ModelAttribute UserSession userSession,
+            HttpServletRequest request,
+            RedirectAttributes redirectAttrs,
+            @RequestParam(required = false) String mibItemId,
+            @RequestParam(required = false) String mavId,
+            @RequestParam(required = false) String newDisposition,
+            @RequestParam(required = false) String newDispositionRemark) {
         
-        LOGGER.info("SINI KITA MASUK KE FUNCTION NK REPAIR");
+        // FLAG 0 - New maverick data
+        // FLAG 1 - Complete Maverick / Bypass
+        // FLAG 2 - Repair
+        // FLAG 3 - Scrap
+        // FLAG 4 - 
+
+        LOGGER.info("SINI KITA MASUK KE FUNCTION NK update, tengok sini :::: " + mavId);
+        LOGGER.info("mibItemId     >>>>> " + mibItemId);
+        LOGGER.info("data dia pilih   >>>> " + newDisposition);
+        LOGGER.info("data dia pilih   >>>> " + newDispositionRemark);
+
+        String returnPage = "redirect:/maverick/list";
+
+        LocalDateTime instance = LocalDateTime.now();
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
+        String formattedString = formatter.format(instance); //15-02-2022 12:43
+        String username = userSession.getFullname();
         
-        return "maverick/repair";
+        ItemMaverickDAO imdao = new ItemMaverickDAO();
+        ItemMaverick itemmaverick = imdao.getItemMaverick(mavId);
+
+        String disposition1 = itemmaverick.getDisposition1();
+        String disposition2 = itemmaverick.getDisposition2();
+        
+        // Update item_maverick table - ALL SCENARIO WILL UPDATE
+        if (disposition2 == null || disposition2.trim().isEmpty()) {
+            if (disposition1 == null || disposition1.trim().isEmpty()) {
+                itemmaverick.setDisposition1(newDisposition);
+                itemmaverick.setDisposition1By(username);
+                itemmaverick.setDisposition1Date(formattedString);
+                itemmaverick.setDispositionRemarks1(newDispositionRemark);
+            } else {
+                itemmaverick.setDisposition2(newDisposition);
+                itemmaverick.setDisposition2By(username);
+                itemmaverick.setDisposition2Date(formattedString);
+                itemmaverick.setDisposition2Remarks(newDispositionRemark);
+            }
+            
+        } else {
+            // IF ALREADY HAS DATA, SUPPOSE CANNOT GET IN HERE
+            redirectAttrs.addFlashAttribute("error", "Disposition already completed. This should not happen. Pls contact system admin. Maverick ID :: "+mavId);
+        }
+
+        if (newDisposition.equalsIgnoreCase("Repair")) {
+            // KES REPAIR
+            // Update item_maverick table -> Key in repair table
+            itemmaverick.setFlag("2");
+            imdao = new ItemMaverickDAO();
+            imdao.updateItemMaverick(itemmaverick);
+
+            returnPage = "redirect:/maverick/repair/"+mavId;
+        } else if (newDisposition.equalsIgnoreCase("Scrap")) {
+            // KES SCRAP
+            // Update item_maverick table -> Key in scrap table
+            itemmaverick.setFlag("3");
+            imdao = new ItemMaverickDAO();
+            imdao.updateItemMaverick(itemmaverick);
+
+            returnPage = "redirect:/maverick/scrap/"+mavId;
+        } else if (newDisposition.equalsIgnoreCase("Bypass")) {
+            // KES BYPASS
+            // Update item_maverick table + flag = 1
+            itemmaverick.setFlag("1");
+            imdao = new ItemMaverickDAO();
+            imdao.updateItemMaverick(itemmaverick);
+            
+            returnPage = "redirect:/maverick/list";
+        }
+
+        return returnPage;
     }
-    
-    @RequestMapping(value = "/scrap/{id}", method=RequestMethod.GET)
+
+    @RequestMapping(value = "/scrap/{id}", method = RequestMethod.GET)
     public String maverickScrap(@PathVariable String id) {
-        
         LOGGER.info("SINI KITA MASUK KE FUNCTION NK SCRAP MOTHERBOARD NI");
-        
+
         return "maverick/scrap";
     }
-    
-    @RequestMapping(value = "/bypass/{id}", method=RequestMethod.GET)
-    public String maverickBypass(@PathVariable String id) {
-        
+
+    @RequestMapping(value = "/repair/{id}", method = RequestMethod.GET)
+    public String maverickRepair(@PathVariable String id) {
         LOGGER.info("SINI KITA MASUK KE FUNCTION PATAH BALIK KE FUNCTION YANG ASAL");
-        
-        
-        return "maverick/test";
+
+        return "maverick/repair";
     }
-    
+
     @RequestMapping(value = "/checkfile/{type}/{itemid}", method = RequestMethod.GET)
     public void downloadAttachmentTest(HttpServletRequest request,
             @PathVariable("type") String type,

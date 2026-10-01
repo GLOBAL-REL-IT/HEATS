@@ -138,7 +138,7 @@
                                         <div class="mb-1">
                                             <label for="itemId" class="form-label">Booking Remarks</label>
                                             <div class="input input-group">
-                                                <textarea class="form-control" rows="3" id="dispoRemark2" name="dispoRemark2" readonly>${dispositionRemarks2}</textarea>
+                                                <textarea class="form-control" rows="3" id="dispoRemark2" name="dispoRemark2" readonly>${data.disposition2Remarks}</textarea>
                                             </div>
                                         </div>
                                     </div>

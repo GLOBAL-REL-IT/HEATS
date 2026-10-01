@@ -63,7 +63,7 @@ public class ItemMaverickDAO {
     public QueryResult updateItemMaverick(ItemMaverick itemmaverick) {
         QueryResult queryResult = new QueryResult();
         try (Connection conn = dataSource.getConnection(); PreparedStatement ps = conn.prepareStatement(SQL_UPDATE_ITEM_MAVERICK)) {
-            ps.setString(1, itemmaverick.getMibItemId());
+            ps.setString(1, itemmaverick.getItemId());
             ps.setString(2, itemmaverick.getModule());
             ps.setString(3, itemmaverick.getSubmodule());
             ps.setString(4, itemmaverick.getDisposition1());
