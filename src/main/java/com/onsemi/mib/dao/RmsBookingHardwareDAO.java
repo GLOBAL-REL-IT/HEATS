@@ -324,7 +324,9 @@ public class RmsBookingHardwareDAO {
 
     private static final String SQL_GET_RMS_BOOKING_HARDWARE = "SELECT * FROM rms_booking_hardware WHERE id = ?";
     private static final String SQL_GET_RMS_BOOKING_HARDWARE_BY_BOOKING_PKID_FOR_LOADCARD_FLAG_ZERO = "SELECT ha.* FROM rms_booking_hardware ha WHERE ha.booking_pkid = ? AND ha.flag = '0' AND ha.status != 'NA' AND ha.item_type = 'Load Card'";
+    private static final String SQL_GET_RMS_BOOKING_HARDWARE_BY_BOOKING_PKID_FOR_LOADCARD_FLAG_ONE = "SELECT ha.* FROM rms_booking_hardware ha WHERE ha.booking_pkid = ? AND ha.flag = '1' AND ha.status != 'NA' AND ha.item_type = 'Load Card'";
     private static final String SQL_GET_RMS_BOOKING_HARDWARE_BY_BOOKING_PKID_FOR_PROGRAMCARD_FLAG_ZERO = "SELECT ha.* FROM rms_booking_hardware ha WHERE ha.booking_pkid = ? AND ha.flag = '0' AND ha.status != 'NA' AND ha.item_type = 'Program Card'";
+    private static final String SQL_GET_RMS_BOOKING_HARDWARE_BY_BOOKING_PKID_FOR_PROGRAMCARD_FLAG_ONE = "SELECT ha.* FROM rms_booking_hardware ha WHERE ha.booking_pkid = ? AND ha.flag = '1' AND ha.status != 'NA' AND ha.item_type = 'Program Card'";
     private static final String SQL_GET_RMS_BOOKING_HARDWARE_BY_BOOKING_PKID_AND_ITEM_PKID = "SELECT * FROM rms_booking_hardware WHERE booking_pkid = ? AND item_pkid = ? AND status = 'Available'";
     private static final String SQL_GET_RMS_BOOKING_HARDWARE_BY_BOOKING_PKID_AND_ITEM_PKID_BIB_CARD = "SELECT * FROM rms_booking_hardware WHERE booking_pkid = ? AND item_pkid = ? AND status IN ('Available', 'Released to Production')";
     private static final String SQL_GET_RMS_BOOKING_HARDWARE_BY_BOOKING_PKID_AND_PKID = "SELECT * FROM rms_booking_hardware WHERE booking_pkid = ? AND pkid = ? AND item_type = 'Motherboard'";
@@ -395,10 +397,74 @@ public class RmsBookingHardwareDAO {
         }
         return rmsbookingHardware;
     }
+    
+    public RmsBookingHardware getRmsBookingHardwareByBookingPkidForLoadCardFlagOne(String bookingPkid) {
+        RmsBookingHardware rmsbookingHardware = null;
+        try (Connection conn = dataSource.getConnection(); PreparedStatement ps = conn.prepareStatement(SQL_GET_RMS_BOOKING_HARDWARE_BY_BOOKING_PKID_FOR_LOADCARD_FLAG_ONE)) {
+            ps.setString(1, bookingPkid);
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    rmsbookingHardware = new RmsBookingHardware();
+                    rmsbookingHardware.setId(rs.getString("id"));
+                    rmsbookingHardware.setBookingPkid(rs.getString("booking_pkid"));
+                    rmsbookingHardware.setPkid(rs.getString("pkid"));
+                    rmsbookingHardware.setItemType(rs.getString("item_type"));
+                    rmsbookingHardware.setItemId(rs.getString("item_id"));
+                    rmsbookingHardware.setItemPkid(rs.getString("item_pkid"));
+                    rmsbookingHardware.setQty(rs.getString("qty"));
+                    rmsbookingHardware.setReadiness(rs.getString("readiness"));
+                    rmsbookingHardware.setStatus(rs.getString("status"));
+                    rmsbookingHardware.setRecall(rs.getString("recall"));
+                    rmsbookingHardware.setFlag(rs.getString("flag"));
+                    rmsbookingHardware.setCreatedDate(rs.getString("created_date"));
+                    rmsbookingHardware.setCreatedBy(rs.getString("created_by"));
+                    rmsbookingHardware.setModifiedDate(rs.getString("modified_date"));
+                    rmsbookingHardware.setModifiedBy(rs.getString("modified_by"));
+                    rmsbookingHardware.setLcQty(rs.getString("lc_qty"));
+                    rmsbookingHardware.setPcQty(rs.getString("pc_qty"));
+                }
+            }
+        } catch (SQLException e) {
+            LOGGER.error("Error retrieving Load Card with flag 0 for booking PKID: {}", bookingPkid, e);
+        }
+        return rmsbookingHardware;
+    }
 
     public RmsBookingHardware getRmsBookingHardwareByBookingPkidForProgramCardFlagZero(String bookingPkid) {
         RmsBookingHardware rmsbookingHardware = null;
         try (Connection conn = dataSource.getConnection(); PreparedStatement ps = conn.prepareStatement(SQL_GET_RMS_BOOKING_HARDWARE_BY_BOOKING_PKID_FOR_PROGRAMCARD_FLAG_ZERO)) {
+            ps.setString(1, bookingPkid);
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    rmsbookingHardware = new RmsBookingHardware();
+                    rmsbookingHardware.setId(rs.getString("id"));
+                    rmsbookingHardware.setBookingPkid(rs.getString("booking_pkid"));
+                    rmsbookingHardware.setPkid(rs.getString("pkid"));
+                    rmsbookingHardware.setItemType(rs.getString("item_type"));
+                    rmsbookingHardware.setItemId(rs.getString("item_id"));
+                    rmsbookingHardware.setItemPkid(rs.getString("item_pkid"));
+                    rmsbookingHardware.setQty(rs.getString("qty"));
+                    rmsbookingHardware.setReadiness(rs.getString("readiness"));
+                    rmsbookingHardware.setStatus(rs.getString("status"));
+                    rmsbookingHardware.setRecall(rs.getString("recall"));
+                    rmsbookingHardware.setFlag(rs.getString("flag"));
+                    rmsbookingHardware.setCreatedDate(rs.getString("created_date"));
+                    rmsbookingHardware.setCreatedBy(rs.getString("created_by"));
+                    rmsbookingHardware.setModifiedDate(rs.getString("modified_date"));
+                    rmsbookingHardware.setModifiedBy(rs.getString("modified_by"));
+                    rmsbookingHardware.setLcQty(rs.getString("lc_qty"));
+                    rmsbookingHardware.setPcQty(rs.getString("pc_qty"));
+                }
+            }
+        } catch (SQLException e) {
+            LOGGER.error("Error retrieving Program Card with flag 0 for booking PKID: {}", bookingPkid, e);
+        }
+        return rmsbookingHardware;
+    }
+    
+    public RmsBookingHardware getRmsBookingHardwareByBookingPkidForProgramCardFlagOne(String bookingPkid) {
+        RmsBookingHardware rmsbookingHardware = null;
+        try (Connection conn = dataSource.getConnection(); PreparedStatement ps = conn.prepareStatement(SQL_GET_RMS_BOOKING_HARDWARE_BY_BOOKING_PKID_FOR_PROGRAMCARD_FLAG_ONE)) {
             ps.setString(1, bookingPkid);
             try (ResultSet rs = ps.executeQuery()) {
                 if (rs.next()) {

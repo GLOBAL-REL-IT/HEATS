@@ -5922,11 +5922,13 @@ public class RmsBookingDetailController {
 
         //get LC detail
         rmsHD = new RmsBookingHardwareDAO();
-        RmsBookingHardware bookingLc = rmsHD.getRmsBookingHardwareByBookingPkidForLoadCardFlagZero(bookingH.getBookingPkid());
+//        RmsBookingHardware bookingLc = rmsHD.getRmsBookingHardwareByBookingPkidForLoadCardFlagZero(bookingH.getBookingPkid());
+        RmsBookingHardware bookingLc = rmsHD.getRmsBookingHardwareByBookingPkidForLoadCardFlagOne(bookingH.getBookingPkid());
 
         //get PC detail
         rmsHD = new RmsBookingHardwareDAO();
-        RmsBookingHardware bookingPc = rmsHD.getRmsBookingHardwareByBookingPkidForProgramCardFlagZero(bookingH.getBookingPkid());
+//        RmsBookingHardware bookingPc = rmsHD.getRmsBookingHardwareByBookingPkidForProgramCardFlagZero(bookingH.getBookingPkid());
+        RmsBookingHardware bookingPc = rmsHD.getRmsBookingHardwareByBookingPkidForProgramCardFlagOne(bookingH.getBookingPkid());
 
         RmsBookingDetailDAO rmsD = new RmsBookingDetailDAO();
         RmsBookingDetail rms1 = rmsD.getRmsBookingDetailByBookingPkid(bookingH.getBookingPkid());
@@ -5971,162 +5973,162 @@ public class RmsBookingDetailController {
             QueryResult q2 = rmsHD.updateRmsBookingHardwareForFlagAndStatusAndReturnDateById(hardware1); //include release date 29 June 2026
 
             //update movement in SPTS for Loard Card Item ID first before update HEATS DB
-            if (bookingLc != null) {
-                if (Integer.parseInt(bookingH.getLcQty()) > 0) {
-                    JSONObject paramsLc = new JSONObject();
-                    paramsLc.put("dateTime", completeDateTime);
-                    paramsLc.put("itemsPKID", bookingLc.getItemPkid());
-                    paramsLc.put("transType", "26");
-                    paramsLc.put("transQty", bookingH.getLcQty());
-                    paramsLc.put("remarks", "Return from Production Staging through HEATS");
+//            if (bookingLc != null) { // disabled on 7 Oct 2026. no need to check on item ID level. transaction happened by checking lc_qty registered per motherboard
+            if (Integer.parseInt(bookingH.getLcQty()) > 0) {
+                JSONObject paramsLc = new JSONObject();
+                paramsLc.put("dateTime", completeDateTime);
+                paramsLc.put("itemsPKID", bookingLc.getItemPkid());
+                paramsLc.put("transType", "26");
+                paramsLc.put("transQty", bookingH.getLcQty());
+                paramsLc.put("remarks", "Return from Production Staging through HEATS");
 
-                    SPTSResponse TransLc = SPTSWebService.insertTransaction(paramsLc);
+                SPTSResponse TransLc = SPTSWebService.insertTransaction(paramsLc);
 
-                    if (TransLc.getResponseId() > 0) {
+                if (TransLc.getResponseId() > 0) {
 
-                        //add Load Card transaction to DB
-                        ItemTransaction itemLc = new ItemTransaction();
-                        itemLc.setSptsPkid(TransLc.getResponseId().toString());
-                        itemLc.setItemPkid(bookingLc.getItemPkid());
-                        itemLc.setSiteName("Seremban");
-                        itemLc.setDateTime(date1 + " " + time);
-                        itemLc.setTransType("26");
-                        itemLc.setTransTypeName("Return from Production Staging");
-                        itemLc.setTransQty(bookingH.getLcQty());
-                        itemLc.setTransOutQty(bookingH.getLcQty());
-                        itemLc.setRemarks("Return from Production Staging through HEATS");
+                    //add Load Card transaction to DB
+                    ItemTransaction itemLc = new ItemTransaction();
+                    itemLc.setSptsPkid(TransLc.getResponseId().toString());
+                    itemLc.setItemPkid(bookingLc.getItemPkid());
+                    itemLc.setSiteName("Seremban");
+                    itemLc.setDateTime(date1 + " " + time);
+                    itemLc.setTransType("26");
+                    itemLc.setTransTypeName("Return from Production Staging");
+                    itemLc.setTransQty(bookingH.getLcQty());
+                    itemLc.setTransOutQty(bookingH.getLcQty());
+                    itemLc.setRemarks("Return from Production Staging through HEATS");
 
-                        itemD = new ItemTransactionDAO();
-                        QueryResult qLc = itemD.insertItemTransaction(itemLc);
+                    itemD = new ItemTransactionDAO();
+                    QueryResult qLc = itemD.insertItemTransaction(itemLc);
 
-                        RmsBookingHardware hardwareLc = new RmsBookingHardware();
-                        hardwareLc.setId(bookingLc.getId());
-                        hardwareLc.setFlag("0");
-                        hardwareLc.setModifiedBy(userSession.getFullname());
-                        hardwareLc.setStatus("Pending Release to Production");
-                        rmsHD = new RmsBookingHardwareDAO();
-                        QueryResult queryLc = rmsHD.updateRmsBookingHardwareForFlagAndStatusById(hardwareLc);
+                    RmsBookingHardware hardwareLc = new RmsBookingHardware();
+                    hardwareLc.setId(bookingLc.getId());
+                    hardwareLc.setFlag("0");
+                    hardwareLc.setModifiedBy(userSession.getFullname());
+                    hardwareLc.setStatus("Pending Release to Production");
+                    rmsHD = new RmsBookingHardwareDAO();
+                    QueryResult queryLc = rmsHD.updateRmsBookingHardwareForFlagAndStatusById(hardwareLc);
 
-                    } else {
-                        LOGGER.info("Fail to insert transaction for Item ID: " + bookingLc.getItemId());
+                } else {
+                    LOGGER.info("Fail to insert transaction for Item ID: " + bookingLc.getItemId());
 
-                        redirectAttrs.addFlashAttribute("error", "Failed to Return Load Card from Production Staging. Pls contact system admin.");
+                    redirectAttrs.addFlashAttribute("error", "Failed to Return Load Card from Production Staging. Pls contact system admin.");
 
-                        String[] to = {"global-rel-it@onsemi.com"};
+                    String[] to = {"global-rel-it@onsemi.com"};
 
-                        //gethostname
-                        HostnameDAO hostnameD = new HostnameDAO();
-                        Hostname h = hostnameD.getHostnameFlagZero();
-                        String hostname = h.getHostname();
+                    //gethostname
+                    HostnameDAO hostnameD = new HostnameDAO();
+                    Hostname h = hostnameD.getHostnameFlagZero();
+                    String hostname = h.getHostname();
 
-                        EmailSender emailSender = new EmailSender();
-                        emailSender.htmlEmailTable(
-                                servletContext,
-                                "", //user name requestor
-                                to, //to
-                                //                        emailTo,
-                                "HW Release to Production - Failed to Insert SPTS Transaction", //subject
-                                "<br />"
-                                + "Please be informed that the item below failed to insert SPTS transaction (Return from Production Staging)."
-                                + "<br /> "
-                                + "<br /> "
-                                + "RMS No: " + rms1.getRmsNo()
-                                + "<br /> "
-                                + "Event: " + rms1.getEvent()
-                                + "<br /> "
-                                + "Item ID: " + bookingLc.getItemId()
-                                + "<br /> "
-                                + "Transaction Date: " + completeDateTime
-                                + "<br /> "
-                                + "<br /> "
-                                + "Detail: Failed to insert SPTS Transaction (Return from Production Staging)"
-                                + "<br /> "
-                                + "Please click <a href=\"http://" + hostname + "/HEATS/rmsbookingDetail/detail/" + id + " \">HERE</a> for more detail."
-                                + "<br /> "
-                                + "<br />Thank you." //msg
-                        );
-                    }
-
+                    EmailSender emailSender = new EmailSender();
+                    emailSender.htmlEmailTable(
+                            servletContext,
+                            "", //user name requestor
+                            to, //to
+                            //                        emailTo,
+                            "HW Release to Production - Failed to Insert SPTS Transaction", //subject
+                            "<br />"
+                            + "Please be informed that the item below failed to insert SPTS transaction (Return from Production Staging)."
+                            + "<br /> "
+                            + "<br /> "
+                            + "RMS No: " + rms1.getRmsNo()
+                            + "<br /> "
+                            + "Event: " + rms1.getEvent()
+                            + "<br /> "
+                            + "Item ID: " + bookingLc.getItemId()
+                            + "<br /> "
+                            + "Transaction Date: " + completeDateTime
+                            + "<br /> "
+                            + "<br /> "
+                            + "Detail: Failed to insert SPTS Transaction (Return from Production Staging)"
+                            + "<br /> "
+                            + "Please click <a href=\"http://" + hostname + "/HEATS/rmsbookingDetail/detail/" + id + " \">HERE</a> for more detail."
+                            + "<br /> "
+                            + "<br />Thank you." //msg
+                    );
                 }
+
             }
+//            }
             //update movement in SPTS for Program Card Item ID first before update HEATS DB
-            if (bookingPc != null) {
-                if (Integer.parseInt(bookingH.getPcQty()) > 0) {
-                    JSONObject paramsPc = new JSONObject();
-                    paramsPc.put("dateTime", completeDateTime);
-                    paramsPc.put("itemsPKID", bookingPc.getItemPkid());
-                    paramsPc.put("transType", "26");
-                    paramsPc.put("transQty", bookingH.getPcQty());
-                    paramsPc.put("remarks", "Return from Production Staging through HEATS");
+//            if (bookingPc != null) { // disabled on 7 Oct 2026. no need to check on item ID level. transaction happened by checking pc_qty registered per motherboard
+            if (Integer.parseInt(bookingH.getPcQty()) > 0) {
+                JSONObject paramsPc = new JSONObject();
+                paramsPc.put("dateTime", completeDateTime);
+                paramsPc.put("itemsPKID", bookingPc.getItemPkid());
+                paramsPc.put("transType", "26");
+                paramsPc.put("transQty", bookingH.getPcQty());
+                paramsPc.put("remarks", "Return from Production Staging through HEATS");
 
-                    SPTSResponse TransPc = SPTSWebService.insertTransaction(paramsPc);
+                SPTSResponse TransPc = SPTSWebService.insertTransaction(paramsPc);
 
-                    if (TransPc.getResponseId() > 0) {
+                if (TransPc.getResponseId() > 0) {
 
-                        //add Program Card transaction to DB
-                        ItemTransaction itemPc = new ItemTransaction();
-                        itemPc.setSptsPkid(TransPc.getResponseId().toString());
-                        itemPc.setItemPkid(bookingPc.getItemPkid());
-                        itemPc.setSiteName("Seremban");
-                        itemPc.setDateTime(date1 + " " + time);
-                        itemPc.setTransType("26");
-                        itemPc.setTransTypeName("Return from Production Staging");
-                        itemPc.setTransQty(bookingH.getPcQty());
-                        itemPc.setTransOutQty(bookingH.getPcQty());
-                        itemPc.setRemarks("Return from Production Staging through HEATS");
+                    //add Program Card transaction to DB
+                    ItemTransaction itemPc = new ItemTransaction();
+                    itemPc.setSptsPkid(TransPc.getResponseId().toString());
+                    itemPc.setItemPkid(bookingPc.getItemPkid());
+                    itemPc.setSiteName("Seremban");
+                    itemPc.setDateTime(date1 + " " + time);
+                    itemPc.setTransType("26");
+                    itemPc.setTransTypeName("Return from Production Staging");
+                    itemPc.setTransQty(bookingH.getPcQty());
+                    itemPc.setTransOutQty(bookingH.getPcQty());
+                    itemPc.setRemarks("Return from Production Staging through HEATS");
 
-                        itemD = new ItemTransactionDAO();
-                        QueryResult qPc = itemD.insertItemTransaction(itemPc);
+                    itemD = new ItemTransactionDAO();
+                    QueryResult qPc = itemD.insertItemTransaction(itemPc);
 
-                        RmsBookingHardware hardwarePc = new RmsBookingHardware();
-                        hardwarePc.setId(bookingPc.getId());
-                        hardwarePc.setFlag("0");
-                        hardwarePc.setModifiedBy(userSession.getFullname());
-                        hardwarePc.setStatus("Pending Release to Production");
-                        rmsHD = new RmsBookingHardwareDAO();
-                        QueryResult queryLc = rmsHD.updateRmsBookingHardwareForFlagAndStatusById(hardwarePc);
+                    RmsBookingHardware hardwarePc = new RmsBookingHardware();
+                    hardwarePc.setId(bookingPc.getId());
+                    hardwarePc.setFlag("0");
+                    hardwarePc.setModifiedBy(userSession.getFullname());
+                    hardwarePc.setStatus("Pending Release to Production");
+                    rmsHD = new RmsBookingHardwareDAO();
+                    QueryResult queryLc = rmsHD.updateRmsBookingHardwareForFlagAndStatusById(hardwarePc);
 
-                    } else {
-                        LOGGER.info("Fail to insert transaction for Item ID: " + bookingPc.getItemId());
+                } else {
+                    LOGGER.info("Fail to insert transaction for Item ID: " + bookingPc.getItemId());
 
-                        redirectAttrs.addFlashAttribute("error", "Failed to Return Program Card from Production Staging. Pls contact system admin.");
+                    redirectAttrs.addFlashAttribute("error", "Failed to Return Program Card from Production Staging. Pls contact system admin.");
 
-                        String[] to = {"global-rel-it@onsemi.com"};
+                    String[] to = {"global-rel-it@onsemi.com"};
 
-                        //gethostname
-                        HostnameDAO hostnameD = new HostnameDAO();
-                        Hostname h = hostnameD.getHostnameFlagZero();
-                        String hostname = h.getHostname();
+                    //gethostname
+                    HostnameDAO hostnameD = new HostnameDAO();
+                    Hostname h = hostnameD.getHostnameFlagZero();
+                    String hostname = h.getHostname();
 
-                        EmailSender emailSender = new EmailSender();
-                        emailSender.htmlEmailTable(
-                                servletContext,
-                                "", //user name requestor
-                                to, //to
-                                //                        emailTo,
-                                "HW Release to Production - Failed to Insert SPTS Transaction", //subject
-                                "<br />"
-                                + "Please be informed that the item below failed to insert SPTS transaction (Return from Production Staging)."
-                                + "<br /> "
-                                + "<br /> "
-                                + "RMS No: " + rms1.getRmsNo()
-                                + "<br /> "
-                                + "Event: " + rms1.getEvent()
-                                + "<br /> "
-                                + "Item ID: " + bookingPc.getItemId()
-                                + "<br /> "
-                                + "Transaction Date: " + completeDateTime
-                                + "<br /> "
-                                + "<br /> "
-                                + "Detail: Failed to insert SPTS Transaction (Return from Production Staging)"
-                                + "<br /> "
-                                + "Please click <a href=\"http://" + hostname + "/HEATS/rmsbookingDetail/detail/" + id + " \">HERE</a> for more detail."
-                                + "<br /> "
-                                + "<br />Thank you." //msg
-                        );
-                    }
+                    EmailSender emailSender = new EmailSender();
+                    emailSender.htmlEmailTable(
+                            servletContext,
+                            "", //user name requestor
+                            to, //to
+                            //                        emailTo,
+                            "HW Release to Production - Failed to Insert SPTS Transaction", //subject
+                            "<br />"
+                            + "Please be informed that the item below failed to insert SPTS transaction (Return from Production Staging)."
+                            + "<br /> "
+                            + "<br /> "
+                            + "RMS No: " + rms1.getRmsNo()
+                            + "<br /> "
+                            + "Event: " + rms1.getEvent()
+                            + "<br /> "
+                            + "Item ID: " + bookingPc.getItemId()
+                            + "<br /> "
+                            + "Transaction Date: " + completeDateTime
+                            + "<br /> "
+                            + "<br /> "
+                            + "Detail: Failed to insert SPTS Transaction (Return from Production Staging)"
+                            + "<br /> "
+                            + "Please click <a href=\"http://" + hostname + "/HEATS/rmsbookingDetail/detail/" + id + " \">HERE</a> for more detail."
+                            + "<br /> "
+                            + "<br />Thank you." //msg
+                    );
                 }
             }
+//            }
 
             //update for hardware ID at item_hardware and  rms_booking_hardware_group
             RmsBookingHardwareGroupDAO groupD = new RmsBookingHardwareGroupDAO();
