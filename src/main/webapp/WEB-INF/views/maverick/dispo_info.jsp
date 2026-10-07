@@ -37,6 +37,7 @@
     <div class="mb-3">
         <label for="hardwareStatus" class="form-label">Status</label>
         <input type="text" class="form-control" id="hardwareStatus" name="hardwareStatus" value="${data.status}">
+        <input type="type" name="name" value="${data.flag}">
     </div>
 </div>
 <div class="col-12">

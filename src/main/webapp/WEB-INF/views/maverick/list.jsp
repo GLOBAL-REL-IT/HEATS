@@ -63,47 +63,62 @@
                                             <tbody>
                                                 <c:forEach items="${maverickList}" var="parameterMaster" varStatus="parameterMasterLoop">
                                                     <tr>
-                                                        <td><c:out value="${parameterMasterLoop.index+1}"/></td>
-                                                        <td id="modal_delete_info_${parameterMaster.id2}"><c:out value="${parameterMaster.itemType}"/></td>
-                                                        <td><c:out value="${parameterMaster.itemId}"/></td>
-                                                        <td><span class="badge border border-secondary text-body fs-6"><c:out value="${parameterMaster.module}"/></span></td>
-                                                        <td><c:out value="${parameterMaster.submodule}"/></td>
-                                                        <td style="color: red;"><c:out value="${parameterMaster.createdDate}" /></td>
+                                                        <td><c:out value="${parameterMasterLoop.index + 1}" /></td>
+                                                        <td id="modal_delete_info_${parameterMaster.id2}"><c:out value="${parameterMaster.itemType}" /></td>
+                                                        <td><c:out value="${parameterMaster.itemId}" /></td>
+                                                        <td><span class="badge border border-secondary text-body fs-6"><c:out value="${parameterMaster.module}" /></span></td>
+                                                        <td><c:out value="${parameterMaster.submodule}" /></td>
+                                                        <c:set var="textColor" value="" />
                                                         <c:choose>
+                                                            <c:when test="${parameterMaster.flag == '1'}">
+                                                                <c:set var="textColor" value="green" />
+                                                            </c:when>
                                                             <c:when test="${fn:contains(parameterMaster.module, 'oading')}">
-                                                                <td style="color: purple;"><c:out value="${parameterMaster.status}" /></td>
+                                                                <c:set var="textColor" value="purple" />
                                                             </c:when>
                                                             <c:when test="${fn:contains(parameterMaster.module, 'Registration')}">
-                                                                <td style="color: red;"><c:out value="${parameterMaster.status}"/></td>
+                                                                <c:set var="textColor" value="red" />
                                                             </c:when>
                                                             <c:otherwise>
-                                                                <td><c:out value="${parameterMaster.status}"/></td>
                                                             </c:otherwise>
                                                         </c:choose>
+                                                        <td style="color: ${textColor};"><c:out value="${parameterMaster.createdDate}" /></td>
+                                                        <td style="color: ${textColor};"><c:out value="${parameterMaster.status}" /></td>
                                                         <td align="center">
                                                             <c:choose>
                                                                 <c:when test="${parameterMaster.flag == '1'}">
-                                                                    <a href="maverickdetails/${parameterMaster.id}/${parameterMaster.module}/${parameterMaster.id2}" type="button" data-bs-toggle="offcanvas" title="Check details" data-bs-target="#staticBackdrop" aria-controls="staticBackdrop" onclick="getData(this);">
-                                                                        <i class="bi bi-list-ol h3"></i>
-                                                                    </a>
+                                                                    <a href="maverickdetails/${parameterMaster.id}/${parameterMaster.module}/${parameterMaster.id2}" title="Maverick Complete?"><i class="bi bi-search h3"></i></a>
                                                                 </c:when>
                                                                 <c:when test="${parameterMaster.flag == '0'}">
-                                                                    <a href="maverickdetails/${parameterMaster.id}/${parameterMaster.module}/${parameterMaster.id2}" type="button" onclick="getDataDetails(this);">
-                                                                        <c:choose>
-                                                                            <c:when test="${fn:contains(parameterMaster.module, 'oading')}">
-                                                                                <i class="bi bi-motherboard h3"></i>
-                                                                            </c:when>
-                                                                            <c:when test="${fn:contains(parameterMaster.module, 'Registration')}">
-                                                                                <i class="bi bi-postcard h3"></i>
-                                                                            </c:when>
-                                                                        </c:choose>
+                                                                    <a href="maverickdetails/${parameterMaster.id}/${parameterMaster.module}/${parameterMaster.id2}" title="View Maverick details">
+                                                                    <c:choose>
+                                                                        <c:when test="${fn:contains(parameterMaster.module, 'oading')}">
+                                                                            <i class="bi bi-motherboard h3"></i>
+                                                                        </c:when>
+                                                                        <c:when test="${fn:contains(parameterMaster.module, 'Registration')}">
+                                                                            <i class="bi bi-postcard h3"></i>
+                                                                        </c:when>
+                                                                        <c:otherwise>
+                                                                            <i class="bi bi-search h3"></i>
+                                                                        </c:otherwise>
+                                                                    </c:choose>
                                                                     </a>
                                                                 </c:when>
+                                                                <c:when test="${parameterMaster.flag == '2'}">
+                                                                    <a href="maverickdetails/${parameterMaster.id}/${parameterMaster.module}/${parameterMaster.id2}" title="Repair"><i class="bi bi-wrench-adjustable-circle h3" ></i></a>
+                                                                </c:when>
+                                                                <c:when test="${parameterMaster.flag == '3'}">
+                                                                    <a href="maverickdetails/${parameterMaster.id}/${parameterMaster.module}/${parameterMaster.id2}" title="Item sent to Scrap"><i class="bi bi-recycle h3"></i></a>
+                                                                </c:when>
+                                                                <c:when test="${parameterMaster.flag == '4'}">
+                                                                    <a href="maverickdetails/${parameterMaster.id}/${parameterMaster.module}/${parameterMaster.id2}" title="This one still no decided yet"><i class="bi bi-search h3"></i></a>
+                                                                </c:when>
                                                                 <c:otherwise>
-                                                                    <a href="maverickdetails/scrap"><i class="bi bi-eraser-fill h3"></i></a>
-                                                                    <a href="maverickdetails/${parameterMaster.id}/${parameterMaster.module}/${parameterMaster.id2}" type="button" onclick="getDataDetails(this);"><i class="bi bi-search h3"></i></a>
+                                                                    <a href="maverickdetails/scrap" title="Bukan button ini yang kita mahu"><i class="bi bi-eraser-fill h3"></i></a>
+                                                                    <a href="maverickdetails/${parameterMaster.id}/${parameterMaster.module}/${parameterMaster.id2}" title="Patut tak jumpa yang ini"><i class="bi bi-search h3"></i></a>
                                                                 </c:otherwise>
                                                             </c:choose>
+                                                            <!--ADD SOME MORE CONDITION IF NEEDED-->
                                                         </td>
                                                     </tr>
                                                 </c:forEach>
@@ -115,30 +130,6 @@
                         </div>
                     </div>
                 </div>
-
-<!--                <div class="col-sm-12 col-12">
-                    <div class="card mb-4">
-                        <div class="card-header">
-                            <h5 class="card-title">Maverick List</h5>
-                        </div>
-                        <div class="card-body">
-                            <div class="row gx-3">
-                                <div class="card-body">
-                                    <div class="table-responsive">
-                                        <table id="customButtons1" class="table custom-table pending">
-                                            <thead>
-                                                
-                                            </thead>
-                                            <tbody>
-                                                
-                                            </tbody>
-                                        </table>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>-->
             </div>
         </div>
 
@@ -166,13 +157,7 @@
     <s:layout-component name="page_js_inline">
         <script>
             $(document).ready(function () {
-//                var placeholder = "Email cc";
-//                $(".mySelect").select2({
-//                    allowClear: true,
-//                    placeholder: placeholder,
-//                    minimumInputLength: 3,
-//                    page: 10
-//                });
+                
             });
 
             $(function () {

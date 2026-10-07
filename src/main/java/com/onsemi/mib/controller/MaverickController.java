@@ -111,6 +111,7 @@ public class MaverickController {
             HttpServletRequest request,
             HttpServletResponse response,
             RedirectAttributes redirectAttrs,
+            @ModelAttribute UserSession userSession,
             @PathVariable String id,
             @PathVariable String id2,
             @PathVariable String module) throws SQLException, ServletException, IOException {
@@ -120,17 +121,26 @@ public class MaverickController {
             redirectAttrs.addFlashAttribute("error", "This record does not belong to Hardware Registration page, please contact HEATS admin");
             return "redirect:/maverick/list";
         }
+        
+        // FLAG 0 - New maverick data - DONE
+        // FLAG 1 - Complete Maverick / Bypass - DONE
+        // FLAG 2 - Repair
+        // FLAG 3 - Scrap
+        // FLAG 4 - 
 
+//        String username = userSession.getFullname();
         ItemMaverick itemmav = new ItemMaverick();
         ItemMaverickDAO itemmavdao = new ItemMaverickDAO();
         itemmav = itemmavdao.getItemMaverickById(id);
         model.addAttribute("data", itemmav);
         model.addAttribute("mibItemId", id2);
         model.addAttribute("id", id);
+//        model.addAttribute("username", username);
         
         String submodule = itemmav.getSubmodule();
 //        String returnPage = "maverick/registration_ft";
-        String returnPage = "maverick/reg_ft";
+        String returnPage = "maverick/registration";
+        String jenis = "FT";
 
         model.addAttribute("leakCheck", "No");
         model.addAttribute("manCheck", "No");
@@ -228,8 +238,9 @@ public class MaverickController {
             model.addAttribute("labelIdentificationReject", labelIdentificationReject);
 
             model.addAttribute("itemVm", itemVm);
+            jenis = "VM";
 //            returnPage = "maverick/registration_vm";
-            returnPage = "maverick/reg_vm";
+//            returnPage = "maverick/reg_vm";
         }
 
         ItemFunctionalTestDAO itemdao2 = new ItemFunctionalTestDAO();
@@ -278,6 +289,8 @@ public class MaverickController {
             List<ParameterDetails> winResultData = pDx.getGroupParameterDetailList("", "016");
             model.addAttribute("winResultData", winResultData);
         }
+        
+        model.addAttribute("jenis", jenis);
 
         ItemLogDAO itemlogdao = new ItemLogDAO();
         List<ItemLog> itemlog = itemlogdao.getItemLogListByItemId(id2);
@@ -400,6 +413,26 @@ public class MaverickController {
         LOGGER.info("SINI KITA MASUK KE FUNCTION PATAH BALIK KE FUNCTION YANG ASAL");
 
         return "maverick/repair";
+    }
+    
+    @RequestMapping(value = "/updateRepairStatus", method = RequestMethod.POST)
+    public String processAction(
+            @ModelAttribute UserSession userSession,
+            HttpServletRequest request,
+            RedirectAttributes redirectAttrs,
+            @RequestParam(required = false) String status) {
+        
+        LOGGER.info("FUNCTION UNTUK UPDATE REPAIR STATUS DIA >>>>>> "+status);
+        if ("approve".equals(status)) {
+            // Logic for approval - sample ONLY
+        } else if ("reject".equals(status)) {
+            // Logic for rejection - sample ONLY
+        } else if ("failed".equals(status)) {
+            // THIS IS WHERE REPAIR DOES NOT WORK
+        } else if ("success".equals(status)) {
+            // REPAIR SUCCESS
+        }
+        return "redirect:/maverick/list";
     }
 
     @RequestMapping(value = "/checkfile/{type}/{itemid}", method = RequestMethod.GET)
