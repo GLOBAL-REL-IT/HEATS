@@ -5923,12 +5923,12 @@ public class RmsBookingDetailController {
         //get LC detail
         rmsHD = new RmsBookingHardwareDAO();
 //        RmsBookingHardware bookingLc = rmsHD.getRmsBookingHardwareByBookingPkidForLoadCardFlagZero(bookingH.getBookingPkid());
-        RmsBookingHardware bookingLc = rmsHD.getRmsBookingHardwareByBookingPkidForLoadCardFlagOne(bookingH.getBookingPkid());
+        RmsBookingHardware bookingLc = rmsHD.getRmsBookingHardwareByBookingPkidForLoadCardFlagOneAndZero(bookingH.getBookingPkid());
 
         //get PC detail
         rmsHD = new RmsBookingHardwareDAO();
 //        RmsBookingHardware bookingPc = rmsHD.getRmsBookingHardwareByBookingPkidForProgramCardFlagZero(bookingH.getBookingPkid());
-        RmsBookingHardware bookingPc = rmsHD.getRmsBookingHardwareByBookingPkidForProgramCardFlagOne(bookingH.getBookingPkid());
+        RmsBookingHardware bookingPc = rmsHD.getRmsBookingHardwareByBookingPkidForProgramCardFlagOneAndZero(bookingH.getBookingPkid());
 
         RmsBookingDetailDAO rmsD = new RmsBookingDetailDAO();
         RmsBookingDetail rms1 = rmsD.getRmsBookingDetailByBookingPkid(bookingH.getBookingPkid());

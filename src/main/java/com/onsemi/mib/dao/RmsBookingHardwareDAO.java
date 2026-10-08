@@ -324,9 +324,9 @@ public class RmsBookingHardwareDAO {
 
     private static final String SQL_GET_RMS_BOOKING_HARDWARE = "SELECT * FROM rms_booking_hardware WHERE id = ?";
     private static final String SQL_GET_RMS_BOOKING_HARDWARE_BY_BOOKING_PKID_FOR_LOADCARD_FLAG_ZERO = "SELECT ha.* FROM rms_booking_hardware ha WHERE ha.booking_pkid = ? AND ha.flag = '0' AND ha.status != 'NA' AND ha.item_type = 'Load Card'";
-    private static final String SQL_GET_RMS_BOOKING_HARDWARE_BY_BOOKING_PKID_FOR_LOADCARD_FLAG_ONE = "SELECT ha.* FROM rms_booking_hardware ha WHERE ha.booking_pkid = ? AND ha.flag = '1' AND ha.status != 'NA' AND ha.item_type = 'Load Card'";
+    private static final String SQL_GET_RMS_BOOKING_HARDWARE_BY_BOOKING_PKID_FOR_LOADCARD_FLAG_ONE = "SELECT ha.* FROM rms_booking_hardware ha WHERE ha.booking_pkid = ? AND ha.flag IN ('1','0') AND ha.status != 'NA' AND ha.item_type = 'Load Card'";
     private static final String SQL_GET_RMS_BOOKING_HARDWARE_BY_BOOKING_PKID_FOR_PROGRAMCARD_FLAG_ZERO = "SELECT ha.* FROM rms_booking_hardware ha WHERE ha.booking_pkid = ? AND ha.flag = '0' AND ha.status != 'NA' AND ha.item_type = 'Program Card'";
-    private static final String SQL_GET_RMS_BOOKING_HARDWARE_BY_BOOKING_PKID_FOR_PROGRAMCARD_FLAG_ONE = "SELECT ha.* FROM rms_booking_hardware ha WHERE ha.booking_pkid = ? AND ha.flag = '1' AND ha.status != 'NA' AND ha.item_type = 'Program Card'";
+    private static final String SQL_GET_RMS_BOOKING_HARDWARE_BY_BOOKING_PKID_FOR_PROGRAMCARD_FLAG_ONE = "SELECT ha.* FROM rms_booking_hardware ha WHERE ha.booking_pkid = ? AND ha.flag IN ('1','0') AND ha.status != 'NA' AND ha.item_type = 'Program Card'";
     private static final String SQL_GET_RMS_BOOKING_HARDWARE_BY_BOOKING_PKID_AND_ITEM_PKID = "SELECT * FROM rms_booking_hardware WHERE booking_pkid = ? AND item_pkid = ? AND status = 'Available'";
     private static final String SQL_GET_RMS_BOOKING_HARDWARE_BY_BOOKING_PKID_AND_ITEM_PKID_BIB_CARD = "SELECT * FROM rms_booking_hardware WHERE booking_pkid = ? AND item_pkid = ? AND status IN ('Available', 'Released to Production')";
     private static final String SQL_GET_RMS_BOOKING_HARDWARE_BY_BOOKING_PKID_AND_PKID = "SELECT * FROM rms_booking_hardware WHERE booking_pkid = ? AND pkid = ? AND item_type = 'Motherboard'";
@@ -398,7 +398,7 @@ public class RmsBookingHardwareDAO {
         return rmsbookingHardware;
     }
     
-    public RmsBookingHardware getRmsBookingHardwareByBookingPkidForLoadCardFlagOne(String bookingPkid) {
+    public RmsBookingHardware getRmsBookingHardwareByBookingPkidForLoadCardFlagOneAndZero(String bookingPkid) {
         RmsBookingHardware rmsbookingHardware = null;
         try (Connection conn = dataSource.getConnection(); PreparedStatement ps = conn.prepareStatement(SQL_GET_RMS_BOOKING_HARDWARE_BY_BOOKING_PKID_FOR_LOADCARD_FLAG_ONE)) {
             ps.setString(1, bookingPkid);
@@ -462,7 +462,7 @@ public class RmsBookingHardwareDAO {
         return rmsbookingHardware;
     }
     
-    public RmsBookingHardware getRmsBookingHardwareByBookingPkidForProgramCardFlagOne(String bookingPkid) {
+    public RmsBookingHardware getRmsBookingHardwareByBookingPkidForProgramCardFlagOneAndZero(String bookingPkid) {
         RmsBookingHardware rmsbookingHardware = null;
         try (Connection conn = dataSource.getConnection(); PreparedStatement ps = conn.prepareStatement(SQL_GET_RMS_BOOKING_HARDWARE_BY_BOOKING_PKID_FOR_PROGRAMCARD_FLAG_ONE)) {
             ps.setString(1, bookingPkid);
