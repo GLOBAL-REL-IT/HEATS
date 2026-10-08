@@ -2960,6 +2960,8 @@ public class ItemController {
         LOGGER.info("itemStatus: " + "0");
         LOGGER.info("cdarsStatus: " + "0");
 
+//        addItem.put("descriptions", ""); //string value . new field 08 Oct 2026. disabled for now. will open once PIM module release
+//        addItem.put("hardwareCategory", "0"); //int value . new field 08 Oct 2026. disabled for now. will open once PIM module release
         SPTSResponse sr = SPTSWebService.updateItem(addItem);
         if (sr.getStatus()) {
             redirectAttrs.addFlashAttribute("success", "Item updated!");
@@ -4751,9 +4753,9 @@ public class ItemController {
                 e.printStackTrace();
             }
         } else {
-            
+
         }
-        
+
         if (bibDaqUpload != null) {
             try {
                 // Get the file and save it somewhere
@@ -4809,9 +4811,9 @@ public class ItemController {
                 e.printStackTrace();
             }
         } else {
-            
+
         }
-        
+
         if (leakUpload != null) {
             try {
                 // Get the file and save it somewhere
@@ -4873,9 +4875,9 @@ public class ItemController {
                 e.printStackTrace();
             }
         } else {
-            
+
         }
-        
+
         if (psUpload != null) {
             try {
                 // Get the file and save it somewhere
@@ -4929,9 +4931,9 @@ public class ItemController {
                 e.printStackTrace();
             }
         } else {
-            
+
         }
-        
+
         if (winUpload != null) {
             try {
                 // Get the file and save it somewhere
@@ -4980,7 +4982,7 @@ public class ItemController {
                 e.printStackTrace();
             }
         } else {
-            
+
         }
 
         ItemLog log = new ItemLog();
@@ -5208,6 +5210,8 @@ public class ItemController {
 //        addItem.put("manpowerUnit", manpowerUnit);
         addItem.put("complexityScore", "0");
 
+//        addItem.put("descriptions", ""); //string value . new field 08 Oct 2026. disabled for now. will open once PIM module release
+//        addItem.put("hardwareCategory", "0"); //int value . new field 08 Oct 2026. disabled for now. will open once PIM module release
         SPTSResponse sr = SPTSWebService.insertItem(addItem);
 
         if (sr.getStatus()) {

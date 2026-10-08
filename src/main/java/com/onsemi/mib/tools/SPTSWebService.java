@@ -22,8 +22,8 @@ public class SPTSWebService {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(SPTSWebService.class);
 
-//    private static final String SPTS_WEB_SERVICE_URL = "http://sptstest.jorfei.com/SPTSServices/SPTSServices.asmx";
-    private static final String SPTS_WEB_SERVICE_URL = "http://mysed-rel-app04/SPTSServices/SPTSServices.asmx";
+    private static final String SPTS_WEB_SERVICE_URL = "http://mysed-rel-app04/SPTSServices/SPTSServices.asmx"; //server
+//    private static final String SPTS_WEB_SERVICE_URL = "http://mysed-rel-lrt04/SPTSServices/SPTSServices.asmx"; //testing
     private static final String SPTS_WEB_SERVICE_URL_GLOBAL = "http://mysed-rel-app04/SPTSGlobalServices/SPTSGlobalServices.asmx";
     private static final String SPTS_ACTION_GETITEMALL = "http://tempuri.org/GetItemAll";
     private static final String SPTS_ACTION_GETITEMBYPKID = "http://tempuri.org/GetItemByPKID";
