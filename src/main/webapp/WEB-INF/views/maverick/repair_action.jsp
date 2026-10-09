@@ -13,7 +13,7 @@
             <form class="row g-3 align-items-center" role="form" action="${contextPath}/maverick/updateRepairStatus" method="post">
                 <div class="row gx-3">
                     <input type="hidden" name="mibItemId" id="mibItemId" value="${mibItemId}">
-                    <input type="type" name="mavId" id="mavId" value="${id}">
+                    <input type="hidden" name="mavId" id="mavId" value="${id}">
                     <div class="col-12">
                         <div class="mb-3">
                             <label for="repairRemark" class="form-label">Repair Remark</label>
