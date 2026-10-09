@@ -13,7 +13,7 @@
             <form class="row g-3 align-items-center" role="form" action="${contextPath}/maverick/updateRepairStatus" method="post">
                 <div class="row gx-3">
                     <input type="hidden" name="mibItemId" id="mibItemId" value="${mibItemId}">
-                    <input type="hidden" name="mavId" id="mavId" value="${id}">
+                    <input type="type" name="mavId" id="mavId" value="${id}">
                     <div class="col-12">
                         <div class="mb-3">
                             <label for="repairRemark" class="form-label">Repair Remark</label>
@@ -24,10 +24,9 @@
                         </div>
                     </div>
                 </div>
-                <div class="d-flex justify-content-end gap-2">
-                    <!--<button type="submit" class="btn btn-primary">Submit</button>-->
-                    <button type="submit" class="btn btn-primary" name="status" value="success">Item Repaired</button>
-                    <button type="submit" class="btn btn-primary" name="status" value="failed">Repair Failed</button>
+                <div class="d-flex justify-content-between gap-2">
+                    <button type="submit" class="btn btn-danger" name="status" value="failed">Repair Failed</button>
+                    <button type="submit" class="btn btn-success" name="status" value="success">Item Repaired</button>
                 </div>
             </form>
         </div>

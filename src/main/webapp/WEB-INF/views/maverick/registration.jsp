@@ -60,6 +60,20 @@
                     padding-left: 20px;
                 }
             }
+            /* Hover */
+            .section-header:hover {
+                background-color: #dce2f3;
+            }
+            /* Open */
+            .section-header[aria-expanded="true"],
+            .section-header[aria-expanded="true"]:hover {
+                background-color: #fd7e14;
+                color: white;
+            }
+            /* Rotate arrow when open */
+            .section-header[aria-expanded="true"] .section-arrow {
+                transform: rotate(180deg);
+            }
         </style>
     </s:layout-component>
     <s:layout-component name="page_container">
@@ -78,23 +92,27 @@
                             <div class="col-sm-8 col-12">
                             </c:otherwise>
                         </c:choose>
-                        <div class="card mb-4">
-                            <div class="card-header"><h5 class="card-title">Maverick Details - <span style="color:#D97D55">${data.module} [${jenis}]</span></h5></div>
-                            <div class="card-body">
-                                <div class="row gx-3">
-                                    <%@ include file="dispo_info.jsp" %>
-                                    <c:choose>
-                                        <c:when test="${jenis eq 'VM'}">
-                                            <%@ include file="vm.jsp" %>
-                                        </c:when>
-                                        <c:when test="${jenis eq 'FT'}">
-                                            <%@ include file="ft.jsp" %>
-                                        </c:when>
-                                    </c:choose>
-                                    <%@ include file="log.jsp" %>
+                        <fieldset disabled>
+                            <div class="card mb-4">
+                                <div class="card-header">
+                                    <h5 class="card-title">Maverick Details - <span style="color:#D97D55">${data.module} [${jenis}]</span></h5>
+                                </div>
+                                <div class="card-body">
+                                    <div class="row gx-3">
+                                        <%@ include file="dispo_info.jsp" %>
+                                        <c:choose>
+                                            <c:when test="${jenis eq 'VM'}">
+                                                <%@ include file="vm.jsp" %>
+                                            </c:when>
+                                            <c:when test="${jenis eq 'FT'}">
+                                                <%@ include file="ft.jsp" %>
+                                            </c:when>
+                                        </c:choose>
+                                        <%@ include file="log.jsp" %>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
+                        </fieldset>
                     </div>
                     <c:choose>
                         <c:when test="${data.flag eq '0'}">

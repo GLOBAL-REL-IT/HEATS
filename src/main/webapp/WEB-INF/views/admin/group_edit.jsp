@@ -2,13 +2,10 @@
 <%@include file="/WEB-INF/base/taglibs.jsp" %>
 <s:layout-render name="/WEB-INF/base/base.jsp">
     <s:layout-component name="page_css">
-        <!-- Data Tables -->
         <link rel="stylesheet" href="${contextPath}/resources/statflow/vendor/datatables/dataTables.bs5.css">
         <link rel="stylesheet" href="${contextPath}/resources/statflow/vendor/datatables/dataTables.bs5-custom.css">
         <link rel="stylesheet" href="${contextPath}/resources/statflow/vendor/datatables/buttons/dataTables.bs5-custom.css">
-        <!-- Bootstrap Select CSS -->
         <link rel="stylesheet" href="${contextPath}/resources/statflow/vendor/bs-select/bs-select.css">
-        <!-- Date Range CSS -->
         <link rel="stylesheet" href="${contextPath}/resources/statflow/vendor/daterange/daterange.css">
     </s:layout-component>
     <s:layout-component name="page_css_inline">
@@ -27,16 +24,14 @@
                 float:none;
                 text-align:right;
             }
-
             .select2-container-active .select2-choice,
             .select2-container-active .select2-choices {
-                border: 1px solid $input-border-focus !important;
+                border: 1px solid !important;
                 -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, .075), 0 0 6px #009d9b !important;
                 box-shadow: inset 0 1px 1px rgba(0, 0, 0, .075), 0 0 6px #009d9b !important;
                 -webkit-box-shadow: inset 0 1px 1px rgba(0,0,0,.075), 0 0 8px rgba(102, 175, 233, .6) !important;
                 box-shadow: inset 0 1px 1px rgba(0,0,0,.075), 0 0 8px rgba(102, 175, 233, .6) !important;
             }
-
             .select2-dropdown-open .select2-choice {
                 border-bottom: 0 !important;
                 background-image: none;
@@ -45,10 +40,9 @@
                 -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, .075), 0 0 6px #009d9b !important;
                 box-shadow: inset 0 1px 1px rgba(0, 0, 0, .075), 0 0 6px #009d9b !important;
             }
-
             .select2-dropdown-open.select2-drop-above .select2-choice,
             .select2-dropdown-open.select2-drop-above .select2-choices {
-                border: 1px solid $input-border-focus !important;
+                border: 1px solid !important;
                 border-top: 0 !important;
                 background-image: none;
                 background-color: #fff;
@@ -56,36 +50,29 @@
                 -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, .075), 0 0 6px #009d9b !important;
                 box-shadow: inset 0 1px 1px rgba(0, 0, 0, .075), 0 0 6px #009d9b !important;
             }
-
             .no-border {
                 border: 0;
                 box-shadow: none;  /*You may want to include this as bootstrap applies these styles too */
             }
-
             span.tab-space {
                 padding-left:20em;
             }
-
             .move-left {
                 width: auto;
                 box-shadow: none;
             }
-
             .form-group.required .form-label:after {
                 content:"*";
                 color:red;
             }
-
             .img3 {
                 width: 55px; /* Sets a fixed width */
                 height: 18px; /* Sets a fixed height */
             }
-
             .pending thead th {
                 background-color: #f06a0a; /* Light blue */
                 color: #FFFFFF; /* White text for contrast */
             }
-
         </style>
     </s:layout-component>
     <s:layout-component name="page_container">

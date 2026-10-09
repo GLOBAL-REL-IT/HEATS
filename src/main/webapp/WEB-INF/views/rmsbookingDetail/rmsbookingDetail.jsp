@@ -25,7 +25,7 @@
             }
             .select2-container-active .select2-choice,
             .select2-container-active .select2-choices {
-                border: 1px solid $input-border-focus !important;
+                border: 1px solid !important;
                 -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, .075), 0 0 6px #009d9b !important;
                 box-shadow: inset 0 1px 1px rgba(0, 0, 0, .075), 0 0 6px #009d9b !important;
                 -webkit-box-shadow: inset 0 1px 1px rgba(0,0,0,.075), 0 0 8px rgba(102, 175, 233, .6) !important;
@@ -41,7 +41,7 @@
             }
             .select2-dropdown-open.select2-drop-above .select2-choice,
             .select2-dropdown-open.select2-drop-above .select2-choices {
-                border: 1px solid $input-border-focus !important;
+                border: 1px solid !important;
                 border-top: 0 !important;
                 background-image: none;
                 background-color: #fff;
@@ -77,7 +77,6 @@
                 border-color: #415243;
                 color: #ffffff;
             }
-
             .btn-duck-green:hover {
                 background-color: #253627;  /* darker on hover */
                 border-color: #253627;
@@ -88,20 +87,18 @@
                 border-color: #9c2438;
                 color: #ffffff;
             }
-
             .btn-red:hover {
                 background-color: #540512;  /* darker on hover */
                 border-color: #540512;
                 color: #e1f7e4;
             }
-             .offcanvas.offcanvas-returnHw {
+            .offcanvas.offcanvas-returnHw {
                 top: 0;
                 left: 0;
                 width: 900px;
                 border-right: 1px solid rgba(0, 6, 28, 0.175);
                 transform: translateX(-100%);
                 transition: transform 0.2s ease-in-out;
-                ;
             }
         </style>
     </s:layout-component>
