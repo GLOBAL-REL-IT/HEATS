@@ -3884,6 +3884,8 @@ public class RmsBookingDetailController {
         List<RmsBookingHardware> hardware = rmsHD.getRmsBookingHardwareListByBookingPkidWithFlagZeroAndStatusNotNA(rms1.getBookingPkid());
 
         for (int i = 0; i < hardware.size(); i++) {
+
+            LOGGER.info("hardware.get(i).getItemPkid(): " + hardware.get(i).getItemPkid() + "; itemId: " + hardware.get(i).getItemId());
             //update movement in SPTS for Item ID first before update HEATS DB
             JSONObject params2 = new JSONObject();
             params2.put("dateTime", completeDateTime);
@@ -3895,6 +3897,8 @@ public class RmsBookingDetailController {
             SPTSResponse TransPkid = SPTSWebService.insertTransaction(params2);
 
             if (TransPkid.getResponseId() > 0) {
+
+                LOGGER.info("TransPkid.getResponseId():" + TransPkid.getResponseId() + " for itemId: " + hardware.get(i).getItemId());
 
                 //add transaction to DB
                 ItemTransaction item = new ItemTransaction();
@@ -6296,6 +6300,8 @@ public class RmsBookingDetailController {
                         + "Please be informed that the HW for below RMS_Event have been reverted by Loading Tech."
                         + "<br /> "
                         + "<br /> "
+                        + "HW ID: " + bookingH.getItemId()
+                        + "<br /> "
                         + "RMS No: " + rms1.getRmsNo()
                         + "<br /> "
                         + "Event: " + rms1.getEvent()
@@ -6322,6 +6328,8 @@ public class RmsBookingDetailController {
                         "<br />"
                         + "Please be informed that the HW for below RMS_Event have been reverted by Loading Tech."
                         + "<br /> "
+                        + "<br /> "
+                        + "HW ID: " + bookingH.getItemId()
                         + "<br /> "
                         + "RMS No: " + rms1.getRmsNo()
                         + "<br /> "
