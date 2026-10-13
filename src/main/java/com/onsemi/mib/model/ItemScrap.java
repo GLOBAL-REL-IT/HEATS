@@ -22,6 +22,9 @@ public class ItemScrap {
     private String scrapBy;
     private String scrapDate;
     private String flag;
+    
+    private String itemName;
+    private String itemType;
 
     public String getId() {
         return id;
@@ -117,6 +120,22 @@ public class ItemScrap {
 
     public void setFlag(String flag) {
         this.flag = flag;
+    }
+
+    public String getItemName() {
+        return itemName;
+    }
+
+    public void setItemName(String itemName) {
+        this.itemName = itemName;
+    }
+
+    public String getItemType() {
+        return itemType;
+    }
+
+    public void setItemType(String itemType) {
+        this.itemType = itemType;
     }
     
 }

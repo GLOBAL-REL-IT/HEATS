@@ -132,9 +132,12 @@ public class ItemScrapDAO {
         return null;
     }
     
+    private static final String SQL_GET_ITEM_SCRAP_LIST = "SELECT * FROM item_scrap WHERE flag = '0' ORDER BY ID DESC";
+    private static final String SQL_GET_ITEM_SCRAP_LIST_DETAIL = "SELECT s.id, CASE WHEN s.mib_item_id <> 0 THEN i.item_id ELSE h.item_id END AS item_name, CASE WHEN s.mib_item_id <> 0 THEN i.item_type ELSE h.item_type END AS item_type, s.mib_item_id, s.group_id, s.module, s.sub_module, s.status, s.remark, s.created_by FROM item_scrap s LEFT JOIN item i ON s.mib_item_id = i.id LEFT JOIN rms_booking_hardware h ON SUBSTRING_INDEX(s.group_id, '/', 1) = h.booking_pkid";
+    
     public List<ItemScrap> getScrapList() {
         List<ItemScrap> scrapList = new ArrayList<>();
-        try (Connection conn = dataSource.getConnection(); PreparedStatement ps = conn.prepareStatement(SQL1); ResultSet rs = ps.executeQuery()) {
+        try (Connection conn = dataSource.getConnection(); PreparedStatement ps = conn.prepareStatement(SQL_GET_ITEM_SCRAP_LIST); ResultSet rs = ps.executeQuery()) {
             while (rs.next()) {
                 ItemScrap scrap = new ItemScrap();
                 scrap.setId(rs.getString("id"));
@@ -149,6 +152,29 @@ public class ItemScrapDAO {
                 scrap.setCreatedBy(rs.getString("created_by"));
                 scrap.setCreatedDate(rs.getString("created_date"));
                 scrap.setFlag(rs.getString("flag"));
+                scrapList.add(scrap);
+            }
+        } catch (SQLException e) {
+            LOGGER.error("Error getting scrap list", e);
+        }
+        return scrapList;
+    }
+    
+    public List<ItemScrap> getScrapListDetail() {
+        List<ItemScrap> scrapList = new ArrayList<>();
+        try (Connection conn = dataSource.getConnection(); PreparedStatement ps = conn.prepareStatement(SQL_GET_ITEM_SCRAP_LIST_DETAIL); ResultSet rs = ps.executeQuery()) {
+            while (rs.next()) {
+                ItemScrap scrap = new ItemScrap();
+                scrap.setId(rs.getString("id"));
+                scrap.setItemName(rs.getString("item_name"));
+                scrap.setItemType(rs.getString("item_type"));
+                scrap.setMibItemId(rs.getString("mib_item_id"));
+                scrap.setGroupId(rs.getString("group_id"));
+                scrap.setModule(rs.getString("module"));
+                scrap.setSubModule(rs.getString("sub_module"));
+                scrap.setStatus(rs.getString("status"));
+                scrap.setRemark(rs.getString("remark"));
+                scrap.setCreatedBy(rs.getString("created_by"));
                 scrapList.add(scrap);
             }
         } catch (SQLException e) {

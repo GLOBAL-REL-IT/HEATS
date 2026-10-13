@@ -4,6 +4,8 @@
  */
 package com.onsemi.mib.controller;
 
+import com.onsemi.mib.dao.ItemScrapDAO;
+import com.onsemi.mib.model.ItemScrap;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.util.List;
@@ -47,7 +49,9 @@ public class ItemScrapController {
     
     @RequestMapping(value = "", method = RequestMethod.GET)
     public String scrapList(Model model) {
-
+        ItemScrapDAO isdao = new ItemScrapDAO();
+        List<ItemScrap> isList = isdao.getScrapListDetail();
+        model.addAttribute("scrapList", isList);
         return "scrap/list";
     }
 

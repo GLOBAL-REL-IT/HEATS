@@ -303,8 +303,6 @@ public class MaverickController {
             @RequestParam(required = false) String newDisposition,
             @RequestParam(required = false) String newDispositionRemark) {
         
-        LOGGER.info("FUNCTION MASUK UNTUK UPDATE MAVERICK DATA STATUS :::::: "+newDisposition);
-        
         // FLAG 0 - New maverick data
         // FLAG 1 - Complete Maverick / Bypass
         // FLAG 2 - Repair
