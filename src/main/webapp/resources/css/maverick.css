@@ -1,0 +1,82 @@
+/*
+Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+Click nbfs://nbhost/SystemFileSystem/Templates/Other/CascadeStyleSheet.css to edit this template
+*/
+/* 
+    Created on : Oct 9, 2026, 3:07:37 PM
+    Author     : zbqb9x
+*/
+
+.content-wrapper {
+    padding: 0 20px;
+    height: calc(100vh - 10px);
+    overflow: auto;
+}
+.section-header {
+    background-color: #eaedf8;
+    min-height: 40px;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    padding: 8px 45px;
+    margin-bottom: 15px;
+    font-weight: 600;
+    text-align: center;
+    border-radius: 3px;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+}
+.section-header:hover {
+    background-color: #dce2f3;
+}
+.section-header .section-arrow {
+    position: absolute;
+    right: 15px;
+    font-size: 16px;
+    transition: transform 0.25s ease;
+}
+.section-header[aria-expanded="true"] .section-arrow {
+    transform: rotate(180deg);
+}
+.section-content {
+    padding-bottom: 5px;
+}
+@media (min-width: 768px) {
+    .disposition-left {
+        padding-right: 20px;
+    }
+    .disposition-right {
+        padding-left: 20px;
+    }
+}
+/* Hover */
+.section-header:hover {
+    background-color: #dce2f3;
+}
+/* Open */
+.section-header[aria-expanded="true"],
+.section-header[aria-expanded="true"]:hover {
+    background-color: #fd7e14;
+    color: white;
+}
+/* Rotate arrow when open */
+.section-header[aria-expanded="true"] .section-arrow {
+    transform: rotate(180deg);
+}
+
+.dataTables_wrapper .dt-buttons {
+    float:none;
+    text-align:right;
+}
+.img3 {
+    width: 55px;
+    height: 18px;
+}
+input.no-box {
+    border: none;
+    background: transparent;
+    outline: none;
+    width: 100%;
+}

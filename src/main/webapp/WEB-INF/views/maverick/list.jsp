@@ -12,27 +12,11 @@
         <link rel="stylesheet" href="${contextPath}/resources/statflow/vendor/datatables/dataTables.bs5-custom.css">
         <link rel="stylesheet" href="${contextPath}/resources/statflow/vendor/datatables/buttons/dataTables.bs5-custom.css">
         <link rel="stylesheet" href="${contextPath}/resources/statflow/vendor/bs-select/bs-select.css">
+        <link rel="stylesheet" href="${contextPath}/resources/css/maverick.css"/>
     </s:layout-component>
     <s:layout-component name="page_css_inline">
         <style>
-            .dataTables_wrapper .dt-buttons {
-                float:none;
-                text-align:right;
-            }
-            .img3 {
-                width: 55px;
-                height: 18px;
-            }
-            .pending thead th {
-                background-color: #f06a0a;
-                color: #FFFFFF;
-            }
-            input.no-box {
-                border: none;
-                background: transparent;
-                outline: none;
-                width: 100%;
-            }
+            
         </style>
     </s:layout-component>
     <s:layout-component name="page_container">
@@ -87,7 +71,8 @@
                                                         <td align="center">
                                                             <c:choose>
                                                                 <c:when test="${parameterMaster.flag == '1'}">
-                                                                    <a href="maverickdetails/${parameterMaster.id}/${parameterMaster.module}/${parameterMaster.id2}" title="Maverick Complete?"><i class="bi bi-search h3"></i></a>
+                                                                    <a href="maverickdetails/${parameterMaster.id}/${parameterMaster.module}/${parameterMaster.id2}" title="Maverick Complete?"><i class="bi bi-clipboard-check h3"></i></a>
+                                                                    <a href="url" title="Proceed Visual Inspection / Functional Test"><i class="bi bi-search h3"></i></a>
                                                                 </c:when>
                                                                 <c:when test="${parameterMaster.flag == '0'}">
                                                                     <a href="maverickdetails/${parameterMaster.id}/${parameterMaster.module}/${parameterMaster.id2}" title="View Maverick details">

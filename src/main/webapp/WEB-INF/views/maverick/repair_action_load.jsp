@@ -1,0 +1,34 @@
+<%-- 
+    Document   : repair_action_load
+    Created on : Oct 12, 2026, 3:25:20 PM
+    Author     : zbqb9x
+--%>
+
+<div class="col-sm-4 col-12">
+    <div class="card mb-4">
+        <div class="card-header">
+            <h5 class="card-title">Repair Action [Loading] </h5>
+        </div>
+        <div class="card-body">
+            <form class="row g-3 align-items-center" role="form" action="${contextPath}/maverick/updateRepairLoadStatus" method="post">
+                <div class="row gx-3">
+                    <input type="hidden" name="mibItemId" id="mibItemId" value="${mibItemId}">
+                    <input type="hidden" name="mavId" id="mavId" value="${id}">
+                    <div class="col-12">
+                        <div class="mb-3">
+                            <label for="repairRemark" class="form-label">Repair Remark</label>
+                            <div class="input-group">
+                                <span class="input-group-text"><i class="bi bi-pencil"></i></span>
+                                <textarea class="form-control" id="repairRemark" name="repairRemark" placeholder="Enter Remark" rows="3"></textarea>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="d-flex justify-content-between gap-2">
+                    <button type="submit" class="btn btn-danger" name="status" value="failed">Repair Failed</button>
+                    <button type="submit" class="btn btn-success" name="status" value="success">Item Repaired</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

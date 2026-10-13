@@ -4,7 +4,6 @@
     Author     : zbqb9x
 --%>
 
-<%--<%@page contentType="text/html;charset=UTF-8" %>--%>
 <%@page contentType="text/html;charset=UTF-8" pageEncoding="UTF-8" %>
 <%@include file="/WEB-INF/base/taglibs.jsp" %>
 <s:layout-render name="/WEB-INF/base/base.jsp">
@@ -13,75 +12,19 @@
         <link rel="stylesheet" href="${contextPath}/resources/statflow/vendor/datatables/dataTables.bs5-custom.css">
         <link rel="stylesheet" href="${contextPath}/resources/statflow/vendor/datatables/buttons/dataTables.bs5-custom.css">
         <link rel="stylesheet" href="${contextPath}/resources/statflow/vendor/bs-select/bs-select.css">
+        <link rel="stylesheet" href="${contextPath}/resources/css/maverick.css"/>
     </s:layout-component>
     <s:layout-component name="page_css_inline">
-        <style>
-            .content-wrapper {
-                padding: 0 20px;
-                height: calc(100vh - 10px);
-                overflow: auto;
-            }
-            .section-header {
-                background-color: #eaedf8;
-                min-height: 40px;
-                width: 100%;
-                display: flex;
-                align-items: center;
-                justify-content: center;
-                position: relative;
-                padding: 8px 45px;
-                margin-bottom: 15px;
-                font-weight: 600;
-                text-align: center;
-                border-radius: 3px;
-                cursor: pointer;
-                transition: background-color 0.2s ease;
-            }
-            .section-header:hover {
-                background-color: #dce2f3;
-            }
-            .section-header .section-arrow {
-                position: absolute;
-                right: 15px;
-                font-size: 16px;
-                transition: transform 0.25s ease;
-            }
-            .section-header[aria-expanded="true"] .section-arrow {
-                transform: rotate(180deg);
-            }
-            .section-content {
-                padding-bottom: 5px;
-            }
-            @media (min-width: 768px) {
-                .disposition-left {
-                    padding-right: 20px;
-                }
-                .disposition-right {
-                    padding-left: 20px;
-                }
-            }
-            /* Hover */
-            .section-header:hover {
-                background-color: #dce2f3;
-            }
-            /* Open */
-            .section-header[aria-expanded="true"],
-            .section-header[aria-expanded="true"]:hover {
-                background-color: #fd7e14;
-                color: white;
-            }
-            /* Rotate arrow when open */
-            .section-header[aria-expanded="true"] .section-arrow {
-                transform: rotate(180deg);
-            }
-        </style>
     </s:layout-component>
     <s:layout-component name="page_container">
         <div class="content-wrapper">
             <div class="row">
                 <nav class="navbar bg-body-tertiary">
-                    <div class="container-fluid justify-content-start">
+                    <div class="container-fluid d-flex justify-content-between">
                         <a href="${contextPath}/maverick/list" class="btn btn-outline-warning me-2" role="button"><i class='bi bi-arrow-bar-left'></i>&nbsp;&nbsp;Back</a>
+                        <c:if test="${data.flag == '1'}">
+                            <a href="url" class="btn btn-outline-success"><i class="bi bi-search me-2"></i>PROCEED VM</a>
+                        </c:if>
                     </div>
                 </nav>
                 <c:choose>

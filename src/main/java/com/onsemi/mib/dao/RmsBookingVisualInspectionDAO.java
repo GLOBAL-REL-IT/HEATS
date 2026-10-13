@@ -1,7 +1,6 @@
 package com.onsemi.mib.dao;
 
 import com.onsemi.mib.db.DB;
-import com.onsemi.mib.model.ItemVisualInspection;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -18,33 +17,22 @@ import org.slf4j.LoggerFactory;
 public class RmsBookingVisualInspectionDAO {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(RmsBookingVisualInspectionDAO.class);
-    private final Connection conn;
+//    private final Connection conn;
     private final DataSource dataSource;
 
     public RmsBookingVisualInspectionDAO() {
         DB db = new DB();
-        this.conn = db.getConnection();
+//        this.conn = db.getConnection();
         this.dataSource = db.getDataSource();
     }
 
+    private static final String INSERT_RMS_BOOKING_VISUAL_INSPECTION = "INSERT INTO rms_booking_visual_inspection ("
+            + "group_id, module, pcb, pcb_reject, pcb_reject_upload, pcb_reject_qty, handle, handle_reject, handle_reject_upload, handle_reject_qty, metal_frame, metal_frame_reject, metal_frame_reject_upload, metal_frame_reject_qty, hardware_fasterners, hardware_fasterners_reject, hardware_fasterners_reject_upload, hardware_fasterners_reject_qty, clip_holder, clip_holder_reject, clip_holder_reject_upload, clip_holder_reject_qty, pcb_edge_finger, pcb_edge_finger_reject, pcb_edge_finger_reject_upload, pcb_edge_finger_reject_qty, connector, connector_reject, connector_reject_upload, connector_reject_qty, dut_sockets, dut_sockets_reject, dut_sockets_reject_upload, dut_sockets_reject_qty, edge_mb_banana, edge_mb_banana_reject, edge_mb_banana_reject_upload, edge_mb_banana_reject_qty, elect_component, elect_component_reject, elect_component_reject_upload, elect_component_reject_qty, solder_joint, solder_joint_reject, solder_joint_reject_upload, solder_joint_reject_qty, win_connector, win_connector_reject, win_connector_reject_upload, win_connector_reject_qty, remarks, final_status, created_by, created_date, flag, pcb_hardware_id, handle_hardware_id, metal_frame_hardware_id, hardware_fasterners_hardware_id, clip_holder_hardware_id, pcb_edge_finger_hardware_id, connector_hardware_id, dut_sockets_hardware_id, edge_mb_banana_hardware_id, elect_component_hardware_id, solder_joint_hardware_id, win_connector_hardware_id, teflon_connector, teflon_connector_hardware_id, teflon_connector_reject, teflon_connector_reject_qty, pogo_receptacles_pin, pogo_receptacles_pin_hardware_id, pogo_receptacles_pin_reject, pogo_receptacles_pin_reject_qty, cable_wired_copper_wire, cable_wired_copper_wire_hardware_id, cable_wired_copper_wire_reject, cable_wired_copper_wire_reject_qty, label_identification, label_identification_hardware_id, label_identification_reject, label_identification_reject_qty"
+            + ") VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,NOW(),?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
+
     public QueryResult insertRmsBookingVisualInspection(RmsBookingVisualInspection rmsbookingVisualInspection) {
         QueryResult queryResult = new QueryResult();
-        try {
-            PreparedStatement ps = conn.prepareStatement(
-                    "INSERT INTO rms_booking_visual_inspection (group_id, module, pcb, pcb_reject, pcb_reject_upload, pcb_reject_qty, handle, handle_reject, "
-                    + "handle_reject_upload, handle_reject_qty, metal_frame, metal_frame_reject, metal_frame_reject_upload, metal_frame_reject_qty, "
-                    + "hardware_fasterners, hardware_fasterners_reject, hardware_fasterners_reject_upload, hardware_fasterners_reject_qty, clip_holder, "
-                    + "clip_holder_reject, clip_holder_reject_upload, clip_holder_reject_qty, pcb_edge_finger, pcb_edge_finger_reject, pcb_edge_finger_reject_upload, "
-                    + "pcb_edge_finger_reject_qty, connector, connector_reject, connector_reject_upload, connector_reject_qty, dut_sockets, dut_sockets_reject, "
-                    + "dut_sockets_reject_upload, dut_sockets_reject_qty, edge_mb_banana, edge_mb_banana_reject, edge_mb_banana_reject_upload, edge_mb_banana_reject_qty, "
-                    + "elect_component, elect_component_reject, elect_component_reject_upload, elect_component_reject_qty, solder_joint, solder_joint_reject, "
-                    + "solder_joint_reject_upload, solder_joint_reject_qty, win_connector, win_connector_reject, win_connector_reject_upload, win_connector_reject_qty, "
-                    + "remarks, final_status, created_by, created_date, flag, pcb_hardware_id,handle_hardware_id,metal_frame_hardware_id,hardware_fasterners_hardware_id,clip_holder_hardware_id,"
-                    + "pcb_edge_finger_hardware_id,connector_hardware_id,dut_sockets_hardware_id,edge_mb_banana_hardware_id,elect_component_hardware_id,solder_joint_hardware_id,win_connector_hardware_id,"
-                    + "teflon_connector,teflon_connector_hardware_id, teflon_connector_reject,teflon_connector_reject_qty,pogo_receptacles_pin,pogo_receptacles_pin_hardware_id,pogo_receptacles_pin_reject,pogo_receptacles_pin_reject_qty,"
-                    + "cable_wired_copper_wire,cable_wired_copper_wire_hardware_id,cable_wired_copper_wire_reject, cable_wired_copper_wire_reject_qty,label_identification, label_identification_hardware_id, label_identification_reject,label_identification_reject_qty) "
-                    + "VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,NOW(),?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)", Statement.RETURN_GENERATED_KEYS
-            );
+        try (Connection conn = dataSource.getConnection(); PreparedStatement ps = conn.prepareStatement(INSERT_RMS_BOOKING_VISUAL_INSPECTION, Statement.RETURN_GENERATED_KEYS)) {
             ps.setString(1, rmsbookingVisualInspection.getGroupId());
             ps.setString(2, rmsbookingVisualInspection.getModule());
             ps.setString(3, rmsbookingVisualInspection.getPcb());
@@ -128,33 +116,38 @@ public class RmsBookingVisualInspectionDAO {
             ps.setString(81, rmsbookingVisualInspection.getLabelIdentificationReject());
             ps.setString(82, rmsbookingVisualInspection.getLabelIdentificationRejectQty());
             queryResult.setResult(ps.executeUpdate());
-            ResultSet rs = ps.getGeneratedKeys();
-            if (rs.next()) {
-                queryResult.setGeneratedKey(Integer.toString(rs.getInt(1)));
-            }
-            rs.close();
-            ps.close();
-        } catch (SQLException e) {
-            queryResult.setErrorMessage(e.getMessage());
-            LOGGER.error(e.getMessage());
-        } finally {
-            if (conn != null) {
-                try {
-                    conn.close();
-                } catch (SQLException e) {
-                    LOGGER.error(e.getMessage());
+            try (ResultSet rs = ps.getGeneratedKeys()) {
+                if (rs.next()) {
+                    queryResult.setGeneratedKey(String.valueOf(rs.getInt(1)));
                 }
             }
+        } catch (SQLException e) {
+            queryResult.setErrorMessage(e.getMessage());
+            LOGGER.error("Error inserting rms_booking_visual_inspection. GroupId={}, Module={}", rmsbookingVisualInspection.getGroupId(), rmsbookingVisualInspection.getModule(), e);
         }
         return queryResult;
     }
 
     public QueryResult updateRmsBookingVisualInspection(RmsBookingVisualInspection rmsbookingVisualInspection) {
         QueryResult queryResult = new QueryResult();
-        try {
-            PreparedStatement ps = conn.prepareStatement(
-                    "UPDATE rms_booking_visual_inspection SET group_id = ?, module = ?, pcb = ?, pcb_reject = ?, pcb_reject_upload = ?, pcb_reject_qty = ?, handle = ?, handle_reject = ?, handle_reject_upload = ?, handle_reject_qty = ?, metal_frame = ?, metal_frame_reject = ?, metal_frame_reject_upload = ?, metal_frame_reject_qty = ?, hardware_fasterners = ?, hardware_fasterners_reject = ?, hardware_fasterners_reject_upload = ?, hardware_fasterners_reject_qty = ?, clip_holder = ?, clip_holder_reject = ?, clip_holder_reject_upload = ?, clip_holder_reject_qty = ?, pcb_edge_finger = ?, pcb_edge_finger_reject = ?, pcb_edge_finger_reject_upload = ?, pcb_edge_finger_reject_qty = ?, connector = ?, connector_reject = ?, connector_reject_upload = ?, connector_reject_qty = ?, dut_sockets = ?, dut_sockets_reject = ?, dut_sockets_reject_upload = ?, dut_sockets_reject_qty = ?, edge_mb_banana = ?, edge_mb_banana_reject = ?, edge_mb_banana_reject_upload = ?, edge_mb_banana_reject_qty = ?, elect_component = ?, elect_component_reject = ?, elect_component_reject_upload = ?, elect_component_reject_qty = ?, solder_joint = ?, solder_joint_reject = ?, solder_joint_reject_upload = ?, solder_joint_reject_qty = ?, win_connector = ?, win_connector_reject = ?, win_connector_reject_upload = ?, win_connector_reject_qty = ?, remarks = ?, final_status = ?, created_by = ?, created_date = ?, flag = ? WHERE id = ?"
-            );
+
+        try (Connection conn = dataSource.getConnection(); PreparedStatement ps = conn.prepareStatement(
+                "UPDATE rms_booking_visual_inspection SET "
+                + "group_id = ?, module = ?, pcb = ?, pcb_reject = ?, pcb_reject_upload = ?, pcb_reject_qty = ?, "
+                + "handle = ?, handle_reject = ?, handle_reject_upload = ?, handle_reject_qty = ?, "
+                + "metal_frame = ?, metal_frame_reject = ?, metal_frame_reject_upload = ?, metal_frame_reject_qty = ?, "
+                + "hardware_fasterners = ?, hardware_fasterners_reject = ?, hardware_fasterners_reject_upload = ?, hardware_fasterners_reject_qty = ?, "
+                + "clip_holder = ?, clip_holder_reject = ?, clip_holder_reject_upload = ?, clip_holder_reject_qty = ?, "
+                + "pcb_edge_finger = ?, pcb_edge_finger_reject = ?, pcb_edge_finger_reject_upload = ?, pcb_edge_finger_reject_qty = ?, "
+                + "connector = ?, connector_reject = ?, connector_reject_upload = ?, connector_reject_qty = ?, "
+                + "dut_sockets = ?, dut_sockets_reject = ?, dut_sockets_reject_upload = ?, dut_sockets_reject_qty = ?, "
+                + "edge_mb_banana = ?, edge_mb_banana_reject = ?, edge_mb_banana_reject_upload = ?, edge_mb_banana_reject_qty = ?, "
+                + "elect_component = ?, elect_component_reject = ?, elect_component_reject_upload = ?, elect_component_reject_qty = ?, "
+                + "solder_joint = ?, solder_joint_reject = ?, solder_joint_reject_upload = ?, solder_joint_reject_qty = ?, "
+                + "win_connector = ?, win_connector_reject = ?, win_connector_reject_upload = ?, win_connector_reject_qty = ?, "
+                + "remarks = ?, final_status = ?, created_by = ?, created_date = ?, flag = ? "
+                + "WHERE id = ?")) {
+
             ps.setString(1, rmsbookingVisualInspection.getGroupId());
             ps.setString(2, rmsbookingVisualInspection.getModule());
             ps.setString(3, rmsbookingVisualInspection.getPcb());
@@ -212,30 +205,34 @@ public class RmsBookingVisualInspectionDAO {
             ps.setString(55, rmsbookingVisualInspection.getFlag());
             ps.setString(56, rmsbookingVisualInspection.getId());
             queryResult.setResult(ps.executeUpdate());
-            ps.close();
         } catch (SQLException e) {
             queryResult.setErrorMessage(e.getMessage());
-            LOGGER.error(e.getMessage());
-        } finally {
-            if (conn != null) {
-                try {
-                    conn.close();
-                } catch (SQLException e) {
-                    LOGGER.error(e.getMessage());
-                }
-            }
+            LOGGER.error("Error updating RMS Booking Visual Inspection. Id={}, GroupId={}", rmsbookingVisualInspection.getId(), rmsbookingVisualInspection.getGroupId(), e);
         }
         return queryResult;
     }
 
     public QueryResult updateItemVisualInspectionForAttachment(RmsBookingVisualInspection itemvisualInspection) {
         QueryResult queryResult = new QueryResult();
-        try {
-            PreparedStatement ps = conn.prepareStatement(
-                    "UPDATE rms_booking_visual_inspection SET pcb_reject_upload = ?, handle_reject_upload = ?, metal_frame_reject_upload = ?, hardware_fasterners_reject_upload = ?, clip_holder_reject_upload = ?, pcb_edge_finger_reject_upload = ?, "
-                    + "connector_reject_upload = ?, dut_sockets_reject_upload = ?, edge_mb_banana_reject_upload = ?, elect_component_reject_upload = ?, solder_joint_reject_upload = ?, win_connector_reject_upload = ?, "
-                    + "teflon_connector_reject_upload = ?, pogo_receptacles_pin_reject_upload = ?, cable_wired_copper_wire_reject_upload = ?, label_identification_reject_upload = ? WHERE id = ?"
-            );
+        try (Connection conn = dataSource.getConnection(); PreparedStatement ps = conn.prepareStatement(
+                "UPDATE rms_booking_visual_inspection SET "
+                + "pcb_reject_upload = ?, "
+                + "handle_reject_upload = ?, "
+                + "metal_frame_reject_upload = ?, "
+                + "hardware_fasterners_reject_upload = ?, "
+                + "clip_holder_reject_upload = ?, "
+                + "pcb_edge_finger_reject_upload = ?, "
+                + "connector_reject_upload = ?, "
+                + "dut_sockets_reject_upload = ?, "
+                + "edge_mb_banana_reject_upload = ?, "
+                + "elect_component_reject_upload = ?, "
+                + "solder_joint_reject_upload = ?, "
+                + "win_connector_reject_upload = ?, "
+                + "teflon_connector_reject_upload = ?, "
+                + "pogo_receptacles_pin_reject_upload = ?, "
+                + "cable_wired_copper_wire_reject_upload = ?, "
+                + "label_identification_reject_upload = ? "
+                + "WHERE id = ?")) {
             ps.setString(1, itemvisualInspection.getPcbRejectUpload());
             ps.setString(2, itemvisualInspection.getHandleRejectUpload());
             ps.setString(3, itemvisualInspection.getMetalFrameRejectUpload());
@@ -254,384 +251,330 @@ public class RmsBookingVisualInspectionDAO {
             ps.setString(16, itemvisualInspection.getLabelIdentificationRejectUpload());
             ps.setString(17, itemvisualInspection.getId());
             queryResult.setResult(ps.executeUpdate());
-            ps.close();
         } catch (SQLException e) {
             queryResult.setErrorMessage(e.getMessage());
-            LOGGER.error(e.getMessage());
-        } finally {
-            if (conn != null) {
-                try {
-                    conn.close();
-                } catch (SQLException e) {
-                    LOGGER.error(e.getMessage());
-                }
-            }
+            LOGGER.error("Error updating visual inspection attachments. Id={}", itemvisualInspection.getId(), e);
         }
         return queryResult;
     }
 
     public QueryResult deleteRmsBookingVisualInspection(String rmsbookingVisualInspectionId) {
         QueryResult queryResult = new QueryResult();
-        try {
-            PreparedStatement ps = conn.prepareStatement(
-                    "DELETE FROM rms_booking_visual_inspection WHERE id = '" + rmsbookingVisualInspectionId + "'"
-            );
+        try (Connection conn = dataSource.getConnection(); PreparedStatement ps = conn.prepareStatement("DELETE FROM rms_booking_visual_inspection WHERE id = ?")) {
+            ps.setString(1, rmsbookingVisualInspectionId);
             queryResult.setResult(ps.executeUpdate());
-            ps.close();
         } catch (SQLException e) {
             queryResult.setErrorMessage(e.getMessage());
-            LOGGER.error(e.getMessage());
-        } finally {
-            if (conn != null) {
-                try {
-                    conn.close();
-                } catch (SQLException e) {
-                    LOGGER.error(e.getMessage());
-                }
-            }
+            LOGGER.error("Error deleting RMS Booking Visual Inspection. Id={}", rmsbookingVisualInspectionId, e);
         }
         return queryResult;
     }
 
     public RmsBookingVisualInspection getRmsBookingVisualInspection(String rmsbookingVisualInspectionId) {
-        String sql = "SELECT * FROM rms_booking_visual_inspection WHERE id = '" + rmsbookingVisualInspectionId + "'";
         RmsBookingVisualInspection rmsbookingVisualInspection = null;
-        try {
-            PreparedStatement ps = conn.prepareStatement(sql);
-            ResultSet rs = ps.executeQuery();
-            while (rs.next()) {
-                rmsbookingVisualInspection = new RmsBookingVisualInspection();
-                rmsbookingVisualInspection.setId(rs.getString("id"));
-                rmsbookingVisualInspection.setGroupId(rs.getString("group_id"));
-                rmsbookingVisualInspection.setModule(rs.getString("module"));
-                rmsbookingVisualInspection.setPcb(rs.getString("pcb"));
-                rmsbookingVisualInspection.setPcbReject(rs.getString("pcb_reject"));
-                rmsbookingVisualInspection.setPcbRejectUpload(rs.getString("pcb_reject_upload"));
-                rmsbookingVisualInspection.setPcbRejectQty(rs.getString("pcb_reject_qty"));
-                rmsbookingVisualInspection.setHandle(rs.getString("handle"));
-                rmsbookingVisualInspection.setHandleReject(rs.getString("handle_reject"));
-                rmsbookingVisualInspection.setHandleRejectUpload(rs.getString("handle_reject_upload"));
-                rmsbookingVisualInspection.setHandleRejectQty(rs.getString("handle_reject_qty"));
-                rmsbookingVisualInspection.setMetalFrame(rs.getString("metal_frame"));
-                rmsbookingVisualInspection.setMetalFrameReject(rs.getString("metal_frame_reject"));
-                rmsbookingVisualInspection.setMetalFrameRejectUpload(rs.getString("metal_frame_reject_upload"));
-                rmsbookingVisualInspection.setMetalFrameRejectQty(rs.getString("metal_frame_reject_qty"));
-                rmsbookingVisualInspection.setHardwareFasterners(rs.getString("hardware_fasterners"));
-                rmsbookingVisualInspection.setHardwareFasternersReject(rs.getString("hardware_fasterners_reject"));
-                rmsbookingVisualInspection.setHardwareFasternersRejectUpload(rs.getString("hardware_fasterners_reject_upload"));
-                rmsbookingVisualInspection.setHardwareFasternersRejectQty(rs.getString("hardware_fasterners_reject_qty"));
-                rmsbookingVisualInspection.setClipHolder(rs.getString("clip_holder"));
-                rmsbookingVisualInspection.setClipHolderReject(rs.getString("clip_holder_reject"));
-                rmsbookingVisualInspection.setClipHolderRejectUpload(rs.getString("clip_holder_reject_upload"));
-                rmsbookingVisualInspection.setClipHolderRejectQty(rs.getString("clip_holder_reject_qty"));
-                rmsbookingVisualInspection.setPcbEdgeFinger(rs.getString("pcb_edge_finger"));
-                rmsbookingVisualInspection.setPcbEdgeFingerReject(rs.getString("pcb_edge_finger_reject"));
-                rmsbookingVisualInspection.setPcbEdgeFingerRejectUpload(rs.getString("pcb_edge_finger_reject_upload"));
-                rmsbookingVisualInspection.setPcbEdgeFingerRejectQty(rs.getString("pcb_edge_finger_reject_qty"));
-                rmsbookingVisualInspection.setConnector(rs.getString("connector"));
-                rmsbookingVisualInspection.setConnectorReject(rs.getString("connector_reject"));
-                rmsbookingVisualInspection.setConnectorRejectUpload(rs.getString("connector_reject_upload"));
-                rmsbookingVisualInspection.setConnectorRejectQty(rs.getString("connector_reject_qty"));
-                rmsbookingVisualInspection.setDutSockets(rs.getString("dut_sockets"));
-                rmsbookingVisualInspection.setDutSocketsReject(rs.getString("dut_sockets_reject"));
-                rmsbookingVisualInspection.setDutSocketsRejectUpload(rs.getString("dut_sockets_reject_upload"));
-                rmsbookingVisualInspection.setDutSocketsRejectQty(rs.getString("dut_sockets_reject_qty"));
-                rmsbookingVisualInspection.setEdgeMbBanana(rs.getString("edge_mb_banana"));
-                rmsbookingVisualInspection.setEdgeMbBananaReject(rs.getString("edge_mb_banana_reject"));
-                rmsbookingVisualInspection.setEdgeMbBananaRejectUpload(rs.getString("edge_mb_banana_reject_upload"));
-                rmsbookingVisualInspection.setEdgeMbBananaRejectQty(rs.getString("edge_mb_banana_reject_qty"));
-                rmsbookingVisualInspection.setElectComponent(rs.getString("elect_component"));
-                rmsbookingVisualInspection.setElectComponentReject(rs.getString("elect_component_reject"));
-                rmsbookingVisualInspection.setElectComponentRejectUpload(rs.getString("elect_component_reject_upload"));
-                rmsbookingVisualInspection.setElectComponentRejectQty(rs.getString("elect_component_reject_qty"));
-                rmsbookingVisualInspection.setSolderJoint(rs.getString("solder_joint"));
-                rmsbookingVisualInspection.setSolderJointReject(rs.getString("solder_joint_reject"));
-                rmsbookingVisualInspection.setSolderJointRejectUpload(rs.getString("solder_joint_reject_upload"));
-                rmsbookingVisualInspection.setSolderJointRejectQty(rs.getString("solder_joint_reject_qty"));
-                rmsbookingVisualInspection.setWinConnector(rs.getString("win_connector"));
-                rmsbookingVisualInspection.setWinConnectorReject(rs.getString("win_connector_reject"));
-                rmsbookingVisualInspection.setWinConnectorRejectUpload(rs.getString("win_connector_reject_upload"));
-                rmsbookingVisualInspection.setWinConnectorRejectQty(rs.getString("win_connector_reject_qty"));
-                rmsbookingVisualInspection.setRemarks(rs.getString("remarks"));
-                rmsbookingVisualInspection.setFinalStatus(rs.getString("final_status"));
-                rmsbookingVisualInspection.setCreatedBy(rs.getString("created_by"));
-                rmsbookingVisualInspection.setCreatedDate(rs.getString("created_date"));
-                rmsbookingVisualInspection.setFlag(rs.getString("flag"));
+        try (Connection conn = dataSource.getConnection(); PreparedStatement ps = conn.prepareStatement("SELECT * FROM rms_booking_visual_inspection WHERE id = ?")) {
+            ps.setString(1, rmsbookingVisualInspectionId);
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    rmsbookingVisualInspection = new RmsBookingVisualInspection();
+                    rmsbookingVisualInspection.setId(rs.getString("id"));
+                    rmsbookingVisualInspection.setGroupId(rs.getString("group_id"));
+                    rmsbookingVisualInspection.setModule(rs.getString("module"));
+                    rmsbookingVisualInspection.setPcb(rs.getString("pcb"));
+                    rmsbookingVisualInspection.setPcbReject(rs.getString("pcb_reject"));
+                    rmsbookingVisualInspection.setPcbRejectUpload(rs.getString("pcb_reject_upload"));
+                    rmsbookingVisualInspection.setPcbRejectQty(rs.getString("pcb_reject_qty"));
+                    rmsbookingVisualInspection.setHandle(rs.getString("handle"));
+                    rmsbookingVisualInspection.setHandleReject(rs.getString("handle_reject"));
+                    rmsbookingVisualInspection.setHandleRejectUpload(rs.getString("handle_reject_upload"));
+                    rmsbookingVisualInspection.setHandleRejectQty(rs.getString("handle_reject_qty"));
+                    rmsbookingVisualInspection.setMetalFrame(rs.getString("metal_frame"));
+                    rmsbookingVisualInspection.setMetalFrameReject(rs.getString("metal_frame_reject"));
+                    rmsbookingVisualInspection.setMetalFrameRejectUpload(rs.getString("metal_frame_reject_upload"));
+                    rmsbookingVisualInspection.setMetalFrameRejectQty(rs.getString("metal_frame_reject_qty"));
+                    rmsbookingVisualInspection.setHardwareFasterners(rs.getString("hardware_fasterners"));
+                    rmsbookingVisualInspection.setHardwareFasternersReject(rs.getString("hardware_fasterners_reject"));
+                    rmsbookingVisualInspection.setHardwareFasternersRejectUpload(rs.getString("hardware_fasterners_reject_upload"));
+                    rmsbookingVisualInspection.setHardwareFasternersRejectQty(rs.getString("hardware_fasterners_reject_qty"));
+                    rmsbookingVisualInspection.setClipHolder(rs.getString("clip_holder"));
+                    rmsbookingVisualInspection.setClipHolderReject(rs.getString("clip_holder_reject"));
+                    rmsbookingVisualInspection.setClipHolderRejectUpload(rs.getString("clip_holder_reject_upload"));
+                    rmsbookingVisualInspection.setClipHolderRejectQty(rs.getString("clip_holder_reject_qty"));
+                    rmsbookingVisualInspection.setPcbEdgeFinger(rs.getString("pcb_edge_finger"));
+                    rmsbookingVisualInspection.setPcbEdgeFingerReject(rs.getString("pcb_edge_finger_reject"));
+                    rmsbookingVisualInspection.setPcbEdgeFingerRejectUpload(rs.getString("pcb_edge_finger_reject_upload"));
+                    rmsbookingVisualInspection.setPcbEdgeFingerRejectQty(rs.getString("pcb_edge_finger_reject_qty"));
+                    rmsbookingVisualInspection.setConnector(rs.getString("connector"));
+                    rmsbookingVisualInspection.setConnectorReject(rs.getString("connector_reject"));
+                    rmsbookingVisualInspection.setConnectorRejectUpload(rs.getString("connector_reject_upload"));
+                    rmsbookingVisualInspection.setConnectorRejectQty(rs.getString("connector_reject_qty"));
+                    rmsbookingVisualInspection.setDutSockets(rs.getString("dut_sockets"));
+                    rmsbookingVisualInspection.setDutSocketsReject(rs.getString("dut_sockets_reject"));
+                    rmsbookingVisualInspection.setDutSocketsRejectUpload(rs.getString("dut_sockets_reject_upload"));
+                    rmsbookingVisualInspection.setDutSocketsRejectQty(rs.getString("dut_sockets_reject_qty"));
+                    rmsbookingVisualInspection.setEdgeMbBanana(rs.getString("edge_mb_banana"));
+                    rmsbookingVisualInspection.setEdgeMbBananaReject(rs.getString("edge_mb_banana_reject"));
+                    rmsbookingVisualInspection.setEdgeMbBananaRejectUpload(rs.getString("edge_mb_banana_reject_upload"));
+                    rmsbookingVisualInspection.setEdgeMbBananaRejectQty(rs.getString("edge_mb_banana_reject_qty"));
+                    rmsbookingVisualInspection.setElectComponent(rs.getString("elect_component"));
+                    rmsbookingVisualInspection.setElectComponentReject(rs.getString("elect_component_reject"));
+                    rmsbookingVisualInspection.setElectComponentRejectUpload(rs.getString("elect_component_reject_upload"));
+                    rmsbookingVisualInspection.setElectComponentRejectQty(rs.getString("elect_component_reject_qty"));
+                    rmsbookingVisualInspection.setSolderJoint(rs.getString("solder_joint"));
+                    rmsbookingVisualInspection.setSolderJointReject(rs.getString("solder_joint_reject"));
+                    rmsbookingVisualInspection.setSolderJointRejectUpload(rs.getString("solder_joint_reject_upload"));
+                    rmsbookingVisualInspection.setSolderJointRejectQty(rs.getString("solder_joint_reject_qty"));
+                    rmsbookingVisualInspection.setWinConnector(rs.getString("win_connector"));
+                    rmsbookingVisualInspection.setWinConnectorReject(rs.getString("win_connector_reject"));
+                    rmsbookingVisualInspection.setWinConnectorRejectUpload(rs.getString("win_connector_reject_upload"));
+                    rmsbookingVisualInspection.setWinConnectorRejectQty(rs.getString("win_connector_reject_qty"));
+                    rmsbookingVisualInspection.setRemarks(rs.getString("remarks"));
+                    rmsbookingVisualInspection.setFinalStatus(rs.getString("final_status"));
+                    rmsbookingVisualInspection.setCreatedBy(rs.getString("created_by"));
+                    rmsbookingVisualInspection.setCreatedDate(rs.getString("created_date"));
+                    rmsbookingVisualInspection.setFlag(rs.getString("flag"));
 
-                rmsbookingVisualInspection.setTeflonConnector(rs.getString("teflon_connector"));
-                rmsbookingVisualInspection.setTeflonConnectorHardwareId(rs.getString("teflon_connector_hardware_id"));
-                rmsbookingVisualInspection.setTeflonConnectorReject(rs.getString("teflon_connector_reject"));
-                rmsbookingVisualInspection.setTeflonConnectorRejectQty(rs.getString("teflon_connector_reject_qty"));
-                rmsbookingVisualInspection.setTeflonConnectorRejectUpload(rs.getString("teflon_connector_reject_upload"));
-                rmsbookingVisualInspection.setPogoReceptaclesPin(rs.getString("pogo_receptacles_pin"));
-                rmsbookingVisualInspection.setPogoReceptaclesPinHardwareId(rs.getString("pogo_receptacles_pin_hardware_id"));
-                rmsbookingVisualInspection.setPogoReceptaclesPinReject(rs.getString("pogo_receptacles_pin_reject"));
-                rmsbookingVisualInspection.setPogoReceptaclesPinRejectQty(rs.getString("pogo_receptacles_pin_reject_qty"));
-                rmsbookingVisualInspection.setPogoReceptaclesPinRejectUpload(rs.getString("pogo_receptacles_pin_reject_upload"));
-                rmsbookingVisualInspection.setCableWiredCopperWire(rs.getString("cable_wired_copper_wire"));
-                rmsbookingVisualInspection.setCableWiredCopperWireHardwareId(rs.getString("cable_wired_copper_wire_hardware_id"));
-                rmsbookingVisualInspection.setCableWiredCopperWireReject(rs.getString("cable_wired_copper_wire_reject"));
-                rmsbookingVisualInspection.setCableWiredCopperWireRejectQty(rs.getString("cable_wired_copper_wire_reject_qty"));
-                rmsbookingVisualInspection.setCableWiredCopperWireRejectUpload(rs.getString("cable_wired_copper_wire_reject_upload"));
-                rmsbookingVisualInspection.setLabelIdentification(rs.getString("label_identification"));
-                rmsbookingVisualInspection.setLabelIdentificationHardwareId(rs.getString("label_identification_hardware_id"));
-                rmsbookingVisualInspection.setLabelIdentificationReject(rs.getString("label_identification_reject"));
-                rmsbookingVisualInspection.setLabelIdentificationRejectQty(rs.getString("label_identification_reject_qty"));
-                rmsbookingVisualInspection.setLabelIdentificationRejectUpload(rs.getString("label_identification_reject_upload"));
-            }
-            rs.close();
-            ps.close();
-        } catch (SQLException e) {
-            LOGGER.error(e.getMessage());
-        } finally {
-            if (conn != null) {
-                try {
-                    conn.close();
-                } catch (SQLException e) {
-                    LOGGER.error(e.getMessage());
+                    rmsbookingVisualInspection.setTeflonConnector(rs.getString("teflon_connector"));
+                    rmsbookingVisualInspection.setTeflonConnectorHardwareId(rs.getString("teflon_connector_hardware_id"));
+                    rmsbookingVisualInspection.setTeflonConnectorReject(rs.getString("teflon_connector_reject"));
+                    rmsbookingVisualInspection.setTeflonConnectorRejectQty(rs.getString("teflon_connector_reject_qty"));
+                    rmsbookingVisualInspection.setTeflonConnectorRejectUpload(rs.getString("teflon_connector_reject_upload"));
+                    rmsbookingVisualInspection.setPogoReceptaclesPin(rs.getString("pogo_receptacles_pin"));
+                    rmsbookingVisualInspection.setPogoReceptaclesPinHardwareId(rs.getString("pogo_receptacles_pin_hardware_id"));
+                    rmsbookingVisualInspection.setPogoReceptaclesPinReject(rs.getString("pogo_receptacles_pin_reject"));
+                    rmsbookingVisualInspection.setPogoReceptaclesPinRejectQty(rs.getString("pogo_receptacles_pin_reject_qty"));
+                    rmsbookingVisualInspection.setPogoReceptaclesPinRejectUpload(rs.getString("pogo_receptacles_pin_reject_upload"));
+                    rmsbookingVisualInspection.setCableWiredCopperWire(rs.getString("cable_wired_copper_wire"));
+                    rmsbookingVisualInspection.setCableWiredCopperWireHardwareId(rs.getString("cable_wired_copper_wire_hardware_id"));
+                    rmsbookingVisualInspection.setCableWiredCopperWireReject(rs.getString("cable_wired_copper_wire_reject"));
+                    rmsbookingVisualInspection.setCableWiredCopperWireRejectQty(rs.getString("cable_wired_copper_wire_reject_qty"));
+                    rmsbookingVisualInspection.setCableWiredCopperWireRejectUpload(rs.getString("cable_wired_copper_wire_reject_upload"));
+                    rmsbookingVisualInspection.setLabelIdentification(rs.getString("label_identification"));
+                    rmsbookingVisualInspection.setLabelIdentificationHardwareId(rs.getString("label_identification_hardware_id"));
+                    rmsbookingVisualInspection.setLabelIdentificationReject(rs.getString("label_identification_reject"));
+                    rmsbookingVisualInspection.setLabelIdentificationRejectQty(rs.getString("label_identification_reject_qty"));
+                    rmsbookingVisualInspection.setLabelIdentificationRejectUpload(rs.getString("label_identification_reject_upload"));
                 }
             }
+        } catch (SQLException e) {
+            LOGGER.error("Error retrieving RMS Booking Visual Inspection. Id={}", rmsbookingVisualInspectionId, e);
         }
         return rmsbookingVisualInspection;
     }
 
-    public RmsBookingVisualInspection getRmsBookingVisualInspectionByGroupId(String groupId) {
-        String sql = "SELECT * FROM rms_booking_visual_inspection WHERE group_id = '" + groupId + "' and module = 'Before Loading'";
+    public RmsBookingVisualInspection getRmsBookingVisualInspectionByGroupId(String groupId) throws SQLException {
         RmsBookingVisualInspection rmsbookingVisualInspection = null;
-        try {
-            PreparedStatement ps = conn.prepareStatement(sql);
-            ResultSet rs = ps.executeQuery();
-            while (rs.next()) {
-                rmsbookingVisualInspection = new RmsBookingVisualInspection();
-                rmsbookingVisualInspection.setId(rs.getString("id"));
-                rmsbookingVisualInspection.setGroupId(rs.getString("group_id"));
-                rmsbookingVisualInspection.setModule(rs.getString("module"));
-                rmsbookingVisualInspection.setPcb(rs.getString("pcb"));
-                rmsbookingVisualInspection.setPcbReject(rs.getString("pcb_reject"));
-                rmsbookingVisualInspection.setPcbRejectUpload(rs.getString("pcb_reject_upload"));
-                rmsbookingVisualInspection.setPcbRejectQty(rs.getString("pcb_reject_qty"));
-                rmsbookingVisualInspection.setHandle(rs.getString("handle"));
-                rmsbookingVisualInspection.setHandleReject(rs.getString("handle_reject"));
-                rmsbookingVisualInspection.setHandleRejectUpload(rs.getString("handle_reject_upload"));
-                rmsbookingVisualInspection.setHandleRejectQty(rs.getString("handle_reject_qty"));
-                rmsbookingVisualInspection.setMetalFrame(rs.getString("metal_frame"));
-                rmsbookingVisualInspection.setMetalFrameReject(rs.getString("metal_frame_reject"));
-                rmsbookingVisualInspection.setMetalFrameRejectUpload(rs.getString("metal_frame_reject_upload"));
-                rmsbookingVisualInspection.setMetalFrameRejectQty(rs.getString("metal_frame_reject_qty"));
-                rmsbookingVisualInspection.setHardwareFasterners(rs.getString("hardware_fasterners"));
-                rmsbookingVisualInspection.setHardwareFasternersReject(rs.getString("hardware_fasterners_reject"));
-                rmsbookingVisualInspection.setHardwareFasternersRejectUpload(rs.getString("hardware_fasterners_reject_upload"));
-                rmsbookingVisualInspection.setHardwareFasternersRejectQty(rs.getString("hardware_fasterners_reject_qty"));
-                rmsbookingVisualInspection.setClipHolder(rs.getString("clip_holder"));
-                rmsbookingVisualInspection.setClipHolderReject(rs.getString("clip_holder_reject"));
-                rmsbookingVisualInspection.setClipHolderRejectUpload(rs.getString("clip_holder_reject_upload"));
-                rmsbookingVisualInspection.setClipHolderRejectQty(rs.getString("clip_holder_reject_qty"));
-                rmsbookingVisualInspection.setPcbEdgeFinger(rs.getString("pcb_edge_finger"));
-                rmsbookingVisualInspection.setPcbEdgeFingerReject(rs.getString("pcb_edge_finger_reject"));
-                rmsbookingVisualInspection.setPcbEdgeFingerRejectUpload(rs.getString("pcb_edge_finger_reject_upload"));
-                rmsbookingVisualInspection.setPcbEdgeFingerRejectQty(rs.getString("pcb_edge_finger_reject_qty"));
-                rmsbookingVisualInspection.setConnector(rs.getString("connector"));
-                rmsbookingVisualInspection.setConnectorReject(rs.getString("connector_reject"));
-                rmsbookingVisualInspection.setConnectorRejectUpload(rs.getString("connector_reject_upload"));
-                rmsbookingVisualInspection.setConnectorRejectQty(rs.getString("connector_reject_qty"));
-                rmsbookingVisualInspection.setDutSockets(rs.getString("dut_sockets"));
-                rmsbookingVisualInspection.setDutSocketsReject(rs.getString("dut_sockets_reject"));
-                rmsbookingVisualInspection.setDutSocketsRejectUpload(rs.getString("dut_sockets_reject_upload"));
-                rmsbookingVisualInspection.setDutSocketsRejectQty(rs.getString("dut_sockets_reject_qty"));
-                rmsbookingVisualInspection.setEdgeMbBanana(rs.getString("edge_mb_banana"));
-                rmsbookingVisualInspection.setEdgeMbBananaReject(rs.getString("edge_mb_banana_reject"));
-                rmsbookingVisualInspection.setEdgeMbBananaRejectUpload(rs.getString("edge_mb_banana_reject_upload"));
-                rmsbookingVisualInspection.setEdgeMbBananaRejectQty(rs.getString("edge_mb_banana_reject_qty"));
-                rmsbookingVisualInspection.setElectComponent(rs.getString("elect_component"));
-                rmsbookingVisualInspection.setElectComponentReject(rs.getString("elect_component_reject"));
-                rmsbookingVisualInspection.setElectComponentRejectUpload(rs.getString("elect_component_reject_upload"));
-                rmsbookingVisualInspection.setElectComponentRejectQty(rs.getString("elect_component_reject_qty"));
-                rmsbookingVisualInspection.setSolderJoint(rs.getString("solder_joint"));
-                rmsbookingVisualInspection.setSolderJointReject(rs.getString("solder_joint_reject"));
-                rmsbookingVisualInspection.setSolderJointRejectUpload(rs.getString("solder_joint_reject_upload"));
-                rmsbookingVisualInspection.setSolderJointRejectQty(rs.getString("solder_joint_reject_qty"));
-                rmsbookingVisualInspection.setWinConnector(rs.getString("win_connector"));
-                rmsbookingVisualInspection.setWinConnectorReject(rs.getString("win_connector_reject"));
-                rmsbookingVisualInspection.setWinConnectorRejectUpload(rs.getString("win_connector_reject_upload"));
-                rmsbookingVisualInspection.setWinConnectorRejectQty(rs.getString("win_connector_reject_qty"));
-                rmsbookingVisualInspection.setRemarks(rs.getString("remarks"));
-                rmsbookingVisualInspection.setFinalStatus(rs.getString("final_status"));
-                rmsbookingVisualInspection.setCreatedBy(rs.getString("created_by"));
-                rmsbookingVisualInspection.setCreatedDate(rs.getString("created_date"));
-                rmsbookingVisualInspection.setFlag(rs.getString("flag"));
-                rmsbookingVisualInspection.setPcbHardwareId(rs.getString("pcb_hardware_id"));
-                rmsbookingVisualInspection.setHandleHardwareId(rs.getString("handle_hardware_id"));
-                rmsbookingVisualInspection.setMetalFrameHardwareId(rs.getString("metal_frame_hardware_id"));
-                rmsbookingVisualInspection.setHardwareFasternersHardwareId(rs.getString("hardware_fasterners_hardware_id"));
-                rmsbookingVisualInspection.setClipHolderHardwareId(rs.getString("clip_holder_hardware_id"));
-                rmsbookingVisualInspection.setPcbEdgeFingerHardwareId(rs.getString("pcb_edge_finger_hardware_id"));
-                rmsbookingVisualInspection.setConnectorHardwareId(rs.getString("connector_hardware_id"));
-                rmsbookingVisualInspection.setDutSocketsHardwareId(rs.getString("dut_sockets_hardware_id"));
-                rmsbookingVisualInspection.setEdgeMbBananaHardwareId(rs.getString("edge_mb_banana_hardware_id"));
-                rmsbookingVisualInspection.setElectComponentHardwareId(rs.getString("elect_component_hardware_id"));
-                rmsbookingVisualInspection.setSolderJointHardwareId(rs.getString("solder_joint_hardware_id"));
-                rmsbookingVisualInspection.setWinConnectorHardwareId(rs.getString("win_connector_hardware_id"));
-                rmsbookingVisualInspection.setTeflonConnector(rs.getString("teflon_connector"));
-                rmsbookingVisualInspection.setTeflonConnectorHardwareId(rs.getString("teflon_connector_hardware_id"));
-                rmsbookingVisualInspection.setTeflonConnectorReject(rs.getString("teflon_connector_reject"));
-                rmsbookingVisualInspection.setTeflonConnectorRejectQty(rs.getString("teflon_connector_reject_qty"));
-                rmsbookingVisualInspection.setTeflonConnectorRejectUpload(rs.getString("teflon_connector_reject_upload"));
-                rmsbookingVisualInspection.setPogoReceptaclesPin(rs.getString("pogo_receptacles_pin"));
-                rmsbookingVisualInspection.setPogoReceptaclesPinHardwareId(rs.getString("pogo_receptacles_pin_hardware_id"));
-                rmsbookingVisualInspection.setPogoReceptaclesPinReject(rs.getString("pogo_receptacles_pin_reject"));
-                rmsbookingVisualInspection.setPogoReceptaclesPinRejectQty(rs.getString("pogo_receptacles_pin_reject_qty"));
-                rmsbookingVisualInspection.setPogoReceptaclesPinRejectUpload(rs.getString("pogo_receptacles_pin_reject_upload"));
-                rmsbookingVisualInspection.setCableWiredCopperWire(rs.getString("cable_wired_copper_wire"));
-                rmsbookingVisualInspection.setCableWiredCopperWireHardwareId(rs.getString("cable_wired_copper_wire_hardware_id"));
-                rmsbookingVisualInspection.setCableWiredCopperWireReject(rs.getString("cable_wired_copper_wire_reject"));
-                rmsbookingVisualInspection.setCableWiredCopperWireRejectQty(rs.getString("cable_wired_copper_wire_reject_qty"));
-                rmsbookingVisualInspection.setCableWiredCopperWireRejectUpload(rs.getString("cable_wired_copper_wire_reject_upload"));
-                rmsbookingVisualInspection.setLabelIdentification(rs.getString("label_identification"));
-                rmsbookingVisualInspection.setLabelIdentificationHardwareId(rs.getString("label_identification_hardware_id"));
-                rmsbookingVisualInspection.setLabelIdentificationReject(rs.getString("label_identification_reject"));
-                rmsbookingVisualInspection.setLabelIdentificationRejectQty(rs.getString("label_identification_reject_qty"));
-                rmsbookingVisualInspection.setLabelIdentificationRejectUpload(rs.getString("label_identification_reject_upload"));
-
-            }
-            rs.close();
-            ps.close();
-        } catch (SQLException e) {
-            LOGGER.error(e.getMessage());
-        } finally {
-            if (conn != null) {
-                try {
-                    conn.close();
-                } catch (SQLException e) {
-                    LOGGER.error(e.getMessage());
+        try (Connection conn = dataSource.getConnection(); PreparedStatement ps = conn.prepareStatement("SELECT * FROM rms_booking_visual_inspection WHERE group_id = ? and module = 'Before Loading'")) {
+            ps.setString(1, groupId);
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    rmsbookingVisualInspection = new RmsBookingVisualInspection();
+                    rmsbookingVisualInspection.setId(rs.getString("id"));
+                    rmsbookingVisualInspection.setGroupId(rs.getString("group_id"));
+                    rmsbookingVisualInspection.setModule(rs.getString("module"));
+                    rmsbookingVisualInspection.setPcb(rs.getString("pcb"));
+                    rmsbookingVisualInspection.setPcbReject(rs.getString("pcb_reject"));
+                    rmsbookingVisualInspection.setPcbRejectUpload(rs.getString("pcb_reject_upload"));
+                    rmsbookingVisualInspection.setPcbRejectQty(rs.getString("pcb_reject_qty"));
+                    rmsbookingVisualInspection.setHandle(rs.getString("handle"));
+                    rmsbookingVisualInspection.setHandleReject(rs.getString("handle_reject"));
+                    rmsbookingVisualInspection.setHandleRejectUpload(rs.getString("handle_reject_upload"));
+                    rmsbookingVisualInspection.setHandleRejectQty(rs.getString("handle_reject_qty"));
+                    rmsbookingVisualInspection.setMetalFrame(rs.getString("metal_frame"));
+                    rmsbookingVisualInspection.setMetalFrameReject(rs.getString("metal_frame_reject"));
+                    rmsbookingVisualInspection.setMetalFrameRejectUpload(rs.getString("metal_frame_reject_upload"));
+                    rmsbookingVisualInspection.setMetalFrameRejectQty(rs.getString("metal_frame_reject_qty"));
+                    rmsbookingVisualInspection.setHardwareFasterners(rs.getString("hardware_fasterners"));
+                    rmsbookingVisualInspection.setHardwareFasternersReject(rs.getString("hardware_fasterners_reject"));
+                    rmsbookingVisualInspection.setHardwareFasternersRejectUpload(rs.getString("hardware_fasterners_reject_upload"));
+                    rmsbookingVisualInspection.setHardwareFasternersRejectQty(rs.getString("hardware_fasterners_reject_qty"));
+                    rmsbookingVisualInspection.setClipHolder(rs.getString("clip_holder"));
+                    rmsbookingVisualInspection.setClipHolderReject(rs.getString("clip_holder_reject"));
+                    rmsbookingVisualInspection.setClipHolderRejectUpload(rs.getString("clip_holder_reject_upload"));
+                    rmsbookingVisualInspection.setClipHolderRejectQty(rs.getString("clip_holder_reject_qty"));
+                    rmsbookingVisualInspection.setPcbEdgeFinger(rs.getString("pcb_edge_finger"));
+                    rmsbookingVisualInspection.setPcbEdgeFingerReject(rs.getString("pcb_edge_finger_reject"));
+                    rmsbookingVisualInspection.setPcbEdgeFingerRejectUpload(rs.getString("pcb_edge_finger_reject_upload"));
+                    rmsbookingVisualInspection.setPcbEdgeFingerRejectQty(rs.getString("pcb_edge_finger_reject_qty"));
+                    rmsbookingVisualInspection.setConnector(rs.getString("connector"));
+                    rmsbookingVisualInspection.setConnectorReject(rs.getString("connector_reject"));
+                    rmsbookingVisualInspection.setConnectorRejectUpload(rs.getString("connector_reject_upload"));
+                    rmsbookingVisualInspection.setConnectorRejectQty(rs.getString("connector_reject_qty"));
+                    rmsbookingVisualInspection.setDutSockets(rs.getString("dut_sockets"));
+                    rmsbookingVisualInspection.setDutSocketsReject(rs.getString("dut_sockets_reject"));
+                    rmsbookingVisualInspection.setDutSocketsRejectUpload(rs.getString("dut_sockets_reject_upload"));
+                    rmsbookingVisualInspection.setDutSocketsRejectQty(rs.getString("dut_sockets_reject_qty"));
+                    rmsbookingVisualInspection.setEdgeMbBanana(rs.getString("edge_mb_banana"));
+                    rmsbookingVisualInspection.setEdgeMbBananaReject(rs.getString("edge_mb_banana_reject"));
+                    rmsbookingVisualInspection.setEdgeMbBananaRejectUpload(rs.getString("edge_mb_banana_reject_upload"));
+                    rmsbookingVisualInspection.setEdgeMbBananaRejectQty(rs.getString("edge_mb_banana_reject_qty"));
+                    rmsbookingVisualInspection.setElectComponent(rs.getString("elect_component"));
+                    rmsbookingVisualInspection.setElectComponentReject(rs.getString("elect_component_reject"));
+                    rmsbookingVisualInspection.setElectComponentRejectUpload(rs.getString("elect_component_reject_upload"));
+                    rmsbookingVisualInspection.setElectComponentRejectQty(rs.getString("elect_component_reject_qty"));
+                    rmsbookingVisualInspection.setSolderJoint(rs.getString("solder_joint"));
+                    rmsbookingVisualInspection.setSolderJointReject(rs.getString("solder_joint_reject"));
+                    rmsbookingVisualInspection.setSolderJointRejectUpload(rs.getString("solder_joint_reject_upload"));
+                    rmsbookingVisualInspection.setSolderJointRejectQty(rs.getString("solder_joint_reject_qty"));
+                    rmsbookingVisualInspection.setWinConnector(rs.getString("win_connector"));
+                    rmsbookingVisualInspection.setWinConnectorReject(rs.getString("win_connector_reject"));
+                    rmsbookingVisualInspection.setWinConnectorRejectUpload(rs.getString("win_connector_reject_upload"));
+                    rmsbookingVisualInspection.setWinConnectorRejectQty(rs.getString("win_connector_reject_qty"));
+                    rmsbookingVisualInspection.setRemarks(rs.getString("remarks"));
+                    rmsbookingVisualInspection.setFinalStatus(rs.getString("final_status"));
+                    rmsbookingVisualInspection.setCreatedBy(rs.getString("created_by"));
+                    rmsbookingVisualInspection.setCreatedDate(rs.getString("created_date"));
+                    rmsbookingVisualInspection.setFlag(rs.getString("flag"));
+                    rmsbookingVisualInspection.setPcbHardwareId(rs.getString("pcb_hardware_id"));
+                    rmsbookingVisualInspection.setHandleHardwareId(rs.getString("handle_hardware_id"));
+                    rmsbookingVisualInspection.setMetalFrameHardwareId(rs.getString("metal_frame_hardware_id"));
+                    rmsbookingVisualInspection.setHardwareFasternersHardwareId(rs.getString("hardware_fasterners_hardware_id"));
+                    rmsbookingVisualInspection.setClipHolderHardwareId(rs.getString("clip_holder_hardware_id"));
+                    rmsbookingVisualInspection.setPcbEdgeFingerHardwareId(rs.getString("pcb_edge_finger_hardware_id"));
+                    rmsbookingVisualInspection.setConnectorHardwareId(rs.getString("connector_hardware_id"));
+                    rmsbookingVisualInspection.setDutSocketsHardwareId(rs.getString("dut_sockets_hardware_id"));
+                    rmsbookingVisualInspection.setEdgeMbBananaHardwareId(rs.getString("edge_mb_banana_hardware_id"));
+                    rmsbookingVisualInspection.setElectComponentHardwareId(rs.getString("elect_component_hardware_id"));
+                    rmsbookingVisualInspection.setSolderJointHardwareId(rs.getString("solder_joint_hardware_id"));
+                    rmsbookingVisualInspection.setWinConnectorHardwareId(rs.getString("win_connector_hardware_id"));
+                    rmsbookingVisualInspection.setTeflonConnector(rs.getString("teflon_connector"));
+                    rmsbookingVisualInspection.setTeflonConnectorHardwareId(rs.getString("teflon_connector_hardware_id"));
+                    rmsbookingVisualInspection.setTeflonConnectorReject(rs.getString("teflon_connector_reject"));
+                    rmsbookingVisualInspection.setTeflonConnectorRejectQty(rs.getString("teflon_connector_reject_qty"));
+                    rmsbookingVisualInspection.setTeflonConnectorRejectUpload(rs.getString("teflon_connector_reject_upload"));
+                    rmsbookingVisualInspection.setPogoReceptaclesPin(rs.getString("pogo_receptacles_pin"));
+                    rmsbookingVisualInspection.setPogoReceptaclesPinHardwareId(rs.getString("pogo_receptacles_pin_hardware_id"));
+                    rmsbookingVisualInspection.setPogoReceptaclesPinReject(rs.getString("pogo_receptacles_pin_reject"));
+                    rmsbookingVisualInspection.setPogoReceptaclesPinRejectQty(rs.getString("pogo_receptacles_pin_reject_qty"));
+                    rmsbookingVisualInspection.setPogoReceptaclesPinRejectUpload(rs.getString("pogo_receptacles_pin_reject_upload"));
+                    rmsbookingVisualInspection.setCableWiredCopperWire(rs.getString("cable_wired_copper_wire"));
+                    rmsbookingVisualInspection.setCableWiredCopperWireHardwareId(rs.getString("cable_wired_copper_wire_hardware_id"));
+                    rmsbookingVisualInspection.setCableWiredCopperWireReject(rs.getString("cable_wired_copper_wire_reject"));
+                    rmsbookingVisualInspection.setCableWiredCopperWireRejectQty(rs.getString("cable_wired_copper_wire_reject_qty"));
+                    rmsbookingVisualInspection.setCableWiredCopperWireRejectUpload(rs.getString("cable_wired_copper_wire_reject_upload"));
+                    rmsbookingVisualInspection.setLabelIdentification(rs.getString("label_identification"));
+                    rmsbookingVisualInspection.setLabelIdentificationHardwareId(rs.getString("label_identification_hardware_id"));
+                    rmsbookingVisualInspection.setLabelIdentificationReject(rs.getString("label_identification_reject"));
+                    rmsbookingVisualInspection.setLabelIdentificationRejectQty(rs.getString("label_identification_reject_qty"));
+                    rmsbookingVisualInspection.setLabelIdentificationRejectUpload(rs.getString("label_identification_reject_upload"));
                 }
+            } catch (SQLException e) {
+                LOGGER.error("Error retrieving RMS Booking Visual Inspection. gROUP Id={}", groupId, e);
             }
+            return rmsbookingVisualInspection;
         }
-        return rmsbookingVisualInspection;
     }
 
-    public RmsBookingVisualInspection getRmsBookingVisualInspectionByGroupIdAndStatus(String groupId, String status) {
-        String sql = "SELECT * FROM rms_booking_visual_inspection WHERE group_id = '" + groupId + "' and module = '" + status + "'";
+    public RmsBookingVisualInspection getRmsBookingVisualInspectionByGroupIdAndStatus(String groupId, String status) throws SQLException {
         RmsBookingVisualInspection rmsbookingVisualInspection = null;
-        try {
-            PreparedStatement ps = conn.prepareStatement(sql);
-            ResultSet rs = ps.executeQuery();
-            while (rs.next()) {
-                rmsbookingVisualInspection = new RmsBookingVisualInspection();
-                rmsbookingVisualInspection.setId(rs.getString("id"));
-                rmsbookingVisualInspection.setGroupId(rs.getString("group_id"));
-                rmsbookingVisualInspection.setModule(rs.getString("module"));
-                rmsbookingVisualInspection.setPcb(rs.getString("pcb"));
-                rmsbookingVisualInspection.setPcbReject(rs.getString("pcb_reject"));
-                rmsbookingVisualInspection.setPcbRejectUpload(rs.getString("pcb_reject_upload"));
-                rmsbookingVisualInspection.setPcbRejectQty(rs.getString("pcb_reject_qty"));
-                rmsbookingVisualInspection.setHandle(rs.getString("handle"));
-                rmsbookingVisualInspection.setHandleReject(rs.getString("handle_reject"));
-                rmsbookingVisualInspection.setHandleRejectUpload(rs.getString("handle_reject_upload"));
-                rmsbookingVisualInspection.setHandleRejectQty(rs.getString("handle_reject_qty"));
-                rmsbookingVisualInspection.setMetalFrame(rs.getString("metal_frame"));
-                rmsbookingVisualInspection.setMetalFrameReject(rs.getString("metal_frame_reject"));
-                rmsbookingVisualInspection.setMetalFrameRejectUpload(rs.getString("metal_frame_reject_upload"));
-                rmsbookingVisualInspection.setMetalFrameRejectQty(rs.getString("metal_frame_reject_qty"));
-                rmsbookingVisualInspection.setHardwareFasterners(rs.getString("hardware_fasterners"));
-                rmsbookingVisualInspection.setHardwareFasternersReject(rs.getString("hardware_fasterners_reject"));
-                rmsbookingVisualInspection.setHardwareFasternersRejectUpload(rs.getString("hardware_fasterners_reject_upload"));
-                rmsbookingVisualInspection.setHardwareFasternersRejectQty(rs.getString("hardware_fasterners_reject_qty"));
-                rmsbookingVisualInspection.setClipHolder(rs.getString("clip_holder"));
-                rmsbookingVisualInspection.setClipHolderReject(rs.getString("clip_holder_reject"));
-                rmsbookingVisualInspection.setClipHolderRejectUpload(rs.getString("clip_holder_reject_upload"));
-                rmsbookingVisualInspection.setClipHolderRejectQty(rs.getString("clip_holder_reject_qty"));
-                rmsbookingVisualInspection.setPcbEdgeFinger(rs.getString("pcb_edge_finger"));
-                rmsbookingVisualInspection.setPcbEdgeFingerReject(rs.getString("pcb_edge_finger_reject"));
-                rmsbookingVisualInspection.setPcbEdgeFingerRejectUpload(rs.getString("pcb_edge_finger_reject_upload"));
-                rmsbookingVisualInspection.setPcbEdgeFingerRejectQty(rs.getString("pcb_edge_finger_reject_qty"));
-                rmsbookingVisualInspection.setConnector(rs.getString("connector"));
-                rmsbookingVisualInspection.setConnectorReject(rs.getString("connector_reject"));
-                rmsbookingVisualInspection.setConnectorRejectUpload(rs.getString("connector_reject_upload"));
-                rmsbookingVisualInspection.setConnectorRejectQty(rs.getString("connector_reject_qty"));
-                rmsbookingVisualInspection.setDutSockets(rs.getString("dut_sockets"));
-                rmsbookingVisualInspection.setDutSocketsReject(rs.getString("dut_sockets_reject"));
-                rmsbookingVisualInspection.setDutSocketsRejectUpload(rs.getString("dut_sockets_reject_upload"));
-                rmsbookingVisualInspection.setDutSocketsRejectQty(rs.getString("dut_sockets_reject_qty"));
-                rmsbookingVisualInspection.setEdgeMbBanana(rs.getString("edge_mb_banana"));
-                rmsbookingVisualInspection.setEdgeMbBananaReject(rs.getString("edge_mb_banana_reject"));
-                rmsbookingVisualInspection.setEdgeMbBananaRejectUpload(rs.getString("edge_mb_banana_reject_upload"));
-                rmsbookingVisualInspection.setEdgeMbBananaRejectQty(rs.getString("edge_mb_banana_reject_qty"));
-                rmsbookingVisualInspection.setElectComponent(rs.getString("elect_component"));
-                rmsbookingVisualInspection.setElectComponentReject(rs.getString("elect_component_reject"));
-                rmsbookingVisualInspection.setElectComponentRejectUpload(rs.getString("elect_component_reject_upload"));
-                rmsbookingVisualInspection.setElectComponentRejectQty(rs.getString("elect_component_reject_qty"));
-                rmsbookingVisualInspection.setSolderJoint(rs.getString("solder_joint"));
-                rmsbookingVisualInspection.setSolderJointReject(rs.getString("solder_joint_reject"));
-                rmsbookingVisualInspection.setSolderJointRejectUpload(rs.getString("solder_joint_reject_upload"));
-                rmsbookingVisualInspection.setSolderJointRejectQty(rs.getString("solder_joint_reject_qty"));
-                rmsbookingVisualInspection.setWinConnector(rs.getString("win_connector"));
-                rmsbookingVisualInspection.setWinConnectorReject(rs.getString("win_connector_reject"));
-                rmsbookingVisualInspection.setWinConnectorRejectUpload(rs.getString("win_connector_reject_upload"));
-                rmsbookingVisualInspection.setWinConnectorRejectQty(rs.getString("win_connector_reject_qty"));
-                rmsbookingVisualInspection.setRemarks(rs.getString("remarks"));
-                rmsbookingVisualInspection.setFinalStatus(rs.getString("final_status"));
-                rmsbookingVisualInspection.setCreatedBy(rs.getString("created_by"));
-                rmsbookingVisualInspection.setCreatedDate(rs.getString("created_date"));
-                rmsbookingVisualInspection.setFlag(rs.getString("flag"));
-                rmsbookingVisualInspection.setPcbHardwareId(rs.getString("pcb_hardware_id"));
-                rmsbookingVisualInspection.setHandleHardwareId(rs.getString("handle_hardware_id"));
-                rmsbookingVisualInspection.setMetalFrameHardwareId(rs.getString("metal_frame_hardware_id"));
-                rmsbookingVisualInspection.setHardwareFasternersHardwareId(rs.getString("hardware_fasterners_hardware_id"));
-                rmsbookingVisualInspection.setClipHolderHardwareId(rs.getString("clip_holder_hardware_id"));
-                rmsbookingVisualInspection.setPcbEdgeFingerHardwareId(rs.getString("pcb_edge_finger_hardware_id"));
-                rmsbookingVisualInspection.setConnectorHardwareId(rs.getString("connector_hardware_id"));
-                rmsbookingVisualInspection.setDutSocketsHardwareId(rs.getString("dut_sockets_hardware_id"));
-                rmsbookingVisualInspection.setEdgeMbBananaHardwareId(rs.getString("edge_mb_banana_hardware_id"));
-                rmsbookingVisualInspection.setElectComponentHardwareId(rs.getString("elect_component_hardware_id"));
-                rmsbookingVisualInspection.setSolderJointHardwareId(rs.getString("solder_joint_hardware_id"));
-                rmsbookingVisualInspection.setWinConnectorHardwareId(rs.getString("win_connector_hardware_id"));
-                rmsbookingVisualInspection.setTeflonConnector(rs.getString("teflon_connector"));
-                rmsbookingVisualInspection.setTeflonConnectorHardwareId(rs.getString("teflon_connector_hardware_id"));
-                rmsbookingVisualInspection.setTeflonConnectorReject(rs.getString("teflon_connector_reject"));
-                rmsbookingVisualInspection.setTeflonConnectorRejectQty(rs.getString("teflon_connector_reject_qty"));
-                rmsbookingVisualInspection.setTeflonConnectorRejectUpload(rs.getString("teflon_connector_reject_upload"));
-                rmsbookingVisualInspection.setPogoReceptaclesPin(rs.getString("pogo_receptacles_pin"));
-                rmsbookingVisualInspection.setPogoReceptaclesPinHardwareId(rs.getString("pogo_receptacles_pin_hardware_id"));
-                rmsbookingVisualInspection.setPogoReceptaclesPinReject(rs.getString("pogo_receptacles_pin_reject"));
-                rmsbookingVisualInspection.setPogoReceptaclesPinRejectQty(rs.getString("pogo_receptacles_pin_reject_qty"));
-                rmsbookingVisualInspection.setPogoReceptaclesPinRejectUpload(rs.getString("pogo_receptacles_pin_reject_upload"));
-                rmsbookingVisualInspection.setCableWiredCopperWire(rs.getString("cable_wired_copper_wire"));
-                rmsbookingVisualInspection.setCableWiredCopperWireHardwareId(rs.getString("cable_wired_copper_wire_hardware_id"));
-                rmsbookingVisualInspection.setCableWiredCopperWireReject(rs.getString("cable_wired_copper_wire_reject"));
-                rmsbookingVisualInspection.setCableWiredCopperWireRejectQty(rs.getString("cable_wired_copper_wire_reject_qty"));
-                rmsbookingVisualInspection.setCableWiredCopperWireRejectUpload(rs.getString("cable_wired_copper_wire_reject_upload"));
-                rmsbookingVisualInspection.setLabelIdentification(rs.getString("label_identification"));
-                rmsbookingVisualInspection.setLabelIdentificationHardwareId(rs.getString("label_identification_hardware_id"));
-                rmsbookingVisualInspection.setLabelIdentificationReject(rs.getString("label_identification_reject"));
-                rmsbookingVisualInspection.setLabelIdentificationRejectQty(rs.getString("label_identification_reject_qty"));
-                rmsbookingVisualInspection.setLabelIdentificationRejectUpload(rs.getString("label_identification_reject_upload"));
-
-            }
-            rs.close();
-            ps.close();
-        } catch (SQLException e) {
-            LOGGER.error(e.getMessage());
-        } finally {
-            if (conn != null) {
-                try {
-                    conn.close();
-                } catch (SQLException e) {
-                    LOGGER.error(e.getMessage());
+        try (Connection conn = dataSource.getConnection(); PreparedStatement ps = conn.prepareStatement("SELECT * FROM rms_booking_visual_inspection WHERE group_id = ? and module = ?")) {
+            ps.setString(1, groupId);
+            ps.setString(2, status);
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    rmsbookingVisualInspection = new RmsBookingVisualInspection();
+                    rmsbookingVisualInspection.setId(rs.getString("id"));
+                    rmsbookingVisualInspection.setGroupId(rs.getString("group_id"));
+                    rmsbookingVisualInspection.setModule(rs.getString("module"));
+                    rmsbookingVisualInspection.setPcb(rs.getString("pcb"));
+                    rmsbookingVisualInspection.setPcbReject(rs.getString("pcb_reject"));
+                    rmsbookingVisualInspection.setPcbRejectUpload(rs.getString("pcb_reject_upload"));
+                    rmsbookingVisualInspection.setPcbRejectQty(rs.getString("pcb_reject_qty"));
+                    rmsbookingVisualInspection.setHandle(rs.getString("handle"));
+                    rmsbookingVisualInspection.setHandleReject(rs.getString("handle_reject"));
+                    rmsbookingVisualInspection.setHandleRejectUpload(rs.getString("handle_reject_upload"));
+                    rmsbookingVisualInspection.setHandleRejectQty(rs.getString("handle_reject_qty"));
+                    rmsbookingVisualInspection.setMetalFrame(rs.getString("metal_frame"));
+                    rmsbookingVisualInspection.setMetalFrameReject(rs.getString("metal_frame_reject"));
+                    rmsbookingVisualInspection.setMetalFrameRejectUpload(rs.getString("metal_frame_reject_upload"));
+                    rmsbookingVisualInspection.setMetalFrameRejectQty(rs.getString("metal_frame_reject_qty"));
+                    rmsbookingVisualInspection.setHardwareFasterners(rs.getString("hardware_fasterners"));
+                    rmsbookingVisualInspection.setHardwareFasternersReject(rs.getString("hardware_fasterners_reject"));
+                    rmsbookingVisualInspection.setHardwareFasternersRejectUpload(rs.getString("hardware_fasterners_reject_upload"));
+                    rmsbookingVisualInspection.setHardwareFasternersRejectQty(rs.getString("hardware_fasterners_reject_qty"));
+                    rmsbookingVisualInspection.setClipHolder(rs.getString("clip_holder"));
+                    rmsbookingVisualInspection.setClipHolderReject(rs.getString("clip_holder_reject"));
+                    rmsbookingVisualInspection.setClipHolderRejectUpload(rs.getString("clip_holder_reject_upload"));
+                    rmsbookingVisualInspection.setClipHolderRejectQty(rs.getString("clip_holder_reject_qty"));
+                    rmsbookingVisualInspection.setPcbEdgeFinger(rs.getString("pcb_edge_finger"));
+                    rmsbookingVisualInspection.setPcbEdgeFingerReject(rs.getString("pcb_edge_finger_reject"));
+                    rmsbookingVisualInspection.setPcbEdgeFingerRejectUpload(rs.getString("pcb_edge_finger_reject_upload"));
+                    rmsbookingVisualInspection.setPcbEdgeFingerRejectQty(rs.getString("pcb_edge_finger_reject_qty"));
+                    rmsbookingVisualInspection.setConnector(rs.getString("connector"));
+                    rmsbookingVisualInspection.setConnectorReject(rs.getString("connector_reject"));
+                    rmsbookingVisualInspection.setConnectorRejectUpload(rs.getString("connector_reject_upload"));
+                    rmsbookingVisualInspection.setConnectorRejectQty(rs.getString("connector_reject_qty"));
+                    rmsbookingVisualInspection.setDutSockets(rs.getString("dut_sockets"));
+                    rmsbookingVisualInspection.setDutSocketsReject(rs.getString("dut_sockets_reject"));
+                    rmsbookingVisualInspection.setDutSocketsRejectUpload(rs.getString("dut_sockets_reject_upload"));
+                    rmsbookingVisualInspection.setDutSocketsRejectQty(rs.getString("dut_sockets_reject_qty"));
+                    rmsbookingVisualInspection.setEdgeMbBanana(rs.getString("edge_mb_banana"));
+                    rmsbookingVisualInspection.setEdgeMbBananaReject(rs.getString("edge_mb_banana_reject"));
+                    rmsbookingVisualInspection.setEdgeMbBananaRejectUpload(rs.getString("edge_mb_banana_reject_upload"));
+                    rmsbookingVisualInspection.setEdgeMbBananaRejectQty(rs.getString("edge_mb_banana_reject_qty"));
+                    rmsbookingVisualInspection.setElectComponent(rs.getString("elect_component"));
+                    rmsbookingVisualInspection.setElectComponentReject(rs.getString("elect_component_reject"));
+                    rmsbookingVisualInspection.setElectComponentRejectUpload(rs.getString("elect_component_reject_upload"));
+                    rmsbookingVisualInspection.setElectComponentRejectQty(rs.getString("elect_component_reject_qty"));
+                    rmsbookingVisualInspection.setSolderJoint(rs.getString("solder_joint"));
+                    rmsbookingVisualInspection.setSolderJointReject(rs.getString("solder_joint_reject"));
+                    rmsbookingVisualInspection.setSolderJointRejectUpload(rs.getString("solder_joint_reject_upload"));
+                    rmsbookingVisualInspection.setSolderJointRejectQty(rs.getString("solder_joint_reject_qty"));
+                    rmsbookingVisualInspection.setWinConnector(rs.getString("win_connector"));
+                    rmsbookingVisualInspection.setWinConnectorReject(rs.getString("win_connector_reject"));
+                    rmsbookingVisualInspection.setWinConnectorRejectUpload(rs.getString("win_connector_reject_upload"));
+                    rmsbookingVisualInspection.setWinConnectorRejectQty(rs.getString("win_connector_reject_qty"));
+                    rmsbookingVisualInspection.setRemarks(rs.getString("remarks"));
+                    rmsbookingVisualInspection.setFinalStatus(rs.getString("final_status"));
+                    rmsbookingVisualInspection.setCreatedBy(rs.getString("created_by"));
+                    rmsbookingVisualInspection.setCreatedDate(rs.getString("created_date"));
+                    rmsbookingVisualInspection.setFlag(rs.getString("flag"));
+                    rmsbookingVisualInspection.setPcbHardwareId(rs.getString("pcb_hardware_id"));
+                    rmsbookingVisualInspection.setHandleHardwareId(rs.getString("handle_hardware_id"));
+                    rmsbookingVisualInspection.setMetalFrameHardwareId(rs.getString("metal_frame_hardware_id"));
+                    rmsbookingVisualInspection.setHardwareFasternersHardwareId(rs.getString("hardware_fasterners_hardware_id"));
+                    rmsbookingVisualInspection.setClipHolderHardwareId(rs.getString("clip_holder_hardware_id"));
+                    rmsbookingVisualInspection.setPcbEdgeFingerHardwareId(rs.getString("pcb_edge_finger_hardware_id"));
+                    rmsbookingVisualInspection.setConnectorHardwareId(rs.getString("connector_hardware_id"));
+                    rmsbookingVisualInspection.setDutSocketsHardwareId(rs.getString("dut_sockets_hardware_id"));
+                    rmsbookingVisualInspection.setEdgeMbBananaHardwareId(rs.getString("edge_mb_banana_hardware_id"));
+                    rmsbookingVisualInspection.setElectComponentHardwareId(rs.getString("elect_component_hardware_id"));
+                    rmsbookingVisualInspection.setSolderJointHardwareId(rs.getString("solder_joint_hardware_id"));
+                    rmsbookingVisualInspection.setWinConnectorHardwareId(rs.getString("win_connector_hardware_id"));
+                    rmsbookingVisualInspection.setTeflonConnector(rs.getString("teflon_connector"));
+                    rmsbookingVisualInspection.setTeflonConnectorHardwareId(rs.getString("teflon_connector_hardware_id"));
+                    rmsbookingVisualInspection.setTeflonConnectorReject(rs.getString("teflon_connector_reject"));
+                    rmsbookingVisualInspection.setTeflonConnectorRejectQty(rs.getString("teflon_connector_reject_qty"));
+                    rmsbookingVisualInspection.setTeflonConnectorRejectUpload(rs.getString("teflon_connector_reject_upload"));
+                    rmsbookingVisualInspection.setPogoReceptaclesPin(rs.getString("pogo_receptacles_pin"));
+                    rmsbookingVisualInspection.setPogoReceptaclesPinHardwareId(rs.getString("pogo_receptacles_pin_hardware_id"));
+                    rmsbookingVisualInspection.setPogoReceptaclesPinReject(rs.getString("pogo_receptacles_pin_reject"));
+                    rmsbookingVisualInspection.setPogoReceptaclesPinRejectQty(rs.getString("pogo_receptacles_pin_reject_qty"));
+                    rmsbookingVisualInspection.setPogoReceptaclesPinRejectUpload(rs.getString("pogo_receptacles_pin_reject_upload"));
+                    rmsbookingVisualInspection.setCableWiredCopperWire(rs.getString("cable_wired_copper_wire"));
+                    rmsbookingVisualInspection.setCableWiredCopperWireHardwareId(rs.getString("cable_wired_copper_wire_hardware_id"));
+                    rmsbookingVisualInspection.setCableWiredCopperWireReject(rs.getString("cable_wired_copper_wire_reject"));
+                    rmsbookingVisualInspection.setCableWiredCopperWireRejectQty(rs.getString("cable_wired_copper_wire_reject_qty"));
+                    rmsbookingVisualInspection.setCableWiredCopperWireRejectUpload(rs.getString("cable_wired_copper_wire_reject_upload"));
+                    rmsbookingVisualInspection.setLabelIdentification(rs.getString("label_identification"));
+                    rmsbookingVisualInspection.setLabelIdentificationHardwareId(rs.getString("label_identification_hardware_id"));
+                    rmsbookingVisualInspection.setLabelIdentificationReject(rs.getString("label_identification_reject"));
+                    rmsbookingVisualInspection.setLabelIdentificationRejectQty(rs.getString("label_identification_reject_qty"));
+                    rmsbookingVisualInspection.setLabelIdentificationRejectUpload(rs.getString("label_identification_reject_upload"));
                 }
+            } catch (SQLException e) {
+                LOGGER.error("Error retrieving RMS Booking Visual Inspection. Id={}", groupId, e);
             }
+            return rmsbookingVisualInspection;
         }
-        return rmsbookingVisualInspection;
     }
 
     public List<RmsBookingVisualInspection> getRmsBookingVisualInspectionList() {
         String sql = "SELECT * FROM rms_booking_visual_inspection ORDER BY id ASC";
         List<RmsBookingVisualInspection> rmsbookingVisualInspectionList = new ArrayList<RmsBookingVisualInspection>();
-        try {
-            PreparedStatement ps = conn.prepareStatement(sql);
-            RmsBookingVisualInspection rmsbookingVisualInspection;
-            ResultSet rs = ps.executeQuery();
+        try (Connection conn = dataSource.getConnection(); PreparedStatement ps = conn.prepareStatement(sql); ResultSet rs = ps.executeQuery()) {
             while (rs.next()) {
-                rmsbookingVisualInspection = new RmsBookingVisualInspection();
+                RmsBookingVisualInspection rmsbookingVisualInspection = new RmsBookingVisualInspection();
                 rmsbookingVisualInspection.setId(rs.getString("id"));
                 rmsbookingVisualInspection.setGroupId(rs.getString("group_id"));
                 rmsbookingVisualInspection.setModule(rs.getString("module"));
@@ -710,127 +653,75 @@ public class RmsBookingVisualInspectionDAO {
                 rmsbookingVisualInspection.setLabelIdentificationRejectUpload(rs.getString("label_identification_reject_upload"));
                 rmsbookingVisualInspectionList.add(rmsbookingVisualInspection);
             }
-            rs.close();
-            ps.close();
         } catch (SQLException e) {
-            LOGGER.error(e.getMessage());
-        } finally {
-            if (conn != null) {
-                try {
-                    conn.close();
-                } catch (SQLException e) {
-                    LOGGER.error(e.getMessage());
-                }
-            }
+            LOGGER.error("Error retrieving RMS Booking Visual Inspection List", e);
         }
         return rmsbookingVisualInspectionList;
     }
 
     public Integer getCountByGroupIdWithModuleBeforeLoading(String groupId) {
-        Integer count = null;
-        try {
-            PreparedStatement ps = conn.prepareStatement(
-                    "SELECT COUNT(*) AS count FROM rms_booking_visual_inspection inc WHERE inc.group_id = '" + groupId + "' AND inc.module = 'Before Loading'"
-            );
-            ResultSet rs = ps.executeQuery();
-            while (rs.next()) {
-                count = rs.getInt("count");
-            }
-            rs.close();
-
-            ps.close();
-        } catch (SQLException e) {
-            LOGGER.error(e.getMessage());
-        } finally {
-            if (conn != null) {
-                try {
-                    conn.close();
-                } catch (SQLException e) {
-                    LOGGER.error(e.getMessage());
+        Integer count = 0;
+        try (Connection conn = dataSource.getConnection(); PreparedStatement ps = conn.prepareStatement("SELECT COUNT(*) AS count FROM rms_booking_visual_inspection inc WHERE inc.group_id = ? AND inc.module = ?")) {
+            ps.setString(1, groupId);
+            ps.setString(2, "Before Loading");
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    count = rs.getInt("count");
                 }
             }
+        } catch (SQLException e) {
+            LOGGER.error("Error getting count for RMS Booking Visual Inspection. GroupId={}", groupId, e);
         }
         return count;
     }
 
     public Integer getCountByGroupIdWithModuleBeforeLoadingWithFinalStatusPass(String groupId) {
-        Integer count = null;
-        try {
-            PreparedStatement ps = conn.prepareStatement(
-                    "SELECT COUNT(*) AS count FROM rms_booking_visual_inspection inc WHERE inc.group_id = '" + groupId + "' AND inc.module = 'Before Loading' and inc.final_status = 'Pass'"
-            );
-            ResultSet rs = ps.executeQuery();
-            while (rs.next()) {
-                count = rs.getInt("count");
-            }
-            rs.close();
-
-            ps.close();
-        } catch (SQLException e) {
-            LOGGER.error(e.getMessage());
-        } finally {
-            if (conn != null) {
-                try {
-                    conn.close();
-                } catch (SQLException e) {
-                    LOGGER.error(e.getMessage());
+        Integer count = 0;
+        try (Connection conn = dataSource.getConnection(); PreparedStatement ps = conn.prepareStatement("SELECT COUNT(*) AS count FROM rms_booking_visual_inspection inc WHERE inc.group_id = ? AND inc.module = ? AND inc.final_status = ?")) {
+            ps.setString(1, groupId);
+            ps.setString(2, "Before Loading");
+            ps.setString(3, "Pass");
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    count = rs.getInt("count");
                 }
             }
+        } catch (SQLException e) {
+            LOGGER.error("Error getting count for RMS Booking Visual Inspection. GroupId={}, Module={}, FinalStatus={}", groupId, "Before Loading", "Pass", e);
         }
         return count;
     }
 
     public Integer getCountByGroupIdWithModuleAfterLoading(String groupId) {
-        Integer count = null;
-        try {
-            PreparedStatement ps = conn.prepareStatement(
-                    "SELECT COUNT(*) AS count FROM rms_booking_visual_inspection inc WHERE inc.group_id = '" + groupId + "' AND inc.module = 'After Loading'"
-            );
-            ResultSet rs = ps.executeQuery();
-            while (rs.next()) {
-                count = rs.getInt("count");
-            }
-            rs.close();
-
-            ps.close();
-        } catch (SQLException e) {
-            LOGGER.error(e.getMessage());
-        } finally {
-            if (conn != null) {
-                try {
-                    conn.close();
-                } catch (SQLException e) {
-                    LOGGER.error(e.getMessage());
+        Integer count = 0;
+        try (Connection conn = dataSource.getConnection(); PreparedStatement ps = conn.prepareStatement("SELECT COUNT(*) AS count FROM rms_booking_visual_inspection inc WHERE inc.group_id = ? AND inc.module = ?")) {
+            ps.setString(1, groupId);
+            ps.setString(2, "After Loading");
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    count = rs.getInt("count");
                 }
             }
+        } catch (SQLException e) {
+            LOGGER.error("Error getting count for RMS Booking Visual Inspection. GroupId={}, Module={}", groupId, "After Loading", e);
         }
         return count;
     }
 
     public Integer getCountByGroupIdAndStatus(String groupId, String status) {
-        Integer count = null;
-        try {
-            PreparedStatement ps = conn.prepareStatement(
-                    "SELECT COUNT(*) AS count FROM rms_booking_visual_inspection inc WHERE inc.group_id = '" + groupId + "' AND inc.module = '" + status + "'"
-            );
-            ResultSet rs = ps.executeQuery();
-            while (rs.next()) {
-                count = rs.getInt("count");
-            }
-            rs.close();
-
-            ps.close();
-        } catch (SQLException e) {
-            LOGGER.error(e.getMessage());
-        } finally {
-            if (conn != null) {
-                try {
-                    conn.close();
-                } catch (SQLException e) {
-                    LOGGER.error(e.getMessage());
+        Integer count = 0;
+        try (Connection conn = dataSource.getConnection(); PreparedStatement ps = conn.prepareStatement("SELECT COUNT(*) AS count FROM rms_booking_visual_inspection inc WHERE inc.group_id = ? AND inc.module = ?")) {
+            ps.setString(1, groupId);
+            ps.setString(2, status);
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    count = rs.getInt("count");
                 }
             }
+        } catch (SQLException e) {
+            LOGGER.error("Error getting count for RMS Booking Visual Inspection. GroupId={}, Status={}", groupId, status, e);
         }
         return count;
     }
+
 }

@@ -2787,7 +2787,7 @@ public class RmsBookingDetailUnloadingController {
             @PathVariable("bookingId") String bookingId,
             @PathVariable("itemPkid") String itemPkid,
             RedirectAttributes redirectAttrs,
-            @ModelAttribute UserSession userSession) throws IOException {
+            @ModelAttribute UserSession userSession) throws IOException, SQLException {
 
         String currentStatus = "";
         String leakTest = "";
@@ -3632,16 +3632,22 @@ public class RmsBookingDetailUnloadingController {
 
         if (jenistest.contains("Leakage")) {
             emailBodyFail = "Failed Functional Test - Leakage Test";
+            currentsubmodule = "Leakage Test";
         } else if (jenistest.contains("Manual")) {
             emailBodyFail = "Failed Functional Test - Manual Test";
+            currentsubmodule = "Manual Test";
         } else if (jenistest.contains("BIB")) {
             emailBodyFail = "Failed Functional Test - BIB Test";
+            currentsubmodule = "BIB Test";
         } else if (jenistest.contains("BIBDAQ")) {
             emailBodyFail = "Failed Functional Test - BIB DAQ Test";
+            currentsubmodule = "BIB DAQ Test";
         } else if (jenistest.contains("Power")) {
             emailBodyFail = "Failed Functional Test - Power Supply Leakage Test";
+            currentsubmodule = "Power Supply Leakage Test";
         } else if (jenistest.contains("Winchester")) {
             emailBodyFail = "Failed Functional Test - Winchester Chamber Leakage Test";
+            currentsubmodule = "Winchester Chamber Leakage Test";
         }
 
         // UPDATE SUB STATUS rms_booking_hardware START

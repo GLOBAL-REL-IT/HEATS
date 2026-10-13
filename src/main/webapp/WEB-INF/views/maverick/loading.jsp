@@ -4,14 +4,102 @@
     Author     : zbqb9x
 --%>
 
-<%@page contentType="text/html" pageEncoding="UTF-8"%>
-<!DOCTYPE html>
-<html>
-    <head>
-        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-        <title>JSP Page</title>
-    </head>
-    <body>
-        <h1>Hello World!</h1>
-    </body>
-</html>
+<%@page contentType="text/html;charset=UTF-8" pageEncoding="UTF-8" %>
+<%@include file="/WEB-INF/base/taglibs.jsp" %>
+<s:layout-render name="/WEB-INF/base/base.jsp">
+    <s:layout-component name="page_css">
+        <link rel="stylesheet" href="${contextPath}/resources/statflow/vendor/datatables/dataTables.bs5.css">
+        <link rel="stylesheet" href="${contextPath}/resources/statflow/vendor/datatables/dataTables.bs5-custom.css">
+        <link rel="stylesheet" href="${contextPath}/resources/statflow/vendor/datatables/buttons/dataTables.bs5-custom.css">
+        <link rel="stylesheet" href="${contextPath}/resources/statflow/vendor/bs-select/bs-select.css">
+        <link rel="stylesheet" href="${contextPath}/resources/css/maverick.css"/>
+    </s:layout-component>
+    <s:layout-component name="page_css_inline">
+    </s:layout-component>
+    <s:layout-component name="page_container">
+        <div class="content-wrapper">
+            <div class="row">
+                <nav class="navbar bg-body-tertiary">
+                    <div class="container-fluid justify-content-start">
+                        <a href="${contextPath}/maverick/list" class="btn btn-outline-warning me-2" role="button"><i class='bi bi-arrow-bar-left'></i>&nbsp;&nbsp;Back</a>
+                    </div>
+                </nav>
+                <c:choose>
+                    <c:when test="${data.flag eq '1' || data.flag eq '3'}">
+                        <div class="col-sm-12 col-12">
+                        </c:when>
+                        <c:otherwise>
+                            <div class="col-sm-8 col-12">
+                            </c:otherwise>
+                        </c:choose>
+                        <fieldset disabled>
+                            <div class="card mb-4">
+                                <div class="card-header">
+                                    <h5 class="card-title">Maverick Details - <span style="color:#D97D55">${data.module} [${jenis}]</span></h5>
+                                </div>
+                                <div class="card-body">
+                                    <div class="row gx-3">
+                                        <%@ include file="dispo_info.jsp" %>
+                                        <c:choose>
+                                            <c:when test="${jenis eq 'VM'}">
+                                                <%@ include file="vm.jsp" %>
+                                            </c:when>
+                                            <c:when test="${jenis eq 'FT'}">
+                                                <%@ include file="ft.jsp" %>
+                                            </c:when>
+                                        </c:choose>
+                                        <%@ include file="log.jsp" %>
+                                    </div>
+                                </div>
+                            </div>
+                        </fieldset>
+                    </div>
+                    <c:choose>
+                        <c:when test="${data.flag eq '0'}">
+                            <%@ include file="dispo_action_load.jsp" %>
+                        </c:when>
+                        <c:when test="${data.flag eq '1' || data.flag eq '3'}">
+                            <%--HIDE THIS PAGE, SINCE ALREADY BYPASS, SCRAP, OR COMPLETED--%> 
+                        </c:when>
+                        <c:when test="${data.flag eq '2'}">
+                            <%@ include file="repair_action_load.jsp" %>
+                        </c:when>
+                        <c:otherwise>
+                            <%--EMPTY PAGE HERE SINCE WE CANNOT DECIDE--%>
+                        </c:otherwise>
+                    </c:choose>
+                    <c:if test="${data.flag != '1'}">
+
+                    </c:if>
+                </div>
+                <div class="app-footer">
+                    <span>© Bootstrap Gallery 2025</span>
+                </div>
+            </div>
+        </div>
+    </s:layout-component>
+    <s:layout-component name="page_js_inline">
+        <script>
+            // THIS CODE TO MAKE SURE THE DATE DEFAULTED AS TODAY - START
+            document.addEventListener("DOMContentLoaded", function () {
+                setTodayIfEmpty("newDispositionDate");
+                setTodayIfEmpty("repairDate");
+            });
+
+            function setTodayIfEmpty(elementId) {
+                const input = document.getElementById(elementId);
+                if (!input) {
+                    return;
+                }
+                if (!input.value || input.value.trim() === "") {
+                    const today = new Date();
+                    const year = today.getFullYear();
+                    const month = String(today.getMonth() + 1).padStart(2, "0");
+                    const day = String(today.getDate()).padStart(2, "0");
+                    input.value = year + "-" + month + "-" + day;
+                }
+            }
+            // THIS CODE TO MAKE SURE THE DATE DEFAULTED AS TODAY - END
+        </script>
+    </s:layout-component>
+</s:layout-render>

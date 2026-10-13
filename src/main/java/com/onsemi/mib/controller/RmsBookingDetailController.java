@@ -2681,6 +2681,7 @@ public class RmsBookingDetailController {
             finalStatus = "Pass";
             itemVm.setFlag("0");
         }
+        // ARIF ADD ONE MORE FLAG TO CATER PREVIOUS RECORD AND TO DISPLAY THE NEW ONE ONLY - MAVERICK RELATED - 66
         itemVm.setFinalStatus(finalStatus);
         itemVm.setCreatedBy(userSession.getFullname());
 
@@ -4218,7 +4219,7 @@ public class RmsBookingDetailController {
             @PathVariable("bookingId") String bookingId,
             @PathVariable("itemPkid") String itemPkid,
             RedirectAttributes redirectAttrs,
-            @ModelAttribute UserSession userSession) throws IOException {
+            @ModelAttribute UserSession userSession) throws IOException, SQLException {
 
         String currentStatus = "";
         String leakTest = "";
