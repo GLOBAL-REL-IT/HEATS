@@ -11,11 +11,11 @@
         <div class="card-body">
             <form class="row g-3 align-items-center" role="form" action="${contextPath}/maverick/updateMaverick" method="post">
                 <div class="row gx-3">
-                    <input type="input" name="mibItemId" id="mibItemId" value="${mibItemId}">
-                    <input type="input" name="mavId" id="mavId" value="${id}">
-                    <input type="input" name="groupId" id="groupId" value="${groupId}">
-                    <input type="input" name="module" id="module" value="${data.module}">
-                    <input type="input" name="submodule" id="subModule" value="${data.submodule}">
+                    <input type="hidden" name="mibItemId" id="mibItemId" value="${mibItemId}">
+                    <input type="hidden" name="mavId" id="mavId" value="${id}">
+                    <input type="hidden" name="groupId" id="groupId" value="${groupId}">
+                    <input type="hidden" name="module" id="module" value="${data.module}">
+                    <input type="hidden" name="submodule" id="subModule" value="${data.submodule}">
                     <div class="col-12">
                         <div class="mb-3">
                             <label for="newDisposition" class="form-label">Disposition</label>

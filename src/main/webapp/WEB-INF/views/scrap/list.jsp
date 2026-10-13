@@ -68,11 +68,11 @@
                                                         <td align="center">
                                                             <c:choose>
                                                                 <c:when test="${scrap.flag == '1'}">
-                                                                    <a href="maverickdetails/${scrap.id}/${scrap.module}/${scrap.id}" title="Maverick Complete?"><i class="bi bi-clipboard-check h3"></i></a>
-                                                                    <a href="url" title="Proceed Visual Inspection / Functional Test"><i class="bi bi-search h3"></i></a>
+                                                                    <a href="scrap/view/${scrap.id}" title="Maverick Complete?"><i class="bi bi-clipboard-check h3"></i></a>
+                                                                    <a href="scrap/view/${scrap.id}" title="Proceed Visual Inspection / Functional Test"><i class="bi bi-search h3"></i></a>
                                                                 </c:when>
                                                                 <c:when test="${scrap.flag == '0'}">
-                                                                    <a href="maverickdetails/${scrap.id}/${scrap.module}/${scrap.id}" title="View Maverick details">
+                                                                    <a href="scrap/view/${scrap.id}" title="View Maverick details">
                                                                     <c:choose>
                                                                         <c:when test="${fn:contains(scrap.module, 'oading')}">
                                                                             <i class="bi bi-motherboard h3"></i>
@@ -87,17 +87,17 @@
                                                                     </a>
                                                                 </c:when>
                                                                 <c:when test="${scrap.flag == '2'}">
-                                                                    <a href="maverickdetails/${scrap.id}/${scrap.module}/${scrap.id}" title="Repair"><i class="bi bi-wrench-adjustable-circle h3" ></i></a>
+                                                                    <a href="scrap/view/${scrap.id}" title="Repair"><i class="bi bi-wrench-adjustable-circle h3" ></i></a>
                                                                 </c:when>
                                                                 <c:when test="${scrap.flag == '3'}">
-                                                                    <a href="maverickdetails/${scrap.id}/${scrap.module}/${scrap.id}" title="Item sent to Scrap"><i class="bi bi-recycle h3"></i></a>
+                                                                    <a href="scrap/view/${scrap.id}" title="Item sent to Scrap"><i class="bi bi-recycle h3"></i></a>
                                                                 </c:when>
                                                                 <c:when test="${scrap.flag == '4'}">
-                                                                    <a href="maverickdetails/${scrap.id}/${scrap.module}/${scrap.id}" title="This one still no decided yet"><i class="bi bi-search h3"></i></a>
+                                                                    <a href="scrap/view/${scrap.id}" title="This one still no decided yet"><i class="bi bi-search h3"></i></a>
                                                                 </c:when>
                                                                 <c:otherwise>
-                                                                    <a href="maverickdetails/scrap" title="Bukan button ini yang kita mahu"><i class="bi bi-eraser-fill h3"></i></a>
-                                                                    <a href="maverickdetails/${scrap.id}/${scrap.module}/${scrap.id}" title="Patut tak jumpa yang ini"><i class="bi bi-search h3"></i></a>
+                                                                    <a href="scrap/view/${scrap.id}" title="Bukan button ini yang kita mahu"><i class="bi bi-eraser-fill h3"></i></a>
+                                                                    <a href="scrap/view/${scrap.id}" title="Patut tak jumpa yang ini"><i class="bi bi-search h3"></i></a>
                                                                 </c:otherwise>
                                                             </c:choose>
                                                             <!--ADD SOME MORE CONDITION IF NEEDED-->
