@@ -3469,7 +3469,7 @@ public class RmsBookingDetailController {
                 bookHardware.setBookingPkid(bookId);
                 bookHardware.setPkid(motherboardId);
                 bookHardware.setSubStatus(newStatus);
-                bookHardware.setFlag("1");
+                bookHardware.setFlag("0");
                 RmsBookingHardwareDAO booking = new RmsBookingHardwareDAO();
 //                booking.updateRmsBookingHardwareSubStatusByPkidAndBookingPkid(bookHardware);
                 booking.updateRmsBookingHardwareStatus(bookHardware);
@@ -3524,7 +3524,7 @@ public class RmsBookingDetailController {
                 bookHardware.setBookingPkid(bookId);
                 bookHardware.setPkid(motherboardId);
                 bookHardware.setSubStatus(newStatus);
-                bookHardware.setFlag("1");
+                bookHardware.setFlag("0");
                 RmsBookingHardwareDAO booking = new RmsBookingHardwareDAO();
 //                booking.updateRmsBookingHardwareSubStatusByPkidAndBookingPkid(bookHardware);
                 booking.updateRmsBookingHardwareStatus(bookHardware);
@@ -3575,7 +3575,7 @@ public class RmsBookingDetailController {
                 bookHardware.setBookingPkid(bookId);
                 bookHardware.setPkid(motherboardId);
                 bookHardware.setSubStatus(newStatus);
-                bookHardware.setFlag("1");
+                bookHardware.setFlag("0");
                 RmsBookingHardwareDAO booking = new RmsBookingHardwareDAO();
 //                booking.updateRmsBookingHardwareSubStatusByPkidAndBookingPkid(bookHardware);
                 booking.updateRmsBookingHardwareStatus(bookHardware);
@@ -3623,7 +3623,7 @@ public class RmsBookingDetailController {
                 bookHardware.setBookingPkid(bookId);
                 bookHardware.setPkid(motherboardId);
                 bookHardware.setSubStatus(newStatus);
-                bookHardware.setFlag("1");
+                bookHardware.setFlag("0");
                 RmsBookingHardwareDAO booking = new RmsBookingHardwareDAO();
 //                booking.updateRmsBookingHardwareSubStatusByPkidAndBookingPkid(bookHardware);
                 booking.updateRmsBookingHardwareStatus(bookHardware);
@@ -3669,7 +3669,7 @@ public class RmsBookingDetailController {
                 bookHardware.setBookingPkid(bookId);
                 bookHardware.setPkid(motherboardId);
                 bookHardware.setSubStatus(newStatus);
-                bookHardware.setFlag("1");
+                bookHardware.setFlag("0");
                 RmsBookingHardwareDAO booking = new RmsBookingHardwareDAO();
 //                booking.updateRmsBookingHardwareSubStatusByPkidAndBookingPkid(bookHardware);
                 booking.updateRmsBookingHardwareStatus(bookHardware);
