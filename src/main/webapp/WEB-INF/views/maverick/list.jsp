@@ -72,7 +72,7 @@
                                                             <c:choose>
                                                                 <c:when test="${parameterMaster.flag == '1'}">
                                                                     <a href="maverickdetails/${parameterMaster.id}/${parameterMaster.module}/${parameterMaster.id2}" title="Maverick Complete?"><i class="bi bi-clipboard-check h3"></i></a>
-                                                                    <a href="url" title="Proceed Visual Inspection / Functional Test"><i class="bi bi-search h3"></i></a>
+                                                                    <a href="redo/${parameterMaster.id}" title="Proceed Visual Inspection / Functional Test"><i class="bi bi-search h3"></i></a>
                                                                 </c:when>
                                                                 <c:when test="${parameterMaster.flag == '0'}">
                                                                     <a href="maverickdetails/${parameterMaster.id}/${parameterMaster.module}/${parameterMaster.id2}" title="View Maverick details">

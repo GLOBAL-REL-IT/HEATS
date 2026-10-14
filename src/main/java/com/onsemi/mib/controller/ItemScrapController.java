@@ -47,7 +47,7 @@ public class ItemScrapController {
     @Autowired
     ServletContext servletContext;
     
-    @RequestMapping(value = "", method = RequestMethod.GET)
+    @RequestMapping(value = "/list", method = RequestMethod.GET)
     public String scrapList(Model model) {
         ItemScrapDAO isdao = new ItemScrapDAO();
         List<ItemScrap> isList = isdao.getScrapListDetail();

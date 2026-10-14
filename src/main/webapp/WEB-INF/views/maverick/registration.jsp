@@ -23,7 +23,7 @@
                     <div class="container-fluid d-flex justify-content-between">
                         <a href="${contextPath}/maverick/list" class="btn btn-outline-warning me-2" role="button"><i class='bi bi-arrow-bar-left'></i>&nbsp;&nbsp;Back</a>
                         <c:if test="${data.flag == '1'}">
-                            <a href="url" class="btn btn-outline-success"><i class="bi bi-search me-2"></i>PROCEED VM</a>
+                            <a href="${contextPath}/maverick/redo/${id}" class="btn btn-outline-success"><i class="bi bi-search me-2"></i>PROCEED VM</a>
                         </c:if>
                     </div>
                 </nav>

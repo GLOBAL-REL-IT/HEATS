@@ -807,6 +807,11 @@ public class MaverickController {
         return "maverick/repair";
     }
 
+    @RequestMapping(value = "/redo/{id}", method = RequestMethod.GET)
+    public String maverickVM(@PathVariable String id) {
+        return "maverick/maverick_vmft";
+    }
+
     @RequestMapping(value = "/checkfile/{type}/{itemid}", method = RequestMethod.GET)
     public void downloadAttachmentTest(HttpServletRequest request,
             @PathVariable("type") String type,

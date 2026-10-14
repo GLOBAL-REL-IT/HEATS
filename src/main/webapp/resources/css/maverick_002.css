@@ -1,0 +1,157 @@
+/*
+Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+Click nbfs://nbhost/SystemFileSystem/Templates/Other/CascadeStyleSheet.css to edit this template
+*/
+/* 
+    Created on : Oct 14, 2026, 10:04:08 AM
+    Author     : zbqb9x
+*/
+
+@media print {
+    table thead {
+        border-top: #000 solid 2px;
+        border-bottom: #000 solid 2px;
+    }
+    table tbody {
+        border-top: #000 solid 2px;
+        border-bottom: #000 solid 2px;
+    }
+}
+.dataTables_wrapper .dt-buttons {
+    float:none;
+    text-align:right;
+}
+.select2-container--default .select2-selection--single{
+    border: 1.5px solid #000;
+    border-radius: 0.5rem;
+    box-shadow: 2.5px 3px 0 #000;
+    outline: none;
+    transition: ease 0.25s;
+}
+.input {
+    border: 1.5px solid #000;
+    border-radius: 0.5rem;
+    box-shadow: 2.5px 3px 0 #000;
+    outline: none;
+    transition: ease 0.25s;
+}
+.input:focus {
+    box-shadow: 5.5px 7px 0 black;
+}
+.no-border {
+    border: 0;
+    box-shadow: none;
+}
+span.tab-space {
+    padding-left:20em;
+}
+.move-left {
+    width: auto;
+    box-shadow: none;
+}
+.form-group.required .form-label:after {
+    content:"*";
+    color:red;
+}
+.img3 {
+    width: 55px;
+    height: 18px;
+}
+.pending thead th {
+    background-color: #f06a0a;
+    color: #FFFFFF;
+}
+.accordion-button:not(.collapsed) {
+    background-color: lightsalmon;
+}
+.accordion-button {
+    background-color: #f8f9ff;
+}
+/* INI UNTUK TABLE MANUAL TEST SAHAJA*/
+table {
+    border-collapse: collapse;
+    width: 95%;
+    max-width: 1500px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    background-color: #fff;
+    border-radius: 8px;
+    overflow: hidden;
+}
+th, td {
+    border: 1px solid #dee2e6;
+    padding: 0;
+    text-align: center;
+}
+thead th {
+    background-color: gray;
+    color: white;
+    font-weight: 600;
+    padding: 12px 8px;
+}
+.qty-header {
+    background-color: lightgray;
+    font-weight: bold;
+    color: #333;
+    padding: 12px 16px;
+}
+thead tr:nth-child(2) th {
+    background-color: lightgray;
+    color: white;
+    font-weight: normal;
+    font-size: 0.85em;
+    padding: 6px 4px;
+    white-space: nowrap;
+}
+tbody tr:nth-child(even) {
+    background-color: #f8f9fa;
+}
+tbody tr:hover {
+    background-color: #e0f7fa;
+}
+.input-wrapper {
+    padding: 8px 4px 2px;
+}
+.param-cell input {
+    width: 100%;
+    padding: 4px;
+    box-sizing: border-box;
+    border: none;
+    text-align: center;
+    background-color: transparent;
+    font-family: inherit;
+    font-size: inherit;
+}
+.limits {
+    font-size: 0.75em;
+    color: #6c757d;
+    display: block;
+    padding-bottom: 4px;
+}
+.status-cell {
+    background-color: #eafdea;
+    padding: 4px;
+}
+select {
+    padding: 6px;
+    border-radius: 4px;
+    border: 1px solid #ccc;
+    font-size: 0.9em;
+    width: 100%;
+    box-sizing: border-box;
+    background-color: #fff;
+}
+.status-header {
+    background-color: lightgreen !important;
+    color: white !important;
+    font-weight: bold !important;
+}
+.saving {
+    opacity: 0.6;
+    cursor: wait;
+}
+li.disabled,
+li.disabled a {
+    pointer-events: none; /* Prevents all mouse clicks and hovers */
+    opacity: 0.5;         /* Visually dims the element */
+    cursor: not-allowed;  /* Shows a "no entry" cursor if pointer-events allows it */
+}

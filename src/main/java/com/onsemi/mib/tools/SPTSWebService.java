@@ -125,7 +125,7 @@ public class SPTSWebService {
     private static final String HWID_GET_BYPARAMS = "http://tempuri.org/ItemHardware_GetByParams";
     private static final String HWID_INSERT = "http://tempuri.org/ItemHardware_Insert";
     private static final String HWID_UPDATE_BYPKID = "http://tempuri.org/ItemHardware_UpdateByPKID";
-    private static final String HWID_MOVEMENT_INSERT = "http://tempuri.org/ItemHardwareMovement_Insert";
+    private static final String HWID_MOVEMENT_INSERT = "http://tempuri.org/ItemHardwareMovement_Insert_By_HEATS";
     private static final String HWIDMOVEMENT_GETBYPARAM = "http://tempuri.org/ItemHardwareMovement_GetByParams";
 
     public static JSONArray getItemAll() throws IOException {
