@@ -1397,9 +1397,9 @@ public class SPTSRequestXML {
         String xmlString = "<?xml version=\"1.0\" encoding=\"utf-8\"?>"
                 + "<soap:Envelope xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\" xmlns:soap=\"http://schemas.xmlsoap.org/soap/envelope/\">"
                 + "<soap:Body>"
-                + "<ItemHardwareMovement_Insert xmlns=\"http://tempuri.org/\">"
+                + "<ItemHardwareMovement_Insert_By_HEATS xmlns=\"http://tempuri.org/\">"
                 + paramsXmlString
-                + "</ItemHardwareMovement_Insert>"
+                + "</ItemHardwareMovement_Insert_By_HEATS>"
                 + "</soap:Body>"
                 + "</soap:Envelope>";
         return xmlString;

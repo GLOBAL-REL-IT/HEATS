@@ -3846,8 +3846,8 @@ public class SPTSWebService {
             JSONObject jsonObject = XML.toJSONObject(xmlString);
             JSONObject soapEnvelope = jsonObject.getJSONObject("soap:Envelope");
             JSONObject soapBody = soapEnvelope.getJSONObject("soap:Body");
-            JSONObject getAllItemResponse = soapBody.getJSONObject("ItemHardwareMovement_InsertResponse");
-            pkID = getAllItemResponse.getInt("ItemHardwareMovement_InsertResult");
+            JSONObject getAllItemResponse = soapBody.getJSONObject("ItemHardwareMovement_Insert_By_HEATSResponse");
+            pkID = getAllItemResponse.getInt("ItemHardwareMovement_Insert_By_HEATSResult");
             sr.setStatus(Boolean.TRUE);
             sr.setResponseCode(result);
             sr.setResponseId(pkID);
