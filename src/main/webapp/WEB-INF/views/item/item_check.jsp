@@ -470,7 +470,7 @@
             const percentCell = document.getElementById('percent_cell_' + rowId);
             const lowerCell = document.getElementById('lower_cell_' + rowId);
             const upperCell = document.getElementById('upper_cell_' + rowId);
-
+            
             if (selectElement.value === 'Fuse') {
                 // Set required values for hidden inputs
                 // We clear the numerical input value since the string input will carry the name
@@ -478,13 +478,13 @@
                 percentInput.value = 0;
                 lowerInput.value = 0;
                 upperInput.value = 1;
-
+                
                 // Remove 'required' from hidden standard inputs
                 valueInput.removeAttribute('required');
                 percentInput.removeAttribute('required');
                 // Add 'required' to the visible "COMPLETE" input if needed (though it has a default value)
                 // completeInput.setAttribute('required', true); // Optional, since value is hardcoded
-
+                
                 // Hide standard inputs and cells
                 valueInput.classList.add('hidden');
                 percentInput.classList.add('hidden');
@@ -721,9 +721,13 @@
                         lowerLimitInput.value = (val - tolerance).toFixed(2);
                         upperLimitInput.value = (val + tolerance).toFixed(2);
                     } else {
+                        percentageInput.value = "0";
                         lowerLimitInput.value = "N/A";
                         upperLimitInput.value = "N/A";
                     }
+                } else {
+                    valueInput.value = '1';
+                    percentageInput.value = '0';
                 }
             };
 
@@ -747,6 +751,12 @@
                     span.className = 'status-text';
                     span.innerText = "OPEN / SHORT";
                     valueCell.appendChild(span);
+                    
+                    valueInput.value = '1';
+                    percentageCell.value = '0';
+                    lowerLimitCell.value = '1';
+                    upperLimitCell.value = '1';
+                    
 //                } else if (type === "Diode" || type === "Zener") {
 //                    percentageInput.value = 0;
 //                    percentageInput.style.display = 'none';

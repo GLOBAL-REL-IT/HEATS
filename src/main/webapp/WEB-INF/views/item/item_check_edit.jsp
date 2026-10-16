@@ -527,9 +527,13 @@
                         lowerLimitInput.value = (val - tolerance).toFixed(2);
                         upperLimitInput.value = (val + tolerance).toFixed(2);
                     } else {
+                        percentageInput.value = "0";
                         lowerLimitInput.value = "N/A";
                         upperLimitInput.value = "N/A";
                     }
+                } else {
+                    valueInput.value = '1';
+                    percentageInput.value = '0';
                 }
             };
 
@@ -553,6 +557,11 @@
                     span.className = 'status-text';
                     span.innerText = "OPEN / SHORT";
                     valueCell.appendChild(span);
+                    
+                    valueInput.value = '1';
+                    percentageCell.value = '0';
+                    lowerLimitCell.value = '1';
+                    upperLimitCell.value = '1';
                 } else {
                     calculateLimits();
                 }
