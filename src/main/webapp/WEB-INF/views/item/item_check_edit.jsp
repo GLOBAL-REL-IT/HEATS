@@ -411,8 +411,8 @@
             const tableBody = document.getElementById("tableBody");
             const newRow = tableBody.insertRow(-1);
 
-            const typeCell = newRow.insertCell(0);
-            const nameCell = newRow.insertCell(1);
+            const nameCell = newRow.insertCell(0);
+            const typeCell = newRow.insertCell(1);
             const valueCell = newRow.insertCell(2);
             const percentageCell = newRow.insertCell(3);
             const lowerLimitCell = newRow.insertCell(4);
@@ -422,6 +422,7 @@
             // --- Component Type Select ---
             const typeSelect = document.createElement("select");
             typeSelect.name = 'component_type[]';
+            typeSelect.className = 'standard-input';
             typeSelect.innerHTML = `
                 <option value="Capacitor">Capacitor</option>
                 <option value="Resistor">Resistor</option>
@@ -528,8 +529,8 @@
                         upperLimitInput.value = (val + tolerance).toFixed(2);
                     } else {
                         percentageInput.value = "0";
-                        lowerLimitInput.value = "N/A";
-                        upperLimitInput.value = "N/A";
+                        lowerLimitInput.value = "0";
+                        upperLimitInput.value = "0";
                     }
                 } else {
                     valueInput.value = '1';
@@ -611,8 +612,9 @@
                     lowerLimitInput.value = (val - tolerance).toFixed(2);
                     upperLimitInput.value = (val + tolerance).toFixed(2);
                 } else {
-                    lowerLimitInput.value = "N/A";
-                    upperLimitInput.value = "N/A";
+                    percentageInput.value = "0";
+                    lowerLimitInput.value = "1";
+                    upperLimitInput.value = "1";
                 }
             }
         };

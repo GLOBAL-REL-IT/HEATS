@@ -57,6 +57,9 @@
                                                             <c:when test="${parameterMaster.flag == '1'}">
                                                                 <c:set var="textColor" value="green" />
                                                             </c:when>
+                                                            <c:when test="${parameterMaster.flag == '4' || parameterMaster.flag == '5'}">
+                                                                <c:set var="textColor" value="orange" />
+                                                            </c:when>
                                                             <c:when test="${fn:contains(parameterMaster.module, 'oading')}">
                                                                 <c:set var="textColor" value="purple" />
                                                             </c:when>
@@ -72,16 +75,18 @@
                                                             <c:choose>
                                                                 <c:when test="${parameterMaster.flag == '1'}">
                                                                     <a href="maverickdetails/${parameterMaster.id}/${parameterMaster.module}/${parameterMaster.id2}" title="Maverick Complete?"><i class="bi bi-clipboard-check h3"></i></a>
-                                                                    <a href="redo/${parameterMaster.id}" title="Proceed Visual Inspection / Functional Test"><i class="bi bi-search h3"></i></a>
+                                                                    <!--<a href="redo/${parameterMaster.id}" title="Proceed Visual Inspection / Functional Test"><i class="bi bi-search h3"></i></a>-->
+                                                                    <!--<a href="redo/${parameterMaster.id}"><i class="bi bi-clipboard2 h3" title="Visual Inspection"></i></a>-->
+                                                                    <!--<a href="redo/${parameterMaster.id}"><i class="bi bi-clipboard2-pulse h3" title="Functional Test"></i></a>-->
                                                                 </c:when>
                                                                 <c:when test="${parameterMaster.flag == '0'}">
                                                                     <a href="maverickdetails/${parameterMaster.id}/${parameterMaster.module}/${parameterMaster.id2}" title="View Maverick details">
                                                                     <c:choose>
                                                                         <c:when test="${fn:contains(parameterMaster.module, 'oading')}">
-                                                                            <i class="bi bi-motherboard h3"></i>
+                                                                            <i class="bi bi-clipboard2-fill h3"></i>
                                                                         </c:when>
                                                                         <c:when test="${fn:contains(parameterMaster.module, 'Registration')}">
-                                                                            <i class="bi bi-postcard h3"></i>
+                                                                            <i class="bi bi-clipboard-fill h3"></i>
                                                                         </c:when>
                                                                         <c:otherwise>
                                                                             <i class="bi bi-search h3"></i>
@@ -96,7 +101,12 @@
                                                                     <a href="maverickdetails/${parameterMaster.id}/${parameterMaster.module}/${parameterMaster.id2}" title="Item sent to Scrap"><i class="bi bi-recycle h3"></i></a>
                                                                 </c:when>
                                                                 <c:when test="${parameterMaster.flag == '4'}">
-                                                                    <a href="maverickdetails/${parameterMaster.id}/${parameterMaster.module}/${parameterMaster.id2}" title="This one still no decided yet"><i class="bi bi-search h3"></i></a>
+                                                                    <a href="maverickdetails/${parameterMaster.id}/${parameterMaster.module}/${parameterMaster.id2}" title="This one still no decided yet"><i class="bi bi-clipboard2 h3"></i></a>
+                                                                    <a href="redo/${parameterMaster.id}"><i class="bi bi-clipboard-plus h3" title="Visual Inspection"></i></a>
+                                                                </c:when>
+                                                                <c:when test="${parameterMaster.flag == '5'}">
+                                                                    <a href="maverickdetails/${parameterMaster.id}/${parameterMaster.module}/${parameterMaster.id2}" title="This one still no decided yet"><i class="bi bi-clipboard2 h3"></i></a>
+                                                                    <a href="redo/${parameterMaster.id}"><i class="bi bi-clipboard2-pulse h3" title="Functional Test"></i></a>
                                                                 </c:when>
                                                                 <c:otherwise>
                                                                     <a href="maverickdetails/scrap" title="Bukan button ini yang kita mahu"><i class="bi bi-eraser-fill h3"></i></a>

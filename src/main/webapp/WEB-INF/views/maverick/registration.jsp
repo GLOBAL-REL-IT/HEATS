@@ -22,13 +22,16 @@
                 <nav class="navbar bg-body-tertiary">
                     <div class="container-fluid d-flex justify-content-between">
                         <a href="${contextPath}/maverick/list" class="btn btn-outline-warning me-2" role="button"><i class='bi bi-arrow-bar-left'></i>&nbsp;&nbsp;Back</a>
-                        <c:if test="${data.flag == '1'}">
+                        <c:if test="${data.flag == '4'}">
                             <a href="${contextPath}/maverick/redo/${id}" class="btn btn-outline-success"><i class="bi bi-search me-2"></i>PROCEED VM</a>
+                        </c:if>
+                        <c:if test="${data.flag == '5'}">
+                            <a href="${contextPath}/maverick/redo/${id}" class="btn btn-outline-success"><i class="bi bi-search me-2"></i>PROCEED FT</a>
                         </c:if>
                     </div>
                 </nav>
                 <c:choose>
-                    <c:when test="${data.flag eq '1' || data.flag eq '3'}">
+                    <c:when test="${data.flag eq '1' || data.flag eq '3' || data.flag eq '4' || data.flag eq '5'}">
                         <div class="col-sm-12 col-12">
                         </c:when>
                         <c:otherwise>
@@ -61,7 +64,7 @@
                         <c:when test="${data.flag eq '0'}">
                             <%@ include file="dispo_action.jsp" %>
                         </c:when>
-                        <c:when test="${data.flag eq '1' || data.flag eq '3'}">
+                        <c:when test="${data.flag eq '1' || data.flag eq '3' || data.flag eq '4' || data.flag eq '5'}">
                             <%--HIDE THIS PAGE, SINCE ALREADY BYPASS, SCRAP, OR COMPLETED--%> 
                         </c:when>
                         <c:when test="${data.flag eq '2'}">

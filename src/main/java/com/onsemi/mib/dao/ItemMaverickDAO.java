@@ -147,6 +147,7 @@ public class ItemMaverickDAO {
                     itemmaverick.setId(rs.getString("id"));
                     itemmaverick.setItemType(rs.getString("item_type"));
                     itemmaverick.setItemId(rs.getString("item_identifier"));
+                    itemmaverick.setMibItemId(rs.getString("id2"));
                     itemmaverick.setModule(rs.getString("module"));
                     itemmaverick.setSubmodule(rs.getString("submodule"));
                     itemmaverick.setDisposition1(rs.getString("disposition_1"));

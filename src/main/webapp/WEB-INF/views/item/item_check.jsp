@@ -722,8 +722,8 @@
                         upperLimitInput.value = (val + tolerance).toFixed(2);
                     } else {
                         percentageInput.value = "0";
-                        lowerLimitInput.value = "N/A";
-                        upperLimitInput.value = "N/A";
+                        lowerLimitInput.value = "0";
+                        upperLimitInput.value = "0";
                     }
                 } else {
                     valueInput.value = '1';
@@ -756,17 +756,6 @@
                     percentageCell.value = '0';
                     lowerLimitCell.value = '1';
                     upperLimitCell.value = '1';
-                    
-//                } else if (type === "Diode" || type === "Zener") {
-//                    percentageInput.value = 0;
-//                    percentageInput.style.display = 'none';
-//                    percentageCell.colSpan = 3;
-//                    lowerLimitCell.style.display = 'none';
-//                    upperLimitCell.style.display = 'none';
-//                    const span = document.createElement('span');
-//                    span.className = 'status-text';
-//                    span.innerText = "OPEN / SHORT";
-//                    percentageCell.appendChild(span);
                 } else {
                     calculateLimits();
                 }
