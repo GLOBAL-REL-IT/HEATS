@@ -28,7 +28,7 @@ public class UserGroupDAO {
     private static final String SQL_UPDATE_GROUP = "UPDATE user_group SET code = ?, name = ?, modified_by = ?, modified_time = NOW() WHERE id = ? ";
     private static final String SQL_DELETE_GROUP = "DELETE FROM user_group WHERE id = ? ";
     private static final String SQL_GET_GROUP = "SELECT * FROM user_group WHERE id = ? ";
-    private static final String SQL_GET_GROUP_LIST = "SELECT id, code, name, IF(id = ?, 'selected=\"selected\"', '') AS selected FROM user_group ORDER BY nam";
+    private static final String SQL_GET_GROUP_LIST = "SELECT id, code, name, IF(id = ?, 'selected=\"selected\"', '') AS selected FROM user_group ORDER BY name";
 
     public QueryResult insertGroup(UserGroup userGroup) {
         QueryResult queryResult = new QueryResult();

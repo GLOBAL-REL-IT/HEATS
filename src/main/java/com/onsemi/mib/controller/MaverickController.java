@@ -321,17 +321,17 @@ public class MaverickController {
             scrap.setCreatedBy(username);
             scrap.setFlag("0");
 
-            isdao = new ItemScrapDAO();
+            isdao = new ItemScrapDAO(); 
             isdao.insertScrap(scrap);
 
             returnPage = "redirect:/maverick/list";
         } else if (newDisposition.equalsIgnoreCase("Bypass")) {
             // KES BYPASS
-            itemmaverick.setFlag("1");
+            itemmaverick.setFlag("4");
             imdao = new ItemMaverickDAO();
             imdao.updateItemMaverick(itemmaverick);
             
-            
+            // KALAU MOTHERBOARD BOLE LA KITA UPDATE DEKAT TABLE ITEM, TAPI KALAU LC ATAU PC, MACAM MANA NK UPATE STATUS DIA
             
             returnPage = "redirect:/maverick/list";
         }
@@ -681,7 +681,7 @@ public class MaverickController {
     }
 
     @RequestMapping(value = "/redo/{id}", method = RequestMethod.GET)
-    public String maverickVMFT(Model model, @PathVariable String id) throws SQLException {
+    public String maverickVM(Model model, @PathVariable String id) throws SQLException {
         ItemMaverick itemmaverick = new ItemMaverick();
         ItemMaverickDAO itemdao = new ItemMaverickDAO();
         itemmaverick = itemdao.getItemMaverickById(id);
@@ -724,6 +724,56 @@ public class MaverickController {
         addParameterDetail(model, pD, itemVm.getPogoReceptaclesPinReject(), "021", "pogoReceptaclesPinReject");
         addParameterDetail(model, pD, itemVm.getCableWiredCopperWireReject(), "022", "cableWiredCopperWireReject");
         addParameterDetail(model, pD, itemVm.getLabelIdentificationReject(), "023", "labelIdentificationReject");
+
+        return "maverick/maverick_vmft";
+    }
+    
+    @RequestMapping(value = "/redoft/{id}", method = RequestMethod.GET)
+    public String maverickFT(Model model, @PathVariable String id) throws SQLException {
+        ItemMaverick itemmaverick = new ItemMaverick();
+        ItemMaverickDAO itemdao = new ItemMaverickDAO();
+        itemmaverick = itemdao.getItemMaverickById(id);
+        String mibItemId = itemmaverick.getMibItemId();
+        model.addAttribute("itemmaverick", itemmaverick);
+
+        // KENA BUAT CHECKING KALAU VISUAL_INSPECTION DATA DA CREATE BARU, IF NOT PLEASE CREATE
+        // CHECK ALSO 
+//        model.addAttribute("item", "");
+//        model.addAttribute("itemVm", "");
+//        return "maverick/maverick_registration";
+        ItemDAO itemD = new ItemDAO();
+        Item item = itemD.getHardwareDetail(mibItemId);
+        ItemVisualInspection itemVm = new ItemVisualInspection(); //declare new model to prevent null pointer exception
+
+        ItemVisualInspectionDAO itemVmD = new ItemVisualInspectionDAO(); //check if already have VM data
+        int count = itemVmD.getCountItemIdWithModuleItemRegistration(mibItemId);
+
+        if (count == 1) { // assigned itemVm model with data
+            itemVmD = new ItemVisualInspectionDAO();
+            itemVm = itemVmD.getItemVisualInspectionByMibItemIdWithModuleItemRegistration(mibItemId);
+        }
+
+        ParameterDetailsDAO pD = new ParameterDetailsDAO();
+//        addParameterDetail(model, pD, item.getItemUsage(), "001", "paramItemUsage");
+//        addParameterDetail(model, pD, item.getItemUsage(), "013", "cableWireReject");
+        addParameterDetail(model, pD, itemVm.getPcbReject(), "003", "pcbReject");
+        addParameterDetail(model, pD, itemVm.getHandleReject(), "004", "handleReject");
+        addParameterDetail(model, pD, itemVm.getMetalFrameReject(), "005", "metalFrameReject");
+        addParameterDetail(model, pD, itemVm.getHardwareFasternersReject(), "006", "hardwareFasternersReject");
+        addParameterDetail(model, pD, itemVm.getClipHolderReject(), "007", "clipHolderReject");
+        addParameterDetail(model, pD, itemVm.getPcbEdgeFingerReject(), "008", "pcbEdgeFingerReject");
+        addParameterDetail(model, pD, itemVm.getConnectorReject(), "009", "connectorReject");
+        addParameterDetail(model, pD, itemVm.getDutSocketsReject(), "010", "dutSocketsReject");
+        addParameterDetail(model, pD, itemVm.getEdgeMbBananaReject(), "011", "edgeMbBananaReject");
+        addParameterDetail(model, pD, itemVm.getElectComponentReject(), "012", "electComponentReject");
+        addParameterDetail(model, pD, itemVm.getSolderJointReject(), "014", "solderJointReject");
+        addParameterDetail(model, pD, itemVm.getWinConnectorReject(), "015", "winConnectorReject");
+        addParameterDetail(model, pD, itemVm.getTeflonConnectorReject(), "020", "teflonConnectorReject");
+        addParameterDetail(model, pD, itemVm.getPogoReceptaclesPinReject(), "021", "pogoReceptaclesPinReject");
+        addParameterDetail(model, pD, itemVm.getCableWiredCopperWireReject(), "022", "cableWiredCopperWireReject");
+        addParameterDetail(model, pD, itemVm.getLabelIdentificationReject(), "023", "labelIdentificationReject");
+        
+        
 
         return "maverick/maverick_vmft";
     }

@@ -61,10 +61,9 @@
                                     <div class="tab-pane fade" id="threeAAA" role="tabpanel">
                                         <div class="row gx-4">
                                             <div class="col-12">
-                                                &nbsp;
-                                            </div>
-                                        </div>
-                                    </div>
+                                            &nbsp;
+                                        </div> 
+                                    </div> 
                                 </div>
                             </div>
                         </div>
