@@ -638,14 +638,12 @@ public class ItemController {
             HttpServletRequest request,
             @RequestParam(required = false) String pkID
     ) throws IOException, SQLException {
-        LOGGER.info("KITA MASUK KE FUNCTION BACA DETAILS");
 
         //check if any info from SPTS need to update to MIB DB
         //update SPTS data per item type into MIB DB
         JSONObject params = new JSONObject();
         params.put("pkID", pkID);
         JSONArray getItemByParam = SPTSWebService.getItemByParam(params);
-        LOGGER.info("baca no 1");
 
         int count = 0;
         int countAdd = 0;
@@ -901,7 +899,6 @@ public class ItemController {
         JSONObject params2 = new JSONObject();
         params2.put("itemsPKID", pkID);
         JSONArray getTransactionByParam = SPTSWebService.getTransactionByParam(params2);
-        LOGGER.info("baca no 2");
 
         for (int i = 0; i < getTransactionByParam.length(); i++) {
 
@@ -948,7 +945,6 @@ public class ItemController {
         JSONObject paramsSf = new JSONObject();
         paramsSf.put("itemPKID", pkID);
         JSONArray getSFItemByParam = SPTSWebService.getSFItemByParam(paramsSf);
-        LOGGER.info("baca no 3");
 
         for (int i = 0; i < getSFItemByParam.length(); i++) {
 
@@ -1001,7 +997,6 @@ public class ItemController {
         JSONObject paramsHwid = new JSONObject();
         paramsHwid.put("itemPKID", pkID);
         JSONArray getItemHwByParam = SPTSWebService.getHardwareIdByParam(paramsHwid);
-        LOGGER.info("baca no 4");
 
         for (int i = 0; i < getItemHwByParam.length(); i++) {
             String sptsStatus = "";
@@ -6817,7 +6812,7 @@ public class ItemController {
             finalQuery = "SELECT * FROM item WHERE flag = '1000'";
         }
 
-        System.out.println("finalQuery: " + finalQuery);
+//        System.out.println("finalQuery: " + finalQuery);
 
         itemD = new ItemDAO();
         List<Item> resultQuery = itemD.getitemQuery(finalQuery);

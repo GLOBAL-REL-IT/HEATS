@@ -85,7 +85,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
  * @author zbqb9x
  */
 @Controller
-@RequestMapping("/maverick")
+@RequestMapping(value = "/maverick")
 @SessionAttributes({"userSession"})
 @PropertySource("classpath:ldap.properties")
 public class MaverickController {

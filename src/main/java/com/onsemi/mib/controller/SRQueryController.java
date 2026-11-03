@@ -209,7 +209,7 @@ public class SRQueryController {
             finalQuery = "SELECT * FROM sr_request WHERE flag = '1000'";
         }
 
-        System.out.println("finalQuery: " + finalQuery);
+//        System.out.println("finalQuery: " + finalQuery);
 
         srD = new SampleRequestDAO();
         List<SampleRequest> SrQuery = srD.getAllQuery(finalQuery);

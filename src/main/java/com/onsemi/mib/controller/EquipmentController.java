@@ -333,7 +333,7 @@ public class EquipmentController {
             //check need to insert or update
             EquipmentDAO eqptD = new EquipmentDAO();
             int countPkid = eqptD.getCountPkid(pkid);
-            LOGGER.info("pkid: " + pkid);
+//            LOGGER.info("pkid: " + pkid);
             if (countPkid == 0) { //insert
                 eqptD = new EquipmentDAO();
                 QueryResult q = eqptD.insertEquipment(eqpt);
@@ -2346,7 +2346,7 @@ public class EquipmentController {
             finalQuery = "SELECT * FROM equipment WHERE flag = '1000'";
         }
 
-        System.out.println("finalQuery: " + finalQuery);
+//        System.out.println("finalQuery: " + finalQuery);
 
         eqptD = new EquipmentDAO();
         List<Equipment> resultQuery = eqptD.getEquipmentforQuery(finalQuery);

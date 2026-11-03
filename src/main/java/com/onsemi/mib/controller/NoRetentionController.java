@@ -431,7 +431,7 @@ public class NoRetentionController {
             finalQuery = "SELECT * FROM sr_archive WHERE flag = '1000'";
         }
 
-        System.out.println("finalQuery: " + finalQuery);
+//        System.out.println("finalQuery: " + finalQuery);
 
         arcD = new SRArchiveDAO();
         List<SRArchive> SrQuery = arcD.getAllQueryList(finalQuery);
