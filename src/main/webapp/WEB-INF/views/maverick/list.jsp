@@ -101,11 +101,11 @@
                                                                     <a href="maverickdetails/${parameterMaster.id}/${parameterMaster.module}/${parameterMaster.id2}" title="Item sent to Scrap"><i class="bi bi-recycle h3"></i></a>
                                                                 </c:when>
                                                                 <c:when test="${parameterMaster.flag == '4'}">
-                                                                    <a href="maverickdetails/${parameterMaster.id}/${parameterMaster.module}/${parameterMaster.id2}" title="This one still no decided yet"><i class="bi bi-clipboard2 h3"></i></a>
+                                                                    <a href="maverickdetails/${parameterMaster.id}/${parameterMaster.module}/${parameterMaster.id2}" title="Maverick Details"><i class="bi bi-clipboard2 h3"></i></a>
                                                                     <a href="redo/${parameterMaster.id}"><i class="bi bi-clipboard-plus h3" title="Visual Inspection"></i></a>
                                                                 </c:when>
                                                                 <c:when test="${parameterMaster.flag == '5'}">
-                                                                    <a href="maverickdetails/${parameterMaster.id}/${parameterMaster.module}/${parameterMaster.id2}" title="This one still no decided yet"><i class="bi bi-clipboard2 h3"></i></a>
+                                                                    <a href="maverickdetails/${parameterMaster.id}/${parameterMaster.module}/${parameterMaster.id2}" title="Maverick Details"><i class="bi bi-clipboard2 h3"></i></a>
                                                                     <a href="redo/${parameterMaster.id}"><i class="bi bi-clipboard2-pulse h3" title="Functional Test"></i></a>
                                                                 </c:when>
                                                                 <c:otherwise>

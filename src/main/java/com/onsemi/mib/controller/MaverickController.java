@@ -773,9 +773,15 @@ public class MaverickController {
         addParameterDetail(model, pD, itemVm.getCableWiredCopperWireReject(), "022", "cableWiredCopperWireReject");
         addParameterDetail(model, pD, itemVm.getLabelIdentificationReject(), "023", "labelIdentificationReject");
         
-        
+        model.addAttribute("leakCheck", "Yes");
+        model.addAttribute("manCheck", "No");
+        model.addAttribute("bibCheck", "Yes");
+        model.addAttribute("bibDaqCheck", "Yes");
+        model.addAttribute("psCheck", "No");
+        model.addAttribute("winCheck", "No");
+        LOGGER.info("SINI KITA MASUK UNTUK PAGE YANG BUAT FUNCTIONAL TEST");
 
-        return "maverick/maverick_vmft";
+        return "maverick/maverick_ft";
     }
 
     @RequestMapping(value = "/vm/save", method = {RequestMethod.GET, RequestMethod.POST})

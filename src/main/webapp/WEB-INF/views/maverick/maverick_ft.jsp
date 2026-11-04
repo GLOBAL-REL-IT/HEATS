@@ -41,7 +41,7 @@
                                         <a class="nav-link" id="tab-twoAAA" data-bs-toggle="tab" href="#twoAAA" role="tab" aria-controls="twoAAA" aria-selected="false"><i class="bi bi-search"></i>Visual Inspection Check</a>
                                     </li>
                                     <li>
-                                        <a class="nav-link" id="tab-threeAAA" data-bs-toggle="tab" href="#threeAAA" role="tab" aria-controls="threeAAA" aria-selected="false"><i class="bi bi-clipboard-check"></i>Functional Test</a>
+                                        <a class="nav-link active" id="tab-threeAAA" data-bs-toggle="tab" href="#threeAAA" role="tab" aria-controls="threeAAA" aria-selected="false"><i class="bi bi-clipboard-check"></i>Functional Test</a>
                                     </li>
                                 </ul>
                                 <div class="tab-content" id="customTabContent">
@@ -55,10 +55,9 @@
                                             <%@ include file="redo_vm.jsp" %>
                                         </div>
                                     </div>
-                                    <div class="tab-pane active" id="threeAAA" role="tabpanel">
+                                    <div class="tab-pane fade show active" id="threeAAA" role="tabpanel">
                                         <div class="row gx-4">
                                             <div class="col-12">
-                                                &nbsp;
                                                 <input type="hidden" name="maverickId" value="${itemmaverick.id}">
                                                 <input type="hidden" name="module" value="${itemmaverick.module}">
                                                 <input type="hidden" name="mibItemId" value="${itemmaverick.mibItemId}">

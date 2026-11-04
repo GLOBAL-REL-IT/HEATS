@@ -26,7 +26,7 @@
                             <a href="${contextPath}/maverick/redo/${id}" class="btn btn-outline-success"><i class="bi bi-search me-2"></i>PROCEED VM</a>
                         </c:if>
                         <c:if test="${data.flag == '5'}">
-                            <a href="${contextPath}/maverick/redo/${id}" class="btn btn-outline-success"><i class="bi bi-search me-2"></i>PROCEED FT</a>
+                            <a href="${contextPath}/maverick/redoft/${id}" class="btn btn-outline-success"><i class="bi bi-search me-2"></i>PROCEED FT</a>
                         </c:if>
                     </div>
                 </nav>

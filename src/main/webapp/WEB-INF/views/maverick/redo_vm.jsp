@@ -60,7 +60,7 @@
                             </div>
                             <div class="col-xl-6 col-sm-12 col-12">
                                 <div class="mb-2">
-                                    <a class="form-label" href="${contextPath}/hw/item/vm/downloadAttach/${itemVm.id}/pcb" id="pcbAttach" name="pcbAttach"> Download Attachment</a>
+                                    <a class="form-label" href="${contextPath}/hw/item/vm/downloadAttach/${itemVm.id}/pcb" id="pcbAttach" name="pcbAttach" style="${empty itemVm.pcbAttach ? 'display:none;' : ''}"> Download Attachment</a>
                                 </div>
                             </div>
                         </div>
@@ -120,7 +120,7 @@
                             </div>
                             <div class="col-xl-6 col-sm-12 col-12">
                                 <div class="mb-2">
-                                    <a class="form-label" href="${contextPath}/hw/item/vm/downloadAttach/${itemVm.id}/handle" id="handleAttach" name="handleAttach"> Download Attachment</a>
+                                    <a class="form-label" href="${contextPath}/hw/item/vm/downloadAttach/${itemVm.id}/handle" id="handleAttach" name="handleAttach" style="${empty itemVm.handleAttach ? 'display:none;' : ''}"> Download Attachment</a>
                                 </div>
                             </div>
                         </div>
@@ -180,7 +180,7 @@
                             </div>
                             <div class="col-xl-6 col-sm-12 col-12">
                                 <div class="mb-2">
-                                    <a class="form-label" href="${contextPath}/hw/item/vm/downloadAttach/${itemVm.id}/metalFrame" id="metalFrameAttach" name="metalFrameAttach"> Download Attachment</a>
+                                    <a class="form-label" href="${contextPath}/hw/item/vm/downloadAttach/${itemVm.id}/metalFrame" id="metalFrameAttach" name="metalFrameAttach" style="${empty itemVm.metalFrameAttach ? 'display:none;' : ''}"> Download Attachment</a>
                                 </div>
                             </div>
                         </div>
@@ -240,7 +240,7 @@
                             </div>
                             <div class="col-xl-6 col-sm-12 col-12">
                                 <div class="mb-2">
-                                    <a class="form-label" href="${contextPath}/hw/item/vm/downloadAttach/${itemVm.id}/hardwareFasterners" id="hardwareFasternersAttach" name="hardwareFasternersAttach"> Download Attachment</a>
+                                    <a class="form-label" href="${contextPath}/hw/item/vm/downloadAttach/${itemVm.id}/hardwareFasterners" id="hardwareFasternersAttach" name="hardwareFasternersAttach" style="${empty itemVm.hardwareFasternersAttach ? 'display:none;' : ''}">Download Attachment</a>
                                 </div>
                             </div>
                         </div>
@@ -300,7 +300,7 @@
                             </div>
                             <div class="col-xl-6 col-sm-12 col-12">
                                 <div class="mb-2">
-                                    <a class="form-label" href="${contextPath}/hw/item/vm/downloadAttach/${itemVm.id}/clipHolder" id="clipHolderAttach" name="clipHolderAttach"> Download Attachment</a>
+                                    <a class="form-label" href="${contextPath}/hw/item/vm/downloadAttach/${itemVm.id}/clipHolder" id="clipHolderAttach" name="clipHolderAttach" style="${empty itemVm.clipHolderAttach ? 'display:none;' : ''}"> Download Attachment</a>
                                 </div>
                             </div>
                         </div>
@@ -360,7 +360,7 @@
                             </div>
                             <div class="col-xl-6 col-sm-12 col-12">
                                 <div class="mb-2">
-                                    <a class="form-label" href="${contextPath}/hw/item/vm/downloadAttach/${itemVm.id}/pcbEdgeFinger" id="pcbEdgeFingerAttach" name="pcbEdgeFingerAttach"> Download Attachment</a>
+                                    <a class="form-label" href="${contextPath}/hw/item/vm/downloadAttach/${itemVm.id}/pcbEdgeFinger" id="pcbEdgeFingerAttach" name="pcbEdgeFingerAttach" style="${empty itemVm.pcbEdgeFingerAttach ? 'display:none;' : ''}"> Download Attachment</a>
                                 </div>
                             </div>
                         </div>
@@ -420,7 +420,7 @@
                             </div>
                             <div class="col-xl-6 col-sm-12 col-12">
                                 <div class="mb-2">
-                                    <a class="form-label" href="${contextPath}/hw/item/vm/downloadAttach/${itemVm.id}/connector" id="connectorAttach" name="connectorAttach"> Download Attachment</a>
+                                    <a class="form-label" href="${contextPath}/hw/item/vm/downloadAttach/${itemVm.id}/connector" id="connectorAttach" name="connectorAttach" style="${empty itemVm.connectorAttach ? 'display:none;' : ''}"> Download Attachment</a>
                                 </div>
                             </div>
                         </div>
@@ -480,7 +480,7 @@
                             </div>
                             <div class="col-xl-6 col-sm-12 col-12">
                                 <div class="mb-2">
-                                    <a class="form-label" href="${contextPath}/hw/item/vm/downloadAttach/${itemVm.id}/dutSockets" id="dutSocketsAttach" name="dutSocketsAttach"> Download Attachment</a>
+                                    <a class="form-label" href="${contextPath}/hw/item/vm/downloadAttach/${itemVm.id}/dutSockets" id="dutSocketsAttach" name="dutSocketsAttach" style="${empty itemVm.dutSocketsAttach ? 'display:none;' : ''}"> Download Attachment</a>
                                 </div>
                             </div>
                         </div>
@@ -540,7 +540,7 @@
                             </div>
                             <div class="col-xl-6 col-sm-12 col-12">
                                 <div class="mb-2">
-                                    <a class="form-label" href="${contextPath}/hw/item/vm/downloadAttach/${itemVm.id}/edgeMbBanana" id="edgeMbBananaAttach" name="edgeMbBananaAttach"> Download Attachment</a>
+                                    <a class="form-label" href="${contextPath}/hw/item/vm/downloadAttach/${itemVm.id}/edgeMbBanana" id="edgeMbBananaAttach" name="edgeMbBananaAttach" style="${empty itemVm.edgeMbBananaAttach ? 'display:none;' : ''}"> Download Attachment</a>
                                 </div>
                             </div>
                         </div>
@@ -600,7 +600,7 @@
                             </div>
                             <div class="col-xl-6 col-sm-12 col-12">
                                 <div class="mb-2">
-                                    <a class="form-label" href="${contextPath}/hw/item/vm/downloadAttach/${itemVm.id}/electComponent" id="electComponentAttach" name="electComponentAttach"> Download Attachment</a>
+                                    <a class="form-label" href="${contextPath}/hw/item/vm/downloadAttach/${itemVm.id}/electComponent" id="electComponentAttach" name="electComponentAttach" style="${empty itemVm.electComponentAttach ? 'display:none;' : ''}"> Download Attachment</a>
                                 </div>
                             </div>
                         </div>
@@ -660,7 +660,7 @@
                             </div>
                             <div class="col-xl-6 col-sm-12 col-12">
                                 <div class="mb-2">
-                                    <a class="form-label" href="${contextPath}/hw/item/vm/downloadAttach/${itemVm.id}/solderJoint" id="solderJointAttach" name="solderJointAttach"> Download Attachment</a>
+                                    <a class="form-label" href="${contextPath}/hw/item/vm/downloadAttach/${itemVm.id}/solderJoint" id="solderJointAttach" name="solderJointAttach" style="${empty itemVm.solderJointAttach ? 'display:none;' : ''}"> Download Attachment</a>
                                 </div>
                             </div>
                         </div>
@@ -720,7 +720,7 @@
                             </div>
                             <div class="col-xl-6 col-sm-12 col-12">
                                 <div class="mb-2">
-                                    <a class="form-label" href="${contextPath}/hw/item/vm/downloadAttach/${itemVm.id}/winConnector" id="winConnectorAttach" name="winConnectorAttach"> Download Attachment</a>
+                                    <a class="form-label" href="${contextPath}/hw/item/vm/downloadAttach/${itemVm.id}/winConnector" id="winConnectorAttach" name="winConnectorAttach" style="${empty itemVm.winConnectorAttach ? 'display:none;' : ''}"> Download Attachment</a>
                                 </div>
                             </div>
                         </div>
@@ -780,7 +780,7 @@
                             </div>
                             <div class="col-xl-6 col-sm-12 col-12">
                                 <div class="mb-2">
-                                    <a class="form-label" href="${contextPath}/hw/item/vm/downloadAttach/${itemVm.id}/teflonConnector" id="teflonConnectorAttach" name="teflonConnectorAttach"> Download Attachment</a>
+                                    <a class="form-label" href="${contextPath}/hw/item/vm/downloadAttach/${itemVm.id}/teflonConnector" id="teflonConnectorAttach" name="teflonConnectorAttach" style="${empty itemVm.teflonConnectorAttach ? 'display:none;' : ''}"> Download Attachment</a>
                                 </div>
                             </div>
                         </div>
@@ -840,7 +840,7 @@
                             </div>
                             <div class="col-xl-6 col-sm-12 col-12">
                                 <div class="mb-2">
-                                    <a class="form-label" href="${contextPath}/hw/item/vm/downloadAttach/${itemVm.id}/pogoReceptaclesPin" id="pogoReceptaclesPinAttach" name="pogoReceptaclesPinAttach"> Download Attachment</a>
+                                    <a class="form-label" href="${contextPath}/hw/item/vm/downloadAttach/${itemVm.id}/pogoReceptaclesPin" id="pogoReceptaclesPinAttach" name="pogoReceptaclesPinAttach" style="${empty itemVm.pogoReceptaclesPinAttach ? 'display:none;' : ''}"> Download Attachment</a>
                                 </div>
                             </div>
                         </div>
@@ -900,7 +900,7 @@
                             </div>
                             <div class="col-xl-6 col-sm-12 col-12">
                                 <div class="mb-2">
-                                    <a class="form-label" href="${contextPath}/hw/item/vm/downloadAttach/${itemVm.id}/cableWiredCopperWire" id="cableWiredCopperWireAttach" name="cableWiredCopperWireAttach"> Download Attachment</a>
+                                    <a class="form-label" href="${contextPath}/hw/item/vm/downloadAttach/${itemVm.id}/cableWiredCopperWire" id="cableWiredCopperWireAttach" name="cableWiredCopperWireAttach" style="${empty itemVm.cableWiredCopperWireAttach ? 'display:none;' : ''}"> Download Attachment</a>
                                 </div>
                             </div>
                         </div>
@@ -960,7 +960,7 @@
                             </div>
                             <div class="col-xl-6 col-sm-12 col-12">
                                 <div class="mb-2">
-                                    <a class="form-label" href="${contextPath}/hw/item/vm/downloadAttach/${itemVm.id}/labelIdentification" id="labelIdentificationAttach" name="labelIdentificationAttach"> Download Attachment</a>
+                                    <a class="form-label" href="${contextPath}/hw/item/vm/downloadAttach/${itemVm.id}/labelIdentification" id="labelIdentificationAttach" name="labelIdentificationAttach" style="${empty itemVm.labelIdentificationAttach ? 'display:none;' : ''}"> Download Attachment</a>
                                 </div>
                             </div>
                         </div>
