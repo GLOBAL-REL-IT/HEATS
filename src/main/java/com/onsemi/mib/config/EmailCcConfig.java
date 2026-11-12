@@ -89,7 +89,8 @@ public class EmailCcConfig {
 
         Hashtable h = new Hashtable();
         h.put(Context.INITIAL_CONTEXT_FACTORY, "com.sun.jndi.ldap.LdapCtxFactory");
-        h.put(Context.PROVIDER_URL, "ldap://ldap.onsemi.com:389/o=ondex");
+//        h.put(Context.PROVIDER_URL, "ldap://ldap.onsemi.com:389/o=ondex");
+        h.put(Context.PROVIDER_URL, "ldap://adldap.ad.onsemi.com:389/o=ondex");
 
         DirContext ctx = null;
         NamingEnumeration results = null;

@@ -148,7 +148,7 @@
                                 </div>
                             </c:if>
                             <div class="col-md-12">
-                                <button type="submit" id="submit" class="btn btn-primary float-end ${bibbutton}">Save benda</button>
+                                <button type="submit" id="submit" class="btn btn-primary float-end ${bibbutton}">Save</button>
                             </div>
                         </form>
                     </div>

@@ -774,11 +774,11 @@ public class MaverickController {
         addParameterDetail(model, pD, itemVm.getLabelIdentificationReject(), "023", "labelIdentificationReject");
         
         model.addAttribute("leakCheck", "Yes");
-        model.addAttribute("manCheck", "No");
+        model.addAttribute("manCheck", "Yes");
         model.addAttribute("bibCheck", "Yes");
         model.addAttribute("bibDaqCheck", "Yes");
-        model.addAttribute("psCheck", "No");
-        model.addAttribute("winCheck", "No");
+        model.addAttribute("psCheck", "Yes");
+        model.addAttribute("winCheck", "Yes");
         LOGGER.info("SINI KITA MASUK UNTUK PAGE YANG BUAT FUNCTIONAL TEST");
 
         return "maverick/maverick_ft";

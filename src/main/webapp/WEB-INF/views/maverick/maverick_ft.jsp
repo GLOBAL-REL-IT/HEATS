@@ -26,6 +26,9 @@
         <div class="content-wrapper">
             <!-- Row start -->
             <div class="row gx-4">
+                <div class="mb-2">
+                    <a href="${contextPath}/maverick/list" class="btn btn-outline-warning me-2" role="button"><i class='bi bi-arrow-bar-left'></i>&nbsp;&nbsp;Back</a>
+                </div>
                 <div class="col-sm-12 col-12">
                     <div class="card mb-4">
                         <div class="card-header">
@@ -49,7 +52,7 @@
                                         <div class="row gx-4">
                                             &nbsp;
                                         </div> 
-                                    </div> 
+                                    </div>
                                     <div class="tab-pane fade" id="twoAAA" role="tabpanel">
                                         <div class="row gx-4">
                                             <%@ include file="redo_vm.jsp" %>
