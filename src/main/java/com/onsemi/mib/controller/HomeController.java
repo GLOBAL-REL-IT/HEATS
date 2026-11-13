@@ -32,6 +32,7 @@ import java.io.IOException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.Month;
+import java.time.YearMonth;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
@@ -86,7 +87,7 @@ public class HomeController {
     public String home(
             Model model,
             HttpServletRequest request,
-            @RequestParam(required = false) String selectedProgram) throws IOException {
+            @RequestParam(required = false) String selectedProgram) throws IOException, NamingException {
 
         HttpSession currentSession = request.getSession();
         UserSession userSession = (UserSession) currentSession.getAttribute("userSession");
@@ -110,32 +111,45 @@ public class HomeController {
                 yearLabel = year.toString();
             }
 
-            for (int x = 1; x <= 12; x++) {
-                if (month < 1) {
-//                year = year - 1;
-                    year -= 1;
-                    month = 12;
-                }
-                Month monthN = Month.of(month);
-                String monthNameFull = monthN.name();
-                String monthName = monthNameFull.substring(0, 3);
-                String year1 = year.toString().substring(2, 4);
-                String fullMonthYear = "'" + monthName + " " + year1 + "'";
-                monthNameList.add(fullMonthYear);
+//            for (int x = 1; x <= 12; x++) {
+//                if (month < 1) {
+////                year = year - 1;
+//                    year -= 1;
+//                    month = 12;
+//                }
+//                Month monthN = Month.of(month);
+//                String monthNameFull = monthN.name();
+//                String monthName = monthNameFull.substring(0, 3);
+//                String year1 = year.toString().substring(2, 4);
+//                String fullMonthYear = "'" + monthName + " " + year1 + "'";
+//                monthNameList.add(fullMonthYear);
+//
+//                RmsBookingHardwareDAO hwD = new RmsBookingHardwareDAO();
+//                int countHwId = hwD.getCountBibInByMonthAndYear(month.toString(), year.toString());
+//                listHwIn.add(countHwId);
+//
+//                hwD = new RmsBookingHardwareDAO();
+//                int countHwRelease = hwD.getCountBibReleaseByMonthAndYear(month.toString(), year.toString());
+//                listHwOut.add(countHwRelease);
+//
+//                hwD = new RmsBookingHardwareDAO();
+//                String avgCircleTime = hwD.getCountAvgCircleTypeByMonthAndYear(month.toString(), year.toString());
+//                listHwAverage.add(avgCircleTime);
+//
+//                month -= 1;
+//            }
+            RmsBookingHardwareDAO hardwareDAO = new RmsBookingHardwareDAO();
+            YearMonth currentPeriod = YearMonth.of(year, month);
 
-                RmsBookingHardwareDAO hwD = new RmsBookingHardwareDAO();
-                int countHwId = hwD.getCountBibInByMonthAndYear(month.toString(), year.toString());
-                listHwIn.add(countHwId);
-
-                hwD = new RmsBookingHardwareDAO();
-                int countHwRelease = hwD.getCountBibReleaseByMonthAndYear(month.toString(), year.toString());
-                listHwOut.add(countHwRelease);
-
-                hwD = new RmsBookingHardwareDAO();
-                String avgCircleTime = hwD.getCountAvgCircleTypeByMonthAndYear(month.toString(), year.toString());
-                listHwAverage.add(avgCircleTime);
-
-                month -= 1;
+            for (int i = 0; i < 12; i++) {
+                String monthYearLabel = String.format("'%s %s'", currentPeriod.getMonth().name().substring(0, 3), String.valueOf(currentPeriod.getYear()).substring(2));
+                monthNameList.add(monthYearLabel);
+                String monthStr = String.valueOf(currentPeriod.getMonthValue());
+                String yearStr = String.valueOf(currentPeriod.getYear());
+                listHwIn.add(hardwareDAO.getCountBibInByMonthAndYear(monthStr, yearStr));
+                listHwOut.add(hardwareDAO.getCountBibReleaseByMonthAndYear(monthStr, yearStr));
+                listHwAverage.add(hardwareDAO.getCountAvgCircleTypeByMonthAndYear(monthStr, yearStr));
+                currentPeriod = currentPeriod.minusMonths(1);
             }
 
             Collections.reverse(listHwIn);
@@ -524,104 +538,115 @@ public class HomeController {
             List<LDAPUser> ldapUserList = new ArrayList<LDAPUser>();
 
             //save to user table if not registered yet
-            if ("0".equals(groupId)) {
-                //Start Retrieve LDAP Users
-                Hashtable h = new Hashtable();
-                h.put(Context.INITIAL_CONTEXT_FACTORY, "com.sun.jndi.ldap.LdapCtxFactory");
-                h.put(Context.PROVIDER_URL, env.getProperty("ldap.url"));
-
-                DirContext ctx = null;
-                NamingEnumeration results = null;
-
-                try {
-                    ctx = new InitialDirContext(h);
-                    SearchControls controls = new SearchControls();
-                    controls.setSearchScope(SearchControls.SUBTREE_SCOPE);
-                    String[] attrIDs = {"givenname", "sn", "title", "cn", "mail", "oncid", "onoraclelocation"};
-                    controls.setReturningAttributes(attrIDs);
-                    //Local
-//                results = ctx.search("ou=Users", "(cn=" + loginId + ")", controls);
-                    //Onsemid
-//                 //new style to prevent LDAP Injection 20 July 2026
-                    String safeLoginId = escapeLDAPSearchFilter(userSession.getLoginId());
-                    String filter = "(&(objectClass=person)(cn=" + safeLoginId + "))";
-                    results = ctx.search("ou=ONSemi", filter, controls);
-
-//                    results = ctx.search("ou=ONSemi", "(cn=" + userSession.getLoginId() + ")", controls); //disabled to prevent LDAP Injection 20 July 2026
-                    while (results.hasMore()) {
-                        SearchResult searchResult = (SearchResult) results.next();
-                        Attributes attributes = searchResult.getAttributes();
-
-                        LDAPUser user = new LDAPUser();
-
-                        Enumeration e = attributes.getIDs();
-                        while (e.hasMoreElements()) {
-                            String key = (String) e.nextElement();
-                            if (key.equalsIgnoreCase("givenName")) {
-                                user.setFirstname(attributes.get(key).get().toString());
-                            }
-                            if (key.equalsIgnoreCase("sn")) {
-                                user.setLastname(attributes.get(key).get().toString());
-                            }
-                            if (key.equalsIgnoreCase("title")) {
-                                user.setTitle(attributes.get(key).get().toString());
-                            }
-                            if (key.equalsIgnoreCase("cn")) {
-                                user.setLoginId(attributes.get(key).get().toString());
-                            }
-                            if (key.equalsIgnoreCase("mail")) {
-                                user.setEmail(attributes.get(key).get().toString());
-                            }
-                            if (key.equalsIgnoreCase("oncid")) {
-                                user.setOncid(attributes.get(key).get().toString());
-                            }
-//                            System.out.println("onoraclelocation: " + attributes.get(key).get().toString());
-//                        LOGGER.info("onoraclelocation: " + attributes.get(key).get().toString());
-                        }
-
-                        ldapUserList.add(user);
-                    }
-                } catch (NamingException e) {
-                    LOGGER.error(e.getMessage());
-                } finally {
-                    if (results != null) {
-                        try {
-                            results.close();
-                        } catch (Exception e) {
-                            LOGGER.error(e.getMessage());
-                        }
-                    }
-                    if (ctx != null) {
-                        try {
-                            ctx.close();
-                        } catch (Exception e) {
-                            LOGGER.error(e.getMessage());
-                        }
-                    }
-                }
-                //End Retrieve LDAP Users
-
-                for (int i = 0; i < ldapUserList.size(); i++) {
-
-                    LDAPUser ldap = new LDAPUser();
-                    ldap.setLoginId(ldapUserList.get(i).getLoginId());
-                    ldap.setOncid(ldapUserList.get(i).getOncid());
-                    ldap.setFirstname(ldapUserList.get(i).getFirstname());
-                    ldap.setLastname(ldapUserList.get(i).getLastname());
-                    ldap.setEmail(ldapUserList.get(i).getEmail());
-                    ldap.setTitle(ldapUserList.get(i).getTitle());
-                    ldap.setGroupId("3");
-                    ldap.setRequestAccess("No");
-                    LDAPUserDAO ldapUserDAO = new LDAPUserDAO();
-                    QueryResult queryResult = ldapUserDAO.insert(ldap);
-//                    System.out.println("++queryResult : " + queryResult.getGeneratedKey());
-                    return "redirect:/";
-                }
-
-            } else if ("3".equals(groupId)) { //return different page if group - fresh user
-//                model.addAttribute("groupId", groupId);
-                return "home/index1";
-            }
+//            if ("0".equals(groupId)) {
+//                //Start Retrieve LDAP Users
+//                Hashtable h = new Hashtable();
+//                h.put(Context.INITIAL_CONTEXT_FACTORY, "com.sun.jndi.ldap.LdapCtxFactory");
+//                h.put(Context.PROVIDER_URL, env.getProperty("ldap.url"));
+//
+//                DirContext ctx = null;
+//                NamingEnumeration results = null;
+//
+//                try {
+//                    ctx = new InitialDirContext(h);
+//                    SearchControls controls = new SearchControls();
+//                    controls.setSearchScope(SearchControls.SUBTREE_SCOPE);
+//                    String[] attrIDs = {"givenname", "sn", "title", "cn", "mail", "oncid", "onoraclelocation"};
+//                    controls.setReturningAttributes(attrIDs);
+//                    //Local
+////                results = ctx.search("ou=Users", "(cn=" + loginId + ")", controls);
+//                    //Onsemid
+////                 //new style to prevent LDAP Injection 20 July 2026
+//                    String safeLoginId = escapeLDAPSearchFilter(userSession.getLoginId());
+//                    String filter = "(&(objectClass=person)(cn=" + safeLoginId + "))";
+//                    results = ctx.search("ou=ONSemi", filter, controls);
+//
+////                    results = ctx.search("ou=ONSemi", "(cn=" + userSession.getLoginId() + ")", controls); //disabled to prevent LDAP Injection 20 July 2026
+//                    while (results.hasMore()) {
+//                        SearchResult searchResult = (SearchResult) results.next();
+//                        Attributes attributes = searchResult.getAttributes();
+//
+//                        LDAPUser user = new LDAPUser();
+//
+//                        Enumeration e = attributes.getIDs();
+//                        while (e.hasMoreElements()) {
+//                            String key = (String) e.nextElement();
+//                            if (key.equalsIgnoreCase("givenName")) {
+//                                user.setFirstname(attributes.get(key).get().toString());
+//                            }
+//                            if (key.equalsIgnoreCase("sn")) {
+//                                user.setLastname(attributes.get(key).get().toString());
+//                            }
+//                            if (key.equalsIgnoreCase("title")) {
+//                                user.setTitle(attributes.get(key).get().toString());
+//                            }
+//                            if (key.equalsIgnoreCase("cn")) {
+//                                user.setLoginId(attributes.get(key).get().toString());
+//                            }
+//                            if (key.equalsIgnoreCase("mail")) {
+//                                user.setEmail(attributes.get(key).get().toString());
+//                            }
+//                            if (key.equalsIgnoreCase("oncid")) {
+//                                user.setOncid(attributes.get(key).get().toString());
+//                            }
+////                            System.out.println("onoraclelocation: " + attributes.get(key).get().toString());
+////                        LOGGER.info("onoraclelocation: " + attributes.get(key).get().toString());
+//
+//                            userSession.setLoginId(safeLoginId);
+//                            userSession.setFirstName(user.getFirstname());
+//                            userSession.setFullname(user.getFirstname() + " " + user.getLastname());
+//                            userSession.setEmail(user.getEmail());
+//                            userSession.setTitle(user.getTitle());
+//                            userSession.setOncid(user.getOncid());
+//
+//                            LOGGER.info("LDAP attributes loaded successfully");
+//                        }
+//
+//                        ldapUserList.add(user);
+//                    }
+//                } catch (NamingException e) {
+//                    LOGGER.error(e.getMessage());
+//                } finally {
+//                    if (results != null) {
+//                        try {
+//                            results.close();
+//                        } catch (Exception e) {
+//                            LOGGER.error(e.getMessage());
+//                        }
+//                    }
+//                    if (ctx != null) {
+//                        try {
+//                            ctx.close();
+//                        } catch (Exception e) {
+//                            LOGGER.error(e.getMessage());
+//                        }
+//                    }
+//                }
+//                //End Retrieve LDAP Users
+//
+//                for (int i = 0; i < ldapUserList.size(); i++) {
+//
+//                    LDAPUser ldap = new LDAPUser();
+//
+//                    ldap.setLoginId(userSession.getLoginId());
+//                    ldap.setOncid(userSession.getOncid());
+//                    ldap.setFirstname(userSession.getFirstName());
+//                    ldap.setLastname(userSession.getFullname());
+//                    ldap.setEmail(userSession.getEmail());
+//                    ldap.setTitle(userSession.getTitle());
+//                    ldap.setGroupId("3");
+//                    ldap.setRequestAccess("No");
+//
+//                    LDAPUserDAO ldapUserDAO = new LDAPUserDAO();
+//                    QueryResult queryResult = ldapUserDAO.insert(ldap);
+//
+//                    return "redirect:/";
+//                }
+//
+//            } else if ("3".equals(groupId)) { //return different page if group - fresh user
+////                model.addAttribute("groupId", groupId);
+//                return "home/index1";
+//            }
 
             //Anything for Dashboard
             return "home/index";

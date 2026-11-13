@@ -9,6 +9,8 @@ public class UserSession {
     private String group;
     private String[] programAccess;
     private String firstName;
+    private String title;
+    private String oncid;
 
     private String itemEdit;
     private String itemDelete;
@@ -310,6 +312,22 @@ public class UserSession {
 
     public void setEqptRelTestGroupAddGlobal(String eqptRelTestGroupAddGlobal) {
         this.eqptRelTestGroupAddGlobal = eqptRelTestGroupAddGlobal;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    public String getOncid() {
+        return oncid;
+    }
+
+    public void setOncid(String oncid) {
+        this.oncid = oncid;
     }
 
 }

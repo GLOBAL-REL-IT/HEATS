@@ -1,10 +1,21 @@
 package com.onsemi.mib.config;
 
+import com.onsemi.mib.dao.LDAPUserDAO;
+import com.onsemi.mib.model.LDAPUser;
+import com.onsemi.mib.model.UserSessionDetails;
+import com.onsemi.mib.tools.QueryResult;
 import java.util.ArrayList;
+import java.util.Enumeration;
 import java.util.List;
+import java.util.logging.Level;
 import java.util.Map;
 import java.util.stream.Collectors;
 import javax.annotation.PostConstruct;
+import javax.naming.NamingEnumeration;
+import javax.naming.directory.Attributes;
+import javax.naming.directory.SearchControls;
+import javax.naming.directory.SearchResult;
+import javax.naming.NamingException;
 import javax.sql.DataSource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -24,8 +35,8 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
-import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -115,6 +126,65 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                     throw new DisabledException("User [" + cleanUsername + "] is disabled in user_ldap.");
                 }
 
+                SearchControls controls = new SearchControls();
+                controls.setSearchScope(SearchControls.SUBTREE_SCOPE);
+                String[] attrIDs = {"givenname", "sn", "title", "cn", "mail", "oncid", "onoraclelocation"};
+                controls.setReturningAttributes(attrIDs);
+                try {
+                    NamingEnumeration results = ctx.search("ou=Users", "(cn=" + cleanUsername + ")", controls);
+
+                    while (results.hasMore()) {
+                        SearchResult searchResult = (SearchResult) results.next();
+                        Attributes attributes = searchResult.getAttributes();
+
+                        LDAPUser user = new LDAPUser();
+
+                        Enumeration e = attributes.getIDs();
+                        while (e.hasMoreElements()) {
+                            String key = (String) e.nextElement();
+                            if (key.equalsIgnoreCase("givenName")) {
+                                user.setFirstname(attributes.get(key).get().toString());
+                            }
+                            if (key.equalsIgnoreCase("sn")) {
+                                user.setLastname(attributes.get(key).get().toString());
+                            }
+                            if (key.equalsIgnoreCase("title")) {
+                                user.setTitle(attributes.get(key).get().toString());
+                            }
+                            if (key.equalsIgnoreCase("cn")) {
+                                user.setLoginId(attributes.get(key).get().toString());
+                            }
+                            if (key.equalsIgnoreCase("mail")) {
+                                user.setEmail(attributes.get(key).get().toString());
+                            }
+                            if (key.equalsIgnoreCase("oncid")) {
+                                user.setOncid(attributes.get(key).get().toString());
+                            }
+//                            System.out.println("onoraclelocation: " + attributes.get(key).get().toString());
+//                        LOGGER.info("onoraclelocation: " + attributes.get(key).get().toString());
+
+                            LDAPUser ldap = new LDAPUser();
+
+                            ldap.setLoginId(cleanUsername);
+                            ldap.setOncid(user.getOncid());
+                            ldap.setFirstname(user.getFirstname());
+                            ldap.setLastname(user.getLastname());
+                            ldap.setEmail(user.getEmail());
+                            ldap.setTitle(user.getTitle());
+                            ldap.setGroupId("3");
+                            ldap.setRequestAccess("No");
+
+                            LDAPUserDAO ldapUserDAO = new LDAPUserDAO();
+                            QueryResult queryResult = ldapUserDAO.insert(ldap);
+                            LOGGER.info("LDAP attributes loaded successfully");
+                        }
+
+                    }
+                } catch (NamingException ex) {
+                    LOGGER.error("=== FAILED NAMING EXCEPTION ERROR +++ " + ex.getMessage());
+                    java.util.logging.Logger.getLogger(SecurityConfig.class.getName()).log(Level.SEVERE, null, ex);
+                }
+
                 List<GrantedAuthority> dbAuthorities = rows.stream()
                         .filter(row -> row.get("group_id") != null)
                         .map(row -> new SimpleGrantedAuthority(row.get("group_id").toString()))
@@ -125,7 +195,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 //                        dbAuthorities.add(new SimpleGrantedAuthority(row.get("group_id").toString()));
 //                    }
 //                }
-                
+
                 if (dbAuthorities.isEmpty()) {
                     dbAuthorities.add(new SimpleGrantedAuthority("ROLE_USER"));
                 }
