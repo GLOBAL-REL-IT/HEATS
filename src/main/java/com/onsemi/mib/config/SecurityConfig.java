@@ -2,17 +2,20 @@ package com.onsemi.mib.config;
 
 import com.onsemi.mib.dao.LDAPUserDAO;
 import com.onsemi.mib.model.LDAPUser;
-import com.onsemi.mib.model.UserSessionDetails;
 import com.onsemi.mib.tools.QueryResult;
 import java.util.ArrayList;
 import java.util.Enumeration;
+import java.util.Hashtable;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.Map;
 import java.util.stream.Collectors;
 import javax.annotation.PostConstruct;
+import javax.naming.Context;
 import javax.naming.NamingEnumeration;
 import javax.naming.directory.Attributes;
+import javax.naming.directory.DirContext;
+import javax.naming.directory.InitialDirContext;
 import javax.naming.directory.SearchControls;
 import javax.naming.directory.SearchResult;
 import javax.naming.NamingException;
@@ -99,6 +102,93 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                         ctx = new javax.naming.directory.InitialDirContext(env);
                         successfulBindUser = bindPrincipal;
                         LOGGER.info("=== SUCCESSFUL AD BIND WITH: [" + bindPrincipal + "] ===");
+                        LOGGER.info("=== BIND SUCCESSFUL! PROVIDER_URL is: " + env.get(Context.PROVIDER_URL) + " ===");
+                        
+                        // check if da ada rekod dlm database
+                        LDAPUser ldap = new LDAPUser();
+                        LDAPUserDAO ldapdao = new LDAPUserDAO();
+                        
+                        ldap = ldapdao.getByLoginId(cleanUsername);
+                        if (ldap == null) {
+                            ctx.close();
+                            // Keep your existing PROVIDER_URL: ldap://adldap.ad.onsemi.com:389/o=ondex
+                            env.put(Context.PROVIDER_URL, "ldap://adldap.ad.onsemi.com:389");
+                            env.put(Context.REFERRAL, "ignore");
+                            ctx = new InitialDirContext(env);
+
+                            // 1. Ask adldap.ad.onsemi.com what root namingContexts it actually hosts!
+                            Attributes rootAttrs = ctx.getAttributes("", new String[]{"defaultNamingContext", "namingContexts"});
+                            LOGGER.info("=== ROOT DSE ATTRS: " + rootAttrs + " ===");
+
+                            // 2. Pick defaultNamingContext if present, otherwise use "" (empty string)
+                            String searchBase = "";
+                            if (rootAttrs.get("defaultNamingContext") != null) {
+                                searchBase = rootAttrs.get("defaultNamingContext").get().toString();
+                            } else if (rootAttrs.get("namingContexts") != null) {
+                                searchBase = rootAttrs.get("namingContexts").get().toString();
+                            }
+
+                            // 3. Search using that exact searchBase
+                            String searchFilter = "(|(sAMAccountName=" + cleanUsername + ")(cn=" + cleanUsername + ")(uid=" + cleanUsername + "))";
+                            SearchControls controls = new SearchControls();
+                            controls.setSearchScope(SearchControls.SUBTREE_SCOPE);
+                            controls.setReturningAttributes(new String[]{"sAMAccountName", "cn", "uid", "sn", "givenName", "employeeNumber", "mail", "title", "distinguishedName"});
+
+                            NamingEnumeration<SearchResult> results = ctx.search(searchBase, searchFilter, controls);
+
+                            if (!results.hasMore()) {
+                                LOGGER.warn("=== LDAP SEARCH RETURNED 0 RESULTS for: " + cleanUsername + " ===");
+                            }
+
+                            while (results.hasMore()) {
+                                SearchResult searchResult = (SearchResult) results.next();
+                                Attributes attributes = searchResult.getAttributes();
+
+                                String samVal = (attributes.get("sAMAccountName") != null) ? attributes.get("sAMAccountName").get().toString() : "NULL";
+                                String cnVal = (attributes.get("cn") != null) ? attributes.get("cn").get().toString() : "NULL";
+                                String oncidVal = (attributes.get("employeeNumber") != null) ? attributes.get("employeeNumber").get().toString() : "NULL";
+                                String dnVal = (attributes.get("distinguishedName") != null) ? attributes.get("distinguishedName").get().toString() : "NULL";
+
+                                // Log both values side by side
+                                LDAPUser user = new LDAPUser();
+                                Enumeration e = attributes.getIDs();
+                                while (e.hasMoreElements()) {
+                                    String key = (String) e.nextElement();
+                                    if (key.equalsIgnoreCase("givenName")) {
+                                        user.setFirstname(attributes.get(key).get().toString());
+                                    }
+                                    if (key.equalsIgnoreCase("sn")) {
+                                        user.setLastname(attributes.get(key).get().toString());
+                                    }
+                                    if (key.equalsIgnoreCase("title")) {
+                                        user.setTitle(attributes.get(key).get().toString());
+                                    }
+                                    if (key.equalsIgnoreCase("cn")) {
+                                        user.setLoginId(attributes.get(key).get().toString());
+                                    }
+                                    if (key.equalsIgnoreCase("mail")) {
+                                        user.setEmail(attributes.get(key).get().toString());
+                                    }
+                                    if (key.equalsIgnoreCase("employeeNumber")) {
+                                        user.setOncid(attributes.get(key).get().toString());
+                                    }
+                                }
+                                ldap = new LDAPUser();
+
+                                ldap.setLoginId(cleanUsername);
+                                ldap.setOncid(user.getOncid());
+                                ldap.setFirstname(user.getFirstname());
+                                ldap.setLastname(user.getLastname());
+                                ldap.setEmail(user.getEmail());
+                                ldap.setTitle(user.getTitle());
+                                ldap.setGroupId("3");
+                                ldap.setRequestAccess("No");
+
+                                LDAPUserDAO ldapUserDAO = new LDAPUserDAO();
+                                QueryResult queryResult = ldapUserDAO.insert(ldap);
+                            }
+                        }
+
                         ctx.close();
                         break;
                     } catch (Exception e) {
@@ -124,65 +214,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
                 if (!isActive) {
                     throw new DisabledException("User [" + cleanUsername + "] is disabled in user_ldap.");
-                }
-
-                SearchControls controls = new SearchControls();
-                controls.setSearchScope(SearchControls.SUBTREE_SCOPE);
-                String[] attrIDs = {"givenname", "sn", "title", "cn", "mail", "oncid", "onoraclelocation"};
-                controls.setReturningAttributes(attrIDs);
-                try {
-                    NamingEnumeration results = ctx.search("ou=Users", "(cn=" + cleanUsername + ")", controls);
-
-                    while (results.hasMore()) {
-                        SearchResult searchResult = (SearchResult) results.next();
-                        Attributes attributes = searchResult.getAttributes();
-
-                        LDAPUser user = new LDAPUser();
-
-                        Enumeration e = attributes.getIDs();
-                        while (e.hasMoreElements()) {
-                            String key = (String) e.nextElement();
-                            if (key.equalsIgnoreCase("givenName")) {
-                                user.setFirstname(attributes.get(key).get().toString());
-                            }
-                            if (key.equalsIgnoreCase("sn")) {
-                                user.setLastname(attributes.get(key).get().toString());
-                            }
-                            if (key.equalsIgnoreCase("title")) {
-                                user.setTitle(attributes.get(key).get().toString());
-                            }
-                            if (key.equalsIgnoreCase("cn")) {
-                                user.setLoginId(attributes.get(key).get().toString());
-                            }
-                            if (key.equalsIgnoreCase("mail")) {
-                                user.setEmail(attributes.get(key).get().toString());
-                            }
-                            if (key.equalsIgnoreCase("oncid")) {
-                                user.setOncid(attributes.get(key).get().toString());
-                            }
-//                            System.out.println("onoraclelocation: " + attributes.get(key).get().toString());
-//                        LOGGER.info("onoraclelocation: " + attributes.get(key).get().toString());
-
-                            LDAPUser ldap = new LDAPUser();
-
-                            ldap.setLoginId(cleanUsername);
-                            ldap.setOncid(user.getOncid());
-                            ldap.setFirstname(user.getFirstname());
-                            ldap.setLastname(user.getLastname());
-                            ldap.setEmail(user.getEmail());
-                            ldap.setTitle(user.getTitle());
-                            ldap.setGroupId("3");
-                            ldap.setRequestAccess("No");
-
-                            LDAPUserDAO ldapUserDAO = new LDAPUserDAO();
-                            QueryResult queryResult = ldapUserDAO.insert(ldap);
-                            LOGGER.info("LDAP attributes loaded successfully");
-                        }
-
-                    }
-                } catch (NamingException ex) {
-                    LOGGER.error("=== FAILED NAMING EXCEPTION ERROR +++ " + ex.getMessage());
-                    java.util.logging.Logger.getLogger(SecurityConfig.class.getName()).log(Level.SEVERE, null, ex);
                 }
 
                 List<GrantedAuthority> dbAuthorities = rows.stream()
