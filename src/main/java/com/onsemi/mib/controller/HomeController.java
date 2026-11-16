@@ -643,10 +643,10 @@ public class HomeController {
 //                    return "redirect:/";
 //                }
 //
-//            } else if ("3".equals(groupId)) { //return different page if group - fresh user
-////                model.addAttribute("groupId", groupId);
-//                return "home/index1";
-//            }
+            if ("3".equals(groupId)) { //return different page if group - fresh user
+//                model.addAttribute("groupId", groupId);
+                return "home/index1";
+            }
 
             //Anything for Dashboard
             return "home/index";

@@ -103,13 +103,14 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                         successfulBindUser = bindPrincipal;
                         LOGGER.info("=== SUCCESSFUL AD BIND WITH: [" + bindPrincipal + "] ===");
                         LOGGER.info("=== BIND SUCCESSFUL! PROVIDER_URL is: " + env.get(Context.PROVIDER_URL) + " ===");
-                        
+
                         // check if da ada rekod dlm database
-                        LDAPUser ldap = new LDAPUser();
                         LDAPUserDAO ldapdao = new LDAPUserDAO();
-                        
-                        ldap = ldapdao.getByLoginId(cleanUsername);
-                        if (ldap == null) {
+//                        LDAPUser ldap = ldapdao.getByLoginId(cleanUsername);
+                        int countLoginId = ldapdao.getCountBookingId(cleanUsername);
+//                        if (ldap == null) {
+                        if (countLoginId == 0) {
+                            LOGGER.info("cek......");
                             ctx.close();
                             // Keep your existing PROVIDER_URL: ldap://adldap.ad.onsemi.com:389/o=ondex
                             env.put(Context.PROVIDER_URL, "ldap://adldap.ad.onsemi.com:389");
@@ -173,7 +174,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                                         user.setOncid(attributes.get(key).get().toString());
                                     }
                                 }
-                                ldap = new LDAPUser();
+                                LDAPUser ldap = new LDAPUser();
 
                                 ldap.setLoginId(cleanUsername);
                                 ldap.setOncid(user.getOncid());
@@ -187,6 +188,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                                 LDAPUserDAO ldapUserDAO = new LDAPUserDAO();
                                 QueryResult queryResult = ldapUserDAO.insert(ldap);
                             }
+                        } else {
+                            LOGGER.info("cek22222222......");
                         }
 
                         ctx.close();

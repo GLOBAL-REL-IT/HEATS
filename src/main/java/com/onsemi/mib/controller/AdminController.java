@@ -164,7 +164,8 @@ public class AdminController {
                 //Onsemi
 //                //new style to prevent LDAP Injection 20 July 2026
                 String safeLoginId = escapeLDAPSearchFilter(loginId);
-                String filter = "(&(objectClass=person)(cn=" + safeLoginId + "))";
+//                String filter = "(&(objectClass=person)(cn=" + safeLoginId + "))";
+                String filter = "(&(objectClass=user)(sAMAccountName=" + safeLoginId + "))";
                 results = ctx.search("ou=ONSemi", filter, controls);
 
 //                results = ctx.search("ou=ONSemi", "(cn=" + loginId + ")", controls); //disabled to prevent LDAP Injection 20 July 2026

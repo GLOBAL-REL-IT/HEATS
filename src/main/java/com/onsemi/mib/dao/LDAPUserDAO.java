@@ -9,6 +9,7 @@ import com.onsemi.mib.tools.QueryResult;
 import com.onsemi.mib.model.LDAPUser;
 import java.math.BigInteger;
 import java.sql.Connection;
+import java.sql.PreparedStatement;
 import javax.sql.DataSource;
 import org.apache.commons.dbutils.QueryRunner;
 import org.apache.commons.dbutils.ResultSetHandler;
@@ -400,5 +401,20 @@ public class LDAPUserDAO {
             LOGGER.error(ex.getMessage());
         }
         return list;
+    }
+
+    public Integer getCountBookingId(String loginId) {
+        Integer count = 0;
+        try ( Connection conn = dataSource.getConnection();  PreparedStatement ps = conn.prepareStatement("SELECT count(*) AS count FROM user_ldap WHERE login_id = ?")) {
+            ps.setString(1, loginId);
+            try ( ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    count = rs.getInt("count");
+                }
+            }
+        } catch (SQLException e) {
+            LOGGER.error("Error retrieving booking count for loginId: {}", loginId, e);
+        }
+        return count;
     }
 }
