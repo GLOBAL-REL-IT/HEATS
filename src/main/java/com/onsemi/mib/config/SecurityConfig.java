@@ -110,7 +110,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                         int countLoginId = ldapdao.getCountBookingId(cleanUsername);
 //                        if (ldap == null) {
                         if (countLoginId == 0) {
-                            LOGGER.info("cek......");
+//                            LOGGER.info("cek......");
                             ctx.close();
                             // Keep your existing PROVIDER_URL: ldap://adldap.ad.onsemi.com:389/o=ondex
                             env.put(Context.PROVIDER_URL, "ldap://adldap.ad.onsemi.com:389");
@@ -189,7 +189,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                                 QueryResult queryResult = ldapUserDAO.insert(ldap);
                             }
                         } else {
-                            LOGGER.info("cek22222222......");
+                            LOGGER.info("account found in DB");
                         }
 
                         ctx.close();

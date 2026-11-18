@@ -32,7 +32,7 @@ public class RmsBookingIonicDAO {
     public QueryResult insertRmsBookingIonic(RmsBookingIonic rmsBookingIonic) {
         QueryResult queryResult = new QueryResult();
         try (
-            Connection conn = dataSource.getConnection(); PreparedStatement ps = conn.prepareStatement(INSERT_RMS_BOOKING_IONIC, Statement.RETURN_GENERATED_KEYS)) {
+                 Connection conn = dataSource.getConnection();  PreparedStatement ps = conn.prepareStatement(INSERT_RMS_BOOKING_IONIC, Statement.RETURN_GENERATED_KEYS)) {
             ps.setString(1, rmsBookingIonic.getGroupId());
             ps.setString(2, rmsBookingIonic.getModule());
             ps.setString(3, rmsBookingIonic.getBibResult());
@@ -45,7 +45,7 @@ public class RmsBookingIonicDAO {
             ps.setString(10, rmsBookingIonic.getFlag());
             ps.setString(11, rmsBookingIonic.getCreatedBy());
             queryResult.setResult(ps.executeUpdate());
-            try (ResultSet rs = ps.getGeneratedKeys()) {
+            try ( ResultSet rs = ps.getGeneratedKeys()) {
                 if (rs.next()) {
                     queryResult.setGeneratedKey(
                             String.valueOf(rs.getInt(1))
@@ -62,7 +62,7 @@ public class RmsBookingIonicDAO {
     public QueryResult updateRmsBookingIonic(RmsBookingIonic rmsBookingIonic) {
         QueryResult queryResult = new QueryResult();
         try (
-            Connection conn = dataSource.getConnection(); PreparedStatement ps = conn.prepareStatement(UPDATE_RMS_BOOKING_IONIC)) {
+                 Connection conn = dataSource.getConnection();  PreparedStatement ps = conn.prepareStatement(UPDATE_RMS_BOOKING_IONIC)) {
             ps.setString(1, rmsBookingIonic.getGroupId());
             ps.setString(2, rmsBookingIonic.getModule());
             ps.setString(3, rmsBookingIonic.getBibResult());
@@ -87,7 +87,7 @@ public class RmsBookingIonicDAO {
     public QueryResult updateRmsBookingIonicForUploadFile(RmsBookingIonic rmsBookingIonic) {
         QueryResult queryResult = new QueryResult();
         try (
-            Connection conn = dataSource.getConnection(); PreparedStatement ps = conn.prepareStatement(UPDATE_RMS_BOOKING_IONIC_FOR_UPLOAD_FILE)) {
+                 Connection conn = dataSource.getConnection();  PreparedStatement ps = conn.prepareStatement(UPDATE_RMS_BOOKING_IONIC_FOR_UPLOAD_FILE)) {
             ps.setString(1, rmsBookingIonic.getBibUpload());
             ps.setString(2, rmsBookingIonic.getBibCardUpload());
             ps.setString(3, rmsBookingIonic.getId());
@@ -102,7 +102,7 @@ public class RmsBookingIonicDAO {
     public QueryResult deleteRmsBookingIonic(String rmsBookingIonicId) {
         QueryResult queryResult = new QueryResult();
         try (
-            Connection conn = dataSource.getConnection(); PreparedStatement ps = conn.prepareStatement(DELETE_RMS_BOOKING_IONIC)) {
+                 Connection conn = dataSource.getConnection();  PreparedStatement ps = conn.prepareStatement(DELETE_RMS_BOOKING_IONIC)) {
             ps.setString(1, rmsBookingIonicId);
             queryResult.setResult(ps.executeUpdate());
         } catch (SQLException e) {
@@ -115,16 +115,18 @@ public class RmsBookingIonicDAO {
     private static final String GET_RMS_BOOKING_IONIC = "SELECT id, group_id, module, bib_result, bib_status, bib_upload, bib_card_result, bib_card_status, bib_card_upload, status, flag, created_by, created_date FROM rms_booking_ionic WHERE id = ?";
     private static final String GET_RMS_BOOKING_IONIC_BY_GROUP_ID = "SELECT id, group_id, module, bib_result, bib_status, bib_upload, bib_card_result, bib_card_status, bib_card_upload, status, flag, created_by, created_date FROM rms_booking_ionic WHERE group_id = ?";
     private static final String GET_RMS_BOOKING_IONIC_BY_GROUP_ID_AND_MODULE = "SELECT id, group_id, module, bib_result, bib_status, bib_upload, bib_card_result, bib_card_status, bib_card_upload, status, flag, created_by, created_date FROM rms_booking_ionic WHERE group_id = ? AND module = ?";
+    private static final String GET_RMS_BOOKING_IONIC_BY_GROUP_ID_AND_MODULE_2 = "SELECT id, group_id, module, bib_result, bib_status, bib_upload, bib_card_result, bib_card_status, bib_card_upload, status, flag, created_by, created_date FROM rms_booking_ionic WHERE group_id = ? AND module LIKE ?";
     private static final String GET_RMS_BOOKING_IONIC_LIST = "SELECT id, group_id, module, bib_result, bib_status, bib_upload, bib_card_result, bib_card_status, bib_card_upload, status, flag, created_by, created_date FROM rms_booking_ionic ORDER BY id ASC";
     private static final String COUNT_BY_GROUP_ID_AND_MODULE = "SELECT COUNT(*) AS count FROM rms_booking_ionic inc WHERE inc.group_id = ? AND inc.module = ?";
-    private static final String COUNT_BOOKING_ID_FROM_GROUP_ID_AND_MODULE = "SELECT COUNT(ion.id) AS count FROM rms_booking_ionic ion WHERE SUBSTRING_INDEX(ion.group_id, '/', 1) = ? AND ion.module = ?";
+//    private static final String COUNT_BOOKING_ID_FROM_GROUP_ID_AND_MODULE = "SELECT COUNT(ion.id) AS count FROM rms_booking_ionic ion WHERE SUBSTRING_INDEX(ion.group_id, '/', 1) = ? AND ion.module = ?";
+    private static final String COUNT_BOOKING_ID_FROM_GROUP_ID_AND_MODULE = "SELECT COUNT(ion.id) AS count FROM rms_booking_ionic ion WHERE SUBSTRING_INDEX(ion.group_id, '/', 1) = ? AND ion.module LIKE ?";
 
     public RmsBookingIonic getRmsBookingIonic(String rmsBookingIonicId) {
         RmsBookingIonic rmsBookingIonic = null;
         try (
-            Connection conn = dataSource.getConnection(); PreparedStatement ps = conn.prepareStatement(GET_RMS_BOOKING_IONIC)) {
+                 Connection conn = dataSource.getConnection();  PreparedStatement ps = conn.prepareStatement(GET_RMS_BOOKING_IONIC)) {
             ps.setString(1, rmsBookingIonicId);
-            try (ResultSet rs = ps.executeQuery()) {
+            try ( ResultSet rs = ps.executeQuery()) {
                 if (rs.next()) {
                     rmsBookingIonic = new RmsBookingIonic();
                     rmsBookingIonic.setId(rs.getString("id"));
@@ -151,9 +153,9 @@ public class RmsBookingIonicDAO {
     public RmsBookingIonic getRmsBookingIonicbyGroupId(String groupId) {
         RmsBookingIonic rmsBookingIonic = null;
         try (
-            Connection conn = dataSource.getConnection(); PreparedStatement ps = conn.prepareStatement(GET_RMS_BOOKING_IONIC_BY_GROUP_ID)) {
+                 Connection conn = dataSource.getConnection();  PreparedStatement ps = conn.prepareStatement(GET_RMS_BOOKING_IONIC_BY_GROUP_ID)) {
             ps.setString(1, groupId);
-            try (ResultSet rs = ps.executeQuery()) {
+            try ( ResultSet rs = ps.executeQuery()) {
                 if (rs.next()) {
                     rmsBookingIonic = new RmsBookingIonic();
                     rmsBookingIonic.setId(rs.getString("id"));
@@ -180,10 +182,10 @@ public class RmsBookingIonicDAO {
     public RmsBookingIonic getRmsBookingIonicbyGroupIdAndModule(String groupId, String module) {
         RmsBookingIonic rmsBookingIonic = null;
         try (
-            Connection conn = dataSource.getConnection(); PreparedStatement ps = conn.prepareStatement(GET_RMS_BOOKING_IONIC_BY_GROUP_ID_AND_MODULE)) {
+                 Connection conn = dataSource.getConnection();  PreparedStatement ps = conn.prepareStatement(GET_RMS_BOOKING_IONIC_BY_GROUP_ID_AND_MODULE)) {
             ps.setString(1, groupId);
             ps.setString(2, module);
-            try (ResultSet rs = ps.executeQuery()) {
+            try ( ResultSet rs = ps.executeQuery()) {
                 if (rs.next()) {
                     rmsBookingIonic = new RmsBookingIonic();
                     rmsBookingIonic.setId(rs.getString("id"));
@@ -202,7 +204,37 @@ public class RmsBookingIonicDAO {
                 }
             }
         } catch (SQLException e) {
-            LOGGER.error("Error retrieving RMS booking ionic by group ID and module. GroupId: {}, Module: {}, Error: {}", groupId, module, e.getMessage(), e );
+            LOGGER.error("Error retrieving RMS booking ionic by group ID and module. GroupId: {}, Module: {}, Error: {}", groupId, module, e.getMessage(), e);
+        }
+        return rmsBookingIonic;
+    }
+
+    public RmsBookingIonic getRmsBookingIonicbyGroupIdAndModule2(String groupId, String module) {
+        RmsBookingIonic rmsBookingIonic = null;
+        try (
+                 Connection conn = dataSource.getConnection();  PreparedStatement ps = conn.prepareStatement(GET_RMS_BOOKING_IONIC_BY_GROUP_ID_AND_MODULE_2)) {
+            ps.setString(1, groupId);
+            ps.setString(2, module + '%');
+            try ( ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    rmsBookingIonic = new RmsBookingIonic();
+                    rmsBookingIonic.setId(rs.getString("id"));
+                    rmsBookingIonic.setGroupId(rs.getString("group_id"));
+                    rmsBookingIonic.setModule(rs.getString("module"));
+                    rmsBookingIonic.setBibResult(rs.getString("bib_result"));
+                    rmsBookingIonic.setBibStatus(rs.getString("bib_status"));
+                    rmsBookingIonic.setBibUpload(rs.getString("bib_upload"));
+                    rmsBookingIonic.setBibCardResult(rs.getString("bib_card_result"));
+                    rmsBookingIonic.setBibCardStatus(rs.getString("bib_card_status"));
+                    rmsBookingIonic.setBibCardUpload(rs.getString("bib_card_upload"));
+                    rmsBookingIonic.setStatus(rs.getString("status"));
+                    rmsBookingIonic.setFlag(rs.getString("flag"));
+                    rmsBookingIonic.setCreatedBy(rs.getString("created_by"));
+                    rmsBookingIonic.setCreatedDate(rs.getString("created_date"));
+                }
+            }
+        } catch (SQLException e) {
+            LOGGER.error("Error retrieving RMS booking ionic by group ID and module. GroupId: {}, Module: {}, Error: {}", groupId, module, e.getMessage(), e);
         }
         return rmsBookingIonic;
     }
@@ -210,7 +242,7 @@ public class RmsBookingIonicDAO {
     public List<RmsBookingIonic> getRmsBookingIonicList() {
         List<RmsBookingIonic> rmsBookingIonicList = new ArrayList<>();
         try (
-            Connection conn = dataSource.getConnection(); PreparedStatement ps = conn.prepareStatement(GET_RMS_BOOKING_IONIC_LIST); ResultSet rs = ps.executeQuery()) {
+                 Connection conn = dataSource.getConnection();  PreparedStatement ps = conn.prepareStatement(GET_RMS_BOOKING_IONIC_LIST);  ResultSet rs = ps.executeQuery()) {
             while (rs.next()) {
                 RmsBookingIonic rmsBookingIonic = new RmsBookingIonic();
                 rmsBookingIonic.setId(rs.getString("id"));
@@ -237,10 +269,10 @@ public class RmsBookingIonicDAO {
     public Integer getCountByGroupIdAndModule(String groupId, String module) {
         Integer count = 0;
         try (
-            Connection conn = dataSource.getConnection(); PreparedStatement ps = conn.prepareStatement(COUNT_BY_GROUP_ID_AND_MODULE)) {
+                 Connection conn = dataSource.getConnection();  PreparedStatement ps = conn.prepareStatement(COUNT_BY_GROUP_ID_AND_MODULE)) {
             ps.setString(1, groupId);
             ps.setString(2, module);
-            try (ResultSet rs = ps.executeQuery()) {
+            try ( ResultSet rs = ps.executeQuery()) {
                 if (rs.next()) {
                     count = rs.getInt("count");
                 }
@@ -254,10 +286,10 @@ public class RmsBookingIonicDAO {
     public Integer getCountBookingIdFromGroupIdAndModule(String bookingId, String module) {
         Integer count = 0;
         try (
-            Connection conn = dataSource.getConnection(); PreparedStatement ps = conn.prepareStatement(COUNT_BOOKING_ID_FROM_GROUP_ID_AND_MODULE)) {
+                 Connection conn = dataSource.getConnection();  PreparedStatement ps = conn.prepareStatement(COUNT_BOOKING_ID_FROM_GROUP_ID_AND_MODULE)) {
             ps.setString(1, bookingId);
-            ps.setString(2, module);
-            try (ResultSet rs = ps.executeQuery()) {
+            ps.setString(2, module + '%');
+            try ( ResultSet rs = ps.executeQuery()) {
                 if (rs.next()) {
                     count = rs.getInt("count");
                 }

@@ -561,14 +561,25 @@ public class RmsBookingDetailUnloadingController {
             model.addAttribute("ionic", new RmsBookingIonic());
         }
 
+        // remove '_Lot' in status if any
+        String trimStatus = "";
+        if (h.getStatus().contains("_")) {
+            trimStatus = h.getStatus().substring(0, h.getStatus().lastIndexOf('_'));
+        } else {
+            trimStatus = h.getStatus();
+        }
+        LOGGER.info("trimStatus: " + trimStatus);
+
         //check if other HW with same bookingID and module has done ionic test or not (to bypass ionic test)
         ioncD = new RmsBookingIonicDAO();
-        Integer countPrevIonic = ioncD.getCountBookingIdFromGroupIdAndModule(bookingId, h.getStatus());
+//        Integer countPrevIonic = ioncD.getCountBookingIdFromGroupIdAndModule(bookingId, h.getStatus());
+        Integer countPrevIonic = ioncD.getCountBookingIdFromGroupIdAndModule(bookingId, trimStatus);
         if (countPrevIonic == 0) {
             model.addAttribute("countPrevIonic", "disabled"); //disabled checkbox if no ionic test for same bookingId
         } else {
             ioncD = new RmsBookingIonicDAO();
-            RmsBookingIonic currentIonic = ioncD.getRmsBookingIonicbyGroupIdAndModule(groupId, h.getStatus()); //disabled checkbox if same groupId
+//            RmsBookingIonic currentIonic = ioncD.getRmsBookingIonicbyGroupIdAndModule(groupId, h.getStatus()); //disabled checkbox if same groupId
+            RmsBookingIonic currentIonic = ioncD.getRmsBookingIonicbyGroupIdAndModule2(groupId, trimStatus); //disabled checkbox if same groupId
             if (currentIonic == null) {
                 model.addAttribute("countPrevIonic", ""); //open checkbox if no data for same groupId
             } else {
@@ -852,6 +863,7 @@ public class RmsBookingDetailUnloadingController {
             Locale locale,
             RedirectAttributes redirectAttrs,
             @ModelAttribute UserSession userSession,
+            HttpServletRequest request,
             @RequestParam(required = false) String hwStatus,
             @RequestParam(required = false) String groupId,
             @RequestParam(required = false) String bibResult,
@@ -869,6 +881,8 @@ public class RmsBookingDetailUnloadingController {
 
         RmsBookingIonic ionic = new RmsBookingIonic();
         ionic.setGroupId(groupId);
+//        LOGGER.info("Request Encoding = " + request.getCharacterEncoding());
+//        LOGGER.info("hwStatus: " + hwStatus);
         ionic.setModule(hwStatus);
         ionic.setBibResult(bibResult);
         ionic.setBibStatus(bibStatus);
@@ -1859,7 +1873,7 @@ public class RmsBookingDetailUnloadingController {
 
         // SINI DAPATKAN INFO SAMADA HAST ATAU BUKAN
         String event = "";
-        
+
         if (checkMb == 0) {
             redirectAttrs.addFlashAttribute("error", "No motherboard configured");
         } else {
@@ -2207,7 +2221,7 @@ public class RmsBookingDetailUnloadingController {
                 RmsBookingHardwareGroupDAO groupD = new RmsBookingHardwareGroupDAO();
                 groupD.updateRmsBookingHardwareGroupFlagAndStatusByGroupId(rmsgroup);
                 // ABOVE FUNCTION WILL UPDATE ALL THE STATUS IN HW GROUP
-                
+
             } else {
                 // RIGHT NOW HARDCODE - PLEASE UPDATE LATER
                 String sptsStatus = "Good";
@@ -2218,25 +2232,24 @@ public class RmsBookingDetailUnloadingController {
                 // UPDATE SPTS TRANSACTION FOR ITEM AND HARDWARE LEVEL - START
                 sendSPTSTransactionUnloading(bookId, motherboardId, username);
                 // UPDATE SPTS TRANSACTION FOR ITEM AND HARDWARE LEVEL - END
-                
+
                 // UPDATE ITEM AND HARDWARE TABLE IN HEATS - START
                 // - check if function above already cover to update all hardware id status
                 // UPDATE ITEM AND HARDWARE TABLE IN HEATS - END
-                
                 // UPDATE RMS_BOOKING_DETAIL STATUS - START
                 // CHECK IF ALL THE MOTHERBOARDS HAS CLOSED, ELSE STILL NO UPDATE
                 RmsBookingHardwareDAO rmsbhdao = new RmsBookingHardwareDAO();
-                
+
                 RmsBookingHardware rmsbook = new RmsBookingHardware();
                 rmsbook.setSubStatus(newStatus);
                 rmsbook.setFlag("3");
                 rmsbhdao.updateRmsBookingHardwareStatus(rmsbook);
-                
+
                 rmsbhdao = new RmsBookingHardwareDAO();
                 Integer tutup = rmsbhdao.countDataHardwareClosed(bookId);
                 rmsbhdao = new RmsBookingHardwareDAO();
                 Integer semua = rmsbhdao.countDataHardwareSemua(bookId);
-                
+
                 if (tutup == semua) {
                     // SINI SEMUA DA CLOSED DA, SO, SILA UPDATE rms_booking_detail
                     flag = "3";
@@ -2261,7 +2274,6 @@ public class RmsBookingDetailUnloadingController {
         log2.setCreatedBy(userSession.getFullname());
         RmsBookingHardwareGroupLogDAO logD2 = new RmsBookingHardwareGroupLogDAO();
         logD2.insertRmsBookingHardwareGroupLog(log2);
-        
 
         return target_location;
     }
@@ -3754,7 +3766,7 @@ public class RmsBookingDetailUnloadingController {
     }
 
     public void sendSPTSTransactionUnloading(String bookPkid, String pkid, String username) throws IOException, SQLException {
-        
+
         String rmsNo = "";
         String event = "";
         String sptsStatus = "Good";
@@ -3767,7 +3779,7 @@ public class RmsBookingDetailUnloadingController {
         String flag = "3";
         String sptsRemark = "Return From Production Staging through HEATS";
         String hwStatus = "Available";
-        
+
 //        B.	Return item hardware from Production Staging to Good
 //              TransType:26 (Return_From_Production_Staging)
         DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");
@@ -3776,7 +3788,7 @@ public class RmsBookingDetailUnloadingController {
         String date1 = formattedDate.substring(0, 10);
         String time = formattedDate.substring(11, 23);
         String completeDateTime = date1 + "T" + time;
-        
+
         RmsBookingDetailDAO rmsdao = new RmsBookingDetailDAO();
         RmsBookingDetail rmsdetail = new RmsBookingDetail();
         rmsdetail = rmsdao.getRmsBookingDetailByBookingPkid(bookPkid);
@@ -3785,7 +3797,7 @@ public class RmsBookingDetailUnloadingController {
         RmsBookingHardwareDAO rmsHD = new RmsBookingHardwareDAO();
         // UPDATE THE FUNCTION TO GET THE DATA THAT RETURN FROM PRODUCTION STAGING
         List<RmsBookingHardware> hardware = rmsHD.getRmsBookingForUnloading(bookPkid, pkid);
-        
+
         for (int i = 0; i < hardware.size(); i++) {
             // TO MAKE SURE HANYA YANG DA LAST INTERVAL SAHAJA UPDATE DEKAT SINI
             if (hardware.get(i).getStatus().equalsIgnoreCase("Return from Production (Complete Final SI)")) {
@@ -3955,7 +3967,7 @@ public class RmsBookingDetailUnloadingController {
                 RmsBookingHardwareGroup group1 = new RmsBookingHardwareGroup();
                 group1.setId(group.get(x).getId());
                 group1.setStatus(transTypeName);
-                group1.setSptsStatus(sptsStatus); 
+                group1.setSptsStatus(sptsStatus);
                 group1.setFlag(flag);
                 groupD = new RmsBookingHardwareGroupDAO();
                 QueryResult q3 = groupD.updateRmsBookingHardwareGroupStatusAndSptsStatusAndFlag(group1);
@@ -3967,30 +3979,30 @@ public class RmsBookingDetailUnloadingController {
                 log2.setCreatedBy(username);
                 RmsBookingHardwareGroupLogDAO logD2 = new RmsBookingHardwareGroupLogDAO();
                 QueryResult logQ2 = logD2.insertRmsBookingHardwareGroupLog(log2);
-                
+
                 // UPDATE ALL HARDWARE ID STATUS
                 ItemHardware ithw = new ItemHardware();
                 ItemHardwareDAO itemdao = new ItemHardwareDAO();
                 ithw.setStatus(hwStatus);
                 ithw.setVerifyBy(username);
                 ithw.setId(group.get(x).getId());
-                
+
                 itemdao.updateHardwareIdStatusAvailable(ithw);
-                
+
                 String itemPkid = "";
                 String hardwareId = group.get(x).getHardwareId();
                 String groupId = bookPkid + "/" + pkid;
-                
+
                 RmsBookingHardwareGroupDAO groupD1 = new RmsBookingHardwareGroupDAO();
                 itemPkid = groupD1.getMibItemIdByGroupIdAndHardwareId(hardwareId, groupId);
-                
+
                 Item item = new Item();
                 ItemDAO itemdai = new ItemDAO();
                 item = itemdai.getHardwareDetail(itemPkid);
-                
+
                 int onHand = 0;
                 int psQty = 0;
-                
+
                 if (item.getOnHandQty() != null && !item.getOnHandQty().trim().isEmpty()) {
                     onHand = Integer.parseInt(item.getOnHandQty());
                 }
@@ -3999,9 +4011,9 @@ public class RmsBookingDetailUnloadingController {
                 }
                 onHand += 1;
                 psQty -= 1;
-                
+
                 ItemDAO itemdao1 = new ItemDAO();
-                
+
                 item = new Item();
                 item.setOnHandQty(String.valueOf(onHand));
                 item.setProductionQty(String.valueOf(psQty));
@@ -4017,7 +4029,7 @@ public class RmsBookingDetailUnloadingController {
                         servletContext,
                         "",
                         to,
-                        emailSubject, 
+                        emailSubject,
                         "<br />"
                         + "Please be informed that the Hardware ID below failed to insert SPTS transaction (Return From Production Staging)."
                         + "<br /> "

@@ -301,7 +301,7 @@
 
                                                                 </c:otherwise>
                                                             </c:choose>
-                                                            <form class="row gx-3 needs-validation" role="form" action="${contextPath}/rmsbookingDetailUnloading/ionic/save" method="post" enctype="multipart/form-data" novalidate>
+                                                            <form class="row gx-3 needs-validation" role="form" action="${contextPath}/rmsbookingDetailUnloading/ionic/save" method="post" accept-charset="UTF-8" enctype="multipart/form-data" novalidate>
                                                                 <input type="hidden" class="form-control" id="bookingPkid" name="bookingPkid" placeholder="" value="${rms.bookingPkid}">
                                                                 <input type="hidden" class="form-control" id="groupId" name="groupId" placeholder="" value="${groupId}">
                                                                 <input type="hidden" class="form-control" id="motherboardId" name="motherboardId" placeholder="" value="${motherboardId}">
