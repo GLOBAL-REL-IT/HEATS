@@ -57,6 +57,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.function.Consumer;
+import java.util.stream.Stream;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -94,8 +95,8 @@ public class MaverickController {
     String[] args = {};
 
     private static final int BUFFER_SIZE = 4096;
-
     private static final String UPLOADED_FOLDER = "\\\\mysed-rel-app05\\f$\\HEATS\\VI-Attachment\\HW_Registration\\"; //server
+    private static final String FOLDER_TEST = "\\\\mysed-rel-app05\\f$\\HEATS\\FT\\"; //server
 
     @Autowired
     private MessageSource messageSource;
@@ -108,7 +109,8 @@ public class MaverickController {
 
     @RequestMapping(value = "", method = RequestMethod.GET)
     public String maverickHome(Model model) {
-        return "maverick/test";
+//        return "maverick/test";
+        return "redirect:/maverick/list";
     }
 
     @RequestMapping(value = "/list", method = {RequestMethod.GET, RequestMethod.POST})
@@ -297,15 +299,31 @@ public class MaverickController {
             redirectAttrs.addFlashAttribute("error", "Disposition already completed. This should not happen. Pls contact system admin. Maverick ID :: " + mavId);
         }
 
+        ItemLog itemlog = new ItemLog();
+        itemlog.setItemId(mibItemId);
+        itemlog.setCreatedBy(username);
+
         if (newDisposition.equalsIgnoreCase("Repair")) {
             // KES REPAIR
+            itemlog.setDetail("Item sent for repair");
+            ItemLogDAO logD = new ItemLogDAO();
+            QueryResult logQ = logD.insertItemLog(itemlog);
+
             itemmaverick.setFlag("2");
+            itemmaverick.setStatus("Item sent for repair");
             imdao = new ItemMaverickDAO();
             imdao.updateItemMaverick(itemmaverick);
+
+            // BUAT MOVEMENT DEKAT SPTS - todo
             returnPage = "redirect:/maverick/list";
         } else if (newDisposition.equalsIgnoreCase("Scrap")) {
             // KES SCRAP
+            itemlog.setDetail("Item sent for scrap");
+            ItemLogDAO logD = new ItemLogDAO();
+            QueryResult logQ = logD.insertItemLog(itemlog);
+
             itemmaverick.setFlag("3");
+            itemmaverick.setStatus("Item sent for scrap");
             imdao = new ItemMaverickDAO();
             imdao.updateItemMaverick(itemmaverick);
 
@@ -321,18 +339,22 @@ public class MaverickController {
             scrap.setCreatedBy(username);
             scrap.setFlag("0");
 
-            isdao = new ItemScrapDAO(); 
+            isdao = new ItemScrapDAO();
             isdao.insertScrap(scrap);
 
             returnPage = "redirect:/maverick/list";
         } else if (newDisposition.equalsIgnoreCase("Bypass")) {
             // KES BYPASS
+            itemlog.setDetail("Bypass Maverick");
+            ItemLogDAO logD = new ItemLogDAO();
+            QueryResult logQ = logD.insertItemLog(itemlog);
+
             itemmaverick.setFlag("4");
+            itemmaverick.setStatus("Bypass - Item Pending Visual Inspection");
             imdao = new ItemMaverickDAO();
             imdao.updateItemMaverick(itemmaverick);
-            
+
             // KALAU MOTHERBOARD BOLE LA KITA UPDATE DEKAT TABLE ITEM, TAPI KALAU LC ATAU PC, MACAM MANA NK UPATE STATUS DIA
-            
             returnPage = "redirect:/maverick/list";
         }
 
@@ -375,10 +397,12 @@ public class MaverickController {
             // THIS IS WHERE REPAIR DOES NOT WORK
             // KITA PULANGKAN DIA JADI FLAG 0, BAGI DIA BUAT DISPOSITION LAGI SEKALI
             itemmav.setFlag("0");
+            itemmav.setStatus("Repair Failed - Sent for disposition again");
         } else if ("success".equals(status)) {
             // REPAIR SUCCESS
             // KITA UPDATE FLAG JADI 1, SO, DIA BOLE PROCEED BUAT VM BALIK
-            itemmav.setFlag("1");
+            itemmav.setFlag("4");
+            itemmav.setStatus("Item Repaired - Item Pending Visual Inspection");
             // sini kita nk kena buat new vm dengan functional test? so, kita akan update flag asal kepada?? 
         }
 
@@ -727,7 +751,7 @@ public class MaverickController {
 
         return "maverick/maverick_vmft";
     }
-    
+
     @RequestMapping(value = "/redoft/{id}", method = RequestMethod.GET)
     public String maverickFT(Model model, @PathVariable String id) throws SQLException {
         ItemMaverick itemmaverick = new ItemMaverick();
@@ -772,7 +796,7 @@ public class MaverickController {
         addParameterDetail(model, pD, itemVm.getPogoReceptaclesPinReject(), "021", "pogoReceptaclesPinReject");
         addParameterDetail(model, pD, itemVm.getCableWiredCopperWireReject(), "022", "cableWiredCopperWireReject");
         addParameterDetail(model, pD, itemVm.getLabelIdentificationReject(), "023", "labelIdentificationReject");
-        
+
         model.addAttribute("leakCheck", "Yes");
         model.addAttribute("manCheck", "Yes");
         model.addAttribute("bibCheck", "Yes");
@@ -861,6 +885,13 @@ public class MaverickController {
             @RequestParam(required = false) MultipartFile labelIdentificationRejectUpload
     ) throws IOException, SQLException {
 
+        if (mibItemId == null || mibItemId.trim().isEmpty()) {
+            LOGGER.info("DEKAT SINI SEMUA KOSONG");
+            return "redirect:/maverick/list";
+        } else {
+            LOGGER.info("SINI DAPAT DA VALUE");
+        }
+
         LOGGER.info("KITA NK MASUK KE DALAM FUNCTION SAVE VM YANG BARU - SELEPAS MAVERICK");
         LOGGER.info("itemStatus                 ::: " + itemStatus);
         LOGGER.info("pcb                        ::: " + pcb);
@@ -932,6 +963,7 @@ public class MaverickController {
         LOGGER.info("MIB ITEM ID     :::: " + mibItemId);
         LOGGER.info("MODULE          :::: " + module);
         LOGGER.info("MAVERICK ID     :::: " + maverickId);
+        LOGGER.info("itemStatus      :::: " + itemStatus);
 
 //        saveAndSetFile(pcbRejectUpload, "pcb", q.getGeneratedKey(), itemVm::setPcbRejectUpload);
         String finalStatus = "";
@@ -1022,20 +1054,55 @@ public class MaverickController {
         emailBodyFail += processRejectItem(cableWiredCopperWire, cableWiredCopperWireRejectQty, cableWiredCopperWireReject, "Cable/Wired/Copper Wire", itemVm::setCableWiredCopperWireRejectQty, emailBodyFail);
         emailBodyFail += processRejectItem(labelIdentification, labelIdentificationRejectQty, labelIdentificationReject, "Label & Identification", itemVm::setLabelIdentificationRejectQty, emailBodyFail);
 
-        if ("Fail".equals(pcb) || "Fail".equals(handle) || "Fail".equals(metalFrame) || "Fail".equals(hardwareFasterners) || "Fail".equals(clipHolder) || "Fail".equals(pcbEdgeFinger) || "Fail".equals(connector)
-                || "Fail".equals(dutSockets) || "Fail".equals(edgeMbBanana) || "Fail".equals(electComponent) || "Fail".equals(solderJoint) || "Fail".equals(winConnector)
-                || "Fail".equals(teflonConnector) || "Fail".equals(pogoReceptaclesPin) || "Fail".equals(cableWiredCopperWire) || "Fail".equals(labelIdentification)) {
+//        if ("Fail".equals(pcb) || "Fail".equals(handle) || "Fail".equals(metalFrame) || "Fail".equals(hardwareFasterners) || "Fail".equals(clipHolder) || "Fail".equals(pcbEdgeFinger) || "Fail".equals(connector)
+//                || "Fail".equals(dutSockets) || "Fail".equals(edgeMbBanana) || "Fail".equals(electComponent) || "Fail".equals(solderJoint) || "Fail".equals(winConnector)
+//                || "Fail".equals(teflonConnector) || "Fail".equals(pogoReceptaclesPin) || "Fail".equals(cableWiredCopperWire) || "Fail".equals(labelIdentification)) {
+//            finalStatus = "Fail";
+//            itemVm.setFlag("99");
+//        } else {
+//            finalStatus = "Pass";
+//            itemVm.setFlag("0");
+//        }
+        LOGGER.info("ALL THE STATUS WE WANT TO CHECK");
+        LOGGER.info("pcd                        :::: " + pcb);
+        LOGGER.info("handle                     :::: " + handle);
+        LOGGER.info("metalFrame                 :::: " + metalFrame);
+        LOGGER.info("hardwareFasterners         :::: " + hardwareFasterners);
+        LOGGER.info("clipHolder                 :::: " + clipHolder);
+        LOGGER.info("pcbEdgeFinger              :::: " + pcbEdgeFinger);
+        LOGGER.info("connector                  :::: " + connector);
+        LOGGER.info("dutSockets                 :::: " + dutSockets);
+        LOGGER.info("edgeMbBanana               :::: " + edgeMbBanana);
+        LOGGER.info("electComponent             :::: " + electComponent);
+        LOGGER.info("solderJoint                :::: " + solderJoint);
+        LOGGER.info("winConnector               :::: " + winConnector);
+        LOGGER.info("teflonConnector            :::: " + teflonConnector);
+        LOGGER.info("pogoReceptaclesPin         :::: " + pogoReceptaclesPin);
+        LOGGER.info("cableWiredCopperWire       :::: " + cableWiredCopperWire);
+        LOGGER.info("labelIdentification        :::: " + labelIdentification);
+
+        boolean hasFailed = Stream.of(pcb, handle, metalFrame, hardwareFasterners,
+                clipHolder, pcbEdgeFinger, connector, dutSockets,
+                edgeMbBanana, electComponent, solderJoint,
+                winConnector, teflonConnector, pogoReceptaclesPin,
+                cableWiredCopperWire, labelIdentification
+        ).anyMatch("Fail"::equals);
+
+        if (hasFailed) {
             finalStatus = "Fail";
             itemVm.setFlag("99");
         } else {
             finalStatus = "Pass";
             itemVm.setFlag("0");
         }
+
         itemVm.setFinalStatus(finalStatus);
         itemVm.setCreatedBy(userSession.getFullname());
+        LOGGER.info("555");
 
         ItemVisualInspectionDAO itemVmD = new ItemVisualInspectionDAO();
         QueryResult q = itemVmD.insertItemVisualInspection(itemVm);
+        LOGGER.info("888");
 
         if (!"0".equals(q.getGeneratedKey())) {
 
@@ -1089,7 +1156,7 @@ public class MaverickController {
             //update log
             ItemLog log = new ItemLog();
             log.setItemId(mibItemId);
-            log.setDetail("VM Data Added");
+            log.setDetail("VM Data Added (Maverick)");
             log.setCreatedBy(userSession.getFullname());
             ItemLogDAO logD = new ItemLogDAO();
             QueryResult logQ = logD.insertItemLog(log);
@@ -1099,7 +1166,7 @@ public class MaverickController {
                 //save to maverick table
                 ItemMaverick maverick = new ItemMaverick();
                 maverick.setMibItemId(mibItemId);
-                maverick.setModule("Hardware Registration");
+                maverick.setModule("Maverick");
                 maverick.setSubmodule("Visual Inspection");
                 maverick.setStatus("Failed Visual Inspection");
                 maverick.setFlag("0");
@@ -1155,26 +1222,543 @@ public class MaverickController {
 
                 redirectAttrs.addFlashAttribute("error", "Visual Inspection Fail. Pls go to Maverick Module for Corrective Action.");
 //                return "redirect:/hw/item/add2/" + mibItemId;
-                return "redirect:/maverick/maverickdetails/" + maverickId + "/" + module + "/" + mibItemId;
+//                return "redirect:/maverick/maverickdetails/" + maverickId + "/" + module + "/" + mibItemId;
             } else {
                 redirectAttrs.addFlashAttribute("success", "Visual Inspection Pass.");
                 if (status.equals("Good")) {
 //                    return "redirect:/hw/item/pending";
-                    return "redirect:/maverick/maverickdetails/" + maverickId + "/" + module + "/" + mibItemId;
+//                    return "redirect:/maverick/maverickdetails/" + maverickId + "/" + module + "/" + mibItemId;
                 } else {
 //                    return "redirect:/hw/item/add2/" + mibItemId;
-                    return "redirect:/maverick/maverickdetails/" + maverickId + "/" + module + "/" + mibItemId;
+//                    return "redirect:/maverick/maverickdetails/" + maverickId + "/" + module + "/" + mibItemId;
                 }
-
             }
 
         } else {
             redirectAttrs.addFlashAttribute("error", "Failed to save Visual Inspection. Pls Contact System Admin");
 //            return "redirect:/hw/item/add2/" + mibItemId;
-            return "redirect:/maverick/maverickdetails/" + maverickId + "/" + module + "/" + mibItemId;
+//            return "redirect:/maverick/maverickdetails/" + maverickId + "/" + module + "/" + mibItemId;
         }
 
-//        return "redirect:/maverick/maverickdetails/" + maverickId + "/" + module + "/" + mibItemId;
+        return "redirect:/maverick/maverickdetails/" + maverickId + "/" + module + "/" + mibItemId;
+    }
+
+//    @RequestMapping(value = "/save/{jenis}", method = {RequestMethod.GET, RequestMethod.POST})
+//    public String itemFunctionalTestSave(
+//            Model model,
+//            Locale locale,
+//            RedirectAttributes redirectAttrs,
+//            @ModelAttribute UserSession userSession,
+//            @PathVariable("jenis") String jenis,
+//            @RequestParam(required = false) String mibItemId,
+//            @RequestParam(required = false) String totalQty,
+//            @RequestParam(required = false) String bibResult,
+//            @RequestParam(required = false) MultipartFile bibUpload,
+//            @RequestParam(required = false) String bibDaqResult,
+//            @RequestParam(required = false) MultipartFile bibDaqUpload,
+//            @RequestParam(required = false) String leakResult,
+//            @RequestParam(required = false) MultipartFile leakUpload,
+//            @RequestParam(required = false) String psResult,
+//            @RequestParam(required = false) MultipartFile psUpload,
+//            @RequestParam(required = false) String winResult,
+//            @RequestParam(required = false) MultipartFile winUpload,
+//            HttpServletResponse response
+//    ) throws IOException, SQLException {
+//
+//        // jenis2
+//        // ------------------------ // 
+//        // /leakTest
+//        // /bibTest
+//        // /daqTest
+//        // /psTest
+//        // /winTest
+//        String username = userSession.getFullname();
+//        String newStatus = "";
+//        String logStatus = "";
+//        checkInsertFunctionalTest(mibItemId, username);
+//        String target_location = "redirect:/hw/item/add2/" + mibItemId;
+//
+//        String pathLeak = "";
+//        String pathBib = "";
+//        String pathDaq = "";
+//        String pathPs = "";
+//        String pathWin = "";
+//
+//        ItemFunctionalTest item = new ItemFunctionalTest();
+//
+//        ItemActivityConfigDAO itemdao2 = new ItemActivityConfigDAO();
+//        ItemActivityConfig itemdata = itemdao2.getItemActivityByItemId(mibItemId);
+//        // SINI TAK CHECK DATA NULL - ASSUME SEBELUM NI DA CHECK AND *MESTI* ADA DATA
+//        String checkLeak = itemdata.getLeakageTest() != null ? itemdata.getLeakageTest() : "No";
+//        String checkMan = itemdata.getManualTest() != null ? itemdata.getManualTest() : "No";
+//        String checkBib = itemdata.getBibTest() != null ? itemdata.getBibTest() : "No";
+//        String checkDaq = itemdata.getBibDaqTest() != null ? itemdata.getBibDaqTest() : "No";
+//        String checkPs = itemdata.getPsLeakageTest() != null ? itemdata.getPsLeakageTest() : "No";
+//        String checkWin = itemdata.getWinchesterChamberLeakageTest() != null ? itemdata.getWinchesterChamberLeakageTest() : "No";
+//
+//        if (bibUpload != null) {
+//            try {
+//                // Get the file and save it somewhere
+//                byte[] bytesConnector = bibUpload.getBytes();
+//                Path pathConnector = Paths.get(FOLDER_TEST + "_bibTest_" + bibUpload.getOriginalFilename()); // THIS ONE TESTING ONLY, USE CORRECT GENERATED KEY
+//                if (bibUpload.getOriginalFilename() == null || bibUpload.getOriginalFilename().equalsIgnoreCase("")) {
+//
+//                } else {
+//                    Files.write(pathConnector, bytesConnector);
+//                    pathBib = pathConnector.toString();
+//                }
+//
+//                // UPDATE STATUS TABLE ITEM START
+//                Item item0 = new Item();
+//                item0.setId(mibItemId);
+//                item0.setFlag("0");
+//
+//                if (bibResult.equals("Pass")) {
+//                    if (checkDaq.equals("Yes")) {
+//                        newStatus = "Pending Functional Test - BIB DAQ Test";
+//                    } else if (checkPs.equals("Yes")) {
+//                        newStatus = "Pending Functional Test - Power Supply Test";
+//                    } else if (checkWin.equals("Yes")) {
+//                        newStatus = "Pending Functional Test - Winchester Chamber Test";
+//                    } else {
+//                        newStatus = "Good";
+//                        item0.setFlag("1");
+//                        insertSPTSData(mibItemId, username);
+//                        target_location = "redirect:/hw/item/pending";
+//                    }
+//                    logStatus = "Registration - FT - BIB Test - Passed";
+//                } else {
+//                    newStatus = "Failed Functional Test - BIB Test - Waiting Maverick CA";
+//                    logStatus = "Registration - FT - BIB Test - Failed";
+//                    updateMaverickAndEmail(mibItemId, username, "BIB");
+//                }
+//                item0.setStatus(newStatus);
+//
+//                ItemDAO itemDA = new ItemDAO();
+//                QueryResult iQ = itemDA.updateItemStatusAndFlag(item0);
+//                // UPDATE STATUS TABLE ITEM END
+//
+//                // UPDATE TABLE ITEM_FUNCTIONAL_TEST START
+//                ItemFunctionalTestDAO itemdao = new ItemFunctionalTestDAO();
+//                item.setMibItemId(mibItemId);
+//                item.setBibQty(totalQty);
+//                item.setBibStatus(bibResult);
+//                item.setBibUpload(pathBib);
+//                item.setRemark("");
+//                item.setFinalStatus(newStatus);
+//                item.setFlag("0");
+//                itemdao.updateBibTest(item);
+//                // UPDATE TABLE ITEM_FUNCTIONAL_TEST END
+//            } catch (IOException e) {
+//                e.printStackTrace();
+//            }
+//        } else {
+//
+//        }
+//
+//        if (bibDaqUpload != null) {
+//            try {
+//                // Get the file and save it somewhere
+//                byte[] bytesConnector = bibDaqUpload.getBytes();
+//                Path pathConnector = Paths.get(FOLDER_TEST + "_bibDaqTest_" + bibDaqUpload.getOriginalFilename()); // THIS ONE TESTING ONLY, USE CORRECT GENERATED KEY
+//                if (bibDaqUpload.getOriginalFilename() == null || bibDaqUpload.getOriginalFilename().equalsIgnoreCase("")) {
+//
+//                } else {
+//                    Files.write(pathConnector, bytesConnector);
+//                    pathDaq = pathConnector.toString();
+//                }
+//
+//                // UPDATE STATUS TABLE ITEM START
+//                Item item0 = new Item();
+//                item0.setId(mibItemId);
+//                item0.setFlag("0");
+//
+//                if (bibDaqResult.equals("Pass")) {
+//                    if (checkPs.equals("Yes")) {
+//                        newStatus = "Pending Functional Test - Power Supply Test";
+//                    } else if (checkWin.equals("Yes")) {
+//                        newStatus = "Pending Functional Test - Winchester Chamber Test";
+//                    } else {
+//                        newStatus = "Good";
+//                        item0.setFlag("1");
+//                        insertSPTSData(mibItemId, username);
+//                        target_location = "redirect:/hw/item/pending";
+//                    }
+//                    logStatus = "Registration - FT - BIB DAQ Test - Passed";
+//                } else {
+//                    newStatus = "Failed Functional Test - BIB DAQ Test - Waiting Maverick CA";
+//                    updateMaverickAndEmail(mibItemId, username, "BIB");
+//                    logStatus = "Registration - FT - BIB DAQ Test - Failed";
+//                }
+//                item0.setStatus(newStatus);
+//
+//                ItemDAO itemDA = new ItemDAO();
+//                QueryResult iQ = itemDA.updateItemStatusAndFlag(item0);
+//                // UPDATE STATUS TABLE ITEM END
+//
+//                // UPDATE TABLE ITEM_FUNCTIONAL_TEST START
+//                ItemFunctionalTestDAO itemdao = new ItemFunctionalTestDAO();
+//                item.setMibItemId(mibItemId);
+//                item.setBibDaqQty(totalQty);
+//                item.setBibDaqStatus(bibDaqResult);
+//                item.setBibDaqUpload(pathDaq);
+//                item.setRemark("");
+//                item.setFinalStatus(newStatus);
+//                item.setFlag("0");
+//                itemdao.updateBibDaqTest(item);
+//                // UPDATE TABLE ITEM_FUNCTIONAL_TEST END
+//            } catch (IOException e) {
+//                e.printStackTrace();
+//            }
+//        } else {
+//
+//        }
+//
+//        if (leakUpload != null) {
+//            try {
+//                // Get the file and save it somewhere
+//                byte[] bytesConnector = leakUpload.getBytes();
+//                Path pathConnector = Paths.get(FOLDER_TEST + "_leakTest_" + leakUpload.getOriginalFilename()); // THIS ONE TESTING ONLY, USE CORRECT GENERATED KEY
+//                if (leakUpload.getOriginalFilename() == null || leakUpload.getOriginalFilename().equalsIgnoreCase("")) {
+//
+//                } else {
+//                    Files.write(pathConnector, bytesConnector);
+//                    pathLeak = pathConnector.toString();
+//                }
+//
+//                // UPDATE STATUS TABLE ITEM START
+//                Item item0 = new Item();
+//                item0.setId(mibItemId);
+//                item0.setFlag("0");
+//
+//                if (leakResult.equals("Pass")) {
+//                    if (checkMan.equals("Yes")) {
+//                        newStatus = "Pending Functional Test - Manual Test";
+//                    } else if (checkBib.equals("Yes")) {
+//                        newStatus = "Pending Functional Test - BIB Test";
+//                    } else if (checkDaq.equals("Yes")) {
+//                        newStatus = "Pending Functional Test - BIB DAQ Test";
+//                    } else if (checkPs.equals("Yes")) {
+//                        newStatus = "Pending Functional Test - Power Supply Test";
+//                    } else if (checkWin.equals("Yes")) {
+//                        newStatus = "Pending Functional Test - Winchester Chamber Test";
+//                    } else {
+//                        newStatus = "Good";
+//                        item0.setFlag("1");
+//                        insertSPTSData(mibItemId, username);
+//                        target_location = "redirect:/hw/item/pending";
+//                    }
+//                    logStatus = "Registration - FT - Leakage Test - Passed";
+//                } else {
+//                    newStatus = "Failed Functional Test - Leakage Test - Waiting Maverick CA";
+//                    updateMaverickAndEmail(mibItemId, username, "Leakage");
+//                    logStatus = "Registration - FT - Leakage Test - Failed";
+//                }
+//                item0.setStatus(newStatus);
+//
+//                ItemDAO itemDA = new ItemDAO();
+//                QueryResult iQ = itemDA.updateItemStatusAndFlag(item0);
+//                // UPDATE STATUS TABLE ITEM END
+//
+//                // UPDATE TABLE ITEM_FUNCTIONAL_TEST START
+//                ItemFunctionalTestDAO itemdao = new ItemFunctionalTestDAO();
+//                item.setMibItemId(mibItemId);
+//                item.setLeakQty(totalQty);
+//                item.setLeakStatus(leakResult);
+//                item.setLeakUpload(pathLeak);
+//                item.setRemark("");
+//                item.setFinalStatus(newStatus);
+//                item.setFlag("0");
+//                itemdao.updateLeakageTest(item);
+//                // UPDATE TABLE ITEM_FUNCTIONAL_TEST END
+//            } catch (IOException e) {
+//                e.printStackTrace();
+//            }
+//        } else {
+//
+//        }
+//
+//        if (psUpload != null) {
+//            try {
+//                // Get the file and save it somewhere
+//                byte[] bytesConnector = psUpload.getBytes();
+//                Path pathConnector = Paths.get(FOLDER_TEST + "_psTest_" + psUpload.getOriginalFilename()); // THIS ONE TESTING ONLY, USE CORRECT GENERATED KEY
+//                if (psUpload.getOriginalFilename() == null || psUpload.getOriginalFilename().equalsIgnoreCase("")) {
+//
+//                } else {
+//                    Files.write(pathConnector, bytesConnector);
+//                    pathPs = pathConnector.toString();
+//                }
+//
+//                // UPDATE STATUS TABLE ITEM START
+//                Item item0 = new Item();
+//                item0.setId(mibItemId);
+//                item0.setFlag("0");
+//
+//                if (psResult.equals("Pass")) {
+//                    if (checkWin.equals("Yes")) {
+//                        newStatus = "Pending Functional Test - Winchester Chamber Test";
+//                    } else {
+//                        newStatus = "Good";
+//                        item0.setFlag("1");
+//                        insertSPTSData(mibItemId, username);
+//                        target_location = "redirect:/hw/item/pending";
+//                    }
+//                    logStatus = "Registration - FT - Power Supply Leakage Test - Passed";
+//                } else {
+//                    newStatus = "Failed Functional Test - Power Supply Test - Waiting Maverick CA";
+//                    updateMaverickAndEmail(mibItemId, username, "Power");
+//                    logStatus = "Registration - FT - Power Supply Leakage Test - Failed";
+//                }
+//                item0.setStatus(newStatus);
+//
+//                ItemDAO itemDA = new ItemDAO();
+//                QueryResult iQ = itemDA.updateItemStatusAndFlag(item0);
+//                // UPDATE STATUS TABLE ITEM END
+//
+//                // UPDATE TABLE ITEM_FUNCTIONAL_TEST START
+//                ItemFunctionalTestDAO itemdao = new ItemFunctionalTestDAO();
+//                item.setMibItemId(mibItemId);
+//                item.setPsQty(totalQty);
+//                item.setPsStatus(psResult);
+//                item.setPsUpload(pathPs);
+//                item.setRemark("");
+//                item.setFinalStatus(newStatus);
+//                item.setFlag("0");
+//                itemdao.updatePowerTest(item);
+//                // UPDATE TABLE ITEM_FUNCTIONAL_TEST END
+//            } catch (IOException e) {
+//                e.printStackTrace();
+//            }
+//        } else {
+//
+//        }
+//
+//        if (winUpload != null) {
+//            try {
+//                // Get the file and save it somewhere
+//                byte[] bytesConnector = winUpload.getBytes();
+//                Path pathConnector = Paths.get(FOLDER_TEST + "_winTest_" + winUpload.getOriginalFilename()); // THIS ONE TESTING ONLY, USE CORRECT GENERATED KEY
+//                if (winUpload.getOriginalFilename() == null || winUpload.getOriginalFilename().equalsIgnoreCase("")) {
+//
+//                } else {
+//                    Files.write(pathConnector, bytesConnector);
+//                    pathWin = pathConnector.toString();
+//                }
+//
+//                // UPDATE STATUS TABLE ITEM START
+//                Item item0 = new Item();
+//                item0.setId(mibItemId);
+//                item0.setFlag("1");
+//
+//                if (winResult.equals("Pass")) {
+//                    newStatus = "Good";
+//                    insertSPTSData(mibItemId, username);
+//                    target_location = "redirect:/hw/item/pending";
+//                    logStatus = "Registration - FT - Winchester Chamber Leakage Test - Passed";
+//                } else {
+//                    newStatus = "Failed Functional Test - Winchester Chamber Leakage Test - Waiting Maverick CA";
+//                    updateMaverickAndEmail(mibItemId, username, "Winchester");
+//                    logStatus = "Registration - FT - Winchester Chamber Leakage Test - Failed";
+//                }
+//                item0.setStatus(newStatus);
+//
+//                ItemDAO itemDA = new ItemDAO();
+//                QueryResult iQ = itemDA.updateItemStatusAndFlag(item0);
+//                // UPDATE STATUS TABLE ITEM END
+//
+//                // UPDATE TABLE ITEM_FUNCTIONAL_TEST START
+//                ItemFunctionalTestDAO itemdao = new ItemFunctionalTestDAO();
+//                item.setMibItemId(mibItemId);
+//                item.setWinQty(totalQty);
+//                item.setWinStatus(winResult);
+//                item.setWinUpload(pathWin);
+//                item.setRemark("");
+//                item.setFinalStatus(newStatus);
+//                item.setFlag("0");
+//                itemdao.updateWinchesterTest(item);
+//                // UPDATE TABLE ITEM_FUNCTIONAL_TEST END
+//            } catch (IOException e) {
+//                e.printStackTrace();
+//            }
+//        } else {
+//
+//        }
+//
+//        ItemLog log = new ItemLog();
+//        log.setItemId(mibItemId);
+//        log.setDetail(logStatus);
+//        log.setCreatedBy(userSession.getFullname());
+//        ItemLogDAO logD = new ItemLogDAO();
+//        QueryResult logQ = logD.insertItemLog(log);
+//        return target_location;
+//    }
+    
+    @RequestMapping(value = "/save/{jenis}", method = {RequestMethod.GET, RequestMethod.POST})
+    public String itemFunctionalTestSave(
+            Model model,
+            Locale locale,
+            RedirectAttributes redirectAttrs,
+            @ModelAttribute UserSession userSession,
+            @PathVariable("jenis") String jenis,
+            @RequestParam(required = false) String mibItemId,
+            @RequestParam(required = false) String totalQty,
+            @RequestParam(required = false) String bibResult,
+            @RequestParam(required = false) MultipartFile bibUpload,
+            @RequestParam(required = false) String bibDaqResult,
+            @RequestParam(required = false) MultipartFile bibDaqUpload,
+            @RequestParam(required = false) String leakResult,
+            @RequestParam(required = false) MultipartFile leakUpload,
+            @RequestParam(required = false) String psResult,
+            @RequestParam(required = false) MultipartFile psUpload,
+            @RequestParam(required = false) String winResult,
+            @RequestParam(required = false) MultipartFile winUpload,
+            HttpServletResponse response
+    ) throws IOException, SQLException {
+
+        String username = userSession.getFullname();
+        String targetLocation = "redirect:/hw/item/add2/" + mibItemId;
+        String logStatus = "";
+
+        // Initialize functional test record if necessary
+        checkInsertFunctionalTest(mibItemId, username);
+
+        // Retrieve functional test configuration
+        ItemActivityConfigDAO configDAO = new ItemActivityConfigDAO();
+        ItemActivityConfig itemData = configDAO.getItemActivityByItemId(mibItemId);
+
+        String checkLeak = itemData.getLeakageTest() != null ? itemData.getLeakageTest() : "No";
+        String checkMan = itemData.getManualTest() != null ? itemData.getManualTest() : "No";
+        String checkBib = itemData.getBibTest() != null ? itemData.getBibTest() : "No";
+        String checkDaq = itemData.getBibDaqTest() != null ? itemData.getBibDaqTest() : "No";
+        String checkPs = itemData.getPsLeakageTest() != null ? itemData.getPsLeakageTest() : "No";
+        String checkWin = itemData.getWinchesterChamberLeakageTest() != null ? itemData.getWinchesterChamberLeakageTest() : "No";
+
+        // Retrieve existing functional test record
+        ItemFunctionalTestDAO functionalDAO = new ItemFunctionalTestDAO();
+
+        ItemFunctionalTest item = functionalDAO.getItemActivityByItemIdAndFlag(mibItemId, "0");
+
+        if (item == null) {
+            throw new SQLException(
+                    "Functional test record not found. MIB Item ID: " + mibItemId
+            );
+        }
+
+        if (bibUpload != null && !bibUpload.isEmpty()) {
+            String path = saveFunctionalTestFile(bibUpload, "bibTest");
+            boolean passed = "Pass".equals(bibResult);
+            String newStatus;
+            String failureType = "BIB";
+            if (passed) {
+                if ("Yes".equals(checkDaq)) {
+                    newStatus = "Pending Functional Test - BIB DAQ Test";
+                } else if ("Yes".equals(checkPs)) {
+                    newStatus = "Pending Functional Test - Power Supply Test";
+                } else if ("Yes".equals(checkWin)) {
+                    newStatus = "Pending Functional Test - Winchester Chamber Test";
+                } else {
+                    newStatus = "Good";
+                    targetLocation = completeFunctionalTest(mibItemId, username);
+                }
+                logStatus = "Registration - FT - BIB Test - Passed";
+            } else {
+                newStatus = "Failed Functional Test - BIB Test - Waiting Maverick CA";
+                logStatus = "Registration - FT - BIB Test - Failed";
+            }
+            processFunctionalTest(item, mibItemId, username, newStatus, "0", failureType, bibResult, path, totalQty, logStatus, "BIB");
+        }
+
+        if (bibDaqUpload != null && !bibDaqUpload.isEmpty()) {
+            String path = saveFunctionalTestFile(bibDaqUpload, "bibDaqTest");
+            boolean passed = "Pass".equals(bibDaqResult);
+            String newStatus;
+            if (passed) {
+                if ("Yes".equals(checkPs)) {
+                    newStatus = "Pending Functional Test - Power Supply Test";
+                } else if ("Yes".equals(checkWin)) {
+                    newStatus = "Pending Functional Test - Winchester Chamber Test";
+                } else {
+                    newStatus = "Good";
+                    targetLocation = completeFunctionalTest(mibItemId, username);
+                }
+                logStatus = "Registration - FT - BIB DAQ Test - Passed";
+            } else {
+                newStatus = "Failed Functional Test - BIB DAQ Test - Waiting Maverick CA";
+                logStatus = "Registration - FT - BIB DAQ Test - Failed";
+            }
+            processFunctionalTest(item, mibItemId, username, newStatus, "0", "BIB", bibDaqResult, path, totalQty, logStatus, "BIB DAQ");
+        }
+
+        if (leakUpload != null && !leakUpload.isEmpty()) {
+            String path = saveFunctionalTestFile(leakUpload, "leakTest");
+            boolean passed = "Pass".equals(leakResult);
+            String newStatus;
+            if (passed) {
+                if ("Yes".equals(checkMan)) {
+                    newStatus = "Pending Functional Test - Manual Test";
+                } else if ("Yes".equals(checkBib)) {
+                    newStatus = "Pending Functional Test - BIB Test";
+                } else if ("Yes".equals(checkDaq)) {
+                    newStatus = "Pending Functional Test - BIB DAQ Test";
+                } else if ("Yes".equals(checkPs)) {
+                    newStatus = "Pending Functional Test - Power Supply Test";
+                } else if ("Yes".equals(checkWin)) {
+                    newStatus = "Pending Functional Test - Winchester Chamber Test";
+                } else {
+                    newStatus = "Good";
+                    targetLocation = completeFunctionalTest(mibItemId, username);
+                }
+                logStatus = "Registration - FT - Leakage Test - Passed";
+            } else {
+                newStatus = "Failed Functional Test - Leakage Test - Waiting Maverick CA";
+                logStatus = "Registration - FT - Leakage Test - Failed";
+            }
+            processFunctionalTest(item, mibItemId, username, newStatus, "0", "Leakage", leakResult, path, totalQty, logStatus, "Leakage");
+        }
+
+        if (psUpload != null && !psUpload.isEmpty()) {
+            String path = saveFunctionalTestFile(psUpload, "psTest");
+            boolean passed = "Pass".equals(psResult);
+            String newStatus;
+            if (passed) {
+                if ("Yes".equals(checkWin)) {
+                    newStatus = "Pending Functional Test - Winchester Chamber Test";
+                } else {
+                    newStatus = "Good";
+                    targetLocation = completeFunctionalTest(mibItemId, username);
+                }
+                logStatus = "Registration - FT - Power Supply Leakage Test - Passed";
+            } else {
+                newStatus = "Failed Functional Test - Power Supply Test - Waiting Maverick CA";
+                logStatus = "Registration - FT - Power Supply Leakage Test - Failed";
+            }
+            processFunctionalTest(item, mibItemId, username, newStatus, "0", "Power", psResult, path, totalQty, logStatus, "Power");
+        }
+
+        if (winUpload != null && !winUpload.isEmpty()) {
+            String path = saveFunctionalTestFile(winUpload, "winTest");
+            boolean passed = "Pass".equals(winResult);
+            String newStatus;
+            if (passed) {
+                newStatus = "Good";
+                targetLocation = completeFunctionalTest(mibItemId, username);
+                logStatus = "Registration - FT - Winchester Chamber Leakage Test - Passed";
+            } else {
+                newStatus = "Failed Functional Test - Winchester Chamber Leakage Test - Waiting Maverick CA";
+                logStatus = "Registration - FT - Winchester Chamber Leakage Test - Failed";
+            }
+            processFunctionalTest(item, mibItemId, username, newStatus, "1", "Winchester", winResult, path, totalQty, logStatus, "Winchester");
+        }
+
+        updateFunctionalTestLog(mibItemId, username, logStatus);
+        return targetLocation;
+    }
+
+    @RequestMapping(value = "/redoload/{id}", method = RequestMethod.GET)
+    public String maverickVMFTLoad(@PathVariable String id) {
+
+        return "maverick/maverick_loading";
     }
 
     private void saveAndSetFile(MultipartFile file, String prefix, Long generatedKey, Consumer<String> setter) {
@@ -1199,12 +1783,6 @@ public class MaverickController {
             LOGGER.error("Error saving {} file", prefix, e);
             return null;
         }
-    }
-
-    @RequestMapping(value = "/redoload/{id}", method = RequestMethod.GET)
-    public String maverickVMFTLoad(@PathVariable String id) {
-
-        return "maverick/maverick_loading";
     }
 
     @RequestMapping(value = "/checkfile/{type}/{itemid}", method = RequestMethod.GET)
@@ -1474,6 +2052,211 @@ public class MaverickController {
 
     private void addParameterDetail(Model model, ParameterDetailsDAO dao, String value, String groupCode, String attributeName) {
         model.addAttribute(attributeName, dao.getGroupParameterDetailList(value, groupCode));
+    }
+
+    public void checkInsertFunctionalTest(String itemId, String username) {
+        ItemFunctionalTestDAO itemdao = new ItemFunctionalTestDAO();
+        ItemFunctionalTest item = itemdao.getItemActivityByItemIdAndFlag(itemId, "0");
+        if (item != null) {
+            // DO NOTHING SINCE DATA ALREADY EXISTED
+        } else {
+            itemdao = new ItemFunctionalTestDAO();
+            ItemFunctionalTest itembaru = new ItemFunctionalTest();
+            itembaru.setMibItemId(itemId);
+            itembaru.setLeakQty("0");
+            itembaru.setLeakStatus("");
+            itembaru.setLeakUpload("");
+            itembaru.setManStatus("");
+            itembaru.setBibQty("0");
+            itembaru.setBibStatus("");
+            itembaru.setBibUpload("");
+            itembaru.setBibDaqQty("0");
+            itembaru.setBibDaqStatus("");
+            itembaru.setBibDaqUpload("");
+            itembaru.setPsQty("0");
+            itembaru.setPsStatus("");
+            itembaru.setPsUpload("");
+            itembaru.setWinQty("0");
+            itembaru.setWinStatus("");
+            itembaru.setWinUpload("");
+            itembaru.setRemark("");
+            itembaru.setFinalStatus("");
+            itembaru.setCreatedBy(username);
+            itembaru.setFlag("0");
+            itemdao.insertItemFunctionalTest(itembaru);
+        }
+    }
+
+    public void updateMaverickAndEmail(String mibItemId, String username, String jenis) throws SQLException {
+
+        String module = "Maverick";
+        String sub = "";
+        String status = "Failed Functional Test";
+
+        switch (jenis) {
+            case "Leakage":
+                sub = "Leakage Test";
+                break;
+            case "Manual":
+                sub = "Manual Test";
+                break;
+            case "BIB":
+                sub = "BIB Test";
+                break;
+            case "DAQ":
+                sub = "BIB DAQ Test";
+                break;
+            case "Power":
+                sub = "Power Supply Leakage Test";
+                break;
+            case "Winchester":
+                sub = "Winchester Chamber Leakage Test";
+                break;
+            default:
+                break;
+        }
+
+        ItemMaverick maverick = new ItemMaverick();
+        maverick.setMibItemId(mibItemId);
+        maverick.setModule(module);
+        maverick.setSubmodule(sub);
+        maverick.setStatus(status + " - " + sub);
+        maverick.setFlag("0");
+        maverick.setCreatedBy(username);
+        ItemMaverickDAO maverickD = new ItemMaverickDAO();
+        QueryResult maverickAdd = maverickD.insertItemMaverick(maverick);
+
+        EmailVmFailDAO userDao = new EmailVmFailDAO();
+        List<EmailVmFail> userRecipientsList = userDao.getEmailVmFailList();
+
+        String[] to = new String[userRecipientsList.size()];
+        for (int i = 0; i < userRecipientsList.size(); i++) {
+            to[i] = userRecipientsList.get(i).getEmail();
+        }
+
+        //get current date and time
+        LocalDateTime instance = LocalDateTime.now();
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm");
+        String formattedString = formatter.format(instance); //15-02-2022 12:43
+
+        //gethostname
+        HostnameDAO hostnameD = new HostnameDAO();
+        Hostname h = hostnameD.getHostnameFlagZero();
+        String hostname = h.getHostname();
+
+        ItemDAO itemD = new ItemDAO();
+        Item item2 = itemD.getHardwareDetail(mibItemId);
+
+        //send INFORMATION email
+        LOGGER.info("######################### START MAVERICK EMAIL ########################### ");
+        EmailSender emailSender = new EmailSender();
+        emailSender.htmlEmailTable(
+                servletContext,
+                "", //user name requestor
+                to, //to
+                //                        emailTo,
+                "Hardware Registration - " + status + " [" + sub + "]", //subject
+                "<br />"
+                + "Please be informed that the hardware below failed the functional test inspection."
+                + "<br /> "
+                + "<br /> "
+                + "Item ID: " + item2.getItemId()
+                + "<br /> "
+                + "Inspection Date: " + formattedString
+                + "<br /> "
+                + "<br /> "
+                + "Please click <a href=\"http://" + hostname + "/HEATS/hw/item/add2/" + mibItemId + " \">HERE</a> for more detail."
+                + "<br /> "
+                + "<br />Thank you." //msg
+        );
+    }
+
+    private String saveFunctionalTestFile(MultipartFile file, String testType) throws IOException {
+        if (file == null || file.isEmpty()) {
+            return "";
+        }
+        String originalFilename = Paths.get(file.getOriginalFilename()).getFileName().toString();
+        String filename = testType + "_" + System.currentTimeMillis() + "_" + originalFilename;
+        Path path = Paths.get(FOLDER_TEST, filename);
+        Files.write(path, file.getBytes());
+        return path.toString();
+    }
+    
+    private String completeFunctionalTest(String mibItemId, String username) throws IOException, SQLException {
+        insertSPTSData(mibItemId, username);
+        return "redirect:/hw/item/pending";
+    }
+    
+    private void processFunctionalTest(ItemFunctionalTest item, String mibItemId, String username, String newStatus, String flag, String failureType, String result, String uploadPath, String totalQty, String logStatus, String testType) throws SQLException {
+        boolean passed = "Pass".equals(result);
+        // Update item status
+        Item item0 = new Item();
+        item0.setId(mibItemId);
+        item0.setStatus(newStatus);
+
+        // Preserve original flag behavior
+        item0.setFlag(flag);
+
+        ItemDAO itemDAO = new ItemDAO();
+        itemDAO.updateItemStatusAndFlag(item0);
+
+        // Update functional test record
+        item.setMibItemId(mibItemId);
+        item.setRemark("");
+        item.setFinalStatus(newStatus);
+        item.setFlag("0");
+
+        ItemFunctionalTestDAO functionalDAO = new ItemFunctionalTestDAO();
+
+        switch (testType) {
+            case "BIB":
+                item.setBibQty(totalQty);
+                item.setBibStatus(result);
+                item.setBibUpload(uploadPath);
+                functionalDAO.updateBibTest(item);
+                break;
+            case "BIB DAQ":
+                item.setBibDaqQty(totalQty);
+                item.setBibDaqStatus(result);
+                item.setBibDaqUpload(uploadPath);
+                functionalDAO.updateBibDaqTest(item);
+                break;
+            case "Leakage":
+                item.setLeakQty(totalQty);
+                item.setLeakStatus(result);
+                item.setLeakUpload(uploadPath);
+                functionalDAO.updateLeakageTest(item);
+                break;
+            case "Power":
+                item.setPsQty(totalQty);
+                item.setPsStatus(result);
+                item.setPsUpload(uploadPath);
+                functionalDAO.updatePowerTest(item);
+                break;
+            case "Winchester":
+                item.setWinQty(totalQty);
+                item.setWinStatus(result);
+                item.setWinUpload(uploadPath);
+                functionalDAO.updateWinchesterTest(item);
+                break;
+        }
+
+        // Handle failed functional test
+        if (!passed) {
+            updateMaverickAndEmail(mibItemId, username, failureType);
+        }
+    }
+    
+    private void updateFunctionalTestLog(String mibItemId, String username, String logStatus) {
+        if (logStatus == null || logStatus.isEmpty()) {
+            return;
+        }
+        ItemLog log = new ItemLog();
+        log.setItemId(mibItemId);
+        log.setDetail(logStatus);
+        log.setCreatedBy(username);
+        ItemLogDAO logDAO = new ItemLogDAO();
+        logDAO.insertItemLog(log);
     }
 
 }

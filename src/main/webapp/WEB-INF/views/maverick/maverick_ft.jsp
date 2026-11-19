@@ -61,10 +61,6 @@
                                     <div class="tab-pane fade show active" id="threeAAA" role="tabpanel">
                                         <div class="row gx-4">
                                             <div class="col-12">
-                                                <input type="hidden" name="maverickId" value="${itemmaverick.id}">
-                                                <input type="hidden" name="module" value="${itemmaverick.module}">
-                                                <input type="hidden" name="mibItemId" value="${itemmaverick.mibItemId}">
-                                                <input type="hidden" name="itemStatus" value="Pending Functional Test (from Maverick)">
                                                 <%@ include file="redo_ft.jsp" %>
                                             </div>
                                         </div>

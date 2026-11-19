@@ -98,19 +98,13 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                         env.put(javax.naming.Context.SECURITY_PRINCIPAL, bindPrincipal);
                         env.put(javax.naming.Context.SECURITY_CREDENTIALS, rawPassword);
 
-                        LOGGER.info("=== TRYING AD BIND WITH: [" + bindPrincipal + "] ===");
                         ctx = new javax.naming.directory.InitialDirContext(env);
                         successfulBindUser = bindPrincipal;
-                        LOGGER.info("=== SUCCESSFUL AD BIND WITH: [" + bindPrincipal + "] ===");
-                        LOGGER.info("=== BIND SUCCESSFUL! PROVIDER_URL is: " + env.get(Context.PROVIDER_URL) + " ===");
 
                         // check if da ada rekod dlm database
                         LDAPUserDAO ldapdao = new LDAPUserDAO();
-//                        LDAPUser ldap = ldapdao.getByLoginId(cleanUsername);
                         int countLoginId = ldapdao.getCountBookingId(cleanUsername);
-//                        if (ldap == null) {
                         if (countLoginId == 0) {
-//                            LOGGER.info("cek......");
                             ctx.close();
                             // Keep your existing PROVIDER_URL: ldap://adldap.ad.onsemi.com:389/o=ondex
                             env.put(Context.PROVIDER_URL, "ldap://adldap.ad.onsemi.com:389");
@@ -145,12 +139,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                                 SearchResult searchResult = (SearchResult) results.next();
                                 Attributes attributes = searchResult.getAttributes();
 
-                                String samVal = (attributes.get("sAMAccountName") != null) ? attributes.get("sAMAccountName").get().toString() : "NULL";
-                                String cnVal = (attributes.get("cn") != null) ? attributes.get("cn").get().toString() : "NULL";
-                                String oncidVal = (attributes.get("employeeNumber") != null) ? attributes.get("employeeNumber").get().toString() : "NULL";
-                                String dnVal = (attributes.get("distinguishedName") != null) ? attributes.get("distinguishedName").get().toString() : "NULL";
-
-                                // Log both values side by side
                                 LDAPUser user = new LDAPUser();
                                 Enumeration e = attributes.getIDs();
                                 while (e.hasMoreElements()) {
@@ -191,7 +179,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                         } else {
                             LOGGER.info("account found in DB");
                         }
-
                         ctx.close();
                         break;
                     } catch (Exception e) {

@@ -4,8 +4,6 @@
     Author     : zbqb9x
 --%>
 
-<h6>Hello World!</h6>
-<h6>Masih tak buat lagi</h6>
 <div class="card-body">
     <div class="accordion" id="accordionPanelsStayOpenExample">
         <c:if test="${leakCheck eq 'Yes'}">
@@ -18,13 +16,14 @@
                 <div id="panelsStayOpen-collapseThree" class="accordion-collapse collapse ${leakshow}"
                      aria-labelledby="panelsStayOpen-headingThree">
                     <div class="accordion-body">
-                        <form class="row gx-3 " role="form" action="${contextPath}/hw/item/save/leakTest" method="post" enctype="multipart/form-data" novalidate>
+                        <form class="row gx-3 " role="form" action="${contextPath}/maverick/save/leakTest" method="post" enctype="multipart/form-data" novalidate>
+                            <input type="hidden" class="form-control" id="maverickId" name="maverickId" value="${itemmaverick.id}">
+                            <input type="hidden" class="form-control" id="mibItemId" name="mibItemId" value="${itemmaverick.mibItemId}">
                             <div class="col-xl-1 col-sm-12 col-12">
                                 <div class="mb-3">
                                     <label for="quantity" class="form-label">Quantity</label>
                                     <div class="input input-group">
                                         <input type="number" class="form-control" id="totalQty" name="totalQty" placeholder="" value="${dataTest.leakQty}" min="1" required>
-                                        <input type="hidden" class="form-control" id="mibItemId" name="mibItemId" placeholder="" value="${item.id}">
                                     </div>
                                 </div>
                             </div>
@@ -53,7 +52,7 @@
                                 <div class="row gx-4">
                                     <div class="col-xl-2 col-sm-12 col-12">
                                         <div class="mb-2">
-                                            <a class="form-label" href="${contextPath}/hw/item/ft/leaktest/${item.id}" id="leakTestAttach" name="leakTestAttach"> Download Attachment</a>
+                                            <a class="form-label" href="${contextPath}/maverick/checkfile/leaktest/${item.id}" id="leakTestAttach" name="leakTestAttach"> Download Attachment</a>
                                         </div>
                                     </div>
                                 </div>
@@ -75,12 +74,13 @@
                 </h2>
                 <div id="panelsStayOpen-collapseTwo" class="accordion-collapse collapse ${manshow}" aria-labelledby="panelsStayOpen-headingTwo">
                     <div class="accordion-body">
+                        <input type="hidden" class="form-control" id="maverickId" name="maverickId" value="${itemmaverick.id}">
+                        <input type="hidden" class="form-control" id="mibItemId" name="mibItemId" value="${itemmaverick.mibItemId}">
                         <div class="row">
                             <div class="col-sm-6">
                                 <label for="status" class="form-label">Status</label>
                                 <div>
                                     <input type="text" class="form-control" id="labelStatus" name="labelStatus" placeholder="" value="${item.status}" readonly>
-                                    <input type="hidden" class="form-control" id="mibItemId" name="mibItemId" placeholder="" value="${item.id}">
                                 </div>
                             </div>
                             <div class="col-sm-4">
@@ -107,13 +107,14 @@
                 <div id="panelsStayOpen-collapseOne" class="accordion-collapse collapse ${bibshow}"
                      aria-labelledby="panelsStayOpen-headingOne">
                     <div class="accordion-body">
-                        <form class="row gx-3 " role="form" action="${contextPath}/hw/item/save/bibTest" method="post" enctype="multipart/form-data" novalidate>
+                        <form class="row gx-3 " role="form" action="${contextPath}/maverick/save/bibTest" method="post" enctype="multipart/form-data" novalidate>
+                            <input type="hidden" class="form-control" id="maverickId" name="maverickId" value="${itemmaverick.id}">
+                            <input type="hidden" class="form-control" id="mibItemId" name="mibItemId" value="${itemmaverick.mibItemId}">
                             <div class="col-xl-1 col-sm-12 col-12">
                                 <div class="mb-3">
                                     <label for="quantity" class="form-label">Quantity</label>
                                     <div class="input input-group">
                                         <input type="number" class="form-control" id="totalQty" name="totalQty" placeholder="" value="${dataTest.bibQty}" min="1" required>
-                                        <input type="hidden" class="form-control" id="mibItemId" name="mibItemId" placeholder="" value="${item.id}">
                                     </div>
                                 </div>
                             </div>
@@ -142,7 +143,7 @@
                                 <div class="row gx-4">
                                     <div class="col-xl-2 col-sm-12 col-12">
                                         <div class="mb-2">
-                                            <a class="form-label" href="${contextPath}/hw/item/ft/bibtest/${item.id}" id="bibTestAttach" name="bibTestAttach"> Download Attachment</a>
+                                            <a class="form-label" href="${contextPath}/maverick/checkfile/bibtest/${item.id}" id="bibTestAttach" name="bibTestAttach"> Download Attachment</a>
                                         </div>
                                     </div>
                                 </div>
@@ -165,13 +166,14 @@
                 <div id="panelsStayOpen-collapseSix" class="accordion-collapse collapse ${bibdaqshow}"
                      aria-labelledby="panelsStayOpen-headingSix">
                     <div class="accordion-body">
-                        <form class="row gx-3 " role="form" action="${contextPath}/hw/item/save/bibDaqTest" method="post" enctype="multipart/form-data" novalidate>
+                        <form class="row gx-3 " role="form" action="${contextPath}/maverick/save/bibDaqTest" method="post" enctype="multipart/form-data" novalidate>
+                            <input type="hidden" class="form-control" id="maverickId" name="maverickId" value="${itemmaverick.id}">
+                            <input type="hidden" class="form-control" id="mibItemId" name="mibItemId" value="${itemmaverick.mibItemId}">
                             <div class="col-xl-1 col-sm-12 col-12">
                                 <div class="mb-3">
                                     <label for="quantity" class="form-label">Quantity</label>
                                     <div class="input input-group">
                                         <input type="number" class="form-control" id="totalQty" name="totalQty" placeholder="" value="${dataTest.bibDaqQty}" min="1" required>
-                                        <input type="hidden" class="form-control" id="mibItemId" name="mibItemId" placeholder="" value="${item.id}">
                                     </div>
                                 </div>
                             </div>
@@ -200,7 +202,7 @@
                                 <div class="row gx-4">
                                     <div class="col-xl-2 col-sm-12 col-12">
                                         <div class="mb-2">
-                                            <a class="form-label" href="${contextPath}/hw/item/ft/bibdaqtest/${item.id}" id="daqTestAttach" name="daqTestAttach"> Download Attachment</a>
+                                            <a class="form-label" href="${contextPath}/maverick/checkfile/bibdaqtest/${item.id}" id="daqTestAttach" name="daqTestAttach"> Download Attachment</a>
                                         </div>
                                     </div>
                                 </div>
@@ -223,13 +225,14 @@
                 <div id="panelsStayOpen-collapseFour" class="accordion-collapse collapse ${psshow}"
                      aria-labelledby="panelsStayOpen-headingFour">
                     <div class="accordion-body">
-                        <form class="row gx-3 " role="form" action="${contextPath}/hw/item/save/psTest" method="post" enctype="multipart/form-data" novalidate>
+                        <form class="row gx-3 " role="form" action="${contextPath}/maverick/save/psTest" method="post" enctype="multipart/form-data" novalidate>
+                            <input type="hidden" class="form-control" id="maverickId" name="maverickId" value="${itemmaverick.id}">
+                            <input type="hidden" class="form-control" id="mibItemId" name="mibItemId" value="${itemmaverick.mibItemId}">
                             <div class="col-xl-1 col-sm-12 col-12">
                                 <div class="mb-3">
                                     <label for="quantity" class="form-label">Quantity</label>
                                     <div class="input input-group">
                                         <input type="number" class="form-control" id="totalQty" name="totalQty" placeholder="" value="${dataTest.psQty}" min="1" required>
-                                        <input type="hidden" class="form-control" id="mibItemId" name="mibItemId" placeholder="" value="${item.id}">
                                     </div>
                                 </div>
                             </div>
@@ -258,7 +261,7 @@
                                 <div class="row gx-4">
                                     <div class="col-xl-2 col-sm-12 col-12">
                                         <div class="mb-2">
-                                            <a class="form-label" href="${contextPath}/hw/item/ft/pstest/${item.id}" id="psTestAttach" name="psTestAttach"> Download Attachment</a>
+                                            <a class="form-label" href="${contextPath}/maverick/checkfile/pstest/${item.id}" id="psTestAttach" name="psTestAttach"> Download Attachment</a>
                                         </div>
                                     </div>
                                 </div>
@@ -281,13 +284,14 @@
                 <div id="panelsStayOpen-collapseFive" class="accordion-collapse collapse ${winshow}"
                      aria-labelledby="panelsStayOpen-headingFive">
                     <div class="accordion-body">
-                        <form class="row gx-3 " role="form" action="${contextPath}/hw/item/save/winTest" method="post" enctype="multipart/form-data" novalidate>
+                        <form class="row gx-3 " role="form" action="${contextPath}/maverick/save/winTest" method="post" enctype="multipart/form-data" novalidate>
+                            <input type="hidden" class="form-control" id="maverickId" name="maverickId" value="${itemmaverick.id}">
+                            <input type="hidden" class="form-control" id="mibItemId" name="mibItemId" value="${itemmaverick.mibItemId}">
                             <div class="col-xl-1 col-sm-12 col-12">
                                 <div class="mb-3">
                                     <label for="quantity" class="form-label">Quantity</label>
                                     <div class="input input-group">
                                         <input type="number" class="form-control" id="totalQty" name="totalQty" placeholder="" value="${dataTest.winQty}" min="1" required>
-                                        <input type="hidden" class="form-control" id="mibItemId" name="mibItemId" placeholder="" value="${item.id}">
                                     </div>
                                 </div>
                             </div>
@@ -316,7 +320,7 @@
                                 <div class="row gx-4">
                                     <div class="col-xl-2 col-sm-12 col-12">
                                         <div class="mb-2">
-                                            <a class="form-label" href="${contextPath}/hw/item/ft/wintest/${item.id}" id="winTestAttach" name="winTestAttach"> Download Attachment</a>
+                                            <a class="form-label" href="${contextPath}/maverick/checkfile/wintest/${item.id}" id="winTestAttach" name="winTestAttach"> Download Attachment</a>
                                         </div>
                                     </div>
                                 </div>

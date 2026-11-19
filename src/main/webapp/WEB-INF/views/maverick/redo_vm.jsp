@@ -6,7 +6,10 @@
 
 <form class="row gx-3 needs-validation" role="form" action="${contextPath}/maverick/vm/save" method="post" enctype="multipart/form-data" novalidate>
     <div class="row">
-
+        <input type="hidden" name="maverickId" value="${itemmaverick.id}">
+        <input type="hidden" name="module" value="${itemmaverick.module}">
+        <input type="hidden" name="mibItemId" value="${itemmaverick.mibItemId}">
+        <input type="hidden" name="itemStatus" value="Pending Visual Inspection (from Maverick)">
         <!-- PCB -->
         <div class="col-lg-6">
             <div class="card mb-2">
@@ -15,7 +18,6 @@
                         <label class="form-label" for="pcb">PCB</label>
                         <div class="radio-group">
                             <div class="form-check form-check-inline">
-                                <input type="hidden" class="form-control" name="mibItemId" id="mibItemId" value="${item.id}">
                                 <input type="hidden" class="form-control" name="viId" id="viId" value="${itemVm.id}">
                                 <input class="form-check-input" type="radio" name="pcb" value="Pass" <c:if test="${itemVm.pcb == 'Pass'}">checked</c:if>>
                                 <label class="form-check-label">Pass</label>

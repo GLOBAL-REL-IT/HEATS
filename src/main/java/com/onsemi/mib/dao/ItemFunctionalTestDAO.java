@@ -19,24 +19,26 @@ import org.slf4j.LoggerFactory;
 public class ItemFunctionalTestDAO {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(ItemFunctionalTestDAO.class);
-    private final Connection conn;
     private final DataSource dataSource;
 
     public ItemFunctionalTestDAO() {
         DB db = new DB();
-        this.conn = db.getConnection();
         this.dataSource = db.getDataSource();
     }
-    
+
+    private static final String SQL_INSERT_ITEM_FUNCTIONAL_TEST = "INSERT INTO item_functional_test (mib_item_id, bib_qty, bib_status, bib_upload, man_status, leak_qty, leak_status, leak_upload, ps_qty, ps_status, ps_upload, win_qty, win_status, win_upload, remark, final_status, created_by, created_date, flag, bib_daq_qty, bib_daq_status, bib_daq_upload) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, NOW(), ?, ?, ?, ?)";
+    private static final String SQL_UPDATE_ITEM_FUNCTIONAL_TEST = "UPDATE item_functional_test SET mib_item_id=?, bib_qty=?, bib_status=?, bib_upload=?, man_status=?, leak_qty=?, leak_status=?, leak_upload=?, ps_qty=?, ps_status=?, ps_upload=?, win_qty=?, win_status=?, win_upload=?, remark=?, final_status=?, flag=?, bib_daq_qty=?, bib_daq_status=?, bib_daq_upload=? WHERE id=?";
+    private static final String SQL_UPDATE_BIB_TEST = "UPDATE item_functional_test SET bib_qty=?, bib_status=?, bib_upload=?, remark=?, final_status=?, flag=? WHERE mib_item_id=?";
+    private static final String SQL_UPDATE_BIB_DAQ_TEST = "UPDATE item_functional_test SET bib_daq_qty=?, bib_daq_status=?, bib_daq_upload=?, remark=?, final_status=?, flag=? WHERE mib_item_id=?";
+    private static final String SQL_UPDATE_MANUAL_TEST = "UPDATE item_functional_test SET man_status=?, remark=?, final_status=?, flag=? WHERE mib_item_id=?";
+    private static final String SQL_UPDATE_LEAKAGE_TEST = "UPDATE item_functional_test SET leak_qty=?, leak_status=?, leak_upload=?, remark=?, final_status=?, flag=? WHERE mib_item_id=?";
+    private static final String SQL_UPDATE_POWER_TEST = "UPDATE item_functional_test SET ps_qty=?, ps_status=?, ps_upload=?, remark=?, final_status=?, flag=? WHERE mib_item_id=?";
+    private static final String SQL_UPDATE_WINCHESTER_TEST = "UPDATE item_functional_test SET win_qty=?, win_status=?, win_upload=?, remark=?, final_status=?, flag=? WHERE mib_item_id=?";
+    private static final String SQL_DELETE_ITEM_FUNCTIONAL_TEST = "DELETE FROM item_functional_test WHERE id = ?";
+
     public QueryResult insertItemFunctionalTest(ItemFunctionalTest item) {
         QueryResult queryResult = new QueryResult();
-        try {
-            PreparedStatement ps = conn.prepareStatement(
-                    "INSERT INTO item_functional_test (mib_item_id, bib_qty, bib_status, bib_upload, man_status, leak_qty, leak_status, leak_upload, "
-                            + "ps_qty, ps_status, ps_upload, win_qty, win_status, win_upload, "
-                            + "remark, final_status, created_by, created_date, flag, bib_daq_qty, bib_daq_status, bib_daq_upload) "
-                            + "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, NOW(), ?, ?, ?, ?)", Statement.RETURN_GENERATED_KEYS
-            );
+        try (Connection connection = dataSource.getConnection(); PreparedStatement ps = connection.prepareStatement(SQL_INSERT_ITEM_FUNCTIONAL_TEST, Statement.RETURN_GENERATED_KEYS)) {
             ps.setString(1, item.getMibItemId());
             ps.setString(2, item.getBibQty());
             ps.setString(3, item.getBibStatus());
@@ -58,35 +60,24 @@ public class ItemFunctionalTestDAO {
             ps.setString(19, item.getBibDaqQty());
             ps.setString(20, item.getBibDaqStatus());
             ps.setString(21, item.getBibDaqUpload());
-
             queryResult.setResult(ps.executeUpdate());
-            ResultSet rs = ps.getGeneratedKeys();
-            if (rs.next()) {
-                queryResult.setGeneratedKey(Integer.toString(rs.getInt(1)));
-            }
-            rs.close();
-            ps.close();
-        } catch (SQLException e) {
-            queryResult.setErrorMessage(e.getMessage());
-            LOGGER.error(e.getMessage());
-        } finally {
-            if (conn != null) {
-                try {
-                    conn.close();
-                } catch (SQLException e) {
-                    LOGGER.error(e.getMessage());
+            try (ResultSet rs = ps.getGeneratedKeys()) {
+                if (rs.next()) {
+                    queryResult.setGeneratedKey(
+                            Integer.toString(rs.getInt(1))
+                    );
                 }
             }
+        } catch (SQLException e) {
+            queryResult.setErrorMessage(e.getMessage());
+            LOGGER.error("Error inserting item functional test. MIB Item ID: {}", item.getMibItemId(), e);
         }
         return queryResult;
     }
-    
+
     public QueryResult updateItemFunctionalTest(ItemFunctionalTest item) {
         QueryResult queryResult = new QueryResult();
-        try {
-            PreparedStatement ps = conn.prepareStatement(
-                    "UPDATE item_functional_test SET mib_item_id=?, bib_qty=?, bib_status=?, bib_upload=?, man_status=?, leak_qty=?, leak_status=?, leak_upload=?, ps_qty=?, ps_status=?, ps_upload=?, win_qty=?, win_status=?, win_upload=?, remark=?, final_status=?, flag=?, bib_daq_qty=?, bib_daq_status=?, bib_daq_upload=? WHERE id=?"
-            );
+        try (Connection connection = dataSource.getConnection(); PreparedStatement ps = connection.prepareStatement(SQL_UPDATE_ITEM_FUNCTIONAL_TEST)) {
             ps.setString(1, item.getMibItemId());
             ps.setString(2, item.getBibQty());
             ps.setString(3, item.getBibStatus());
@@ -109,28 +100,16 @@ public class ItemFunctionalTestDAO {
             ps.setString(20, item.getBibDaqUpload());
             ps.setString(21, item.getId());
             queryResult.setResult(ps.executeUpdate());
-            ps.close();
         } catch (SQLException e) {
             queryResult.setErrorMessage(e.getMessage());
-            LOGGER.error(e.getMessage());
-        } finally {
-            if (conn != null) {
-                try {
-                    conn.close();
-                } catch (SQLException e) {
-                    LOGGER.error(e.getMessage());
-                }
-            }
+            LOGGER.error("Error updating item functional test. ID: {}", item.getId(), e);
         }
         return queryResult;
     }
-    
+
     public QueryResult updateBibTest(ItemFunctionalTest item) {
         QueryResult queryResult = new QueryResult();
-        try {
-            PreparedStatement ps = conn.prepareStatement(
-                    "UPDATE item_functional_test SET bib_qty=?, bib_status=?, bib_upload=?, remark=?, final_status=?, flag=? WHERE mib_item_id=?"
-            );
+        try (Connection connection = dataSource.getConnection(); PreparedStatement ps = connection.prepareStatement(SQL_UPDATE_BIB_TEST)) {
             ps.setString(1, item.getBibQty());
             ps.setString(2, item.getBibStatus());
             ps.setString(3, item.getBibUpload());
@@ -139,28 +118,16 @@ public class ItemFunctionalTestDAO {
             ps.setString(6, item.getFlag());
             ps.setString(7, item.getMibItemId());
             queryResult.setResult(ps.executeUpdate());
-            ps.close();
         } catch (SQLException e) {
             queryResult.setErrorMessage(e.getMessage());
-            LOGGER.error(e.getMessage());
-        } finally {
-            if (conn != null) {
-                try {
-                    conn.close();
-                } catch (SQLException e) {
-                    LOGGER.error(e.getMessage());
-                }
-            }
+            LOGGER.error("Error updating BIB test. MIB Item ID: {}", item.getMibItemId(), e);
         }
         return queryResult;
     }
-    
+
     public QueryResult updateBibDaqTest(ItemFunctionalTest item) {
         QueryResult queryResult = new QueryResult();
-        try {
-            PreparedStatement ps = conn.prepareStatement(
-                    "UPDATE item_functional_test SET bib_daq_qty=?, bib_daq_status=?, bib_daq_upload=?, remark=?, final_status=?, flag=? WHERE mib_item_id=?"
-            );
+        try (Connection connection = dataSource.getConnection(); PreparedStatement ps = connection.prepareStatement(SQL_UPDATE_BIB_DAQ_TEST)) {
             ps.setString(1, item.getBibDaqQty());
             ps.setString(2, item.getBibDaqStatus());
             ps.setString(3, item.getBibDaqUpload());
@@ -169,56 +136,32 @@ public class ItemFunctionalTestDAO {
             ps.setString(6, item.getFlag());
             ps.setString(7, item.getMibItemId());
             queryResult.setResult(ps.executeUpdate());
-            ps.close();
         } catch (SQLException e) {
             queryResult.setErrorMessage(e.getMessage());
-            LOGGER.error(e.getMessage());
-        } finally {
-            if (conn != null) {
-                try {
-                    conn.close();
-                } catch (SQLException e) {
-                    LOGGER.error(e.getMessage());
-                }
-            }
+            LOGGER.error("Error updating BIB DAQ test. MIB Item ID: {}", item.getMibItemId(), e);
         }
         return queryResult;
     }
-    
+
     public QueryResult updateManualTest(ItemFunctionalTest item) {
         QueryResult queryResult = new QueryResult();
-        try {
-            PreparedStatement ps = conn.prepareStatement(
-                    "UPDATE item_functional_test SET man_status=?, remark=?, final_status=?, flag=? WHERE mib_item_id=?"
-            );
+        try (Connection connection = dataSource.getConnection(); PreparedStatement ps = connection.prepareStatement(SQL_UPDATE_MANUAL_TEST)) {
             ps.setString(1, item.getManStatus());
             ps.setString(2, item.getRemark());
             ps.setString(3, item.getFinalStatus());
             ps.setString(4, item.getFlag());
             ps.setString(5, item.getMibItemId());
             queryResult.setResult(ps.executeUpdate());
-            ps.close();
         } catch (SQLException e) {
             queryResult.setErrorMessage(e.getMessage());
-            LOGGER.error(e.getMessage());
-        } finally {
-            if (conn != null) {
-                try {
-                    conn.close();
-                } catch (SQLException e) {
-                    LOGGER.error(e.getMessage());
-                }
-            }
+            LOGGER.error("Error updating manual test. MIB Item ID: {}", item.getMibItemId(), e);
         }
         return queryResult;
     }
-    
+
     public QueryResult updateLeakageTest(ItemFunctionalTest item) {
         QueryResult queryResult = new QueryResult();
-        try {
-            PreparedStatement ps = conn.prepareStatement(
-                    "UPDATE item_functional_test SET leak_qty=?, leak_status=?, leak_upload=?, remark=?, final_status=?, flag=? WHERE mib_item_id=?"
-            );
+        try (Connection connection = dataSource.getConnection(); PreparedStatement ps = connection.prepareStatement(SQL_UPDATE_LEAKAGE_TEST)) {
             ps.setString(1, item.getLeakQty());
             ps.setString(2, item.getLeakStatus());
             ps.setString(3, item.getLeakUpload());
@@ -227,28 +170,16 @@ public class ItemFunctionalTestDAO {
             ps.setString(6, item.getFlag());
             ps.setString(7, item.getMibItemId());
             queryResult.setResult(ps.executeUpdate());
-            ps.close();
         } catch (SQLException e) {
             queryResult.setErrorMessage(e.getMessage());
-            LOGGER.error(e.getMessage());
-        } finally {
-            if (conn != null) {
-                try {
-                    conn.close();
-                } catch (SQLException e) {
-                    LOGGER.error(e.getMessage());
-                }
-            }
+            LOGGER.error("Error updating leakage test. MIB Item ID: {}", item.getMibItemId(), e);
         }
         return queryResult;
     }
-    
+
     public QueryResult updatePowerTest(ItemFunctionalTest item) {
         QueryResult queryResult = new QueryResult();
-        try {
-            PreparedStatement ps = conn.prepareStatement(
-                    "UPDATE item_functional_test SET ps_qty=?, ps_status=?, ps_upload=?, remark=?, final_status=?, flag=? WHERE mib_item_id=?"
-            );
+        try (Connection connection = dataSource.getConnection(); PreparedStatement ps = connection.prepareStatement(SQL_UPDATE_POWER_TEST)) {
             ps.setString(1, item.getPsQty());
             ps.setString(2, item.getPsStatus());
             ps.setString(3, item.getPsUpload());
@@ -257,28 +188,16 @@ public class ItemFunctionalTestDAO {
             ps.setString(6, item.getFlag());
             ps.setString(7, item.getMibItemId());
             queryResult.setResult(ps.executeUpdate());
-            ps.close();
         } catch (SQLException e) {
             queryResult.setErrorMessage(e.getMessage());
-            LOGGER.error(e.getMessage());
-        } finally {
-            if (conn != null) {
-                try {
-                    conn.close();
-                } catch (SQLException e) {
-                    LOGGER.error(e.getMessage());
-                }
-            }
+            LOGGER.error("Error updating power test. MIB Item ID: {}", item.getMibItemId(), e);
         }
         return queryResult;
     }
-    
+
     public QueryResult updateWinchesterTest(ItemFunctionalTest item) {
         QueryResult queryResult = new QueryResult();
-        try {
-            PreparedStatement ps = conn.prepareStatement(
-                    "UPDATE item_functional_test SET win_qty=?, win_status=?, win_upload=?, remark=?, final_status=?, flag=? WHERE mib_item_id=?"
-            );
+        try (Connection connection = dataSource.getConnection(); PreparedStatement ps = connection.prepareStatement(SQL_UPDATE_WINCHESTER_TEST)) {
             ps.setString(1, item.getWinQty());
             ps.setString(2, item.getWinStatus());
             ps.setString(3, item.getWinUpload());
@@ -287,91 +206,103 @@ public class ItemFunctionalTestDAO {
             ps.setString(6, item.getFlag());
             ps.setString(7, item.getMibItemId());
             queryResult.setResult(ps.executeUpdate());
-            ps.close();
         } catch (SQLException e) {
             queryResult.setErrorMessage(e.getMessage());
-            LOGGER.error(e.getMessage());
-        } finally {
-            if (conn != null) {
-                try {
-                    conn.close();
-                } catch (SQLException e) {
-                    LOGGER.error(e.getMessage());
-                }
-            }
+            LOGGER.error("Error updating Winchester test. MIB Item ID: {}", item.getMibItemId(), e);
         }
         return queryResult;
     }
-    
+
     public QueryResult deleteItemFunctionalTest(String id) {
         QueryResult queryResult = new QueryResult();
-        try {
-            PreparedStatement ps = conn.prepareStatement(
-                    "DELETE FROM item_functional_test WHERE id = '" + id + "'"
-            );
+        try (Connection connection = dataSource.getConnection(); PreparedStatement ps = connection.prepareStatement(SQL_DELETE_ITEM_FUNCTIONAL_TEST)) {
+            ps.setString(1, id);
             queryResult.setResult(ps.executeUpdate());
-            ps.close();
         } catch (SQLException e) {
             queryResult.setErrorMessage(e.getMessage());
-            LOGGER.error(e.getMessage());
-        } finally {
-            if (conn != null) {
-                try {
-                    conn.close();
-                } catch (SQLException e) {
-                    LOGGER.error(e.getMessage());
-                }
-            }
+            LOGGER.error("Error deleting item functional test. ID: {}", id, e);
         }
         return queryResult;
     }
-    
+
+    private static final String SQL_GET_ITEM_ACTIVITY_BY_ITEM_ID = "SELECT * FROM item_functional_test WHERE mib_item_id = ?";
+    private static final String SQL_GET_ITEM_ACTIVITY_BY_ITEM_ID_AND_FLAG = "SELECT * FROM item_functional_test WHERE mib_item_id = ? AND flag = ?";
+
     public ItemFunctionalTest getItemActivityByItemId(String itemId) {
-        String sql = "SELECT * FROM item_functional_test WHERE mib_item_id = '" + itemId + "'";
         ItemFunctionalTest item = null;
-        try {
-            PreparedStatement ps = conn.prepareStatement(sql);
-            ResultSet rs = ps.executeQuery();
-            while (rs.next()) {
-                item = new ItemFunctionalTest();
-                item.setId(rs.getString("id"));
-                item.setMibItemId(rs.getString("mib_item_id"));
-                item.setBibQty(rs.getString("bib_qty"));
-                item.setBibStatus(rs.getString("bib_status"));
-                item.setBibUpload(rs.getString("bib_upload"));
-                item.setBibDaqQty(rs.getString("bib_daq_qty"));
-                item.setBibDaqStatus(rs.getString("bib_daq_status"));
-                item.setBibDaqUpload(rs.getString("bib_daq_upload"));
-                item.setManStatus(rs.getString("man_status"));
-                item.setLeakQty(rs.getString("leak_qty"));
-                item.setLeakStatus(rs.getString("leak_status"));
-                item.setLeakUpload(rs.getString("leak_upload"));
-                item.setPsQty(rs.getString("ps_qty"));
-                item.setPsStatus(rs.getString("ps_status"));
-                item.setPsUpload(rs.getString("ps_upload"));
-                item.setWinQty(rs.getString("win_qty"));
-                item.setWinStatus(rs.getString("win_status"));
-                item.setWinUpload(rs.getString("win_upload"));
-                item.setRemark(rs.getString("remark"));
-                item.setFinalStatus(rs.getString("final_status"));
-                item.setCreatedBy(rs.getString("created_by"));
-                item.setCreatedDate(rs.getString("created_date"));
-                item.setFlag(rs.getString("flag"));
-            }
-            rs.close();
-            ps.close();
-        } catch (SQLException e) {
-            LOGGER.error(e.getMessage());
-        } finally {
-            if (conn != null) {
-                try {
-                    conn.close();
-                } catch (SQLException e) {
-                    LOGGER.error(e.getMessage());
+        try (Connection connection = dataSource.getConnection(); PreparedStatement ps = connection.prepareStatement(SQL_GET_ITEM_ACTIVITY_BY_ITEM_ID)) {
+            ps.setString(1, itemId);
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    item = new ItemFunctionalTest();
+                    item.setId(rs.getString("id"));
+                    item.setMibItemId(rs.getString("mib_item_id"));
+                    item.setBibQty(rs.getString("bib_qty"));
+                    item.setBibStatus(rs.getString("bib_status"));
+                    item.setBibUpload(rs.getString("bib_upload"));
+                    item.setBibDaqQty(rs.getString("bib_daq_qty"));
+                    item.setBibDaqStatus(rs.getString("bib_daq_status"));
+                    item.setBibDaqUpload(rs.getString("bib_daq_upload"));
+                    item.setManStatus(rs.getString("man_status"));
+                    item.setLeakQty(rs.getString("leak_qty"));
+                    item.setLeakStatus(rs.getString("leak_status"));
+                    item.setLeakUpload(rs.getString("leak_upload"));
+                    item.setPsQty(rs.getString("ps_qty"));
+                    item.setPsStatus(rs.getString("ps_status"));
+                    item.setPsUpload(rs.getString("ps_upload"));
+                    item.setWinQty(rs.getString("win_qty"));
+                    item.setWinStatus(rs.getString("win_status"));
+                    item.setWinUpload(rs.getString("win_upload"));
+                    item.setRemark(rs.getString("remark"));
+                    item.setFinalStatus(rs.getString("final_status"));
+                    item.setCreatedBy(rs.getString("created_by"));
+                    item.setCreatedDate(rs.getString("created_date"));
+                    item.setFlag(rs.getString("flag"));
                 }
             }
+        } catch (SQLException e) {
+            LOGGER.error("Error retrieving item functional test. MIB Item ID: {}", itemId, e);
         }
         return item;
     }
-    
- }
+
+    public ItemFunctionalTest getItemActivityByItemIdAndFlag(String itemId, String flag) {
+        ItemFunctionalTest item = null;
+        try (Connection connection = dataSource.getConnection(); PreparedStatement ps = connection.prepareStatement(SQL_GET_ITEM_ACTIVITY_BY_ITEM_ID_AND_FLAG)) {
+            ps.setString(1, itemId);
+            ps.setString(2, flag);
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    item = new ItemFunctionalTest();
+                    item.setId(rs.getString("id"));
+                    item.setMibItemId(rs.getString("mib_item_id"));
+                    item.setBibQty(rs.getString("bib_qty"));
+                    item.setBibStatus(rs.getString("bib_status"));
+                    item.setBibUpload(rs.getString("bib_upload"));
+                    item.setBibDaqQty(rs.getString("bib_daq_qty"));
+                    item.setBibDaqStatus(rs.getString("bib_daq_status"));
+                    item.setBibDaqUpload(rs.getString("bib_daq_upload"));
+                    item.setManStatus(rs.getString("man_status"));
+                    item.setLeakQty(rs.getString("leak_qty"));
+                    item.setLeakStatus(rs.getString("leak_status"));
+                    item.setLeakUpload(rs.getString("leak_upload"));
+                    item.setPsQty(rs.getString("ps_qty"));
+                    item.setPsStatus(rs.getString("ps_status"));
+                    item.setPsUpload(rs.getString("ps_upload"));
+                    item.setWinQty(rs.getString("win_qty"));
+                    item.setWinStatus(rs.getString("win_status"));
+                    item.setWinUpload(rs.getString("win_upload"));
+                    item.setRemark(rs.getString("remark"));
+                    item.setFinalStatus(rs.getString("final_status"));
+                    item.setCreatedBy(rs.getString("created_by"));
+                    item.setCreatedDate(rs.getString("created_date"));
+                    item.setFlag(rs.getString("flag"));
+                }
+            }
+        } catch (SQLException e) {
+            LOGGER.error("Error retrieving item functional test. MIB Item ID: {}, Flag: {}", itemId, flag, e);
+        }
+        return item;
+    }
+
+}

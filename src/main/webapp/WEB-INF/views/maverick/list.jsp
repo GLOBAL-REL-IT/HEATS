@@ -106,7 +106,7 @@
                                                                 </c:when>
                                                                 <c:when test="${parameterMaster.flag == '5'}">
                                                                     <a href="maverickdetails/${parameterMaster.id}/${parameterMaster.module}/${parameterMaster.id2}" title="Maverick Details"><i class="bi bi-clipboard2 h3"></i></a>
-                                                                    <a href="redo/${parameterMaster.id}"><i class="bi bi-clipboard2-pulse h3" title="Functional Test"></i></a>
+                                                                    <a href="redoft/${parameterMaster.id}"><i class="bi bi-clipboard2-pulse h3" title="Functional Test"></i></a>
                                                                 </c:when>
                                                                 <c:otherwise>
                                                                     <a href="maverickdetails/scrap" title="Bukan button ini yang kita mahu"><i class="bi bi-eraser-fill h3"></i></a>

@@ -54,34 +54,30 @@
                                     </div> 
                                     <div class="tab-pane active" id="twoAAA" role="tabpanel">
                                         <div class="row gx-4">
-                                            <input type="hidden" name="maverickId" value="${itemmaverick.id}">
-                                            <input type="hidden" name="module" value="${itemmaverick.module}">
-                                            <input type="hidden" name="mibItemId" value="${itemmaverick.mibItemId}">
-                                            <input type="hidden" name="itemStatus" value="Pending Visual Inspection (from Maverick)">
                                             <%@ include file="redo_vm.jsp" %>
                                         </div>
                                     </div>
                                     <div class="tab-pane fade" id="threeAAA" role="tabpanel">
                                         <div class="row gx-4">
                                             <div class="col-12">
-                                            &nbsp;
+                                                &nbsp;
+                                            </div> 
                                         </div> 
-                                    </div> 
+                                    </div>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
+                <!-- Row end -->
             </div>
-            <!-- Row end -->
-        </div>
-        <!-- Content wrapper end -->
+            <!-- Content wrapper end -->
 
-        <!-- App Footer start -->
-        <div class="app-footer">
-            <img class="img3" src="${contextPath}/resources/onsemi logo.webp" alt="onsemi">
-            <span>© HEATs 2025</span>
-        </div>
+            <!-- App Footer start -->
+            <div class="app-footer">
+                <img class="img3" src="${contextPath}/resources/onsemi logo.webp" alt="onsemi">
+                <span>© HEATs 2025</span>
+            </div>
         </div>
     </s:layout-component>
     <s:layout-component name="page_js">
