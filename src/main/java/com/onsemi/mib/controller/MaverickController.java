@@ -245,6 +245,9 @@ public class MaverickController {
         ItemLogDAO itemlogdao = new ItemLogDAO();
         List<ItemLog> itemlog = itemlogdao.getItemLogListByItemId(id2);
         model.addAttribute("itemlog", itemlog);
+        
+        
+        
 
         return returnPage;
     }
@@ -367,7 +370,29 @@ public class MaverickController {
             HttpServletRequest request,
             RedirectAttributes redirectAttrs,
             @RequestParam(required = false) String mavId,
+            @RequestParam(required = false) String repairRemark,
             @RequestParam(required = false) String status) {
+        
+        String mavStatus = "";
+        String flag = "";
+        
+        if ("approve".equals(status)) {
+            // Logic for approval - sample ONLY
+            flag = "0";
+        } else if ("reject".equals(status)) {
+            // Logic for rejection - sample ONLY
+            flag = "0";
+        } else if ("failed".equals(status)) {
+            // THIS IS WHERE REPAIR DOES NOT WORK
+            // KITA PULANGKAN DIA JADI FLAG 0, BAGI DIA BUAT DISPOSITION LAGI SEKALI
+            flag = "0";
+            mavStatus = "Repair Failed - Maverick";
+        } else if ("success".equals(status)) {
+            // REPAIR SUCCESS
+            // KITA UPDATE FLAG JADI 4, SO, DIA BOLE PROCEED BUAT VM BALIK
+            flag = "4";
+            mavStatus = "Repair Success - Pending Visual Inspection";
+        }
 
         ItemMaverickDAO imdao = new ItemMaverickDAO();
         ItemMaverick itemmaverick = imdao.getItemMaverick(mavId);
@@ -388,27 +413,17 @@ public class MaverickController {
         itemmav.setCreatedBy(itemmaverick.getCreatedBy());
         itemmav.setCreatedDate(itemmaverick.getCreatedDate());
         itemmav.setId(mavId);
-
-        if ("approve".equals(status)) {
-            // Logic for approval - sample ONLY
-        } else if ("reject".equals(status)) {
-            // Logic for rejection - sample ONLY
-        } else if ("failed".equals(status)) {
-            // THIS IS WHERE REPAIR DOES NOT WORK
-            // KITA PULANGKAN DIA JADI FLAG 0, BAGI DIA BUAT DISPOSITION LAGI SEKALI
-            itemmav.setFlag("0");
-            itemmav.setStatus("Repair Failed - Sent for disposition again");
-        } else if ("success".equals(status)) {
-            // REPAIR SUCCESS
-            // KITA UPDATE FLAG JADI 1, SO, DIA BOLE PROCEED BUAT VM BALIK
-            itemmav.setFlag("4");
-            itemmav.setStatus("Item Repaired - Item Pending Visual Inspection");
-            // sini kita nk kena buat new vm dengan functional test? so, kita akan update flag asal kepada?? 
-        }
-
+        itemmav.setFlag(flag);
+        itemmav.setStatus(mavStatus);
         imdao = new ItemMaverickDAO();
         imdao.updateItemMaverick(itemmav);
-
+        
+        ItemLog log = new ItemLog();
+        log.setItemId(itemmaverick.getItemId());
+        log.setCreatedBy(userSession.getFullname());
+        log.setDetail(mavStatus);
+        ItemLogDAO logD = new ItemLogDAO();
+        logD.insertItemLog(log);
         return "redirect:/maverick/list";
     }
 
@@ -984,25 +999,53 @@ public class MaverickController {
         String stringPathCableWiredCopperWire = "";
         String stringPathLabelIdentification = "";
         String emailBodyFail = "";
-
-        ItemVisualInspection itemVm = new ItemVisualInspection();
-
-        itemVm.setMibItemId(mibItemId);
-        if (null == itemStatus) {
-            itemVm.setModule("Item Registration");
+        String flag = "0";
+        String modul = "";
+        
+        boolean hasFailed = Stream.of(pcb, handle, metalFrame, hardwareFasterners, clipHolder, pcbEdgeFinger, connector, dutSockets, edgeMbBanana, electComponent, solderJoint, winConnector, teflonConnector, pogoReceptaclesPin, cableWiredCopperWire, labelIdentification).anyMatch("Fail"::equals);
+        if (hasFailed) {
+            finalStatus = "Fail";
+            flag = "99";
         } else {
-            switch (itemStatus) {
-                case "Pending Visual Inspection":
-                    itemVm.setModule("Item Registration");
-                    break;
-                case "Pending Visual Inspection (from Maverick)":
-                    itemVm.setModule("Item Registration (2nd Visual Inspection");
-                    break;
-                default:
-                    itemVm.setModule("Item Registration");
-                    break;
+            finalStatus = "Pass";
+            flag = "0";
+        }
+        
+        ItemMaverickDAO mavdao = new ItemMaverickDAO();
+        ItemMaverick maverick = mavdao.getItemMaverickById(maverickId);
+        
+        if (maverick == null) {
+            redirectAttrs.addFlashAttribute("error", "Maverick data is not found. Pls contact system admin. Maverick ID :: " + maverickId);
+            return "redirect:/maverick/redo/"+maverickId;
+        } else {
+            String check1 = maverick.getDisposition1();
+            if (check1 == null) {
+                modul = "Maverick (Disposition 1)";
+            } else {
+                modul = "Maverick (Disposition 2)";
             }
         }
+
+//        if (null == itemStatus) {
+//            modul = "Maverick (Disposition)";
+//        } else {
+//            switch (itemStatus) {
+//                case "Pending Visual Inspection":
+//                    modul = "Item Registration";
+//                    break;
+//                case "Pending Visual Inspection (from Maverick)":
+//                    modul = "Maverick (Disposition)";
+//                    break;
+//                default:
+//                    modul = "Maverick";
+//                    break;
+//            }
+//        }
+
+        ItemVisualInspection itemVm = new ItemVisualInspection();
+        
+        itemVm.setMibItemId(mibItemId);
+        itemVm.setModule(modul);
         itemVm.setPcb(pcb);
         itemVm.setPcbReject(pcbReject);
         itemVm.setHandle(handle);
@@ -1036,6 +1079,12 @@ public class MaverickController {
         itemVm.setLabelIdentification(labelIdentification);
         itemVm.setLabelIdentificationReject(labelIdentificationReject);
         itemVm.setRemarks(remarks);
+        itemVm.setFlag(flag);
+        itemVm.setFinalStatus(finalStatus);
+        itemVm.setCreatedBy(userSession.getFullname());
+
+        ItemVisualInspectionDAO itemVmD = new ItemVisualInspectionDAO();
+        QueryResult q = itemVmD.insertItemVisualInspection(itemVm);
 
         emailBodyFail += processRejectItem(pcb, pcbRejectQty, pcbReject, "PCB", itemVm::setPcbRejectQty, emailBodyFail);
         emailBodyFail += processRejectItem(handle, handleRejectQty, handleReject, "Handle", itemVm::setHandleRejectQty, emailBodyFail);
@@ -1054,15 +1103,6 @@ public class MaverickController {
         emailBodyFail += processRejectItem(cableWiredCopperWire, cableWiredCopperWireRejectQty, cableWiredCopperWireReject, "Cable/Wired/Copper Wire", itemVm::setCableWiredCopperWireRejectQty, emailBodyFail);
         emailBodyFail += processRejectItem(labelIdentification, labelIdentificationRejectQty, labelIdentificationReject, "Label & Identification", itemVm::setLabelIdentificationRejectQty, emailBodyFail);
 
-//        if ("Fail".equals(pcb) || "Fail".equals(handle) || "Fail".equals(metalFrame) || "Fail".equals(hardwareFasterners) || "Fail".equals(clipHolder) || "Fail".equals(pcbEdgeFinger) || "Fail".equals(connector)
-//                || "Fail".equals(dutSockets) || "Fail".equals(edgeMbBanana) || "Fail".equals(electComponent) || "Fail".equals(solderJoint) || "Fail".equals(winConnector)
-//                || "Fail".equals(teflonConnector) || "Fail".equals(pogoReceptaclesPin) || "Fail".equals(cableWiredCopperWire) || "Fail".equals(labelIdentification)) {
-//            finalStatus = "Fail";
-//            itemVm.setFlag("99");
-//        } else {
-//            finalStatus = "Pass";
-//            itemVm.setFlag("0");
-//        }
         LOGGER.info("ALL THE STATUS WE WANT TO CHECK");
         LOGGER.info("pcd                        :::: " + pcb);
         LOGGER.info("handle                     :::: " + handle);
@@ -1081,31 +1121,7 @@ public class MaverickController {
         LOGGER.info("cableWiredCopperWire       :::: " + cableWiredCopperWire);
         LOGGER.info("labelIdentification        :::: " + labelIdentification);
 
-        boolean hasFailed = Stream.of(pcb, handle, metalFrame, hardwareFasterners,
-                clipHolder, pcbEdgeFinger, connector, dutSockets,
-                edgeMbBanana, electComponent, solderJoint,
-                winConnector, teflonConnector, pogoReceptaclesPin,
-                cableWiredCopperWire, labelIdentification
-        ).anyMatch("Fail"::equals);
-
-        if (hasFailed) {
-            finalStatus = "Fail";
-            itemVm.setFlag("99");
-        } else {
-            finalStatus = "Pass";
-            itemVm.setFlag("0");
-        }
-
-        itemVm.setFinalStatus(finalStatus);
-        itemVm.setCreatedBy(userSession.getFullname());
-        LOGGER.info("555");
-
-        ItemVisualInspectionDAO itemVmD = new ItemVisualInspectionDAO();
-        QueryResult q = itemVmD.insertItemVisualInspection(itemVm);
-        LOGGER.info("888");
-
         if (!"0".equals(q.getGeneratedKey())) {
-
             itemVm = new ItemVisualInspection();
             Long uploadId = Long.parseLong(q.getGeneratedKey());
 
@@ -1130,16 +1146,13 @@ public class MaverickController {
             itemVmD = new ItemVisualInspectionDAO();
             QueryResult q3 = itemVmD.updateItemVisualInspectionForAttachment(itemVm);
 
-            //update Item DB
+            //update Item DB - START
             String status = "";
-            String flag = "";
-            Item item = new Item();
-            item.setId(mibItemId);
             if ("Fail".equals(finalStatus)) {
                 status = "Failed Visual Inspection - Waiting Maverick CA";
                 flag = "0";
             } else {
-                status = getCurrentStatus(mibItemId);
+                status = getCurrentStatusInMaverick(mibItemId);
                 if (status.equals("Good")) {
                     flag = "1";
 //                    insertSPTSData(mibItemId, userSession.getFullname()); //insert to SPTS if no functional test
@@ -1148,96 +1161,115 @@ public class MaverickController {
                 }
 //                insertSPTSData(mibItemId, userSession.getFullname());
             }
+            
+            Item item = new Item();
+            item.setId(mibItemId);
             item.setStatus(status);
             item.setFlag(flag);
             ItemDAO iD = new ItemDAO();
             QueryResult q2 = iD.updateItemStatusAndFlag(item);
+            //update Item DB - END
 
-            //update log
+            // Update log table - START
             ItemLog log = new ItemLog();
             log.setItemId(mibItemId);
-            log.setDetail("VM Data Added (Maverick)");
+            log.setDetail("VM Data Added (Maverick) - "+finalStatus);
             log.setCreatedBy(userSession.getFullname());
             ItemLogDAO logD = new ItemLogDAO();
             QueryResult logQ = logD.insertItemLog(log);
-
-            if ("Fail".equals(finalStatus)) {
-
-                //save to maverick table
-                ItemMaverick maverick = new ItemMaverick();
-                maverick.setMibItemId(mibItemId);
-                maverick.setModule("Maverick");
-                maverick.setSubmodule("Visual Inspection");
-                maverick.setStatus("Failed Visual Inspection");
-                maverick.setFlag("0");
-                maverick.setCreatedBy(userSession.getFullname());
-                ItemMaverickDAO maverickD = new ItemMaverickDAO();
-                QueryResult maverickAdd = maverickD.insertItemMaverick(maverick);
-
-                EmailVmFailDAO userDao = new EmailVmFailDAO();
-                List<EmailVmFail> userRecipientsList = userDao.getEmailVmFailList();
-
-                String[] to = new String[userRecipientsList.size()];
-                for (int i = 0; i < userRecipientsList.size(); i++) {
-                    to[i] = userRecipientsList.get(i).getEmail();
-                }
-
-                //get current date and time
-                LocalDateTime instance = LocalDateTime.now();
-                DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm");
-                String formattedString = formatter.format(instance); //15-02-2022 12:43
-
-                //gethostname
-                HostnameDAO hostnameD = new HostnameDAO();
-                Hostname h = hostnameD.getHostnameFlagZero();
-                String hostname = h.getHostname();
-
-                ItemDAO itemD = new ItemDAO();
-                Item item2 = itemD.getHardwareDetail(mibItemId);
-
-                //send INFORMATION email
-                LOGGER.info("######################### START EMAIL TO PIC ########################### ");
-                EmailSender emailSender = new EmailSender();
-                emailSender.htmlEmailTable(
-                        servletContext,
-                        "", //user name requestor
-                        to, //to
-                        //                        emailTo,
-                        "Item Registration - Failed Visual Inspection", //subject
-                        "<br />"
-                        + "Please be informed that the item below failed the visual inspection."
-                        + "<br /> "
-                        + "<br /> "
-                        + "Item ID: " + item2.getItemId()
-                        + "<br /> "
-                        + "Inspection Date: " + formattedString
-                        + "<br /> "
-                        + "<br /> "
-                        + "Detail: <br />" + emailBodyFail
-                        + "<br /> "
-                        + "Please click <a href=\"http://" + hostname + "/HEATS/hw/item/add2/" + mibItemId + " \">HERE</a> for more detail."
-                        + "<br /> "
-                        + "<br />Thank you." //msg
-                );
-
-                redirectAttrs.addFlashAttribute("error", "Visual Inspection Fail. Pls go to Maverick Module for Corrective Action.");
-//                return "redirect:/hw/item/add2/" + mibItemId;
-//                return "redirect:/maverick/maverickdetails/" + maverickId + "/" + module + "/" + mibItemId;
-            } else {
-                redirectAttrs.addFlashAttribute("success", "Visual Inspection Pass.");
+            // Update log table - END
+            
+            // UPDATE MAVERICK DATA - TODO
+            if (finalStatus.equals("Pass")) {
                 if (status.equals("Good")) {
-//                    return "redirect:/hw/item/pending";
-//                    return "redirect:/maverick/maverickdetails/" + maverickId + "/" + module + "/" + mibItemId;
+                    flag = "1";
+                    
                 } else {
-//                    return "redirect:/hw/item/add2/" + mibItemId;
-//                    return "redirect:/maverick/maverickdetails/" + maverickId + "/" + module + "/" + mibItemId;
+                    flag = "5";
+                    
                 }
+            } else {
+                flag = "0";
             }
+            
+//            maverick.setModule(modul);            // DO WE NEED TO UPDATE THIS FEATURE?
+            maverick.setStatus(status);
+            maverick.setFlag(flag);
+            
+            mavdao = new ItemMaverickDAO();
+            mavdao.updateItemMaverick(maverick);
+            // UPDATE MAVERICK DATA - END
 
+//            if ("Fail".equals(finalStatus)) {
+//
+//                //save to maverick table
+//                ItemMaverick maverick = new ItemMaverick();
+//                maverick.setMibItemId(mibItemId);
+//                maverick.setModule("Maverick");
+//                maverick.setSubmodule("Visual Inspection");
+//                maverick.setStatus("Failed Visual Inspection");
+//                maverick.setFlag("0");
+//                maverick.setCreatedBy(userSession.getFullname());
+//                ItemMaverickDAO maverickD = new ItemMaverickDAO();
+//                QueryResult maverickAdd = maverickD.insertItemMaverick(maverick);
+//
+//                EmailVmFailDAO userDao = new EmailVmFailDAO();
+//                List<EmailVmFail> userRecipientsList = userDao.getEmailVmFailList();
+//
+//                String[] to = new String[userRecipientsList.size()];
+//                for (int i = 0; i < userRecipientsList.size(); i++) {
+//                    to[i] = userRecipientsList.get(i).getEmail();
+//                }
+//
+//                //get current date and time
+//                LocalDateTime instance = LocalDateTime.now();
+//                DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm");
+//                String formattedString = formatter.format(instance); //15-02-2022 12:43
+//
+//                //gethostname
+//                HostnameDAO hostnameD = new HostnameDAO();
+//                Hostname h = hostnameD.getHostnameFlagZero();
+//                String hostname = h.getHostname();
+//
+//                ItemDAO itemD = new ItemDAO();
+//                Item item2 = itemD.getHardwareDetail(mibItemId);
+//
+//                //send INFORMATION email
+//                LOGGER.info("######################### START EMAIL TO PIC ########################### ");
+//                EmailSender emailSender = new EmailSender();
+//                emailSender.htmlEmailTable(
+//                        servletContext,
+//                        "", //user name requestor
+//                        to, //to
+//                        //                        emailTo,
+//                        "Item Registration - Failed Visual Inspection", //subject
+//                        "<br />"
+//                        + "Please be informed that the item below failed the visual inspection."
+//                        + "<br /> "
+//                        + "<br /> "
+//                        + "Item ID: " + item2.getItemId()
+//                        + "<br /> "
+//                        + "Inspection Date: " + formattedString
+//                        + "<br /> "
+//                        + "<br /> "
+//                        + "Detail: <br />" + emailBodyFail
+//                        + "<br /> "
+//                        + "Please click <a href=\"http://" + hostname + "/HEATS/hw/item/add2/" + mibItemId + " \">HERE</a> for more detail."
+//                        + "<br /> "
+//                        + "<br />Thank you." //msg
+//                );
+//
+//                redirectAttrs.addFlashAttribute("error", "Visual Inspection Fail. Pls go to Maverick Module for Corrective Action.");
+//            } else {
+//                redirectAttrs.addFlashAttribute("success", "Visual Inspection Pass.");
+//                if (status.equals("Good")) {
+//                    
+//                } else {
+//                    
+//                }
+//            }
         } else {
             redirectAttrs.addFlashAttribute("error", "Failed to save Visual Inspection. Pls Contact System Admin");
-//            return "redirect:/hw/item/add2/" + mibItemId;
-//            return "redirect:/maverick/maverickdetails/" + maverickId + "/" + module + "/" + mibItemId;
         }
 
         return "redirect:/maverick/maverickdetails/" + maverickId + "/" + module + "/" + mibItemId;
@@ -1880,6 +1912,49 @@ public class MaverickController {
             status = "Pending Functional Test - Power Supply Test";
         } else if (statusWin.equals("Yes")) {
             status = "Pending Functional Test - Winchester Chamber Test";
+        } else {
+            status = "Good";
+        }
+
+        return status;
+    }
+
+    public String getCurrentStatusInMaverick(String itemId) {
+        String status = "No setup found";
+        String statusVi = "";
+        String statusLeak = "";
+        String statusMan = "";
+        String statusBib = "";
+        String statusDaq = "";
+        String statusPs = "";
+        String statusWin = "";
+        ItemActivityConfig iac = new ItemActivityConfig();
+        ItemActivityConfigDAO iacdao = new ItemActivityConfigDAO();
+
+        iac = iacdao.getItemActivityByItemId(itemId);
+        if (iac != null) {
+            statusVi = iac.getVi();
+            statusLeak = iac.getLeakageTest();
+            statusMan = iac.getManualTest();
+            statusBib = iac.getBibTest();
+            statusDaq = iac.getBibDaqTest();
+            statusPs = iac.getPsLeakageTest();
+            statusWin = iac.getWinchesterChamberLeakageTest();
+        }
+
+        // HANYA UNTUK FIRST TIME SELEPAS DIA COMPLETE KAN VISUAL INSPECTION
+        if (statusLeak.equals("Yes")) {
+            status = "Pending Functional Test - Leakage Test - Maverick";
+        } else if (statusMan.equals("Yes")) {
+            status = "Pending Functional Test - Manual Test - Maverick";
+        } else if (statusBib.equals("Yes")) {
+            status = "Pending Functional Test - BIB Test - Maverick";
+        } else if (statusDaq.equals("Yes")) {
+            status = "Pending Functional Test - BIB DAQ Test - Maverick";
+        } else if (statusPs.equals("Yes")) {
+            status = "Pending Functional Test - Power Supply Test - Maverick";
+        } else if (statusWin.equals("Yes")) {
+            status = "Pending Functional Test - Winchester Chamber Test - Maverick";
         } else {
             status = "Good";
         }

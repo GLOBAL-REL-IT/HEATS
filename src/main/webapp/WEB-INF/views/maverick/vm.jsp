@@ -6,7 +6,7 @@
 
 <div class="col-12">
     <div class="section-header" data-bs-toggle="collapse" data-bs-target="#dispoDetails" aria-expanded="false" aria-controls="dispoDetails">
-        <span>MAVERICK DETAILS</span>
+        <span>MAVERICK DETAILS - VM</span>
         <i class="bi bi-chevron-down section-arrow"></i>
     </div>
 </div>
@@ -1055,6 +1055,9 @@
                     </div>
                 </div>
             </c:if>
+        </div>
+        <div class="row gx-3">
+            <%@ include file="history.jsp" %>
         </div>
     </div>
 </div>

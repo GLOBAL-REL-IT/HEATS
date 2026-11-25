@@ -15,6 +15,20 @@
         <link rel="stylesheet" href="${contextPath}/resources/css/maverick.css"/>
     </s:layout-component>
     <s:layout-component name="page_css_inline">
+        <style>
+            .attachment-button-container {
+                display: flex;
+                flex-wrap: wrap;
+                gap: 10px;
+                margin-top: 5px;
+            }
+            .attachment-btn {
+                display: none;
+                padding: 5px 12px;
+                font-size: 13px;
+                border-radius: 3px;
+            }
+        </style>
     </s:layout-component>
     <s:layout-component name="page_container">
         <div class="content-wrapper">
@@ -59,6 +73,7 @@
                                 </div>
                             </div>
                         </fieldset>
+                        <%@ include file="history.jsp" %>
                     </div>
                     <c:choose>
                         <c:when test="${data.flag eq '0'}">

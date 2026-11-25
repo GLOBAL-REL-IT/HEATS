@@ -2223,11 +2223,12 @@
                                                                             <input type="hidden" class="form-control" id="groupId" name="groupId" placeholder="" value="${groupId}">
                                                                             <input type="hidden" class="form-control" id="bookingPkid" name="bookingPkid" placeholder="" value="${rms.bookingPkid}">
                                                                             <input type="hidden" class="form-control" id="hwStatus" name="hwStatus" value="${status}">
-                                                                            <input class="form-check-input" type="radio" name="releaseOrReturn" id="releaseOrReturn1" required>
+                                                                            <input type="hidden" class="form-control" id="motherboardId" name="motherboardId" placeholder="" value="${motherboardId}">
+                                                                            <input class="form-check-input" type="radio" name="releaseOrReturn" id="releaseOrReturn1" value="release" required>
                                                                             <label class="form-check-label" for="releaseOrReturn1" required>Released to Production</label>
                                                                         </div>
                                                                         <div class="form-check form-check-inline">
-                                                                            <input class="form-check-input" type="radio" name="releaseOrReturn" id="releaseOrReturn2" required>
+                                                                            <input class="form-check-input" type="radio" name="releaseOrReturn" id="releaseOrReturn2" value="return" required>
                                                                             <label class="form-check-label" for="releaseOrReturn2">Return from Production Staging (Return to Inventory)</label>
                                                                         </div>
                                                                     </div>

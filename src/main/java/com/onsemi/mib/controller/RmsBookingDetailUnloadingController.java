@@ -2208,7 +2208,17 @@ public class RmsBookingDetailUnloadingController {
 
         // FUNCTION TO CHECK IF THE FUNCTIONAL TEST IS COMPLETED - START
         if (newStatus == goReady) {
-            if (event == "HAST") {
+            if (event.contains("HAST")) {
+                processHAST(groupId, goDispo);
+            } else {
+                flag = "3";
+//                processNonHAST(newStatus, bookId, motherboardId, username, groupId);
+                processComplete("Yes", flag, newStatus, bookId, motherboardId, username, groupId);
+            }
+
+            /*
+            if (event.contains("HAST")) {
+//            if (event == "HAST") {
 //                newStatus = "Pending Release Or Return";
                 // For HAST, CLOSED status go to Disposition
                 newStatus = goDispo;
@@ -2263,6 +2273,7 @@ public class RmsBookingDetailUnloadingController {
                 }
                 // UPDATE RMS_BOOKING_DETAIL STATUS - END
             }
+             */
         } else {
             // SKIP EVERYTHING SINCE FUNCTIONAL TEST IS NOT COMPLETED
         }
@@ -2277,6 +2288,125 @@ public class RmsBookingDetailUnloadingController {
 
         return target_location;
     }
+
+//    @@RequestMapping
+    @RequestMapping(value = "/releaseOrReturn/save", method = {RequestMethod.GET, RequestMethod.POST})
+    public String hastDecision(
+            Model model,
+            Locale locale,
+            RedirectAttributes redirectAttrs,
+            @ModelAttribute UserSession userSession,
+            @RequestParam(required = false) String bookingPkid,
+            @RequestParam(required = false) String groupId,
+            @RequestParam(required = false) String motherboardId,
+            @RequestParam(required = false) String releaseOrReturn,
+            @RequestParam(required = false) String releaseOrReturnRemarks
+        ) throws IOException, SQLException {
+        
+        String returnPage = "redirect:/maverick/list";
+        returnPage = "redirect:/rmsbookingDetailUnloading/groupDetail/"+groupId;
+        
+        String newStatus = "Released to Production";
+        String username = userSession.getLoginId();
+        String flag = "0";
+        
+//        LOGGER.info("SINI KITA NK TENGOK VALUE DIA HANTAR DLU");
+//        LOGGER.info("bookingPkid >>> "+bookingPkid);
+//        LOGGER.info("groupId >>> "+groupId);
+//        LOGGER.info("motherboardId >>> "+motherboardId);
+//        LOGGER.info("releaseOrReturn ASAL >>>> " + releaseOrReturn);
+//        LOGGER.info("releaseOrReturnRemarks >>>> " + releaseOrReturnRemarks);
+        
+        if (releaseOrReturn.equals("release")) {
+            flag = "1";
+            processComplete("No", flag, newStatus, groupId, motherboardId, username, groupId);
+//            processComplete(newStatus, bookingPkid, motherboardId, username, groupId);
+        } else if (releaseOrReturn.equals("return")) {
+//            returnPage = "";              // set this one to redirect to somewhere else
+            flag = "3";
+            newStatus = "Return from Production Staging";
+            processComplete("No", flag, newStatus, groupId, motherboardId, username, groupId);
+        } else {
+            redirectAttrs.addFlashAttribute("error", "Selected item is not configurable, please refer HEATS admin for this issue.");
+//            returnPage = "";              // should this one also redirect to somewhere
+        }
+        
+        return returnPage;
+    }
+
+    private void processHAST(String groupId, String goDispo) throws SQLException {
+        // For HAST, CLOSED status goes to Disposition
+        RmsBookingHardwareGroup rmsgroup = new RmsBookingHardwareGroup();
+        rmsgroup.setStatus(goDispo);
+        rmsgroup.setGroupId(groupId);
+        rmsgroup.setFlag("2");
+
+        RmsBookingHardwareGroupDAO groupD = new RmsBookingHardwareGroupDAO();
+        groupD.updateRmsBookingHardwareGroupFlagAndStatusByGroupId(rmsgroup);
+    }
+
+    private void processComplete(String sendSpts, String flag, String newStatus, String bookId, String motherboardId, String username, String groupId) throws SQLException, IOException {
+        String sptsStatus = "Good";
+
+        RmsBookingHardwareGroupDAO groupD = new RmsBookingHardwareGroupDAO();
+        groupD.updateGroupStatusToClosed(newStatus, sptsStatus, groupId);
+
+        if (sendSpts.equals("Yes")) {
+            sendSPTSTransactionUnloading(bookId, motherboardId, username);
+        }
+
+        RmsBookingHardware rmsbook = new RmsBookingHardware();
+        rmsbook.setSubStatus(newStatus);
+        rmsbook.setFlag("3");
+
+        RmsBookingHardwareDAO rmsbhdao = new RmsBookingHardwareDAO();
+        rmsbhdao.updateRmsBookingHardwareStatus(rmsbook);
+
+        Integer tutup = rmsbhdao.countDataHardwareClosed(bookId);
+        Integer semua = rmsbhdao.countDataHardwareSemua(bookId);
+
+        if (tutup.equals(semua)) {
+            RmsBookingDetailDAO rmsdetaildao = new RmsBookingDetailDAO();
+            RmsBookingDetail rmsdetail = new RmsBookingDetail();
+
+            rmsdetail.setBookingPkid(bookId);
+            rmsdetail.setFlag("3");
+            rmsdetail.setStatus(newStatus);
+
+            rmsdetaildao.updateRmsBookingDetailForFlagAndStatus(rmsdetail);
+        }
+    }
+    /*
+    private void processNonHAST(String newStatus, String bookId, String motherboardId, String username, String groupId) throws SQLException, IOException {
+        String sptsStatus = "Good";
+
+        RmsBookingHardwareGroupDAO groupD = new RmsBookingHardwareGroupDAO();
+        groupD.updateGroupStatusToClosed(newStatus, sptsStatus, groupId);
+
+        sendSPTSTransactionUnloading(bookId, motherboardId, username);
+
+        RmsBookingHardware rmsbook = new RmsBookingHardware();
+        rmsbook.setSubStatus(newStatus);
+        rmsbook.setFlag("3");
+
+        RmsBookingHardwareDAO rmsbhdao = new RmsBookingHardwareDAO();
+        rmsbhdao.updateRmsBookingHardwareStatus(rmsbook);
+
+        Integer tutup = rmsbhdao.countDataHardwareClosed(bookId);
+        Integer semua = rmsbhdao.countDataHardwareSemua(bookId);
+
+        if (tutup.equals(semua)) {
+            RmsBookingDetailDAO rmsdetaildao = new RmsBookingDetailDAO();
+            RmsBookingDetail rmsdetail = new RmsBookingDetail();
+
+            rmsdetail.setBookingPkid(bookId);
+            rmsdetail.setFlag("3");
+            rmsdetail.setStatus(newStatus);
+
+            rmsdetaildao.updateRmsBookingDetailForFlagAndStatus(rmsdetail);
+        }
+    }
+    */
 
     @RequestMapping(value = "/updateStatusFailed/{groupid}", method = RequestMethod.GET)
     public String updateStatusFailed(

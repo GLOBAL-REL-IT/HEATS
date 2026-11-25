@@ -199,7 +199,7 @@
                                                     </a>
                                                 </c:if>
                                                 <c:if test="${parameterMaster.totalBooking == '0'}">
-                                                    <a modaldeleteid="${parameterMaster.id}" type="button" data-bs-toggle="offcanvas" title="Set Priority"
+                                                    <a modaldeleteid="${parameterMaster.id}" type="button" data-bs-toggle="offcanvas" title="Send Notification"
                                                        data-bs-target="#staticBackdropNoBooking" aria-controls="staticBackdropNoBooking" onclick="getDataNoBooking(this);">
                                                     <!--<a modaldeleteid="${parameterMaster.id}" modalRms="${parameterMaster.rmsNo}" modalEvent="${parameterMaster.event}" type="button" title="No CBMS Booking" data-bs-toggle="modal" data-bs-target="#email_modal" class="table-link" onclick="sendEmail(this);">-->
                                                         <i class="bi bi-exclamation-octagon h3" style="color: red;"></i>

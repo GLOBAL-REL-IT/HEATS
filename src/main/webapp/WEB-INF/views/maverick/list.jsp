@@ -57,6 +57,9 @@
                                                             <c:when test="${parameterMaster.flag == '1'}">
                                                                 <c:set var="textColor" value="green" />
                                                             </c:when>
+                                                            <c:when test="${parameterMaster.flag == '2' || parameterMaster.flag == '3'}">
+                                                                <c:set var="textColor" value="gold" />
+                                                            </c:when>
                                                             <c:when test="${parameterMaster.flag == '4' || parameterMaster.flag == '5'}">
                                                                 <c:set var="textColor" value="orange" />
                                                             </c:when>
